@@ -1,0 +1,18 @@
+title: User
+description: A single user.
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+    example: 00000000-0000-0000-0000-000000000000
+  gender:
+    $ref: ./genderType.v1.yaml
+  firstname:
+    type: string
+  lastname:
+    type: string
+  email:
+    type: string
+    format: email
+    example: email@email.dk

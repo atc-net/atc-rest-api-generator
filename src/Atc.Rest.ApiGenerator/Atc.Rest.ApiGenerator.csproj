@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <Title>Atc.Rest.ApiGenerator</Title>
+    <Authors>Atc-net</Authors>
+    <Description>Atc.Rest.ApiGenerator is a WebApi C# code generator using a OpenApi 3.0.x specification YAML file.</Description>
+    <PackageProjectUrl>https://github.com/atc-net/atc/tree/master/src/Atc.Rest.Generator</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/atc-net/atc</RepositoryUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/atc-net/atc/master/images/icon.png</PackageIconUrl>
+    <PackageIcon>icon.png</PackageIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\launchSettings.json" />
+    <None Remove="Resources\launchSettingsExtended.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\launchSettingsExtended.json" />
+    <EmbeddedResource Include="Resources\launchSettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\images\icon.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Atc" Version="1.0.298" />
+    <PackageReference Include="Atc.CodeAnalysis.CSharp" Version="1.0.298" />
+    <PackageReference Include="Atc.OpenApi" Version="1.0.298" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.7.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.8" />
+    <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.2.3" />
+  </ItemGroup>
+
+</Project>

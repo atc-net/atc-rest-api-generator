@@ -1,0 +1,442 @@
+<div style='text-align: right'>
+
+[References](Index.md)
+
+</div>
+
+
+# References extended
+
+## [Atc.Rest.ApiGenerator](Atc.Rest.ApiGenerator.md)
+
+- [AtcRestApiGeneratorAssemblyTypeInitializer](Atc.Rest.ApiGenerator.md#atcrestapigeneratorassemblytypeinitializer)
+- [Util](Atc.Rest.ApiGenerator.md#util)
+  -  Static Methods
+     - GetCsFileNameForContract(DirectoryInfo pathForContracts, string area, string subArea, string modelName)
+     - GetCsFileNameForContractEnumTypes(DirectoryInfo pathForContracts, string modelName)
+     - GetCsFileNameForContractShared(DirectoryInfo pathForContracts, string modelName)
+     - GetCsFileNameForEndpoints(DirectoryInfo pathForEndpoints, string modelName)
+     - GetCsFileNameForHandler(DirectoryInfo pathForHandlers, string area, string handlerName)
+     - GetProjectPath()
+- [ValidationRuleNameConstants](Atc.Rest.ApiGenerator.md#validationrulenameconstants)
+  -  Static Fields
+     - string OpenApiCore
+     - string Operation01
+     - string Operation02
+     - string Operation03
+     - string Operation04
+     - string Operation05
+     - string Operation06
+     - string Operation07
+     - string Operation08
+     - string Operation09
+     - string Operation10
+     - string Operation11
+     - string Operation12
+     - string Operation13
+     - string Operation14
+     - string Operation15
+     - string Operation16
+     - string Operation17
+     - string Operation18
+     - string Path01
+     - string ProjectApiGenerated01
+     - string ProjectApiGenerated02
+     - string ProjectApiGenerated03
+     - string ProjectApiGenerated04
+     - string ProjectApiGenerated05
+     - string ProjectApiGenerated06
+     - string ProjectDomainGenerated01
+     - string ProjectDomainGenerated02
+     - string ProjectDomainGenerated03
+     - string ProjectDomainGenerated04
+     - string ProjectDomainGenerated05
+     - string ProjectDomainGenerated06
+     - string ProjectDomainGenerated07
+     - string ProjectDomainGenerated08
+     - string ProjectHostGenerated01
+     - string ProjectHostGenerated02
+     - string ProjectHostGenerated03
+     - string ProjectHostGenerated04
+     - string ProjectHostGenerated05
+     - string Schema01
+     - string Schema02
+     - string Schema03
+     - string Schema04
+     - string Schema05
+     - string Schema06
+     - string Schema07
+     - string Schema08
+     - string Schema09
+     - string Schema10
+     - string Schema11
+
+## [Atc.Rest.ApiGenerator.Generators](Atc.Rest.ApiGenerator.Generators.md)
+
+- [ServerApiGenerator](Atc.Rest.ApiGenerator.Generators.md#serverapigenerator)
+  -  Methods
+     - Generate()
+- [ServerDomainGenerator](Atc.Rest.ApiGenerator.Generators.md#serverdomaingenerator)
+  -  Methods
+     - Generate()
+- [ServerHostGenerator](Atc.Rest.ApiGenerator.Generators.md#serverhostgenerator)
+  -  Methods
+     - Generate()
+
+## [Atc.Rest.ApiGenerator.Helpers](Atc.Rest.ApiGenerator.Helpers.md)
+
+- [GenerateHelper](Atc.Rest.ApiGenerator.Helpers.md#generatehelper)
+  -  Static Methods
+     - GenerateServerApi(string projectPrefixName, DirectoryInfo outputPath, DirectoryInfo outputTestPath, Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, ApiOptions apiOptions)
+     - GenerateServerDomain(string projectPrefixName, DirectoryInfo outputPath, DirectoryInfo outputTestPath, Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, ApiOptions apiOptions, DirectoryInfo apiPath)
+     - GenerateServerHost(string projectPrefixName, DirectoryInfo outputPath, DirectoryInfo outputTestPath, Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, ApiOptions apiOptions, DirectoryInfo apiPath, DirectoryInfo domainPath)
+     - GenerateServerSln(string projectPrefixName, string outputSlnPath, DirectoryInfo outputSrcPath, DirectoryInfo outputTestPath)
+     - GetAtcToolVersion()
+     - GetAtcToolVersionAsString3()
+     - GetAtcToolVersionAsString4()
+- [HttpClientHelper](Atc.Rest.ApiGenerator.Helpers.md#httpclienthelper)
+  -  Static Methods
+     - DownloadToTempFile(string apiDesignPath)
+- [LogItemHelper](Atc.Rest.ApiGenerator.Helpers.md#logitemhelper)
+  -  Static Methods
+     - Create(LogCategoryType logCategoryType, string ruleName, string description)
+- [NugetPackageReferenceHelper](Atc.Rest.ApiGenerator.Helpers.md#nugetpackagereferencehelper)
+  -  Static Methods
+     - CreateForApiProject()
+     - CreateForHostProject(bool useRestExtended)
+     - CreateForTestProject(bool useMvc)
+- [OpenApiDocumentHelper](Atc.Rest.ApiGenerator.Helpers.md#openapidocumenthelper)
+  -  Static Methods
+     - CombineAndGetApiDocument(string specificationPath)
+     - GetBasePathSegmentNames(OpenApiDocument openApiDocument)
+     - Validate(Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, ApiOptionsValidation validationOptions)
+- [OpenApiDocumentSchemaModelNameHelper](Atc.Rest.ApiGenerator.Helpers.md#openapidocumentschemamodelnamehelper)
+  -  Static Methods
+     - EnsureModelNameWithNamespaceIfNeeded(EndpointMethodMetadata endpointMethodMetadata, string modelName)
+     - EnsureModelNameWithNamespaceIfNeeded(string projectName, string segmentName, string modelName, bool isShared = False)
+     - GetRawModelName(string modelName)
+- [OpenApiDocumentValidationHelper](Atc.Rest.ApiGenerator.Helpers.md#openapidocumentvalidationhelper)
+  -  Static Methods
+     - ValidateDocument(OpenApiDocument apiDocument, ApiOptionsValidation validationOptions)
+- [OpenApiOperationSchemaMapHelper](Atc.Rest.ApiGenerator.Helpers.md#openapioperationschemamaphelper)
+  -  Static Methods
+     - CollectMappings(OpenApiDocument apiDocument)
+     - GetSegmentName(string path)
+- [SolutionAndProjectHelper](Atc.Rest.ApiGenerator.Helpers.md#solutionandprojecthelper)
+  -  Static Methods
+     - GetBoolFromNullableString(string value)
+     - GetNullableStringFromBool(bool value)
+     - GetNullableValueFromProject(XElement element)
+     - ScaffoldProjFile(FileInfo projectCsProjFile, bool createAsWeb, bool createAsTestProject, string projectName, bool useNullableReferenceTypes, List&lt;string&gt; frameworkReferences, List&lt;Tuple&lt;string, string, string&gt;&gt; packageReferences, List&lt;FileInfo&gt; projectReferences, bool includeApiSpecification)
+     - ScaffoldSlnFile(FileInfo slnFile, string projectName, DirectoryInfo apiPath, DirectoryInfo domainPath, DirectoryInfo hostPath, DirectoryInfo apiTestPath = null, DirectoryInfo domainTestPath = null, DirectoryInfo hostTestPath = null)
+     - SetNullableValueForProject(XElement element, string newNullableValue)
+- [TextFileHelper](Atc.Rest.ApiGenerator.Helpers.md#textfilehelper)
+  -  Static Methods
+     - Save(FileInfo fileInfo, string text, bool overrideIfExist = True)
+     - Save(string file, string text, bool overrideIfExist = True)
+- [ValidatePathsAndOperationsHelper](Atc.Rest.ApiGenerator.Helpers.md#validatepathsandoperationshelper)
+  -  Static Methods
+     - ValidateGetOperations(ApiOptionsValidation validationOptions, KeyValuePair&lt;string, OpenApiPathItem&gt; path)
+     - ValidateGlobalParameters(ApiOptionsValidation validationOptions, IEnumerable&lt;string&gt; globalPathParameterNames, KeyValuePair&lt;string, OpenApiPathItem&gt; path)
+     - ValidateMissingOperationParameters(ApiOptionsValidation validationOptions, KeyValuePair&lt;string, OpenApiPathItem&gt; path)
+     - ValidateOperationsWithParametersNotPresentInPath(ApiOptionsValidation validationOptions, KeyValuePair&lt;string, OpenApiPathItem&gt; path)
+
+## [Atc.Rest.ApiGenerator.Helpers.XunitTest](Atc.Rest.ApiGenerator.Helpers.XunitTest.md)
+
+- [GenerateServerApiXunitTestEndpointHandlerStubHelper](Atc.Rest.ApiGenerator.Helpers.XunitTest.md#generateserverapixunittestendpointhandlerstubhelper)
+  -  Static Methods
+     - Generate(HostProjectOptions hostProjectOptions, EndpointMethodMetadata endpointMethodMetadata)
+- [GenerateServerApiXunitTestEndpointTestHelper](Atc.Rest.ApiGenerator.Helpers.XunitTest.md#generateserverapixunittestendpointtesthelper)
+  -  Static Methods
+     - Generate(HostProjectOptions hostProjectOptions, EndpointMethodMetadata endpointMethodMetadata)
+- [GenerateServerDomainXunitTestHelper](Atc.Rest.ApiGenerator.Helpers.XunitTest.md#generateserverdomainxunittesthelper)
+  -  Static Methods
+     - GenerateCustomTests(DomainProjectOptions domainProjectOptions, SyntaxGeneratorHandler sgHandler)
+     - GenerateGeneratedTests(DomainProjectOptions domainProjectOptions, SyntaxGeneratorHandler sgHandler)
+- [GenerateXunitTestHelper](Atc.Rest.ApiGenerator.Helpers.XunitTest.md#generatexunittesthelper)
+  -  Static Methods
+     - AppendNewModelOrListOfModel(int indentSpaces, StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata, OpenApiSchema schema, HttpStatusCode httpStatusCode, SchemaMapLocatedAreaType locatedArea, string variableName = data)
+     - AppendNewModelOrListOfModelForBadRequest(int indentSpaces, StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata, OpenApiSchema schema, HttpStatusCode httpStatusCode, KeyValuePair&lt;string, OpenApiSchema&gt; badPropertySchema, string variableName = data)
+- [ParameterCombinationHelper](Atc.Rest.ApiGenerator.Helpers.XunitTest.md#parametercombinationhelper)
+  -  Static Methods
+     - GetCombination(List&lt;OpenApiParameter&gt; parameters, bool useForBadRequest)
+- [ValueTypeTestPropertiesHelper](Atc.Rest.ApiGenerator.Helpers.XunitTest.md#valuetypetestpropertieshelper)
+  -  Static Methods
+     - CreateValueBool(bool useForBadRequest)
+     - CreateValueDateTimeOffset(bool useForBadRequest)
+     - CreateValueEmail(bool useForBadRequest, int itemNumber = 0)
+     - CreateValueEnum(string name, KeyValuePair&lt;string, OpenApiSchema&gt; schemaForEnum, bool useForBadRequest)
+     - CreateValueGuid(bool useForBadRequest, int itemNumber = 0)
+     - CreateValueString(string name, OpenApiSchema schema, ParameterLocation? parameterLocation, bool useForBadRequest, int itemNumber = 0, string customValue = null)
+     - CreateValueUri(bool useForBadRequest)
+     - Number(string name, OpenApiSchema schema, bool useForBadRequest)
+
+## [Atc.Rest.ApiGenerator.Models](Atc.Rest.ApiGenerator.Models.md)
+
+- [ApiOperationSchemaMap](Atc.Rest.ApiGenerator.Models.md#apioperationschemamap)
+  -  Properties
+     - LocatedArea
+     - OperationType
+     - ParentSchemaKey
+     - Path
+     - SchemaKey
+     - SegmentName
+  -  Methods
+     - Equals(object obj)
+     - GetHashCode()
+     - ToString()
+- [ApiProjectOptions](Atc.Rest.ApiGenerator.Models.md#apiprojectoptions)
+  -  Properties
+     - PathForContracts
+     - PathForContractsEnumerationTypes
+     - PathForContractsShared
+     - PathForEndpoints
+- [BaseProjectOptions](Atc.Rest.ApiGenerator.Models.md#baseprojectoptions)
+  -  Properties
+     - ApiOptions
+     - ApiVersion
+     - BasePathSegmentNames
+     - Document
+     - DocumentFile
+     - PathForSrcGenerate
+     - PathForTestGenerate
+     - ProjectName
+     - ProjectSrcCsProj
+     - ProjectTestCsProj
+     - ToolName
+     - ToolNameAndVersion
+     - ToolVersion
+- [DomainProjectOptions](Atc.Rest.ApiGenerator.Models.md#domainprojectoptions)
+  -  Properties
+     - ApiProjectSrcCsProj
+     - ApiProjectSrcPath
+     - PathForSrcHandlers
+     - PathForTestHandlers
+  -  Methods
+     - SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles()
+- [EndpointMethodMetadata](Atc.Rest.ApiGenerator.Models.md#endpointmethodmetadata)
+  -  Properties
+     - ComponentsSchemas
+     - ContractInterfaceHandlerTypeName
+     - ContractParameter
+     - ContractParameterTypeName
+     - ContractResultTypeName
+     - ContractReturnTypeNames
+     - HttpOperation
+     - IsSharedResponseModel
+     - MethodName
+     - ProjectName
+     - Route
+     - SegmentName
+  -  Methods
+     - GetHeaderParameters()
+     - GetHeaderRequiredParameters()
+     - GetQueryParameters()
+     - GetQueryRequiredParameters()
+     - GetRouteParameters()
+     - HasContractParameterRequestBody()
+     - HasContractParameterRequiredHeader()
+     - IsPaginationUsed()
+     - ToString()
+- [HostProjectOptions](Atc.Rest.ApiGenerator.Models.md#hostprojectoptions)
+  -  Properties
+     - ApiProjectSrcCsProj
+     - ApiProjectSrcPath
+     - DomainProjectSrcCsProj
+     - DomainProjectSrcPath
+     - UseRestExtended
+  -  Methods
+     - SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles()
+- [SchemaMapLocatedAreaType](Atc.Rest.ApiGenerator.Models.md#schemamaplocatedareatype)
+
+## [Atc.Rest.ApiGenerator.Models.ApiOptions](Atc.Rest.ApiGenerator.Models.ApiOptions.md)
+
+- [ApiOptions](Atc.Rest.ApiGenerator.Models.ApiOptions.md#apioptions)
+  -  Properties
+     - Generator
+     - Validation
+- [ApiOptionsGenerator](Atc.Rest.ApiGenerator.Models.ApiOptions.md#apioptionsgenerator)
+  -  Properties
+     - Request
+     - Response
+     - UseAuthorization
+     - UseNullableReferenceTypes
+- [ApiOptionsGeneratorRequest](Atc.Rest.ApiGenerator.Models.ApiOptions.md#apioptionsgeneratorrequest)
+- [ApiOptionsGeneratorResponse](Atc.Rest.ApiGenerator.Models.ApiOptions.md#apioptionsgeneratorresponse)
+  -  Properties
+     - UseProblemDetailsAsDefaultBody
+- [ApiOptionsValidation](Atc.Rest.ApiGenerator.Models.ApiOptions.md#apioptionsvalidation)
+  -  Properties
+     - ModelNameCasingStyle
+     - ModelPropertyNameCasingStyle
+     - OperationIdCasingStyle
+     - StrictMode
+
+## [Atc.Rest.ApiGenerator.SyntaxGenerators](Atc.Rest.ApiGenerator.SyntaxGenerators.md)
+
+- [ISyntaxCodeGenerator](Atc.Rest.ApiGenerator.SyntaxGenerators.md#isyntaxcodegenerator)
+  -  Properties
+     - Code
+     - FocusOnSegmentName
+  -  Methods
+     - GenerateCode()
+     - ToCodeAsString()
+     - ToFile()
+     - ToFile(FileInfo file)
+- [ISyntaxSchemaCodeGenerator](Atc.Rest.ApiGenerator.SyntaxGenerators.md#isyntaxschemacodegenerator)
+  -  Properties
+     - ApiSchema
+     - ApiSchemaKey
+
+## [Atc.Rest.ApiGenerator.SyntaxGenerators.Api](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md)
+
+- [ISyntaxGeneratorContract](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#isyntaxgeneratorcontract)
+  -  Properties
+     - ApiProjectOptions
+     - FocusOnSegmentName
+- [ISyntaxGeneratorContractInterfaces](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#isyntaxgeneratorcontractinterfaces)
+  -  Methods
+     - GenerateSyntaxTrees()
+- [ISyntaxGeneratorContractModels](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#isyntaxgeneratorcontractmodels)
+  -  Properties
+     - OperationSchemaMappings
+  -  Methods
+     - GenerateSyntaxTrees()
+- [ISyntaxGeneratorContractParameters](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#isyntaxgeneratorcontractparameters)
+  -  Methods
+     - GenerateSyntaxTrees()
+- [ISyntaxGeneratorContractResults](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#isyntaxgeneratorcontractresults)
+  -  Methods
+     - GenerateSyntaxTrees()
+- [ISyntaxGeneratorEndpointControllers](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#isyntaxgeneratorendpointcontrollers)
+- [ISyntaxOperationCodeGenerator](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#isyntaxoperationcodegenerator)
+  -  Properties
+     - ApiOperation
+     - ApiOperationType
+     - ApiProjectOptions
+- [SyntaxGeneratorContractInterface](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorcontractinterface)
+  -  Properties
+     - ApiOperation
+     - ApiOperationType
+     - ApiProjectOptions
+     - Code
+     - FocusOnSegmentName
+     - GlobalPathParameters
+     - HasParametersOrRequestBody
+  -  Methods
+     - GenerateCode()
+     - ToCodeAsString()
+     - ToFile()
+     - ToFile(FileInfo file)
+     - ToString()
+- [SyntaxGeneratorContractInterfaces](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorcontractinterfaces)
+  -  Properties
+     - ApiProjectOptions
+     - FocusOnSegmentName
+  -  Methods
+     - GenerateSyntaxTrees()
+- [SyntaxGeneratorContractModel](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorcontractmodel)
+  -  Properties
+     - ApiSchema
+     - ApiSchemaKey
+     - Code
+     - FocusOnSegmentName
+     - IsEnum
+  -  Methods
+     - GenerateCode()
+     - ToCodeAsString()
+     - ToFile()
+     - ToFile(FileInfo file)
+     - ToString()
+- [SyntaxGeneratorContractModels](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorcontractmodels)
+  -  Properties
+     - ApiProjectOptions
+     - FocusOnSegmentName
+     - OperationSchemaMappings
+  -  Methods
+     - GenerateSyntaxTrees()
+- [SyntaxGeneratorContractParameter](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorcontractparameter)
+  -  Properties
+     - ApiOperation
+     - ApiOperationType
+     - ApiProjectOptions
+     - Code
+     - FocusOnSegmentName
+     - GlobalPathParameters
+  -  Methods
+     - GenerateCode()
+     - ToCodeAsString()
+     - ToFile()
+     - ToFile(FileInfo file)
+     - ToString()
+- [SyntaxGeneratorContractParameters](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorcontractparameters)
+  -  Properties
+     - ApiProjectOptions
+     - FocusOnSegmentName
+  -  Methods
+     - GenerateSyntaxTrees()
+- [SyntaxGeneratorContractResult](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorcontractresult)
+  -  Properties
+     - ApiOperation
+     - ApiOperationType
+     - ApiProjectOptions
+     - Code
+     - FocusOnSegmentName
+  -  Methods
+     - GenerateCode()
+     - ToCodeAsString()
+     - ToFile()
+     - ToFile(FileInfo file)
+     - ToString()
+- [SyntaxGeneratorContractResults](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorcontractresults)
+  -  Properties
+     - ApiProjectOptions
+     - FocusOnSegmentName
+  -  Methods
+     - GenerateSyntaxTrees()
+- [SyntaxGeneratorEndpointControllers](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorendpointcontrollers)
+  -  Properties
+     - Code
+     - FocusOnSegmentName
+  -  Methods
+     - GenerateCode()
+     - GetMetadataForMethods()
+     - ToCodeAsString()
+     - ToFile()
+     - ToFile(FileInfo file)
+
+## [Atc.Rest.ApiGenerator.SyntaxGenerators.Domain](Atc.Rest.ApiGenerator.SyntaxGenerators.Domain.md)
+
+- [ISyntaxGeneratorHandlers](Atc.Rest.ApiGenerator.SyntaxGenerators.Domain.md#isyntaxgeneratorhandlers)
+  -  Properties
+     - DomainProjectOptions
+     - FocusOnSegmentName
+  -  Methods
+     - GenerateSyntaxTrees()
+- [SyntaxGeneratorHandler](Atc.Rest.ApiGenerator.SyntaxGenerators.Domain.md#syntaxgeneratorhandler)
+  -  Properties
+     - ApiOperation
+     - ApiOperationType
+     - Code
+     - DomainProjectOptions
+     - FocusOnSegmentName
+     - HandlerTypeName
+     - HasParametersOrRequestBody
+     - InterfaceTypeName
+     - ParameterTypeName
+     - ResultTypeName
+  -  Methods
+     - GenerateCode()
+     - ToCodeAsString()
+     - ToFile()
+     - ToFile(FileInfo file)
+     - ToString()
+- [SyntaxGeneratorHandlers](Atc.Rest.ApiGenerator.SyntaxGenerators.Domain.md#syntaxgeneratorhandlers)
+  -  Properties
+     - DomainProjectOptions
+     - FocusOnSegmentName
+  -  Methods
+     - GenerateSyntaxTrees()
+
+<hr /><div style='text-align: right'><i>Generated by MarkdownCodeDoc version 1.2</i></div>
+

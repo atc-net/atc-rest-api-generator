@@ -1,0 +1,53 @@
+name: Build
+
+on: [push]
+
+jobs:
+
+  build-linux:
+
+    name: Build on Ubuntu Linux
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: "3.1.x"
+    - name: Restore packages with dotnet
+      run: dotnet restore Atc.Rest.Api.Generator.sln
+    - name: Build with dotnet
+      run: dotnet build Atc.Rest.Api.Generator.sln
+
+  build-windows:
+
+    name: Build on Windows
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: "3.1.x"
+    - name: Restore packages with dotnet
+      run: dotnet restore Atc.Rest.Api.Generator.sln
+    - name: Build with dotnet
+      run: dotnet build Atc.Rest.Api.Generator.sln
+
+  build-macos:
+
+    name: Build on MacOS
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: "3.1.x"
+    - name: Restore packages with dotnet
+      run: dotnet restore Atc.Rest.Api.Generator.sln
+    - name: Build with dotnet
+      run: dotnet build Atc.Rest.Api.Generator.sln

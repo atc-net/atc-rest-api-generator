@@ -1,0 +1,8 @@
+title: Order
+description: A single order.
+type: object
+properties:
+  id:
+    type: string
+  description:
+    type: string

@@ -1,0 +1,19 @@
+title: CreateUserRequest
+description: 'Request to create a user'
+type: object
+required:
+  - firstname
+  - lastname
+  - email
+  - gender
+properties:
+  firstname:
+    type: string
+  lastname:
+    type: string
+  email:
+    type: string
+    format: email
+    example: email@email.dk
+  gender:
+    $ref: ./genderType.v1.yaml

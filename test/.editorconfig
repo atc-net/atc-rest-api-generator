@@ -1,6 +1,6 @@
 # ATC coding rules - https://github.com/atc-net/atc-coding-rules
-# Version: 1.0.2
-# Updated: 10-12-2020
+# Version: 1.0.3
+# Updated: 20-12-2020
 # Location: Test
 # Inspired by: https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/code-style-rule-options
 
@@ -36,6 +36,7 @@ dotnet_diagnostic.CA1707.severity = none            # https://github.com/atc-net
 
 # StyleCop
 # https://github.com/DotNetAnalyzers/StyleCopAnalyzers
+dotnet_diagnostic.SA1133.severity = none            # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/StyleCop/SA1133.md
 
 
 # SonarAnalyzer.CSharp

@@ -1,0 +1,14 @@
+title: UpdateUserRequest
+description: Request to update a user
+type: object
+properties:
+  firstname:
+    type: string
+  lastname:
+    type: string
+  email:
+    type: string
+    format: email
+    example: email@email.dk
+  gender:
+    $ref: ./genderType.v1.yaml

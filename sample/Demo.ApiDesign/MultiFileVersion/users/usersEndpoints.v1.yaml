@@ -1,0 +1,153 @@
+openapi: 3.0.0
+info:
+  $ref: '../common/components/endpoints.v1.yaml#/info'
+servers:
+  $ref: '../common/components/endpoints.v1.yaml#/servers'
+paths:
+  '/users/email':
+    get:
+      tags:
+        - Users
+      summary: Get user by email
+      description: Get user by email
+      operationId: getUserByEmail
+      parameters:
+        - name: email
+          in: query
+          description: The email of the user to retrieve
+          required: true
+          schema:
+            type: string
+            format: email
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '../common/components/responses.v1.yaml#/400'
+        '404':
+          $ref: '../common/components/responses.v1.yaml#/404'
+        default:
+          $ref: '../common/components/responses.v1.yaml#/400'
+  '/users/{id}':
+    get:
+      tags:
+        - Users
+      summary: Get user by id
+      description: Get user by id
+      operationId: getUserById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the user to retrieve
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '../common/components/responses.v1.yaml#/400'
+        '404':
+          $ref: '../common/components/responses.v1.yaml#/404'
+        default:
+          $ref: '../common/components/responses.v1.yaml#/400'
+    put:
+      summary: ''
+      description: Update user by id
+      operationId: updateUserById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the user to update
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          $ref: '../common/components/responses.v1.yaml#/400'
+        '404':
+          $ref: '../common/components/responses.v1.yaml#/404'
+        default:
+          $ref: '../common/components/responses.v1.yaml#/400'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+    delete:
+      summary: ''
+      description: Delete user by id
+      operationId: deleteUserById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the user to delete
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          $ref: '../common/components/responses.v1.yaml#/400'
+        '404':
+          $ref: '../common/components/responses.v1.yaml#/404'
+        default:
+          $ref: '../common/components/responses.v1.yaml#/400'
+  /users:
+      get:
+        summary: Get all users
+        operationId: get-users
+        tags: []
+        responses:
+          '200':
+            description: OK
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Users'
+          '400':
+            $ref: '../common/components/responses.v1.yaml#/400'
+          default:
+            $ref: '../common/components/responses.v1.yaml#/400'
+      post:
+        summary: Create a new user
+        operationId: post-users
+        responses:
+          '200':
+            description: OK
+          '400':
+            $ref: '../common/components/responses.v1.yaml#/400'
+          default:
+            $ref: '../common/components/responses.v1.yaml#/400'
+        requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUserRequest'
+components:
+  schemas:
+    User:
+      $ref: ./models/user.v1.yaml
+    Users:
+      type: array
+      items:
+        $ref: '#/components/schemas/User'
+      x-tags:
+        - Users
+      title: Users
+      description: A list of users.
+    CreateUserRequest:
+        $ref: ./models/CreateUserRequest.v1.yaml
+    UpdateUserRequest:
+      $ref: ./models/UpdateUserRequest.v1.yaml

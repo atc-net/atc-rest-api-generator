@@ -1,0 +1,16 @@
+﻿.topbar-wrapper .link {
+    background: url(swagger.png);
+    background-size: contain;
+    height: 22px;
+    width: 220px;
+    background-repeat: no-repeat;
+    flex: none !important;
+}
+
+    .topbar-wrapper .link img, .topbar-wrapper .link span {
+        display: none;
+    }
+
+#swagger-ui .select-label span {
+    color: white;
+}

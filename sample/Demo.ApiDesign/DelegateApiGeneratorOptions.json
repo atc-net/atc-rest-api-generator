@@ -1,0 +1,17 @@
+{
+	"Generator": {
+		"UseNullableReferenceTypes": true,
+		"UseAuthorization": true,
+		"Request": {
+		},
+		"Response": {
+			"UseProblemDetailsAsDefaultBody": true
+		}
+	},
+	"Validation": {
+		"StrictMode": true,
+		"OperationIdCasingStyle": "CamelCase",
+		"ModelNameCasingStyle": "PascalCase",
+		"ModelPropertyNameCasingStyle": "CamelCase"
+	}
+}
