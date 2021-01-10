@@ -1,7 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <OutputType>Library</OutputType>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <AssemblyVersion>1.0.0</AssemblyVersion>
     <Title>Atc.Rest.ApiGenerator</Title>
     <Authors>Atc-net</Authors>
@@ -10,7 +12,7 @@
     <RepositoryUrl>https://github.com/atc-net/atc</RepositoryUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/atc-net/atc/master/images/icon.png</PackageIconUrl>
     <PackageIcon>icon.png</PackageIcon>
-    <RepositoryUrl>https://github.com/atc-net/atc</RepositoryUrl>
+    <RepositoryUrl>https://github.com/atc-net/atc-rest-api-generator</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <PackageId>Atc.Rest.ApiGenerator</PackageId>
@@ -42,6 +44,7 @@
   <PropertyGroup>
     <Nullable>enable</Nullable>
     <LangVersion>8.0</LangVersion>
+    <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>
