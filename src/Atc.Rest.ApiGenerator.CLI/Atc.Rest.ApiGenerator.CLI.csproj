@@ -11,7 +11,7 @@
     <PackageProjectUrl>https://github.com/atc-net/atc/tree/master/src/Atc.Rest.ApiGenerator.CLI</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/atc-net/atc/master/images/icon.png</PackageIconUrl>
     <PackageIcon>icon.png</PackageIcon>
-    <RepositoryUrl>https://github.com/atc-net/atc</RepositoryUrl>
+    <RepositoryUrl>https://github.com/atc-net/atc-rest-api-generator</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <PackageId>atc-api-gen</PackageId>
@@ -25,6 +25,10 @@
     <DebugType>embedded</DebugType>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\images\icon.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <PropertyGroup>
     <Nullable>enable</Nullable>
@@ -46,10 +50,6 @@
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\..\images\icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>
