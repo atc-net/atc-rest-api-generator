@@ -21,6 +21,9 @@
     <IsPackable>true</IsPackable>
     <PackAsTool>true</PackAsTool>
     <TieredCompilation>true</TieredCompilation>
+    <IncludeSymbols>true</IncludeSymbols>
+    <DebugType>embedded</DebugType>
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
 
   <PropertyGroup>
