@@ -10,6 +10,19 @@
     <RepositoryUrl>https://github.com/atc-net/atc</RepositoryUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/atc-net/atc/master/images/icon.png</PackageIconUrl>
     <PackageIcon>icon.png</PackageIcon>
+    <RepositoryUrl>https://github.com/atc-net/atc</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <PackageId>Atc.Rest.ApiGenerator</PackageId>
+    <AssemblyName>Atc.Rest.ApiGenerator</AssemblyName>
+    <DebugType>embedded</DebugType>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IsPackable>true</IsPackable>
+    <PackAsTool>false</PackAsTool>
+    <TieredCompilation>true</TieredCompilation>
+    <IncludeSymbols>true</IncludeSymbols>
+    <DebugType>embedded</DebugType>
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
 
   <ItemGroup>
