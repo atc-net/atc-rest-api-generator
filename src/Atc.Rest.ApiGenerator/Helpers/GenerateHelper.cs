@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -16,7 +16,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
     {
         public static Version GetAtcToolVersion()
         {
-            var defaultVersion = new Version(1, 0, 216, 0);
+            var defaultVersion = new Version(1, 1, 47, 0);
             var assembly = Assembly.GetEntryAssembly();
             if (assembly == null)
             {

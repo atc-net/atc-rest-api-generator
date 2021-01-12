@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -62,7 +62,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                 FocusOnSegmentName);
 
             // Create class
-            var classDeclaration = SyntaxClassDeclarationFactory.CreateWithInheritClassTypeAndSuppressMessageAttributeByCheckId(
+            var classDeclaration = SyntaxClassDeclarationFactory.CreateWithInheritClassTypeAndSuppressMessageAttributeByCodeAnalyzerCheckId(
                 resultTypeName,
                 "ResultBase",
                 1062,
