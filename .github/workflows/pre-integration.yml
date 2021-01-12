@@ -14,23 +14,23 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Checkout repository
+      - name: 🛒 Checkout repository
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
-      - name: Setup dotnet 3.1.x
+      - name: ⚙️ Setup dotnet 3.1.x
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '3.1.x'
 
-      - name: Clean
+      - name: 🧹 Clean
         run: dotnet clean -c Release && dotnet nuget locals all --clear
 
-      - name: Restore packages
+      - name: 🔁 Restore packages
         run: dotnet restore
 
-      - name: Building library in release mode
+      - name: 🛠️ Building library in release mode
         run: dotnet build -c Release -p:ContinuousIntegrationBuild=true --no-restore
 
   dotnet5-build:
@@ -39,23 +39,23 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Checkout repository
+      - name: 🛒 Checkout repository
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
-      - name: Setup dotnet 5.0.x
+      - name: ⚙️ Setup dotnet 5.0.x
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '5.0.x'
 
-      - name: Clean
+      - name: 🧹 Clean
         run: dotnet clean -c Release && dotnet nuget locals all --clear
 
-      - name: Restore packages
+      - name: 🔁 Restore packages
         run: dotnet restore
 
-      - name: Building library in release mode
+      - name: 🛠️ Building library in release mode
         run: dotnet build -c Release -p:ContinuousIntegrationBuild=true --no-restore
 
   dotnet-test:
@@ -64,28 +64,28 @@ jobs:
       - dotnetcore31-build
       - dotnet5-build
     steps:
-      - name: Checkout repository
+      - name: 🛒 Checkout repository
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
-      - name: Setup dotnet 3.1.x
+      - name: ⚙️ Setup dotnet 3.1.x
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '3.1.x'
 
-      - name: Setup dotnet 5.0.x
+      - name: ⚙️ Setup dotnet 5.0.x
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '5.0.x'
 
-      - name: Prepare build for unit tests
+      - name: 📋 Prepare build for unit tests
         run: |
           dotnet clean -c Debug
           dotnet restore
           dotnet build -c Debug /p:UseSourceLink=true --no-restore
 
-      - name: Run unit tests
+      - name: 🧪 Run unit tests
         run: dotnet test -c Debug --no-build
 
   smoke-tests:
@@ -96,37 +96,37 @@ jobs:
     needs:
       - dotnet-test
     steps:
-      - name: Checkout repository
+      - name: 🛒 Checkout repository
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
-      - name: Setup dotnet 3.1.x
+      - name: ⚙️ Setup dotnet 3.1.x
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '3.1.x'
 
-      - name: Setup dotnet 5.0.x
+      - name: ⚙️ Setup dotnet 5.0.x
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '5.0.x'
 
-      - name: Clean
+      - name: 🧹 Clean
         run: dotnet clean -c Release && dotnet nuget locals all --clear
 
-      - name: Restore packages
+      - name: 🔁 Restore packages
         run: dotnet restore
 
-      - name: Build with dotnet
+      - name: 🛠️ Build with dotnet
         run: dotnet build Atc.Rest.Api.Generator.sln
 
-      - name: Download Swagger Petstore v3 spec
+      - name: ⬇️🌎 Download Swagger Petstore v3 spec
         run: curl -O https://petstore3.swagger.io/api/v3/openapi.yaml
 
-      - name: Generate Code
+      - name: ⚙️ Generate Code
         run: dotnet run -- generate server all -p "Swagger Petstore v3" -s ../../openapi.yaml --outputSlnPath ../../petstore3/ --outputSrcPath ../../petstore3/src --outputTestPath ../../petstore3/test --optionsPath ../../sample/Demo.ApiDesign/ApiGeneratorOptions.json -v true
         working-directory: src/Atc.Rest.ApiGenerator.CLI
 
-      - name: Build Generated Code
+      - name: 🛠️ Build Generated Code
         run: dotnet build
         working-directory: petstore3
