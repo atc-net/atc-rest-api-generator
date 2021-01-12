@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Atc.CodeAnalysis.CSharp.Factories;
@@ -82,11 +82,14 @@ namespace Atc.Rest.ApiGenerator.SyntaxFactories
                 }
             }
 
+            enumDeclaration = enumDeclaration
+                .AddSuppressMessageAttribute(SuppressMessageAttributeFactory.CreateStyleCopAnalyzer(1413, justification: null));
+
             // Add SuppressMessageAttribute
             if (containTypeName)
             {
                 enumDeclaration = enumDeclaration
-                    .AddSuppressMessageAttribute(SuppressMessageAttributeFactory.Create(1720, null));
+                    .AddSuppressMessageAttribute(SuppressMessageAttributeFactory.CreateCodeAnalyzer(1720, justification: null));
             }
 
             // Add FlagAttribute

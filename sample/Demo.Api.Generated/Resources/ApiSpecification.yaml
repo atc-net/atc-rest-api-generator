@@ -306,10 +306,10 @@ paths:
         '200':
           description: OK
       operationId: getRouteWithDash
-  '/items':
+  /items:
     post:
-      summary: 'Create a new item'
-      description: 'Create a new item'
+      summary: Create a new item
+      description: Create a new item
       operationId: createItem
       responses:
         '200':
@@ -321,8 +321,8 @@ paths:
               $ref: '#/components/schemas/CreateItemRequest'
   '/items/{id}':
     put:
-      summary: 'Updates an item'
-      description: 'Updates an item'
+      summary: Updates an item
+      description: Updates an item
       operationId: updateItem
       responses:
         '200':
@@ -511,7 +511,7 @@ components:
           type: string
           description: The users gender type
           enum:
-            - Unknown
+            - None
             - NonBinary
             - Male
             - Female
@@ -526,7 +526,7 @@ components:
           type: string
           description: The users color type
           enum:
-            - Unknown = 0
+            - None = 0
             - Black = 1
             - White = 2
             - Yellow = 4
@@ -683,7 +683,7 @@ components:
       title: Item
       type: object
       properties:
-        name: 
+        name:
           type: string
       required:
         - name
@@ -693,8 +693,13 @@ components:
       properties:
         item:
           $ref: '#/components/schemas/Item'
+        myItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/Item'
       required:
         - item
+        - myItems
     UpdateItemRequest:
       title: UpdateItemRequest
       type: object

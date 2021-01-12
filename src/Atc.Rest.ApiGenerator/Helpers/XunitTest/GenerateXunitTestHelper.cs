@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -18,6 +18,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             OpenApiSchema schema,
             HttpStatusCode httpStatusCode,
             SchemaMapLocatedAreaType locatedArea,
+            bool useVarDeclaration = true,
             string variableName = "data")
         {
             if (sb == null)
@@ -47,24 +48,36 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                         if (contractReturnTypeName.Item2.StartsWith(Microsoft.OpenApi.Models.NameConstants.Pagination, StringComparison.Ordinal))
                         {
                             var listDataType = contractReturnTypeName.Item2.Replace(Microsoft.OpenApi.Models.NameConstants.Pagination, Microsoft.OpenApi.Models.NameConstants.List, StringComparison.Ordinal);
-                            sb.AppendLine(indentSpaces, $"var {variableName} = new {listDataType}");
+                            sb.AppendLine(
+                                indentSpaces,
+                                useVarDeclaration
+                                    ? $"var {variableName} = new {listDataType}"
+                                    : $"{variableName} = new {listDataType}");
                         }
                         else
                         {
-                            sb.AppendLine(indentSpaces, $"var {variableName} = new {contractReturnTypeName.Item2}");
+                            sb.AppendLine(
+                                indentSpaces,
+                                useVarDeclaration
+                                    ? $"var {variableName} = new {contractReturnTypeName.Item2}"
+                                    : $"{variableName} = new {contractReturnTypeName.Item2}");
                         }
 
                         sb.AppendLine(indentSpaces, "{");
                         for (var i = 0; i < 3; i++)
                         {
-                            AppendNewModel(indentSpaces + 4, sb, endpointMethodMetadata, schema, null, i + 1, null);
+                            AppendNewModel(indentSpaces + 4, sb, endpointMethodMetadata, schema, httpStatusCode, locatedArea, null, i + 1, null);
                         }
 
-                        sb.AppendLine(indentSpaces, "};");
+                        sb.AppendLine(
+                            indentSpaces,
+                            useVarDeclaration
+                                ? "};"
+                                : "},");
                     }
                     else
                     {
-                        AppendNewModel(indentSpaces, sb, endpointMethodMetadata, schema, null, 0, variableName);
+                        AppendNewModel(indentSpaces, sb, endpointMethodMetadata, schema, httpStatusCode, locatedArea, null, 0, variableName);
                     }
 
                     break;
@@ -75,20 +88,28 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                     var modelSchemaName = schema.GetModelName();
                     var modelSchema = endpointMethodMetadata.ComponentsSchemas.GetSchemaByModelName(modelSchemaName);
                     var modelName = OpenApiDocumentSchemaModelNameHelper.EnsureModelNameWithNamespaceIfNeeded(endpointMethodMetadata, schema.GetModelName());
-                    sb.AppendLine(indentSpaces, $"var {variableName} = new List<{modelName}>");
+                    sb.AppendLine(
+                        indentSpaces,
+                        useVarDeclaration
+                            ? $"var {variableName} = new List<{modelName}>"
+                            : $"{variableName} = new List<{modelName}>");
 
                     sb.AppendLine(indentSpaces, "{");
                     for (var i = 0; i < 3; i++)
                     {
-                        AppendNewModel(indentSpaces + 4, sb, endpointMethodMetadata, modelSchema, null, i + 1, null);
+                        AppendNewModel(indentSpaces + 4, sb, endpointMethodMetadata, modelSchema, httpStatusCode, locatedArea, null, i + 1, null);
                     }
 
-                    sb.AppendLine(indentSpaces, "};");
+                    sb.AppendLine(
+                        indentSpaces,
+                        useVarDeclaration
+                            ? "};"
+                            : "},");
                     break;
                 }
 
                 case SchemaMapLocatedAreaType.RequestBody:
-                    AppendNewModel(indentSpaces, sb, endpointMethodMetadata, schema, null, 0, variableName);
+                    AppendNewModel(indentSpaces, sb, endpointMethodMetadata, schema, httpStatusCode, locatedArea, null, 0, variableName);
                     break;
             }
         }
@@ -135,6 +156,8 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             StringBuilder sb,
             EndpointMethodMetadata endpointMethodMetadata,
             OpenApiSchema schema,
+            HttpStatusCode httpStatusCode,
+            SchemaMapLocatedAreaType locatedArea,
             string? badRequestPropertyName,
             int itemNumber,
             string? variableName)
@@ -170,13 +193,26 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 string dataType = schemaProperty.Value.GetDataType();
                 string propertyValueGenerated = PropertyValueGenerator(schemaProperty, endpointMethodMetadata.ComponentsSchemas, useForBadRequest, itemNumber, null);
 
-                if ("NEW-INSTANCE".Equals(propertyValueGenerated, StringComparison.Ordinal))
+                if ("NEW-INSTANCE-LIST".Equals(propertyValueGenerated, StringComparison.Ordinal))
+                {
+                    AppendNewModelOrListOfModel(
+                        indentSpaces + 4,
+                        sb,
+                        endpointMethodMetadata,
+                        schemaProperty.Value,
+                        httpStatusCode,
+                        locatedArea,
+                        false,
+                        schemaProperty.Key.EnsureFirstCharacterToUpper());
+                }
+                else if ("NEW-INSTANCE".Equals(propertyValueGenerated, StringComparison.Ordinal))
                 {
                     var schemaForDataType = endpointMethodMetadata.ComponentsSchemas.FirstOrDefault(x => x.Key.Equals(dataType, StringComparison.OrdinalIgnoreCase));
+
                     sb.AppendLine(
                         indentSpaces + 4,
                         $"{schemaProperty.Key.EnsureFirstCharacterToUpper()} = new {schemaForDataType.Value.GetModelName()}");
-                    AppendNewModel(indentSpaces + 4, sb, endpointMethodMetadata, schemaForDataType.Value, badRequestPropertyName, -1, null);
+                    AppendNewModel(indentSpaces + 4, sb, endpointMethodMetadata, schemaForDataType.Value, httpStatusCode, locatedArea, badRequestPropertyName, -1, null);
                 }
                 else
                 {
@@ -288,10 +324,17 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 if ("NEW-INSTANCE".Equals(propertyValueGenerated, StringComparison.Ordinal))
                 {
                     var schemaForDataType = endpointMethodMetadata.ComponentsSchemas.FirstOrDefault(x => x.Key.Equals(dataType, StringComparison.OrdinalIgnoreCase));
-                    sb.AppendLine(
-                        indentSpaces,
-                        WrapInAppendLine($"{jsonSpaces}  {WrapInQuotes(schemaProperty.Key.EnsureFirstCharacterToUpper())}: {{"));
-                    AppendNewModelAsJson(indentSpaces, sb, endpointMethodMetadata, schemaForDataType.Value, badRequestPropertyName, -1, null, jsonIndentLevel + 1);
+                    if (schemaForDataType.Key == null)
+                    {
+                        // TODO: Hmm... ??
+                    }
+                    else
+                    {
+                        sb.AppendLine(
+                            indentSpaces,
+                            WrapInAppendLine($"{jsonSpaces}  {WrapInQuotes(schemaProperty.Key.EnsureFirstCharacterToUpper())}: {{"));
+                        AppendNewModelAsJson(indentSpaces, sb, endpointMethodMetadata, schemaForDataType.Value, badRequestPropertyName, -1, null, jsonIndentLevel + 1);
+                    }
                 }
                 else
                 {
@@ -354,6 +397,24 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
         {
             var name = schema.Key.EnsureFirstCharacterToUpper();
             var schemaForDataType = componentsSchemas.FirstOrDefault(x => x.Key.Equals(schema.Value.GetDataType(), StringComparison.OrdinalIgnoreCase));
+
+            if (schemaForDataType.Key is null && schema.Value.Type == OpenApiDataTypeConstants.Array /*&& schema.Value.Reference != null*/)
+            {
+                try
+                {
+                    var modelName = schema.Value.GetModelName();
+                    if (!string.IsNullOrEmpty(modelName))
+                    {
+                        return "NEW-INSTANCE-LIST";
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
+            }
+
             if (schemaForDataType.Key != null)
             {
                 if (schemaForDataType.Value.IsSchemaEnumOrPropertyEnum())
@@ -364,12 +425,6 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 return useForBadRequest
                     ? "null"
                     : "NEW-INSTANCE";
-            }
-
-            if (schema.Value.GetDataType() == "array")
-            {
-                // TO-DO: Imp. this.
-                return "null";
             }
 
             return "null";

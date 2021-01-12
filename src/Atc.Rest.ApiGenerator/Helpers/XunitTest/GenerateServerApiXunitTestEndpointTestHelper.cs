@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -395,7 +395,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 return;
             }
 
-            GenerateXunitTestHelper.AppendNewModelOrListOfModel(indentSpaces, sb, endpointMethodMetadata, schema, httpStatusCode, SchemaMapLocatedAreaType.RequestBody, variableName);
+            GenerateXunitTestHelper.AppendNewModelOrListOfModel(indentSpaces, sb, endpointMethodMetadata, schema, httpStatusCode, SchemaMapLocatedAreaType.RequestBody, true, variableName);
         }
 
         private static void AppendNewRequestModelForBadRequest(
