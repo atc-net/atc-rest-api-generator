@@ -7,55 +7,78 @@ on:
       - '!stable'
       - '!release'
 
+env:
+  ATC_EMAIL: 'atcnet.org@gmail.com'
+  ATC_NAME: 'Atc-Net'
+  NUGET_REPO_URL: 'https://nuget.pkg.github.com/atc-net/index.json'
+
 jobs:
   merge-to-stable:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: 🛒 Checkout repository
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
           token: ${{ secrets.PAT_WORKFLOWS }}
 
-      - name: Sets environment variables - branch-name
+      - name: ⚛️ Sets environment variables - branch-name
         uses: nelonoel/branch-name@v1.0.1
 
-      - name: Sets environment variables - Nerdbank.GitVersioning
+      - name: ⚛️ Sets environment variables - Nerdbank.GitVersioning
         uses: dotnet/nbgv@master
         with:
           setAllVars: true
 
-      - name: Setup dotnet 3.1.x
+      - name: ⚙️ Setup dotnet 3.1.x
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '3.1.x'
 
-      - name: Setup dotnet 5.0.x
+      - name: ⚙️ Setup dotnet 5.0.x
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '5.0.x'
 
-      - name: Prepare build for unit tests
+      - name: ⚙️ Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.11
+
+      - name: 📋 Prepare build for unit tests
         run: |
           dotnet clean -c Debug
           dotnet restore
           dotnet build -c Debug /p:UseSourceLink=true --no-restore
 
-      - name: Run unit tests
+      - name: 🧪 Run unit tests
         run: dotnet test -c Debug --no-build
 
-      - name: Merge to stable
+      - name: 🌩️ SonarCloud install scanner
+        run: dotnet tool install --global dotnet-sonarscanner
+
+      - name: 🌩️ SonarCloud analyze
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        shell: pwsh
         run: |
-          git config --local user.email "atcnet.org@gmail.com"
-          git config --local user.name "Atc-Net"
+          dotnet sonarscanner begin /k:"atc-rest-api-generator" /o:"atc-net" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+          dotnet build -c Debug /p:UseSourceLink=true --no-restore
+          dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+
+      - name: ⏩ Merge to stable-branch
+        run: |
+          git config --local user.email ${{ env.ATC_EMAIL }}
+          git config --local user.name ${{ env.ATC_NAME }}
           git checkout stable
           git merge --ff-only main
           git push origin stable
 
-      - name: Creating library package for pre-release
+      - name: 🗳️ Creating library package for pre-release
         run: dotnet pack -c Release --no-restore -o ${GITHUB_WORKSPACE}/packages -p:RepositoryBranch=$BRANCH_NAME -p:ContinuousIntegrationBuild=true -p:Version=${NBGV_NuGetPackageVersion}
 
-      - name: Push packages to GitHub Package Registry
+      - name: 📦 Push packages to GitHub Package Registry
         run: |
-          dotnet nuget push ${GITHUB_WORKSPACE}/packages/'Atc.Rest.ApiGenerator.'${NBGV_NuGetPackageVersion}'.nupkg' -k ${{ secrets.GITHUB_TOKEN }} -s https://nuget.pkg.github.com/atc-net/index.json --skip-duplicate
-          dotnet nuget push ${GITHUB_WORKSPACE}/packages/'atc-api-gen.'${NBGV_NuGetPackageVersion}'.nupkg' -k ${{ secrets.GITHUB_TOKEN }} -s https://nuget.pkg.github.com/atc-net/index.json --skip-duplicate
+          dotnet nuget push ${GITHUB_WORKSPACE}/packages/'Atc.Rest.ApiGenerator.'${NBGV_NuGetPackageVersion}'.nupkg' -k ${{ secrets.GITHUB_TOKEN }} -s ${{ env.NUGET_REPO_URL }} --skip-duplicate
+          dotnet nuget push ${GITHUB_WORKSPACE}/packages/'atc-api-gen.'${NBGV_NuGetPackageVersion}'.nupkg' -k ${{ secrets.GITHUB_TOKEN }} -s ${{ env.NUGET_REPO_URL }} --skip-duplicate
