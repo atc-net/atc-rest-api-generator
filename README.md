@@ -1,21 +1,25 @@
 ### General Project Info
 [![Github top language](https://img.shields.io/github/languages/top/atc-net/atc-rest-api-generator)](https://github.com/atc-net/atc-rest-api-generator)
-[![Github stars](https://img.shields.io/github/stars/atc-net/atc-rest-api-generator?style=flat)](https://github.com/atc-net/atc-rest-api-generator)
-[![Github forks](https://img.shields.io/github/forks/atc-net/atc-rest-api-generator?style=flat)](https://github.com/atc-net/atc-rest-api-generator)
-[![Github size](https://img.shields.io/github/repo-size/atc-net/atc-rest-api-generator?style=flat)](https://github.com/atc-net/atc-rest-api-generator)
-[![NuGet Version](https://img.shields.io/nuget/v/atc-rest-api-generator.svg?style=flat-square)](https://www.nuget.org/profiles/atc-net)
-[![Issues Open](https://img.shields.io/github/issues/atc-net/atc-rest-api-generator.svg?style=flat-square&logo=github)](https://github.com/atc-net/atc-rest-api-generator/issues)
+[![Github stars](https://img.shields.io/github/stars/atc-net/atc-rest-api-generator)](https://github.com/atc-net/atc-rest-api-generator)
+[![Github forks](https://img.shields.io/github/forks/atc-net/atc-rest-api-generator)](https://github.com/atc-net/atc-rest-api-generator)
+[![Github size](https://img.shields.io/github/repo-size/atc-net/atc-rest-api-generator)](https://github.com/atc-net/atc-rest-api-generator)
+[![Issues Open](https://img.shields.io/github/issues/atc-net/atc-rest-api-generator.svg?logo=github)](https://github.com/atc-net/atc-rest-api-generator/issues)
+
+### Packages
+[![Github Version](https://img.shields.io/static/v1?logo=github&color=blue&label=github&message=latest)](https://github.com/orgs/atc-net/packages?repo_name=atc-rest-api-generator)
+[![NuGet Version](https://img.shields.io/nuget/v/atc-rest-api-generator.svg?logo=nuget)](https://www.nuget.org/profiles/atc-net)
 
 ### Build Status
-![Build](https://github.com/atc-net/atc-rest-api-generator/workflows/Build/badge.svg)
-![Smoke Tests](https://github.com/atc-net/atc-rest-api-generator/workflows/Smoke%20Tests/badge.svg)
+![Pre-Integration](https://github.com/atc-net/atc-rest-api-generator/workflows/Pre-Integration/badge.svg)
+![Post-Integration](https://github.com/atc-net/atc-rest-api-generator/workflows/Post-Integration/badge.svg)
+![Release](https://github.com/atc-net/atc-rest-api-generator/workflows/Release/badge.svg)
 
 ### Code Quality
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=atc-net_atc-rest-api-generator&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=atc-net_atc-rest-api-generator)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=atc-net_atc-rest-api-generator&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=atc-net_atc-rest-api-generator)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=atc-net_atc-rest-api-generator&metric=security_rating)](https://sonarcloud.io/dashboard?id=atc-net_atc-rest-api-generator)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=atc-net_atc-rest-api-generator&metric=bugs)](https://sonarcloud.io/dashboard?id=atc-net_atc-rest-api-generator)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=atc-net_atc-rest-api-generator&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=atc-net_atc-rest-api-generator)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=atc-rest-api-generator&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=atc-rest-api-generator)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=atc-rest-api-generator&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=atc-rest-api-generator)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=atc-rest-api-generator&metric=security_rating)](https://sonarcloud.io/dashboard?id=atc-rest-api-generator)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=atc-rest-api-generator&metric=bugs)](https://sonarcloud.io/dashboard?id=atc-rest-api-generator)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=atc-rest-api-generator&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=atc-rest-api-generator)
 
 # ATC.Net
 
