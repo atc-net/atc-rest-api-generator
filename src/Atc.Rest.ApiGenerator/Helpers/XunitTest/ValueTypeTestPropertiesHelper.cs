@@ -321,6 +321,5 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 _ => throw new NotSupportedException($"PropertyValueGenerator: {name} - array of ({itemSchema.GetDataType()})")
             };
         }
-
     }
 }
