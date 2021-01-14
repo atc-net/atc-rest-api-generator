@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -150,6 +150,13 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 : "john.doe@example.com";
         }
 
+        public static string CreateValueArray(string name, OpenApiSchema itemSchema, ParameterLocation? parameterLocation, bool useForBadRequest, int count)
+        {
+            return Enumerable.Range(0, count)
+                .Select(i => CreateValueArrayItem(name, itemSchema, parameterLocation, i))
+                .Aggregate((item1, item2) => item1 + $"&{name}=" + item2);
+        }
+
         private static string CreateValueStringDefault(bool useForBadRequest, int itemNumber, string? customValue)
         {
             if (itemNumber > 0)
@@ -297,5 +304,23 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
 
             return "42.2";
         }
+
+        private static string CreateValueArrayItem(string name, OpenApiSchema itemSchema, ParameterLocation? parameterLocation, int itemNumber = 0)
+        {
+            return itemSchema.GetDataType() switch
+            {
+                "double" => Number(name, itemSchema, false),
+                "long" => Number(name, itemSchema, false),
+                "int" => Number(name, itemSchema, false),
+                "bool" => CreateValueBool(false),
+                "string" => CreateValueString(name, itemSchema, parameterLocation, false, itemNumber, null),
+                "DateTimeOffset" => CreateValueDateTimeOffset(false),
+                "Guid" => CreateValueGuid(false),
+                "Uri" => CreateValueUri(false),
+                "Email" => CreateValueEmail(false),
+                _ => throw new NotSupportedException($"PropertyValueGenerator: {name} - array of ({itemSchema.GetDataType()})")
+            };
+        }
+
     }
 }
