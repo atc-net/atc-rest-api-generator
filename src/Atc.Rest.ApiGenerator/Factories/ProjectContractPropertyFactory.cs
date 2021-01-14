@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Models;
@@ -36,6 +36,12 @@ namespace Atc.Rest.ApiGenerator.Factories
                     parameters.Any(x => x.Schema.GetDataType().Equals(OpenApiDataTypeConstants.Array, StringComparison.OrdinalIgnoreCase))))
                 {
                     list.Add("System");
+                }
+
+                if (list.All(x => x != "System.Collections.Generic") &&
+                    parameters.Any(x => x.Schema.Type == OpenApiDataTypeConstants.Array || x.Schema.HasDataTypeFromSystemCollectionGenericNamespace()))
+                {
+                    list.Add("System.Collections.Generic");
                 }
 
                 list.Add("System.CodeDom.Compiler");
