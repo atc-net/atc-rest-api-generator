@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Atc.CodeAnalysis.CSharp;
@@ -109,14 +109,18 @@ namespace Atc.Rest.ApiGenerator.SyntaxFactories
                 useNullableReferenceTypes = false;
             }
 
-            var propertyDeclaration = CreateAuto(
-                parameter.In,
-                parameter.Schema.Nullable,
-                parameter.Required,
-                parameter.Schema.GetDataType(),
-                parameter.Name.EnsureFirstCharacterToUpper(),
-                useNullableReferenceTypes,
-                parameter.Schema.Default);
+            var propertyDeclaration = parameter.Schema.Type == OpenApiDataTypeConstants.Array
+                ? CreateListAuto(
+                    parameter.Schema.Items.GetDataType(),
+                    parameter.Name.EnsureFirstCharacterToUpper())
+                : CreateAuto(
+                    parameter.In,
+                    parameter.Schema.Nullable,
+                    parameter.Required,
+                    parameter.Schema.GetDataType(),
+                    parameter.Name.EnsureFirstCharacterToUpper(),
+                    useNullableReferenceTypes,
+                    parameter.Schema.Default);
 
             propertyDeclaration = parameter.In switch
             {

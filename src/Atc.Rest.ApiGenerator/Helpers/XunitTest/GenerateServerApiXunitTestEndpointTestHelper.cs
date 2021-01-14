@@ -581,6 +581,8 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 "Guid" => ValueTypeTestPropertiesHelper.CreateValueGuid(useForBadRequest),
                 "Uri" => ValueTypeTestPropertiesHelper.CreateValueUri(useForBadRequest),
                 "Email" => ValueTypeTestPropertiesHelper.CreateValueEmail(useForBadRequest),
+                "Array" when parameter.In == ParameterLocation.Query
+                    => ValueTypeTestPropertiesHelper.CreateValueArray(parameter.Name, parameter.Schema.Items, parameter.In, useForBadRequest, 3),
                 _ => PropertyValueGeneratorTypeResolver(parameter, componentsSchemas, useForBadRequest)
             };
         }
