@@ -68,11 +68,6 @@ namespace Atc.Rest.ApiGenerator.Helpers
             return logItems;
         }
 
-        private static LogKeyValueItem HandleAtcCodingRulesPowerShell(DirectoryInfo rootPath)
-        {
-            throw new NotImplementedException();
-        }
-
         private static bool IsFirstTime(DirectoryInfo rootPath)
         {
             var file = new FileInfo(Path.Combine(rootPath.FullName, FileNameEditorConfig));
@@ -117,7 +112,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
             }
         }
 
-        private static LogKeyValueItem HandleAtcCodingRulesPoserShell(DirectoryInfo path)
+        private static LogKeyValueItem HandleAtcCodingRulesPowerShell(DirectoryInfo path)
         {
             const string file = "atc-coding-rules-updater.ps1";
             var filePath = Path.Combine(path.FullName, file);
