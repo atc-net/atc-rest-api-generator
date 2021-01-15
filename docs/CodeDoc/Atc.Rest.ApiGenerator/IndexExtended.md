@@ -85,6 +85,12 @@
 
 ## [Atc.Rest.ApiGenerator.Helpers](Atc.Rest.ApiGenerator.Helpers.md)
 
+- [GenerateAtcCodingRulesHelper](Atc.Rest.ApiGenerator.Helpers.md#generateatccodingruleshelper)
+  -  Static Fields
+     - string FileNameEditorConfig
+  -  Static Methods
+     - Generate(string outputSlnPath, DirectoryInfo outputSrcPath, DirectoryInfo outputTestPath)
+     - GetRawFile(string rawFileUrl)
 - [GenerateHelper](Atc.Rest.ApiGenerator.Helpers.md#generatehelper)
   -  Static Methods
      - GenerateServerApi(string projectPrefixName, DirectoryInfo outputPath, DirectoryInfo outputTestPath, Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, ApiOptions apiOptions)

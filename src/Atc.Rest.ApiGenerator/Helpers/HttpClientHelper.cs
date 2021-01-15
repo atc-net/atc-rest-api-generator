@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Net;
 
@@ -6,7 +7,15 @@ namespace Atc.Rest.ApiGenerator.Helpers
 {
     public static class HttpClientHelper
     {
-        public static FileInfo? DownloadToTempFile(string apiDesignPath)
+        private static readonly ConcurrentDictionary<string, string> Cache = new ConcurrentDictionary<string, string>(StringComparer.Ordinal);
+
+        public static string GetRawFile(string rawFileUrl)
+        {
+            using var client = new WebClient();
+            return Cache.GetOrAdd(rawFileUrl, client.DownloadString(rawFileUrl));
+        }
+
+        public static FileInfo DownloadToTempFile(string apiDesignPath)
         {
             if (apiDesignPath == null)
             {

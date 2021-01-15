@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -108,7 +108,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Domain
 
             return Code
                 .NormalizeWhitespace()
-                .ToFullString();
+                .ToFullString()
+                .FormatCs1998();
         }
 
         public LogKeyValueItem ToFile()

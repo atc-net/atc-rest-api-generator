@@ -8,6 +8,37 @@
 <br />
 
 
+## GenerateAtcCodingRulesHelper
+
+```csharp
+public static class GenerateAtcCodingRulesHelper
+```
+
+### Static Fields
+
+
+#### FileNameEditorConfig
+
+```csharp
+string FileNameEditorConfig
+```
+### Static Methods
+
+
+#### Generate
+
+```csharp
+IEnumerable<LogKeyValueItem> Generate(string outputSlnPath, DirectoryInfo outputSrcPath, DirectoryInfo outputTestPath)
+```
+#### GetRawFile
+
+```csharp
+string GetRawFile(string rawFileUrl)
+```
+
+<br />
+
+
 ## GenerateHelper
 
 ```csharp

@@ -27,6 +27,7 @@ namespace Atc.Rest.ApiGenerator.Tests
             typeof(DomainProjectOptions),
             typeof(HostProjectOptions),
             typeof(GenerateHelper),
+            typeof(GenerateAtcCodingRulesHelper),
             typeof(ValueTypeTestPropertiesHelper),
             typeof(SolutionAndProjectHelper),
             typeof(ServerApiGenerator),
