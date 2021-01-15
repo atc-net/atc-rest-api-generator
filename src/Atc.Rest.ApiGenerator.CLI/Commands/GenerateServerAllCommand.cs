@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Atc.Data.Models;
@@ -77,6 +77,11 @@ namespace Atc.Rest.ApiGenerator.CLI.Commands
 
             logItems.AddRange(GenerateHelper.GenerateServerSln(
                 projectPrefixName,
+                outputSlnPath,
+                outputSrcPath,
+                outputTestPath));
+
+            logItems.AddRange(GenerateAtcCodingRulesHelper.Generate(
                 outputSlnPath,
                 outputSrcPath,
                 outputTestPath));

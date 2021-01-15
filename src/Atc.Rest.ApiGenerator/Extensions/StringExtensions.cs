@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 
 // ReSharper disable once CheckNamespace
 namespace System
@@ -77,6 +77,27 @@ namespace System
 
             value = ConstructorWithInheritResultRegex.Replace(value, ": base(result) { }");
             return value;
+        }
+
+        public static string FormatRemoveEmptyBracketsInitialize(this string value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return value.Replace("{};", "();", StringComparison.Ordinal);
+        }
+
+        public static string FormatCs1998(this string value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            const string pattern = "CS1998 // Async method lacks 'await' operators and will run synchronously";
+            return value.Replace(pattern + Environment.NewLine, pattern, StringComparison.Ordinal);
         }
     }
 }
