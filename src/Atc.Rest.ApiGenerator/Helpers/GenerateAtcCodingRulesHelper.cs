@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Text;
 using Atc.Data.Models;
 
@@ -14,7 +12,6 @@ namespace Atc.Rest.ApiGenerator.Helpers
     {
         private const string RawCodingRulesDistribution = "https://raw.githubusercontent.com/atc-net/atc-coding-rules/main/distribution";
         public const string FileNameEditorConfig = ".editorconfig";
-        private static readonly ConcurrentDictionary<string, string> Cache = new ConcurrentDictionary<string, string>(StringComparer.Ordinal);
 
         public static IEnumerable<LogKeyValueItem> Generate(
             string outputSlnPath,
@@ -46,7 +43,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
             {
                 // atc-coding-rules
                 logItems.Add(HandleAtcCodingRulesJson(rootPath, outputSrcPath, outputTestPath));
-                logItems.Add(HandleAtcCodingRulesPoserShell(rootPath));
+                logItems.Add(HandleAtcCodingRulesPowerShell(rootPath));
 
                 // -> build folder
                 logItems.AddRange(HandleBuildPropsFiles(new DirectoryInfo(Path.Combine(rootPath.FullName, "build"))));
@@ -71,16 +68,15 @@ namespace Atc.Rest.ApiGenerator.Helpers
             return logItems;
         }
 
+        private static LogKeyValueItem HandleAtcCodingRulesPowerShell(DirectoryInfo rootPath)
+        {
+            throw new NotImplementedException();
+        }
+
         private static bool IsFirstTime(DirectoryInfo rootPath)
         {
             var file = new FileInfo(Path.Combine(rootPath.FullName, FileNameEditorConfig));
             return !file.Exists;
-        }
-
-        public static string GetRawFile(string rawFileUrl)
-        {
-            using var client = new WebClient();
-            return Cache.GetOrAdd(rawFileUrl, client.DownloadString(rawFileUrl));
         }
 
         private static LogKeyValueItem HandleAtcCodingRulesJson(
@@ -154,10 +150,10 @@ namespace Atc.Rest.ApiGenerator.Helpers
             {
                 Directory.CreateDirectory(path.FullName);
 
-                var rawCommonPropsData = GetRawFile($"{RawCodingRulesDistribution}/build/common.props");
+                var rawCommonPropsData = HttpClientHelper.GetRawFile($"{RawCodingRulesDistribution}/build/common.props");
                 File.WriteAllText(Path.Combine(path.FullName, "common.props"), rawCommonPropsData);
 
-                var rawCodeAnalysisPropsData = GetRawFile($"{RawCodingRulesDistribution}/build/code-analysis.props");
+                var rawCodeAnalysisPropsData = HttpClientHelper.GetRawFile($"{RawCodingRulesDistribution}/build/code-analysis.props");
                 File.WriteAllText(Path.Combine(path.FullName, "code-analysis.props"), rawCodeAnalysisPropsData);
 
                 return new List<LogKeyValueItem>
@@ -197,7 +193,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
                     Directory.CreateDirectory(file.Directory.FullName);
                 }
 
-                var rawEditorConfig = GetRawFile(rawGitUrl);
+                var rawEditorConfig = HttpClientHelper.GetRawFile(rawGitUrl);
                 File.WriteAllText(file.FullName, rawEditorConfig);
                 return new LogKeyValueItem(LogCategoryType.Debug, "FileCreate", $"{area} - {descriptionPart} created");
             }
@@ -256,7 +252,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
                     Directory.CreateDirectory(file.Directory.FullName);
                 }
 
-                var rawGitData = GetRawFile(rawGitUrl);
+                var rawGitData = HttpClientHelper.GetRawFile(rawGitUrl);
                 File.WriteAllText(file.FullName, rawGitData);
                 return new LogKeyValueItem(LogCategoryType.Debug, "FileCreate", $"{area} - {descriptionPart} created");
             }
