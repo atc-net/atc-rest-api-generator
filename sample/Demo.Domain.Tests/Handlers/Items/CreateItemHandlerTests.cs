@@ -1,5 +1,4 @@
-﻿using Demo.Domain.Handlers.Items;
-using Xunit;
+﻿using Xunit;
 
 namespace Demo.Domain.Tests.Handlers.Items
 {

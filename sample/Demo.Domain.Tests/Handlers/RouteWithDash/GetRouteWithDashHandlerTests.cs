@@ -1,5 +1,4 @@
-﻿using Demo.Domain.Handlers.RouteWithDash;
-using Xunit;
+﻿using Xunit;
 
 namespace Demo.Domain.Tests.Handlers.RouteWithDash
 {

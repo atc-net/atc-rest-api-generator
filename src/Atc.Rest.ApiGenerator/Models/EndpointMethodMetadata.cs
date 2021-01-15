@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -10,6 +10,7 @@ namespace Atc.Rest.ApiGenerator.Models
     public class EndpointMethodMetadata
     {
         public EndpointMethodMetadata(
+            bool useNullableReferenceTypes,
             string projectName,
             string segmentName,
             string route,
@@ -23,6 +24,7 @@ namespace Atc.Rest.ApiGenerator.Models
             SyntaxGeneratorContractParameter? sgContractParameter,
             IDictionary<string, OpenApiSchema> componentsSchemas)
         {
+            UseNullableReferenceTypes = useNullableReferenceTypes;
             ProjectName = projectName;
             SegmentName = segmentName;
             Route = route;
@@ -36,6 +38,8 @@ namespace Atc.Rest.ApiGenerator.Models
             ContractParameter = sgContractParameter;
             ComponentsSchemas = componentsSchemas;
         }
+
+        public bool UseNullableReferenceTypes { get; private set; }
 
         public string ProjectName { get; private set; }
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -200,6 +200,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                     var responseTypeNamesAndItemSchema = GetResponseTypeNamesAndItemSchema(responseTypeNames);
 
                     var endpointMethodMetadata = new EndpointMethodMetadata(
+                        ApiProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
                         ApiProjectOptions.ProjectName,
                         FocusOnSegmentName,
                         $"/api/{ApiProjectOptions.ApiVersion}{routePart}",

@@ -30,8 +30,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc" Version="1.1.44" />
-    <PackageReference Include="Atc.Rest" Version="1.1.44" />
+    <PackageReference Include="Atc" Version="1.1.52" />
+    <PackageReference Include="Atc.Rest" Version="1.1.52" />
   </ItemGroup>
 
 </Project>

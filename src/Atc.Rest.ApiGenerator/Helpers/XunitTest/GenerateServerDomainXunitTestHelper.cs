@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -83,11 +83,9 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             }
 
             var area = sgHandler.FocusOnSegmentName.EnsureFirstCharacterToUpper();
-            var nsSrc = $"{domainProjectOptions.ProjectName}.{NameConstants.Handlers}.{area}";
             var nsTest = $"{domainProjectOptions.ProjectName}.Tests.{NameConstants.Handlers}.{area}";
 
             var sb = new StringBuilder();
-            sb.AppendLine($"using {nsSrc};");
             sb.AppendLine("using Xunit;");
             sb.AppendLine();
             sb.AppendLine($"namespace {nsTest}");
@@ -213,9 +211,16 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 }
             }
 
-            return list
-                .OrderBy(x => x)
-                .ToList();
+            var usings = new List<string>();
+            usings.AddRange(
+                list
+                    .Where(x => x.StartsWith("System", StringComparison.Ordinal))
+                    .OrderBy(x => x));
+            usings.AddRange(
+                list
+                    .Where(x => !x.StartsWith("System", StringComparison.Ordinal))
+                    .OrderBy(x => x));
+            return usings;
         }
 
         private static List<Tuple<string, string>> GetUsedInterfacesInConstructor(SyntaxNode root)

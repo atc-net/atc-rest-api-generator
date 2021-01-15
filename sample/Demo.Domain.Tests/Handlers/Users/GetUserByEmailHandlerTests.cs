@@ -1,5 +1,4 @@
-﻿using Demo.Domain.Handlers.Users;
-using Xunit;
+﻿using Xunit;
 
 namespace Demo.Domain.Tests.Handlers.Users
 {

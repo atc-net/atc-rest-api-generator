@@ -290,6 +290,11 @@ Route
 ```csharp
 SegmentName
 ```
+#### UseNullableReferenceTypes
+
+```csharp
+UseNullableReferenceTypes
+```
 ### Methods
 
 
