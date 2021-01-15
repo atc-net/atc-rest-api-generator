@@ -211,9 +211,48 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Domain
                     SyntaxFactory.GenericName(SyntaxFactory.Identifier(nameof(Task)))
                         .WithTypeArgumentList(SyntaxTypeArgumentListFactory.CreateWithOneItem(resultTypeName)),
                     SyntaxFactory.Identifier("InvokeExecuteAsync"))
-                .WithModifiers(SyntaxTokenListFactory.PrivateAsyncKeyword())
+                .WithModifiers(
+                    SyntaxFactory.TokenList(
+                        SyntaxFactory.Token(
+                            CreatePragmaWarningCodeStyle1998(true),
+                            SyntaxKind.PrivateKeyword,
+                            SyntaxFactory.TriviaList()), SyntaxFactory.Token(SyntaxKind.AsyncKeyword)))
                 .WithParameterList(SyntaxFactory.ParameterList(SyntaxFactory.SeparatedList<ParameterSyntax>(arguments)))
-                .WithBody(SyntaxFactory.Block(SyntaxThrowStatementFactory.CreateNotImplementedException()));
+                .WithBody(
+                    SyntaxFactory.Block(SyntaxThrowStatementFactory.CreateNotImplementedException())
+                        .WithOpenBraceToken(
+                            SyntaxFactory.Token(
+                                CreatePragmaWarningCodeStyle1998(false),
+                                SyntaxKind.OpenBraceToken,
+                                SyntaxFactory.TriviaList())));
+        }
+
+        private SyntaxTriviaList CreatePragmaWarningCodeStyle1998(bool disable)
+        {
+            return CreatePragmaWarningCodeStyle(
+                disable,
+                1998,
+                "// Async method lacks 'await' operators and will run synchronously");
+        }
+
+        private SyntaxTriviaList CreatePragmaWarningCodeStyle(bool disable, int checkId, string comment)
+        {
+            var keyword = disable
+                ? SyntaxKind.DisableKeyword
+                : SyntaxKind.RestoreKeyword;
+
+            return SyntaxFactory.TriviaList(
+                SyntaxFactory.Trivia(
+                    SyntaxFactory.PragmaWarningDirectiveTrivia(
+                            SyntaxFactory.Token(keyword),
+                            true)
+                        .WithErrorCodes(
+                            SyntaxFactory.SingletonSeparatedList<ExpressionSyntax>(
+                                SyntaxFactory.IdentifierName(
+                                    SyntaxFactory.Identifier(
+                                        SyntaxFactory.TriviaList(),
+                                        "CS" + checkId,
+                                        SyntaxFactory.TriviaList(SyntaxFactory.Comment(comment))))))));
         }
     }
 }

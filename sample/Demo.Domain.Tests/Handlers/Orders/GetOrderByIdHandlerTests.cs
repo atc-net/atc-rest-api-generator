@@ -1,5 +1,4 @@
-﻿using Demo.Domain.Handlers.Orders;
-using Xunit;
+﻿using Xunit;
 
 namespace Demo.Domain.Tests.Handlers.Orders
 {

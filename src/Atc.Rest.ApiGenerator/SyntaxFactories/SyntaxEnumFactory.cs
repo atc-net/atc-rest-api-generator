@@ -83,13 +83,13 @@ namespace Atc.Rest.ApiGenerator.SyntaxFactories
             }
 
             enumDeclaration = enumDeclaration
-                .AddSuppressMessageAttribute(SuppressMessageAttributeFactory.CreateStyleCopAnalyzer(1413, justification: null));
+                .AddSuppressMessageAttribute(SuppressMessageAttributeFactory.CreateStyleCopSuppression(1413, justification: null));
 
             // Add SuppressMessageAttribute
             if (containTypeName)
             {
                 enumDeclaration = enumDeclaration
-                    .AddSuppressMessageAttribute(SuppressMessageAttributeFactory.CreateCodeAnalyzer(1720, justification: null));
+                    .AddSuppressMessageAttribute(SuppressMessageAttributeFactory.CreateCodeAnalysisSuppression(1720, justification: null));
             }
 
             // Add FlagAttribute

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Atc.Rest.ApiGenerator.Generators;
@@ -54,6 +54,7 @@ namespace Atc.Rest.ApiGenerator.Tests
             typeof(GenerateXunitTestHelper),
             typeof(GenerateServerApiXunitTestEndpointHandlerStubHelper),
             typeof(GenerateServerApiXunitTestEndpointTestHelper),
+            typeof(GenerateXunitTestPartsHelper),
             typeof(GenerateServerDomainXunitTestHelper),
             typeof(ParameterCombinationHelper),
             typeof(OpenApiDocumentSchemaModelNameHelper),

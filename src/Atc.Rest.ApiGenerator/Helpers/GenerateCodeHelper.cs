@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Text;
+using Atc.Rest.ApiGenerator.Helpers.XunitTest;
 
 namespace Atc.Rest.ApiGenerator.Helpers
 {
@@ -18,6 +19,18 @@ namespace Atc.Rest.ApiGenerator.Helpers
         internal static void AppendGeneratedCodeAttribute(StringBuilder sb, string toolName, Version toolVersion)
         {
             sb.AppendLine(4, $"[GeneratedCode(\"{toolName}\", \"{toolVersion}\")]");
+        }
+
+        internal static string GetTrailingChar(TrailingCharType trailingChar)
+        {
+            return trailingChar switch
+            {
+                TrailingCharType.None => string.Empty,
+                TrailingCharType.Comma => ",",
+                TrailingCharType.SemiColon => ";",
+                TrailingCharType.Colon => ":",
+                _ => throw new ArgumentOutOfRangeException(nameof(trailingChar), trailingChar, null)
+            };
         }
     }
 }

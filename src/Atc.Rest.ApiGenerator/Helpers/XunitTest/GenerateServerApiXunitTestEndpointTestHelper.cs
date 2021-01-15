@@ -8,14 +8,17 @@ using Atc.Data.Models;
 using Atc.Rest.ApiGenerator.Models;
 using Microsoft.OpenApi.Models;
 
-// ReSharper disable SwitchStatementHandlesSomeKnownEnumValuesWithDefault
+// ReSharper disable ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
+// ReSharper disable LoopCanBeConvertedToQuery
 // ReSharper disable UseDeconstruction
-// ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
+// ReSharper disable SuggestBaseTypeForParameter
 namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
 {
     public static class GenerateServerApiXunitTestEndpointTestHelper
     {
-        public static LogKeyValueItem Generate(HostProjectOptions hostProjectOptions, EndpointMethodMetadata endpointMethodMetadata)
+        public static LogKeyValueItem Generate(
+            HostProjectOptions hostProjectOptions,
+            EndpointMethodMetadata endpointMethodMetadata)
         {
             if (hostProjectOptions == null)
             {
@@ -28,20 +31,49 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             }
 
             var sb = new StringBuilder();
+            AppendUsingStatements(sb, hostProjectOptions, endpointMethodMetadata);
+            sb.AppendLine();
+            GenerateCodeHelper.AppendNamespaceComment(sb, hostProjectOptions.ToolNameAndVersion);
+            AppendNamespaceAndClassStart(sb, hostProjectOptions, endpointMethodMetadata);
+            AppendConstructor(sb, endpointMethodMetadata);
+            AppendTestMethod(sb, endpointMethodMetadata);
+            AppendNamespaceAndClassEnd(sb);
+            return SaveFile(sb, hostProjectOptions, endpointMethodMetadata);
+        }
+
+        private static void AppendUsingStatements(
+            StringBuilder sb,
+            HostProjectOptions hostProjectOptions,
+            EndpointMethodMetadata endpointMethodMetadata)
+        {
             foreach (var statement in GetUsingStatements(hostProjectOptions, endpointMethodMetadata))
             {
                 sb.AppendLine($"using {statement};");
             }
+        }
 
-            sb.AppendLine();
-            GenerateCodeHelper.AppendNamespaceComment(sb, hostProjectOptions.ToolNameAndVersion);
+        private static void AppendNamespaceAndClassStart(
+            StringBuilder sb,
+            HostProjectOptions hostProjectOptions,
+            EndpointMethodMetadata endpointMethodMetadata)
+        {
             sb.AppendLine($"namespace {hostProjectOptions.ProjectName}.Tests.Endpoints.{endpointMethodMetadata.SegmentName}.Generated");
             sb.AppendLine("{");
             GenerateCodeHelper.AppendGeneratedCodeAttribute(sb, hostProjectOptions.ToolName, hostProjectOptions.ToolVersion);
             sb.AppendLine(4, "[Collection(\"Sequential-Endpoints\")]");
             sb.AppendLine(4, $"public class {endpointMethodMetadata.MethodName}Tests : WebApiControllerBaseTest");
             sb.AppendLine(4, "{");
+        }
+
+        private static void AppendConstructor(
+            StringBuilder sb,
+            EndpointMethodMetadata endpointMethodMetadata)
+        {
             sb.AppendLine(8, $"public {endpointMethodMetadata.MethodName}Tests(WebApiStartupFactory fixture) : base(fixture) {{ }}");
+        }
+
+        private static void AppendTestMethod(StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata)
+        {
             foreach (var contractReturnTypeName in endpointMethodMetadata.ContractReturnTypeNames)
             {
                 switch (contractReturnTypeName.Item1)
@@ -60,10 +92,19 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                         break;
                 }
             }
+        }
 
+        private static void AppendNamespaceAndClassEnd(StringBuilder sb)
+        {
             sb.AppendLine(4, "}");
             sb.AppendLine("}");
+        }
 
+        private static LogKeyValueItem SaveFile(
+            StringBuilder sb,
+            HostProjectOptions hostProjectOptions,
+            EndpointMethodMetadata endpointMethodMetadata)
+        {
             var pathA = Path.Combine(hostProjectOptions.PathForTestGenerate!.FullName, "Endpoints");
             var pathB = Path.Combine(pathA, endpointMethodMetadata.SegmentName);
             var pathC = Path.Combine(pathB, "Generated");
@@ -245,12 +286,17 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             }
 
             var modelSchema = endpointMethodMetadata.ComponentsSchemas.GetSchemaByModelName(modelName);
-
             var headerRequiredParameters = endpointMethodMetadata.GetHeaderRequiredParameters();
 
             var relevantSchemas = new List<KeyValuePair<string, OpenApiSchema>>();
             foreach (var schemaProperty in modelSchema.Properties)
             {
+                if (endpointMethodMetadata.UseNullableReferenceTypes &&
+                    schemaProperty.Value.Type == OpenApiDataTypeConstants.Array)
+                {
+                    continue;
+                }
+
                 if (modelSchema.Required.Contains(schemaProperty.Key) ||
                     schemaProperty.Value.IsFormatTypeOfEmail() ||
                     schemaProperty.Value.IsFormatTypeOfDate() ||
@@ -386,8 +432,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             int indentSpaces,
             StringBuilder sb,
             EndpointMethodMetadata endpointMethodMetadata,
-            HttpStatusCode httpStatusCode,
-            string variableName = "data")
+            HttpStatusCode httpStatusCode)
         {
             var schema = endpointMethodMetadata.ContractParameter?.ApiOperation.RequestBody?.Content.GetSchema();
             if (schema == null)
@@ -395,7 +440,13 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 return;
             }
 
-            GenerateXunitTestHelper.AppendNewModelOrListOfModel(indentSpaces, sb, endpointMethodMetadata, schema, httpStatusCode, SchemaMapLocatedAreaType.RequestBody, true, variableName);
+            GenerateXunitTestHelper.AppendVarDataModelOrListOfModel(
+                indentSpaces,
+                sb,
+                endpointMethodMetadata,
+                schema,
+                httpStatusCode,
+                SchemaMapLocatedAreaType.RequestBody);
         }
 
         private static void AppendNewRequestModelForBadRequest(
@@ -403,8 +454,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             StringBuilder sb,
             EndpointMethodMetadata endpointMethodMetadata,
             HttpStatusCode httpStatusCode,
-            KeyValuePair<string, OpenApiSchema> badPropertySchema,
-            string variableName = "data")
+            KeyValuePair<string, OpenApiSchema> badPropertySchema)
         {
             var schema = endpointMethodMetadata.ContractParameter?.ApiOperation.RequestBody?.Content.GetSchema();
             if (schema == null)
@@ -412,7 +462,15 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 return;
             }
 
-            GenerateXunitTestHelper.AppendNewModelOrListOfModelForBadRequest(indentSpaces, sb, endpointMethodMetadata, schema, httpStatusCode, badPropertySchema, variableName);
+            GenerateXunitTestHelper.AppendVarDataModelOrListOfModel(
+                indentSpaces,
+                sb,
+                endpointMethodMetadata,
+                schema,
+                httpStatusCode,
+                SchemaMapLocatedAreaType.RequestBody,
+                badPropertySchema,
+                asJsonBody: true);
         }
 
         private static List<string> RenderRelativeRefsForBadRequestInPath(EndpointMethodMetadata endpointMethodMetadata, bool useForBadRequest = false)
@@ -441,32 +499,6 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             return parameters
                 .Where(x => x.Schema.GetDataType() != OpenApiDataTypeConstants.String)
                 .ToList();
-        }
-
-        private static List<string> RenderRelativeRefsForQuery(EndpointMethodMetadata endpointMethodMetadata, bool useForBadRequest = false)
-        {
-            var renderRelativeRefs = new List<string>();
-
-            var queryRequiredParameters = endpointMethodMetadata.GetQueryRequiredParameters();
-            if (queryRequiredParameters.Count == 0)
-            {
-                if (!useForBadRequest)
-                {
-                    // Create without queryParameters
-                    renderRelativeRefs.Add(RenderRelativeRefsForQueryHelper(endpointMethodMetadata, null, useForBadRequest));
-                }
-            }
-            else
-            {
-                var queryParameters = endpointMethodMetadata.GetQueryParameters();
-                var combinationOfQueryParameters = ParameterCombinationHelper.GetCombination(queryParameters, useForBadRequest);
-                foreach (var parameters in combinationOfQueryParameters)
-                {
-                    renderRelativeRefs.Add(RenderRelativeRefsForQueryHelper(endpointMethodMetadata, parameters, useForBadRequest));
-                }
-            }
-
-            return renderRelativeRefs;
         }
 
         private static string RenderRelativeRefsForPathHelper(EndpointMethodMetadata endpointMethodMetadata, List<OpenApiParameter> allRouteParameters, List<OpenApiParameter> badRouteParameters, bool useForBadRequest)
@@ -498,6 +530,32 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
         {
             var queryParameters = endpointMethodMetadata.GetQueryParameters();
             return RenderRelativeRefsForQueryHelper(endpointMethodMetadata, queryParameters, false);
+        }
+
+        private static List<string> RenderRelativeRefsForQuery(EndpointMethodMetadata endpointMethodMetadata, bool useForBadRequest = false)
+        {
+            var renderRelativeRefs = new List<string>();
+
+            var queryRequiredParameters = endpointMethodMetadata.GetQueryRequiredParameters();
+            if (queryRequiredParameters.Count == 0)
+            {
+                if (!useForBadRequest)
+                {
+                    // Create without queryParameters
+                    renderRelativeRefs.Add(RenderRelativeRefsForQueryHelper(endpointMethodMetadata, null, useForBadRequest));
+                }
+            }
+            else
+            {
+                var queryParameters = endpointMethodMetadata.GetQueryParameters();
+                var combinationOfQueryParameters = ParameterCombinationHelper.GetCombination(queryParameters, useForBadRequest);
+                foreach (var parameters in combinationOfQueryParameters)
+                {
+                    renderRelativeRefs.Add(RenderRelativeRefsForQueryHelper(endpointMethodMetadata, parameters, useForBadRequest));
+                }
+            }
+
+            return renderRelativeRefs;
         }
 
         private static string RenderRelativeRefsForQueryHelper(EndpointMethodMetadata endpointMethodMetadata, List<OpenApiParameter>? queryParameters, bool useForBadRequest)
@@ -581,8 +639,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 "Guid" => ValueTypeTestPropertiesHelper.CreateValueGuid(useForBadRequest),
                 "Uri" => ValueTypeTestPropertiesHelper.CreateValueUri(useForBadRequest),
                 "Email" => ValueTypeTestPropertiesHelper.CreateValueEmail(useForBadRequest),
-                "Array" when parameter.In == ParameterLocation.Query
-                    => ValueTypeTestPropertiesHelper.CreateValueArray(parameter.Name, parameter.Schema.Items, parameter.In, useForBadRequest, 3),
+                "Array" when parameter.In == ParameterLocation.Query => ValueTypeTestPropertiesHelper.CreateValueArray(parameter.Name, parameter.Schema.Items, parameter.In, useForBadRequest, 3),
                 _ => PropertyValueGeneratorTypeResolver(parameter, componentsSchemas, useForBadRequest)
             };
         }

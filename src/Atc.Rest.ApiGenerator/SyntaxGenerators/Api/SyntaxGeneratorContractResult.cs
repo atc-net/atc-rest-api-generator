@@ -62,7 +62,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                 FocusOnSegmentName);
 
             // Create class
-            var classDeclaration = SyntaxClassDeclarationFactory.CreateWithInheritClassTypeAndSuppressMessageAttributeByCodeAnalyzerCheckId(
+            var classDeclaration = SyntaxClassDeclarationFactory.CreateWithInheritClassTypeAndSuppressMessageAttributeByCodeAnalysisCheckId(
                 resultTypeName,
                 "ResultBase",
                 1062,

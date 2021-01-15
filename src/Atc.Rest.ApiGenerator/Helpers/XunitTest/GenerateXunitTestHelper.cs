@@ -6,446 +6,475 @@ using System.Text;
 using Atc.Rest.ApiGenerator.Models;
 using Microsoft.OpenApi.Models;
 
+// ReSharper disable ConvertIfStatementToSwitchStatement
 // ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
+// ReSharper disable UseDeconstructionOnParameter
 namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
 {
     public static class GenerateXunitTestHelper
     {
-        public static void AppendNewModelOrListOfModel(
+        public static void AppendVarDataModelOrListOfModel(
             int indentSpaces,
             StringBuilder sb,
             EndpointMethodMetadata endpointMethodMetadata,
             OpenApiSchema schema,
             HttpStatusCode httpStatusCode,
-            SchemaMapLocatedAreaType locatedArea,
-            bool useVarDeclaration = true,
-            string variableName = "data")
+            SchemaMapLocatedAreaType locatedAreaType,
+            KeyValuePair<string, OpenApiSchema>? badPropertySchema = null,
+            bool asJsonBody = false,
+            int maxItemsForList = 3,
+            int depthHierarchy = 0,
+            int maxDepthHierarchy = 2)
         {
-            if (sb == null)
+            var trailingChar = TrailingCharType.SemiColon;
+            if (asJsonBody)
             {
-                throw new ArgumentNullException(nameof(sb));
+                trailingChar = TrailingCharType.None;
             }
 
-            if (endpointMethodMetadata == null)
+            switch (locatedAreaType)
             {
-                throw new ArgumentNullException(nameof(endpointMethodMetadata));
-            }
-
-            if (schema == null)
-            {
-                throw new ArgumentNullException(nameof(schema));
-            }
-
-            switch (locatedArea)
-            {
-                case SchemaMapLocatedAreaType.Response:
-                {
-                    var contractReturnTypeName = endpointMethodMetadata.ContractReturnTypeNames.First(x => x.Item1 == httpStatusCode);
-                    if (!string.IsNullOrEmpty(contractReturnTypeName.Item2) && (
-                        contractReturnTypeName.Item2.StartsWith(Microsoft.OpenApi.Models.NameConstants.Pagination, StringComparison.Ordinal) ||
-                        contractReturnTypeName.Item2.StartsWith(Microsoft.OpenApi.Models.NameConstants.List, StringComparison.Ordinal)))
+                case SchemaMapLocatedAreaType.Parameter:
+                    break;
+                case SchemaMapLocatedAreaType.RequestBody:
+                    if (schema.Type == OpenApiDataTypeConstants.Array)
                     {
-                        if (contractReturnTypeName.Item2.StartsWith(Microsoft.OpenApi.Models.NameConstants.Pagination, StringComparison.Ordinal))
+                        int indentSpacesForData = indentSpaces;
+                        if (asJsonBody)
                         {
-                            var listDataType = contractReturnTypeName.Item2.Replace(Microsoft.OpenApi.Models.NameConstants.Pagination, Microsoft.OpenApi.Models.NameConstants.List, StringComparison.Ordinal);
-                            sb.AppendLine(
-                                indentSpaces,
-                                useVarDeclaration
-                                    ? $"var {variableName} = new {listDataType}"
-                                    : $"{variableName} = new {listDataType}");
-                        }
-                        else
-                        {
-                            sb.AppendLine(
-                                indentSpaces,
-                                useVarDeclaration
-                                    ? $"var {variableName} = new {contractReturnTypeName.Item2}"
-                                    : $"{variableName} = new {contractReturnTypeName.Item2}");
+                            sb.AppendLine(indentSpaces, "var sb = new StringBuilder();");
+                            indentSpacesForData = indentSpacesForData - 4;
                         }
 
-                        sb.AppendLine(indentSpaces, "{");
-                        for (var i = 0; i < 3; i++)
-                        {
-                            AppendNewModel(indentSpaces + 4, sb, endpointMethodMetadata, schema, httpStatusCode, locatedArea, null, i + 1, null);
-                        }
+                        AppendVarDataEqualNewListOfModel(
+                            indentSpacesForData,
+                            sb,
+                            endpointMethodMetadata,
+                            new KeyValuePair<string, OpenApiSchema>("data", schema),
+                            trailingChar,
+                            maxItemsForList,
+                            depthHierarchy,
+                            maxDepthHierarchy,
+                            badPropertySchema,
+                            asJsonBody);
 
-                        sb.AppendLine(
-                            indentSpaces,
-                            useVarDeclaration
-                                ? "};"
-                                : "},");
+                        if (asJsonBody)
+                        {
+                            sb.AppendLine(indentSpaces, "var data = sb.ToString();");
+                        }
                     }
                     else
                     {
-                        AppendNewModel(indentSpaces, sb, endpointMethodMetadata, schema, httpStatusCode, locatedArea, null, 0, variableName);
+                        if (asJsonBody)
+                        {
+                            sb.AppendLine(indentSpaces, "var sb = new StringBuilder();");
+                        }
+                        else
+                        {
+                            GenerateXunitTestPartsHelper.AppendPartVarDataEqualNew(12, sb);
+                        }
+
+                        var modelName = schema.GetModelName();
+                        AppendModel(
+                            indentSpaces,
+                            sb,
+                            endpointMethodMetadata,
+                            modelName,
+                            schema,
+                            trailingChar,
+                            0,
+                            maxItemsForList,
+                            depthHierarchy,
+                            maxDepthHierarchy,
+                            badPropertySchema,
+                            asJsonBody);
+
+                        if (asJsonBody)
+                        {
+                            sb.AppendLine(indentSpaces, "var data = sb.ToString();");
+                        }
                     }
 
                     break;
-                }
-
-                case SchemaMapLocatedAreaType.RequestBody when schema.Type == OpenApiDataTypeConstants.Array:
-                {
-                    var modelSchemaName = schema.GetModelName();
-                    var modelSchema = endpointMethodMetadata.ComponentsSchemas.GetSchemaByModelName(modelSchemaName);
-                    var modelName = OpenApiDocumentSchemaModelNameHelper.EnsureModelNameWithNamespaceIfNeeded(endpointMethodMetadata, schema.GetModelName());
-                    sb.AppendLine(
-                        indentSpaces,
-                        useVarDeclaration
-                            ? $"var {variableName} = new List<{modelName}>"
-                            : $"{variableName} = new List<{modelName}>");
-
-                    sb.AppendLine(indentSpaces, "{");
-                    for (var i = 0; i < 3; i++)
+                case SchemaMapLocatedAreaType.Response:
+                    var contractReturnTypeName = endpointMethodMetadata.ContractReturnTypeNames.First(x => x.Item1 == httpStatusCode);
+                    if (GenerateXunitTestPartsHelper.IsListKind(contractReturnTypeName.Item2))
                     {
-                        AppendNewModel(indentSpaces + 4, sb, endpointMethodMetadata, modelSchema, httpStatusCode, locatedArea, null, i + 1, null);
+                        AppendVarDataEqualNewListOfModel(
+                            indentSpaces,
+                            sb,
+                            endpointMethodMetadata,
+                            new KeyValuePair<string, OpenApiSchema>("data", contractReturnTypeName.Item3!),
+                            trailingChar,
+                            maxItemsForList,
+                            depthHierarchy,
+                            maxDepthHierarchy,
+                            badPropertySchema,
+                            asJsonBody);
+                    }
+                    else
+                    {
+                        GenerateXunitTestPartsHelper.AppendPartVarDataEqualNew(12, sb);
+                        AppendModel(
+                            indentSpaces,
+                            sb,
+                            endpointMethodMetadata,
+                            contractReturnTypeName.Item2,
+                            contractReturnTypeName.Item3!,
+                            trailingChar,
+                            0,
+                            maxItemsForList,
+                            depthHierarchy,
+                            maxDepthHierarchy,
+                            badPropertySchema,
+                            asJsonBody);
                     }
 
-                    sb.AppendLine(
-                        indentSpaces,
-                        useVarDeclaration
-                            ? "};"
-                            : "},");
                     break;
-                }
-
-                case SchemaMapLocatedAreaType.RequestBody:
-                    AppendNewModel(indentSpaces, sb, endpointMethodMetadata, schema, httpStatusCode, locatedArea, null, 0, variableName);
-                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(locatedAreaType), locatedAreaType, null);
             }
         }
 
-        public static void AppendNewModelOrListOfModelForBadRequest(
+        public static void AppendModel(
             int indentSpaces,
             StringBuilder sb,
             EndpointMethodMetadata endpointMethodMetadata,
+            string modelName,
             OpenApiSchema schema,
-            HttpStatusCode httpStatusCode,
-            KeyValuePair<string, OpenApiSchema> badPropertySchema,
-            string variableName = "data")
+            TrailingCharType trailingChar,
+            int itemNumber,
+            int maxItemsForList,
+            int depthHierarchy,
+            int maxDepthHierarchy,
+            KeyValuePair<string, OpenApiSchema>? badPropertySchema,
+            bool asJsonBody,
+            string? parentModelNameToJsonBody = null)
         {
-            if (sb == null)
+            int countString = 1;
+            var renderModelName = OpenApiDocumentSchemaModelNameHelper.EnsureModelNameWithNamespaceIfNeeded(endpointMethodMetadata, modelName);
+            var jsonSpaces = string.Empty.PadLeft(depthHierarchy * 2);
+            if (asJsonBody)
             {
-                throw new ArgumentNullException(nameof(sb));
-            }
-
-            if (endpointMethodMetadata == null)
-            {
-                throw new ArgumentNullException(nameof(endpointMethodMetadata));
-            }
-
-            if (schema == null)
-            {
-                throw new ArgumentNullException(nameof(schema));
-            }
-
-            var contractReturnTypeName = endpointMethodMetadata.ContractReturnTypeNames.First(x => x.Item1 == httpStatusCode);
-            if (!string.IsNullOrEmpty(contractReturnTypeName.Item2) && (
-                contractReturnTypeName.Item2.StartsWith(Microsoft.OpenApi.Models.NameConstants.Pagination, StringComparison.Ordinal) ||
-                contractReturnTypeName.Item2.StartsWith(Microsoft.OpenApi.Models.NameConstants.List, StringComparison.Ordinal)))
-            {
-                // TO-DO: Imp this.
+                sb.AppendLine(
+                    indentSpaces,
+                    string.IsNullOrEmpty(parentModelNameToJsonBody)
+                        ? GenerateXunitTestPartsHelper.WrapInStringBuilderAppendLine($"{jsonSpaces}{{")
+                        : GenerateXunitTestPartsHelper.WrapInStringBuilderAppendLine($"{jsonSpaces}\\\"{parentModelNameToJsonBody}\\\": {{"));
             }
             else
             {
-                AppendNewModelAsJson(indentSpaces, sb, endpointMethodMetadata, schema, badPropertySchema.Key, 0, variableName);
+                sb.AppendLine(renderModelName);
+                sb.AppendLine(indentSpaces, "{");
             }
-        }
-
-        private static void AppendNewModel(
-            int indentSpaces,
-            StringBuilder sb,
-            EndpointMethodMetadata endpointMethodMetadata,
-            OpenApiSchema schema,
-            HttpStatusCode httpStatusCode,
-            SchemaMapLocatedAreaType locatedArea,
-            string? badRequestPropertyName,
-            int itemNumber,
-            string? variableName)
-        {
-            if (sb == null)
-            {
-                throw new ArgumentNullException(nameof(sb));
-            }
-
-            if (schema == null)
-            {
-                throw new ArgumentNullException(nameof(schema));
-            }
-
-            var countString = 0;
-            if (itemNumber != -1 || variableName != null)
-            {
-                var modelName = OpenApiDocumentSchemaModelNameHelper.EnsureModelNameWithNamespaceIfNeeded(endpointMethodMetadata, schema.GetModelName());
-
-                sb.AppendLine(
-                    indentSpaces,
-                    variableName == null
-                        ? $"new {modelName}"
-                        : $"var {variableName} = new {modelName}");
-            }
-
-            sb.AppendLine(indentSpaces, "{");
 
             foreach (var schemaProperty in schema.Properties)
             {
-                var useForBadRequest = !string.IsNullOrEmpty(badRequestPropertyName) &&
-                                       schemaProperty.Key.Equals(badRequestPropertyName, StringComparison.Ordinal);
+                var trailingCharForProperty = GenerateXunitTestPartsHelper.GetTrailingCharForProperty(asJsonBody, schemaProperty, schema.Properties);
+                var useForBadRequest = badPropertySchema != null &&
+                                       schemaProperty.Key.Equals(badPropertySchema.Value.Key, StringComparison.Ordinal);
+
                 string dataType = schemaProperty.Value.GetDataType();
-                string propertyValueGenerated = PropertyValueGenerator(schemaProperty, endpointMethodMetadata.ComponentsSchemas, useForBadRequest, itemNumber, null);
+                string propertyValueGenerated = GenerateXunitTestPartsHelper.PropertyValueGenerator(schemaProperty, endpointMethodMetadata.ComponentsSchemas, useForBadRequest, itemNumber, null);
 
                 if ("NEW-INSTANCE-LIST".Equals(propertyValueGenerated, StringComparison.Ordinal))
                 {
-                    AppendNewModelOrListOfModel(
+                    AppendDataEqualNewListOfModel(
                         indentSpaces + 4,
                         sb,
                         endpointMethodMetadata,
-                        schemaProperty.Value,
-                        httpStatusCode,
-                        locatedArea,
-                        false,
-                        schemaProperty.Key.EnsureFirstCharacterToUpper());
+                        schemaProperty,
+                        trailingCharForProperty,
+                        maxItemsForList,
+                        depthHierarchy + 1,
+                        maxDepthHierarchy,
+                        badPropertySchema,
+                        asJsonBody);
                 }
                 else if ("NEW-INSTANCE".Equals(propertyValueGenerated, StringComparison.Ordinal))
                 {
-                    var schemaForDataType = endpointMethodMetadata.ComponentsSchemas.FirstOrDefault(x => x.Key.Equals(dataType, StringComparison.OrdinalIgnoreCase));
-
-                    sb.AppendLine(
-                        indentSpaces + 4,
-                        $"{schemaProperty.Key.EnsureFirstCharacterToUpper()} = new {schemaForDataType.Value.GetModelName()}");
-                    AppendNewModel(indentSpaces + 4, sb, endpointMethodMetadata, schemaForDataType.Value, httpStatusCode, locatedArea, badRequestPropertyName, -1, null);
+                    AppendModelComplexProperty(
+                        indentSpaces,
+                        sb,
+                        endpointMethodMetadata,
+                        schemaProperty,
+                        dataType,
+                        trailingCharForProperty,
+                        itemNumber,
+                        maxItemsForList,
+                        depthHierarchy + 1,
+                        maxDepthHierarchy,
+                        badPropertySchema,
+                        asJsonBody);
                 }
                 else
                 {
-                    switch (dataType)
+                    var countResult = GenerateXunitTestPartsHelper.AppendModelSimpleProperty(
+                        indentSpaces,
+                        sb,
+                        endpointMethodMetadata,
+                        schemaProperty,
+                        dataType,
+                        propertyValueGenerated,
+                        countString,
+                        asJsonBody,
+                        depthHierarchy,
+                        trailingCharForProperty);
+
+                    if (countResult > 1)
                     {
-                        case "string":
-                            if (!schemaProperty.Value.IsFormatTypeOfEmail() &&
-                                !schemaProperty.Value.IsRuleValidationString())
-                            {
-                                if (countString > 0)
-                                {
-                                    propertyValueGenerated = $"{propertyValueGenerated}{countString}";
-                                }
-
-                                countString++;
-                            }
-
-                            sb.AppendLine(
-                                indentSpaces + 4,
-                                $"{schemaProperty.Key.EnsureFirstCharacterToUpper()} = \"{propertyValueGenerated}\",");
-                            break;
-                        case "DateTimeOffset":
-                            sb.AppendLine(
-                                indentSpaces + 4,
-                                $"{schemaProperty.Key.EnsureFirstCharacterToUpper()} = DateTimeOffset.Parse(\"{propertyValueGenerated}\"),");
-                            break;
-                        case "Guid":
-                            sb.AppendLine(
-                                indentSpaces + 4,
-                                $"{schemaProperty.Key.EnsureFirstCharacterToUpper()} = Guid.Parse(\"{propertyValueGenerated}\"),");
-                            break;
-                        case "Uri":
-                            sb.AppendLine(
-                                indentSpaces + 4,
-                                $"{schemaProperty.Key.EnsureFirstCharacterToUpper()} = new Uri(\"{propertyValueGenerated}\"),");
-                            break;
-                        default:
-                            var enumDataType = GetDataTypeIfEnum(schemaProperty, endpointMethodMetadata.ComponentsSchemas);
-                            if (enumDataType == null)
-                            {
-                                sb.AppendLine(
-                                    indentSpaces + 4,
-                                    $"{schemaProperty.Key.EnsureFirstCharacterToUpper()} = {propertyValueGenerated},");
-                            }
-                            else
-                            {
-                                if (propertyValueGenerated.Contains("=", StringComparison.Ordinal))
-                                {
-                                    propertyValueGenerated = propertyValueGenerated.Split('=').First().Trim();
-                                }
-
-                                sb.AppendLine(
-                                    indentSpaces + 4,
-                                    $"{schemaProperty.Key.EnsureFirstCharacterToUpper()} = {enumDataType}.{propertyValueGenerated},");
-                            }
-
-                            break;
+                        countString += 1;
                     }
                 }
             }
 
             sb.AppendLine(
                 indentSpaces,
-                variableName == null
-                    ? "},"
-                    : "};");
+                asJsonBody
+                    ? GenerateXunitTestPartsHelper.WrapInStringBuilderAppendLine($"{jsonSpaces}}}{GenerateCodeHelper.GetTrailingChar(trailingChar)}")
+                    : $"}}{GenerateCodeHelper.GetTrailingChar(trailingChar)}");
         }
 
-        private static void AppendNewModelAsJson(int indentSpaces, StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata, OpenApiSchema schema, string? badRequestPropertyName, int itemNumber, string? variableName, int jsonIndentLevel = 0)
+        public static void AppendModelComplexProperty(
+            int indentSpaces,
+            StringBuilder sb,
+            EndpointMethodMetadata endpointMethodMetadata,
+            KeyValuePair<string, OpenApiSchema> schemaProperty,
+            string dataType,
+            TrailingCharType trailingChar,
+            int itemNumber,
+            int maxItemsForList,
+            int depthHierarchy,
+            int maxDepthHierarchy,
+            KeyValuePair<string, OpenApiSchema>? badPropertySchema,
+            bool asJsonBody)
         {
-            if (sb == null)
+            var propertyName = schemaProperty.Key.EnsureFirstCharacterToUpper();
+            if (depthHierarchy > maxDepthHierarchy)
             {
-                throw new ArgumentNullException(nameof(sb));
-            }
-
-            if (endpointMethodMetadata == null)
-            {
-                throw new ArgumentNullException(nameof(endpointMethodMetadata));
-            }
-
-            if (schema == null)
-            {
-                throw new ArgumentNullException(nameof(schema));
-            }
-
-            var countString = 0;
-            var jsonSpaces = string.Empty.PadLeft(jsonIndentLevel * 2);
-            if (jsonIndentLevel == 0)
-            {
-                sb.AppendLine(indentSpaces, "var sb = new StringBuilder();");
-                sb.AppendLine(indentSpaces, WrapInAppendLine("{"));
-            }
-
-            foreach (var schemaProperty in schema.Properties)
-            {
-                var trailingChar = ",";
-                if (schema.Properties.Last().Key == schemaProperty.Key)
+                if (asJsonBody)
                 {
-                    trailingChar = string.Empty;
-                }
-
-                var useForBadRequest = !string.IsNullOrEmpty(badRequestPropertyName) &&
-                                       schemaProperty.Key.Equals(badRequestPropertyName, StringComparison.Ordinal);
-                string dataType = schemaProperty.Value.GetDataType();
-                string propertyValueGenerated =
-                    WrapInQuotes(
-                        PropertyValueGenerator(schemaProperty, endpointMethodMetadata.ComponentsSchemas, useForBadRequest, itemNumber, null),
-                        schemaProperty);
-                if ("NEW-INSTANCE".Equals(propertyValueGenerated, StringComparison.Ordinal))
-                {
-                    var schemaForDataType = endpointMethodMetadata.ComponentsSchemas.FirstOrDefault(x => x.Key.Equals(dataType, StringComparison.OrdinalIgnoreCase));
-                    if (schemaForDataType.Key == null)
-                    {
-                        // TODO: Hmm... ??
-                    }
-                    else
-                    {
-                        sb.AppendLine(
-                            indentSpaces,
-                            WrapInAppendLine($"{jsonSpaces}  {WrapInQuotes(schemaProperty.Key.EnsureFirstCharacterToUpper())}: {{"));
-                        AppendNewModelAsJson(indentSpaces, sb, endpointMethodMetadata, schemaForDataType.Value, badRequestPropertyName, -1, null, jsonIndentLevel + 1);
-                    }
+                    // TODO Missing Json support.
                 }
                 else
                 {
-                    if (dataType == "string" && !schemaProperty.Value.IsFormatTypeOfEmail())
-                    {
-                        if (countString > 0 && !propertyValueGenerated.Equals("null", StringComparison.Ordinal))
-                        {
-                            propertyValueGenerated = $"{propertyValueGenerated}{countString}";
-                        }
-
-                        countString++;
-                    }
-
                     sb.AppendLine(
-                               indentSpaces,
-                               WrapInAppendLine($"{jsonSpaces}  {WrapInQuotes(schemaProperty.Key.EnsureFirstCharacterToUpper())}: {propertyValueGenerated}{trailingChar}"));
+                        indentSpaces,
+                        $"{propertyName} = null{GenerateCodeHelper.GetTrailingChar(trailingChar)}");
+                    return;
                 }
             }
 
-            if (jsonIndentLevel == 0)
+            if (!asJsonBody)
             {
-                sb.AppendLine(indentSpaces, WrapInAppendLine($"}}"));
-                sb.AppendLine(indentSpaces, $"var {variableName} = sb.ToString();");
+                indentSpaces += 4;
+                GenerateXunitTestPartsHelper.AppendPartDataEqualNew(
+                    indentSpaces,
+                    sb,
+                    propertyName);
+            }
+
+            var schemaPropertyValue = schemaProperty.Value;
+            if (schemaProperty.Value.Properties.Count == 0 && schemaProperty.Value.OneOf.Count > 0)
+            {
+                schemaPropertyValue = schemaProperty.Value.OneOf.First();
+            }
+
+            var modelName = schemaProperty.Key.EnsureFirstCharacterToUpper();
+
+            AppendModel(
+                indentSpaces,
+                sb,
+                endpointMethodMetadata,
+                dataType,
+                schemaPropertyValue,
+                trailingChar,
+                itemNumber,
+                maxItemsForList,
+                depthHierarchy,
+                maxDepthHierarchy,
+                badPropertySchema,
+                asJsonBody,
+                modelName);
+        }
+
+        public static void AppendVarDataEqualNewListOfModel(
+            int indentSpaces,
+            StringBuilder sb,
+            EndpointMethodMetadata endpointMethodMetadata,
+            KeyValuePair<string, OpenApiSchema> schemaProperty,
+            TrailingCharType trailingChar,
+            int maxItemsForList,
+            int depthHierarchy,
+            int maxDepthHierarchy,
+            KeyValuePair<string, OpenApiSchema>? badPropertySchema,
+            bool asJsonBody)
+        {
+            var modelName = schemaProperty.Value.GetModelName();
+            var renderModelName = OpenApiDocumentSchemaModelNameHelper.EnsureModelNameWithNamespaceIfNeeded(endpointMethodMetadata, modelName);
+
+            if (depthHierarchy > maxDepthHierarchy)
+            {
+                if (asJsonBody)
+                {
+                    // TODO Missing Json support.
+                }
+                else
+                {
+                    sb.AppendLine(
+                        indentSpaces,
+                        $"var {schemaProperty.Key} = new List<{renderModelName}>(){GenerateCodeHelper.GetTrailingChar(trailingChar)}");
+                    return;
+                }
+            }
+
+            if (!asJsonBody)
+            {
+                GenerateXunitTestPartsHelper.AppendPartVarDataEqualNewListOf(
+                    indentSpaces,
+                    sb,
+                    schemaProperty.Key,
+                    renderModelName);
+                sb.AppendLine();
+                sb.AppendLine(indentSpaces, "{");
+            }
+
+            var modelSchema = endpointMethodMetadata.ComponentsSchemas.GetSchemaByModelName(modelName);
+            for (int i = 0; i < maxItemsForList; i++)
+            {
+                var trailingCharForProperty = GenerateXunitTestPartsHelper.GetTrailingCharForProperty(asJsonBody, i, maxItemsForList);
+                int indentSpacesForItem = indentSpaces + 4;
+                if (!asJsonBody)
+                {
+                    indentSpacesForItem = indentSpaces + 4;
+                    GenerateXunitTestPartsHelper.AppendPartDataNew(indentSpacesForItem, sb);
+                }
+
+                AppendModel(
+                    indentSpacesForItem,
+                    sb,
+                    endpointMethodMetadata,
+                    modelName,
+                    modelSchema,
+                    trailingCharForProperty,
+                    i + 1,
+                    maxItemsForList,
+                    depthHierarchy,
+                    maxDepthHierarchy,
+                    badPropertySchema,
+                    asJsonBody);
+            }
+
+            if (!asJsonBody)
+            {
+                sb.AppendLine(
+                    indentSpaces,
+                    $"}}{GenerateCodeHelper.GetTrailingChar(trailingChar)}");
+            }
+        }
+
+        public static void AppendDataEqualNewListOfModel(
+            int indentSpaces,
+            StringBuilder sb,
+            EndpointMethodMetadata endpointMethodMetadata,
+            KeyValuePair<string, OpenApiSchema> schemaProperty,
+            TrailingCharType trailingChar,
+            int maxItemsForList,
+            int depthHierarchy,
+            int maxDepthHierarchy,
+            KeyValuePair<string, OpenApiSchema>? badPropertySchema,
+            bool asJsonBody)
+        {
+            var modelName = schemaProperty.Value.GetModelName();
+            var renderModelName = OpenApiDocumentSchemaModelNameHelper.EnsureModelNameWithNamespaceIfNeeded(endpointMethodMetadata, modelName);
+            var propertyName = schemaProperty.Key.EnsureFirstCharacterToUpper();
+            var jsonSpacesCount = (depthHierarchy * 2) + 2;
+
+            if (depthHierarchy > maxDepthHierarchy)
+            {
+                if (asJsonBody)
+                {
+                    // TODO Missing Json support.
+                }
+                else
+                {
+                    sb.AppendLine(
+                        indentSpaces,
+                        $"{propertyName} = new List<{renderModelName}>()" + GenerateCodeHelper.GetTrailingChar(trailingChar));
+                    return;
+                }
+            }
+
+            if (asJsonBody)
+            {
+                var useForBadRequest = badPropertySchema != null &&
+                                        schemaProperty.Key.Equals(badPropertySchema.Value.Key, StringComparison.Ordinal);
+
+                if (useForBadRequest)
+                {
+                    sb.AppendLine(
+                        indentSpaces - jsonSpacesCount,
+                        GenerateXunitTestPartsHelper.WrapInStringBuilderAppendLineWithKeyQuotes(depthHierarchy - 1, propertyName, "null", trailingChar));
+                    return;
+                }
+
+                sb.AppendLine(
+                    indentSpaces - jsonSpacesCount,
+                    GenerateXunitTestPartsHelper.WrapInStringBuilderAppendLineWithKeyQuotes(depthHierarchy - 1, propertyName, "[", TrailingCharType.None));
             }
             else
             {
-                sb.AppendLine(indentSpaces, WrapInAppendLine($"{jsonSpaces}}}"));
-            }
-        }
-
-        private static string? GetDataTypeIfEnum(KeyValuePair<string, OpenApiSchema> schema, IDictionary<string, OpenApiSchema> componentsSchemas)
-        {
-            var schemaForDataType = componentsSchemas.FirstOrDefault(x => x.Key.Equals(schema.Value.GetDataType(), StringComparison.OrdinalIgnoreCase));
-            return schemaForDataType.Key != null && schemaForDataType.Value.IsSchemaEnumOrPropertyEnum()
-                ? schemaForDataType.Key
-                : null;
-        }
-
-        private static string PropertyValueGenerator(KeyValuePair<string, OpenApiSchema> schema, IDictionary<string, OpenApiSchema> componentsSchemas, bool useForBadRequest, int itemNumber, string? customValue)
-        {
-            var name = schema.Key.EnsureFirstCharacterToUpper();
-
-            // Match on OpenApiSchemaExtensions->GetDataType
-            return schema.Value.GetDataType() switch
-            {
-                "double" => ValueTypeTestPropertiesHelper.Number(name, schema.Value, useForBadRequest),
-                "long" => ValueTypeTestPropertiesHelper.Number(name, schema.Value, useForBadRequest),
-                "int" => ValueTypeTestPropertiesHelper.Number(name, schema.Value, useForBadRequest),
-                "bool" => ValueTypeTestPropertiesHelper.CreateValueBool(useForBadRequest),
-                "string" => ValueTypeTestPropertiesHelper.CreateValueString(name, schema.Value, null, useForBadRequest, itemNumber, customValue),
-                "DateTimeOffset" => ValueTypeTestPropertiesHelper.CreateValueDateTimeOffset(useForBadRequest),
-                "Guid" => ValueTypeTestPropertiesHelper.CreateValueGuid(useForBadRequest, itemNumber),
-                "Uri" => ValueTypeTestPropertiesHelper.CreateValueUri(useForBadRequest),
-                "Email" => ValueTypeTestPropertiesHelper.CreateValueEmail(useForBadRequest),
-                _ => PropertyValueGeneratorTypeResolver(schema, componentsSchemas, useForBadRequest)
-            };
-        }
-
-        private static string PropertyValueGeneratorTypeResolver(KeyValuePair<string, OpenApiSchema> schema, IDictionary<string, OpenApiSchema> componentsSchemas, bool useForBadRequest)
-        {
-            var name = schema.Key.EnsureFirstCharacterToUpper();
-            var schemaForDataType = componentsSchemas.FirstOrDefault(x => x.Key.Equals(schema.Value.GetDataType(), StringComparison.OrdinalIgnoreCase));
-
-            if (schemaForDataType.Key is null && schema.Value.Type == OpenApiDataTypeConstants.Array /*&& schema.Value.Reference != null*/)
-            {
-                try
-                {
-                    var modelName = schema.Value.GetModelName();
-                    if (!string.IsNullOrEmpty(modelName))
-                    {
-                        return "NEW-INSTANCE-LIST";
-                    }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    throw;
-                }
+                GenerateXunitTestPartsHelper.AppendPartDataEqualNewListOf(
+                    indentSpaces,
+                    sb,
+                    propertyName,
+                    modelName);
+                sb.AppendLine();
+                sb.AppendLine(indentSpaces, "{");
             }
 
-            if (schemaForDataType.Key != null)
+            var modelSchema = endpointMethodMetadata.ComponentsSchemas.GetSchemaByModelName(modelName);
+            var currentIndentSpaces = asJsonBody
+                ? indentSpaces - jsonSpacesCount
+                : indentSpaces + 4;
+
+            for (int i = 0; i < maxItemsForList; i++)
             {
-                if (schemaForDataType.Value.IsSchemaEnumOrPropertyEnum())
+                var trailingCharForProperty = GenerateXunitTestPartsHelper.GetTrailingCharForProperty(asJsonBody, i, maxItemsForList);
+
+                if (!asJsonBody)
                 {
-                    return ValueTypeTestPropertiesHelper.CreateValueEnum(name, schemaForDataType, useForBadRequest);
+                    GenerateXunitTestPartsHelper.AppendPartDataNew(currentIndentSpaces, sb);
                 }
 
-                return useForBadRequest
-                    ? "null"
-                    : "NEW-INSTANCE";
+                AppendModel(
+                    currentIndentSpaces,
+                    sb,
+                    endpointMethodMetadata,
+                    modelName,
+                    modelSchema,
+                    trailingCharForProperty,
+                    i + 1,
+                    maxItemsForList,
+                    depthHierarchy,
+                    maxDepthHierarchy,
+                    badPropertySchema,
+                    asJsonBody);
             }
 
-            return "null";
-        }
-
-        private static string WrapInQuotes(string typeTestValue, KeyValuePair<string, OpenApiSchema> schema)
-        {
-            var dataType = schema.Value.GetDataType();
-            return (typeTestValue, dataType) switch
+            if (asJsonBody)
             {
-                (_, "double") => typeTestValue,
-                (_, "long") => typeTestValue,
-                (_, "int") => typeTestValue,
-                ("null", _) => typeTestValue,
-                ("NEW-INSTANCE", _) => typeTestValue,
-                _ => WrapInQuotes(typeTestValue)
-            };
+                var jsonSpaces = string.Empty.PadLeft((depthHierarchy - 1) * 2);
+                sb.AppendLine(
+                    indentSpaces - jsonSpacesCount,
+                    GenerateXunitTestPartsHelper.WrapInStringBuilderAppendLine($"{jsonSpaces}  ]{GenerateCodeHelper.GetTrailingChar(trailingChar)}"));
+            }
+            else
+            {
+                sb.AppendLine(
+                    indentSpaces,
+                    $"}}{GenerateCodeHelper.GetTrailingChar(trailingChar)}");
+            }
         }
-
-        private static string WrapInQuotes(string str) => $"\\\"{str}\\\"";
-
-        private static string WrapInAppendLine(string str) => $"sb.AppendLine(\"{str}\");";
     }
 }
