@@ -41,45 +41,40 @@ namespace Atc.Rest.ApiGenerator.Generators
                 return logItems;
             }
 
-            logItems.AddRange(ScaffoldSrc(projectOptions));
+            logItems.AddRange(ScaffoldSrc());
             if (projectOptions.PathForTestGenerate != null)
             {
-                logItems.AddRange(ScaffoldTest(projectOptions));
+                logItems.AddRange(ScaffoldTest());
             }
 
             if (projectOptions.PathForTestGenerate != null)
             {
-                logItems.AddRange(GenerateTestEndpoints(projectOptions));
+                logItems.AddRange(GenerateTestEndpoints());
             }
 
             return logItems;
         }
 
-        private static List<LogKeyValueItem> ScaffoldSrc(HostProjectOptions hostProjectOptions)
+        private List<LogKeyValueItem> ScaffoldSrc()
         {
-            if (hostProjectOptions == null)
+            if (!Directory.Exists(projectOptions.PathForSrcGenerate.FullName))
             {
-                throw new ArgumentNullException(nameof(hostProjectOptions));
-            }
-
-            if (!Directory.Exists(hostProjectOptions.PathForSrcGenerate.FullName))
-            {
-                Directory.CreateDirectory(hostProjectOptions.PathForSrcGenerate.FullName);
+                Directory.CreateDirectory(projectOptions.PathForSrcGenerate.FullName);
             }
 
             var logItems = new List<LogKeyValueItem>();
 
-            if (hostProjectOptions.PathForSrcGenerate.Exists && hostProjectOptions.ProjectSrcCsProj.Exists)
+            if (projectOptions.PathForSrcGenerate.Exists && projectOptions.ProjectSrcCsProj.Exists)
             {
-                var element = XElement.Load(hostProjectOptions.ProjectSrcCsProj.FullName);
+                var element = XElement.Load(projectOptions.ProjectSrcCsProj.FullName);
                 var originalNullableValue = SolutionAndProjectHelper.GetBoolFromNullableString(SolutionAndProjectHelper.GetNullableValueFromProject(element));
 
                 bool hasUpdates = false;
-                if (hostProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes != originalNullableValue)
+                if (projectOptions.ApiOptions.Generator.UseNullableReferenceTypes != originalNullableValue)
                 {
-                    var newNullableValue = SolutionAndProjectHelper.GetNullableStringFromBool(hostProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes);
+                    var newNullableValue = SolutionAndProjectHelper.GetNullableStringFromBool(projectOptions.ApiOptions.Generator.UseNullableReferenceTypes);
                     SolutionAndProjectHelper.SetNullableValueForProject(element, newNullableValue);
-                    element.Save(hostProjectOptions.ProjectSrcCsProj.FullName);
+                    element.Save(projectOptions.ProjectSrcCsProj.FullName);
                     logItems.Add(new LogKeyValueItem(LogCategoryType.Debug, "FileUpdate", "#", $"Update host csproj - Nullable value={newNullableValue}"));
                     hasUpdates = true;
                 }
@@ -92,126 +87,33 @@ namespace Atc.Rest.ApiGenerator.Generators
             else
             {
                 var projectReferences = new List<FileInfo>();
-                if (hostProjectOptions.ApiProjectSrcCsProj != null)
+                if (projectOptions.ApiProjectSrcCsProj != null)
                 {
-                    projectReferences.Add(hostProjectOptions.ApiProjectSrcCsProj);
+                    projectReferences.Add(projectOptions.ApiProjectSrcCsProj);
                 }
 
-                if (hostProjectOptions.DomainProjectSrcCsProj != null)
+                if (projectOptions.DomainProjectSrcCsProj != null)
                 {
-                    projectReferences.Add(hostProjectOptions.DomainProjectSrcCsProj);
+                    projectReferences.Add(projectOptions.DomainProjectSrcCsProj);
                 }
 
                 logItems.Add(SolutionAndProjectHelper.ScaffoldProjFile(
-                    hostProjectOptions.ProjectSrcCsProj,
+                    projectOptions.ProjectSrcCsProj,
                     true,
                     false,
-                    hostProjectOptions.ProjectName,
-                    hostProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
+                    projectOptions.ProjectName,
+                    "netcoreapp3.1",
+                    projectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
                     null,
-                    NugetPackageReferenceHelper.CreateForHostProject(hostProjectOptions.UseRestExtended),
+                    NugetPackageReferenceHelper.CreateForHostProject(projectOptions.UseRestExtended),
                     projectReferences,
                     false));
 
                 logItems.Add(ScaffoldPropertiesLaunchSettingsFile(
-                    hostProjectOptions.PathForSrcGenerate,
-                    hostProjectOptions.UseRestExtended));
-                logItems.Add(ScaffoldProgramFile(hostProjectOptions));
-                logItems.Add(ScaffoldStartupFile(hostProjectOptions));
-            }
-
-            return logItems;
-        }
-
-        [SuppressMessage("Critical Code Smell", "S3776:Cognitive Complexity of methods should not be too high", Justification = "OK.")]
-        private static List<LogKeyValueItem> ScaffoldTest(HostProjectOptions hostProjectOptions)
-        {
-            if (hostProjectOptions == null)
-            {
-                throw new ArgumentNullException(nameof(hostProjectOptions));
-            }
-
-            var logItems = new List<LogKeyValueItem>();
-
-            if (hostProjectOptions.PathForTestGenerate == null || hostProjectOptions.ProjectTestCsProj == null)
-            {
-                return logItems;
-            }
-
-            if (hostProjectOptions.PathForTestGenerate.Exists && hostProjectOptions.ProjectTestCsProj.Exists)
-            {
-                // Update
-            }
-            else
-            {
-                if (!Directory.Exists(hostProjectOptions.PathForTestGenerate.FullName))
-                {
-                    Directory.CreateDirectory(hostProjectOptions.PathForTestGenerate.FullName);
-                }
-
-                var projectReferences = new List<FileInfo>();
-                if (hostProjectOptions.ApiProjectSrcCsProj != null)
-                {
-                    projectReferences.Add(hostProjectOptions.ProjectSrcCsProj);
-                    projectReferences.Add(hostProjectOptions.ApiProjectSrcCsProj);
-                }
-
-                if (hostProjectOptions.DomainProjectSrcCsProj != null)
-                {
-                    projectReferences.Add(hostProjectOptions.DomainProjectSrcCsProj);
-                }
-
-                logItems.Add(SolutionAndProjectHelper.ScaffoldProjFile(
-                    hostProjectOptions.ProjectTestCsProj,
-                    false,
-                    true,
-                    $"{hostProjectOptions.ProjectName}.Tests",
-                    hostProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
-                    null,
-                    NugetPackageReferenceHelper.CreateForTestProject(true),
-                    projectReferences,
-                    true));
-            }
-
-            logItems.Add(GenerateTestWebApiStartupFactory(hostProjectOptions));
-            logItems.Add(GenerateTestWebApiControllerBaseTest(hostProjectOptions));
-
-            return logItems;
-        }
-
-        private List<LogKeyValueItem> GenerateTestEndpoints(HostProjectOptions hostProjectOptions)
-        {
-            if (hostProjectOptions == null)
-            {
-                throw new ArgumentNullException(nameof(hostProjectOptions));
-            }
-
-            var apiProjectOptions = new ApiProjectOptions(
-                hostProjectOptions.ApiProjectSrcPath,
-                null,
-                hostProjectOptions.Document,
-                hostProjectOptions.DocumentFile,
-                hostProjectOptions.ProjectName.Replace(".Api", string.Empty, StringComparison.Ordinal),
-                hostProjectOptions.ApiOptions);
-
-            var operationSchemaMappings = OpenApiOperationSchemaMapHelper.CollectMappings(projectOptions.Document);
-            var sgEndpointControllers = new List<SyntaxGeneratorEndpointControllers>();
-            foreach (var segmentName in hostProjectOptions.BasePathSegmentNames)
-            {
-                var generator = new SyntaxGeneratorEndpointControllers(apiProjectOptions, operationSchemaMappings, segmentName);
-                generator.GenerateCode();
-                sgEndpointControllers.Add(generator);
-            }
-
-            var logItems = new List<LogKeyValueItem>();
-            foreach (var sgEndpointController in sgEndpointControllers)
-            {
-                var metadataForMethods = sgEndpointController.GetMetadataForMethods();
-                foreach (var endpointMethodMetadata in metadataForMethods)
-                {
-                    logItems.Add(GenerateServerApiXunitTestEndpointHandlerStubHelper.Generate(hostProjectOptions, endpointMethodMetadata));
-                    logItems.Add(GenerateServerApiXunitTestEndpointTestHelper.Generate(hostProjectOptions, endpointMethodMetadata));
-                }
+                    projectOptions.PathForSrcGenerate,
+                    projectOptions.UseRestExtended));
+                logItems.Add(ScaffoldProgramFile());
+                logItems.Add(ScaffoldStartupFile());
             }
 
             return logItems;
@@ -235,199 +137,6 @@ namespace Atc.Rest.ApiGenerator.Generators
             return File.Exists(file.FullName)
                 ? new LogKeyValueItem(LogCategoryType.Debug, "FileSkip", "#", file.FullName)
                 : TextFileHelper.Save(file, json);
-        }
-
-        private static LogKeyValueItem ScaffoldProgramFile(HostProjectOptions hostProjectOptions)
-        {
-            // Create compilationUnit
-            var compilationUnit = SyntaxFactory.CompilationUnit();
-
-            // Create a namespace
-            var @namespace = SyntaxProjectFactory.CreateNamespace(hostProjectOptions, false);
-
-            // Create class
-            var classDeclaration = SyntaxClassDeclarationFactory.CreateAsPublicStatic("Program");
-
-            // Create method
-            var methodDeclarationMain = CreateProgramMain();
-            var methodDeclarationHostBuilder = CreateProgramHostBuilder();
-
-            // Add method to class
-            classDeclaration = classDeclaration.AddMembers(methodDeclarationMain);
-            classDeclaration = classDeclaration.AddMembers(methodDeclarationHostBuilder);
-
-            // Add class to namespace
-            @namespace = @namespace.AddMembers(classDeclaration);
-
-            // Add namespace to compilationUnit
-            compilationUnit = compilationUnit.AddMembers(@namespace);
-
-            // Add using to compilationUnit
-            compilationUnit = compilationUnit.AddUsingStatements(ProjectHostFactory.CreateUsingListForProgram());
-
-            var codeAsString = compilationUnit
-                .NormalizeWhitespace()
-                .ToFullString();
-
-            var file = new FileInfo(Path.Combine(hostProjectOptions.PathForSrcGenerate.FullName, "Program.cs"));
-            return File.Exists(file.FullName)
-                ? new LogKeyValueItem(LogCategoryType.Debug, "FileSkip", "#", file.FullName)
-                : TextFileHelper.Save(file, codeAsString);
-        }
-
-        private static LogKeyValueItem ScaffoldStartupFile(HostProjectOptions hostProjectOptions)
-        {
-            // Create compilationUnit
-            var compilationUnit = SyntaxFactory.CompilationUnit();
-
-            // Create a namespace
-            var @namespace = SyntaxProjectFactory.CreateNamespace(hostProjectOptions, false);
-
-            // Create class
-            var classDeclaration = SyntaxClassDeclarationFactory.Create("Startup");
-
-            // Create Member
-            var memberDeclarationPropertyPrivateOptions = CreateStartupPropertyPrivateOptions(hostProjectOptions.UseRestExtended);
-            var memberDeclarationConstructor = CreateStartupConstructor(hostProjectOptions.UseRestExtended);
-            var memberDeclarationPropertyPublicConfiguration = CreateStartupPropertyPublicConfiguration();
-            var memberDeclarationConfigureServices = CreateStartupConfigureServices(hostProjectOptions.UseRestExtended);
-            var memberDeclarationConfigure = CreateStartupConfigure();
-
-            // Add member to class
-            classDeclaration = classDeclaration.AddMembers(memberDeclarationPropertyPrivateOptions);
-            classDeclaration = classDeclaration.AddMembers(memberDeclarationConstructor);
-            classDeclaration = classDeclaration.AddMembers(memberDeclarationPropertyPublicConfiguration);
-            classDeclaration = classDeclaration.AddMembers(memberDeclarationConfigureServices);
-            classDeclaration = classDeclaration.AddMembers(memberDeclarationConfigure);
-
-            // Add class to namespace
-            @namespace = @namespace.AddMembers(classDeclaration);
-
-            // Add namespace to compilationUnit
-            compilationUnit = compilationUnit.AddMembers(@namespace);
-
-            // Add using to compilationUnit
-            compilationUnit = compilationUnit.AddUsingStatements(ProjectHostFactory.CreateUsingListForStartup(
-                hostProjectOptions.ProjectName,
-                hostProjectOptions.UseRestExtended));
-
-            var codeAsString = compilationUnit
-                .NormalizeWhitespace()
-                .ToFullString()
-                .FormatAutoPropertiesOnOneLine()
-                .FormatRemoveEmptyBracketsInitialize()
-                .FormatPublicPrivateLines();
-
-            var file = new FileInfo(Path.Combine(hostProjectOptions.PathForSrcGenerate.FullName, "Startup.cs"));
-            return File.Exists(file.FullName)
-                ? new LogKeyValueItem(LogCategoryType.Debug, "FileSkip", "#", file.FullName)
-                : TextFileHelper.Save(file, codeAsString);
-        }
-
-        private static LogKeyValueItem GenerateTestWebApiStartupFactory(HostProjectOptions hostProjectOptions)
-        {
-            // Create compilationUnit
-            var compilationUnit = SyntaxFactory.CompilationUnit();
-
-            // Create a namespace
-            var @namespace = SyntaxProjectFactory.CreateNamespace(hostProjectOptions, "Tests");
-
-            // Create class
-            var classDeclaration = SyntaxClassDeclarationFactory.CreateAsPublicPartial("WebApiStartupFactory")
-                .AddGeneratedCodeAttribute(hostProjectOptions.ToolName, hostProjectOptions.ToolVersion.ToString())
-                .WithBaseList(
-                    SyntaxFactory.BaseList(
-                        SyntaxFactory.SingletonSeparatedList<BaseTypeSyntax>(
-                            SyntaxFactory.SimpleBaseType(
-                                SyntaxFactory.GenericName(
-                                        SyntaxFactory.Identifier("WebApplicationFactory"))
-                                    .WithTypeArgumentList(
-                                        SyntaxFactory.TypeArgumentList(
-                                            SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
-                                                SyntaxFactory.IdentifierName("Startup"))))))));
-
-            // Create members
-            var memberDeclarationConfigureWebHost = CreateWebApplicationFactoryConfigureWebHost();
-            var memberDeclarationModifyConfiguration = CreateWebApplicationFactoryModifyConfiguration();
-            var memberDeclarationModifyServices = CreateWebApplicationFactoryModifyServices();
-
-            // Add member to class
-            classDeclaration = classDeclaration.AddMembers(memberDeclarationConfigureWebHost, memberDeclarationModifyConfiguration, memberDeclarationModifyServices);
-
-            // Add class to namespace
-            @namespace = @namespace.AddMembers(classDeclaration);
-
-            // Add namespace to compilationUnit
-            compilationUnit = compilationUnit.AddMembers(@namespace);
-
-            // Add using to compilationUnit
-            compilationUnit = compilationUnit.AddUsingStatements(ProjectHostFactory.CreateUsingListForWebApiStartupFactory(
-                hostProjectOptions.ProjectName));
-
-            var codeAsString = compilationUnit
-                .NormalizeWhitespace()
-                .ToFullString();
-
-            var file = new FileInfo(Path.Combine(hostProjectOptions.PathForTestGenerate!.FullName, "WebApiStartupFactory.cs"));
-            return TextFileHelper.Save(file, codeAsString);
-        }
-
-        private static LogKeyValueItem GenerateTestWebApiControllerBaseTest(HostProjectOptions hostProjectOptions)
-        {
-            // Create compilationUnit
-            var compilationUnit = SyntaxFactory.CompilationUnit();
-
-            // Create a namespace
-            var @namespace = SyntaxProjectFactory.CreateNamespace(hostProjectOptions, "Tests");
-
-            // Create class
-            var classDeclaration = SyntaxClassDeclarationFactory.Create("WebApiControllerBaseTest")
-                .AddModifiers(SyntaxTokenFactory.AbstractKeyword())
-                .AddGeneratedCodeAttribute(hostProjectOptions.ToolName, hostProjectOptions.ToolVersion.ToString())
-                .WithBaseList(
-                    SyntaxFactory.BaseList(
-                        SyntaxFactory.SingletonSeparatedList<BaseTypeSyntax>(
-                            SyntaxFactory.SimpleBaseType(
-                                SyntaxFactory.GenericName(
-                                        SyntaxFactory.Identifier("IClassFixture"))
-                                    .WithTypeArgumentList(
-                                        SyntaxFactory.TypeArgumentList(
-                                            SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
-                                                SyntaxFactory.IdentifierName("WebApiStartupFactory"))))))));
-
-            // Create member
-            var memberDeclarationFactory = CreateWebApiControllerBaseTestFactory();
-            var memberDeclarationHttpClient = CreateWebApiControllerBaseTestHttpClient();
-            var memberDeclarationConfiguration = CreateWebApiControllerBaseTestConfiguration();
-            var memberDeclarationJsonSerializerOptions = CreateWebApiControllerBaseTestJsonSerializerOptions();
-            var memberDeclarationConstructor = CreateWebApiControllerBaseTestConstructor();
-            var memberDeclarationToJson = CreateWebApiControllerBaseTestToJson();
-            var memberDeclarationJson = CreateWebApiControllerBaseTestJson();
-
-            // Add member to class
-            classDeclaration = classDeclaration.AddMembers(memberDeclarationFactory);
-            classDeclaration = classDeclaration.AddMembers(memberDeclarationHttpClient);
-            classDeclaration = classDeclaration.AddMembers(memberDeclarationConfiguration);
-            classDeclaration = classDeclaration.AddMembers(memberDeclarationJsonSerializerOptions);
-            classDeclaration = classDeclaration.AddMembers(memberDeclarationConstructor);
-            classDeclaration = classDeclaration.AddMembers(memberDeclarationToJson);
-            classDeclaration = classDeclaration.AddMembers(memberDeclarationJson);
-
-            // Add class to namespace
-            @namespace = @namespace.AddMembers(classDeclaration);
-
-            // Add namespace to compilationUnit
-            compilationUnit = compilationUnit.AddMembers(@namespace);
-
-            // Add using to compilationUnit
-            compilationUnit = compilationUnit.AddUsingStatements(ProjectHostFactory.CreateUsingListForWebApiControllerBaseTest());
-
-            var codeAsString = compilationUnit
-                .NormalizeWhitespace()
-                .ToFullString();
-
-            var file = new FileInfo(Path.Combine(hostProjectOptions.PathForTestGenerate!.FullName, "WebApiControllerBaseTest.cs"));
-            return TextFileHelper.Save(file, codeAsString);
         }
 
         private static MemberDeclarationSyntax CreateProgramMain()
@@ -1121,6 +830,285 @@ namespace Atc.Rest.ApiGenerator.Generators
                                             SyntaxFactory.Literal(MediaTypeNames.Application.Json))),
                                 })))))
             .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
+        }
+
+        [SuppressMessage("Critical Code Smell", "S3776:Cognitive Complexity of methods should not be too high", Justification = "OK.")]
+        private List<LogKeyValueItem> ScaffoldTest()
+        {
+            var logItems = new List<LogKeyValueItem>();
+
+            if (projectOptions.PathForTestGenerate == null || projectOptions.ProjectTestCsProj == null)
+            {
+                return logItems;
+            }
+
+            if (projectOptions.PathForTestGenerate.Exists && projectOptions.ProjectTestCsProj.Exists)
+            {
+                // Update
+            }
+            else
+            {
+                if (!Directory.Exists(projectOptions.PathForTestGenerate.FullName))
+                {
+                    Directory.CreateDirectory(projectOptions.PathForTestGenerate.FullName);
+                }
+
+                var projectReferences = new List<FileInfo>();
+                if (projectOptions.ApiProjectSrcCsProj != null)
+                {
+                    projectReferences.Add(projectOptions.ProjectSrcCsProj);
+                    projectReferences.Add(projectOptions.ApiProjectSrcCsProj);
+                }
+
+                if (projectOptions.DomainProjectSrcCsProj != null)
+                {
+                    projectReferences.Add(projectOptions.DomainProjectSrcCsProj);
+                }
+
+                logItems.Add(SolutionAndProjectHelper.ScaffoldProjFile(
+                    projectOptions.ProjectTestCsProj,
+                    false,
+                    true,
+                    $"{projectOptions.ProjectName}.Tests",
+                    "netcoreapp3.1",
+                    projectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
+                    null,
+                    NugetPackageReferenceHelper.CreateForTestProject(true),
+                    projectReferences,
+                    true));
+            }
+
+            logItems.Add(GenerateTestWebApiStartupFactory());
+            logItems.Add(GenerateTestWebApiControllerBaseTest());
+
+            return logItems;
+        }
+
+        private List<LogKeyValueItem> GenerateTestEndpoints()
+        {
+            var apiProjectOptions = new ApiProjectOptions(
+                projectOptions.ApiProjectSrcPath,
+                null,
+                projectOptions.Document,
+                projectOptions.DocumentFile,
+                projectOptions.ProjectName.Replace(".Api", string.Empty, StringComparison.Ordinal),
+                "Api.Generated",
+                projectOptions.ApiOptions);
+
+            var operationSchemaMappings = OpenApiOperationSchemaMapHelper.CollectMappings(projectOptions.Document);
+            var sgEndpointControllers = new List<SyntaxGeneratorEndpointControllers>();
+            foreach (var segmentName in projectOptions.BasePathSegmentNames)
+            {
+                var generator = new SyntaxGeneratorEndpointControllers(apiProjectOptions, operationSchemaMappings, segmentName);
+                generator.GenerateCode();
+                sgEndpointControllers.Add(generator);
+            }
+
+            var logItems = new List<LogKeyValueItem>();
+            foreach (var sgEndpointController in sgEndpointControllers)
+            {
+                var metadataForMethods = sgEndpointController.GetMetadataForMethods();
+                foreach (var endpointMethodMetadata in metadataForMethods)
+                {
+                    logItems.Add(GenerateServerApiXunitTestEndpointHandlerStubHelper.Generate(projectOptions, endpointMethodMetadata));
+                    logItems.Add(GenerateServerApiXunitTestEndpointTestHelper.Generate(projectOptions, endpointMethodMetadata));
+                }
+            }
+
+            return logItems;
+        }
+
+        private LogKeyValueItem ScaffoldProgramFile()
+        {
+            // Create compilationUnit
+            var compilationUnit = SyntaxFactory.CompilationUnit();
+
+            // Create a namespace
+            var @namespace = SyntaxProjectFactory.CreateNamespace(projectOptions, false);
+
+            // Create class
+            var classDeclaration = SyntaxClassDeclarationFactory.CreateAsPublicStatic("Program");
+
+            // Create method
+            var methodDeclarationMain = CreateProgramMain();
+            var methodDeclarationHostBuilder = CreateProgramHostBuilder();
+
+            // Add method to class
+            classDeclaration = classDeclaration.AddMembers(methodDeclarationMain);
+            classDeclaration = classDeclaration.AddMembers(methodDeclarationHostBuilder);
+
+            // Add class to namespace
+            @namespace = @namespace.AddMembers(classDeclaration);
+
+            // Add namespace to compilationUnit
+            compilationUnit = compilationUnit.AddMembers(@namespace);
+
+            // Add using to compilationUnit
+            compilationUnit = compilationUnit.AddUsingStatements(ProjectHostFactory.CreateUsingListForProgram());
+
+            var codeAsString = compilationUnit
+                .NormalizeWhitespace()
+                .ToFullString();
+
+            var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "Program.cs"));
+            return File.Exists(file.FullName)
+                ? new LogKeyValueItem(LogCategoryType.Debug, "FileSkip", "#", file.FullName)
+                : TextFileHelper.Save(file, codeAsString);
+        }
+
+        private LogKeyValueItem ScaffoldStartupFile()
+        {
+            // Create compilationUnit
+            var compilationUnit = SyntaxFactory.CompilationUnit();
+
+            // Create a namespace
+            var @namespace = SyntaxProjectFactory.CreateNamespace(projectOptions, false);
+
+            // Create class
+            var classDeclaration = SyntaxClassDeclarationFactory.Create("Startup");
+
+            // Create Member
+            var memberDeclarationPropertyPrivateOptions = CreateStartupPropertyPrivateOptions(projectOptions.UseRestExtended);
+            var memberDeclarationConstructor = CreateStartupConstructor(projectOptions.UseRestExtended);
+            var memberDeclarationPropertyPublicConfiguration = CreateStartupPropertyPublicConfiguration();
+            var memberDeclarationConfigureServices = CreateStartupConfigureServices(projectOptions.UseRestExtended);
+            var memberDeclarationConfigure = CreateStartupConfigure();
+
+            // Add member to class
+            classDeclaration = classDeclaration.AddMembers(memberDeclarationPropertyPrivateOptions);
+            classDeclaration = classDeclaration.AddMembers(memberDeclarationConstructor);
+            classDeclaration = classDeclaration.AddMembers(memberDeclarationPropertyPublicConfiguration);
+            classDeclaration = classDeclaration.AddMembers(memberDeclarationConfigureServices);
+            classDeclaration = classDeclaration.AddMembers(memberDeclarationConfigure);
+
+            // Add class to namespace
+            @namespace = @namespace.AddMembers(classDeclaration);
+
+            // Add namespace to compilationUnit
+            compilationUnit = compilationUnit.AddMembers(@namespace);
+
+            // Add using to compilationUnit
+            compilationUnit = compilationUnit.AddUsingStatements(ProjectHostFactory.CreateUsingListForStartup(
+                projectOptions.ProjectName,
+                projectOptions.UseRestExtended));
+
+            var codeAsString = compilationUnit
+                .NormalizeWhitespace()
+                .ToFullString()
+                .FormatAutoPropertiesOnOneLine()
+                .FormatRemoveEmptyBracketsInitialize()
+                .FormatPublicPrivateLines();
+
+            var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "Startup.cs"));
+            return File.Exists(file.FullName)
+                ? new LogKeyValueItem(LogCategoryType.Debug, "FileSkip", "#", file.FullName)
+                : TextFileHelper.Save(file, codeAsString);
+        }
+
+        private LogKeyValueItem GenerateTestWebApiStartupFactory()
+        {
+            // Create compilationUnit
+            var compilationUnit = SyntaxFactory.CompilationUnit();
+
+            // Create a namespace
+            var @namespace = SyntaxProjectFactory.CreateNamespace(projectOptions, "Tests");
+
+            // Create class
+            var classDeclaration = SyntaxClassDeclarationFactory.CreateAsPublicPartial("WebApiStartupFactory")
+                .AddGeneratedCodeAttribute(projectOptions.ToolName, projectOptions.ToolVersion.ToString())
+                .WithBaseList(
+                    SyntaxFactory.BaseList(
+                        SyntaxFactory.SingletonSeparatedList<BaseTypeSyntax>(
+                            SyntaxFactory.SimpleBaseType(
+                                SyntaxFactory.GenericName(
+                                        SyntaxFactory.Identifier("WebApplicationFactory"))
+                                    .WithTypeArgumentList(
+                                        SyntaxFactory.TypeArgumentList(
+                                            SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
+                                                SyntaxFactory.IdentifierName("Startup"))))))));
+
+            // Create members
+            var memberDeclarationConfigureWebHost = CreateWebApplicationFactoryConfigureWebHost();
+            var memberDeclarationModifyConfiguration = CreateWebApplicationFactoryModifyConfiguration();
+            var memberDeclarationModifyServices = CreateWebApplicationFactoryModifyServices();
+
+            // Add member to class
+            classDeclaration = classDeclaration.AddMembers(memberDeclarationConfigureWebHost, memberDeclarationModifyConfiguration, memberDeclarationModifyServices);
+
+            // Add class to namespace
+            @namespace = @namespace.AddMembers(classDeclaration);
+
+            // Add namespace to compilationUnit
+            compilationUnit = compilationUnit.AddMembers(@namespace);
+
+            // Add using to compilationUnit
+            compilationUnit = compilationUnit.AddUsingStatements(ProjectHostFactory.CreateUsingListForWebApiStartupFactory(
+                projectOptions.ProjectName));
+
+            var codeAsString = compilationUnit
+                .NormalizeWhitespace()
+                .ToFullString();
+
+            var file = new FileInfo(Path.Combine(projectOptions.PathForTestGenerate!.FullName, "WebApiStartupFactory.cs"));
+            return TextFileHelper.Save(file, codeAsString);
+        }
+
+        private LogKeyValueItem GenerateTestWebApiControllerBaseTest()
+        {
+            // Create compilationUnit
+            var compilationUnit = SyntaxFactory.CompilationUnit();
+
+            // Create a namespace
+            var @namespace = SyntaxProjectFactory.CreateNamespace(projectOptions, "Tests");
+
+            // Create class
+            var classDeclaration = SyntaxClassDeclarationFactory.Create("WebApiControllerBaseTest")
+                .AddModifiers(SyntaxTokenFactory.AbstractKeyword())
+                .AddGeneratedCodeAttribute(projectOptions.ToolName, projectOptions.ToolVersion.ToString())
+                .WithBaseList(
+                    SyntaxFactory.BaseList(
+                        SyntaxFactory.SingletonSeparatedList<BaseTypeSyntax>(
+                            SyntaxFactory.SimpleBaseType(
+                                SyntaxFactory.GenericName(
+                                        SyntaxFactory.Identifier("IClassFixture"))
+                                    .WithTypeArgumentList(
+                                        SyntaxFactory.TypeArgumentList(
+                                            SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
+                                                SyntaxFactory.IdentifierName("WebApiStartupFactory"))))))));
+
+            // Create member
+            var memberDeclarationFactory = CreateWebApiControllerBaseTestFactory();
+            var memberDeclarationHttpClient = CreateWebApiControllerBaseTestHttpClient();
+            var memberDeclarationConfiguration = CreateWebApiControllerBaseTestConfiguration();
+            var memberDeclarationJsonSerializerOptions = CreateWebApiControllerBaseTestJsonSerializerOptions();
+            var memberDeclarationConstructor = CreateWebApiControllerBaseTestConstructor();
+            var memberDeclarationToJson = CreateWebApiControllerBaseTestToJson();
+            var memberDeclarationJson = CreateWebApiControllerBaseTestJson();
+
+            // Add member to class
+            classDeclaration = classDeclaration.AddMembers(memberDeclarationFactory);
+            classDeclaration = classDeclaration.AddMembers(memberDeclarationHttpClient);
+            classDeclaration = classDeclaration.AddMembers(memberDeclarationConfiguration);
+            classDeclaration = classDeclaration.AddMembers(memberDeclarationJsonSerializerOptions);
+            classDeclaration = classDeclaration.AddMembers(memberDeclarationConstructor);
+            classDeclaration = classDeclaration.AddMembers(memberDeclarationToJson);
+            classDeclaration = classDeclaration.AddMembers(memberDeclarationJson);
+
+            // Add class to namespace
+            @namespace = @namespace.AddMembers(classDeclaration);
+
+            // Add namespace to compilationUnit
+            compilationUnit = compilationUnit.AddMembers(@namespace);
+
+            // Add using to compilationUnit
+            compilationUnit = compilationUnit.AddUsingStatements(ProjectHostFactory.CreateUsingListForWebApiControllerBaseTest());
+
+            var codeAsString = compilationUnit
+                .NormalizeWhitespace()
+                .ToFullString();
+
+            var file = new FileInfo(Path.Combine(projectOptions.PathForTestGenerate!.FullName, "WebApiControllerBaseTest.cs"));
+            return TextFileHelper.Save(file, codeAsString);
         }
     }
 }

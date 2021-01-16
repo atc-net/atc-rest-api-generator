@@ -30,6 +30,11 @@ public static class Util
 #### GetCsFileNameForContract
 
 ```csharp
+string GetCsFileNameForContract(DirectoryInfo pathForContracts, string area, string modelName)
+```
+#### GetCsFileNameForContract
+
+```csharp
 string GetCsFileNameForContract(DirectoryInfo pathForContracts, string area, string subArea, string modelName)
 ```
 #### GetCsFileNameForContractEnumTypes

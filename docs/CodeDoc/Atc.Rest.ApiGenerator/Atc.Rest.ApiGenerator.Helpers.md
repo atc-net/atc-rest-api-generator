@@ -8,6 +8,24 @@
 <br />
 
 
+## ApiGeneratorHelper
+
+```csharp
+public static class ApiGeneratorHelper
+```
+
+### Static Methods
+
+
+#### CollectMissingContractModelFromOperationSchemaMappings
+
+```csharp
+void CollectMissingContractModelFromOperationSchemaMappings(ApiProjectOptions projectOptions, List<ApiOperationSchemaMap> operationSchemaMappings, List<SyntaxGeneratorContractModel> sgContractModels)
+```
+
+<br />
+
+
 ## GenerateAtcCodingRulesHelper
 
 ```csharp
@@ -30,11 +48,6 @@ string FileNameEditorConfig
 ```csharp
 IEnumerable<LogKeyValueItem> Generate(string outputSlnPath, DirectoryInfo outputSrcPath, DirectoryInfo outputTestPath)
 ```
-#### GetRawFile
-
-```csharp
-string GetRawFile(string rawFileUrl)
-```
 
 <br />
 
@@ -52,6 +65,11 @@ public static class GenerateHelper
 
 ```csharp
 List<LogKeyValueItem> GenerateServerApi(string projectPrefixName, DirectoryInfo outputPath, DirectoryInfo outputTestPath, Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument, ApiOptions apiOptions)
+```
+#### GenerateServerCSharpClient
+
+```csharp
+List<LogKeyValueItem> GenerateServerCSharpClient(string projectPrefixName, string clientFolder, DirectoryInfo outputPath, Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument, ApiOptions apiOptions)
 ```
 #### GenerateServerDomain
 
@@ -100,6 +118,11 @@ public static class HttpClientHelper
 
 ```csharp
 FileInfo DownloadToTempFile(string apiDesignPath)
+```
+#### GetRawFile
+
+```csharp
+string GetRawFile(string rawFileUrl)
 ```
 
 <br />
@@ -275,7 +298,7 @@ string GetNullableValueFromProject(XElement element)
 #### ScaffoldProjFile
 
 ```csharp
-LogKeyValueItem ScaffoldProjFile(FileInfo projectCsProjFile, bool createAsWeb, bool createAsTestProject, string projectName, bool useNullableReferenceTypes, List<string> frameworkReferences, List<Tuple<string, string, string>> packageReferences, List<FileInfo> projectReferences, bool includeApiSpecification)
+LogKeyValueItem ScaffoldProjFile(FileInfo projectCsProjFile, bool createAsWeb, bool createAsTestProject, string projectName, string targetFramework, bool useNullableReferenceTypes, List<string> frameworkReferences, List<Tuple<string, string, string>> packageReferences, List<FileInfo> projectReferences, bool includeApiSpecification)
 ```
 #### ScaffoldSlnFile
 

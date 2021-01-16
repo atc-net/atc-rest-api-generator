@@ -8,6 +8,24 @@
 <br />
 
 
+## ClientCSharpApiGenerator
+
+```csharp
+public class ClientCSharpApiGenerator
+```
+
+### Methods
+
+
+#### Generate
+
+```csharp
+List<LogKeyValueItem> Generate()
+```
+
+<br />
+
+
 ## ServerApiGenerator
 
 ```csharp

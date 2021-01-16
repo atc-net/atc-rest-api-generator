@@ -1,7 +1,5 @@
-﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
 using System.Linq;
 using Atc.Data.Models;
 using Atc.Rest.ApiGenerator.CLI.Commands.Options;
@@ -12,7 +10,7 @@ using McMaster.Extensions.CommandLineUtils;
 namespace Atc.Rest.ApiGenerator.CLI.Commands
 {
     [Command("csharp", Description = "Generate client project in C#.")]
-    public class GenerateClientCSharpCommand : ClientCommandOptions
+    public class GenerateClientCSharpCommand : ClientApiCommandOptions
     {
         private const string CommandArea = "Client-CSharp";
 
@@ -36,10 +34,18 @@ namespace Atc.Rest.ApiGenerator.CLI.Commands
                 return ConsoleHelper.WriteLogItemsAndExit(logItems, verboseMode, CommandArea);
             }
 
-            Console.WriteLine();
-            Colorful.Console.Write("Command for client-CSharp is not implemented yet, sorry...", Color.DarkKhaki);
+            var projectPrefixName = CommandLineApplicationHelper.GetProjectPrefixName(configCmd);
+            var clientFolderName = CommandLineApplicationHelper.GetClientFolderName(configCmd);
+            var outputPath = CommandLineApplicationHelper.GetOutputPath(configCmd);
 
-            return ExitStatusCodes.Success;
+            logItems.AddRange(GenerateHelper.GenerateServerCSharpClient(
+                projectPrefixName,
+                clientFolderName,
+                outputPath,
+                apiDocument,
+                apiOptions));
+
+            return ConsoleHelper.WriteLogItemsAndExit(logItems, verboseMode, CommandArea);
         }
     }
 }
