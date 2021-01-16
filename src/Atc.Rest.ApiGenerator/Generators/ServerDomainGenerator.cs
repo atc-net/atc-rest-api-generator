@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -38,122 +38,16 @@ namespace Atc.Rest.ApiGenerator.Generators
                 return logItems;
             }
 
-            logItems.AddRange(ScaffoldSrc(projectOptions));
+            logItems.AddRange(ScaffoldSrc());
             if (projectOptions.PathForTestGenerate != null)
             {
-                logItems.AddRange(ScaffoldTest(projectOptions));
+                logItems.AddRange(ScaffoldTest());
             }
 
             logItems.AddRange(GenerateSrcHandlers(projectOptions, out List<SyntaxGeneratorHandler> sgHandlers));
             if (projectOptions.PathForTestGenerate != null)
             {
                 logItems.AddRange(GenerateTestHandlers(projectOptions, sgHandlers));
-            }
-
-            return logItems;
-        }
-
-        private static List<LogKeyValueItem> ScaffoldSrc(DomainProjectOptions domainProjectOptions)
-        {
-            if (domainProjectOptions == null)
-            {
-                throw new ArgumentNullException(nameof(domainProjectOptions));
-            }
-
-            if (!Directory.Exists(domainProjectOptions.PathForSrcGenerate.FullName))
-            {
-                Directory.CreateDirectory(domainProjectOptions.PathForSrcGenerate.FullName);
-            }
-
-            var logItems = new List<LogKeyValueItem>();
-
-            if (domainProjectOptions.PathForSrcGenerate.Exists && domainProjectOptions.ProjectSrcCsProj.Exists)
-            {
-                var element = XElement.Load(domainProjectOptions.ProjectSrcCsProj.FullName);
-                var originalNullableValue = SolutionAndProjectHelper.GetBoolFromNullableString(SolutionAndProjectHelper.GetNullableValueFromProject(element));
-
-                bool hasUpdates = false;
-                if (domainProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes != originalNullableValue)
-                {
-                    var newNullableValue = SolutionAndProjectHelper.GetNullableStringFromBool(domainProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes);
-                    SolutionAndProjectHelper.SetNullableValueForProject(element, newNullableValue);
-                    element.Save(domainProjectOptions.ProjectSrcCsProj.FullName);
-                    logItems.Add(new LogKeyValueItem(LogCategoryType.Debug, "FileUpdate", "#", $"Update domain csproj - Nullable value={newNullableValue}"));
-                    hasUpdates = true;
-                }
-
-                if (!hasUpdates)
-                {
-                    logItems.Add(new LogKeyValueItem(LogCategoryType.Debug, "FileSkip", "#", "No updates for domain csproj"));
-                }
-            }
-            else
-            {
-                var projectReferences = new List<FileInfo>();
-                if (domainProjectOptions.ApiProjectSrcCsProj != null)
-                {
-                    projectReferences.Add(domainProjectOptions.ApiProjectSrcCsProj);
-                }
-
-                logItems.Add(SolutionAndProjectHelper.ScaffoldProjFile(
-                    domainProjectOptions.ProjectSrcCsProj,
-                    false,
-                    false,
-                    domainProjectOptions.ProjectName,
-                    domainProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
-                    new List<string> { "Microsoft.AspNetCore.App" },
-                    null,
-                    projectReferences,
-                    false));
-            }
-
-            ScaffoldBasicFileDomainRegistration(domainProjectOptions);
-
-            return logItems;
-        }
-
-        private static List<LogKeyValueItem> ScaffoldTest(DomainProjectOptions domainProjectOptions)
-        {
-            if (domainProjectOptions == null)
-            {
-                throw new ArgumentNullException(nameof(domainProjectOptions));
-            }
-
-            var logItems = new List<LogKeyValueItem>();
-
-            if (domainProjectOptions.PathForTestGenerate == null || domainProjectOptions.ProjectTestCsProj == null)
-            {
-                return logItems;
-            }
-
-            if (domainProjectOptions.PathForTestGenerate.Exists && domainProjectOptions.ProjectTestCsProj.Exists)
-            {
-                // Update
-            }
-            else
-            {
-                if (!Directory.Exists(domainProjectOptions.PathForTestGenerate.FullName))
-                {
-                    Directory.CreateDirectory(domainProjectOptions.PathForTestGenerate.FullName);
-                }
-
-                var projectReferences = new List<FileInfo>();
-                if (domainProjectOptions.ApiProjectSrcCsProj != null)
-                {
-                    projectReferences.Add(domainProjectOptions.ApiProjectSrcCsProj);
-                    projectReferences.Add(domainProjectOptions.ProjectSrcCsProj);
-                }
-
-                logItems.Add(SolutionAndProjectHelper.ScaffoldProjFile(
-                    domainProjectOptions.ProjectTestCsProj,
-                    false,
-                    true,
-                    $"{domainProjectOptions.ProjectName}.Tests",
-                    domainProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
-                    null,
-                    NugetPackageReferenceHelper.CreateForTestProject(false),
-                    projectReferences,
-                    true));
             }
 
             return logItems;
@@ -208,17 +102,115 @@ namespace Atc.Rest.ApiGenerator.Generators
             return logItems;
         }
 
-        private static void ScaffoldBasicFileDomainRegistration(DomainProjectOptions domainProjectOptions)
+        private List<LogKeyValueItem> ScaffoldSrc()
+        {
+            if (!Directory.Exists(projectOptions.PathForSrcGenerate.FullName))
+            {
+                Directory.CreateDirectory(projectOptions.PathForSrcGenerate.FullName);
+            }
+
+            var logItems = new List<LogKeyValueItem>();
+
+            if (projectOptions.PathForSrcGenerate.Exists && projectOptions.ProjectSrcCsProj.Exists)
+            {
+                var element = XElement.Load(projectOptions.ProjectSrcCsProj.FullName);
+                var originalNullableValue = SolutionAndProjectHelper.GetBoolFromNullableString(SolutionAndProjectHelper.GetNullableValueFromProject(element));
+
+                bool hasUpdates = false;
+                if (projectOptions.ApiOptions.Generator.UseNullableReferenceTypes != originalNullableValue)
+                {
+                    var newNullableValue = SolutionAndProjectHelper.GetNullableStringFromBool(projectOptions.ApiOptions.Generator.UseNullableReferenceTypes);
+                    SolutionAndProjectHelper.SetNullableValueForProject(element, newNullableValue);
+                    element.Save(projectOptions.ProjectSrcCsProj.FullName);
+                    logItems.Add(new LogKeyValueItem(LogCategoryType.Debug, "FileUpdate", "#", $"Update domain csproj - Nullable value={newNullableValue}"));
+                    hasUpdates = true;
+                }
+
+                if (!hasUpdates)
+                {
+                    logItems.Add(new LogKeyValueItem(LogCategoryType.Debug, "FileSkip", "#", "No updates for domain csproj"));
+                }
+            }
+            else
+            {
+                var projectReferences = new List<FileInfo>();
+                if (projectOptions.ApiProjectSrcCsProj != null)
+                {
+                    projectReferences.Add(projectOptions.ApiProjectSrcCsProj);
+                }
+
+                logItems.Add(SolutionAndProjectHelper.ScaffoldProjFile(
+                    projectOptions.ProjectSrcCsProj,
+                    false,
+                    false,
+                    projectOptions.ProjectName,
+                    "netcoreapp3.1",
+                    projectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
+                    new List<string> { "Microsoft.AspNetCore.App" },
+                    null,
+                    projectReferences,
+                    false));
+            }
+
+            ScaffoldBasicFileDomainRegistration();
+
+            return logItems;
+        }
+
+        private List<LogKeyValueItem> ScaffoldTest()
+        {
+            var logItems = new List<LogKeyValueItem>();
+
+            if (projectOptions.PathForTestGenerate == null || projectOptions.ProjectTestCsProj == null)
+            {
+                return logItems;
+            }
+
+            if (projectOptions.PathForTestGenerate.Exists && projectOptions.ProjectTestCsProj.Exists)
+            {
+                // Update
+            }
+            else
+            {
+                if (!Directory.Exists(projectOptions.PathForTestGenerate.FullName))
+                {
+                    Directory.CreateDirectory(projectOptions.PathForTestGenerate.FullName);
+                }
+
+                var projectReferences = new List<FileInfo>();
+                if (projectOptions.ApiProjectSrcCsProj != null)
+                {
+                    projectReferences.Add(projectOptions.ApiProjectSrcCsProj);
+                    projectReferences.Add(projectOptions.ProjectSrcCsProj);
+                }
+
+                logItems.Add(SolutionAndProjectHelper.ScaffoldProjFile(
+                    projectOptions.ProjectTestCsProj,
+                    false,
+                    true,
+                    $"{projectOptions.ProjectName}.Tests",
+                    "netcoreapp3.1",
+                    projectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
+                    null,
+                    NugetPackageReferenceHelper.CreateForTestProject(false),
+                    projectReferences,
+                    true));
+            }
+
+            return logItems;
+        }
+
+        private void ScaffoldBasicFileDomainRegistration()
         {
             // Create compilationUnit
             var compilationUnit = SyntaxFactory.CompilationUnit();
 
             // Create a namespace
-            var @namespace = SyntaxProjectFactory.CreateNamespace(domainProjectOptions);
+            var @namespace = SyntaxProjectFactory.CreateNamespace(projectOptions);
 
             // Create class
             var classDeclaration = SyntaxClassDeclarationFactory.Create("DomainRegistration")
-                .AddGeneratedCodeAttribute(domainProjectOptions.ToolName, domainProjectOptions.ToolVersion.ToString());
+                .AddGeneratedCodeAttribute(projectOptions.ToolName, projectOptions.ToolVersion.ToString());
 
             // Add class to namespace
             @namespace = @namespace.AddMembers(classDeclaration);
@@ -233,7 +225,7 @@ namespace Atc.Rest.ApiGenerator.Generators
                 .NormalizeWhitespace()
                 .ToFullString();
 
-            var file = new FileInfo(Path.Combine(domainProjectOptions.PathForSrcGenerate.FullName, "DomainRegistration.cs"));
+            var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "DomainRegistration.cs"));
             TextFileHelper.Save(file, codeAsString);
         }
     }

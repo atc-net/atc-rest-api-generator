@@ -35,6 +35,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
             {
                 this.IsSharedContract = true;
             }
+
+            this.UseModelFolder = true;
         }
 
         private ApiProjectOptions ApiProjectOptions { get; }
@@ -50,6 +52,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
         public CompilationUnitSyntax? Code { get; private set; }
 
         public bool IsEnum { get; private set; }
+
+        public bool UseModelFolder { get; set; }
 
         [SuppressMessage("Critical Code Smell", "S3776:Cognitive Complexity of methods should not be too high", Justification = "OK.")]
         public bool GenerateCode()
@@ -189,7 +193,9 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                 ? Util.GetCsFileNameForContractEnumTypes(ApiProjectOptions.PathForContracts, modelName)
                 : IsSharedContract
                     ? Util.GetCsFileNameForContractShared(ApiProjectOptions.PathForContractsShared, modelName)
-                    : Util.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, NameConstants.ContractModels, modelName);
+                    : UseModelFolder
+                        ? Util.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, NameConstants.ContractModels, modelName)
+                        : Util.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, modelName);
             return TextFileHelper.Save(file, ToCodeAsString());
         }
 

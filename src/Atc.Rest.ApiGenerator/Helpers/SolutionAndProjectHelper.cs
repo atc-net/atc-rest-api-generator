@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -20,6 +20,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
             bool createAsWeb,
             bool createAsTestProject,
             string projectName,
+            string targetFramework,
             bool useNullableReferenceTypes,
             List<string>? frameworkReferences,
             List<Tuple<string, string, string?>>? packageReferences,
@@ -37,7 +38,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
                 : "<Project Sdk=\"Microsoft.NET.Sdk\">");
             sb.AppendLine();
             sb.AppendLine(2, "<PropertyGroup>");
-            sb.AppendLine(4, "<TargetFramework>netcoreapp3.1</TargetFramework>");
+            sb.AppendLine(4, $"<TargetFramework>{targetFramework}</TargetFramework>");
             if (!createAsTestProject)
             {
                 sb.AppendLine(4, "<IsPackable>false</IsPackable>");
@@ -61,7 +62,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
                 sb.AppendLine(2, "</PropertyGroup>");
                 sb.AppendLine();
                 sb.AppendLine(2, "<PropertyGroup>");
-                sb.AppendLine(4, $"<DocumentationFile>bin{Path.DirectorySeparatorChar}Debug{Path.DirectorySeparatorChar}netcoreapp3.1{Path.DirectorySeparatorChar}{projectName}.xml</DocumentationFile>");
+                sb.AppendLine(4, $"<DocumentationFile>bin{Path.DirectorySeparatorChar}Debug{Path.DirectorySeparatorChar}{targetFramework}{Path.DirectorySeparatorChar}{projectName}.xml</DocumentationFile>");
                 sb.AppendLine(4, "<NoWarn>1573;1591;1701;1702;1712;8618</NoWarn>");
                 sb.AppendLine(2, "</PropertyGroup>");
                 sb.AppendLine();

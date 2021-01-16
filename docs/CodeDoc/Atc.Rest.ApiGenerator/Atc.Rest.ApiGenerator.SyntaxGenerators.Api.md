@@ -290,6 +290,11 @@ FocusOnSegmentName
 ```csharp
 IsEnum
 ```
+#### UseModelFolder
+
+```csharp
+UseModelFolder
+```
 ### Methods
 
 

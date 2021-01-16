@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Atc.Rest.ApiGenerator.Models;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -36,15 +36,19 @@ namespace Atc.Rest.ApiGenerator.ProjectSyntaxFactories
                 throw new ArgumentNullException(nameof(namespacePart));
             }
 
+            var fullNamespace = string.IsNullOrEmpty(baseProjectOptions.ClientFolderName)
+                ? $"{baseProjectOptions.ProjectName}.{namespacePart}"
+                : $"{baseProjectOptions.ProjectName}.{baseProjectOptions.ClientFolderName}.{namespacePart}";
+
             if (withAutoGen)
             {
                 return SyntaxNamespaceDeclarationFactory.Create(
                     baseProjectOptions.ToolNameAndVersion,
-                    $"{baseProjectOptions.ProjectName}.{namespacePart}");
+                    fullNamespace);
             }
 
             return SyntaxNamespaceDeclarationFactory.Create(
-                $"{baseProjectOptions.ProjectName}.{namespacePart}");
+                fullNamespace);
         }
 
         public static NamespaceDeclarationSyntax CreateNamespace(BaseProjectOptions baseProjectOptions, string namespacePart, string focusOnSegmentName, bool withAutoGen = true)

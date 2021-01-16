@@ -83,11 +83,6 @@ public class ApiProjectOptions : BaseProjectOptions
 ```csharp
 PathForContracts
 ```
-#### PathForContractsEnumerationTypes
-
-```csharp
-PathForContractsEnumerationTypes
-```
 #### PathForContractsShared
 
 ```csharp
@@ -126,6 +121,11 @@ ApiVersion
 ```csharp
 BasePathSegmentNames
 ```
+#### ClientFolderName
+
+```csharp
+ClientFolderName
+```
 #### Document
 
 ```csharp
@@ -160,6 +160,79 @@ ProjectSrcCsProj
 
 ```csharp
 ProjectTestCsProj
+```
+#### ToolName
+
+```csharp
+ToolName
+```
+#### ToolNameAndVersion
+
+```csharp
+ToolNameAndVersion
+```
+#### ToolVersion
+
+```csharp
+ToolVersion
+```
+
+<br />
+
+
+## ClientCSharpApiProjectOptions
+
+```csharp
+public class ClientCSharpApiProjectOptions
+```
+
+### Properties
+
+
+#### ApiOptions
+
+```csharp
+ApiOptions
+```
+#### ApiVersion
+
+```csharp
+ApiVersion
+```
+#### BasePathSegmentNames
+
+```csharp
+BasePathSegmentNames
+```
+#### ClientFolderName
+
+```csharp
+ClientFolderName
+```
+#### Document
+
+```csharp
+Document
+```
+#### DocumentFile
+
+```csharp
+DocumentFile
+```
+#### PathForSrcGenerate
+
+```csharp
+PathForSrcGenerate
+```
+#### ProjectName
+
+```csharp
+ProjectName
+```
+#### ProjectSrcCsProj
+
+```csharp
+ProjectSrcCsProj
 ```
 #### ToolName
 

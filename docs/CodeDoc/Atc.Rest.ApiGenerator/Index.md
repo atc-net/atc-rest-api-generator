@@ -15,12 +15,14 @@
 
 ## [Atc.Rest.ApiGenerator.Generators](Atc.Rest.ApiGenerator.Generators.md)
 
+- [ClientCSharpApiGenerator](Atc.Rest.ApiGenerator.Generators.md#clientcsharpapigenerator)
 - [ServerApiGenerator](Atc.Rest.ApiGenerator.Generators.md#serverapigenerator)
 - [ServerDomainGenerator](Atc.Rest.ApiGenerator.Generators.md#serverdomaingenerator)
 - [ServerHostGenerator](Atc.Rest.ApiGenerator.Generators.md#serverhostgenerator)
 
 ## [Atc.Rest.ApiGenerator.Helpers](Atc.Rest.ApiGenerator.Helpers.md)
 
+- [ApiGeneratorHelper](Atc.Rest.ApiGenerator.Helpers.md#apigeneratorhelper)
 - [GenerateAtcCodingRulesHelper](Atc.Rest.ApiGenerator.Helpers.md#generateatccodingruleshelper)
 - [GenerateHelper](Atc.Rest.ApiGenerator.Helpers.md#generatehelper)
 - [HttpClientHelper](Atc.Rest.ApiGenerator.Helpers.md#httpclienthelper)
@@ -50,6 +52,7 @@
 - [ApiOperationSchemaMap](Atc.Rest.ApiGenerator.Models.md#apioperationschemamap)
 - [ApiProjectOptions](Atc.Rest.ApiGenerator.Models.md#apiprojectoptions)
 - [BaseProjectOptions](Atc.Rest.ApiGenerator.Models.md#baseprojectoptions)
+- [ClientCSharpApiProjectOptions](Atc.Rest.ApiGenerator.Models.md#clientcsharpapiprojectoptions)
 - [DomainProjectOptions](Atc.Rest.ApiGenerator.Models.md#domainprojectoptions)
 - [EndpointMethodMetadata](Atc.Rest.ApiGenerator.Models.md#endpointmethodmetadata)
 - [HostProjectOptions](Atc.Rest.ApiGenerator.Models.md#hostprojectoptions)

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using McMaster.Extensions.CommandLineUtils;
@@ -22,6 +22,11 @@ namespace Atc.Rest.ApiGenerator.CLI
         public static string GetProjectPrefixName(CommandLineApplication configCmd)
         {
             return GetValueForParameter(configCmd, "projectPrefixName", "p");
+        }
+
+        public static string GetClientFolderName(CommandLineApplication configCmd)
+        {
+            return GetValueForParameter(configCmd, "clientFolderName");
         }
 
         public static DirectoryInfo GetOutputPath(CommandLineApplication configCmd)

@@ -12,6 +12,7 @@
 - [AtcRestApiGeneratorAssemblyTypeInitializer](Atc.Rest.ApiGenerator.md#atcrestapigeneratorassemblytypeinitializer)
 - [Util](Atc.Rest.ApiGenerator.md#util)
   -  Static Methods
+     - GetCsFileNameForContract(DirectoryInfo pathForContracts, string area, string modelName)
      - GetCsFileNameForContract(DirectoryInfo pathForContracts, string area, string subArea, string modelName)
      - GetCsFileNameForContractEnumTypes(DirectoryInfo pathForContracts, string modelName)
      - GetCsFileNameForContractShared(DirectoryInfo pathForContracts, string modelName)
@@ -73,6 +74,9 @@
 
 ## [Atc.Rest.ApiGenerator.Generators](Atc.Rest.ApiGenerator.Generators.md)
 
+- [ClientCSharpApiGenerator](Atc.Rest.ApiGenerator.Generators.md#clientcsharpapigenerator)
+  -  Methods
+     - Generate()
 - [ServerApiGenerator](Atc.Rest.ApiGenerator.Generators.md#serverapigenerator)
   -  Methods
      - Generate()
@@ -85,15 +89,18 @@
 
 ## [Atc.Rest.ApiGenerator.Helpers](Atc.Rest.ApiGenerator.Helpers.md)
 
+- [ApiGeneratorHelper](Atc.Rest.ApiGenerator.Helpers.md#apigeneratorhelper)
+  -  Static Methods
+     - CollectMissingContractModelFromOperationSchemaMappings(ApiProjectOptions projectOptions, List&lt;ApiOperationSchemaMap&gt; operationSchemaMappings, List&lt;SyntaxGeneratorContractModel&gt; sgContractModels)
 - [GenerateAtcCodingRulesHelper](Atc.Rest.ApiGenerator.Helpers.md#generateatccodingruleshelper)
   -  Static Fields
      - string FileNameEditorConfig
   -  Static Methods
      - Generate(string outputSlnPath, DirectoryInfo outputSrcPath, DirectoryInfo outputTestPath)
-     - GetRawFile(string rawFileUrl)
 - [GenerateHelper](Atc.Rest.ApiGenerator.Helpers.md#generatehelper)
   -  Static Methods
      - GenerateServerApi(string projectPrefixName, DirectoryInfo outputPath, DirectoryInfo outputTestPath, Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, ApiOptions apiOptions)
+     - GenerateServerCSharpClient(string projectPrefixName, string clientFolder, DirectoryInfo outputPath, Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, ApiOptions apiOptions)
      - GenerateServerDomain(string projectPrefixName, DirectoryInfo outputPath, DirectoryInfo outputTestPath, Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, ApiOptions apiOptions, DirectoryInfo apiPath)
      - GenerateServerHost(string projectPrefixName, DirectoryInfo outputPath, DirectoryInfo outputTestPath, Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, ApiOptions apiOptions, DirectoryInfo apiPath, DirectoryInfo domainPath)
      - GenerateServerSln(string projectPrefixName, string outputSlnPath, DirectoryInfo outputSrcPath, DirectoryInfo outputTestPath)
@@ -103,6 +110,7 @@
 - [HttpClientHelper](Atc.Rest.ApiGenerator.Helpers.md#httpclienthelper)
   -  Static Methods
      - DownloadToTempFile(string apiDesignPath)
+     - GetRawFile(string rawFileUrl)
 - [LogItemHelper](Atc.Rest.ApiGenerator.Helpers.md#logitemhelper)
   -  Static Methods
      - Create(LogCategoryType logCategoryType, string ruleName, string description)
@@ -133,7 +141,7 @@
      - GetBoolFromNullableString(string value)
      - GetNullableStringFromBool(bool value)
      - GetNullableValueFromProject(XElement element)
-     - ScaffoldProjFile(FileInfo projectCsProjFile, bool createAsWeb, bool createAsTestProject, string projectName, bool useNullableReferenceTypes, List&lt;string&gt; frameworkReferences, List&lt;Tuple&lt;string, string, string&gt;&gt; packageReferences, List&lt;FileInfo&gt; projectReferences, bool includeApiSpecification)
+     - ScaffoldProjFile(FileInfo projectCsProjFile, bool createAsWeb, bool createAsTestProject, string projectName, string targetFramework, bool useNullableReferenceTypes, List&lt;string&gt; frameworkReferences, List&lt;Tuple&lt;string, string, string&gt;&gt; packageReferences, List&lt;FileInfo&gt; projectReferences, bool includeApiSpecification)
      - ScaffoldSlnFile(FileInfo slnFile, string projectName, DirectoryInfo apiPath, DirectoryInfo domainPath, DirectoryInfo hostPath, DirectoryInfo apiTestPath = null, DirectoryInfo domainTestPath = null, DirectoryInfo hostTestPath = null)
      - SetNullableValueForProject(XElement element, string newNullableValue)
 - [TextFileHelper](Atc.Rest.ApiGenerator.Helpers.md#textfilehelper)
@@ -222,7 +230,6 @@
 - [ApiProjectOptions](Atc.Rest.ApiGenerator.Models.md#apiprojectoptions)
   -  Properties
      - PathForContracts
-     - PathForContractsEnumerationTypes
      - PathForContractsShared
      - PathForEndpoints
 - [BaseProjectOptions](Atc.Rest.ApiGenerator.Models.md#baseprojectoptions)
@@ -230,6 +237,7 @@
      - ApiOptions
      - ApiVersion
      - BasePathSegmentNames
+     - ClientFolderName
      - Document
      - DocumentFile
      - PathForSrcGenerate
@@ -237,6 +245,20 @@
      - ProjectName
      - ProjectSrcCsProj
      - ProjectTestCsProj
+     - ToolName
+     - ToolNameAndVersion
+     - ToolVersion
+- [ClientCSharpApiProjectOptions](Atc.Rest.ApiGenerator.Models.md#clientcsharpapiprojectoptions)
+  -  Properties
+     - ApiOptions
+     - ApiVersion
+     - BasePathSegmentNames
+     - ClientFolderName
+     - Document
+     - DocumentFile
+     - PathForSrcGenerate
+     - ProjectName
+     - ProjectSrcCsProj
      - ToolName
      - ToolNameAndVersion
      - ToolVersion
@@ -377,6 +399,7 @@
      - Code
      - FocusOnSegmentName
      - IsEnum
+     - UseModelFolder
   -  Methods
      - GenerateCode()
      - ToCodeAsString()

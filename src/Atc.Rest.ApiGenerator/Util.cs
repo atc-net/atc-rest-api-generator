@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 
 namespace Atc.Rest.ApiGenerator
@@ -33,6 +33,31 @@ namespace Atc.Rest.ApiGenerator
             }
 
             return Path.Combine(pathForEndpoints.FullName, $"{modelName}.cs");
+        }
+
+        public static string GetCsFileNameForContract(
+            DirectoryInfo pathForContracts,
+            string area,
+            string modelName)
+        {
+            if (pathForContracts == null)
+            {
+                throw new ArgumentNullException(nameof(pathForContracts));
+            }
+
+            if (area == null)
+            {
+                throw new ArgumentNullException(nameof(area));
+            }
+
+            if (modelName == null)
+            {
+                throw new ArgumentNullException(nameof(modelName));
+            }
+
+            var a = Path.Combine(pathForContracts.FullName, area);
+            var b = Path.Combine(a, $"{modelName}.cs");
+            return b;
         }
 
         public static string GetCsFileNameForContract(

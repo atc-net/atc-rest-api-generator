@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using Microsoft.OpenApi.Models;
 
 namespace Atc.Rest.ApiGenerator.Models
@@ -11,27 +11,36 @@ namespace Atc.Rest.ApiGenerator.Models
             OpenApiDocument openApiDocument,
             FileInfo openApiDocumentFile,
             string projectPrefixName,
-            ApiOptions.ApiOptions apiOptions)
+            string projectSuffixName,
+            ApiOptions.ApiOptions apiOptions,
+            string? clientFolderName = null)
             : base(
                 projectSrcGeneratePath,
                 projectTestGeneratePath,
                 openApiDocument,
                 openApiDocumentFile,
                 projectPrefixName,
-                "Api.Generated",
-                apiOptions)
+                projectSuffixName,
+                apiOptions,
+                clientFolderName)
         {
-            PathForEndpoints = new DirectoryInfo(Path.Combine(PathForSrcGenerate.FullName, NameConstants.Endpoints));
-            PathForContracts = new DirectoryInfo(Path.Combine(PathForSrcGenerate.FullName, NameConstants.Contracts));
-            PathForContractsEnumerationTypes = new DirectoryInfo(Path.Combine(PathForContracts.FullName, NameConstants.ContractsEnumerationTypes));
-            PathForContractsShared = new DirectoryInfo(Path.Combine(PathForContracts.FullName, NameConstants.ContractsSharedModels));
+            if (string.IsNullOrEmpty(clientFolderName))
+            {
+                PathForEndpoints = new DirectoryInfo(Path.Combine(PathForSrcGenerate.FullName, NameConstants.Endpoints));
+                PathForContracts = new DirectoryInfo(Path.Combine(PathForSrcGenerate.FullName, NameConstants.Contracts));
+                PathForContractsShared = new DirectoryInfo(Path.Combine(PathForContracts.FullName, NameConstants.ContractsSharedModels));
+            }
+            else
+            {
+                PathForEndpoints = new DirectoryInfo(Path.Combine(Path.Combine(PathForSrcGenerate.FullName, clientFolderName), NameConstants.Endpoints));
+                PathForContracts = new DirectoryInfo(Path.Combine(Path.Combine(PathForSrcGenerate.FullName, clientFolderName), NameConstants.Contracts));
+                PathForContractsShared = new DirectoryInfo(Path.Combine(Path.Combine(PathForContracts.FullName), NameConstants.ContractsSharedModels));
+            }
         }
 
         public DirectoryInfo PathForEndpoints { get; }
 
         public DirectoryInfo PathForContracts { get; }
-
-        public DirectoryInfo PathForContractsEnumerationTypes { get; }
 
         public DirectoryInfo PathForContractsShared { get; }
     }

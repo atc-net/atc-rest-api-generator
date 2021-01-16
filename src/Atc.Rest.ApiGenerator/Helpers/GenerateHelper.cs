@@ -67,7 +67,14 @@ namespace Atc.Rest.ApiGenerator.Helpers
                 throw new ArgumentNullException(nameof(apiOptions));
             }
 
-            var projectOptions = new ApiProjectOptions(outputPath, outputTestPath, apiDocument.Item1, apiDocument.Item3, projectPrefixName, apiOptions);
+            var projectOptions = new ApiProjectOptions(
+                outputPath,
+                outputTestPath,
+                apiDocument.Item1,
+                apiDocument.Item3,
+                projectPrefixName,
+                "Api.Generated",
+                apiOptions);
             var serverApiGenerator = new ServerApiGenerator(projectOptions);
             return serverApiGenerator.Generate();
         }
@@ -211,6 +218,38 @@ namespace Atc.Rest.ApiGenerator.Helpers
                 apiPath,
                 domainPath,
                 hostPath);
+        }
+
+        public static List<LogKeyValueItem> GenerateServerCSharpClient(
+            string projectPrefixName,
+            string? clientFolder,
+            DirectoryInfo outputPath,
+            Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument,
+            ApiOptions apiOptions)
+        {
+            if (projectPrefixName == null)
+            {
+                throw new ArgumentNullException(nameof(projectPrefixName));
+            }
+
+            if (outputPath == null)
+            {
+                throw new ArgumentNullException(nameof(outputPath));
+            }
+
+            if (apiDocument == null)
+            {
+                throw new ArgumentNullException(nameof(apiDocument));
+            }
+
+            if (apiOptions == null)
+            {
+                throw new ArgumentNullException(nameof(apiOptions));
+            }
+
+            var clientCSharpApiProjectOptions = new ClientCSharpApiProjectOptions(outputPath, clientFolder, apiDocument.Item1, apiDocument.Item3, projectPrefixName, "App", apiOptions);
+            var clientCSharpApiGenerator = new ClientCSharpApiGenerator(clientCSharpApiProjectOptions);
+            return clientCSharpApiGenerator.Generate();
         }
     }
 }
