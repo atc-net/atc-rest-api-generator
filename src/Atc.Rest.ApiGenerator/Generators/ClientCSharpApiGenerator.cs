@@ -71,11 +71,11 @@ namespace Atc.Rest.ApiGenerator.Generators
 
             var apiProjectOptions = new ApiProjectOptions(
                 projectOptions.PathForSrcGenerate,
-                null,
+                projectTestGeneratePath: null,
                 projectOptions.Document,
                 projectOptions.DocumentFile,
                 projectOptions.ProjectName,
-                null,
+                projectSuffixName: null,
                 projectOptions.ApiOptions,
                 projectOptions.ClientFolderName);
 

@@ -21,33 +21,58 @@ namespace Atc.Rest.ApiGenerator.SyntaxFactories
             bool useNullableReferenceTypes,
             IOpenApiAny? initializer)
         {
-            if (useNullableReferenceTypes && (isNullable || parameterLocation == ParameterLocation.Query) && !isRequired)
+            if (useNullableReferenceTypes &&
+                !isRequired &&
+                (isNullable || parameterLocation == ParameterLocation.Query))
             {
                 dataType += "?";
             }
 
             var propertyDeclaration = CreateAuto(dataType, propertyName);
-
-            if (initializer != null)
+            if (initializer == null)
             {
-                propertyDeclaration = initializer switch
-                {
-                    OpenApiInteger apiInteger => propertyDeclaration.WithInitializer(
-                            SyntaxFactory.EqualsValueClause(SyntaxFactory.LiteralExpression(
-                                SyntaxKind.NumericLiteralExpression, SyntaxFactory.Literal(apiInteger!.Value))))
-                        .WithSemicolonToken(SyntaxTokenFactory.Semicolon()),
-                    OpenApiString apiString => propertyDeclaration.WithInitializer(
-                            SyntaxFactory.EqualsValueClause(SyntaxFactory.LiteralExpression(
-                                SyntaxKind.StringLiteralExpression, SyntaxFactory.Literal(apiString!.Value))))
-                        .WithSemicolonToken(SyntaxTokenFactory.Semicolon()),
-                    OpenApiBoolean apiBoolean when apiBoolean.Value => propertyDeclaration.WithInitializer(
-                        SyntaxFactory.EqualsValueClause(SyntaxFactory.LiteralExpression(SyntaxKind.TrueLiteralExpression)))
-                            .WithSemicolonToken(SyntaxTokenFactory.Semicolon()),
-                    OpenApiBoolean apiBoolean when !apiBoolean.Value => propertyDeclaration.WithInitializer(
-                        SyntaxFactory.EqualsValueClause(SyntaxFactory.LiteralExpression(SyntaxKind.FalseLiteralExpression)))
-                            .WithSemicolonToken(SyntaxTokenFactory.Semicolon()),
-                    _ => throw new NotImplementedException("Property initializer: " + initializer.GetType())
-                };
+                return propertyDeclaration;
+            }
+
+            switch (initializer)
+            {
+                case OpenApiInteger apiInteger:
+                    propertyDeclaration = propertyDeclaration.WithInitializer(
+                            SyntaxFactory.EqualsValueClause(
+                                SyntaxFactory.LiteralExpression(
+                                    SyntaxKind.NumericLiteralExpression,
+                                    SyntaxFactory.Literal(apiInteger!.Value))))
+                        .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
+                    break;
+                case OpenApiString apiString:
+                    var expressionSyntax = string.IsNullOrEmpty(apiString!.Value)
+                        ? (ExpressionSyntax)SyntaxFactory.MemberAccessExpression(
+                            SyntaxKind.SimpleMemberAccessExpression,
+                            SyntaxFactory.PredefinedType(SyntaxTokenFactory.StringKeyword()),
+                            SyntaxFactory.IdentifierName("Empty"))
+                        : SyntaxFactory.LiteralExpression(
+                            SyntaxKind.StringLiteralExpression,
+                            SyntaxFactory.Literal(apiString!.Value));
+
+                    propertyDeclaration = propertyDeclaration.WithInitializer(
+                            SyntaxFactory.EqualsValueClause(expressionSyntax))
+                        .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
+
+                    break;
+                case OpenApiBoolean apiBoolean when apiBoolean.Value:
+                    propertyDeclaration = propertyDeclaration.WithInitializer(
+                            SyntaxFactory.EqualsValueClause(
+                                SyntaxFactory.LiteralExpression(SyntaxKind.TrueLiteralExpression)))
+                        .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
+                    break;
+                case OpenApiBoolean apiBoolean when !apiBoolean.Value:
+                    propertyDeclaration = propertyDeclaration.WithInitializer(
+                            SyntaxFactory.EqualsValueClause(
+                                SyntaxFactory.LiteralExpression(SyntaxKind.FalseLiteralExpression)))
+                        .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
+                    break;
+                default:
+                    throw new NotImplementedException("Property initializer: " + initializer.GetType());
             }
 
             return propertyDeclaration;
