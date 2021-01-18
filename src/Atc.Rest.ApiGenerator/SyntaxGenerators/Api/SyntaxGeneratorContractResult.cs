@@ -62,11 +62,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                 FocusOnSegmentName);
 
             // Create class
-            var classDeclaration = SyntaxClassDeclarationFactory.CreateWithInheritClassTypeAndSuppressMessageAttributeByCodeAnalysisCheckId(
-                resultTypeName,
-                "ResultBase",
-                1062,
-                "Should not throw ArgumentNullExceptions from implicit operators.")
+            var classDeclaration = SyntaxClassDeclarationFactory.CreateWithInheritClassType(resultTypeName, "ResultBase")
                 .AddGeneratedCodeAttribute(ApiProjectOptions.ToolName, ApiProjectOptions.ToolVersion.ToString())
                 .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForResults(ApiOperation, FocusOnSegmentName));
 
