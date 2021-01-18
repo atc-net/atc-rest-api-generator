@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
@@ -70,7 +70,9 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
             {
                 foreach (var parameter in GlobalPathParameters)
                 {
-                    var propertyDeclaration = SyntaxPropertyDeclarationFactory.CreateAuto(parameter, ApiProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes)
+                    var propertyDeclaration = SyntaxPropertyDeclarationFactory.CreateAuto(
+                            parameter,
+                            ApiProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes)
                         .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForParameter(parameter));
                     classDeclaration = classDeclaration.AddMembers(propertyDeclaration);
                 }
@@ -80,7 +82,9 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
             {
                 foreach (var parameter in ApiOperation.Parameters)
                 {
-                    var propertyDeclaration = SyntaxPropertyDeclarationFactory.CreateAuto(parameter, ApiProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes)
+                    var propertyDeclaration = SyntaxPropertyDeclarationFactory.CreateAuto(
+                            parameter,
+                            ApiProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes)
                         .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForParameter(parameter));
                     classDeclaration = classDeclaration.AddMembers(propertyDeclaration);
                 }

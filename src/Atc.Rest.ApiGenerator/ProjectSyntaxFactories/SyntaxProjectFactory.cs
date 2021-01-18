@@ -13,15 +13,19 @@ namespace Atc.Rest.ApiGenerator.ProjectSyntaxFactories
                 throw new ArgumentNullException(nameof(baseProjectOptions));
             }
 
+            var fullNamespace = string.IsNullOrEmpty(baseProjectOptions.ClientFolderName)
+                ? $"{baseProjectOptions.ProjectName}"
+                : $"{baseProjectOptions.ProjectName}.{baseProjectOptions.ClientFolderName}";
+
             if (withAutoGen)
             {
                 return SyntaxNamespaceDeclarationFactory.Create(
                     baseProjectOptions.ToolNameAndVersion,
-                    baseProjectOptions.ProjectName);
+                    fullNamespace);
             }
 
             return SyntaxNamespaceDeclarationFactory.Create(
-                baseProjectOptions.ProjectName);
+                fullNamespace);
         }
 
         public static NamespaceDeclarationSyntax CreateNamespace(BaseProjectOptions baseProjectOptions, string namespacePart, bool withAutoGen = true)
@@ -68,15 +72,19 @@ namespace Atc.Rest.ApiGenerator.ProjectSyntaxFactories
                 throw new ArgumentNullException(nameof(focusOnSegmentName));
             }
 
+            var fullNamespace = string.IsNullOrEmpty(baseProjectOptions.ClientFolderName)
+                ? $"{baseProjectOptions.ProjectName}.{namespacePart}.{focusOnSegmentName.EnsureFirstCharacterToUpper()}"
+                : $"{baseProjectOptions.ProjectName}.{baseProjectOptions.ClientFolderName}.{namespacePart}.{focusOnSegmentName.EnsureFirstCharacterToUpper()}";
+
             if (withAutoGen)
             {
                 return SyntaxNamespaceDeclarationFactory.Create(
                     baseProjectOptions.ToolNameAndVersion,
-                    $"{baseProjectOptions.ProjectName}.{namespacePart}.{focusOnSegmentName.EnsureFirstCharacterToUpper()}");
+                    fullNamespace);
             }
 
             return SyntaxNamespaceDeclarationFactory.Create(
-                $"{baseProjectOptions.ProjectName}.{namespacePart}.{focusOnSegmentName.EnsureFirstCharacterToUpper()}");
+                fullNamespace);
         }
     }
 }
