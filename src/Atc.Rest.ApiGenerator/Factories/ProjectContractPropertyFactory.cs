@@ -11,7 +11,8 @@ namespace Atc.Rest.ApiGenerator.Factories
         public static string[] CreateUsingList(
             IList<OpenApiParameter>? globalParameters,
             IList<OpenApiParameter>? parameters,
-            OpenApiRequestBody? requestBody)
+            OpenApiRequestBody? requestBody,
+            bool forClient)
         {
             var list = new List<string>();
 
@@ -52,7 +53,10 @@ namespace Atc.Rest.ApiGenerator.Factories
                     list.Add("System.ComponentModel.DataAnnotations");
                 }
 
-                list.Add("Microsoft.AspNetCore.Mvc");
+                if (!forClient)
+                {
+                    list.Add("Microsoft.AspNetCore.Mvc");
+                }
             }
 
             var contentSchema = requestBody?.Content?.GetSchema();

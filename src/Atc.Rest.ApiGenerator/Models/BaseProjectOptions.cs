@@ -16,6 +16,7 @@ namespace Atc.Rest.ApiGenerator.Models
             string projectPrefixName,
             string? projectSuffixName,
             ApiOptions.ApiOptions apiOptions,
+            bool forClient = false,
             string? clientFolderName = null)
         {
             if (projectSrcGeneratePath == null)
@@ -52,6 +53,11 @@ namespace Atc.Rest.ApiGenerator.Models
                     .Replace(" ", ".", StringComparison.Ordinal)
                     .Replace("-", ".", StringComparison.Ordinal)
                     .Trim() + $".{projectSuffixName}";
+
+            ProjectPrefixName = ProjectName.Contains('.', StringComparison.Ordinal)
+                ? ProjectName.Substring(0, ProjectName.IndexOf('.', StringComparison.Ordinal))
+                : ProjectName;
+
             PathForSrcGenerate = new DirectoryInfo(Path.Combine(PathForSrcGenerate.FullName, ProjectName));
             ProjectSrcCsProj = new FileInfo(Path.Combine(PathForSrcGenerate.FullName, $"{ProjectName}.csproj"));
             if (PathForTestGenerate != null)
@@ -60,6 +66,7 @@ namespace Atc.Rest.ApiGenerator.Models
                 ProjectTestCsProj = new FileInfo(Path.Combine(PathForTestGenerate.FullName, $"{ProjectName}.Tests.csproj"));
             }
 
+            this.ForClient = forClient;
             this.ClientFolderName = clientFolderName;
 
             BasePathSegmentNames = OpenApiDocumentHelper.GetBasePathSegmentNames(openApiDocument);
@@ -85,9 +92,13 @@ namespace Atc.Rest.ApiGenerator.Models
 
         public FileInfo DocumentFile { get; }
 
+        public string ProjectPrefixName { get; }
+
         public string ProjectName { get; }
 
         public string ApiVersion { get; }
+
+        public bool ForClient { get; }
 
         public string? ClientFolderName { get; }
 

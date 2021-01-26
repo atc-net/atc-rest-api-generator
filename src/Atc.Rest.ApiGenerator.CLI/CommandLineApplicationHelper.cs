@@ -24,9 +24,11 @@ namespace Atc.Rest.ApiGenerator.CLI
             return GetValueForParameter(configCmd, "projectPrefixName", "p");
         }
 
-        public static string GetClientFolderName(CommandLineApplication configCmd)
+        public static string? GetClientFolderName(CommandLineApplication configCmd)
         {
-            return GetValueForParameter(configCmd, "clientFolderName");
+            return TryGetValueForParameter(configCmd, "clientFolderName", null, out string parameterValueResult)
+                ? parameterValueResult
+                : null;
         }
 
         public static DirectoryInfo GetOutputPath(CommandLineApplication configCmd)

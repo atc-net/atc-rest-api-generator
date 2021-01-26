@@ -247,7 +247,14 @@ namespace Atc.Rest.ApiGenerator.Helpers
                 throw new ArgumentNullException(nameof(apiOptions));
             }
 
-            var clientCSharpApiProjectOptions = new ClientCSharpApiProjectOptions(outputPath, clientFolder, apiDocument.Item1, apiDocument.Item3, projectPrefixName, "App", apiOptions);
+            var clientCSharpApiProjectOptions = new ClientCSharpApiProjectOptions(
+                outputPath,
+                clientFolder,
+                apiDocument.Item1,
+                apiDocument.Item3,
+                projectPrefixName,
+                "ApiClient.Generated",
+                apiOptions);
             var clientCSharpApiGenerator = new ClientCSharpApiGenerator(clientCSharpApiProjectOptions);
             return clientCSharpApiGenerator.Generate();
         }
