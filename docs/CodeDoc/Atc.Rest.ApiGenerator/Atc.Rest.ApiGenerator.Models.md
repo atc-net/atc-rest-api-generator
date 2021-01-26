@@ -136,6 +136,11 @@ Document
 ```csharp
 DocumentFile
 ```
+#### ForClient
+
+```csharp
+ForClient
+```
 #### PathForSrcGenerate
 
 ```csharp
@@ -150,6 +155,11 @@ PathForTestGenerate
 
 ```csharp
 ProjectName
+```
+#### ProjectPrefixName
+
+```csharp
+ProjectPrefixName
 ```
 #### ProjectSrcCsProj
 
@@ -218,6 +228,11 @@ Document
 
 ```csharp
 DocumentFile
+```
+#### ForClient
+
+```csharp
+ForClient
 ```
 #### PathForSrcGenerate
 

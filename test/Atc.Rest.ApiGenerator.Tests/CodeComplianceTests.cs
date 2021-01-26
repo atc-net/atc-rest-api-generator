@@ -6,6 +6,7 @@ using Atc.Rest.ApiGenerator.Helpers;
 using Atc.Rest.ApiGenerator.Helpers.XunitTest;
 using Atc.Rest.ApiGenerator.Models;
 using Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
+using Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient;
 using Atc.Rest.ApiGenerator.SyntaxGenerators.Domain;
 using Atc.XUnit;
 using Xunit;
@@ -49,6 +50,8 @@ namespace Atc.Rest.ApiGenerator.Tests
             typeof(SyntaxGeneratorContractParameters),
             typeof(SyntaxGeneratorContractResult),
             typeof(SyntaxGeneratorContractResults),
+            typeof(SyntaxGeneratorClientEndpoint),
+            typeof(SyntaxGeneratorClientEndpoints),
             typeof(SyntaxGeneratorEndpointControllers),
             typeof(SyntaxGeneratorHandler),
             typeof(SyntaxGeneratorHandlers),

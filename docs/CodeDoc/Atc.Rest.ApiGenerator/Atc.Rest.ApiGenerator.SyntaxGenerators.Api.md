@@ -290,10 +290,10 @@ FocusOnSegmentName
 ```csharp
 IsEnum
 ```
-#### UseModelFolder
+#### UseOwnFolder
 
 ```csharp
-UseModelFolder
+UseOwnFolder
 ```
 ### Methods
 
@@ -401,6 +401,11 @@ FocusOnSegmentName
 
 ```csharp
 GlobalPathParameters
+```
+#### UseOwnFolder
+
+```csharp
+UseOwnFolder
 ```
 ### Methods
 
