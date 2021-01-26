@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Atc.Rest.ApiGenerator.Models;
 using Microsoft.OpenApi.Models;
@@ -12,7 +12,8 @@ namespace Atc.Rest.ApiGenerator.Factories
             string focusOnSegmentName,
             List<OpenApiOperation> apiOperations,
             bool includeRestResults,
-            bool hasSharedModel)
+            bool hasSharedModel,
+            bool forClient = false)
         {
             if (apiOperations == null)
             {
@@ -34,14 +35,44 @@ namespace Atc.Rest.ApiGenerator.Factories
 
             if (hasSharedModel)
             {
-                list.Add($"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}");
+                if (forClient)
+                {
+                    list.Add(string.IsNullOrEmpty(apiProjectOptions.ClientFolderName)
+                        ? $"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}"
+                        : $"{apiProjectOptions.ProjectName}.{apiProjectOptions.ClientFolderName}.{NameConstants.Contracts}");
+                }
+                else
+                {
+                    list.Add($"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}");
+                }
             }
 
-            list.Add($"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}.{focusOnSegmentName.EnsureFirstCharacterToUpper()}");
+            if (forClient)
+            {
+                list.Add(string.IsNullOrEmpty(apiProjectOptions.ClientFolderName)
+                    ? $"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}.{focusOnSegmentName.EnsureFirstCharacterToUpper()}"
+                    : $"{apiProjectOptions.ProjectName}.{apiProjectOptions.ClientFolderName}.{NameConstants.Contracts}.{focusOnSegmentName.EnsureFirstCharacterToUpper()}");
+            }
+            else
+            {
+                list.Add($"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}.{focusOnSegmentName.EnsureFirstCharacterToUpper()}");
+            }
+
+            if (forClient)
+            {
+                list.Add("System.Net");
+                list.Add("System.Net.Http");
+                list.Add("Atc.Rest.Client");
+            }
+
             list.Add("Microsoft.AspNetCore.Http");
             list.Add("Microsoft.AspNetCore.Mvc");
 
             if (apiOperations.HasDataTypeFromSystemCollectionGenericNamespace())
+            {
+                list.Add("System.Collections.Generic");
+            }
+            else if (forClient)
             {
                 list.Add("System.Collections.Generic");
             }

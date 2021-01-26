@@ -240,9 +240,11 @@
      - ClientFolderName
      - Document
      - DocumentFile
+     - ForClient
      - PathForSrcGenerate
      - PathForTestGenerate
      - ProjectName
+     - ProjectPrefixName
      - ProjectSrcCsProj
      - ProjectTestCsProj
      - ToolName
@@ -256,6 +258,7 @@
      - ClientFolderName
      - Document
      - DocumentFile
+     - ForClient
      - PathForSrcGenerate
      - ProjectName
      - ProjectSrcCsProj
@@ -399,7 +402,7 @@
      - Code
      - FocusOnSegmentName
      - IsEnum
-     - UseModelFolder
+     - UseOwnFolder
   -  Methods
      - GenerateCode()
      - ToCodeAsString()
@@ -421,6 +424,7 @@
      - Code
      - FocusOnSegmentName
      - GlobalPathParameters
+     - UseOwnFolder
   -  Methods
      - GenerateCode()
      - ToCodeAsString()
@@ -462,6 +466,35 @@
      - ToCodeAsString()
      - ToFile()
      - ToFile(FileInfo file)
+
+## [Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md)
+
+- [ISyntaxGeneratorClientEndpoints](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md#isyntaxgeneratorclientendpoints)
+- [SyntaxGeneratorClientEndpoint](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md#syntaxgeneratorclientendpoint)
+  -  Properties
+     - ApiOperation
+     - ApiOperationType
+     - ApiProjectOptions
+     - ApiUrlPath
+     - Code
+     - EndpointTypeName
+     - FocusOnSegmentName
+     - HasParametersOrRequestBody
+     - InterfaceTypeName
+     - ParameterTypeName
+  -  Methods
+     - GenerateCode()
+     - ToCodeAsString()
+     - ToFile()
+     - ToFile(FileInfo file)
+     - ToString()
+- [SyntaxGeneratorClientEndpoints](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md#syntaxgeneratorclientendpoints)
+  -  Properties
+     - ApiProjectOptions
+     - FocusOnSegmentName
+     - OperationSchemaMappings
+  -  Methods
+     - GenerateSyntaxTrees()
 
 ## [Atc.Rest.ApiGenerator.SyntaxGenerators.Domain](Atc.Rest.ApiGenerator.SyntaxGenerators.Domain.md)
 

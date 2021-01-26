@@ -116,7 +116,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxFactories
             return propertyDeclaration;
         }
 
-        public static PropertyDeclarationSyntax CreateAuto(OpenApiParameter parameter, bool useNullableReferenceTypes)
+        public static PropertyDeclarationSyntax CreateAuto(OpenApiParameter parameter, bool useNullableReferenceTypes, bool forClient)
         {
             if (parameter == null)
             {
@@ -147,13 +147,16 @@ namespace Atc.Rest.ApiGenerator.SyntaxFactories
                     useNullableReferenceTypes,
                     parameter.Schema.Default);
 
-            propertyDeclaration = parameter.In switch
+            if (!forClient)
             {
-                ParameterLocation.Header => propertyDeclaration.AddFromHeaderAttribute(parameter.Name, parameter.Schema),
-                ParameterLocation.Path => propertyDeclaration.AddFromRouteAttribute(parameter.Name, parameter.Schema),
-                ParameterLocation.Query => propertyDeclaration.AddFromQueryAttribute(parameter.Name, parameter.Schema),
-                _ => throw new NotImplementedException("ParameterLocation: " + nameof(ParameterLocation) + " " + parameter.In)
-            };
+                propertyDeclaration = parameter.In switch
+                {
+                    ParameterLocation.Header => propertyDeclaration.AddFromHeaderAttribute(parameter.Name, parameter.Schema),
+                    ParameterLocation.Path => propertyDeclaration.AddFromRouteAttribute(parameter.Name, parameter.Schema),
+                    ParameterLocation.Query => propertyDeclaration.AddFromQueryAttribute(parameter.Name, parameter.Schema),
+                    _ => throw new NotImplementedException("ParameterLocation: " + nameof(ParameterLocation) + " " + parameter.In)
+                };
+            }
 
             if (parameter.Required)
             {

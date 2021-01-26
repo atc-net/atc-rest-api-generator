@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 // ReSharper disable once CheckNamespace
@@ -98,6 +100,59 @@ namespace System
 
             const string pattern = "CS1998 // Async method lacks 'await' operators and will run synchronously";
             return value.Replace(pattern + Environment.NewLine, pattern, StringComparison.Ordinal);
+        }
+
+        public static string FormatClientEndpointNewLineOnFluentMethod(this string value)
+        {
+            var methodList = new List<string>
+            {
+                "FromTemplate",
+                "FromResponse",
+                "AddSuccessResponse",
+                "AddErrorResponse",
+                "BuildResponseAsync",
+            };
+
+            foreach (var method in methodList)
+            {
+                var s1 = $".{method}(";
+                var s2 = $".{method}<";
+
+                if (value.Contains(s1, StringComparison.Ordinal))
+                {
+                    value = value.Replace(
+                        s1,
+                        $"{Environment.NewLine}                {s1}",
+                        StringComparison.Ordinal);
+                }
+
+                if (value.Contains(s2, StringComparison.Ordinal))
+                {
+                    value = value.Replace(
+                        s2,
+                        $"{Environment.NewLine}                {s2}",
+                        StringComparison.Ordinal);
+                }
+            }
+
+            return value;
+        }
+
+        public static string FormatClientEndpointNewLineSpace(this string value)
+        {
+            var list = new List<string>
+            {
+                "var requestBuilder = httpExchangeFactory",
+                "using var requestMessage",
+                "return await httpExchangeFactory",
+            };
+
+            return list.Aggregate(
+                value,
+                (current, item) => current.Replace(
+                    $"            {item}",
+                    $"{Environment.NewLine}            {item}",
+                    StringComparison.Ordinal));
         }
     }
 }

@@ -33,6 +33,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
             this.ApiOperationType = apiOperationType;
             this.ApiOperation = apiOperation ?? throw new ArgumentNullException(nameof(apiOperation));
             this.FocusOnSegmentName = focusOnSegmentName ?? throw new ArgumentNullException(nameof(focusOnSegmentName));
+
+            this.UseOwnFolder = true;
         }
 
         public ApiProjectOptions ApiProjectOptions { get; }
@@ -46,6 +48,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
         public string FocusOnSegmentName { get; }
 
         public CompilationUnitSyntax? Code { get; private set; }
+
+        public bool UseOwnFolder { get; set; }
 
         public bool GenerateCode()
         {
@@ -72,7 +76,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                 {
                     var propertyDeclaration = SyntaxPropertyDeclarationFactory.CreateAuto(
                             parameter,
-                            ApiProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes)
+                            ApiProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
+                            ApiProjectOptions.ForClient)
                         .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForParameter(parameter));
                     classDeclaration = classDeclaration.AddMembers(propertyDeclaration);
                 }
@@ -84,7 +89,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                 {
                     var propertyDeclaration = SyntaxPropertyDeclarationFactory.CreateAuto(
                             parameter,
-                            ApiProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes)
+                            ApiProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
+                            ApiProjectOptions.ForClient)
                         .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForParameter(parameter));
                     classDeclaration = classDeclaration.AddMembers(propertyDeclaration);
                 }
@@ -100,26 +106,43 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                 PropertyDeclarationSyntax propertyDeclaration;
                 if (requestSchema.Type == OpenApiDataTypeConstants.Array)
                 {
-                    propertyDeclaration = SyntaxPropertyDeclarationFactory.CreateListAuto(
-                        requestBodyType,
-                        NameConstants.Request)
-                        .AddFromBodyAttribute()
-                        .AddValidationAttribute(new RequiredAttribute())
-                        .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForParameter(ApiOperation.RequestBody));
+                    propertyDeclaration = ApiProjectOptions.ForClient
+                        ? SyntaxPropertyDeclarationFactory.CreateListAuto(
+                                requestBodyType,
+                                NameConstants.Request)
+                            .AddValidationAttribute(new RequiredAttribute())
+                            .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForParameter(ApiOperation.RequestBody))
+                        : SyntaxPropertyDeclarationFactory.CreateListAuto(
+                                requestBodyType,
+                                NameConstants.Request)
+                            .AddFromBodyAttribute()
+                            .AddValidationAttribute(new RequiredAttribute())
+                            .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForParameter(ApiOperation.RequestBody));
                 }
                 else
                 {
-                    propertyDeclaration = SyntaxPropertyDeclarationFactory.CreateAuto(
-                            null,
-                            false,
-                            true,
-                            requestBodyType,
-                            NameConstants.Request,
-                            ApiProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
-                            null)
-                        .AddFromBodyAttribute()
-                        .AddValidationAttribute(new RequiredAttribute())
-                        .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForParameter(ApiOperation.RequestBody));
+                    propertyDeclaration = ApiProjectOptions.ForClient
+                        ? SyntaxPropertyDeclarationFactory.CreateAuto(
+                                parameterLocation: null,
+                                isNullable: false,
+                                isRequired: true,
+                                requestBodyType,
+                                NameConstants.Request,
+                                ApiProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
+                                initializer: null)
+                            .AddValidationAttribute(new RequiredAttribute())
+                            .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForParameter(ApiOperation.RequestBody))
+                        : SyntaxPropertyDeclarationFactory.CreateAuto(
+                                parameterLocation: null,
+                                isNullable: false,
+                                isRequired: true,
+                                requestBodyType,
+                                NameConstants.Request,
+                                ApiProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
+                                initializer: null)
+                            .AddFromBodyAttribute()
+                            .AddValidationAttribute(new RequiredAttribute())
+                            .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForParameter(ApiOperation.RequestBody));
                 }
 
                 classDeclaration = classDeclaration.AddMembers(propertyDeclaration);
@@ -133,7 +156,12 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
             }
 
             // Add using statement to compilationUnit
-            compilationUnit = compilationUnit.AddUsingStatements(ProjectContractPropertyFactory.CreateUsingList(GlobalPathParameters, ApiOperation.Parameters, ApiOperation.RequestBody));
+            compilationUnit = compilationUnit.AddUsingStatements(
+                ProjectContractPropertyFactory.CreateUsingList(
+                    GlobalPathParameters,
+                    ApiOperation.Parameters,
+                    ApiOperation.RequestBody,
+                    ApiProjectOptions.ForClient));
 
             // Add the class to the namespace.
             @namespace = @namespace.AddMembers(classDeclaration);
@@ -170,7 +198,9 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
         {
             var area = FocusOnSegmentName.EnsureFirstCharacterToUpper();
             var parameterName = ApiOperation.GetOperationName() + NameConstants.ContractParameters;
-            var file = Util.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, NameConstants.ContractParameters, parameterName);
+            var file = UseOwnFolder
+                ? Util.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, NameConstants.ContractParameters, parameterName)
+                : Util.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, parameterName);
             return TextFileHelper.Save(file, ToCodeAsString());
         }
 

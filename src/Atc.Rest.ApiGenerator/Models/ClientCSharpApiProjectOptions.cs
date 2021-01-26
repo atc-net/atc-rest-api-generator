@@ -27,6 +27,7 @@ namespace Atc.Rest.ApiGenerator.Models
                 ? projectSrcGeneratePath.Parent!
                 : projectSrcGeneratePath;
 
+            ForClient = true;
             ClientFolderName = clientFolderName;
             Document = openApiDocument ?? throw new ArgumentNullException(nameof(openApiDocument));
             DocumentFile = openApiDocumentFile ?? throw new ArgumentNullException(nameof(openApiDocumentFile));
@@ -57,6 +58,8 @@ namespace Atc.Rest.ApiGenerator.Models
         public DirectoryInfo PathForSrcGenerate { get; }
 
         public FileInfo ProjectSrcCsProj { get; }
+
+        public bool ForClient { get; }
 
         public string? ClientFolderName { get; }
 

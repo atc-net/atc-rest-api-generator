@@ -135,15 +135,15 @@ namespace Atc.Rest.ApiGenerator.Generators
             {
                 logItems.Add(SolutionAndProjectHelper.ScaffoldProjFile(
                     projectOptions.ProjectSrcCsProj,
-                    false,
-                    false,
+                    createAsWeb: false,
+                    createAsTestProject: false,
                     projectOptions.ProjectName,
                     "netcoreapp3.1",
                     projectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
                     new List<string> { "Microsoft.AspNetCore.App" },
                     NugetPackageReferenceHelper.CreateForApiProject(),
-                    null,
-                    true));
+                    projectReferences: null,
+                    includeApiSpecification: true));
             }
 
             ScaffoldBasicFileApiGenerated();

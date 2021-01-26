@@ -1,8 +1,9 @@
-﻿namespace Atc.Rest.ApiGenerator
+namespace Atc.Rest.ApiGenerator
 {
     internal static class NameConstants
     {
         public const string Endpoints = "Endpoints";
+        public const string Endpoint = "Endpoint";
         public const string Contracts = "Contracts";
         public const string ContractsEnumerationTypes = "_EnumerationTypes";
         public const string ContractsSharedModels = "_Shared";

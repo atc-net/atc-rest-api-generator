@@ -13,6 +13,7 @@ namespace Atc.Rest.ApiGenerator.Models
             string projectPrefixName,
             string projectSuffixName,
             ApiOptions.ApiOptions apiOptions,
+            bool forClient = false,
             string? clientFolderName = null)
             : base(
                 projectSrcGeneratePath,
@@ -22,6 +23,7 @@ namespace Atc.Rest.ApiGenerator.Models
                 projectPrefixName,
                 projectSuffixName,
                 apiOptions,
+                forClient,
                 clientFolderName)
         {
             if (string.IsNullOrEmpty(clientFolderName))
