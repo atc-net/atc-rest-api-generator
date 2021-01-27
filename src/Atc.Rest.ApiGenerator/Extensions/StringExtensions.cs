@@ -106,7 +106,7 @@ namespace System
         {
             var methodList = new List<string>
             {
-                "FromTemplate",
+                // TODO: "FromTemplate",
                 "FromResponse",
                 "AddSuccessResponse",
                 "AddErrorResponse",
