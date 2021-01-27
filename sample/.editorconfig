@@ -28,8 +28,35 @@
 # https://github.com/dotnet/roslyn-analyzers
 
 
-# Microsoft - Threading
-# https://github.com/microsoft/vs-threading/blob/master/doc/analyzers/index.md
+# SecurityCodeScan
+# https://security-code-scan.github.io/
+
+
+# StyleCop
+# https://github.com/DotNetAnalyzers/StyleCopAnalyzers
+
+
+##########################################
+# Custom - Code Analyzers Rules
+##########################################
+
+# AsyncFixer
+# http://www.asyncfixer.com
+
+
+# Asyncify
+# https://github.com/hvanbakel/Asyncify-CSharp
+
+
+# Meziantou
+# https://www.meziantou.net/enforcing-asynchronous-code-good-practices-using-a-roslyn-analyzer.htm
+
+# Microsoft - Code Analysis
+# https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/
+
+
+# Microsoft - FxCop
+# https://github.com/dotnet/roslyn-analyzers
 
 
 # SecurityCodeScan
@@ -75,6 +102,4 @@
 # https://github.com/DotNetAnalyzers/StyleCopAnalyzers
 
 
-##########################################
 # Custom - Code Analyzers Rules
-##########################################
