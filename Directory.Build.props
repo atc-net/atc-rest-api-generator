@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Solution wide properties -->
+  <PropertyGroup Label="Assembly Naming">
+    <Company>CompanyName</Company>
+    <Authors>CompanyName</Authors>
+    <NeutralLanguage>en</NeutralLanguage>
+    <DefaultLanguage>en-US</DefaultLanguage>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Compile settings">
+    <Nullable>enable</Nullable>
+    <LangVersion>9.0</LangVersion>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>1573,1591,1712</NoWarn>
+
+    <!-- Used by code coverage -->
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Analyzer settings">
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<AnalysisLevel>latest</AnalysisLevel>
+		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+
+  <!-- Treat warnings as errors are always on when building in release -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <!-- Shared code analyzers used for all projects in the solution -->
+  <ItemGroup Label="Code Analyzers">
+    <PackageReference Include="AsyncFixer" Version="1.5.1" PrivateAssets="All" />
+    <PackageReference Include="Asyncify" Version="0.9.7" PrivateAssets="All" />
+    <PackageReference Include="Meziantou.Analyzer" Version="1.0.606" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3" PrivateAssets="All" />
+    <PackageReference Include="SecurityCodeScan" Version="3.5.3" PrivateAssets="All" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="All" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.17.0.26580" PrivateAssets="All" />
+  </ItemGroup>
+
+</Project>
