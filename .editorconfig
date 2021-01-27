@@ -469,6 +469,21 @@ dotnet_diagnostic.S1135.severity = suggestion       # https://github.com/atc-net
 
 
 # Fix later
+dotnet_diagnostic.AsyncFixer01.severity = none
+
+dotnet_diagnostic.CA1014.severity = none
+dotnet_diagnostic.CA1002.severity = none
+dotnet_diagnostic.CA1031.severity = none
+dotnet_diagnostic.CA1040.severity = none
+dotnet_diagnostic.CA1054.severity = none
+dotnet_diagnostic.CA1056.severity = none
+dotnet_diagnostic.CA1062.severity = none
+dotnet_diagnostic.CA1724.severity = none
+dotnet_diagnostic.CA1801.severity = none
+dotnet_diagnostic.CA1822.severity = none
+dotnet_diagnostic.CA2007.severity = none
+dotnet_diagnostic.CA2201.severity = none
+
 dotnet_diagnostic.CS0006.severity = none
 dotnet_diagnostic.CS8618.severity = none
 dotnet_diagnostic.CS8625.severity = none
@@ -479,6 +494,7 @@ dotnet_diagnostic.MA0004.severity = none
 dotnet_diagnostic.MA0006.severity = none
 dotnet_diagnostic.MA0009.severity = none
 dotnet_diagnostic.MA0011.severity = none
+dotnet_diagnostic.MA0016.severity = none
 dotnet_diagnostic.MA0049.severity = none
 dotnet_diagnostic.MA0051.severity = none
 dotnet_diagnostic.MA0065.severity = none

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
@@ -27,7 +27,7 @@ namespace Atc.Rest.ApiGenerator.Tests
             var assemblyName = typeof(CodeDocumentationTests).Assembly.GetName().Name;
             var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
             var index = baseDirectory!.IndexOf(assemblyName!, StringComparison.Ordinal);
-            var testProjectDirectory = new DirectoryInfo(baseDirectory.Substring(0, index + assemblyName.Length));
+            var testProjectDirectory = new DirectoryInfo(baseDirectory.Substring(0, index + assemblyName!.Length));
             var rootDirectory = testProjectDirectory!.Parent!.Parent;
             var codeDocPath =
                 Path.Combine(
