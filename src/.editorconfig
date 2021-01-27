@@ -25,10 +25,6 @@
 # https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/
 
 
-# Microsoft - Threading
-# https://github.com/microsoft/vs-threading/blob/master/doc/analyzers/index.md
-
-
 # SecurityCodeScan
 # https://security-code-scan.github.io/
 

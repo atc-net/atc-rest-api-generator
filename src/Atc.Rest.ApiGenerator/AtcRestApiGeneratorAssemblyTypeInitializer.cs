@@ -1,4 +1,8 @@
-﻿namespace Atc.Rest.ApiGenerator
+using System;
+
+[assembly: CLSCompliant(false)]
+
+namespace Atc.Rest.ApiGenerator
 {
     public class AtcRestApiGeneratorAssemblyTypeInitializer
     {
