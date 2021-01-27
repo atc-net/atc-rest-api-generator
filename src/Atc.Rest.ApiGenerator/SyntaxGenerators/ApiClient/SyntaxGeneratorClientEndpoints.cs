@@ -41,6 +41,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                         .Select(x => new SyntaxGeneratorClientEndpoint(
                             ApiProjectOptions,
                             OperationSchemaMappings,
+                            urlPath.Value.Parameters,
                             x.Key,
                             x.Value,
                             FocusOnSegmentName,

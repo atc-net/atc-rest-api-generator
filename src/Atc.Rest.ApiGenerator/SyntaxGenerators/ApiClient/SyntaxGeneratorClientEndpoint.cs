@@ -17,7 +17,9 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.OpenApi.Models;
+// ReSharper disable UseObjectOrCollectionInitializer
 
+// ReSharper disable InvertIf
 namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
 {
     public class SyntaxGeneratorClientEndpoint : ISyntaxCodeGenerator
@@ -25,6 +27,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
         public SyntaxGeneratorClientEndpoint(
             ApiProjectOptions apiProjectOptions,
             List<ApiOperationSchemaMap> operationSchemaMappings,
+            IList<OpenApiParameter> globalPathParameters,
             OperationType apiOperationType,
             OpenApiOperation apiOperation,
             string focusOnSegmentName,
@@ -33,6 +36,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
         {
             this.ApiProjectOptions = apiProjectOptions ?? throw new ArgumentNullException(nameof(apiProjectOptions));
             this.OperationSchemaMappings = operationSchemaMappings ?? throw new ArgumentNullException(nameof(apiProjectOptions));
+            this.GlobalPathParameters = globalPathParameters ?? throw new ArgumentNullException(nameof(globalPathParameters));
             this.ApiOperationType = apiOperationType;
             this.ApiOperation = apiOperation ?? throw new ArgumentNullException(nameof(apiOperation));
             this.FocusOnSegmentName = focusOnSegmentName ?? throw new ArgumentNullException(nameof(focusOnSegmentName));
@@ -43,6 +47,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
         public ApiProjectOptions ApiProjectOptions { get; }
 
         private List<ApiOperationSchemaMap> OperationSchemaMappings { get; }
+
+        public IList<OpenApiParameter> GlobalPathParameters { get; }
 
         public OperationType ApiOperationType { get; }
 
@@ -290,8 +296,13 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                             SyntaxFactory.LiteralExpression(SyntaxKind.DefaultLiteralExpression, SyntaxTokenFactory.DefaultKeyword()))),
                 };
 
-            var codeBody = hasParameters
-                ? SyntaxFactory.Block(
+            SyntaxTokenList methodModifiers;
+            BlockSyntax codeBlockSyntax;
+            if (hasParameters)
+            {
+                methodModifiers = SyntaxTokenListFactory.PublicKeyword();
+
+                codeBlockSyntax = SyntaxFactory.Block(
                     SyntaxIfStatementFactory.CreateParameterArgumentNullCheck("parameters"),
                     SyntaxFactory.ReturnStatement(
                         SyntaxFactory.InvocationExpression(
@@ -303,10 +314,18 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                                         {
                                             SyntaxFactory.Argument(SyntaxFactory.IdentifierName("parameters")),
                                             SyntaxTokenFactory.Comma(),
-                                            SyntaxFactory.Argument(SyntaxFactory.IdentifierName(nameof(CancellationToken).EnsureFirstCharacterToLower())),
-                                        })))))
-                : SyntaxFactory.Block(
-                    SyntaxThrowStatementFactory.CreateNotImplementedException());
+                                            SyntaxFactory.Argument(
+                                                SyntaxFactory.IdentifierName(nameof(CancellationToken)
+                                                    .EnsureFirstCharacterToLower())),
+                                        })))));
+            }
+            else
+            {
+                methodModifiers = SyntaxTokenListFactory.PublicAsyncKeyword();
+
+                var bodyBlockSyntaxStatements = CreateBodyBlockSyntaxStatements(resultTypeName);
+                codeBlockSyntax = SyntaxFactory.Block(bodyBlockSyntaxStatements);
+            }
 
             return SyntaxFactory.MethodDeclaration(
                     SyntaxFactory.GenericName(SyntaxFactory.Identifier(nameof(Task)))
@@ -320,9 +339,9 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                                                 SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
                                                     SyntaxFactory.IdentifierName(resultTypeName))))))),
                     SyntaxFactory.Identifier("ExecuteAsync"))
-                .WithModifiers(SyntaxTokenListFactory.PublicKeyword())
+                .WithModifiers(methodModifiers)
                 .WithParameterList(SyntaxFactory.ParameterList(SyntaxFactory.SeparatedList<ParameterSyntax>(arguments)))
-                .WithBody(codeBody);
+                .WithBody(codeBlockSyntax);
         }
 
         private MemberDeclarationSyntax CreateInvokeExecuteAsyncMethod(string parameterTypeName, string resultTypeName, bool hasParameters)
@@ -338,6 +357,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                 {
                     SyntaxParameterFactory.Create(nameof(CancellationToken), nameof(CancellationToken).EnsureFirstCharacterToLower()),
                 };
+
+            var bodyBlockSyntaxStatements = CreateBodyBlockSyntaxStatements(resultTypeName);
 
             return SyntaxFactory.MethodDeclaration(
                     SyntaxFactory.GenericName(SyntaxFactory.Identifier(nameof(Task)))
@@ -355,12 +376,18 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                 .WithParameterList(
                     SyntaxFactory.ParameterList(SyntaxFactory.SeparatedList<ParameterSyntax>(arguments)))
                 .WithBody(
-                    SyntaxFactory.Block(
-                        CreateInvokeExecuteAsyncMethodBlockLocalClient(),
-                        CreateInvokeExecuteAsyncMethodBlockLocalRequestBuilder(),
-                        CreateInvokeExecuteAsyncMethodBlockLocalRequestMessage(),
-                        CreateInvokeExecuteAsyncMethodBlockLocalResponse(),
-                        CreateInvokeExecuteAsyncMethodBlockReturn(resultTypeName)));
+                    SyntaxFactory.Block(bodyBlockSyntaxStatements));
+        }
+
+        private List<StatementSyntax> CreateBodyBlockSyntaxStatements(string resultTypeName)
+        {
+            var bodyBlockSyntaxStatements = new List<StatementSyntax>();
+            bodyBlockSyntaxStatements.Add(CreateInvokeExecuteAsyncMethodBlockLocalClient());
+            bodyBlockSyntaxStatements.AddRange(CreateInvokeExecuteAsyncMethodBlockLocalRequestBuilder());
+            bodyBlockSyntaxStatements.Add(CreateInvokeExecuteAsyncMethodBlockLocalRequestMessage());
+            bodyBlockSyntaxStatements.Add(CreateInvokeExecuteAsyncMethodBlockLocalResponse());
+            bodyBlockSyntaxStatements.Add(CreateInvokeExecuteAsyncMethodBlockReturn(resultTypeName));
+            return bodyBlockSyntaxStatements;
         }
 
         private LocalDeclarationStatementSyntax CreateInvokeExecuteAsyncMethodBlockLocalClient()
@@ -389,57 +416,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                                                                     $"{ApiProjectOptions.ProjectPrefixName}-ApiClient")))))))))));
         }
 
-        private LocalDeclarationStatementSyntax CreateInvokeExecuteAsyncMethodBlockLocalRequestBuilder()
+        private StatementSyntax[] CreateInvokeExecuteAsyncMethodBlockLocalRequestBuilder()
         {
-            ////var xxx = SyntaxFactory.SingletonList<MemberDeclarationSyntax>(
-            ////    SyntaxFactory.GlobalStatement(
-            ////        SyntaxFactory.LocalDeclarationStatement(
-            ////            SyntaxFactory.VariableDeclaration(
-            ////                SyntaxFactory.IdentifierName("var"))
-            ////            .WithVariables(
-            ////                SyntaxFactory.SingletonSeparatedList<VariableDeclaratorSyntax>(
-            ////                    SyntaxFactory.VariableDeclarator(
-            ////                        SyntaxFactory.Identifier("requestBuilder"))
-            ////                    .WithInitializer(
-            ////                        SyntaxFactory.EqualsValueClause(
-            ////                            SyntaxFactory.InvocationExpression(
-            ////                                SyntaxFactory.MemberAccessExpression(
-            ////                                    SyntaxKind.SimpleMemberAccessExpression,
-            ////                                    SyntaxFactory.InvocationExpression(
-            ////                                        SyntaxFactory.MemberAccessExpression(
-            ////                                            SyntaxKind.SimpleMemberAccessExpression,
-            ////                                            SyntaxFactory.IdentifierName("httpMessageFactory"),
-            ////                                            SyntaxFactory.IdentifierName("FromTemplate")))
-            ////                                    .WithArgumentList(
-            ////                                        SyntaxFactory.ArgumentList(
-            ////                                            SyntaxFactory.SingletonSeparatedList<ArgumentSyntax>(
-            ////                                                SyntaxFactory.Argument(
-            ////                                                    SyntaxFactory.LiteralExpression(
-            ////                                                        SyntaxKind.StringLiteralExpression,
-            ////                                                        SyntaxFactory.Literal("/api/v1/locations/{locationId}")))))),
-            ////                                    SyntaxFactory.IdentifierName("FromHest")))
-            ////                            .WithArgumentList(
-            ////                                SyntaxFactory.ArgumentList(
-            ////                                    SyntaxFactory.SeparatedList<ArgumentSyntax>(
-            ////                                        new SyntaxNodeOrToken[]{
-            ////                                            SyntaxFactory.Argument(
-            ////                                                SyntaxFactory.LiteralExpression(
-            ////                                                    SyntaxKind.StringLiteralExpression,
-            ////                                                    SyntaxFactory.Literal("GRIS"))),
-            ////                                            SyntaxFactory.Token(SyntaxKind.CommaToken),
-            ////                                            SyntaxFactory.Argument(
-            ////                                                SyntaxFactory.MemberAccessExpression(
-            ////                                                    SyntaxKind.SimpleMemberAccessExpression,
-            ////                                                    SyntaxFactory.IdentifierName("parameters"),
-            ////                                                    SyntaxFactory.IdentifierName("HALLO"))),
-            ////                                        }))))))))));
-
-            ////var mae1 = SyntaxFactory.InvocationExpression(
-            ////    SyntaxFactory.MemberAccessExpression(
-            ////        SyntaxKind.SimpleMemberAccessExpression,
-            ////        SyntaxFactory.IdentifierName("httpMessageFactory"),
-            ////        SyntaxFactory.IdentifierName("FromTemplate")));
-
             var equalsClauseSyntax = SyntaxFactory.EqualsValueClause(
                 SyntaxFactory.InvocationExpression(
                         SyntaxFactory.MemberAccessExpression(
@@ -448,7 +426,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                             SyntaxFactory.IdentifierName("FromTemplate")))
                     .WithArgumentList(CreateOneStringArg($"/api/{ApiProjectOptions.ApiVersion}{ApiUrlPath}")));
 
-            return SyntaxFactory.LocalDeclarationStatement(
+            var requestBuilderSyntax = SyntaxFactory.LocalDeclarationStatement(
                 SyntaxFactory.VariableDeclaration(
                     SyntaxFactory.IdentifierName("var"))
                 .WithVariables(
@@ -457,32 +435,87 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                             SyntaxFactory.Identifier("requestBuilder"))
                         .WithInitializer(equalsClauseSyntax))));
 
-            ////return SyntaxFactory.LocalDeclarationStatement(
-            ////    SyntaxFactory.VariableDeclaration(
-            ////        SyntaxFactory.IdentifierName("var"))
-            ////    .WithVariables(
-            ////        SyntaxFactory.SingletonSeparatedList(
-            ////            SyntaxFactory.VariableDeclarator(
-            ////                SyntaxFactory.Identifier("requestBuilder"))
-            ////            .WithInitializer(
-            ////                SyntaxFactory.EqualsValueClause(
-            ////                    SyntaxFactory.InvocationExpression(
-            ////                        SyntaxFactory.MemberAccessExpression(
-            ////                            SyntaxKind.SimpleMemberAccessExpression,
-            ////                            SyntaxFactory.InvocationExpression(
-            ////                                SyntaxFactory.MemberAccessExpression(
-            ////                                    SyntaxKind.SimpleMemberAccessExpression,
-            ////                                    SyntaxFactory.IdentifierName("httpMessageFactory"),
-            ////                                    SyntaxFactory.IdentifierName("FromTemplate")))
-            ////                            .WithArgumentList(
-            ////                                SyntaxFactory.ArgumentList(
-            ////                                    SyntaxFactory.SingletonSeparatedList<ArgumentSyntax>(
-            ////                                        SyntaxFactory.Argument(
-            ////                                            SyntaxFactory.LiteralExpression(
-            ////                                                SyntaxKind.StringLiteralExpression,
-            ////                                                SyntaxFactory.Literal($"/api/{ApiProjectOptions.ApiVersion}{ApiUrlPath}")))))),
-            ////                            SyntaxFactory.IdentifierName("WithPathParameter")))
-            ////                    .WithArgumentList(CreateOneParameterArg("serverId", "ServerId")))))));
+            var result = new List<StatementSyntax>
+            {
+                requestBuilderSyntax,
+            };
+
+            if (HasParametersOrRequestBody)
+            {
+                if (GlobalPathParameters.Any())
+                {
+                    result.AddRange(GlobalPathParameters.Select(CreateExpressionStatementForWithMethodParameterMap));
+                }
+
+                if (ApiOperation.Parameters != null)
+                {
+                    result.AddRange(ApiOperation.Parameters.Select(CreateExpressionStatementForWithMethodParameterMap));
+                }
+
+                var bodySchema = ApiOperation.RequestBody?.Content.GetSchema();
+                if (bodySchema != null)
+                {
+                    result.Add(CreateExpressionStatementForWithMethodBodyMap(bodySchema));
+                }
+            }
+
+            return result.ToArray();
+        }
+
+        private StatementSyntax CreateExpressionStatementForWithMethodParameterMap(OpenApiParameter parameter)
+        {
+            string methodName = parameter.In switch
+            {
+                ParameterLocation.Query => "WithQueryParameter",
+                ParameterLocation.Header => "WithHeaderParameter",
+                ParameterLocation.Path => "WithPathParameter",
+                _ => throw new NotSupportedException(nameof(parameter.In))
+            };
+
+            var parameterMapName = parameter.Name;
+            var parameterName = parameter.Name.EnsureFirstCharacterToUpper();
+
+            return SyntaxFactory.ExpressionStatement(
+                SyntaxFactory.InvocationExpression(
+                    SyntaxFactory.MemberAccessExpression(
+                        SyntaxKind.SimpleMemberAccessExpression,
+                        SyntaxFactory.IdentifierName("requestBuilder"),
+                        SyntaxFactory.IdentifierName(methodName)))
+                .WithArgumentList(
+                    SyntaxFactory.ArgumentList(
+                        SyntaxFactory.SeparatedList<ArgumentSyntax>(
+                            new SyntaxNodeOrToken[]
+                            {
+                                SyntaxFactory.Argument(
+                                    SyntaxFactory.LiteralExpression(
+                                        SyntaxKind.StringLiteralExpression,
+                                        SyntaxFactory.Literal(parameterMapName))),
+                                SyntaxFactory.Token(SyntaxKind.CommaToken), SyntaxFactory.Argument(
+                                    SyntaxFactory.MemberAccessExpression(
+                                        SyntaxKind.SimpleMemberAccessExpression,
+                                        SyntaxFactory.IdentifierName("parameters"),
+                                        SyntaxFactory.IdentifierName(parameterName))),
+                            }))));
+        }
+
+        private StatementSyntax CreateExpressionStatementForWithMethodBodyMap(OpenApiSchema bodySchema)
+        {
+            //// TODO: do we need schema??
+
+            return SyntaxFactory.ExpressionStatement(
+                SyntaxFactory.InvocationExpression(
+                        SyntaxFactory.MemberAccessExpression(
+                            SyntaxKind.SimpleMemberAccessExpression,
+                            SyntaxFactory.IdentifierName("requestBuilder"),
+                            SyntaxFactory.IdentifierName("WithBody")))
+                    .WithArgumentList(
+                        SyntaxFactory.ArgumentList(
+                            SyntaxFactory.SingletonSeparatedList(
+                                SyntaxFactory.Argument(
+                                    SyntaxFactory.MemberAccessExpression(
+                                        SyntaxKind.SimpleMemberAccessExpression,
+                                        SyntaxFactory.IdentifierName("parameters"),
+                                        SyntaxFactory.IdentifierName("Request")))))));
         }
 
         private LocalDeclarationStatementSyntax CreateInvokeExecuteAsyncMethodBlockLocalRequestMessage()
@@ -629,22 +662,5 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                         SyntaxFactory.LiteralExpression(
                             SyntaxKind.StringLiteralExpression,
                             SyntaxFactory.Literal(value)))));
-
-        private static ArgumentListSyntax CreateOneParameterArg(string parameterNameTo, string parameterNameFrom) =>
-            SyntaxFactory.ArgumentList(
-                SyntaxFactory.SeparatedList<ArgumentSyntax>(
-                    new SyntaxNodeOrToken[]
-                    {
-                        SyntaxFactory.Argument(
-                            SyntaxFactory.LiteralExpression(
-                                SyntaxKind.StringLiteralExpression,
-                                SyntaxFactory.Literal(parameterNameTo))),
-                        SyntaxTokenFactory.Comma(),
-                        SyntaxFactory.Argument(
-                            SyntaxFactory.MemberAccessExpression(
-                                SyntaxKind.SimpleMemberAccessExpression,
-                                SyntaxFactory.IdentifierName("parameters"),
-                                SyntaxFactory.IdentifierName(parameterNameFrom))),
-                    }));
     }
 }
