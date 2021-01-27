@@ -126,11 +126,12 @@ namespace Atc.Rest.ApiGenerator.Generators
 
             //// TODO: var sgEndpointInterfaces = new List<SyntaxGeneratorClientEndpointInterface>();
             var sgEndpoints = new List<SyntaxGeneratorClientEndpoint>();
+            var sgEndpointInterfaces = new List<SyntaxGeneratorClientEndpointInterface>();
             foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
             {
-                ////var generatorEndpointInterfaces = new SyntaxGeneratorClientEndpointInterfaces(apiProjectOptions, operationSchemaMappings, basePathSegmentName);
-                ////var generatedEndpointInterfaces = generatorEndpointInterfaces.GenerateSyntaxTrees();
-                ////sgEndpointInterfaces.AddRange(generatedEndpointInterfaces);
+                var generatorEndpointInterfaces = new SyntaxGeneratorClientEndpointInterfaces(apiProjectOptions, operationSchemaMappings, basePathSegmentName);
+                var generatedEndpointInterfaces = generatorEndpointInterfaces.GenerateSyntaxTrees();
+                sgEndpointInterfaces.AddRange(generatedEndpointInterfaces);
 
                 var generatorEndpoints = new SyntaxGeneratorClientEndpoints(apiProjectOptions, operationSchemaMappings, basePathSegmentName);
                 var generatedEndpoints = generatorEndpoints.GenerateSyntaxTrees();
@@ -138,10 +139,10 @@ namespace Atc.Rest.ApiGenerator.Generators
             }
 
             var logItems = new List<LogKeyValueItem>();
-            ////foreach (var sg in sgEndpointInterfaces)
-            ////{
-            ////    logItems.Add(sg.ToFile());
-            ////}
+            foreach (var sg in sgEndpointInterfaces)
+            {
+                logItems.Add(sg.ToFile());
+            }
 
             foreach (var sg in sgEndpoints)
             {

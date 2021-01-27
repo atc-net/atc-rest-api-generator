@@ -74,8 +74,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                 FocusOnSegmentName);
 
             // Create class
-            // TODO: var classDeclaration = SyntaxClassDeclarationFactory.CreateWithInterface(classTypeName, interfaceTypeName)
-            var classDeclaration = SyntaxClassDeclarationFactory.Create(EndpointTypeName)
+            var classDeclaration = SyntaxClassDeclarationFactory.CreateWithInterface(EndpointTypeName, InterfaceTypeName)
                 .AddGeneratedCodeAttribute(ApiProjectOptions.ToolName, ApiProjectOptions.ToolVersion.ToString())
                 .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForResults(ApiOperation, FocusOnSegmentName));
 
@@ -392,9 +391,54 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
 
         private LocalDeclarationStatementSyntax CreateInvokeExecuteAsyncMethodBlockLocalRequestBuilder()
         {
+            ////var xxx = SyntaxFactory.SingletonList<MemberDeclarationSyntax>(
+            ////    SyntaxFactory.GlobalStatement(
+            ////        SyntaxFactory.LocalDeclarationStatement(
+            ////            SyntaxFactory.VariableDeclaration(
+            ////                SyntaxFactory.IdentifierName("var"))
+            ////            .WithVariables(
+            ////                SyntaxFactory.SingletonSeparatedList<VariableDeclaratorSyntax>(
+            ////                    SyntaxFactory.VariableDeclarator(
+            ////                        SyntaxFactory.Identifier("requestBuilder"))
+            ////                    .WithInitializer(
+            ////                        SyntaxFactory.EqualsValueClause(
+            ////                            SyntaxFactory.InvocationExpression(
+            ////                                SyntaxFactory.MemberAccessExpression(
+            ////                                    SyntaxKind.SimpleMemberAccessExpression,
+            ////                                    SyntaxFactory.InvocationExpression(
+            ////                                        SyntaxFactory.MemberAccessExpression(
+            ////                                            SyntaxKind.SimpleMemberAccessExpression,
+            ////                                            SyntaxFactory.IdentifierName("httpMessageFactory"),
+            ////                                            SyntaxFactory.IdentifierName("FromTemplate")))
+            ////                                    .WithArgumentList(
+            ////                                        SyntaxFactory.ArgumentList(
+            ////                                            SyntaxFactory.SingletonSeparatedList<ArgumentSyntax>(
+            ////                                                SyntaxFactory.Argument(
+            ////                                                    SyntaxFactory.LiteralExpression(
+            ////                                                        SyntaxKind.StringLiteralExpression,
+            ////                                                        SyntaxFactory.Literal("/api/v1/locations/{locationId}")))))),
+            ////                                    SyntaxFactory.IdentifierName("FromHest")))
+            ////                            .WithArgumentList(
+            ////                                SyntaxFactory.ArgumentList(
+            ////                                    SyntaxFactory.SeparatedList<ArgumentSyntax>(
+            ////                                        new SyntaxNodeOrToken[]{
+            ////                                            SyntaxFactory.Argument(
+            ////                                                SyntaxFactory.LiteralExpression(
+            ////                                                    SyntaxKind.StringLiteralExpression,
+            ////                                                    SyntaxFactory.Literal("GRIS"))),
+            ////                                            SyntaxFactory.Token(SyntaxKind.CommaToken),
+            ////                                            SyntaxFactory.Argument(
+            ////                                                SyntaxFactory.MemberAccessExpression(
+            ////                                                    SyntaxKind.SimpleMemberAccessExpression,
+            ////                                                    SyntaxFactory.IdentifierName("parameters"),
+            ////                                                    SyntaxFactory.IdentifierName("HALLO"))),
+            ////                                        }))))))))));
+
             ////var mae1 = SyntaxFactory.InvocationExpression(
-            ////    SyntaxKind.SimpleMemberAccessExpression,
-            ////    );
+            ////    SyntaxFactory.MemberAccessExpression(
+            ////        SyntaxKind.SimpleMemberAccessExpression,
+            ////        SyntaxFactory.IdentifierName("httpMessageFactory"),
+            ////        SyntaxFactory.IdentifierName("FromTemplate")));
 
             var equalsClauseSyntax = SyntaxFactory.EqualsValueClause(
                 SyntaxFactory.InvocationExpression(
