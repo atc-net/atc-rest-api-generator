@@ -46,22 +46,22 @@ namespace Atc.Rest.ApiGenerator.Helpers
                 logItems.Add(HandleAtcCodingRulesPowerShell(rootPath));
 
                 // -> build folder
-                logItems.AddRange(HandleBuildPropsFiles(new DirectoryInfo(Path.Combine(rootPath.FullName, "build"))));
+                //// TODO: logItems.AddRange(HandleBuildPropsFiles(new DirectoryInfo(Path.Combine(rootPath.FullName, "build"))));
 
                 // -> root .editorConfig
                 logItems.Add(HandleFileEditorConfig(rootPath, "root", string.Empty));
 
                 // -> src folder -> 3 files
                 logItems.Add(HandleFileEditorConfig(outputSrcPath, "src", "src"));
-                logItems.Add(HandleDirectoryBuildPropsFile(outputSrcPath, "src", "src"));
-                logItems.Add(HandleDirectoryBuildTargetsFile(outputSrcPath, "src", "src"));
+                //// TODO: logItems.Add(HandleDirectoryBuildPropsFile(outputSrcPath, "src", "src"));
+                //// TODO: logItems.Add(HandleDirectoryBuildTargetsFile(outputSrcPath, "src", "src"));
 
                 if (outputTestPath != null)
                 {
                     // -> test folder -> 3 files
                     logItems.Add(HandleFileEditorConfig(outputTestPath, "test", "test"));
-                    logItems.Add(HandleDirectoryBuildPropsFile(outputTestPath, "test", "test"));
-                    logItems.Add(HandleDirectoryBuildTargetsFile(outputTestPath, "test", "test"));
+                    //// TODO: logItems.Add(HandleDirectoryBuildPropsFile(outputTestPath, "test", "test"));
+                    //// TODO: logItems.Add(HandleDirectoryBuildTargetsFile(outputTestPath, "test", "test"));
                 }
             }
 
