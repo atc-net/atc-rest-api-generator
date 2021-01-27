@@ -63,6 +63,7 @@ namespace Atc.Rest.ApiGenerator.Factories
                 list.Add("System.Net");
                 list.Add("System.Net.Http");
                 list.Add("Atc.Rest.Client");
+                list.Add("Atc.Rest.Client.Builder");
             }
 
             list.Add("Microsoft.AspNetCore.Http");

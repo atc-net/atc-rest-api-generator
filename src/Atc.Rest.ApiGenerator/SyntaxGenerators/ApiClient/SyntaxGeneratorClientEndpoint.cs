@@ -80,7 +80,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                 .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForResults(ApiOperation, FocusOnSegmentName));
 
             classDeclaration = classDeclaration.AddMembers(CreateFieldIHttpClientFactory());
-            classDeclaration = classDeclaration.AddMembers(CreateFieldIHttpExchangeFactory());
+            classDeclaration = classDeclaration.AddMembers(CreateFieldIHttpMessageFactory());
             classDeclaration = classDeclaration.AddMembers(CreateConstructor());
             classDeclaration = classDeclaration.AddMembers(CreateMembers());
 
@@ -196,16 +196,16 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                     SyntaxTokenListFactory.PrivateReadonlyKeyword());
         }
 
-        private MemberDeclarationSyntax CreateFieldIHttpExchangeFactory()
+        private MemberDeclarationSyntax CreateFieldIHttpMessageFactory()
         {
             return
                 SyntaxFactory.FieldDeclaration(
                     SyntaxFactory.VariableDeclaration(
-                            SyntaxFactory.IdentifierName("IHttpExchangeFactory"))
+                            SyntaxFactory.IdentifierName("IHttpMessageFactory"))
                         .WithVariables(
                             SyntaxFactory.SingletonSeparatedList(
                                 SyntaxFactory.VariableDeclarator(
-                                    SyntaxFactory.Identifier("httpExchangeFactory")))))
+                                    SyntaxFactory.Identifier("httpMessageFactory")))))
                 .WithModifiers(
                     SyntaxTokenListFactory.PrivateReadonlyKeyword());
         }
@@ -226,8 +226,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                                     SyntaxFactory.Parameter(SyntaxFactory.Identifier("factory"))
                                         .WithType(SyntaxFactory.IdentifierName("IHttpClientFactory")),
                                     SyntaxTokenFactory.Comma(), SyntaxFactory
-                                        .Parameter(SyntaxFactory.Identifier("httpExchangeFactory"))
-                                        .WithType(SyntaxFactory.IdentifierName("IHttpExchangeFactory")),
+                                        .Parameter(SyntaxFactory.Identifier("httpMessageFactory"))
+                                        .WithType(SyntaxFactory.IdentifierName("IHttpMessageFactory")),
                                 })))
                     .WithBody(
                         SyntaxFactory.Block(
@@ -245,8 +245,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                                     SyntaxFactory.MemberAccessExpression(
                                         SyntaxKind.SimpleMemberAccessExpression,
                                         SyntaxFactory.ThisExpression(),
-                                        SyntaxFactory.IdentifierName("httpExchangeFactory")),
-                                    SyntaxFactory.IdentifierName("httpExchangeFactory")))));
+                                        SyntaxFactory.IdentifierName("httpMessageFactory")),
+                                    SyntaxFactory.IdentifierName("httpMessageFactory")))));
         }
 
         private MemberDeclarationSyntax[] CreateMembers()
@@ -400,7 +400,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                 SyntaxFactory.InvocationExpression(
                         SyntaxFactory.MemberAccessExpression(
                             SyntaxKind.SimpleMemberAccessExpression,
-                            SyntaxFactory.IdentifierName("httpExchangeFactory"),
+                            SyntaxFactory.IdentifierName("httpMessageFactory"),
                             SyntaxFactory.IdentifierName("FromTemplate")))
                     .WithArgumentList(CreateOneStringArg($"/api/{ApiProjectOptions.ApiVersion}{ApiUrlPath}")));
 
@@ -428,7 +428,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
             ////                            SyntaxFactory.InvocationExpression(
             ////                                SyntaxFactory.MemberAccessExpression(
             ////                                    SyntaxKind.SimpleMemberAccessExpression,
-            ////                                    SyntaxFactory.IdentifierName("httpExchangeFactory"),
+            ////                                    SyntaxFactory.IdentifierName("httpMessageFactory"),
             ////                                    SyntaxFactory.IdentifierName("FromTemplate")))
             ////                            .WithArgumentList(
             ////                                SyntaxFactory.ArgumentList(
@@ -518,7 +518,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                                                     SyntaxFactory.InvocationExpression(
                                                         SyntaxFactory.MemberAccessExpression(
                                                             SyntaxKind.SimpleMemberAccessExpression,
-                                                            SyntaxFactory.IdentifierName("httpExchangeFactory"),
+                                                            SyntaxFactory.IdentifierName("httpMessageFactory"),
                                                             SyntaxFactory.IdentifierName("FromResponse")))
                                                     .WithArgumentList(
                                                         SyntaxFactory.ArgumentList(

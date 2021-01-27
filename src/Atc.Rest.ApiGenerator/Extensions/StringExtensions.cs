@@ -142,9 +142,9 @@ namespace System
         {
             var list = new List<string>
             {
-                "var requestBuilder = httpExchangeFactory",
+                "var requestBuilder = httpMessageFactory",
                 "using var requestMessage",
-                "return await httpExchangeFactory",
+                "return await httpMessageFactory",
             };
 
             return list.Aggregate(
