@@ -16,6 +16,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.OpenApi.Models;
+// ReSharper disable UseObjectOrCollectionInitializer
 
 // ReSharper disable UseObjectOrCollectionInitializer
 // ReSharper disable InvertIf
