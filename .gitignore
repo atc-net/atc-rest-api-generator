@@ -349,3 +349,6 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 /src/Atc.Rest.ApiGenerator.CLI/Properties/launchSettings.json
+
+# VerifyTests failed verifications
+*.received.txt
