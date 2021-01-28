@@ -351,3 +351,4 @@ MigrationBackup/
 /src/Atc.Rest.ApiGenerator.CLI/Properties/launchSettings.json
 /petstore3/
 openapi.yaml
+.idea/
