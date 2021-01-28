@@ -154,5 +154,10 @@ namespace System
                     $"{Environment.NewLine}            {item}",
                     StringComparison.Ordinal));
         }
+
+        public static string EnsureNewlineAfterMethod(this string value, string methodName)
+        {
+            return value.Replace(methodName, methodName + Environment.NewLine, StringComparison.Ordinal);
+        }
     }
 }
