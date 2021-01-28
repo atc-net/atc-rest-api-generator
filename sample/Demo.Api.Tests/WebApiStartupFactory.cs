@@ -21,7 +21,7 @@ namespace Demo.Api.Tests
     ///
     /// Includes options to override configuration and service collection using a partial class.
     /// </summary>
-    [GeneratedCode("ApiGenerator", "1.1.33.0")]
+    [GeneratedCode("ApiGenerator", "1.1.41.0")]
     public partial class WebApiStartupFactory : WebApplicationFactory<Startup>
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
