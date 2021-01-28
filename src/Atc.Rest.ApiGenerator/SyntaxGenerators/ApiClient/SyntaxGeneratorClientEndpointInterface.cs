@@ -109,7 +109,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
         public LogKeyValueItem ToFile()
         {
             var area = FocusOnSegmentName.EnsureFirstCharacterToUpper();
-            var file = Util.GetCsFileNameForContract(ApiProjectOptions.PathForEndpoints, area, InterfaceTypeName);
+            var file = Util.GetCsFileNameForContract(ApiProjectOptions.PathForEndpoints, area, NameConstants.EndpointInterfaces, InterfaceTypeName);
             return TextFileHelper.Save(file, ToCodeAsString());
         }
 

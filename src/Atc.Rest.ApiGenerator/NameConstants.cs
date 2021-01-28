@@ -4,6 +4,7 @@ namespace Atc.Rest.ApiGenerator
     {
         public const string Endpoints = "Endpoints";
         public const string Endpoint = "Endpoint";
+        public const string EndpointInterfaces = "Interfaces";
         public const string Contracts = "Contracts";
         public const string ContractsEnumerationTypes = "_EnumerationTypes";
         public const string ContractsSharedModels = "_Shared";
