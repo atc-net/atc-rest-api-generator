@@ -239,6 +239,9 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                 .FirstOrDefault(x => x.Item1 == HttpStatusCode.OK)?.Item2 ?? responseTypes
                 .FirstOrDefault(x => x.Item1 == HttpStatusCode.Created)?.Item2 ?? "string";
 
+            // TODO: Fix this hack DKA!!!
+            resultTypeName = resultTypeName.Replace("ReportTemplate.ReportTemplate", "ReportTemplate", StringComparison.OrdinalIgnoreCase);
+
             var result = new List<MemberDeclarationSyntax>
             {
                 CreateExecuteAsyncMethod(ParameterTypeName, resultTypeName, HasParametersOrRequestBody),
