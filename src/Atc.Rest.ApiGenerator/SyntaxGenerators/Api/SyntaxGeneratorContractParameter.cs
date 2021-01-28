@@ -34,6 +34,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
             this.ApiOperation = apiOperation ?? throw new ArgumentNullException(nameof(apiOperation));
             this.FocusOnSegmentName = focusOnSegmentName ?? throw new ArgumentNullException(nameof(focusOnSegmentName));
 
+            this.IsForClient = false;
             this.UseOwnFolder = true;
         }
 
@@ -48,6 +49,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
         public string FocusOnSegmentName { get; }
 
         public CompilationUnitSyntax? Code { get; private set; }
+
+        public bool IsForClient { get; set; }
 
         public bool UseOwnFolder { get; set; }
 
@@ -77,7 +80,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                     var propertyDeclaration = SyntaxPropertyDeclarationFactory.CreateAuto(
                             parameter,
                             ApiProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
-                            ApiProjectOptions.ForClient)
+                            ApiProjectOptions.IsForClient)
                         .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForParameter(parameter));
                     classDeclaration = classDeclaration.AddMembers(propertyDeclaration);
                 }
@@ -90,7 +93,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                     var propertyDeclaration = SyntaxPropertyDeclarationFactory.CreateAuto(
                             parameter,
                             ApiProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
-                            ApiProjectOptions.ForClient)
+                            ApiProjectOptions.IsForClient)
                         .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForParameter(parameter));
                     classDeclaration = classDeclaration.AddMembers(propertyDeclaration);
                 }
@@ -106,7 +109,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                 PropertyDeclarationSyntax propertyDeclaration;
                 if (requestSchema.Type == OpenApiDataTypeConstants.Array)
                 {
-                    propertyDeclaration = ApiProjectOptions.ForClient
+                    propertyDeclaration = ApiProjectOptions.IsForClient
                         ? SyntaxPropertyDeclarationFactory.CreateListAuto(
                                 requestBodyType,
                                 NameConstants.Request)
@@ -121,7 +124,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                 }
                 else
                 {
-                    propertyDeclaration = ApiProjectOptions.ForClient
+                    propertyDeclaration = ApiProjectOptions.IsForClient
                         ? SyntaxPropertyDeclarationFactory.CreateAuto(
                                 parameterLocation: null,
                                 isNullable: false,
@@ -161,7 +164,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                     GlobalPathParameters,
                     ApiOperation.Parameters,
                     ApiOperation.RequestBody,
-                    ApiProjectOptions.ForClient));
+                    ApiProjectOptions.IsForClient));
 
             // Add the class to the namespace.
             @namespace = @namespace.AddMembers(classDeclaration);
@@ -198,9 +201,13 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
         {
             var area = FocusOnSegmentName.EnsureFirstCharacterToUpper();
             var parameterName = ApiOperation.GetOperationName() + NameConstants.ContractParameters;
-            var file = UseOwnFolder
-                ? Util.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, NameConstants.ContractParameters, parameterName)
-                : Util.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, parameterName);
+
+            var file = IsForClient
+                ? Util.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, NameConstants.ClientRequestParameters, parameterName)
+                : UseOwnFolder
+                    ? Util.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, NameConstants.ContractParameters, parameterName)
+                    : Util.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, parameterName);
+
             return TextFileHelper.Save(file, ToCodeAsString());
         }
 

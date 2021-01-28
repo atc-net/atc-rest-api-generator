@@ -49,9 +49,14 @@ namespace Atc.Rest.ApiGenerator.Factories
 
             if (forClient)
             {
-                list.Add(string.IsNullOrEmpty(apiProjectOptions.ClientFolderName)
-                    ? $"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}.{focusOnSegmentName.EnsureFirstCharacterToUpper()}"
-                    : $"{apiProjectOptions.ProjectName}.{apiProjectOptions.ClientFolderName}.{NameConstants.Contracts}.{focusOnSegmentName.EnsureFirstCharacterToUpper()}");
+                var s = string.IsNullOrEmpty(apiProjectOptions.ClientFolderName)
+                    ? $"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}"
+                    : $"{apiProjectOptions.ProjectName}.{apiProjectOptions.ClientFolderName}.{NameConstants.Contracts}";
+
+                if (!list.Contains(s))
+                {
+                    list.Add(s);
+                }
             }
             else
             {

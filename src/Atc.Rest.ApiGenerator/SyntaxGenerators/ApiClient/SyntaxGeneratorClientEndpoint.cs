@@ -89,7 +89,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
             classDeclaration = classDeclaration.AddMembers(CreateConstructor());
             classDeclaration = classDeclaration.AddMembers(CreateMembers());
 
-            // TODO: Imp. this.
+            // TODO: Imp. this. ?
             var usedApiOperations = new List<OpenApiOperation>();
 
             // Add using statement to compilationUnit
@@ -262,6 +262,9 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
             string resultTypeName = responseTypes
                 .FirstOrDefault(x => x.Item1 == HttpStatusCode.OK)?.Item2 ?? responseTypes
                 .FirstOrDefault(x => x.Item1 == HttpStatusCode.Created)?.Item2 ?? "string";
+
+            // TODO: Fix this hack DKA!!!
+            resultTypeName = resultTypeName.Replace("ReportTemplate.ReportTemplate", "ReportTemplate", StringComparison.OrdinalIgnoreCase);
 
             var result = new List<MemberDeclarationSyntax>
             {
