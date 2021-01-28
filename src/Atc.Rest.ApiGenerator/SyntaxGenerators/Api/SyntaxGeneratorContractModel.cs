@@ -36,6 +36,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                 this.IsSharedContract = true;
             }
 
+            this.IsForClient = false;
             this.UseOwnFolder = true;
         }
 
@@ -52,6 +53,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
         public CompilationUnitSyntax? Code { get; private set; }
 
         public bool IsEnum { get; private set; }
+
+        public bool IsForClient { get; set; }
 
         public bool UseOwnFolder { get; set; }
 
@@ -189,6 +192,14 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
         {
             var area = FocusOnSegmentName.EnsureFirstCharacterToUpper();
             var modelName = ApiSchemaKey.EnsureFirstCharacterToUpper();
+
+            if (IsForClient &&
+                modelName.EndsWith(NameConstants.Request, StringComparison.Ordinal))
+            {
+                var clientFile = Util.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, NameConstants.ClientRequestParameters, modelName);
+                return TextFileHelper.Save(clientFile, ToCodeAsString());
+            }
+
             var file = IsEnum
                 ? Util.GetCsFileNameForContractEnumTypes(ApiProjectOptions.PathForContracts, modelName)
                 : IsSharedContract
@@ -196,6 +207,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                     : UseOwnFolder
                         ? Util.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, NameConstants.ContractModels, modelName)
                         : Util.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, modelName);
+
             return TextFileHelper.Save(file, ToCodeAsString());
         }
 

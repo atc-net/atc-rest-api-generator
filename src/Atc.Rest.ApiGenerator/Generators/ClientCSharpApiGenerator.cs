@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using Atc.Data.Models;
 using Atc.Rest.ApiGenerator.Helpers;
 using Atc.Rest.ApiGenerator.Models;
@@ -104,12 +103,14 @@ namespace Atc.Rest.ApiGenerator.Generators
             var logItems = new List<LogKeyValueItem>();
             foreach (var sg in sgContractModels)
             {
+                sg.IsForClient = true;
                 sg.UseOwnFolder = false;
                 logItems.Add(sg.ToFile());
             }
 
             foreach (var sg in sgContractParameters)
             {
+                sg.IsForClient = true;
                 sg.UseOwnFolder = false;
                 logItems.Add(sg.ToFile());
             }

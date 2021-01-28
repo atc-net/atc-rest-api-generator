@@ -66,7 +66,7 @@ namespace Atc.Rest.ApiGenerator.Models
                 ProjectTestCsProj = new FileInfo(Path.Combine(PathForTestGenerate.FullName, $"{ProjectName}.Tests.csproj"));
             }
 
-            this.ForClient = forClient;
+            this.IsForClient = forClient;
             this.ClientFolderName = clientFolderName;
 
             BasePathSegmentNames = OpenApiDocumentHelper.GetBasePathSegmentNames(openApiDocument);
@@ -98,7 +98,7 @@ namespace Atc.Rest.ApiGenerator.Models
 
         public string ApiVersion { get; }
 
-        public bool ForClient { get; }
+        public bool IsForClient { get; }
 
         public string? ClientFolderName { get; }
 

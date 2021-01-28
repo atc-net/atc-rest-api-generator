@@ -21,5 +21,7 @@ namespace Atc.Rest.ApiGenerator
         public const string Request = "Request";
         public const string Handlers = "Handlers";
         public const string Handler = "Handler";
+
+        public const string ClientRequestParameters = "RequestParameters";
     }
 }

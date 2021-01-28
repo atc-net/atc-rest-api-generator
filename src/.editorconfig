@@ -40,3 +40,5 @@
 ##########################################
 # Custom - Code Analyzers Rules
 ##########################################
+
+dotnet_diagnostic.S3358.severity = none         # for now..

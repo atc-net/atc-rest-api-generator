@@ -40,9 +40,17 @@ namespace Atc.Rest.ApiGenerator.ProjectSyntaxFactories
                 throw new ArgumentNullException(nameof(namespacePart));
             }
 
-            var fullNamespace = string.IsNullOrEmpty(baseProjectOptions.ClientFolderName)
-                ? $"{baseProjectOptions.ProjectName}.{namespacePart}"
-                : $"{baseProjectOptions.ProjectName}.{baseProjectOptions.ClientFolderName}.{namespacePart}";
+            string fullNamespace;
+            if (baseProjectOptions.IsForClient)
+            {
+                fullNamespace = string.IsNullOrEmpty(baseProjectOptions.ClientFolderName)
+                    ? $"{baseProjectOptions.ProjectName}.{namespacePart}"
+                    : $"{baseProjectOptions.ProjectName}.{baseProjectOptions.ClientFolderName}.{namespacePart}";
+            }
+            else
+            {
+                fullNamespace = $"{baseProjectOptions.ProjectName}.{namespacePart}";
+            }
 
             if (withAutoGen)
             {
@@ -51,8 +59,7 @@ namespace Atc.Rest.ApiGenerator.ProjectSyntaxFactories
                     fullNamespace);
             }
 
-            return SyntaxNamespaceDeclarationFactory.Create(
-                fullNamespace);
+            return SyntaxNamespaceDeclarationFactory.Create(fullNamespace);
         }
 
         public static NamespaceDeclarationSyntax CreateNamespace(BaseProjectOptions baseProjectOptions, string namespacePart, string focusOnSegmentName, bool withAutoGen = true)
@@ -72,9 +79,17 @@ namespace Atc.Rest.ApiGenerator.ProjectSyntaxFactories
                 throw new ArgumentNullException(nameof(focusOnSegmentName));
             }
 
-            var fullNamespace = string.IsNullOrEmpty(baseProjectOptions.ClientFolderName)
-                ? $"{baseProjectOptions.ProjectName}.{namespacePart}.{focusOnSegmentName.EnsureFirstCharacterToUpper()}"
-                : $"{baseProjectOptions.ProjectName}.{baseProjectOptions.ClientFolderName}.{namespacePart}.{focusOnSegmentName.EnsureFirstCharacterToUpper()}";
+            string fullNamespace;
+            if (baseProjectOptions.IsForClient)
+            {
+                fullNamespace = string.IsNullOrEmpty(baseProjectOptions.ClientFolderName)
+                    ? $"{baseProjectOptions.ProjectName}.{namespacePart}"
+                    : $"{baseProjectOptions.ProjectName}.{baseProjectOptions.ClientFolderName}.{namespacePart}";
+            }
+            else
+            {
+                fullNamespace = $"{baseProjectOptions.ProjectName}.{namespacePart}.{focusOnSegmentName.EnsureFirstCharacterToUpper()}";
+            }
 
             if (withAutoGen)
             {
