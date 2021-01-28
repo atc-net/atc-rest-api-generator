@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -17,7 +17,7 @@ namespace Atc.Rest.ApiGenerator.ProjectSyntaxFactories
 {
     internal static class SyntaxDocumentationFactory
     {
-        private const string Prefix = "/// ";
+        private const string Prefix = "///";
 
         public static SyntaxTriviaList Create(OpenApiSchema apiSchema)
         {
@@ -202,7 +202,7 @@ namespace Atc.Rest.ApiGenerator.ProjectSyntaxFactories
                 value += ".";
             }
 
-            return SyntaxFactory.Comment(Prefix + value);
+            return SyntaxFactory.Comment(Prefix + (string.IsNullOrWhiteSpace(value) ? string.Empty : " ") + value);
         }
 
         public static SyntaxTriviaList CreateSummary(string value, bool ensureEndingDot = false)
@@ -218,6 +218,23 @@ namespace Atc.Rest.ApiGenerator.ProjectSyntaxFactories
                 CreateComment(value, ensureEndingDot),
                 CreateComment("</summary>"),
             };
+
+            return SyntaxFactory.TriviaList(comments);
+        }
+
+        public static SyntaxTriviaList CreateSummary(IEnumerable<string> values, bool ensureEndingDot = false)
+        {
+            if (values == null)
+            {
+                throw new ArgumentNullException(nameof(values));
+            }
+
+            var comments = new List<SyntaxTrivia>
+            {
+                CreateComment("<summary>"),
+            };
+            comments.AddRange(values.Select(value => CreateComment(value, ensureEndingDot)));
+            comments.Add(CreateComment("</summary>"));
 
             return SyntaxFactory.TriviaList(comments);
         }

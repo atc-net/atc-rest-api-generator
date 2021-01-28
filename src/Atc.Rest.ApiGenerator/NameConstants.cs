@@ -1,3 +1,7 @@
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Atc.Rest.ApiGenerator.Tests")]
+
 namespace Atc.Rest.ApiGenerator
 {
     internal static class NameConstants

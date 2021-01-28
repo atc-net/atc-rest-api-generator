@@ -1025,7 +1025,13 @@ namespace Atc.Rest.ApiGenerator.Generators
                                     .WithTypeArgumentList(
                                         SyntaxFactory.TypeArgumentList(
                                             SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
-                                                SyntaxFactory.IdentifierName("Startup"))))))));
+                                                SyntaxFactory.IdentifierName("Startup"))))))))
+                .WithLeadingTrivia(SyntaxDocumentationFactory.CreateSummary(new[]
+                {
+                    "Factory for bootstrapping in memory tests.",
+                    string.Empty,
+                    "Includes options to override configuration and service collection using a partial class.",
+                }));
 
             // Create members
             var memberDeclarationConfigureWebHost = CreateWebApplicationFactoryConfigureWebHost();
@@ -1047,7 +1053,8 @@ namespace Atc.Rest.ApiGenerator.Generators
 
             var codeAsString = compilationUnit
                 .NormalizeWhitespace()
-                .ToFullString();
+                .ToFullString()
+                .EnsureNewlineAfterMethod("partial void ModifyConfiguration(IConfigurationBuilder config);");
 
             var file = new FileInfo(Path.Combine(projectOptions.PathForTestGenerate!.FullName, "WebApiStartupFactory.cs"));
             return TextFileHelper.Save(file, codeAsString);
