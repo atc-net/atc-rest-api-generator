@@ -191,8 +191,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
             return
                 SyntaxFactory.FieldDeclaration(
                     SyntaxFactory
-                        .VariableDeclaration(
-                            SyntaxFactory.IdentifierName("IHttpClientFactory"))
+                        .VariableDeclaration(SyntaxFactory.IdentifierName("IHttpClientFactory"))
                         .WithVariables(
                             SyntaxFactory.SingletonSeparatedList(
                                 SyntaxFactory.VariableDeclarator(
@@ -205,8 +204,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
         {
             return
                 SyntaxFactory.FieldDeclaration(
-                    SyntaxFactory.VariableDeclaration(
-                            SyntaxFactory.IdentifierName("IHttpMessageFactory"))
+                    SyntaxFactory.VariableDeclaration(SyntaxFactory.IdentifierName("IHttpMessageFactory"))
                         .WithVariables(
                             SyntaxFactory.SingletonSeparatedList(
                                 SyntaxFactory.VariableDeclarator(
@@ -305,8 +303,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                 codeBlockSyntax = SyntaxFactory.Block(
                     SyntaxIfStatementFactory.CreateParameterArgumentNullCheck("parameters"),
                     SyntaxFactory.ReturnStatement(
-                        SyntaxFactory.InvocationExpression(
-                                SyntaxFactory.IdentifierName("InvokeExecuteAsync"))
+                        SyntaxFactory.InvocationExpression(SyntaxFactory.IdentifierName("InvokeExecuteAsync"))
                             .WithArgumentList(
                                 SyntaxFactory.ArgumentList(
                                     SyntaxFactory.SeparatedList<ArgumentSyntax>(
@@ -393,8 +390,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
         private LocalDeclarationStatementSyntax CreateInvokeExecuteAsyncMethodBlockLocalClient()
         {
             return SyntaxFactory.LocalDeclarationStatement(
-                SyntaxFactory.VariableDeclaration(
-                        SyntaxFactory.IdentifierName("var"))
+                SyntaxFactory.VariableDeclaration(SyntaxFactory.IdentifierName("var"))
                     .WithVariables(
                         SyntaxFactory.SingletonSeparatedList(
                             SyntaxFactory.VariableDeclarator(
@@ -521,12 +517,10 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
         private LocalDeclarationStatementSyntax CreateInvokeExecuteAsyncMethodBlockLocalRequestMessage()
         {
             return SyntaxFactory.LocalDeclarationStatement(
-                    SyntaxFactory.VariableDeclaration(
-                            SyntaxFactory.IdentifierName("var"))
+                    SyntaxFactory.VariableDeclaration(SyntaxFactory.IdentifierName("var"))
                         .WithVariables(
                             SyntaxFactory.SingletonSeparatedList(
-                                SyntaxFactory.VariableDeclarator(
-                                        SyntaxFactory.Identifier("requestMessage"))
+                                SyntaxFactory.VariableDeclarator(SyntaxFactory.Identifier("requestMessage"))
                                     .WithInitializer(
                                         SyntaxFactory.EqualsValueClause(
                                             SyntaxFactory.InvocationExpression(
@@ -549,12 +543,10 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
         private LocalDeclarationStatementSyntax CreateInvokeExecuteAsyncMethodBlockLocalResponse()
         {
             return SyntaxFactory.LocalDeclarationStatement(
-                    SyntaxFactory.VariableDeclaration(
-                            SyntaxFactory.IdentifierName("var"))
+                    SyntaxFactory.VariableDeclaration(SyntaxFactory.IdentifierName("var"))
                         .WithVariables(
                             SyntaxFactory.SingletonSeparatedList(
-                                SyntaxFactory.VariableDeclarator(
-                                        SyntaxFactory.Identifier("response"))
+                                SyntaxFactory.VariableDeclarator(SyntaxFactory.Identifier("response"))
                                     .WithInitializer(
                                         SyntaxFactory.EqualsValueClause(
                                             SyntaxFactory.AwaitExpression(
@@ -600,17 +592,14 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                                                     .WithArgumentList(
                                                         SyntaxFactory.ArgumentList(
                                                             SyntaxFactory.SingletonSeparatedList(
-                                                                SyntaxFactory.Argument(
-                                                                    SyntaxFactory.IdentifierName("response"))))),
-                                                    SyntaxFactory.GenericName(
-                                                            SyntaxFactory.Identifier("AddSuccessResponse")) // TODO: nameof
+                                                                SyntaxFactory.Argument(SyntaxFactory.IdentifierName("response"))))),
+                                                    SyntaxFactory.GenericName(SyntaxFactory.Identifier("AddSuccessResponse")) // TODO: nameof
                                                     .WithTypeArgumentList(
                                                         SyntaxFactory.TypeArgumentList(
                                                             SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
                                                                 SyntaxFactory.IdentifierName(resultTypeName))))))
                                                     .WithArgumentList(CreateResponseArgHttpStatusCode(HttpStatusCode.OK)),
-                                            SyntaxFactory.GenericName(
-                                                    SyntaxFactory.Identifier("AddErrorResponse")) // TODO: nameof
+                                            SyntaxFactory.GenericName(SyntaxFactory.Identifier("AddErrorResponse")) // TODO: nameof
                                             .WithTypeArgumentList(
                                                 SyntaxFactory.TypeArgumentList(
                                                     SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
@@ -626,12 +615,10 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                                     {
                                         SyntaxFactory.Argument(
                                             SyntaxFactory.SimpleLambdaExpression(
-                                                SyntaxFactory.Parameter(
-                                                    SyntaxFactory.Identifier("x")))
+                                                SyntaxFactory.Parameter(SyntaxFactory.Identifier("x")))
                                                 .WithExpressionBody(
                                                     SyntaxFactory.ObjectCreationExpression(
-                                                        SyntaxFactory.GenericName(
-                                                                SyntaxFactory.Identifier("EndpointResult")) // TODO: nameof
+                                                        SyntaxFactory.GenericName(SyntaxFactory.Identifier("EndpointResult")) // TODO: nameof
                                                             .WithTypeArgumentList(
                                                                 SyntaxFactory.TypeArgumentList(
                                                                     SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
