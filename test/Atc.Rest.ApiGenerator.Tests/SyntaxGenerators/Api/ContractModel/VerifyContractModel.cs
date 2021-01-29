@@ -26,12 +26,15 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators
         public async Task VerifySpecAsync(YamlSpecFile file)
         {
             // Arrange
-            var info = new FileInfo(file.FilePath);
+            var specFileInfo = new FileInfo(file.FilePath);
             var settings = new VerifySettings();
-            settings.UseDirectory(info.DirectoryName);
+            settings.UseDirectory(specFileInfo.DirectoryName);
+            settings.UseTypeName(Path.GetFileNameWithoutExtension(specFileInfo.Name));
             settings.UseMethodName("yaml");
+            settings.UseExtension("txt");
+            settings.UseParameters(string.Empty);
 
-            var spec = await info.OpenText().ReadToEndAsync();
+            var spec = await specFileInfo.OpenText().ReadToEndAsync();
             var apiProj = GeneratorTestSetup.CreateApiProject(spec, ProjectPrefix, ProjectSuffix);
             var sut = new SyntaxGeneratorContractModel(apiProj, string.Empty, apiProj.Document.Components.Schemas.First().Value, FocusOnSecment);
 
@@ -39,11 +42,12 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators
             var specOutput = sut.ToCodeAsString();
 
             // Assert
-            await Verifier.Verify(specOutput, settings)
-                .UseParameters(Path.GetFileNameWithoutExtension(file.FilePath));
+            await Verifier.Verify(specOutput, settings);
         }
 
-        public static IEnumerable<object[]> GetFiles([CallerFilePath] string sourceFilePath = "")
+        public static IEnumerable<object[]> GetFilesProxy() => GetFiles();
+
+        private static IEnumerable<object[]> GetFiles([CallerFilePath] string sourceFilePath = "")
         {
             var directory = Path.GetDirectoryName(sourceFilePath);
             return Directory.EnumerateFiles(directory, "*.yaml")
@@ -51,11 +55,6 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators
                 {
                     new YamlSpecFile(x, Path.GetFileName(x)),
                 });
-        }
-
-        public static IEnumerable<object[]> GetFilesProxy()
-        {
-            return GetFiles();
         }
     }
 }
