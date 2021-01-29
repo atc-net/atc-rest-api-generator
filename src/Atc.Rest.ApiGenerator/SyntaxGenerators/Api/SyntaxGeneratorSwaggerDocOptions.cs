@@ -1,4 +1,6 @@
-﻿using Microsoft.CodeAnalysis.CSharp;
+﻿using System.Text;
+using Atc.Rest.ApiGenerator.Helpers;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.OpenApi.Models;
 
 namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
@@ -28,13 +30,13 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                 string.IsNullOrWhiteSpace(document.Info?.Contact?.Url?.ToString())
                     ? string.Empty
                     : $@"
-                        Url = new Uri(""{document.Info?.Contact?.Url}""),";
+                            Url = new Uri(""{document.Info?.Contact?.Url}""),";
 
             var licenseUrl =
                 string.IsNullOrWhiteSpace(document.Info?.License?.Url?.ToString())
                     ? string.Empty
                     : $@"
-                        Url = new Uri(""{document.Info?.License?.Url}""),";
+                            Url = new Uri(""{document.Info?.License?.Url}""),";
 
             return $@"using System;
 using System.IO;
