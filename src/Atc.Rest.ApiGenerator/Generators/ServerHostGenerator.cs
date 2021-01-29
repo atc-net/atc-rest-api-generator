@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Net.Mime;
+using System.Text;
 using System.Xml.Linq;
 using Atc.CodeAnalysis.CSharp.SyntaxFactories;
 using Atc.Data.Models;
@@ -1025,9 +1026,11 @@ namespace Atc.Rest.ApiGenerator.Generators
 
             var syntaxGenerator = new SyntaxGeneratorSwaggerDocOptions(fullNamespace, projectOptions.Document);
             var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "ConfigureSwaggerDocOptions.cs"));
-            return File.Exists(file.FullName)
-                ? new LogKeyValueItem(LogCategoryType.Debug, "FileSkip", "#", file.FullName)
-                : TextFileHelper.Save(file, syntaxGenerator.GenerateCode());
+
+            var stringBuilder = new StringBuilder();
+            GenerateCodeHelper.AppendNamespaceComment(stringBuilder, projectOptions.ToolNameAndVersion);
+            stringBuilder.AppendLine(syntaxGenerator.GenerateCode());
+            return TextFileHelper.Save(file, stringBuilder.ToString());
         }
 
         private LogKeyValueItem GenerateTestWebApiStartupFactory()
