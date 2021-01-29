@@ -466,6 +466,9 @@
      - ToCodeAsString()
      - ToFile()
      - ToFile(FileInfo file)
+- [SyntaxGeneratorSwaggerDocOptions](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorswaggerdocoptions)
+  -  Methods
+     - GenerateCode()
 
 ## [Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md)
 
