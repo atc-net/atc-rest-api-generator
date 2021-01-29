@@ -114,6 +114,7 @@ namespace Atc.Rest.ApiGenerator.Generators
                     projectOptions.UseRestExtended));
                 logItems.Add(ScaffoldProgramFile());
                 logItems.Add(ScaffoldStartupFile());
+                logItems.Add(ScaffoldConfigureSwaggerDocOptions());
             }
 
             return logItems;
@@ -1003,6 +1004,19 @@ namespace Atc.Rest.ApiGenerator.Generators
             return File.Exists(file.FullName)
                 ? new LogKeyValueItem(LogCategoryType.Debug, "FileSkip", "#", file.FullName)
                 : TextFileHelper.Save(file, codeAsString);
+        }
+
+        private LogKeyValueItem ScaffoldConfigureSwaggerDocOptions()
+        {
+            var fullNamespace = string.IsNullOrEmpty(projectOptions.ClientFolderName)
+                ? $"{projectOptions.ProjectName}"
+                : $"{projectOptions.ProjectName}.{projectOptions.ClientFolderName}";
+
+            var syntaxGenerator = new SyntaxGeneratorSwaggerDocDocOptions(fullNamespace, projectOptions.Document);
+            var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "ConfigureSwaggerDocOptions.cs"));
+            return File.Exists(file.FullName)
+                ? new LogKeyValueItem(LogCategoryType.Debug, "FileSkip", "#", file.FullName)
+                : TextFileHelper.Save(file, syntaxGenerator.ToCodeAsString());
         }
 
         private LogKeyValueItem GenerateTestWebApiStartupFactory()
