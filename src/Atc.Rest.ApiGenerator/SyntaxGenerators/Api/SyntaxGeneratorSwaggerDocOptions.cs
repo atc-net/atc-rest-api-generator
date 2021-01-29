@@ -4,12 +4,14 @@ using Microsoft.OpenApi.Models;
 
 namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
 {
-    public class SyntaxGeneratorSwaggerDocDocOptions
+    public class SyntaxGeneratorSwaggerDocOptions
     {
         private readonly string fullNamespace;
         private readonly OpenApiDocument document;
 
-        public SyntaxGeneratorSwaggerDocDocOptions(string fullNamespace, OpenApiDocument document)
+        public SyntaxGeneratorSwaggerDocOptions(
+            string fullNamespace,
+            OpenApiDocument document)
         {
             this.fullNamespace = fullNamespace;
             this.document = document;

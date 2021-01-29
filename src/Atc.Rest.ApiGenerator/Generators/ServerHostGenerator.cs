@@ -1022,11 +1022,11 @@ namespace Atc.Rest.ApiGenerator.Generators
                 ? $"{projectOptions.ProjectName}"
                 : $"{projectOptions.ProjectName}.{projectOptions.ClientFolderName}";
 
-            var syntaxGenerator = new SyntaxGeneratorSwaggerDocDocOptions(fullNamespace, projectOptions.Document);
+            var syntaxGenerator = new SyntaxGeneratorSwaggerDocOptions(fullNamespace, projectOptions.Document);
             var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "ConfigureSwaggerDocOptions.cs"));
             return File.Exists(file.FullName)
                 ? new LogKeyValueItem(LogCategoryType.Debug, "FileSkip", "#", file.FullName)
-                : TextFileHelper.Save(file, syntaxGenerator.ToCodeAsString());
+                : TextFileHelper.Save(file, syntaxGenerator.GenerateCode());
         }
 
         private LogKeyValueItem GenerateTestWebApiStartupFactory()
