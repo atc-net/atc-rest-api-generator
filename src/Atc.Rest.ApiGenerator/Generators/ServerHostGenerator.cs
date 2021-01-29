@@ -1028,7 +1028,7 @@ namespace Atc.Rest.ApiGenerator.Generators
             var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "ConfigureSwaggerDocOptions.cs"));
 
             var stringBuilder = new StringBuilder();
-            GenerateCodeHelper.AppendNamespaceComment(stringBuilder, projectOptions.ToolNameAndVersion);
+            GenerateCodeHelper.AppendGeneratedCodeWarningComment(stringBuilder, projectOptions.ToolNameAndVersion);
             stringBuilder.AppendLine(syntaxGenerator.GenerateCode());
             return TextFileHelper.Save(file, stringBuilder.ToString());
         }

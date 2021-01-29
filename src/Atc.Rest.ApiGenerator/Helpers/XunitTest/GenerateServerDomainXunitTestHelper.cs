@@ -47,7 +47,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             }
 
             sb.AppendLine();
-            GenerateCodeHelper.AppendNamespaceComment(sb, domainProjectOptions.ToolNameAndVersion);
+            GenerateCodeHelper.AppendGeneratedCodeWarningComment(sb, domainProjectOptions.ToolNameAndVersion);
             sb.AppendLine($"namespace {nsTest}");
             sb.AppendLine("{");
             GenerateCodeHelper.AppendGeneratedCodeAttribute(sb, domainProjectOptions.ToolName, domainProjectOptions.ToolVersion);
