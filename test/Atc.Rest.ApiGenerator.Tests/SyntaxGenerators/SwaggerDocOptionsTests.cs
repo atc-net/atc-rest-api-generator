@@ -16,7 +16,7 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators
             {
                 Info = new OpenApiInfo
                 {
-                    Contact = new OpenApiContact {Email = "apiteam@swagger.io"},
+                    Contact = new OpenApiContact { Email = "apiteam@swagger.io" },
                     Description = @"
 This is a sample Pet Store Server based on the OpenAPI 3.0 specification.  You can find out more about
 Swagger at [http://swagger.io](http://swagger.io). In the third iteration of the pet store, we've switched to the design first approach!
