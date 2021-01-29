@@ -114,8 +114,9 @@ namespace Atc.Rest.ApiGenerator.Generators
                     projectOptions.UseRestExtended));
                 logItems.Add(ScaffoldProgramFile());
                 logItems.Add(ScaffoldStartupFile());
-                logItems.Add(ScaffoldConfigureSwaggerDocOptions());
             }
+
+            logItems.Add(ScaffoldConfigureSwaggerDocOptions());
 
             return logItems;
         }
