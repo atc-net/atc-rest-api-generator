@@ -1,4 +1,3 @@
-
 using Xunit.Abstractions;
 
 namespace Atc.Rest.ApiGenerator.Tests.Helpers.CodeGenerator
