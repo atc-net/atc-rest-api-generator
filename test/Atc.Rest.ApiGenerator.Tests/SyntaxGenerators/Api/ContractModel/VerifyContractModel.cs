@@ -29,10 +29,8 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators
             var specFileInfo = new FileInfo(file.FilePath);
             var settings = new VerifySettings();
             settings.UseDirectory(specFileInfo.DirectoryName);
-            settings.UseTypeName(Path.GetFileNameWithoutExtension(specFileInfo.Name));
-            settings.UseMethodName("yaml");
+            settings.UseFileName(specFileInfo.Name);
             settings.UseExtension("txt");
-            settings.UseParameters(string.Empty);
 
             var spec = await specFileInfo.OpenText().ReadToEndAsync();
             var apiProj = GeneratorTestSetup.CreateApiProject(spec, ProjectPrefix, ProjectSuffix);
