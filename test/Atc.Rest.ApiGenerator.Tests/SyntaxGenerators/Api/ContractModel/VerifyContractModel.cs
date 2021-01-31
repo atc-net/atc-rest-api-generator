@@ -28,7 +28,7 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators
             var settings = new VerifySettings();
             settings.UseDirectory(specFileInfo.DirectoryName);
             settings.UseFileName(specFileInfo.Name);
-            settings.UseExtension("txt");
+            settings.UseExtension("cs");
 
             var spec = await specFileInfo.OpenText().ReadToEndAsync();
             var apiProj = GeneratorTestSetup.CreateApiProject(spec, ProjectPrefix, ProjectSuffix);
