@@ -16,7 +16,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
     {
         public static Version GetAtcToolVersion()
         {
-            var defaultVersion = new Version(1, 1, 33, 0);
+            var defaultVersion = new Version(1, 1, 82, 0);
             var assembly = Assembly.GetEntryAssembly();
             if (assembly == null)
             {
