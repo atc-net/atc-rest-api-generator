@@ -107,10 +107,10 @@ namespace System
             var methodList = new List<string>
             {
                 // TODO: "FromTemplate",
-                "FromResponse",
-                "AddSuccessResponse",
-                "AddErrorResponse",
-                "BuildResponseAsync",
+                // TODO: "FromResponse",
+                // TODO: "AddSuccessResponse",
+                // TODO: "AddErrorResponse",
+                // TODO: "BuildResponseAsync",
             };
 
             foreach (var method in methodList)
@@ -160,6 +160,7 @@ namespace System
                 "var requestBuilder = httpMessageFactory",
                 "using var requestMessage",
                 "return await httpMessageFactory",
+                "var responseBuilder = httpMessageFactory",
             };
 
             return list.Aggregate(

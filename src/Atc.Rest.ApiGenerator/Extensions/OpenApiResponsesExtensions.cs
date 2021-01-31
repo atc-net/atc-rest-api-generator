@@ -121,7 +121,8 @@ namespace Microsoft.OpenApi.Models
             string contractArea,
             List<ApiOperationSchemaMap> apiOperationSchemaMappings,
             string projectName,
-            bool ensureModelNameWithNamespaceIfNeeded)
+            bool ensureModelNameWithNamespaceIfNeeded,
+            bool useProblemDetailsAsDefaultResponseBody = false)
         {
             var result = new List<Tuple<HttpStatusCode, string>>();
             foreach (var response in responses.OrderBy(x => x.Key))
@@ -140,6 +141,12 @@ namespace Microsoft.OpenApi.Models
                 {
                     var isShared = apiOperationSchemaMappings.IsShared(modelName);
                     modelName = OpenApiDocumentSchemaModelNameHelper.EnsureModelNameWithNamespaceIfNeeded(projectName, contractArea, modelName, isShared);
+                }
+
+                var useProblemDetails = responses.IsSchemaTypeProblemDetailsForStatusCode(httpStatusCode);
+                if (!useProblemDetails && useProblemDetailsAsDefaultResponseBody)
+                {
+                    useProblemDetails = true;
                 }
 
                 string? typeResponseName;
@@ -181,7 +188,9 @@ namespace Microsoft.OpenApi.Models
                     case HttpStatusCode.BadRequest:
                     case HttpStatusCode.Unauthorized:
                     case HttpStatusCode.Forbidden:
-                        typeResponseName = null;
+                        typeResponseName = useProblemDetails
+                            ? "ProblemDetails"
+                            : null;
                         break;
                     case HttpStatusCode.NotFound:
                     case HttpStatusCode.MethodNotAllowed:
@@ -191,7 +200,9 @@ namespace Microsoft.OpenApi.Models
                     case HttpStatusCode.BadGateway:
                     case HttpStatusCode.ServiceUnavailable:
                     case HttpStatusCode.GatewayTimeout:
-                        typeResponseName = "string";
+                        typeResponseName = useProblemDetails
+                            ? "ProblemDetails"
+                            : "string";
                         break;
                     default:
                         throw new NotImplementedException($"ProducesResponseType for {(int)httpStatusCode} - {httpStatusCode} is missing.");

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Atc.Rest.ApiGenerator.Extensions;
 using Atc.Rest.ApiGenerator.Models;
+using Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces;
 using Microsoft.OpenApi.Models;
 
 // ReSharper disable ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator

@@ -13,6 +13,7 @@ using Atc.Rest.ApiGenerator.Factories;
 using Atc.Rest.ApiGenerator.Helpers;
 using Atc.Rest.ApiGenerator.Models;
 using Atc.Rest.ApiGenerator.ProjectSyntaxFactories;
+using Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
@@ -186,18 +187,22 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
 
                     var sgContractParameter = generatedParameters.FirstOrDefault(x => x.ApiOperation.GetOperationName() == operationName);
 
-                    var responseTypeNames = GetResponseTypeNames(apiOperation.Value.Responses, FocusOnSegmentName, operationName);
+                    var responseTypes = apiOperation.Value.Responses.GetResponseTypes(
+                        FocusOnSegmentName,
+                        OperationSchemaMappings,
+                        ApiProjectOptions.ProjectName,
+                        true);
 
                     if (contractParameterTypeName != null &&
-                        responseTypeNames.FirstOrDefault(x => x.Item1 == HttpStatusCode.BadRequest) == null)
+                        responseTypes.FirstOrDefault(x => x.Item1 == HttpStatusCode.BadRequest) == null)
                     {
-                        responseTypeNames.Add(
+                        responseTypes.Add(
                             new Tuple<HttpStatusCode, string>(
                                 HttpStatusCode.BadRequest,
                                 "Validation"));
                     }
 
-                    var responseTypeNamesAndItemSchema = GetResponseTypeNamesAndItemSchema(responseTypeNames);
+                    var responseTypeNamesAndItemSchema = GetResponseTypeNamesAndItemSchema(responseTypes);
 
                     var endpointMethodMetadata = new EndpointMethodMetadata(
                         ApiProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
@@ -275,67 +280,6 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
 
                     var schema = ApiProjectOptions.Document.Components.Schemas.FirstOrDefault(x => x.Key.Equals(rawModelName, StringComparison.OrdinalIgnoreCase));
                     list.Add(new Tuple<HttpStatusCode, string, OpenApiSchema?>(responseTypeName.Item1, fullModelName, schema.Value));
-                }
-            }
-
-            return list;
-        }
-
-        private List<Tuple<HttpStatusCode, string>> GetResponseTypeNames(OpenApiResponses openApiResponses, string segmentName, string operationName)
-        {
-            var list = new List<Tuple<HttpStatusCode, string>>();
-
-            var httpStatusCodes = openApiResponses.GetHttpStatusCodes();
-            var producesResponseAttributeParts = openApiResponses.GetProducesResponseAttributeParts(
-                operationName + NameConstants.ContractResult,
-                false,
-                segmentName,
-                OperationSchemaMappings,
-                ApiProjectOptions.ProjectName);
-
-            foreach (var producesResponseAttributePart in producesResponseAttributeParts)
-            {
-                var s = producesResponseAttributePart
-                    .Replace("ProducesResponseType(", string.Empty, StringComparison.Ordinal)
-                    .Replace("typeof(", string.Empty, StringComparison.Ordinal)
-                    .Replace("StatusCodes.Status", string.Empty, StringComparison.Ordinal)
-                    .Replace(")", string.Empty, StringComparison.Ordinal)
-                    .Replace(" ", string.Empty, StringComparison.Ordinal);
-                var sa = s.Split(',');
-
-                switch (sa.Length)
-                {
-                    case 1:
-                        {
-                            foreach (var httpStatusCode in httpStatusCodes)
-                            {
-                                if (sa[0].IndexOf(((int)httpStatusCode).ToString(GlobalizationConstants.EnglishCultureInfo), StringComparison.Ordinal) != -1)
-                                {
-                                    list.Add(
-                                        new Tuple<HttpStatusCode, string>(
-                                            httpStatusCode,
-                                            string.Empty));
-                                }
-                            }
-
-                            break;
-                        }
-
-                    case 2:
-                        {
-                            foreach (var httpStatusCode in httpStatusCodes)
-                            {
-                                if (sa[1].IndexOf(((int)httpStatusCode).ToString(GlobalizationConstants.EnglishCultureInfo), StringComparison.Ordinal) != -1)
-                                {
-                                    list.Add(
-                                        new Tuple<HttpStatusCode, string>(
-                                            httpStatusCode,
-                                            sa[0]));
-                                }
-                            }
-
-                            break;
-                        }
                 }
             }
 

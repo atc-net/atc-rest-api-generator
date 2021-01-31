@@ -10,6 +10,7 @@ using Atc.Rest.ApiGenerator.Factories;
 using Atc.Rest.ApiGenerator.Helpers;
 using Atc.Rest.ApiGenerator.Models;
 using Atc.Rest.ApiGenerator.ProjectSyntaxFactories;
+using Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
@@ -163,13 +164,6 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
             }
 
             return result;
-        }
-
-        private static MemberDeclarationSyntax CreateActionResultField()
-        {
-            return SyntaxFactory.FieldDeclaration(
-                    SyntaxVariableDeclarationFactory.Create(nameof(ActionResult), "result"))
-                .WithModifiers(SyntaxTokenListFactory.PrivateReadonlyKeyword());
         }
 
         private static List<MemberDeclarationSyntax> CreateConstructor(
