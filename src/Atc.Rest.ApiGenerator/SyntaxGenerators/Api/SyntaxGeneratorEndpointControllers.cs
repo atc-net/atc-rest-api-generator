@@ -112,7 +112,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                 .Any(x => x.Identifier.ValueText.Contains($"({Microsoft.OpenApi.Models.NameConstants.Pagination}<", StringComparison.Ordinal));
 
             compilationUnit = compilationUnit.AddUsingStatements(
-                ProjectEndpointsFactory.CreateUsingList(
+                ProjectApiFactory.CreateUsingListForEndpoint(
                     ApiProjectOptions,
                     FocusOnSegmentName,
                     usedApiOperations,
@@ -533,10 +533,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
             return SyntaxFactory.ReturnStatement(
                 SyntaxFactory.AwaitExpression(
                     SyntaxFactory.InvocationExpression(
-                            SyntaxFactory.MemberAccessExpression(
-                                SyntaxKind.SimpleMemberAccessExpression,
-                                SyntaxFactory.IdentifierName("handler"),
-                                SyntaxFactory.IdentifierName("ExecuteAsync")))
+                            SyntaxMemberAccessExpressionFactory.Create("ExecuteAsync", "handler"))
                         .WithArgumentList(
                             SyntaxFactory.ArgumentList(
                                 SyntaxFactory.SeparatedList<ArgumentSyntax>(arguments)))));

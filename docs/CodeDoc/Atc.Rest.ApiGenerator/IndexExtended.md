@@ -72,6 +72,31 @@
      - string Schema10
      - string Schema11
 
+## [Atc.Rest.ApiGenerator.Factories](Atc.Rest.ApiGenerator.Factories.md)
+
+- [ProjectApiClientFactory](Atc.Rest.ApiGenerator.Factories.md#projectapiclientfactory)
+  -  Static Methods
+     - CreateUsingListForEndpoint(ApiProjectOptions apiProjectOptions, bool includeRestResults, bool hasSharedModel)
+     - CreateUsingListForEndpointInterface(ApiProjectOptions apiProjectOptions, bool includeRestResults, bool hasSharedModel)
+     - CreateUsingListForEndpointResult(ApiProjectOptions apiProjectOptions, bool includeRestResults, bool hasSharedModel)
+     - CreateUsingListForEndpointResultInterface(ApiProjectOptions apiProjectOptions, bool includeRestResults, bool hasSharedModel)
+- [ProjectApiFactory](Atc.Rest.ApiGenerator.Factories.md#projectapifactory)
+  -  Static Methods
+     - CreateUsingListForContractInterface()
+     - CreateUsingListForContractModel(OpenApiSchema apiSchema)
+     - CreateUsingListForContractParameter(IList&lt;OpenApiParameter&gt; globalParameters, IList&lt;OpenApiParameter&gt; parameters, OpenApiRequestBody requestBody, bool forClient)
+     - CreateUsingListForContractResult(OpenApiResponses responses, bool useProblemDetailsAsDefaultResponseBody)
+     - CreateUsingListForEndpoint(ApiProjectOptions apiProjectOptions, string focusOnSegmentName, List&lt;OpenApiOperation&gt; apiOperations, bool includeRestResults, bool hasSharedModel)
+- [ProjectDomainFactory](Atc.Rest.ApiGenerator.Factories.md#projectdomainfactory)
+  -  Static Methods
+     - CreateUsingListForHandler(DomainProjectOptions domainProjectOptions, string focusOnSegmentName)
+- [ProjectHostFactory](Atc.Rest.ApiGenerator.Factories.md#projecthostfactory)
+  -  Static Methods
+     - CreateUsingListForProgram()
+     - CreateUsingListForStartup(string projectName, bool useExtended)
+     - CreateUsingListForWebApiControllerBaseTest()
+     - CreateUsingListForWebApiStartupFactory(string projectName)
+
 ## [Atc.Rest.ApiGenerator.Generators](Atc.Rest.ApiGenerator.Generators.md)
 
 - [ClientCSharpApiGenerator](Atc.Rest.ApiGenerator.Generators.md#clientcsharpapigenerator)
@@ -92,6 +117,9 @@
 - [ApiGeneratorHelper](Atc.Rest.ApiGenerator.Helpers.md#apigeneratorhelper)
   -  Static Methods
      - CollectMissingContractModelFromOperationSchemaMappings(ApiProjectOptions projectOptions, List&lt;ApiOperationSchemaMap&gt; operationSchemaMappings, List&lt;SyntaxGeneratorContractModel&gt; sgContractModels)
+- [ContractHelper](Atc.Rest.ApiGenerator.Helpers.md#contracthelper)
+  -  Static Methods
+     - HasSharedResponseContract(OpenApiDocument document, List&lt;ApiOperationSchemaMap&gt; operationSchemaMappings, string focusOnSegmentName)
 - [GenerateAtcCodingRulesHelper](Atc.Rest.ApiGenerator.Helpers.md#generateatccodingruleshelper)
   -  Static Fields
      - string FileNameEditorConfig
@@ -240,7 +268,7 @@
      - ClientFolderName
      - Document
      - DocumentFile
-     - ForClient
+     - IsForClient
      - PathForSrcGenerate
      - PathForTestGenerate
      - ProjectName
@@ -402,6 +430,7 @@
      - Code
      - FocusOnSegmentName
      - IsEnum
+     - IsForClient
      - UseOwnFolder
   -  Methods
      - GenerateCode()
@@ -424,6 +453,7 @@
      - Code
      - FocusOnSegmentName
      - GlobalPathParameters
+     - IsForClient
      - UseOwnFolder
   -  Methods
      - GenerateCode()
@@ -479,6 +509,7 @@
      - Code
      - EndpointTypeName
      - FocusOnSegmentName
+     - GlobalPathParameters
      - HasParametersOrRequestBody
      - InterfaceTypeName
      - ParameterTypeName
@@ -488,6 +519,80 @@
      - ToFile()
      - ToFile(FileInfo file)
      - ToString()
+- [SyntaxGeneratorClientEndpointInterface](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md#syntaxgeneratorclientendpointinterface)
+  -  Properties
+     - ApiOperation
+     - ApiOperationType
+     - ApiProjectOptions
+     - ApiUrlPath
+     - Code
+     - FocusOnSegmentName
+     - HasParametersOrRequestBody
+     - InterfaceTypeName
+     - ParameterTypeName
+  -  Methods
+     - GenerateCode()
+     - ToCodeAsString()
+     - ToFile()
+     - ToFile(FileInfo file)
+     - ToString()
+- [SyntaxGeneratorClientEndpointInterfaces](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md#syntaxgeneratorclientendpointinterfaces)
+  -  Properties
+     - ApiProjectOptions
+     - FocusOnSegmentName
+     - OperationSchemaMappings
+  -  Methods
+     - GenerateSyntaxTrees()
+- [SyntaxGeneratorClientEndpointResult](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md#syntaxgeneratorclientendpointresult)
+  -  Properties
+     - ApiOperation
+     - ApiOperationType
+     - ApiProjectOptions
+     - ApiUrlPath
+     - Code
+     - EndpointTypeName
+     - FocusOnSegmentName
+     - GlobalPathParameters
+     - HasParametersOrRequestBody
+     - InterfaceTypeName
+     - ParameterTypeName
+  -  Methods
+     - GenerateCode()
+     - ToCodeAsString()
+     - ToFile()
+     - ToFile(FileInfo file)
+     - ToString()
+- [SyntaxGeneratorClientEndpointResultInterface](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md#syntaxgeneratorclientendpointresultinterface)
+  -  Properties
+     - ApiOperation
+     - ApiOperationType
+     - ApiProjectOptions
+     - ApiUrlPath
+     - Code
+     - FocusOnSegmentName
+     - HasParametersOrRequestBody
+     - InterfaceTypeName
+     - ParameterTypeName
+  -  Methods
+     - GenerateCode()
+     - ToCodeAsString()
+     - ToFile()
+     - ToFile(FileInfo file)
+     - ToString()
+- [SyntaxGeneratorClientEndpointResultInterfaces](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md#syntaxgeneratorclientendpointresultinterfaces)
+  -  Properties
+     - ApiProjectOptions
+     - FocusOnSegmentName
+     - OperationSchemaMappings
+  -  Methods
+     - GenerateSyntaxTrees()
+- [SyntaxGeneratorClientEndpointResults](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md#syntaxgeneratorclientendpointresults)
+  -  Properties
+     - ApiProjectOptions
+     - FocusOnSegmentName
+     - OperationSchemaMappings
+  -  Methods
+     - GenerateSyntaxTrees()
 - [SyntaxGeneratorClientEndpoints](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md#syntaxgeneratorclientendpoints)
   -  Properties
      - ApiProjectOptions

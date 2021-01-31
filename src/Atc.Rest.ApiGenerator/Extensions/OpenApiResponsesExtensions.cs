@@ -120,7 +120,8 @@ namespace Microsoft.OpenApi.Models
             this OpenApiResponses responses,
             string contractArea,
             List<ApiOperationSchemaMap> apiOperationSchemaMappings,
-            string projectName)
+            string projectName,
+            bool ensureModelNameWithNamespaceIfNeeded)
         {
             var result = new List<Tuple<HttpStatusCode, string>>();
             foreach (var response in responses.OrderBy(x => x.Key))
@@ -135,7 +136,7 @@ namespace Microsoft.OpenApi.Models
                 var isList = responses.IsSchemaTypeArrayForStatusCode(httpStatusCode);
                 var modelName = responses.GetModelNameForStatusCode(httpStatusCode);
 
-                if (!string.IsNullOrEmpty(modelName))
+                if (ensureModelNameWithNamespaceIfNeeded && !string.IsNullOrEmpty(modelName))
                 {
                     var isShared = apiOperationSchemaMappings.IsShared(modelName);
                     modelName = OpenApiDocumentSchemaModelNameHelper.EnsureModelNameWithNamespaceIfNeeded(projectName, contractArea, modelName, isShared);

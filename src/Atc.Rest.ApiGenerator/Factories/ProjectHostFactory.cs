@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 // ReSharper disable InvertIf
 namespace Atc.Rest.ApiGenerator.Factories
 {
-    internal static class ProjectHostFactory
+    public static class ProjectHostFactory
     {
         public static string[] CreateUsingListForProgram()
         {

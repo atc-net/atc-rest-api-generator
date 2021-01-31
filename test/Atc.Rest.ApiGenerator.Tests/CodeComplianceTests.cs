@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Atc.Rest.ApiGenerator.Factories;
 using Atc.Rest.ApiGenerator.Generators;
 using Atc.Rest.ApiGenerator.Helpers;
 using Atc.Rest.ApiGenerator.Helpers.XunitTest;
@@ -53,6 +54,12 @@ namespace Atc.Rest.ApiGenerator.Tests
             typeof(SyntaxGeneratorClientEndpoint),
             typeof(SyntaxGeneratorClientEndpoints),
             typeof(SyntaxGeneratorEndpointControllers),
+            typeof(SyntaxGeneratorClientEndpointInterface),
+            typeof(SyntaxGeneratorClientEndpointInterfaces),
+            typeof(SyntaxGeneratorClientEndpointResult),
+            typeof(SyntaxGeneratorClientEndpointResults),
+            typeof(SyntaxGeneratorClientEndpointResultInterface),
+            typeof(SyntaxGeneratorClientEndpointResultInterfaces),
             typeof(SyntaxGeneratorHandler),
             typeof(SyntaxGeneratorHandlers),
             typeof(ValidatePathsAndOperationsHelper),
@@ -64,6 +71,11 @@ namespace Atc.Rest.ApiGenerator.Tests
             typeof(GenerateServerDomainXunitTestHelper),
             typeof(ParameterCombinationHelper),
             typeof(OpenApiDocumentSchemaModelNameHelper),
+            typeof(ProjectApiFactory),
+            typeof(ProjectApiClientFactory),
+            typeof(ProjectHostFactory),
+            typeof(ProjectDomainFactory),
+            typeof(ContractHelper),
         };
 
         public CodeComplianceTests(ITestOutputHelper testOutputHelper)

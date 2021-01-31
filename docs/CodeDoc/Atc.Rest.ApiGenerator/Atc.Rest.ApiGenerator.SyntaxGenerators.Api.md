@@ -290,6 +290,11 @@ FocusOnSegmentName
 ```csharp
 IsEnum
 ```
+#### IsForClient
+
+```csharp
+IsForClient
+```
 #### UseOwnFolder
 
 ```csharp
@@ -401,6 +406,11 @@ FocusOnSegmentName
 
 ```csharp
 GlobalPathParameters
+```
+#### IsForClient
+
+```csharp
+IsForClient
 ```
 #### UseOwnFolder
 

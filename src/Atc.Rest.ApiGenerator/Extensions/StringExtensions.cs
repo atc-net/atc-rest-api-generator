@@ -138,7 +138,22 @@ namespace System
             return value;
         }
 
-        public static string FormatClientEndpointNewLineSpace(this string value)
+        public static string FormatClientEndpointNewLineSpaceBefore8(this string value)
+        {
+            var list = new List<string>
+            {
+                "private readonly IHttpMessageFactory httpMessageFactory;",
+            };
+
+            return list.Aggregate(
+                value,
+                (current, item) => current.Replace(
+                    $"        {item}",
+                    $"        {item}{Environment.NewLine}",
+                    StringComparison.Ordinal));
+        }
+
+        public static string FormatClientEndpointNewLineSpaceAfter12(this string value)
         {
             var list = new List<string>
             {

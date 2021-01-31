@@ -79,7 +79,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Domain
 
             // Add using statement to compilationUnit
             compilationUnit = compilationUnit.AddUsingStatements(
-                ProjectHandlerFactory.CreateUsingList(
+                ProjectDomainFactory.CreateUsingListForHandler(
                     DomainProjectOptions,
                     FocusOnSegmentName));
 

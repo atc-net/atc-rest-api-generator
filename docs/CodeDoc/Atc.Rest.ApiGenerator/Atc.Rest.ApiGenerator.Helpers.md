@@ -26,6 +26,24 @@ void CollectMissingContractModelFromOperationSchemaMappings(ApiProjectOptions pr
 <br />
 
 
+## ContractHelper
+
+```csharp
+public static class ContractHelper
+```
+
+### Static Methods
+
+
+#### HasSharedResponseContract
+
+```csharp
+bool HasSharedResponseContract(OpenApiDocument document, List<ApiOperationSchemaMap> operationSchemaMappings, string focusOnSegmentName)
+```
+
+<br />
+
+
 ## GenerateAtcCodingRulesHelper
 
 ```csharp

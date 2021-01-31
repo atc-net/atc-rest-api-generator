@@ -2,12 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 using Atc.CodeAnalysis.CSharp.SyntaxFactories;
 using Atc.Data.Models;
-using Atc.Rest.ApiGenerator.Extensions;
 using Atc.Rest.ApiGenerator.Factories;
 using Atc.Rest.ApiGenerator.Helpers;
 using Atc.Rest.ApiGenerator.Models;
@@ -19,9 +15,9 @@ using Microsoft.OpenApi.Models;
 
 namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
 {
-    public class SyntaxGeneratorClientEndpointInterface
+    public class SyntaxGeneratorClientEndpointResultInterface
     {
-        public SyntaxGeneratorClientEndpointInterface(
+        public SyntaxGeneratorClientEndpointResultInterface(
             ApiProjectOptions apiProjectOptions,
             List<ApiOperationSchemaMap> operationSchemaMappings,
             OperationType apiOperationType,
@@ -31,7 +27,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
             bool hasParametersOrRequestBody)
         {
             this.ApiProjectOptions = apiProjectOptions ?? throw new ArgumentNullException(nameof(apiProjectOptions));
-            this.OperationSchemaMappings = operationSchemaMappings ?? throw new ArgumentNullException(nameof(apiProjectOptions));
+            this.OperationSchemaMappings =
+                operationSchemaMappings ?? throw new ArgumentNullException(nameof(apiProjectOptions));
             this.ApiOperationType = apiOperationType;
             this.ApiOperation = apiOperation ?? throw new ArgumentNullException(nameof(apiOperation));
             this.FocusOnSegmentName = focusOnSegmentName ?? throw new ArgumentNullException(nameof(focusOnSegmentName));
@@ -53,7 +50,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
 
         public CompilationUnitSyntax? Code { get; private set; }
 
-        public string InterfaceTypeName => "I" + ApiOperation.GetOperationName() + NameConstants.Endpoint;
+        public string InterfaceTypeName => "I" + ApiOperation.GetOperationName() + NameConstants.EndpointResult;
 
         public string ParameterTypeName => ApiOperation.GetOperationName() + NameConstants.ContractParameters;
 
@@ -76,7 +73,6 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                 .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForResults(ApiOperation, FocusOnSegmentName));
 
             // Create interface-method
-            interfaceDeclaration = interfaceDeclaration.AddMembers(CreateMembers());
             //// TODO: var methodDeclaration = ...
 
             // Add using statement to compilationUnit
@@ -85,8 +81,9 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                 .Any(x => x.Identifier.ValueText.Contains(
                     $"({Microsoft.OpenApi.Models.NameConstants.Pagination}<",
                     StringComparison.Ordinal));
+
             compilationUnit = compilationUnit.AddUsingStatements(
-                ProjectApiClientFactory.CreateUsingListForEndpointInterface(
+                ProjectApiClientFactory.CreateUsingListForEndpointResultInterface(
                     ApiProjectOptions,
                     includeRestResults,
                     ContractHelper.HasSharedResponseContract(
@@ -117,7 +114,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
 
             if (Code == null)
             {
-                return $"Syntax generate problem for client-endpoint-interface for apiOperation: {ApiOperation}";
+                return $"Syntax generate problem for client-endpointResult-interface for apiOperation: {ApiOperation}";
             }
 
             return Code
@@ -128,7 +125,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
         public LogKeyValueItem ToFile()
         {
             var area = FocusOnSegmentName.EnsureFirstCharacterToUpper();
-            var file = Util.GetCsFileNameForContract(ApiProjectOptions.PathForEndpoints, area, NameConstants.EndpointInterfaces, InterfaceTypeName);
+            var file = Util.GetCsFileNameForContract(ApiProjectOptions.PathForEndpoints, area, NameConstants.EndpointInterfaceResults, InterfaceTypeName);
             return TextFileHelper.Save(file, ToCodeAsString());
         }
 
@@ -144,60 +141,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
 
         public override string ToString()
         {
-            return $"OperationType: {ApiOperationType}, OperationName: {ApiOperation.GetOperationName()}, SegmentName: {FocusOnSegmentName}";
-        }
-
-        private MemberDeclarationSyntax[] CreateMembers()
-        {
-            var responseTypes = ApiOperation.Responses.GetResponseTypes(
-                FocusOnSegmentName,
-                OperationSchemaMappings,
-                ApiProjectOptions.ProjectName,
-                false);
-
-            string resultTypeName = responseTypes
-                .FirstOrDefault(x => x.Item1 == HttpStatusCode.OK)?.Item2 ?? responseTypes
-                .FirstOrDefault(x => x.Item1 == HttpStatusCode.Created)?.Item2 ?? "string";
-
-            var result = new List<MemberDeclarationSyntax>
-            {
-                CreateExecuteAsyncMethod(ParameterTypeName, resultTypeName, HasParametersOrRequestBody),
-            };
-
-            return result.ToArray();
-        }
-
-        private MemberDeclarationSyntax CreateExecuteAsyncMethod(string parameterTypeName, string resultTypeName, bool hasParameters)
-        {
-            var arguments = hasParameters
-                ? new SyntaxNodeOrToken[]
-                {
-                    SyntaxParameterFactory.Create(parameterTypeName, "parameters"),
-                    SyntaxTokenFactory.Comma(),
-                    SyntaxParameterFactory.Create(nameof(CancellationToken), nameof(CancellationToken).EnsureFirstCharacterToLower())
-                        .WithDefault(SyntaxFactory.EqualsValueClause(
-                            SyntaxFactory.LiteralExpression(SyntaxKind.DefaultLiteralExpression, SyntaxTokenFactory.DefaultKeyword()))),
-                }
-                : new SyntaxNodeOrToken[]
-                {
-                    SyntaxParameterFactory.Create(nameof(CancellationToken), nameof(CancellationToken).EnsureFirstCharacterToLower())
-                        .WithDefault(SyntaxFactory.EqualsValueClause(
-                            SyntaxFactory.LiteralExpression(SyntaxKind.DefaultLiteralExpression, SyntaxTokenFactory.DefaultKeyword()))),
-                };
-
-            return SyntaxFactory.MethodDeclaration(
-                    SyntaxFactory.GenericName(SyntaxFactory.Identifier(nameof(Task)))
-                        .WithTypeArgumentList(
-                            SyntaxFactory.TypeArgumentList(
-                                SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
-                                    SyntaxFactory.GenericName(
-                                            SyntaxFactory.Identifier("EndpointResult"))
-                                        .WithTypeArgumentList(
-                                            SyntaxTypeArgumentListFactory.CreateWithOneItem(resultTypeName))))),
-                    SyntaxFactory.Identifier("ExecuteAsync"))
-                .WithModifiers(SyntaxTokenListFactory.PublicKeyword())
-                .WithParameterList(SyntaxFactory.ParameterList(SyntaxFactory.SeparatedList<ParameterSyntax>(arguments)))
-                .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
+            return
+                $"OperationType: {ApiOperationType}, OperationName: {ApiOperation.GetOperationName()}, SegmentName: {FocusOnSegmentName}";
         }
     }
 }
