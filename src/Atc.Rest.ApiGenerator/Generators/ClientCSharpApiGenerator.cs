@@ -131,6 +131,7 @@ namespace Atc.Rest.ApiGenerator.Generators
             var sgEndpointInterfaces = new List<SyntaxGeneratorClientEndpointInterface>();
             var sgEndpoints = new List<SyntaxGeneratorClientEndpoint>();
             var sgEndpointInterfaces = new List<SyntaxGeneratorClientEndpointInterface>();
+            var sgEndpoints = new List<SyntaxGeneratorClientEndpoint>();
             foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
             {
                 var generatorEndpointResultInterfaces = new SyntaxGeneratorClientEndpointResultInterfaces(apiProjectOptions, operationSchemaMappings, basePathSegmentName);

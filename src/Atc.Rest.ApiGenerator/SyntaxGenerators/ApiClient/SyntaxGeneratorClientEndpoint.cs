@@ -16,7 +16,6 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.OpenApi.Models;
-// ReSharper disable UseObjectOrCollectionInitializer
 
 // ReSharper disable UseObjectOrCollectionInitializer
 // ReSharper disable InvertIf
@@ -238,9 +237,6 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
             string resultTypeName = responseTypes
                 .FirstOrDefault(x => x.Item1 == HttpStatusCode.OK)?.Item2 ?? responseTypes
                 .FirstOrDefault(x => x.Item1 == HttpStatusCode.Created)?.Item2 ?? "string";
-
-            // TODO: Fix this hack DKA!!!
-            resultTypeName = resultTypeName.Replace("ReportTemplate.ReportTemplate", "ReportTemplate", StringComparison.OrdinalIgnoreCase);
 
             var result = new List<MemberDeclarationSyntax>
             {
@@ -623,6 +619,15 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                     SyntaxFactory.InvocationExpression(
                         SyntaxFactory.MemberAccessExpression(
                             SyntaxKind.SimpleMemberAccessExpression,
+                            SyntaxFactory.InvocationExpression(
+                                SyntaxFactory.MemberAccessExpression(
+                                    SyntaxKind.SimpleMemberAccessExpression,
+                                    SyntaxFactory.InvocationExpression(
+                                        SyntaxFactory.MemberAccessExpression(
+                                            SyntaxKind.SimpleMemberAccessExpression,
+                                            SyntaxFactory.InvocationExpression(
+                                                SyntaxFactory.MemberAccessExpression(
+                                                    SyntaxKind.SimpleMemberAccessExpression,
                             SyntaxFactory.IdentifierName("responseBuilder"),
                             SyntaxFactory.IdentifierName("BuildResponseAsync")))
                     .WithArgumentList(
