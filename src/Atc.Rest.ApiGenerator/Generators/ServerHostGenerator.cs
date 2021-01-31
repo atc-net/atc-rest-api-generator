@@ -156,10 +156,7 @@ namespace Atc.Rest.ApiGenerator.Generators
                                         SyntaxFactory.InvocationExpression(
                                                 SyntaxFactory.IdentifierName("CreateHostBuilder"))
                                             .WithArgumentList(
-                                                SyntaxFactory.ArgumentList(
-                                                    SyntaxFactory.SingletonSeparatedList(
-                                                        SyntaxFactory.Argument(
-                                                            SyntaxFactory.IdentifierName("args"))))),
+                                                SyntaxArgumentListFactory.CreateWithOneItem("args")),
                                         SyntaxFactory.IdentifierName("Build"))),
                                 SyntaxFactory.IdentifierName("Run"))))));
 
@@ -173,13 +170,13 @@ namespace Atc.Rest.ApiGenerator.Generators
                             SyntaxFactory.Parameter(SyntaxFactory.Identifier("args"))
                                 .WithType(
                                     SyntaxFactory.ArrayType(
-                                        SyntaxFactory.PredefinedType(
-                                            SyntaxTokenFactory.StringKeyword()))
-                                    .WithRankSpecifiers(
-                                        SyntaxFactory.SingletonList(
-                                            SyntaxFactory.ArrayRankSpecifier(
-                                                SyntaxFactory.SingletonSeparatedList<ExpressionSyntax>(
-                                                    SyntaxFactory.OmittedArraySizeExpression()))))))))
+                                            SyntaxFactory.PredefinedType(
+                                                SyntaxTokenFactory.StringKeyword()))
+                                        .WithRankSpecifiers(
+                                            SyntaxFactory.SingletonList(
+                                                SyntaxFactory.ArrayRankSpecifier(
+                                                    SyntaxFactory.SingletonSeparatedList<ExpressionSyntax>(
+                                                        SyntaxFactory.OmittedArraySizeExpression()))))))))
                 .WithBody(codeBody);
         }
 
@@ -188,48 +185,41 @@ namespace Atc.Rest.ApiGenerator.Generators
             var codeBody = SyntaxFactory.Block(
                 SyntaxFactory.LocalDeclarationStatement(
                     SyntaxFactory.VariableDeclaration(
-                        SyntaxFactory.IdentifierName("var"))
-                    .WithVariables(
-                        SyntaxFactory.SingletonSeparatedList(
-                            SyntaxFactory.VariableDeclarator(
-                                SyntaxFactory.Identifier("builder"))
-                            .WithInitializer(
-                                SyntaxFactory.EqualsValueClause(
-                                    SyntaxFactory.InvocationExpression(
-                                        SyntaxFactory.MemberAccessExpression(
-                                            SyntaxKind.SimpleMemberAccessExpression,
+                            SyntaxFactory.IdentifierName("var"))
+                        .WithVariables(
+                            SyntaxFactory.SingletonSeparatedList(
+                                SyntaxFactory.VariableDeclarator(
+                                        SyntaxFactory.Identifier("builder"))
+                                    .WithInitializer(
+                                        SyntaxFactory.EqualsValueClause(
                                             SyntaxFactory.InvocationExpression(
-                                                SyntaxFactory.MemberAccessExpression(
-                                                    SyntaxKind.SimpleMemberAccessExpression,
-                                                    SyntaxFactory.IdentifierName("Host"),
-                                                    SyntaxFactory.IdentifierName("CreateDefaultBuilder")))
-                                            .WithArgumentList(
-                                                SyntaxFactory.ArgumentList(
-                                                    SyntaxFactory.SingletonSeparatedList(
-                                                        SyntaxFactory.Argument(
-                                                            SyntaxFactory.IdentifierName("args"))))),
-                                            SyntaxFactory.IdentifierName("ConfigureWebHostDefaults")))
-                                    .WithArgumentList(
-                                        SyntaxFactory.ArgumentList(
-                                            SyntaxFactory.SingletonSeparatedList(
-                                                SyntaxFactory.Argument(
-                                                    SyntaxFactory.SimpleLambdaExpression(
-                                                        SyntaxFactory.Parameter(
-                                                            SyntaxFactory.Identifier("webBuilder")))
-                                                    .WithBlock(
-                                                        SyntaxFactory.Block(
-                                                            SyntaxFactory.SingletonList<StatementSyntax>(
-                                                                SyntaxFactory.ExpressionStatement(
-                                                                    SyntaxFactory.InvocationExpression(
-                                                                        SyntaxFactory.MemberAccessExpression(
-                                                                            SyntaxKind.SimpleMemberAccessExpression,
-                                                                            SyntaxFactory.IdentifierName("webBuilder"),
-                                                                            SyntaxFactory.GenericName(
-                                                                                SyntaxFactory.Identifier("UseStartup"))
-                                                                            .WithTypeArgumentList(
-                                                                                SyntaxFactory.TypeArgumentList(
-                                                                                    SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
-                                                                                        SyntaxFactory.IdentifierName("Startup"))))))))))))))))))),
+                                                    SyntaxFactory.MemberAccessExpression(
+                                                        SyntaxKind.SimpleMemberAccessExpression,
+                                                        SyntaxFactory.InvocationExpression(
+                                                            SyntaxMemberAccessExpressionFactory.Create("CreateDefaultBuilder", "Host"))
+                                                            .WithArgumentList(
+                                                                SyntaxArgumentListFactory.CreateWithOneItem("args")),
+                                                        SyntaxFactory.IdentifierName("ConfigureWebHostDefaults")))
+                                                .WithArgumentList(
+                                                    SyntaxFactory.ArgumentList(
+                                                        SyntaxFactory.SingletonSeparatedList(
+                                                            SyntaxFactory.Argument(
+                                                                SyntaxFactory.SimpleLambdaExpression(
+                                                                    SyntaxFactory.Parameter(
+                                                                        SyntaxFactory.Identifier("webBuilder")))
+                                                                .WithBlock(
+                                                                    SyntaxFactory.Block(
+                                                                        SyntaxFactory
+                                                                            .SingletonList<StatementSyntax>(
+                                                                                SyntaxFactory.ExpressionStatement(
+                                                                                    SyntaxFactory.InvocationExpression(
+                                                                                        SyntaxFactory.MemberAccessExpression(
+                                                                                            SyntaxKind.SimpleMemberAccessExpression,
+                                                                                            SyntaxFactory.IdentifierName("webBuilder"),
+                                                                                            SyntaxFactory.GenericName(
+                                                                                                    SyntaxFactory.Identifier("UseStartup"))
+                                                                                                .WithTypeArgumentList(
+                                                                                                    SyntaxTypeArgumentListFactory.CreateWithOneItem("Startup"))))))))))))))))),
                 SyntaxFactory.ReturnStatement(SyntaxFactory.IdentifierName("builder")));
 
             return SyntaxFactory.MethodDeclaration(
@@ -280,56 +270,44 @@ namespace Atc.Rest.ApiGenerator.Generators
 
             var codeBody = SyntaxFactory.Block(
                 SyntaxFactory.ExpressionStatement(
-                    SyntaxFactory.AssignmentExpression(
-                        SyntaxKind.SimpleAssignmentExpression,
-                        SyntaxFactory.IdentifierName("Configuration"),
-                        SyntaxFactory.IdentifierName("configuration"))),
+                    SyntaxMemberAccessExpressionFactory.Create("Configuration", "configuration")),
                 SyntaxFactory.ExpressionStatement(
                     SyntaxFactory.AssignmentExpression(
                         SyntaxKind.SimpleAssignmentExpression,
                         SyntaxFactory.IdentifierName("restApiOptions"),
                         SyntaxFactory.ObjectCreationExpression(
-                            SyntaxFactory.IdentifierName(optionTypeName))
-                        .WithInitializer(
-                            SyntaxFactory.InitializerExpression(
-                                SyntaxKind.ObjectInitializerExpression)))),
+                                SyntaxFactory.IdentifierName(optionTypeName))
+                            .WithInitializer(
+                                SyntaxFactory.InitializerExpression(
+                                    SyntaxKind.ObjectInitializerExpression)))),
                 SyntaxFactory.ExpressionStatement(
                     SyntaxFactory.InvocationExpression(
-                        SyntaxFactory.MemberAccessExpression(
-                            SyntaxKind.SimpleMemberAccessExpression,
-                            SyntaxFactory.IdentifierName("restApiOptions"),
-                            SyntaxFactory.IdentifierName("AddAssemblyPairs")))
-                    .WithArgumentList(
-                        SyntaxFactory.ArgumentList(
-                            SyntaxFactory.SeparatedList<ArgumentSyntax>(
-                                new SyntaxNodeOrToken[]
-                                {
-                                    SyntaxFactory.Argument(
-                                        SyntaxFactory.InvocationExpression(
-                                            SyntaxFactory.MemberAccessExpression(
-                                                SyntaxKind.SimpleMemberAccessExpression,
-                                                SyntaxFactory.IdentifierName("Assembly"),
-                                                SyntaxFactory.IdentifierName("GetAssembly")))
-                                        .WithArgumentList(
-                                            SyntaxFactory.ArgumentList(
-                                                SyntaxFactory.SingletonSeparatedList(
-                                                    SyntaxFactory.Argument(
-                                                        SyntaxFactory.TypeOfExpression(
-                                                            SyntaxFactory.IdentifierName("ApiRegistration"))))))),
-                                    SyntaxTokenFactory.Comma(),
-                                    SyntaxFactory.Argument(
-                                        SyntaxFactory.InvocationExpression(
-                                            SyntaxFactory.MemberAccessExpression(
-                                                SyntaxKind.SimpleMemberAccessExpression,
-                                                SyntaxFactory.IdentifierName("Assembly"),
-                                                SyntaxFactory.IdentifierName("GetAssembly")))
-                                        .WithArgumentList(
-                                            SyntaxFactory.ArgumentList(
-                                                SyntaxFactory.SingletonSeparatedList(
-                                                    SyntaxFactory.Argument(
-                                                        SyntaxFactory.TypeOfExpression(
-                                                            SyntaxFactory.IdentifierName("DomainRegistration"))))))),
-                                })))));
+                            SyntaxMemberAccessExpressionFactory.Create("restApiOptions", "AddAssemblyPairs"))
+                        .WithArgumentList(
+                            SyntaxFactory.ArgumentList(
+                                SyntaxFactory.SeparatedList<ArgumentSyntax>(
+                                    new SyntaxNodeOrToken[]
+                                    {
+                                        SyntaxFactory.Argument(
+                                            SyntaxFactory.InvocationExpression(
+                                                SyntaxMemberAccessExpressionFactory.Create("Assembly", "GetAssembly"))
+                                            .WithArgumentList(
+                                                SyntaxFactory.ArgumentList(
+                                                    SyntaxFactory.SingletonSeparatedList(
+                                                        SyntaxFactory.Argument(
+                                                            SyntaxFactory.TypeOfExpression(
+                                                                SyntaxFactory.IdentifierName("ApiRegistration"))))))),
+                                        SyntaxTokenFactory.Comma(),
+                                        SyntaxFactory.Argument(
+                                            SyntaxFactory.InvocationExpression(
+                                                SyntaxMemberAccessExpressionFactory.Create("Assembly", "GetAssembly"))
+                                            .WithArgumentList(
+                                                SyntaxFactory.ArgumentList(
+                                                    SyntaxFactory.SingletonSeparatedList(
+                                                        SyntaxFactory.Argument(
+                                                            SyntaxFactory.TypeOfExpression(
+                                                                SyntaxFactory.IdentifierName("DomainRegistration"))))))),
+                                    })))));
 
             return SyntaxFactory.MethodDeclaration(
                     SyntaxFactory.IdentifierName("Startup"),
@@ -423,177 +401,142 @@ namespace Atc.Rest.ApiGenerator.Generators
         private static MemberDeclarationSyntax CreateStartupConfigure()
         {
             return SyntaxFactory.MethodDeclaration(
-                SyntaxFactory.PredefinedType(SyntaxTokenFactory.VoidKeyword()),
-                SyntaxFactory.Identifier("Configure"))
-            .WithModifiers(SyntaxTokenList.Create(SyntaxTokenFactory.PublicKeyword()))
-            .WithParameterList(
-                SyntaxFactory.ParameterList(
-                    SyntaxFactory.SeparatedList<ParameterSyntax>(
-                        new SyntaxNodeOrToken[]
-                        {
-                            SyntaxFactory.Parameter(SyntaxFactory.Identifier("app"))
-                                .WithType(SyntaxFactory.IdentifierName("IApplicationBuilder")),
-                            SyntaxTokenFactory.Comma(),
-                            SyntaxFactory.Parameter(SyntaxFactory.Identifier("env"))
-                                .WithType(SyntaxFactory.IdentifierName("IWebHostEnvironment")),
-                        })))
-            .WithBody(
-                SyntaxFactory.Block(
-                    SyntaxFactory.SingletonList<StatementSyntax>(
-                        SyntaxFactory.ExpressionStatement(
-                            SyntaxFactory.InvocationExpression(
-                                SyntaxFactory.MemberAccessExpression(
-                                    SyntaxKind.SimpleMemberAccessExpression,
-                                    SyntaxFactory.IdentifierName("app"),
-                                    SyntaxFactory.IdentifierName("ConfigureRestApi")))
-                            .WithArgumentList(
-                                SyntaxFactory.ArgumentList(
-                                    SyntaxFactory.SeparatedList<ArgumentSyntax>(
-                                        new SyntaxNodeOrToken[]
-                                        {
+                    SyntaxFactory.PredefinedType(SyntaxTokenFactory.VoidKeyword()),
+                    SyntaxFactory.Identifier("Configure"))
+                .WithModifiers(SyntaxTokenList.Create(SyntaxTokenFactory.PublicKeyword()))
+                .WithParameterList(
+                    SyntaxFactory.ParameterList(
+                        SyntaxFactory.SeparatedList<ParameterSyntax>(
+                            new SyntaxNodeOrToken[]
+                            {
+                                SyntaxFactory.Parameter(SyntaxFactory.Identifier("app"))
+                                    .WithType(SyntaxFactory.IdentifierName("IApplicationBuilder")),
+                                SyntaxTokenFactory.Comma(), SyntaxFactory.Parameter(SyntaxFactory.Identifier("env"))
+                                    .WithType(SyntaxFactory.IdentifierName("IWebHostEnvironment")),
+                            })))
+                .WithBody(
+                    SyntaxFactory.Block(
+                        SyntaxFactory.SingletonList<StatementSyntax>(
+                            SyntaxFactory.ExpressionStatement(
+                                SyntaxFactory.InvocationExpression(
+                                    SyntaxMemberAccessExpressionFactory.Create("app", "ConfigureRestApi"))
+                                    .WithArgumentList(
+                                        SyntaxArgumentListFactory.CreateWithTwoArgumentItems(
                                             SyntaxFactory.Argument(SyntaxFactory.IdentifierName("env")),
-                                            SyntaxTokenFactory.Comma(),
-                                            SyntaxFactory.Argument(SyntaxFactory.IdentifierName("restApiOptions")),
-                                        })))))));
+                                            SyntaxFactory.Argument(SyntaxFactory.IdentifierName("restApiOptions"))))))));
         }
 
         private static MemberDeclarationSyntax CreateWebApplicationFactoryConfigureWebHost()
         {
             return SyntaxFactory.MethodDeclaration(
-                SyntaxFactory.PredefinedType(SyntaxTokenFactory.VoidKeyword()),
-                SyntaxFactory.Identifier("ConfigureWebHost"))
-            .WithModifiers(
-                SyntaxFactory.TokenList(
-                    SyntaxTokenFactory.ProtectedKeyword(),
-                    SyntaxTokenFactory.OverrideKeyword()))
-            .WithParameterList(
-                SyntaxFactory.ParameterList(
-                    SyntaxFactory.SingletonSeparatedList(
-                        SyntaxFactory.Parameter(SyntaxFactory.Identifier("builder"))
-                        .WithType(SyntaxFactory.IdentifierName("IWebHostBuilder")))))
-            .WithBody(
-                SyntaxFactory.Block(
-                    SyntaxFactory.ExpressionStatement(
-                        SyntaxFactory.InvocationExpression(
-                            SyntaxFactory.MemberAccessExpression(
-                                SyntaxKind.SimpleMemberAccessExpression,
-                                SyntaxFactory.IdentifierName("builder"),
-                                SyntaxFactory.IdentifierName("ConfigureAppConfiguration")))
-                        .WithArgumentList(
-                            SyntaxFactory.ArgumentList(
-                                SyntaxFactory.SingletonSeparatedList(
-                                    SyntaxFactory.Argument(
-                                        SyntaxFactory.SimpleLambdaExpression(
-                                            SyntaxFactory.Parameter(SyntaxFactory.Identifier("config")))
-                                        .WithBlock(
-                                            SyntaxFactory.Block(
-                                                SyntaxFactory.ExpressionStatement(
-                                                    SyntaxFactory.InvocationExpression(
-                                                        SyntaxFactory.IdentifierName("ModifyConfiguration"))
-                                                    .WithArgumentList(
-                                                        SyntaxArgumentListFactory.CreateWithOneItem("config"))),
-                                                SyntaxFactory.LocalDeclarationStatement(
-                                                    SyntaxFactory.VariableDeclaration(SyntaxFactory.IdentifierName("var"))
-                                                    .WithVariables(
-                                                        SyntaxFactory.SingletonSeparatedList(
-                                                            SyntaxFactory.VariableDeclarator(SyntaxFactory.Identifier("integrationConfig"))
-                                                            .WithInitializer(
-                                                                SyntaxFactory.EqualsValueClause(
-                                                                    SyntaxFactory.InvocationExpression(
-                                                                        SyntaxFactory.MemberAccessExpression(
-                                                                            SyntaxKind.SimpleMemberAccessExpression,
-                                                                            SyntaxFactory.ObjectCreationExpression(SyntaxFactory.IdentifierName("ConfigurationBuilder"))
-                                                                            .WithArgumentList(
-                                                                                SyntaxFactory.ArgumentList()),
-                                                                            SyntaxFactory.IdentifierName("Build")))))))),
-                                                SyntaxFactory.ExpressionStatement(
-                                                    SyntaxFactory.InvocationExpression(
-                                                        SyntaxFactory.MemberAccessExpression(
-                                                            SyntaxKind.SimpleMemberAccessExpression,
-                                                            SyntaxFactory.IdentifierName("config"),
-                                                            SyntaxFactory.IdentifierName("AddConfiguration")))
-                                                    .WithArgumentList(
-                                                        SyntaxFactory.ArgumentList(
-                                                            SyntaxFactory.SingletonSeparatedList(
-                                                                SyntaxFactory.Argument(
-                                                                    SyntaxFactory.IdentifierName("integrationConfig"))))))))))))),
-                    SyntaxFactory.ExpressionStatement(
-                        SyntaxFactory.InvocationExpression(
-                            SyntaxFactory.MemberAccessExpression(
-                                SyntaxKind.SimpleMemberAccessExpression,
-                                SyntaxFactory.IdentifierName("builder"),
-                                SyntaxFactory.IdentifierName("ConfigureTestServices")))
-                        .WithArgumentList(
-                            SyntaxFactory.ArgumentList(
-                                SyntaxFactory.SingletonSeparatedList(
-                                    SyntaxFactory.Argument(
-                                        SyntaxFactory.SimpleLambdaExpression(
-                                            SyntaxFactory.Parameter(
-                                                SyntaxFactory.Identifier("services")))
-                                        .WithBlock(
-                                            SyntaxFactory.Block(
-                                                SyntaxFactory.ExpressionStatement(
-                                                   SyntaxFactory.InvocationExpression(
-                                                       SyntaxFactory.IdentifierName("ModifyServices"))
-                                                   .WithArgumentList(
-                                                       SyntaxArgumentListFactory.CreateWithOneItem("services"))),
-                                                SyntaxFactory.ExpressionStatement(
-                                                    SyntaxFactory.InvocationExpression(
-                                                        SyntaxFactory.MemberAccessExpression(
-                                                            SyntaxKind.SimpleMemberAccessExpression,
-                                                            SyntaxFactory.IdentifierName("services"),
-                                                            SyntaxFactory.GenericName(
-                                                                    SyntaxFactory.Identifier("AddSingleton"))
-                                                                .WithTypeArgumentList(
-                                                                    SyntaxFactory.TypeArgumentList(
-                                                                        SyntaxFactory.SeparatedList<TypeSyntax>(
+                    SyntaxFactory.PredefinedType(SyntaxTokenFactory.VoidKeyword()),
+                    SyntaxFactory.Identifier("ConfigureWebHost"))
+                .WithModifiers(
+                    SyntaxFactory.TokenList(
+                        SyntaxTokenFactory.ProtectedKeyword(),
+                        SyntaxTokenFactory.OverrideKeyword()))
+                .WithParameterList(
+                    SyntaxFactory.ParameterList(
+                        SyntaxFactory.SingletonSeparatedList(
+                            SyntaxFactory.Parameter(SyntaxFactory.Identifier("builder"))
+                                .WithType(SyntaxFactory.IdentifierName("IWebHostBuilder")))))
+                .WithBody(
+                    SyntaxFactory.Block(
+                        SyntaxFactory.ExpressionStatement(
+                            SyntaxFactory.InvocationExpression(
+                                SyntaxMemberAccessExpressionFactory.Create("ConfigureAppConfiguration", "builder"))
+                            .WithArgumentList(
+                                SyntaxFactory.ArgumentList(
+                                    SyntaxFactory.SingletonSeparatedList(
+                                        SyntaxFactory.Argument(
+                                            SyntaxFactory.SimpleLambdaExpression(
+                                                SyntaxFactory.Parameter(SyntaxFactory.Identifier("config")))
+                                            .WithBlock(
+                                                SyntaxFactory.Block(
+                                                    SyntaxFactory.ExpressionStatement(
+                                                        SyntaxFactory.InvocationExpression(
+                                                            SyntaxFactory.IdentifierName("ModifyConfiguration"))
+                                                        .WithArgumentList(
+                                                            SyntaxArgumentListFactory.CreateWithOneItem("config"))),
+                                                    SyntaxFactory.LocalDeclarationStatement(
+                                                        SyntaxFactory.VariableDeclaration(SyntaxFactory.IdentifierName("var"))
+                                                            .WithVariables(
+                                                                SyntaxFactory.SingletonSeparatedList(
+                                                                    SyntaxFactory.VariableDeclarator(SyntaxFactory.Identifier("integrationConfig"))
+                                                                        .WithInitializer(
+                                                                            SyntaxFactory.EqualsValueClause(
+                                                                                SyntaxFactory.InvocationExpression(
+                                                                                    SyntaxFactory.MemberAccessExpression(
+                                                                                        SyntaxKind.SimpleMemberAccessExpression,
+                                                                                        SyntaxFactory.ObjectCreationExpression(SyntaxFactory.IdentifierName("ConfigurationBuilder"))
+                                                                                            .WithArgumentList(
+                                                                                                SyntaxFactory.ArgumentList()),
+                                                                                        SyntaxFactory.IdentifierName("Build")))))))),
+                                                    SyntaxFactory.ExpressionStatement(
+                                                            SyntaxFactory.InvocationExpression(
+                                                                SyntaxMemberAccessExpressionFactory.Create("AddConfiguration", "config"))
+                                                            .WithArgumentList(
+                                                                SyntaxArgumentListFactory.CreateWithOneItem("integrationConfig")))))))))),
+                        SyntaxFactory.ExpressionStatement(
+                            SyntaxFactory.InvocationExpression(
+                                    SyntaxMemberAccessExpressionFactory.Create("ConfigureTestServices", "builder"))
+                                .WithArgumentList(
+                                    SyntaxFactory.ArgumentList(
+                                        SyntaxFactory.SingletonSeparatedList(
+                                            SyntaxFactory.Argument(
+                                                SyntaxFactory.SimpleLambdaExpression(
+                                                        SyntaxFactory.Parameter(
+                                                            SyntaxFactory.Identifier("services")))
+                                                    .WithBlock(
+                                                        SyntaxFactory.Block(
+                                                            SyntaxFactory.ExpressionStatement(
+                                                                SyntaxFactory.InvocationExpression(
+                                                                        SyntaxFactory.IdentifierName("ModifyServices"))
+                                                                    .WithArgumentList(
+                                                                        SyntaxArgumentListFactory.CreateWithOneItem("services"))),
+                                                            SyntaxFactory.ExpressionStatement(
+                                                                SyntaxFactory.InvocationExpression(
+                                                                    SyntaxFactory.MemberAccessExpression(
+                                                                        SyntaxKind.SimpleMemberAccessExpression,
+                                                                        SyntaxFactory.IdentifierName("services"),
+                                                                        SyntaxFactory.GenericName(
+                                                                                SyntaxFactory.Identifier("AddSingleton"))
+                                                                            .WithTypeArgumentList(
+                                                                                SyntaxTypeArgumentListFactory.CreateWithTwoItems(
+                                                                                    "RestApiOptions",
+                                                                                    "RestApiOptions"))))),
+                                                            SyntaxFactory.ExpressionStatement(
+                                                                SyntaxFactory.InvocationExpression(
+                                                                    SyntaxMemberAccessExpressionFactory.Create("AutoRegistrateServices", "services"))
+                                                                .WithArgumentList(
+                                                                    SyntaxFactory.ArgumentList(
+                                                                        SyntaxFactory.SeparatedList<ArgumentSyntax>(
                                                                             new SyntaxNodeOrToken[]
                                                                             {
-                                                                                SyntaxFactory.IdentifierName("RestApiOptions"),
+                                                                                SyntaxFactory.Argument(
+                                                                                    SyntaxFactory.PostfixUnaryExpression(
+                                                                                        SyntaxKind.SuppressNullableWarningExpression,
+                                                                                        SyntaxFactory.InvocationExpression(
+                                                                                                SyntaxMemberAccessExpressionFactory.Create("GetAssembly", "Assembly"))
+                                                                                            .WithArgumentList(
+                                                                                                SyntaxFactory.ArgumentList(
+                                                                                                    SyntaxFactory.SingletonSeparatedList(
+                                                                                                        SyntaxFactory.Argument(
+                                                                                                            SyntaxFactory.TypeOfExpression(
+                                                                                                                SyntaxFactory.IdentifierName("ApiRegistration")))))))),
                                                                                 SyntaxTokenFactory.Comma(),
-                                                                                SyntaxFactory.IdentifierName("RestApiOptions"),
-                                                                            })))))),
-                                                SyntaxFactory.ExpressionStatement(
-                                                    SyntaxFactory.InvocationExpression(
-                                                        SyntaxFactory.MemberAccessExpression(
-                                                            SyntaxKind.SimpleMemberAccessExpression,
-                                                            SyntaxFactory.IdentifierName("services"),
-                                                            SyntaxFactory.IdentifierName("AutoRegistrateServices")))
-                                                    .WithArgumentList(
-                                                        SyntaxFactory.ArgumentList(
-                                                            SyntaxFactory.SeparatedList<ArgumentSyntax>(
-                                                                new SyntaxNodeOrToken[]
-                                                                {
-                                                                    SyntaxFactory.Argument(
-                                                                        SyntaxFactory.PostfixUnaryExpression(
-                                                                            SyntaxKind.SuppressNullableWarningExpression,
-                                                                            SyntaxFactory.InvocationExpression(
-                                                                                SyntaxFactory.MemberAccessExpression(
-                                                                                    SyntaxKind.SimpleMemberAccessExpression,
-                                                                                    SyntaxFactory.IdentifierName("Assembly"),
-                                                                                    SyntaxFactory.IdentifierName("GetAssembly")))
-                                                                            .WithArgumentList(
-                                                                                SyntaxFactory.ArgumentList(
-                                                                                    SyntaxFactory.SingletonSeparatedList(
-                                                                                        SyntaxFactory.Argument(
-                                                                                            SyntaxFactory.TypeOfExpression(
-                                                                                                SyntaxFactory.IdentifierName("ApiRegistration")))))))),
-                                                                    SyntaxTokenFactory.Comma(),
-                                                                    SyntaxFactory.Argument(
-                                                                        SyntaxFactory.PostfixUnaryExpression(
-                                                                            SyntaxKind.SuppressNullableWarningExpression,
-                                                                            SyntaxFactory.InvocationExpression(
-                                                                                SyntaxFactory.MemberAccessExpression(
-                                                                                    SyntaxKind.SimpleMemberAccessExpression,
-                                                                                    SyntaxFactory.IdentifierName("Assembly"),
-                                                                                    SyntaxFactory.IdentifierName("GetAssembly")))
-                                                                            .WithArgumentList(
-                                                                                SyntaxFactory.ArgumentList(
-                                                                                    SyntaxFactory.SingletonSeparatedList(
-                                                                                        SyntaxFactory.Argument(
-                                                                                            SyntaxFactory.TypeOfExpression(
-                                                                                                SyntaxFactory.IdentifierName("WebApiStartupFactory")))))))),
-                                                                })))))))))))));
+                                                                                SyntaxFactory.Argument(
+                                                                                    SyntaxFactory.PostfixUnaryExpression(
+                                                                                        SyntaxKind.SuppressNullableWarningExpression,
+                                                                                        SyntaxFactory.InvocationExpression(
+                                                                                            SyntaxMemberAccessExpressionFactory.Create("GetAssembly", "Assembly"))
+                                                                                        .WithArgumentList(
+                                                                                            SyntaxFactory.ArgumentList(
+                                                                                                SyntaxFactory.SingletonSeparatedList(
+                                                                                                    SyntaxFactory.Argument(
+                                                                                                        SyntaxFactory.TypeOfExpression(
+                                                                                                            SyntaxFactory.IdentifierName("WebApiStartupFactory")))))))),
+                                                                            })))))))))))));
         }
 
         private static MemberDeclarationSyntax CreateWebApplicationFactoryModifyConfiguration()
@@ -609,7 +552,7 @@ namespace Atc.Rest.ApiGenerator.Generators
                     SyntaxFactory.ParameterList(
                         SyntaxFactory.SingletonSeparatedList(
                             SyntaxFactory.Parameter(SyntaxFactory.Identifier("config"))
-                            .WithType(SyntaxFactory.IdentifierName("IConfigurationBuilder")))))
+                                .WithType(SyntaxFactory.IdentifierName("IConfigurationBuilder")))))
                 .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
         }
 
@@ -626,7 +569,7 @@ namespace Atc.Rest.ApiGenerator.Generators
                     SyntaxFactory.ParameterList(
                         SyntaxFactory.SingletonSeparatedList(
                             SyntaxFactory.Parameter(SyntaxFactory.Identifier("services"))
-                            .WithType(SyntaxFactory.IdentifierName("IServiceCollection")))))
+                                .WithType(SyntaxFactory.IdentifierName("IServiceCollection")))))
                 .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
         }
 
@@ -679,170 +622,154 @@ namespace Atc.Rest.ApiGenerator.Generators
         private static MemberDeclarationSyntax CreateWebApiControllerBaseTestConstructor()
         {
             return SyntaxFactory.MethodDeclaration(
-                SyntaxFactory.IdentifierName("WebApiControllerBaseTest"),
-                SyntaxFactory.MissingToken(SyntaxKind.IdentifierToken))
-            .WithModifiers(
-                SyntaxFactory.TokenList(SyntaxTokenFactory.ProtectedKeyword()))
-            .WithParameterList(
-                SyntaxFactory.ParameterList(
-                    SyntaxFactory.SingletonSeparatedList(
-                        SyntaxFactory.Parameter(SyntaxFactory.Identifier("fixture"))
-                        .WithType(SyntaxFactory.IdentifierName("WebApiStartupFactory")))))
-            .WithBody(
-                SyntaxFactory.Block(
-                    SyntaxFactory.ExpressionStatement(
-                        SyntaxFactory.AssignmentExpression(
-                            SyntaxKind.SimpleAssignmentExpression,
-                            SyntaxFactory.MemberAccessExpression(
-                                SyntaxKind.SimpleMemberAccessExpression,
-                                SyntaxFactory.ThisExpression(),
-                                SyntaxFactory.IdentifierName("Factory")),
-                            SyntaxFactory.IdentifierName("fixture"))),
-                    SyntaxFactory.ExpressionStatement(
-                        SyntaxFactory.AssignmentExpression(
-                            SyntaxKind.SimpleAssignmentExpression,
-                            SyntaxFactory.MemberAccessExpression(
-                                SyntaxKind.SimpleMemberAccessExpression,
-                                SyntaxFactory.ThisExpression(),
-                                SyntaxFactory.IdentifierName("HttpClient")),
-                            SyntaxFactory.InvocationExpression(
+                    SyntaxFactory.IdentifierName("WebApiControllerBaseTest"),
+                    SyntaxFactory.MissingToken(SyntaxKind.IdentifierToken))
+                .WithModifiers(
+                    SyntaxFactory.TokenList(SyntaxTokenFactory.ProtectedKeyword()))
+                .WithParameterList(
+                    SyntaxFactory.ParameterList(
+                        SyntaxFactory.SingletonSeparatedList(
+                            SyntaxFactory.Parameter(SyntaxFactory.Identifier("fixture"))
+                                .WithType(SyntaxFactory.IdentifierName("WebApiStartupFactory")))))
+                .WithBody(
+                    SyntaxFactory.Block(
+                        SyntaxFactory.ExpressionStatement(
+                            SyntaxFactory.AssignmentExpression(
+                                SyntaxKind.SimpleAssignmentExpression,
                                 SyntaxFactory.MemberAccessExpression(
                                     SyntaxKind.SimpleMemberAccessExpression,
+                                    SyntaxFactory.ThisExpression(),
+                                    SyntaxFactory.IdentifierName("Factory")),
+                                SyntaxFactory.IdentifierName("fixture"))),
+                        SyntaxFactory.ExpressionStatement(
+                            SyntaxFactory.AssignmentExpression(
+                                SyntaxKind.SimpleAssignmentExpression,
+                                SyntaxFactory.MemberAccessExpression(
+                                    SyntaxKind.SimpleMemberAccessExpression,
+                                    SyntaxFactory.ThisExpression(),
+                                    SyntaxFactory.IdentifierName("HttpClient")),
+                                SyntaxFactory.InvocationExpression(
                                     SyntaxFactory.MemberAccessExpression(
                                         SyntaxKind.SimpleMemberAccessExpression,
-                                        SyntaxFactory.ThisExpression(),
-                                        SyntaxFactory.IdentifierName("Factory")),
-                                    SyntaxFactory.IdentifierName("CreateClient"))))),
-                    SyntaxFactory.ExpressionStatement(
-                        SyntaxFactory.AssignmentExpression(
-                            SyntaxKind.SimpleAssignmentExpression,
-                            SyntaxFactory.MemberAccessExpression(
-                                SyntaxKind.SimpleMemberAccessExpression,
-                                SyntaxFactory.ThisExpression(),
-                                SyntaxFactory.IdentifierName("Configuration")),
-                            SyntaxFactory.InvocationExpression(
+                                        SyntaxFactory.MemberAccessExpression(
+                                            SyntaxKind.SimpleMemberAccessExpression,
+                                            SyntaxFactory.ThisExpression(),
+                                            SyntaxFactory.IdentifierName("Factory")),
+                                        SyntaxFactory.IdentifierName("CreateClient"))))),
+                        SyntaxFactory.ExpressionStatement(
+                            SyntaxFactory.AssignmentExpression(
+                                SyntaxKind.SimpleAssignmentExpression,
                                 SyntaxFactory.MemberAccessExpression(
                                     SyntaxKind.SimpleMemberAccessExpression,
-                                    SyntaxFactory.ObjectCreationExpression(
-                                        SyntaxFactory.IdentifierName("ConfigurationBuilder"))
-                                    .WithArgumentList(
-                                        SyntaxFactory.ArgumentList()),
-                                    SyntaxFactory.IdentifierName("Build"))))),
-                    SyntaxFactory.ExpressionStatement(
-                        SyntaxFactory.AssignmentExpression(
-                            SyntaxKind.SimpleAssignmentExpression,
-                            SyntaxFactory.IdentifierName("JsonSerializerOptions"),
-                            SyntaxFactory.ObjectCreationExpression(
-                                SyntaxFactory.IdentifierName("JsonSerializerOptions"))
-                                .WithInitializer(
-                                    SyntaxFactory.InitializerExpression(
-                                        SyntaxKind.ObjectInitializerExpression,
-                                        SyntaxFactory.SeparatedList<ExpressionSyntax>(
-                                            new SyntaxNodeOrToken[]
-                                            {
-                                                SyntaxFactory.AssignmentExpression(
-                                                    SyntaxKind.SimpleAssignmentExpression,
-                                                    SyntaxFactory.IdentifierName("PropertyNameCaseInsensitive"),
-                                                    SyntaxFactory.LiteralExpression(SyntaxKind.TrueLiteralExpression)),
-                                                SyntaxTokenFactory.Comma(),
-                                                SyntaxFactory.AssignmentExpression(
-                                                    SyntaxKind.SimpleAssignmentExpression,
-                                                    SyntaxFactory.IdentifierName("Converters"),
-                                                    SyntaxFactory.InitializerExpression(
-                                                        SyntaxKind.CollectionInitializerExpression,
-                                                        SyntaxFactory.SingletonSeparatedList<ExpressionSyntax>(
-                                                            SyntaxFactory.ObjectCreationExpression(
+                                    SyntaxFactory.ThisExpression(),
+                                    SyntaxFactory.IdentifierName("Configuration")),
+                                SyntaxFactory.InvocationExpression(
+                                    SyntaxFactory.MemberAccessExpression(
+                                        SyntaxKind.SimpleMemberAccessExpression,
+                                        SyntaxFactory.ObjectCreationExpression(
+                                                SyntaxFactory.IdentifierName("ConfigurationBuilder"))
+                                            .WithArgumentList(
+                                                SyntaxFactory.ArgumentList()),
+                                        SyntaxFactory.IdentifierName("Build"))))),
+                        SyntaxFactory.ExpressionStatement(
+                            SyntaxFactory.AssignmentExpression(
+                                SyntaxKind.SimpleAssignmentExpression,
+                                SyntaxFactory.IdentifierName("JsonSerializerOptions"),
+                                SyntaxFactory.ObjectCreationExpression(
+                                        SyntaxFactory.IdentifierName("JsonSerializerOptions"))
+                                    .WithInitializer(
+                                        SyntaxFactory.InitializerExpression(
+                                            SyntaxKind.ObjectInitializerExpression,
+                                            SyntaxFactory.SeparatedList<ExpressionSyntax>(
+                                                new SyntaxNodeOrToken[]
+                                                {
+                                                    SyntaxFactory.AssignmentExpression(
+                                                        SyntaxKind.SimpleAssignmentExpression,
+                                                        SyntaxFactory.IdentifierName("PropertyNameCaseInsensitive"),
+                                                        SyntaxFactory.LiteralExpression(SyntaxKind.TrueLiteralExpression)),
+                                                    SyntaxTokenFactory.Comma(),
+                                                    SyntaxFactory.AssignmentExpression(
+                                                        SyntaxKind.SimpleAssignmentExpression,
+                                                        SyntaxFactory.IdentifierName("Converters"),
+                                                        SyntaxFactory.InitializerExpression(
+                                                            SyntaxKind.CollectionInitializerExpression,
+                                                            SyntaxFactory.SingletonSeparatedList<ExpressionSyntax>(
+                                                                SyntaxFactory.ObjectCreationExpression(
                                                                     SyntaxFactory.IdentifierName("JsonStringEnumConverter"))
-                                                                .WithArgumentList(SyntaxFactory.ArgumentList())))),
-                                                SyntaxTokenFactory.Comma(),
-                                            })))))));
+                                                                .WithArgumentList(
+                                                                    SyntaxFactory.ArgumentList())))),
+                                                    SyntaxTokenFactory.Comma(),
+                                                })))))));
         }
 
         private static MemberDeclarationSyntax CreateWebApiControllerBaseTestToJson()
         {
             return SyntaxFactory.MethodDeclaration(
-                SyntaxFactory.IdentifierName("StringContent"),
-                SyntaxFactory.Identifier("ToJson"))
-            .WithModifiers(SyntaxTokenListFactory.ProtectedStaticKeyword())
-            .WithParameterList(
-                SyntaxFactory.ParameterList(
-                    SyntaxFactory.SingletonSeparatedList(
-                        SyntaxFactory.Parameter(SyntaxFactory.Identifier("data"))
-                        .WithType(SyntaxFactory.PredefinedType(SyntaxTokenFactory.ObjectKeyword())))))
-            .WithExpressionBody(
-                SyntaxFactory.ArrowExpressionClause(
-                    SyntaxFactory.ObjectCreationExpression(
-                        SyntaxFactory.IdentifierName("StringContent"))
-                    .WithArgumentList(
-                        SyntaxFactory.ArgumentList(
-                            SyntaxFactory.SeparatedList<ArgumentSyntax>(
-                                new SyntaxNodeOrToken[]
-                                {
-                                    SyntaxFactory.Argument(
-                                        SyntaxFactory.InvocationExpression(
-                                            SyntaxFactory.MemberAccessExpression(
-                                                SyntaxKind.SimpleMemberAccessExpression,
-                                                SyntaxFactory.IdentifierName("JsonSerializer"),
-                                                SyntaxFactory.IdentifierName("Serialize")))
-                                        .WithArgumentList(
-                                            SyntaxFactory.ArgumentList(
-                                                SyntaxFactory.SeparatedList<ArgumentSyntax>(
-                                                    new SyntaxNodeOrToken[]
-                                                    {
+                    SyntaxFactory.IdentifierName("StringContent"),
+                    SyntaxFactory.Identifier("ToJson"))
+                .WithModifiers(SyntaxTokenListFactory.ProtectedStaticKeyword())
+                .WithParameterList(
+                    SyntaxFactory.ParameterList(
+                        SyntaxFactory.SingletonSeparatedList(
+                            SyntaxFactory.Parameter(SyntaxFactory.Identifier("data"))
+                                .WithType(SyntaxFactory.PredefinedType(SyntaxTokenFactory.ObjectKeyword())))))
+                .WithExpressionBody(
+                    SyntaxFactory.ArrowExpressionClause(
+                        SyntaxFactory.ObjectCreationExpression(
+                                SyntaxFactory.IdentifierName("StringContent"))
+                            .WithArgumentList(
+                                SyntaxFactory.ArgumentList(
+                                    SyntaxFactory.SeparatedList<ArgumentSyntax>(
+                                        new SyntaxNodeOrToken[]
+                                        {
+                                            SyntaxFactory.Argument(
+                                                SyntaxFactory.InvocationExpression(
+                                                    SyntaxMemberAccessExpressionFactory.Create("Serialize", "JsonSerializer"))
+                                                .WithArgumentList(
+                                                    SyntaxArgumentListFactory.CreateWithTwoArgumentItems(
                                                         SyntaxFactory.Argument(SyntaxFactory.IdentifierName("data")),
-                                                        SyntaxTokenFactory.Comma(),
-                                                        SyntaxFactory.Argument(SyntaxFactory.IdentifierName("JsonSerializerOptions")),
-                                                    })))),
-                                    SyntaxTokenFactory.Comma(),
-                                    SyntaxFactory.Argument(
-                                        SyntaxFactory.MemberAccessExpression(
-                                            SyntaxKind.SimpleMemberAccessExpression,
-                                            SyntaxFactory.IdentifierName("Encoding"),
-                                            SyntaxFactory.IdentifierName("UTF8"))),
-                                    SyntaxTokenFactory.Comma(),
-                                    SyntaxFactory.Argument(
-                                        SyntaxFactory.LiteralExpression(
-                                            SyntaxKind.StringLiteralExpression,
-                                            SyntaxFactory.Literal(MediaTypeNames.Application.Json))),
-                                })))))
-            .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
+                                                        SyntaxFactory.Argument(SyntaxFactory.IdentifierName("JsonSerializerOptions"))))),
+                                            SyntaxTokenFactory.Comma(),
+                                            SyntaxFactory.Argument(SyntaxMemberAccessExpressionFactory.Create("UTF8", "Encoding")),
+                                            SyntaxTokenFactory.Comma(),
+                                            SyntaxFactory.Argument(
+                                                SyntaxFactory.LiteralExpression(
+                                                    SyntaxKind.StringLiteralExpression,
+                                                    SyntaxFactory.Literal(MediaTypeNames.Application.Json))),
+                                        })))))
+                .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
         }
 
         private static MemberDeclarationSyntax CreateWebApiControllerBaseTestJson()
         {
             return SyntaxFactory.MethodDeclaration(
-                SyntaxFactory.IdentifierName("StringContent"),
-                SyntaxFactory.Identifier("Json"))
-            .WithModifiers(SyntaxTokenListFactory.ProtectedStaticKeyword())
-            .WithParameterList(
-                SyntaxFactory.ParameterList(
-                    SyntaxFactory.SingletonSeparatedList(
-                        SyntaxFactory.Parameter(SyntaxFactory.Identifier("data"))
-                        .WithType(SyntaxFactory.PredefinedType(SyntaxTokenFactory.StringKeyword())))))
-            .WithExpressionBody(
-                SyntaxFactory.ArrowExpressionClause(
-                    SyntaxFactory.ObjectCreationExpression(
-                        SyntaxFactory.IdentifierName("StringContent"))
-                    .WithArgumentList(
-                        SyntaxFactory.ArgumentList(
-                            SyntaxFactory.SeparatedList<ArgumentSyntax>(
-                                new SyntaxNodeOrToken[]
-                                {
-                                    SyntaxFactory.Argument(
-                                        SyntaxFactory.IdentifierName("data")),
-                                    SyntaxTokenFactory.Comma(),
-                                    SyntaxFactory.Argument(
-                                        SyntaxFactory.MemberAccessExpression(
-                                            SyntaxKind.SimpleMemberAccessExpression,
-                                            SyntaxFactory.IdentifierName("Encoding"),
-                                            SyntaxFactory.IdentifierName("UTF8"))),
-                                    SyntaxTokenFactory.Comma(),
-                                    SyntaxFactory.Argument(
-                                        SyntaxFactory.LiteralExpression(
-                                            SyntaxKind.StringLiteralExpression,
-                                            SyntaxFactory.Literal(MediaTypeNames.Application.Json))),
-                                })))))
-            .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
+                    SyntaxFactory.IdentifierName("StringContent"),
+                    SyntaxFactory.Identifier("Json"))
+                .WithModifiers(SyntaxTokenListFactory.ProtectedStaticKeyword())
+                .WithParameterList(
+                    SyntaxFactory.ParameterList(
+                        SyntaxFactory.SingletonSeparatedList(
+                            SyntaxFactory.Parameter(SyntaxFactory.Identifier("data"))
+                                .WithType(SyntaxFactory.PredefinedType(SyntaxTokenFactory.StringKeyword())))))
+                .WithExpressionBody(
+                    SyntaxFactory.ArrowExpressionClause(
+                        SyntaxFactory.ObjectCreationExpression(
+                                SyntaxFactory.IdentifierName("StringContent"))
+                            .WithArgumentList(
+                                SyntaxFactory.ArgumentList(
+                                    SyntaxFactory.SeparatedList<ArgumentSyntax>(
+                                        new SyntaxNodeOrToken[]
+                                        {
+                                            SyntaxFactory.Argument(SyntaxFactory.IdentifierName("data")),
+                                            SyntaxTokenFactory.Comma(),
+                                            SyntaxFactory.Argument(SyntaxMemberAccessExpressionFactory.Create("UTF8", "Encoding")),
+                                            SyntaxTokenFactory.Comma(),
+                                            SyntaxFactory.Argument(
+                                                SyntaxFactory.LiteralExpression(
+                                                    SyntaxKind.StringLiteralExpression,
+                                                    SyntaxFactory.Literal(MediaTypeNames.Application.Json))),
+                                        })))))
+                .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
         }
 
         [SuppressMessage("Critical Code Smell", "S3776:Cognitive Complexity of methods should not be too high", Justification = "OK.")]
@@ -1076,8 +1003,9 @@ namespace Atc.Rest.ApiGenerator.Generators
             compilationUnit = compilationUnit.AddMembers(@namespace);
 
             // Add using to compilationUnit
-            compilationUnit = compilationUnit.AddUsingStatements(ProjectHostFactory.CreateUsingListForWebApiStartupFactory(
-                projectOptions.ProjectName));
+            compilationUnit = compilationUnit.AddUsingStatements(
+                ProjectHostFactory.CreateUsingListForWebApiStartupFactory(
+                    projectOptions.ProjectName));
 
             var codeAsString = compilationUnit
                 .NormalizeWhitespace()
@@ -1107,9 +1035,7 @@ namespace Atc.Rest.ApiGenerator.Generators
                                 SyntaxFactory.GenericName(
                                         SyntaxFactory.Identifier("IClassFixture"))
                                     .WithTypeArgumentList(
-                                        SyntaxFactory.TypeArgumentList(
-                                            SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
-                                                SyntaxFactory.IdentifierName("WebApiStartupFactory"))))))));
+                                        SyntaxTypeArgumentListFactory.CreateWithOneItem("WebApiStartupFactory"))))));
 
             // Create member
             var memberDeclarationFactory = CreateWebApiControllerBaseTestFactory();

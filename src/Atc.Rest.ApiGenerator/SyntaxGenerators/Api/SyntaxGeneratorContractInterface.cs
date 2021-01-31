@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -72,7 +72,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                 .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForInterfaceMethod(GlobalPathParameters.Any() || ApiOperation.HasParametersOrRequestBody()));
 
             // Add using statement to compilationUnit
-            compilationUnit = compilationUnit.AddUsingStatements(ProjectContractInterfaceFactory.CreateUsingList());
+            compilationUnit = compilationUnit.AddUsingStatements(ProjectApiFactory.CreateUsingListForContractInterface());
 
             // Add interface-method to interface
             interfaceDeclaration = interfaceDeclaration.AddMembers(methodDeclaration);

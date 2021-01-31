@@ -160,7 +160,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
 
             // Add using statement to compilationUnit
             compilationUnit = compilationUnit.AddUsingStatements(
-                ProjectContractPropertyFactory.CreateUsingList(
+                ProjectApiFactory.CreateUsingListForContractParameter(
                     GlobalPathParameters,
                     ApiOperation.Parameters,
                     ApiOperation.RequestBody,

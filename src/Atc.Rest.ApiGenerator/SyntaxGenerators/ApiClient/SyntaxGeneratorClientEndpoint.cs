@@ -8,7 +8,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Atc.CodeAnalysis.CSharp.SyntaxFactories;
 using Atc.Data.Models;
-using Atc.Rest.ApiGenerator.Extensions;
 using Atc.Rest.ApiGenerator.Factories;
 using Atc.Rest.ApiGenerator.Helpers;
 using Atc.Rest.ApiGenerator.Models;
@@ -17,8 +16,8 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.OpenApi.Models;
-// ReSharper disable UseObjectOrCollectionInitializer
 
+// ReSharper disable UseObjectOrCollectionInitializer
 // ReSharper disable InvertIf
 namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
 {
@@ -89,9 +88,6 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
             classDeclaration = classDeclaration.AddMembers(CreateConstructor());
             classDeclaration = classDeclaration.AddMembers(CreateMembers());
 
-            // TODO: Imp. this. ?
-            var usedApiOperations = new List<OpenApiOperation>();
-
             // Add using statement to compilationUnit
             var includeRestResults = classDeclaration
                 .Select<IdentifierNameSyntax>()
@@ -100,13 +96,13 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                     StringComparison.Ordinal));
 
             compilationUnit = compilationUnit.AddUsingStatements(
-                ProjectEndpointsFactory.CreateUsingList(
+                ProjectApiClientFactory.CreateUsingListForEndpoint(
                     ApiProjectOptions,
-                    FocusOnSegmentName,
-                    usedApiOperations,
                     includeRestResults,
-                    HasSharedResponseContract(),
-                    forClient: true));
+                    ContractHelper.HasSharedResponseContract(
+                        ApiProjectOptions.Document,
+                        OperationSchemaMappings,
+                        FocusOnSegmentName)));
 
             // Add the class to the namespace.
             @namespace = @namespace.AddMembers(classDeclaration);
@@ -135,7 +131,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                 .NormalizeWhitespace()
                 .ToFullString()
                 .FormatClientEndpointNewLineOnFluentMethod()
-                .FormatClientEndpointNewLineSpace();
+                .FormatClientEndpointNewLineSpaceBefore8()
+                .FormatClientEndpointNewLineSpaceAfter12();
         }
 
         public LogKeyValueItem ToFile()
@@ -159,31 +156,6 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
         public override string ToString()
         {
             return $"OperationType: {ApiOperationType}, OperationName: {ApiOperation.GetOperationName()}, SegmentName: {FocusOnSegmentName}";
-        }
-
-        // CopyFrom - SyntaxGeneratorEndpointControllers
-        private bool HasSharedResponseContract()
-        {
-            foreach (var (_, value) in ApiProjectOptions.Document.GetPathsByBasePathSegmentName(FocusOnSegmentName))
-            {
-                foreach (var apiOperation in value.Operations)
-                {
-                    if (apiOperation.Value.Responses == null)
-                    {
-                        continue;
-                    }
-
-                    var responseModelName = apiOperation.Value.Responses.GetModelNameForStatusCode(HttpStatusCode.OK);
-                    var isSharedResponseModel = !string.IsNullOrEmpty(responseModelName) &&
-                                                OperationSchemaMappings.IsShared(responseModelName);
-                    if (isSharedResponseModel)
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
         }
 
         private MemberDeclarationSyntax CreateFieldIHttpClientFactory()
@@ -257,14 +229,12 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
             var responseTypes = ApiOperation.Responses.GetResponseTypes(
                 FocusOnSegmentName,
                 OperationSchemaMappings,
-                ApiProjectOptions.ProjectName);
+                ApiProjectOptions.ProjectName,
+                false);
 
             string resultTypeName = responseTypes
                 .FirstOrDefault(x => x.Item1 == HttpStatusCode.OK)?.Item2 ?? responseTypes
                 .FirstOrDefault(x => x.Item1 == HttpStatusCode.Created)?.Item2 ?? "string";
-
-            // TODO: Fix this hack DKA!!!
-            resultTypeName = resultTypeName.Replace("ReportTemplate.ReportTemplate", "ReportTemplate", StringComparison.OrdinalIgnoreCase);
 
             var result = new List<MemberDeclarationSyntax>
             {
@@ -335,9 +305,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                                     SyntaxFactory.GenericName(
                                             SyntaxFactory.Identifier("EndpointResult"))
                                         .WithTypeArgumentList(
-                                            SyntaxFactory.TypeArgumentList(
-                                                SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
-                                                    SyntaxFactory.IdentifierName(resultTypeName))))))),
+                                            SyntaxTypeArgumentListFactory.CreateWithOneItem(resultTypeName))))),
                     SyntaxFactory.Identifier("ExecuteAsync"))
                 .WithModifiers(methodModifiers)
                 .WithParameterList(SyntaxFactory.ParameterList(SyntaxFactory.SeparatedList<ParameterSyntax>(arguments)))
@@ -368,9 +336,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                                     SyntaxFactory.GenericName(
                                             SyntaxFactory.Identifier("EndpointResult"))
                                         .WithTypeArgumentList(
-                                            SyntaxFactory.TypeArgumentList(
-                                                SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
-                                                    SyntaxFactory.IdentifierName(resultTypeName))))))),
+                                            SyntaxTypeArgumentListFactory.CreateWithOneItem(resultTypeName))))),
                     SyntaxFactory.Identifier("InvokeExecuteAsync"))
                 .WithModifiers(SyntaxTokenListFactory.PrivateAsyncKeyword())
                 .WithParameterList(
@@ -401,10 +367,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                                 .WithInitializer(
                                     SyntaxFactory.EqualsValueClause(
                                         SyntaxFactory.InvocationExpression(
-                                                SyntaxFactory.MemberAccessExpression(
-                                                    SyntaxKind.SimpleMemberAccessExpression,
-                                                    SyntaxFactory.IdentifierName("factory"),
-                                                    SyntaxFactory.IdentifierName("CreateClient")))
+                                                SyntaxMemberAccessExpressionFactory.Create("CreateClient", "factory"))
                                             .WithArgumentList(
                                                 SyntaxFactory.ArgumentList(
                                                     SyntaxFactory.SingletonSeparatedList(
@@ -419,10 +382,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
         {
             var equalsClauseSyntax = SyntaxFactory.EqualsValueClause(
                 SyntaxFactory.InvocationExpression(
-                        SyntaxFactory.MemberAccessExpression(
-                            SyntaxKind.SimpleMemberAccessExpression,
-                            SyntaxFactory.IdentifierName("httpMessageFactory"),
-                            SyntaxFactory.IdentifierName("FromTemplate")))
+                        SyntaxMemberAccessExpressionFactory.Create("FromTemplate", "httpMessageFactory"))
                     .WithArgumentList(CreateOneStringArg($"/api/{ApiProjectOptions.ApiVersion}{ApiUrlPath}")));
 
             var requestBuilderSyntax = SyntaxFactory.LocalDeclarationStatement(
@@ -454,7 +414,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                 var bodySchema = ApiOperation.RequestBody?.Content.GetSchema();
                 if (bodySchema != null)
                 {
-                    result.Add(CreateExpressionStatementForWithMethodBodyMap(bodySchema));
+                    result.Add(CreateExpressionStatementForWithMethodBodyMap());
                 }
             }
 
@@ -476,10 +436,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
 
             return SyntaxFactory.ExpressionStatement(
                 SyntaxFactory.InvocationExpression(
-                    SyntaxFactory.MemberAccessExpression(
-                        SyntaxKind.SimpleMemberAccessExpression,
-                        SyntaxFactory.IdentifierName("requestBuilder"),
-                        SyntaxFactory.IdentifierName(methodName)))
+                        SyntaxMemberAccessExpressionFactory.Create(methodName, "requestBuilder"))
                 .WithArgumentList(
                     SyntaxFactory.ArgumentList(
                         SyntaxFactory.SeparatedList<ArgumentSyntax>(
@@ -489,32 +446,21 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                                     SyntaxFactory.LiteralExpression(
                                         SyntaxKind.StringLiteralExpression,
                                         SyntaxFactory.Literal(parameterMapName))),
-                                SyntaxFactory.Token(SyntaxKind.CommaToken), SyntaxFactory.Argument(
-                                    SyntaxFactory.MemberAccessExpression(
-                                        SyntaxKind.SimpleMemberAccessExpression,
-                                        SyntaxFactory.IdentifierName("parameters"),
-                                        SyntaxFactory.IdentifierName(parameterName))),
+                                SyntaxTokenFactory.Comma(),
+                                SyntaxFactory.Argument(SyntaxMemberAccessExpressionFactory.Create(parameterName, "parameters")),
                             }))));
         }
 
-        private StatementSyntax CreateExpressionStatementForWithMethodBodyMap(OpenApiSchema bodySchema)
+        private StatementSyntax CreateExpressionStatementForWithMethodBodyMap()
         {
-            //// TODO: do we need schema??
-
             return SyntaxFactory.ExpressionStatement(
                 SyntaxFactory.InvocationExpression(
-                        SyntaxFactory.MemberAccessExpression(
-                            SyntaxKind.SimpleMemberAccessExpression,
-                            SyntaxFactory.IdentifierName("requestBuilder"),
-                            SyntaxFactory.IdentifierName("WithBody")))
+                        SyntaxMemberAccessExpressionFactory.Create("WithBody", "requestBuilder"))
                     .WithArgumentList(
                         SyntaxFactory.ArgumentList(
                             SyntaxFactory.SingletonSeparatedList(
                                 SyntaxFactory.Argument(
-                                    SyntaxFactory.MemberAccessExpression(
-                                        SyntaxKind.SimpleMemberAccessExpression,
-                                        SyntaxFactory.IdentifierName("parameters"),
-                                        SyntaxFactory.IdentifierName("Request")))))));
+                                    SyntaxMemberAccessExpressionFactory.Create("Request", "parameters"))))));
         }
 
         private LocalDeclarationStatementSyntax CreateInvokeExecuteAsyncMethodBlockLocalRequestMessage()
@@ -527,18 +473,12 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                                     .WithInitializer(
                                         SyntaxFactory.EqualsValueClause(
                                             SyntaxFactory.InvocationExpression(
-                                                    SyntaxFactory.MemberAccessExpression(
-                                                        SyntaxKind.SimpleMemberAccessExpression,
-                                                        SyntaxFactory.IdentifierName("requestBuilder"),
-                                                        SyntaxFactory.IdentifierName("Build"))) // TODO: nameof
+                                                    SyntaxMemberAccessExpressionFactory.Create("Build", "requestBuilder")) // TODO: nameof
                                                 .WithArgumentList(
                                                     SyntaxFactory.ArgumentList(
                                                         SyntaxFactory.SingletonSeparatedList(
                                                             SyntaxFactory.Argument(
-                                                                SyntaxFactory.MemberAccessExpression(
-                                                                    SyntaxKind.SimpleMemberAccessExpression,
-                                                                    SyntaxFactory.IdentifierName(nameof(HttpMethod)),
-                                                                    SyntaxFactory.IdentifierName(ApiOperationType.ToString())))))))))))
+                                                                SyntaxMemberAccessExpressionFactory.Create(ApiOperationType.ToString(), nameof(HttpMethod)))))))))))
                 .WithUsingKeyword(
                     SyntaxFactory.Token(SyntaxKind.UsingKeyword));
         }
@@ -554,10 +494,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                                         SyntaxFactory.EqualsValueClause(
                                             SyntaxFactory.AwaitExpression(
                                                 SyntaxFactory.InvocationExpression(
-                                                        SyntaxFactory.MemberAccessExpression(
-                                                            SyntaxKind.SimpleMemberAccessExpression,
-                                                            SyntaxFactory.IdentifierName("client"),
-                                                            SyntaxFactory.IdentifierName(nameof(HttpClient.SendAsync))))
+                                                        SyntaxMemberAccessExpressionFactory.Create(nameof(HttpClient.SendAsync), "client"))
                                                     .WithArgumentList(
                                                         SyntaxFactory.ArgumentList(
                                                             SyntaxFactory.SeparatedList<ArgumentSyntax>(
@@ -588,25 +525,18 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                                                 SyntaxFactory.MemberAccessExpression(
                                                     SyntaxKind.SimpleMemberAccessExpression,
                                                     SyntaxFactory.InvocationExpression(
-                                                        SyntaxFactory.MemberAccessExpression(
-                                                            SyntaxKind.SimpleMemberAccessExpression,
-                                                            SyntaxFactory.IdentifierName("httpMessageFactory"),
-                                                            SyntaxFactory.IdentifierName("FromResponse")))
+                                                        SyntaxMemberAccessExpressionFactory.Create("FromResponse", "httpMessageFactory"))
                                                     .WithArgumentList(
                                                         SyntaxFactory.ArgumentList(
                                                             SyntaxFactory.SingletonSeparatedList(
                                                                 SyntaxFactory.Argument(SyntaxFactory.IdentifierName("response"))))),
                                                     SyntaxFactory.GenericName(SyntaxFactory.Identifier("AddSuccessResponse")) // TODO: nameof
                                                     .WithTypeArgumentList(
-                                                        SyntaxFactory.TypeArgumentList(
-                                                            SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
-                                                                SyntaxFactory.IdentifierName(resultTypeName))))))
+                                                        SyntaxTypeArgumentListFactory.CreateWithOneItem(resultTypeName))))
                                                     .WithArgumentList(CreateResponseArgHttpStatusCode(HttpStatusCode.OK)),
                                             SyntaxFactory.GenericName(SyntaxFactory.Identifier("AddErrorResponse")) // TODO: nameof
                                             .WithTypeArgumentList(
-                                                SyntaxFactory.TypeArgumentList(
-                                                    SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
-                                                        SyntaxFactory.IdentifierName("ProblemDetails")))))) // TODO: nameof
+                                                SyntaxTypeArgumentListFactory.CreateWithOneItem("ProblemDetails")))) // TODO: nameof
                                             .WithArgumentList(CreateResponseArgHttpStatusCode(HttpStatusCode.BadRequest)),
                                     SyntaxFactory.IdentifierName("AddErrorResponse"))) // TODO: nameof
                                 .WithArgumentList(CreateResponseArgHttpStatusCode(HttpStatusCode.NotFound)),
@@ -623,9 +553,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                                                     SyntaxFactory.ObjectCreationExpression(
                                                         SyntaxFactory.GenericName(SyntaxFactory.Identifier("EndpointResult")) // TODO: nameof
                                                             .WithTypeArgumentList(
-                                                                SyntaxFactory.TypeArgumentList(
-                                                                    SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
-                                                                        SyntaxFactory.IdentifierName(resultTypeName)))))
+                                                                SyntaxTypeArgumentListFactory.CreateWithOneItem(resultTypeName)))
                                                         .WithArgumentList(
                                                             SyntaxFactory.ArgumentList(
                                                                 SyntaxFactory.SingletonSeparatedList(
@@ -640,10 +568,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
             SyntaxFactory.ArgumentList(
                 SyntaxFactory.SingletonSeparatedList(
                     SyntaxFactory.Argument(
-                        SyntaxFactory.MemberAccessExpression(
-                            SyntaxKind.SimpleMemberAccessExpression,
-                            SyntaxFactory.IdentifierName(nameof(HttpStatusCode)),
-                            SyntaxFactory.IdentifierName(httpStatusCode.ToString())))));
+                        SyntaxMemberAccessExpressionFactory.Create(httpStatusCode.ToString(), nameof(HttpStatusCode)))));
 
         private ArgumentListSyntax CreateOneStringArg(string value) =>
             SyntaxFactory.ArgumentList(

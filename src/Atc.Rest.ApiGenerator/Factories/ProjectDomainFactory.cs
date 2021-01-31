@@ -1,12 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Atc.Rest.ApiGenerator.Models;
 
 namespace Atc.Rest.ApiGenerator.Factories
 {
-    internal static class ProjectHandlerFactory
+    public static class ProjectDomainFactory
     {
-        public static string[] CreateUsingList(
+        public static string[] CreateUsingListForHandler(
             DomainProjectOptions domainProjectOptions,
             string focusOnSegmentName)
         {
