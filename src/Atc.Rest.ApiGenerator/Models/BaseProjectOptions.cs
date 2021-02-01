@@ -106,21 +106,7 @@ namespace Atc.Rest.ApiGenerator.Models
 
         private static string GetApiVersion(OpenApiDocument openApiDocument)
         {
-            if (openApiDocument.Info?.Version != null)
-            {
-                return openApiDocument.Info.Version switch
-                {
-                    "1" => "v1",
-                    "1.0" => "v1",
-                    "1.0.0" => "v1",
-                    "v1" => "v1",
-                    "v1.0" => "v1",
-                    "v1.0.0" => "v1",
-                    _ => openApiDocument.Info.Version.Replace(".", string.Empty, StringComparison.Ordinal)
-                };
-            }
-
-            return "v1";
+            return "api/v1";
         }
     }
 }
