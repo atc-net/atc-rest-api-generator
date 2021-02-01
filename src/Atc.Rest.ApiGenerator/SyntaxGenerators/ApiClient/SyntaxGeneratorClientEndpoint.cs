@@ -565,16 +565,24 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                 ensureModelNameWithNamespaceIfNeeded: false,
                 useProblemDetailsAsDefaultResponseBody: true);
 
+            // TODO: If HasParametersOrRequestBody-AND-Minimum-1-required-or-1-that-is-not-string
+            if (HasParametersOrRequestBody &&
+                responseTypes.All(x => x.Item1 != HttpStatusCode.BadRequest))
+            {
+                responseTypes.Add(new Tuple<HttpStatusCode, string>(HttpStatusCode.BadRequest, "ValidationProblemDetails"));
+            }
+
+            if (ApiProjectOptions.ApiOptions.Generator.UseAuthorization &&
+                responseTypes.All(x => x.Item1 != HttpStatusCode.Unauthorized))
+            {
+                responseTypes.Add(new Tuple<HttpStatusCode, string>(HttpStatusCode.Unauthorized, "ProblemDetails"));
+            }
+
             var result = new List<StatementSyntax>();
             foreach (var responseType in responseTypes
+                .Where(x => x.Item1.IsClientOrServerError())
                 .OrderBy(x => x.Item1))
             {
-                var httpStatus = (int)responseType.Item1;
-                if (httpStatus >= 200 && httpStatus < 300)
-                {
-                    continue;
-                }
-
                 result.Add(CreateInvokeExecuteAsyncMethodBlockLocalResponseBuilderAddError(responseType));
             }
 
