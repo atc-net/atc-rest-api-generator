@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Atc.CodeAnalysis.CSharp.SyntaxFactories;
@@ -55,6 +54,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
         public string InterfaceTypeName => "I" + ApiOperation.GetOperationName() + NameConstants.Endpoint;
 
         public string ParameterTypeName => ApiOperation.GetOperationName() + NameConstants.ContractParameters;
+
+        public string EndpointResultTypeName => ApiOperation.GetOperationName() + NameConstants.EndpointResult;
 
         public bool HasParametersOrRequestBody { get; }
 
@@ -148,27 +149,15 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
 
         private MemberDeclarationSyntax[] CreateMembers()
         {
-            var responseTypes = ApiOperation.Responses.GetResponseTypes(
-                OperationSchemaMappings,
-                FocusOnSegmentName,
-                ApiProjectOptions.ProjectName,
-                ensureModelNameWithNamespaceIfNeeded: false,
-                useProblemDetailsAsDefaultResponseBody: false,
-                false);
-
-            string resultTypeName = responseTypes
-                .FirstOrDefault(x => x.Item1 == HttpStatusCode.OK)?.Item2 ?? responseTypes
-                .FirstOrDefault(x => x.Item1 == HttpStatusCode.Created)?.Item2 ?? "string";
-
             var result = new List<MemberDeclarationSyntax>
             {
-                CreateExecuteAsyncMethod(ParameterTypeName, resultTypeName, HasParametersOrRequestBody),
+                CreateExecuteAsyncMethod(ParameterTypeName, HasParametersOrRequestBody),
             };
 
             return result.ToArray();
         }
 
-        private MemberDeclarationSyntax CreateExecuteAsyncMethod(string parameterTypeName, string resultTypeName, bool hasParameters)
+        private MemberDeclarationSyntax CreateExecuteAsyncMethod(string parameterTypeName, bool hasParameters)
         {
             var arguments = hasParameters
                 ? new SyntaxNodeOrToken[]
@@ -191,10 +180,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                         .WithTypeArgumentList(
                             SyntaxFactory.TypeArgumentList(
                                 SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
-                                    SyntaxFactory.GenericName(
-                                            SyntaxFactory.Identifier("EndpointResult"))
-                                        .WithTypeArgumentList(
-                                            SyntaxTypeArgumentListFactory.CreateWithOneItem(resultTypeName))))),
+                                    SyntaxFactory.IdentifierName(EndpointResultTypeName)))),
                     SyntaxFactory.Identifier("ExecuteAsync"))
                 .WithModifiers(SyntaxTokenListFactory.PublicKeyword())
                 .WithParameterList(SyntaxFactory.ParameterList(SyntaxFactory.SeparatedList<ParameterSyntax>(arguments)))

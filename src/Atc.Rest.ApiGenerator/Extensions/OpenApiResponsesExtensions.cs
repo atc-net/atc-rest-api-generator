@@ -19,7 +19,6 @@ namespace Microsoft.OpenApi.Models
             List<ApiOperationSchemaMap> apiOperationSchemaMappings,
             string contractArea,
             string projectName,
-            string resultTypeName,
             bool useProblemDetailsAsDefaultResponseBody,
             bool includeIfNotDefinedValidation,
             bool includeIfNotDefinedAuthorization,
@@ -32,22 +31,10 @@ namespace Microsoft.OpenApi.Models
                 projectName,
                 ensureModelNameWithNamespaceIfNeeded: true,
                 useProblemDetailsAsDefaultResponseBody,
-                includeEmptyResponseTypes: true);
-
-            if (includeIfNotDefinedValidation && responseTypes.All(x => x.Item1 != HttpStatusCode.BadRequest))
-            {
-                responseTypes.Add(Tuple.Create(HttpStatusCode.BadRequest, "ValidationProblemDetails"));
-            }
-
-            if (includeIfNotDefinedAuthorization && responseTypes.All(x => x.Item1 != HttpStatusCode.Unauthorized))
-            {
-                responseTypes.Add(Tuple.Create(HttpStatusCode.Unauthorized, "ProblemDetails"));
-            }
-
-            if (includeIfNotDefinedInternalServerError && responseTypes.All(x => x.Item1 != HttpStatusCode.InternalServerError))
-            {
-                responseTypes.Add(Tuple.Create(HttpStatusCode.InternalServerError, "ProblemDetails"));
-            }
+                includeEmptyResponseTypes: true,
+                includeIfNotDefinedValidation,
+                includeIfNotDefinedAuthorization,
+                includeIfNotDefinedInternalServerError);
 
             return responseTypes
                 .OrderBy(x => x.Item1)
@@ -64,7 +51,10 @@ namespace Microsoft.OpenApi.Models
             string projectName,
             bool ensureModelNameWithNamespaceIfNeeded,
             bool useProblemDetailsAsDefaultResponseBody,
-            bool includeEmptyResponseTypes)
+            bool includeEmptyResponseTypes,
+            bool includeIfNotDefinedValidation,
+            bool includeIfNotDefinedAuthorization,
+            bool includeIfNotDefinedInternalServerError)
         {
             var result = new List<Tuple<HttpStatusCode, string>>();
             foreach (var response in responses.OrderBy(x => x.Key))
@@ -162,6 +152,27 @@ namespace Microsoft.OpenApi.Models
                 {
                     result.Add(Tuple.Create(httpStatusCode, string.Empty));
                 }
+            }
+
+            if (includeIfNotDefinedValidation && result.All(x => x.Item1 != HttpStatusCode.BadRequest))
+            {
+                result.Add(useProblemDetailsAsDefaultResponseBody
+                    ? Tuple.Create(HttpStatusCode.BadRequest, "ValidationProblemDetails")
+                    : Tuple.Create(HttpStatusCode.BadRequest, string.Empty));
+            }
+
+            if (includeIfNotDefinedAuthorization && result.All(x => x.Item1 != HttpStatusCode.Forbidden))
+            {
+                result.Add(useProblemDetailsAsDefaultResponseBody
+                    ? Tuple.Create(HttpStatusCode.Forbidden, "ProblemDetails")
+                    : Tuple.Create(HttpStatusCode.Forbidden, string.Empty));
+            }
+
+            if (includeIfNotDefinedInternalServerError && result.All(x => x.Item1 != HttpStatusCode.InternalServerError))
+            {
+                result.Add(useProblemDetailsAsDefaultResponseBody
+                    ? Tuple.Create(HttpStatusCode.InternalServerError, "ProblemDetails")
+                    : Tuple.Create(HttpStatusCode.InternalServerError, "string"));
             }
 
             return result;
