@@ -38,8 +38,8 @@ Some useful links:
                 },
                 Servers = new List<OpenApiServer>
                 {
-                    new() { Url = "/api/v2" },
-                    new() { Url = "/api/v3" },
+                    new () { Url = "/api/v2" },
+                    new () { Url = "/api/v3" },
                 },
             };
 
