@@ -150,9 +150,11 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
         private MemberDeclarationSyntax[] CreateMembers()
         {
             var responseTypes = ApiOperation.Responses.GetResponseTypes(
-                FocusOnSegmentName,
                 OperationSchemaMappings,
+                FocusOnSegmentName,
                 ApiProjectOptions.ProjectName,
+                ensureModelNameWithNamespaceIfNeeded: false,
+                useProblemDetailsAsDefaultResponseBody: false,
                 false);
 
             string resultTypeName = responseTypes
