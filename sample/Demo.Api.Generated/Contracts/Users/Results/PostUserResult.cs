@@ -32,7 +32,7 @@ namespace Demo.Api.Generated.Contracts.Users
         /// <summary>
         /// 400 - BadRequest response.
         /// </summary>
-        public static PostUserResult BadRequest(string message) => new PostUserResult(ResultFactory.CreateContentResultWithProblemDetails(HttpStatusCode.BadRequest, message));
+        public static PostUserResult BadRequest(string? message = null) => new PostUserResult(ResultFactory.CreateContentResultWithValidationProblemDetails(HttpStatusCode.BadRequest, message));
 
         /// <summary>
         /// 409 - Conflict response.
