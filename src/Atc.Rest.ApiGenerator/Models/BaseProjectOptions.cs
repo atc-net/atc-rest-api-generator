@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Atc.Rest.ApiGenerator.Helpers;
 using Microsoft.OpenApi.Models;
 
@@ -106,7 +107,8 @@ namespace Atc.Rest.ApiGenerator.Models
 
         private static string GetApiVersion(OpenApiDocument openApiDocument)
         {
-            return "api/v1";
+            var server = openApiDocument.Servers?.FirstOrDefault()?.Url;
+            return string.IsNullOrWhiteSpace(server) ? "api/v1" : server;
         }
     }
 }
