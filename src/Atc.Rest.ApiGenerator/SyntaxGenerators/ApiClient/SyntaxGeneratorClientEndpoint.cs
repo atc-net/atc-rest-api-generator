@@ -227,10 +227,12 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
         private MemberDeclarationSyntax[] CreateMembers()
         {
             var responseTypes = ApiOperation.Responses.GetResponseTypes(
-                FocusOnSegmentName,
                 OperationSchemaMappings,
+                FocusOnSegmentName,
                 ApiProjectOptions.ProjectName,
-                false);
+                ensureModelNameWithNamespaceIfNeeded: false,
+                useProblemDetailsAsDefaultResponseBody: false,
+                includeEmptyResponseTypes: false);
 
             string resultTypeName = responseTypes
                 .FirstOrDefault(x => x.Item1 == HttpStatusCode.OK)?.Item2 ?? responseTypes
@@ -559,11 +561,12 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
         private StatementSyntax[] CreateInvokeExecuteAsyncMethodBlockLocalResponseBuilderAddErrors()
         {
             var responseTypes = ApiOperation.Responses.GetResponseTypes(
-                FocusOnSegmentName,
                 OperationSchemaMappings,
+                FocusOnSegmentName,
                 ApiProjectOptions.ProjectName,
                 ensureModelNameWithNamespaceIfNeeded: false,
-                useProblemDetailsAsDefaultResponseBody: true);
+                useProblemDetailsAsDefaultResponseBody: true,
+                includeEmptyResponseTypes: false);
 
             // TODO: If HasParametersOrRequestBody-AND-Minimum-1-required-or-1-that-is-not-string
             if (HasParametersOrRequestBody &&

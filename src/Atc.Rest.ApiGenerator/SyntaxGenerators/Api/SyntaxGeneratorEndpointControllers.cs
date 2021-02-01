@@ -188,10 +188,12 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                     var sgContractParameter = generatedParameters.FirstOrDefault(x => x.ApiOperation.GetOperationName() == operationName);
 
                     var responseTypes = apiOperation.Value.Responses.GetResponseTypes(
-                        FocusOnSegmentName,
                         OperationSchemaMappings,
+                        FocusOnSegmentName,
                         ApiProjectOptions.ProjectName,
-                        true);
+                        ensureModelNameWithNamespaceIfNeeded: true,
+                        useProblemDetailsAsDefaultResponseBody: false,
+                        includeEmptyResponseTypes: false);
 
                     if (contractParameterTypeName != null &&
                         responseTypes.FirstOrDefault(x => x.Item1 == HttpStatusCode.BadRequest) == null)
@@ -323,11 +325,14 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
 
             // Create and add producesResponseTypes-attributes
             var producesResponseAttributeParts = apiOperation.Value.Responses.GetProducesResponseAttributeParts(
+                OperationSchemaMappings,
+                area,
+                ApiProjectOptions.ProjectName,
                 resultTypeName,
                 ApiProjectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
-                area,
-                OperationSchemaMappings,
-                ApiProjectOptions.ProjectName);
+                apiOperation.Value.HasParametersOrRequestBody(),
+                ApiProjectOptions.ApiOptions.Generator.UseAuthorization,
+                includeIfNotDefinedInternalServerError: true);
 
             return producesResponseAttributeParts
                 .Aggregate(
