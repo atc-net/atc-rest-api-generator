@@ -280,7 +280,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                         break;
                     case HttpStatusCode.BadRequest:
                         methodDeclaration = useProblemDetails
-                            ? CreateTypeRequestWithProblemDetailsWithMessage(className, httpStatusCode)
+                            ? CreateTypeRequestWithSpecifiedResultFactoryMethodWithMessageAllowNull("CreateContentResultWithValidationProblemDetails", className, httpStatusCode)
                             : CreateTypeRequestWithMessage(className, httpStatusCode, nameof(BadRequestObjectResult));
                         break;
                     case HttpStatusCode.Unauthorized:
@@ -503,42 +503,6 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                                                             SyntaxFactory.Argument(SyntaxMemberAccessExpressionFactory.Create(httpStatusCode.ToString(), nameof(HttpStatusCode))),
                                                             SyntaxTokenFactory.Comma(),
                                                             SyntaxFactory.Argument(SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)),
-                                                        })))))))))
-                .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
-        }
-
-        private static MethodDeclarationSyntax CreateTypeRequestWithProblemDetailsWithMessage(
-            string className,
-            HttpStatusCode httpStatusCode,
-            string parameterName = "message")
-        {
-            return SyntaxFactory.MethodDeclaration(
-                    SyntaxFactory.IdentifierName(className),
-                    SyntaxFactory.Identifier(httpStatusCode.ToNormalizedString()))
-                .WithModifiers(SyntaxTokenListFactory.PublicStaticKeyword())
-                .WithParameterList(
-                    SyntaxFactory.ParameterList(
-                        SyntaxFactory.SingletonSeparatedList(
-                            SyntaxFactory.Parameter(SyntaxFactory.Identifier(parameterName))
-                                .WithType(SyntaxFactory.PredefinedType(SyntaxTokenFactory.StringKeyword())))))
-                .WithExpressionBody(
-                    SyntaxFactory.ArrowExpressionClause(
-                        SyntaxFactory.ObjectCreationExpression(
-                                SyntaxFactory.IdentifierName(className))
-                            .WithArgumentList(
-                                SyntaxFactory.ArgumentList(
-                                    SyntaxFactory.SingletonSeparatedList(
-                                        SyntaxFactory.Argument(
-                                            SyntaxFactory.InvocationExpression(
-                                                SyntaxMemberAccessExpressionFactory.Create("CreateContentResultWithProblemDetails", "ResultFactory"))
-                                            .WithArgumentList(
-                                                SyntaxFactory.ArgumentList(
-                                                    SyntaxFactory.SeparatedList<ArgumentSyntax>(
-                                                        new SyntaxNodeOrToken[]
-                                                        {
-                                                            SyntaxFactory.Argument(SyntaxMemberAccessExpressionFactory.Create(httpStatusCode.ToString(), nameof(HttpStatusCode))),
-                                                            SyntaxTokenFactory.Comma(),
-                                                            SyntaxFactory.Argument(SyntaxFactory.IdentifierName(parameterName)),
                                                         })))))))))
                 .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
         }
