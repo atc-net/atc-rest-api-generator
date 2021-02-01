@@ -45,6 +45,16 @@ namespace System
             return value.Replace($"{Environment.NewLine}{Environment.NewLine}    }}", $"{Environment.NewLine}    }}", StringComparison.Ordinal);
         }
 
+        public static string FormatDoubleLinesFromEndBracket(this string value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return value.Replace($"        }}{Environment.NewLine}{Environment.NewLine}{Environment.NewLine}", $"        }}{Environment.NewLine}{Environment.NewLine}", StringComparison.Ordinal);
+        }
+
         public static string FormatPublicPrivateLines(this string value)
         {
             if (value == null)
@@ -174,6 +184,38 @@ namespace System
         public static string EnsureNewlineAfterMethod(this string value, string methodName)
         {
             return value.Replace(methodName, methodName + Environment.NewLine, StringComparison.Ordinal);
+        }
+
+        public static string FormatClientEndpointResult(this string value)
+        {
+            value = value.Replace(
+                $"{Environment.NewLine}        public ",
+                $"{Environment.NewLine}{Environment.NewLine}        public ",
+                StringComparison.Ordinal);
+
+            value = FormatDoubleLinesFromEndBracket(value);
+
+            value = value.Replace(
+                " => ",
+                $"{Environment.NewLine}            => ",
+                StringComparison.Ordinal);
+
+            value = value.Replace(
+                " ? ",
+                $"{Environment.NewLine}                ? ",
+                StringComparison.Ordinal);
+
+            value = value.Replace(
+                " : ",
+                $"{Environment.NewLine}                :",
+                StringComparison.Ordinal);
+
+            value = value.Replace(
+                $"{Environment.NewLine}                :EndpointResponse",
+                " : EndpointResponse",
+                StringComparison.Ordinal);
+
+            return value;
         }
     }
 }

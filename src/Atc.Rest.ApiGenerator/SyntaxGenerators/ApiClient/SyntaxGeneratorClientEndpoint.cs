@@ -65,6 +65,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
 
         public string EndpointTypeName => ApiOperation.GetOperationName() + NameConstants.Endpoint;
 
+        public string EndpointResultTypeName => ApiOperation.GetOperationName() + NameConstants.EndpointResult;
+
         public bool HasParametersOrRequestBody { get; }
 
         public bool GenerateCode()
@@ -232,7 +234,10 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                 ApiProjectOptions.ProjectName,
                 ensureModelNameWithNamespaceIfNeeded: false,
                 useProblemDetailsAsDefaultResponseBody: false,
-                includeEmptyResponseTypes: false);
+                includeEmptyResponseTypes: false,
+                HasParametersOrRequestBody,
+                ApiProjectOptions.ApiOptions.Generator.UseAuthorization,
+                includeIfNotDefinedInternalServerError: true);
 
             string resultTypeName = responseTypes
                 .FirstOrDefault(x => x.Item1 == HttpStatusCode.OK)?.Item2 ?? responseTypes
@@ -295,10 +300,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                         .WithTypeArgumentList(
                             SyntaxFactory.TypeArgumentList(
                                 SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
-                                    SyntaxFactory.GenericName(
-                                            SyntaxFactory.Identifier("EndpointResult"))
-                                        .WithTypeArgumentList(
-                                            SyntaxTypeArgumentListFactory.CreateWithOneItem(resultTypeName))))),
+                                    SyntaxFactory.IdentifierName(EndpointResultTypeName)))),
                     SyntaxFactory.Identifier("ExecuteAsync"))
                 .WithModifiers(methodModifiers)
                 .WithParameterList(SyntaxFactory.ParameterList(SyntaxFactory.SeparatedList<ParameterSyntax>(arguments)))
@@ -326,10 +328,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                         .WithTypeArgumentList(
                             SyntaxFactory.TypeArgumentList(
                                 SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
-                                    SyntaxFactory.GenericName(
-                                            SyntaxFactory.Identifier("EndpointResult"))
-                                        .WithTypeArgumentList(
-                                            SyntaxTypeArgumentListFactory.CreateWithOneItem(resultTypeName))))),
+                                    SyntaxFactory.IdentifierName(EndpointResultTypeName)))),
                     SyntaxFactory.Identifier("InvokeExecuteAsync"))
                 .WithModifiers(SyntaxTokenListFactory.PrivateAsyncKeyword())
                 .WithParameterList(
@@ -508,7 +507,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
             result.Add(CreateInvokeExecuteAsyncMethodBlockLocalResponseBuilderFromResponse());
             result.Add(CreateInvokeExecuteAsyncMethodBlockLocalResponseBuilderAddSuccess(resultTypeName));
             result.AddRange(CreateInvokeExecuteAsyncMethodBlockLocalResponseBuilderAddErrors());
-            result.Add(CreateInvokeExecuteAsyncMethodBlockLocalResponseBuilderReturnBuildResponse(resultTypeName));
+            result.Add(CreateInvokeExecuteAsyncMethodBlockLocalResponseBuilderReturnBuildResponse());
             return result.ToArray();
         }
 
@@ -550,12 +549,12 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                                             SyntaxFactory.IdentifierName(resultTypeName))))))
                     .WithArgumentList(
                         SyntaxFactory.ArgumentList(
-                            SyntaxFactory.SingletonSeparatedList<ArgumentSyntax>(
+                            SyntaxFactory.SingletonSeparatedList(
                                 SyntaxFactory.Argument(
                                     SyntaxFactory.MemberAccessExpression(
                                         SyntaxKind.SimpleMemberAccessExpression,
-                                        SyntaxFactory.IdentifierName("HttpStatusCode"),
-                                        SyntaxFactory.IdentifierName("OK")))))));
+                                        SyntaxFactory.IdentifierName(nameof(HttpStatusCode)),
+                                        SyntaxFactory.IdentifierName(nameof(HttpStatusCode.OK))))))));
         }
 
         private StatementSyntax[] CreateInvokeExecuteAsyncMethodBlockLocalResponseBuilderAddErrors()
@@ -566,20 +565,10 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                 ApiProjectOptions.ProjectName,
                 ensureModelNameWithNamespaceIfNeeded: false,
                 useProblemDetailsAsDefaultResponseBody: true,
-                includeEmptyResponseTypes: false);
-
-            // TODO: If HasParametersOrRequestBody-AND-Minimum-1-required-or-1-that-is-not-string
-            if (HasParametersOrRequestBody &&
-                responseTypes.All(x => x.Item1 != HttpStatusCode.BadRequest))
-            {
-                responseTypes.Add(new Tuple<HttpStatusCode, string>(HttpStatusCode.BadRequest, "ValidationProblemDetails"));
-            }
-
-            if (ApiProjectOptions.ApiOptions.Generator.UseAuthorization &&
-                responseTypes.All(x => x.Item1 != HttpStatusCode.Unauthorized))
-            {
-                responseTypes.Add(new Tuple<HttpStatusCode, string>(HttpStatusCode.Unauthorized, "ProblemDetails"));
-            }
+                includeEmptyResponseTypes: false,
+                HasParametersOrRequestBody,
+                ApiProjectOptions.ApiOptions.Generator.UseAuthorization,
+                includeIfNotDefinedInternalServerError: true);
 
             // TODO: If HasParametersOrRequestBody-AND-Minimum-1-required-or-1-that-is-not-string
             if (HasParametersOrRequestBody &&
@@ -625,7 +614,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                                     SyntaxMemberAccessExpressionFactory.Create(responseType.Item1.ToString(), nameof(HttpStatusCode)))))));
         }
 
-        private ReturnStatementSyntax CreateInvokeExecuteAsyncMethodBlockLocalResponseBuilderReturnBuildResponse(string resultTypeName)
+        private ReturnStatementSyntax CreateInvokeExecuteAsyncMethodBlockLocalResponseBuilderReturnBuildResponse()
         {
             return SyntaxFactory.ReturnStatement(
                 SyntaxFactory.AwaitExpression(
@@ -650,21 +639,16 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                                 {
                                     SyntaxFactory.Argument(
                                         SyntaxFactory.SimpleLambdaExpression(
-                                            SyntaxFactory.Parameter(
-                                                SyntaxFactory.Identifier("x")))
-                                        .WithExpressionBody(
-                                            SyntaxFactory.ObjectCreationExpression(
-                                                SyntaxFactory.GenericName(
-                                                    SyntaxFactory.Identifier("EndpointResult"))
-                                                .WithTypeArgumentList(
-                                                    SyntaxFactory.TypeArgumentList(
-                                                        SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
-                                                            SyntaxFactory.IdentifierName(resultTypeName)))))
-                                            .WithArgumentList(
-                                                SyntaxFactory.ArgumentList(
-                                                    SyntaxFactory.SingletonSeparatedList<ArgumentSyntax>(
-                                                        SyntaxFactory.Argument(
-                                                            SyntaxFactory.IdentifierName("x"))))))),
+                                                SyntaxFactory.Parameter(
+                                                    SyntaxFactory.Identifier("x")))
+                                            .WithExpressionBody(
+                                                SyntaxFactory.ObjectCreationExpression(
+                                                        SyntaxFactory.IdentifierName(EndpointResultTypeName))
+                                                    .WithArgumentList(
+                                                        SyntaxFactory.ArgumentList(
+                                                            SyntaxFactory.SingletonSeparatedList(
+                                                                SyntaxFactory.Argument(
+                                                                    SyntaxFactory.IdentifierName("x"))))))),
                                     SyntaxFactory.Token(SyntaxKind.CommaToken),
                                     SyntaxFactory.Argument(
                                         SyntaxFactory.IdentifierName("cancellationToken")),

@@ -193,16 +193,10 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                         ApiProjectOptions.ProjectName,
                         ensureModelNameWithNamespaceIfNeeded: true,
                         useProblemDetailsAsDefaultResponseBody: false,
-                        includeEmptyResponseTypes: false);
-
-                    if (contractParameterTypeName != null &&
-                        responseTypes.FirstOrDefault(x => x.Item1 == HttpStatusCode.BadRequest) == null)
-                    {
-                        responseTypes.Add(
-                            new Tuple<HttpStatusCode, string>(
-                                HttpStatusCode.BadRequest,
-                                "Validation"));
-                    }
+                        includeEmptyResponseTypes: false,
+                        apiOperation.Value.HasParametersOrRequestBody(),
+                        ApiProjectOptions.ApiOptions.Generator.UseAuthorization,
+                        includeIfNotDefinedInternalServerError: false);
 
                     var responseTypeNamesAndItemSchema = GetResponseTypeNamesAndItemSchema(responseTypes);
 
@@ -299,7 +293,6 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
             var methodName = operationName + "Async";
             var helperMethodName = $"Invoke{operationName}Async";
             var parameterTypeName = operationName + NameConstants.ContractParameters;
-            var resultTypeName = operationName + NameConstants.ContractResult;
 
             // Create method # use CreateParameterList & CreateCodeBlockReturnStatement
             var methodDeclaration = SyntaxFactory.MethodDeclaration(
@@ -328,11 +321,10 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                 OperationSchemaMappings,
                 area,
                 ApiProjectOptions.ProjectName,
-                resultTypeName,
                 ApiProjectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
                 apiOperation.Value.HasParametersOrRequestBody(),
                 ApiProjectOptions.ApiOptions.Generator.UseAuthorization,
-                includeIfNotDefinedInternalServerError: true);
+                includeIfNotDefinedInternalServerError: false);
 
             return producesResponseAttributeParts
                 .Aggregate(

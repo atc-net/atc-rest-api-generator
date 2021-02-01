@@ -138,8 +138,6 @@ namespace Atc.Rest.ApiGenerator.Factories
             {
                 "System",
                 "System.CodeDom.Compiler",
-                "System.Threading",
-                "System.Threading.Tasks",
             };
 
             if (includeRestResults)
@@ -164,8 +162,8 @@ namespace Atc.Rest.ApiGenerator.Factories
             }
 
             list.Add("System.Net");
-            list.Add("System.Net.Http");
             list.Add("Atc.Rest.Client");
+            list.Add("Microsoft.AspNetCore.Mvc");
 
             list.Add("System.Collections.Generic");
 
