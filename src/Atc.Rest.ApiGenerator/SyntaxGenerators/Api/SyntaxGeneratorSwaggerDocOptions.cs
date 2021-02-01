@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Atc.Rest.ApiGenerator.Helpers;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.OpenApi.Models;
 
