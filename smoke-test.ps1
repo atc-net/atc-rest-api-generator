@@ -1,5 +1,5 @@
 Write-Host "Download Swagger Petstore v3 OpenAPI spec`n" -ForegroundColor Green
-curl -O https://petstore3.swagger.io/api/v3/openapi.yaml
+Invoke-WebRequest -Uri https://petstore3.swagger.io/api/v3/openapi.yaml -OutFile ./openapi.yaml
 
 Write-Host "`nGenerate code`n" -ForegroundColor Green
 Set-Location src/Atc.Rest.ApiGenerator.CLI
