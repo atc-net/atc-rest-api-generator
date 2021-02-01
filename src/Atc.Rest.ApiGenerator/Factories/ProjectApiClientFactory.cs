@@ -97,14 +97,7 @@ namespace Atc.Rest.ApiGenerator.Factories
             list.Add("Atc.Rest.Client");
             list.Add("Atc.Rest.Client.Builder");
 
-            list.Add("Microsoft.AspNetCore.Http");
             list.Add("Microsoft.AspNetCore.Mvc");
-            list.Add("System.Collections.Generic");
-
-            if (apiProjectOptions.ApiOptions.Generator.UseAuthorization)
-            {
-                list.Add("Microsoft.AspNetCore.Authorization");
-            }
 
             return list.ToArray();
         }
