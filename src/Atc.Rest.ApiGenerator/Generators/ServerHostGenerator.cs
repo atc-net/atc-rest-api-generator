@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Net.Mime;
+using System.Text;
 using System.Xml.Linq;
 using Atc.CodeAnalysis.CSharp.SyntaxFactories;
 using Atc.Data.Models;
@@ -115,6 +116,8 @@ namespace Atc.Rest.ApiGenerator.Generators
                 logItems.Add(ScaffoldProgramFile());
                 logItems.Add(ScaffoldStartupFile());
             }
+
+            logItems.Add(ScaffoldConfigureSwaggerDocOptions());
 
             return logItems;
         }
@@ -382,29 +385,39 @@ namespace Atc.Rest.ApiGenerator.Generators
             }
 
             return SyntaxFactory.MethodDeclaration(
-                SyntaxFactory.PredefinedType(SyntaxTokenFactory.VoidKeyword()),
-                SyntaxFactory.Identifier("ConfigureServices"))
-            .WithModifiers(
-                SyntaxFactory.TokenList(SyntaxTokenFactory.PublicKeyword()))
-            .WithParameterList(
-                SyntaxFactory.ParameterList(
-                    SyntaxFactory.SingletonSeparatedList(
-                        SyntaxFactory.Parameter(SyntaxFactory.Identifier("services"))
-                            .WithType(SyntaxFactory.IdentifierName("IServiceCollection")))))
-            .WithBody(
-                SyntaxFactory.Block(
-                    SyntaxFactory.SingletonList<StatementSyntax>(
+                    SyntaxFactory.PredefinedType(SyntaxTokenFactory.VoidKeyword()),
+                    SyntaxFactory.Identifier("ConfigureServices"))
+                .WithModifiers(
+                    SyntaxFactory.TokenList(SyntaxTokenFactory.PublicKeyword()))
+                .WithParameterList(
+                    SyntaxFactory.ParameterList(
+                        SyntaxFactory.SingletonSeparatedList(
+                            SyntaxFactory.Parameter(SyntaxFactory.Identifier("services"))
+                                .WithType(SyntaxFactory.IdentifierName("IServiceCollection")))))
+                .WithBody(
+                    SyntaxFactory.Block(
                         SyntaxFactory.ExpressionStatement(
                             SyntaxFactory.InvocationExpression(
                                 SyntaxFactory.MemberAccessExpression(
                                     SyntaxKind.SimpleMemberAccessExpression,
                                     SyntaxFactory.IdentifierName("services"),
-                                    SyntaxFactory.GenericName(SyntaxFactory.Identifier("AddRestApi"))
+                                    SyntaxFactory.GenericName(
+                                            SyntaxFactory.Identifier("ConfigureOptions"))
                                         .WithTypeArgumentList(
                                             SyntaxFactory.TypeArgumentList(
                                                 SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
-                                                    SyntaxFactory.IdentifierName("Startup"))))))
-                                .WithArgumentList(argumentList)))));
+                                                    SyntaxFactory.IdentifierName("ConfigureSwaggerDocOptions"))))))),
+                        SyntaxFactory.ExpressionStatement(
+                            SyntaxFactory.InvocationExpression(
+                                    SyntaxFactory.MemberAccessExpression(
+                                        SyntaxKind.SimpleMemberAccessExpression,
+                                        SyntaxFactory.IdentifierName("services"),
+                                        SyntaxFactory.GenericName(SyntaxFactory.Identifier("AddRestApi"))
+                                            .WithTypeArgumentList(
+                                                SyntaxFactory.TypeArgumentList(
+                                                    SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
+                                                        SyntaxFactory.IdentifierName("Startup"))))))
+                                .WithArgumentList(argumentList))));
         }
 
         private static MemberDeclarationSyntax CreateStartupConfigure()
@@ -1003,6 +1016,21 @@ namespace Atc.Rest.ApiGenerator.Generators
             return File.Exists(file.FullName)
                 ? new LogKeyValueItem(LogCategoryType.Debug, "FileSkip", "#", file.FullName)
                 : TextFileHelper.Save(file, codeAsString);
+        }
+
+        private LogKeyValueItem ScaffoldConfigureSwaggerDocOptions()
+        {
+            var fullNamespace = string.IsNullOrEmpty(projectOptions.ClientFolderName)
+                ? $"{projectOptions.ProjectName}"
+                : $"{projectOptions.ProjectName}.{projectOptions.ClientFolderName}";
+
+            var syntaxGenerator = new SyntaxGeneratorSwaggerDocOptions(fullNamespace, projectOptions.Document);
+            var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "ConfigureSwaggerDocOptions.cs"));
+
+            var stringBuilder = new StringBuilder();
+            GenerateCodeHelper.AppendGeneratedCodeWarningComment(stringBuilder, projectOptions.ToolNameAndVersion);
+            stringBuilder.AppendLine(syntaxGenerator.GenerateCode());
+            return TextFileHelper.Save(file, stringBuilder.ToString());
         }
 
         private LogKeyValueItem GenerateTestWebApiStartupFactory()

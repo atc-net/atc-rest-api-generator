@@ -30,7 +30,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             var sb = new StringBuilder();
             AppendUsingStatements(sb, hostProjectOptions, endpointMethodMetadata);
             sb.AppendLine();
-            GenerateCodeHelper.AppendNamespaceComment(sb, hostProjectOptions.ToolNameAndVersion);
+            GenerateCodeHelper.AppendGeneratedCodeWarningComment(sb, hostProjectOptions.ToolNameAndVersion);
             AppendNamespaceAndClassStart(sb, hostProjectOptions, endpointMethodMetadata);
             AppendMethodExecuteAsyncStart(sb, endpointMethodMetadata);
             AppendMethodExecuteAsyncContent(sb, endpointMethodMetadata);
