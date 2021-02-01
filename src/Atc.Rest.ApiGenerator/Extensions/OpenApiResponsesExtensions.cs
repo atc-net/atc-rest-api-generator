@@ -85,11 +85,15 @@ namespace Microsoft.OpenApi.Models
                     case HttpStatusCode.Accepted:
                     case HttpStatusCode.NoContent:
                     case HttpStatusCode.NotModified:
-                    case HttpStatusCode.BadRequest:
                     case HttpStatusCode.Unauthorized:
                     case HttpStatusCode.Forbidden:
                         typeResponseName = useProblemDetails
                             ? "ProblemDetails"
+                            : null;
+                        break;
+                    case HttpStatusCode.BadRequest:
+                        typeResponseName = useProblemDetails
+                            ? "ValidationProblemDetails"
                             : null;
                         break;
                     case HttpStatusCode.NotFound:
@@ -185,11 +189,15 @@ namespace Microsoft.OpenApi.Models
                     case HttpStatusCode.Accepted:
                     case HttpStatusCode.NoContent:
                     case HttpStatusCode.NotModified:
-                    case HttpStatusCode.BadRequest:
                     case HttpStatusCode.Unauthorized:
                     case HttpStatusCode.Forbidden:
                         typeResponseName = useProblemDetails
                             ? "ProblemDetails"
+                            : null;
+                        break;
+                    case HttpStatusCode.BadRequest:
+                        typeResponseName = useProblemDetails
+                            ? "ValidationProblemDetails"
                             : null;
                         break;
                     case HttpStatusCode.NotFound:

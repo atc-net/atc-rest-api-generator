@@ -274,20 +274,11 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                 methodModifiers = SyntaxTokenListFactory.PublicKeyword();
 
                 codeBlockSyntax = SyntaxFactory.Block(
-                    SyntaxIfStatementFactory.CreateParameterArgumentNullCheck("parameters"),
+                    SyntaxIfStatementFactory.CreateParameterArgumentNullCheck("parameters", false),
                     SyntaxFactory.ReturnStatement(
                         SyntaxFactory.InvocationExpression(SyntaxFactory.IdentifierName("InvokeExecuteAsync"))
                             .WithArgumentList(
-                                SyntaxFactory.ArgumentList(
-                                    SyntaxFactory.SeparatedList<ArgumentSyntax>(
-                                        new SyntaxNodeOrToken[]
-                                        {
-                                            SyntaxFactory.Argument(SyntaxFactory.IdentifierName("parameters")),
-                                            SyntaxTokenFactory.Comma(),
-                                            SyntaxFactory.Argument(
-                                                SyntaxFactory.IdentifierName(nameof(CancellationToken)
-                                                    .EnsureFirstCharacterToLower())),
-                                        })))));
+                                SyntaxArgumentListFactory.CreateWithTwoItems("parameters", nameof(CancellationToken).EnsureFirstCharacterToLower()))));
             }
             else
             {
