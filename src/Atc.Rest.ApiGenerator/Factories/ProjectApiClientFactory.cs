@@ -14,7 +14,6 @@ namespace Atc.Rest.ApiGenerator.Factories
         {
             var list = new List<string>
             {
-                "System",
                 "System.CodeDom.Compiler",
                 "System.Threading",
                 "System.Threading.Tasks",
@@ -41,19 +40,9 @@ namespace Atc.Rest.ApiGenerator.Factories
                 list.Add(s);
             }
 
-            list.Add("System.Net");
-            list.Add("System.Net.Http");
             list.Add("Atc.Rest.Client");
-            list.Add("Atc.Rest.Client.Builder");
 
-            list.Add("Microsoft.AspNetCore.Http");
-            list.Add("Microsoft.AspNetCore.Mvc");
             list.Add("System.Collections.Generic");
-
-            if (apiProjectOptions.ApiOptions.Generator.UseAuthorization)
-            {
-                list.Add("Microsoft.AspNetCore.Authorization");
-            }
 
             return list.ToArray();
         }
@@ -97,8 +86,6 @@ namespace Atc.Rest.ApiGenerator.Factories
             list.Add("Atc.Rest.Client");
             list.Add("Atc.Rest.Client.Builder");
 
-            list.Add("Microsoft.AspNetCore.Mvc");
-
             list.Add("System.Collections.Generic"); // TODO: Remove when switching from EndpointResult -> XXXEndpointResult
 
             return list.ToArray();
@@ -111,10 +98,7 @@ namespace Atc.Rest.ApiGenerator.Factories
         {
             var list = new List<string>
             {
-                "System",
                 "System.CodeDom.Compiler",
-                "System.Threading",
-                "System.Threading.Tasks",
             };
 
             if (includeRestResults)
@@ -138,19 +122,7 @@ namespace Atc.Rest.ApiGenerator.Factories
                 list.Add(s);
             }
 
-            list.Add("System.Net");
-            list.Add("System.Net.Http");
-            list.Add("Atc.Rest.Client");
-            list.Add("Atc.Rest.Client.Builder");
-
-            list.Add("Microsoft.AspNetCore.Http");
-            list.Add("Microsoft.AspNetCore.Mvc");
             list.Add("System.Collections.Generic");
-
-            if (apiProjectOptions.ApiOptions.Generator.UseAuthorization)
-            {
-                list.Add("Microsoft.AspNetCore.Authorization");
-            }
 
             return list.ToArray();
         }
@@ -192,16 +164,8 @@ namespace Atc.Rest.ApiGenerator.Factories
             list.Add("System.Net");
             list.Add("System.Net.Http");
             list.Add("Atc.Rest.Client");
-            list.Add("Atc.Rest.Client.Builder");
 
-            list.Add("Microsoft.AspNetCore.Http");
-            list.Add("Microsoft.AspNetCore.Mvc");
             list.Add("System.Collections.Generic");
-
-            if (apiProjectOptions.ApiOptions.Generator.UseAuthorization)
-            {
-                list.Add("Microsoft.AspNetCore.Authorization");
-            }
 
             return list.ToArray();
         }

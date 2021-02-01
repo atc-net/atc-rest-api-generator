@@ -583,7 +583,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                 .Where(x => x.Item1.IsClientOrServerError())
                 .OrderBy(x => x.Item1))
             {
-                result.Add(CreateInvokeExecuteAsyncMethodBlockLocalResponseBuilderAddError(responseType));
+                // TODO: incomment.. trying out stuff..
+                ////result.Add(CreateInvokeExecuteAsyncMethodBlockLocalResponseBuilderAddError(responseType));
             }
 
             return result.ToArray();
