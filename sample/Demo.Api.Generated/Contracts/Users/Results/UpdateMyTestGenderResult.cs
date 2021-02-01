@@ -32,7 +32,7 @@ namespace Demo.Api.Generated.Contracts.Users
         /// <summary>
         /// 400 - BadRequest response.
         /// </summary>
-        public static UpdateMyTestGenderResult BadRequest(string message) => new UpdateMyTestGenderResult(ResultFactory.CreateContentResultWithProblemDetails(HttpStatusCode.BadRequest, message));
+        public static UpdateMyTestGenderResult BadRequest(string? message = null) => new UpdateMyTestGenderResult(ResultFactory.CreateContentResultWithValidationProblemDetails(HttpStatusCode.BadRequest, message));
 
         /// <summary>
         /// 404 - NotFound response.
