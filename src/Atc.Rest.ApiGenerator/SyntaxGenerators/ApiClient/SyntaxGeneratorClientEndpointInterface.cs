@@ -7,7 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Atc.CodeAnalysis.CSharp.SyntaxFactories;
 using Atc.Data.Models;
-using Atc.Rest.ApiGenerator.Extensions;
 using Atc.Rest.ApiGenerator.Factories;
 using Atc.Rest.ApiGenerator.Helpers;
 using Atc.Rest.ApiGenerator.Models;
