@@ -86,6 +86,8 @@ namespace Atc.Rest.ApiGenerator.Factories
             list.Add("Atc.Rest.Client");
             list.Add("Atc.Rest.Client.Builder");
 
+            list.Add("Microsoft.AspNetCore.Mvc");
+
             list.Add("System.Collections.Generic"); // TODO: Remove when switching from EndpointResult -> XXXEndpointResult
 
             return list.ToArray();
