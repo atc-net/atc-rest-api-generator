@@ -44,7 +44,7 @@ namespace Atc.Rest.ApiGenerator.Models
             ToolVersion = GenerateHelper.GetAtcToolVersion();
             ApiOptions = apiOptions;
 
-            ApiVersion = GetApiVersion(openApiDocument);
+            RouteBase = GetApiVersion(openApiDocument);
             ProjectName = string.IsNullOrEmpty(projectSuffixName)
                 ? projectPrefixName
                     .Replace(" ", ".", StringComparison.Ordinal)
@@ -97,7 +97,7 @@ namespace Atc.Rest.ApiGenerator.Models
 
         public string ProjectName { get; }
 
-        public string ApiVersion { get; }
+        public string RouteBase { get; }
 
         public bool IsForClient { get; }
 

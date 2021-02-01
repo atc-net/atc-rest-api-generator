@@ -71,7 +71,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
             classDeclaration =
                 classDeclaration.AddAttributeLists(
                     SyntaxAttributeListFactory.Create(nameof(ApiControllerAttribute)),
-                    SyntaxAttributeListFactory.CreateWithOneItemWithOneArgument(nameof(RouteAttribute), $"{ApiProjectOptions.ApiVersion}/{GetRouteSegment()}"))
+                    SyntaxAttributeListFactory.CreateWithOneItemWithOneArgument(nameof(RouteAttribute), $"{ApiProjectOptions.RouteBase}/{GetRouteSegment()}"))
                 .AddBaseListTypes(SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseTypeName(nameof(ControllerBase))))
                 .AddGeneratedCodeAttribute(ApiProjectOptions.ToolName, ApiProjectOptions.ToolVersion.ToString())
                 .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForEndpoints(FocusOnSegmentName));
@@ -205,7 +205,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                         ApiProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
                         ApiProjectOptions.ProjectName,
                         FocusOnSegmentName,
-                        $"/api/{ApiProjectOptions.ApiVersion}{routePart}",
+                        $"/{ApiProjectOptions.RouteBase}{routePart}",
                         apiOperation.Key,
                         operationName,
                         hasSharedResponseContract,
