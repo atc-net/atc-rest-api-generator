@@ -207,11 +207,11 @@ namespace System
 
             value = value.Replace(
                 " : ",
-                $"{Environment.NewLine}                :",
+                $"{Environment.NewLine}                : ",
                 StringComparison.Ordinal);
 
             value = value.Replace(
-                $"{Environment.NewLine}                :EndpointResponse",
+                $"{Environment.NewLine}                : EndpointResponse",
                 " : EndpointResponse",
                 StringComparison.Ordinal);
 
