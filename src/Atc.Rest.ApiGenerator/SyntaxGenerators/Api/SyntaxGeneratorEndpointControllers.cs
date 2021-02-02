@@ -170,6 +170,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
             {
                 var generatorParameters = new SyntaxGeneratorContractParameters(ApiProjectOptions, FocusOnSegmentName);
                 var generatedParameters = generatorParameters.GenerateSyntaxTrees();
+                var hasGlobalParameters = value.HasParameters();
 
                 foreach (var apiOperation in value.Operations)
                 {
@@ -194,7 +195,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                         ensureModelNameWithNamespaceIfNeeded: true,
                         useProblemDetailsAsDefaultResponseBody: false,
                         includeEmptyResponseTypes: false,
-                        apiOperation.Value.HasParametersOrRequestBody(),
+                        hasGlobalParameters || apiOperation.Value.HasParametersOrRequestBody(),
                         includeIfNotDefinedAuthorization: false,
                         includeIfNotDefinedInternalServerError: false);
 
