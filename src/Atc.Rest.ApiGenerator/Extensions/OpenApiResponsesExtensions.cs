@@ -161,11 +161,21 @@ namespace Microsoft.OpenApi.Models
                     : Tuple.Create(HttpStatusCode.BadRequest, string.Empty));
             }
 
-            if (includeIfNotDefinedAuthorization && result.All(x => x.Item1 != HttpStatusCode.Forbidden))
+            if (includeIfNotDefinedAuthorization)
             {
-                result.Add(useProblemDetailsAsDefaultResponseBody
-                    ? Tuple.Create(HttpStatusCode.Forbidden, "ProblemDetails")
-                    : Tuple.Create(HttpStatusCode.Forbidden, string.Empty));
+                if (result.All(x => x.Item1 != HttpStatusCode.Unauthorized))
+                {
+                    result.Add(useProblemDetailsAsDefaultResponseBody
+                        ? Tuple.Create(HttpStatusCode.Unauthorized, "ProblemDetails")
+                        : Tuple.Create(HttpStatusCode.Unauthorized, string.Empty));
+                }
+
+                if (result.All(x => x.Item1 != HttpStatusCode.Forbidden))
+                {
+                    result.Add(useProblemDetailsAsDefaultResponseBody
+                        ? Tuple.Create(HttpStatusCode.Forbidden, "ProblemDetails")
+                        : Tuple.Create(HttpStatusCode.Forbidden, string.Empty));
+                }
             }
 
             if (includeIfNotDefinedInternalServerError && result.All(x => x.Item1 != HttpStatusCode.InternalServerError))
