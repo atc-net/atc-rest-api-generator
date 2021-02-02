@@ -195,7 +195,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                         useProblemDetailsAsDefaultResponseBody: false,
                         includeEmptyResponseTypes: false,
                         apiOperation.Value.HasParametersOrRequestBody(),
-                        ApiProjectOptions.ApiOptions.Generator.UseAuthorization,
+                        includeIfNotDefinedAuthorization: false,
                         includeIfNotDefinedInternalServerError: false);
 
                     var responseTypeNamesAndItemSchema = GetResponseTypeNamesAndItemSchema(responseTypes);
@@ -323,7 +323,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                 ApiProjectOptions.ProjectName,
                 ApiProjectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
                 apiOperation.Value.HasParametersOrRequestBody(),
-                ApiProjectOptions.ApiOptions.Generator.UseAuthorization,
+                includeIfNotDefinedAuthorization: false,
                 includeIfNotDefinedInternalServerError: false);
 
             return producesResponseAttributeParts

@@ -570,19 +570,6 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                 ApiProjectOptions.ApiOptions.Generator.UseAuthorization,
                 includeIfNotDefinedInternalServerError: true);
 
-            // TODO: If HasParametersOrRequestBody-AND-Minimum-1-required-or-1-that-is-not-string
-            if (HasParametersOrRequestBody &&
-                responseTypes.All(x => x.Item1 != HttpStatusCode.BadRequest))
-            {
-                responseTypes.Add(new Tuple<HttpStatusCode, string>(HttpStatusCode.BadRequest, "ValidationProblemDetails"));
-            }
-
-            if (ApiProjectOptions.ApiOptions.Generator.UseAuthorization &&
-                responseTypes.All(x => x.Item1 != HttpStatusCode.Unauthorized))
-            {
-                responseTypes.Add(new Tuple<HttpStatusCode, string>(HttpStatusCode.Unauthorized, "ProblemDetails"));
-            }
-
             var result = new List<StatementSyntax>();
             foreach (var responseType in responseTypes
                 .Where(x => x.Item1.IsClientOrServerError())
@@ -621,15 +608,6 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                     SyntaxFactory.InvocationExpression(
                         SyntaxFactory.MemberAccessExpression(
                             SyntaxKind.SimpleMemberAccessExpression,
-                            SyntaxFactory.InvocationExpression(
-                                SyntaxFactory.MemberAccessExpression(
-                                    SyntaxKind.SimpleMemberAccessExpression,
-                                    SyntaxFactory.InvocationExpression(
-                                        SyntaxFactory.MemberAccessExpression(
-                                            SyntaxKind.SimpleMemberAccessExpression,
-                                            SyntaxFactory.InvocationExpression(
-                                                SyntaxFactory.MemberAccessExpression(
-                                                    SyntaxKind.SimpleMemberAccessExpression,
                             SyntaxFactory.IdentifierName("responseBuilder"),
                             SyntaxFactory.IdentifierName("BuildResponseAsync")))
                     .WithArgumentList(
