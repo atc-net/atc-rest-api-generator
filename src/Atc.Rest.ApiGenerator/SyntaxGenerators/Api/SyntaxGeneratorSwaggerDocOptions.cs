@@ -40,6 +40,12 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                     : $@"
                             Url = new Uri(""{document.Info?.License?.Url}""),";
 
+            var termsOfService =
+                string.IsNullOrWhiteSpace(document.Info?.License?.Url?.ToString())
+                    ? string.Empty
+                    : $@"
+                        TermsOfService = new Uri(""{document.Info?.TermsOfService}""),";
+
             return $@"using System;
 using System.IO;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -72,8 +78,7 @@ namespace {fullNamespace}
                         {{
                             Name = ""{document.Info?.Contact?.Name}"",{contactUrl}
                             Email = ""{document.Info?.Contact?.Email}"",
-                        }},
-                        TermsOfService = new Uri(""{document.Info?.TermsOfService}""),
+                        }},{termsOfService}
                         License = new OpenApiLicense
                         {{
                             Name = ""{document.Info?.License?.Name}"",{licenseUrl}
