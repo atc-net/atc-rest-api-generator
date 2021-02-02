@@ -66,13 +66,13 @@ namespace {fullNamespace}
                         Version = ""{document.Info?.Version}"",
                         Title = ""{document.Info?.Title}"",
                         Description = @""{document.Info?.Description}"",
-                        Contact = new OpenApiContact()
+                        Contact = new OpenApiContact
                         {{
                             Name = ""{document.Info?.Contact?.Name}"",{contactUrl}
                             Email = ""{document.Info?.Contact?.Email}"",
                         }},
                         TermsOfService = new Uri(""{document.Info?.TermsOfService}""),
-                        License = new OpenApiLicense()
+                        License = new OpenApiLicense
                         {{
                             Name = ""{document.Info?.License?.Name}"",{licenseUrl}
                         }},
