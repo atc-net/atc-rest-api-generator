@@ -270,7 +270,10 @@ namespace Atc.Rest.ApiGenerator.Generators
 
             var codeBody = SyntaxFactory.Block(
                 SyntaxFactory.ExpressionStatement(
-                    SyntaxMemberAccessExpressionFactory.Create("Configuration", "configuration")),
+                    SyntaxFactory.AssignmentExpression(
+                        SyntaxKind.SimpleAssignmentExpression,
+                        SyntaxFactory.IdentifierName("Configuration"),
+                        SyntaxFactory.IdentifierName("configuration"))),
                 SyntaxFactory.ExpressionStatement(
                     SyntaxFactory.AssignmentExpression(
                         SyntaxKind.SimpleAssignmentExpression,
@@ -282,7 +285,7 @@ namespace Atc.Rest.ApiGenerator.Generators
                                     SyntaxKind.ObjectInitializerExpression)))),
                 SyntaxFactory.ExpressionStatement(
                     SyntaxFactory.InvocationExpression(
-                            SyntaxMemberAccessExpressionFactory.Create("restApiOptions", "AddAssemblyPairs"))
+                            SyntaxMemberAccessExpressionFactory.Create("AddAssemblyPairs", "restApiOptions"))
                         .WithArgumentList(
                             SyntaxFactory.ArgumentList(
                                 SyntaxFactory.SeparatedList<ArgumentSyntax>(
@@ -290,7 +293,7 @@ namespace Atc.Rest.ApiGenerator.Generators
                                     {
                                         SyntaxFactory.Argument(
                                             SyntaxFactory.InvocationExpression(
-                                                SyntaxMemberAccessExpressionFactory.Create("Assembly", "GetAssembly"))
+                                                SyntaxMemberAccessExpressionFactory.Create("GetAssembly", "Assembly"))
                                             .WithArgumentList(
                                                 SyntaxFactory.ArgumentList(
                                                     SyntaxFactory.SingletonSeparatedList(
@@ -300,7 +303,7 @@ namespace Atc.Rest.ApiGenerator.Generators
                                         SyntaxTokenFactory.Comma(),
                                         SyntaxFactory.Argument(
                                             SyntaxFactory.InvocationExpression(
-                                                SyntaxMemberAccessExpressionFactory.Create("Assembly", "GetAssembly"))
+                                                SyntaxMemberAccessExpressionFactory.Create("GetAssembly", "Assembly"))
                                             .WithArgumentList(
                                                 SyntaxFactory.ArgumentList(
                                                     SyntaxFactory.SingletonSeparatedList(
@@ -419,7 +422,7 @@ namespace Atc.Rest.ApiGenerator.Generators
                         SyntaxFactory.SingletonList<StatementSyntax>(
                             SyntaxFactory.ExpressionStatement(
                                 SyntaxFactory.InvocationExpression(
-                                    SyntaxMemberAccessExpressionFactory.Create("app", "ConfigureRestApi"))
+                                    SyntaxMemberAccessExpressionFactory.Create("ConfigureRestApi", "app"))
                                     .WithArgumentList(
                                         SyntaxArgumentListFactory.CreateWithTwoArgumentItems(
                                             SyntaxFactory.Argument(SyntaxFactory.IdentifierName("env")),
