@@ -22,7 +22,9 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
 
         public string GenerateCode()
             => SyntaxFactory
-                .ParseSyntaxTree(GetSyntaxTreeText())
+                .ParseSyntaxTree(
+                    GetSyntaxTreeText()
+                        .Replace("\"\"", "null", StringComparison.OrdinalIgnoreCase))
                 .GetCompilationUnitRoot()
                 .ToFullString();
 
