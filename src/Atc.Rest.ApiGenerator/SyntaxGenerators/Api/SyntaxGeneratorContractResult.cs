@@ -471,7 +471,10 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                                                                             SyntaxFactory.Token(SyntaxKind.IntKeyword)),
                                                                         SyntaxMemberAccessExpressionFactory.Create(httpStatusCode.ToNormalizedString(), nameof(HttpStatusCode)))),
                                                                 SyntaxTokenFactory.Comma(),
-                                                                SyntaxMemberAccessExpressionFactory.Create(parameterName, "Content"),
+                                                                SyntaxFactory.AssignmentExpression(
+                                                                    SyntaxKind.SimpleAssignmentExpression,
+                                                                    SyntaxFactory.IdentifierName("Content"),
+                                                                    SyntaxFactory.IdentifierName(parameterName)),
                                                             })))))))))
                 .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
         }
