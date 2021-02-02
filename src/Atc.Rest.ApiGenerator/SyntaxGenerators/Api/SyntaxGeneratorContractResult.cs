@@ -10,6 +10,7 @@ using Atc.Rest.ApiGenerator.Factories;
 using Atc.Rest.ApiGenerator.Helpers;
 using Atc.Rest.ApiGenerator.Models;
 using Atc.Rest.ApiGenerator.ProjectSyntaxFactories;
+using Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
@@ -76,7 +77,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
 
             // Add using statement to compilationUnit
             compilationUnit = compilationUnit.AddUsingStatements(
-                ProjectContractResultFactory.CreateUsingList(
+                ProjectApiFactory.CreateUsingListForContractResult(
                     ApiOperation.Responses,
                     ApiProjectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody));
 
@@ -165,13 +166,6 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
             return result;
         }
 
-        private static MemberDeclarationSyntax CreateActionResultField()
-        {
-            return SyntaxFactory.FieldDeclaration(
-                    SyntaxVariableDeclarationFactory.Create(nameof(ActionResult), "result"))
-                .WithModifiers(SyntaxTokenListFactory.PrivateReadonlyKeyword());
-        }
-
         private static List<MemberDeclarationSyntax> CreateConstructor(
             string className,
             string parameterName)
@@ -199,9 +193,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                             SyntaxFactory.InvocationExpression(
                                 SyntaxFactory.BaseExpression())
                             .WithArgumentList(
-                                SyntaxFactory.ArgumentList(
-                                    SyntaxFactory.SingletonSeparatedList(
-                                        SyntaxFactory.Argument(SyntaxFactory.IdentifierName(parameterName))))))
+                                SyntaxArgumentListFactory.CreateWithOneItem(parameterName)))
                         .WithSemicolonToken(SyntaxFactory.MissingToken(SyntaxKind.SemicolonToken))),
                     SyntaxFactory.GlobalStatement(SyntaxFactory.Block()),
                 }.ToList();
@@ -288,7 +280,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                         break;
                     case HttpStatusCode.BadRequest:
                         methodDeclaration = useProblemDetails
-                            ? CreateTypeRequestWithProblemDetailsWithMessage(className, httpStatusCode)
+                            ? CreateTypeRequestWithSpecifiedResultFactoryMethodWithMessageAllowNull("CreateContentResultWithValidationProblemDetails", className, httpStatusCode)
                             : CreateTypeRequestWithMessage(className, httpStatusCode, nameof(BadRequestObjectResult));
                         break;
                     case HttpStatusCode.Unauthorized:
@@ -351,10 +343,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                                                     SyntaxFactory.ArgumentList(
                                                         SyntaxFactory.SingletonSeparatedList(
                                                             SyntaxFactory.Argument(
-                                                                SyntaxFactory.MemberAccessExpression(
-                                                                    SyntaxKind.SimpleMemberAccessExpression,
-                                                                    SyntaxFactory.IdentifierName(nameof(StatusCodes)),
-                                                                    SyntaxFactory.IdentifierName($"Status{(int)httpStatusCode}{httpStatusCode}"))))))))))))
+                                                                SyntaxMemberAccessExpressionFactory.Create($"Status{(int)httpStatusCode}{httpStatusCode}", nameof(StatusCodes))))))))))))
                 .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken));
         }
 
@@ -375,8 +364,9 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                                     SyntaxFactory.SingletonSeparatedList(
                                         SyntaxFactory.Argument(
                                             SyntaxFactory.ObjectCreationExpression(
-                                                    SyntaxFactory.IdentifierName(typeRequestName))
-                                                .WithArgumentList(SyntaxFactory.ArgumentList())))))))
+                                                SyntaxFactory.IdentifierName(typeRequestName))
+                                            .WithArgumentList(
+                                                SyntaxFactory.ArgumentList())))))))
                 .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
         }
 
@@ -405,7 +395,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                                             SyntaxObjectCreationExpressionFactory.Create(typeRequestName)
                                                 .WithArgumentList(
                                                     SyntaxArgumentListFactory.CreateWithOneItem(parameterName))))))))
-                .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken));
+                .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
         }
 
         private static MethodDeclarationSyntax CreateTypeRequestWithMessageAllowNull(
@@ -422,7 +412,9 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                     SyntaxFactory.ParameterList(
                         SyntaxFactory.SingletonSeparatedList(
                             SyntaxFactory.Parameter(SyntaxFactory.Identifier(parameterName))
-                                .WithType(SyntaxFactory.NullableType(SyntaxFactory.PredefinedType(SyntaxTokenFactory.StringKeyword())))
+                                .WithType(
+                                    SyntaxFactory.NullableType(
+                                        SyntaxFactory.PredefinedType(SyntaxTokenFactory.StringKeyword())))
                                 .WithDefault(
                                     SyntaxFactory.EqualsValueClause(
                                         SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression))))))
@@ -477,15 +469,9 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                                                                     SyntaxFactory.CastExpression(
                                                                         SyntaxFactory.PredefinedType(
                                                                             SyntaxFactory.Token(SyntaxKind.IntKeyword)),
-                                                                        SyntaxFactory.MemberAccessExpression(
-                                                                            SyntaxKind.SimpleMemberAccessExpression,
-                                                                            SyntaxFactory.IdentifierName(nameof(HttpStatusCode)),
-                                                                            SyntaxFactory.IdentifierName(httpStatusCode.ToNormalizedString())))),
+                                                                        SyntaxMemberAccessExpressionFactory.Create(httpStatusCode.ToNormalizedString(), nameof(HttpStatusCode)))),
                                                                 SyntaxTokenFactory.Comma(),
-                                                                SyntaxFactory.AssignmentExpression(
-                                                                    SyntaxKind.SimpleAssignmentExpression,
-                                                                    SyntaxFactory.IdentifierName("Content"),
-                                                                    SyntaxFactory.IdentifierName(parameterName)),
+                                                                SyntaxMemberAccessExpressionFactory.Create(parameterName, "Content"),
                                                             })))))))))
                 .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
         }
@@ -508,66 +494,16 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                                     SyntaxFactory.SingletonSeparatedList(
                                         SyntaxFactory.Argument(
                                             SyntaxFactory.InvocationExpression(
-                                                    SyntaxFactory.MemberAccessExpression(
-                                                        SyntaxKind.SimpleMemberAccessExpression,
-                                                        SyntaxFactory.IdentifierName("ResultFactory"),
-                                                        SyntaxFactory.IdentifierName(resultFactoryMethodName)))
-                                                .WithArgumentList(
-                                                    SyntaxFactory.ArgumentList(
-                                                        SyntaxFactory.SeparatedList<ArgumentSyntax>(
-                                                            new SyntaxNodeOrToken[]
-                                                            {
-                                                                SyntaxFactory.Argument(
-                                                                    SyntaxFactory.MemberAccessExpression(
-                                                                        SyntaxKind.SimpleMemberAccessExpression,
-                                                                        SyntaxFactory.IdentifierName(nameof(HttpStatusCode)),
-                                                                        SyntaxFactory.IdentifierName(httpStatusCode.ToString()))),
-                                                                SyntaxTokenFactory.Comma(),
-                                                                SyntaxFactory.Argument(SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)),
-                                                            })))))))))
-                .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
-        }
-
-        private static MethodDeclarationSyntax CreateTypeRequestWithProblemDetailsWithMessage(
-            string className,
-            HttpStatusCode httpStatusCode,
-            string parameterName = "message")
-        {
-            return SyntaxFactory.MethodDeclaration(
-                    SyntaxFactory.IdentifierName(className),
-                    SyntaxFactory.Identifier(httpStatusCode.ToNormalizedString()))
-                .WithModifiers(SyntaxTokenListFactory.PublicStaticKeyword())
-                .WithParameterList(
-                    SyntaxFactory.ParameterList(
-                        SyntaxFactory.SingletonSeparatedList(
-                            SyntaxFactory.Parameter(SyntaxFactory.Identifier(parameterName))
-                                .WithType(SyntaxFactory.PredefinedType(SyntaxTokenFactory.StringKeyword())))))
-                .WithExpressionBody(
-                    SyntaxFactory.ArrowExpressionClause(
-                        SyntaxFactory.ObjectCreationExpression(
-                                SyntaxFactory.IdentifierName(className))
-                            .WithArgumentList(
-                                SyntaxFactory.ArgumentList(
-                                    SyntaxFactory.SingletonSeparatedList(
-                                        SyntaxFactory.Argument(
-                                            SyntaxFactory.InvocationExpression(
-                                                    SyntaxFactory.MemberAccessExpression(
-                                                        SyntaxKind.SimpleMemberAccessExpression,
-                                                        SyntaxFactory.IdentifierName("ResultFactory"),
-                                                        SyntaxFactory.IdentifierName("CreateContentResultWithProblemDetails")))
-                                                .WithArgumentList(
-                                                    SyntaxFactory.ArgumentList(
-                                                        SyntaxFactory.SeparatedList<ArgumentSyntax>(
-                                                            new SyntaxNodeOrToken[]
-                                                            {
-                                                                SyntaxFactory.Argument(
-                                                                    SyntaxFactory.MemberAccessExpression(
-                                                                        SyntaxKind.SimpleMemberAccessExpression,
-                                                                        SyntaxFactory.IdentifierName(nameof(HttpStatusCode)),
-                                                                        SyntaxFactory.IdentifierName(httpStatusCode.ToString()))),
-                                                                SyntaxTokenFactory.Comma(),
-                                                                SyntaxFactory.Argument(SyntaxFactory.IdentifierName(parameterName)),
-                                                            })))))))))
+                                                SyntaxMemberAccessExpressionFactory.Create(resultFactoryMethodName, "ResultFactory"))
+                                            .WithArgumentList(
+                                                SyntaxFactory.ArgumentList(
+                                                    SyntaxFactory.SeparatedList<ArgumentSyntax>(
+                                                        new SyntaxNodeOrToken[]
+                                                        {
+                                                            SyntaxFactory.Argument(SyntaxMemberAccessExpressionFactory.Create(httpStatusCode.ToString(), nameof(HttpStatusCode))),
+                                                            SyntaxTokenFactory.Comma(),
+                                                            SyntaxFactory.Argument(SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)),
+                                                        })))))))))
                 .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
         }
 
@@ -598,20 +534,13 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                                     SyntaxFactory.SingletonSeparatedList(
                                         SyntaxFactory.Argument(
                                             SyntaxFactory.InvocationExpression(
-                                                    SyntaxFactory.MemberAccessExpression(
-                                                        SyntaxKind.SimpleMemberAccessExpression,
-                                                        SyntaxFactory.IdentifierName("ResultFactory"),
-                                                        SyntaxFactory.IdentifierName(resultFactoryMethodName)))
+                                                    SyntaxMemberAccessExpressionFactory.Create(resultFactoryMethodName, "ResultFactory"))
                                                 .WithArgumentList(
                                                     SyntaxFactory.ArgumentList(
                                                         SyntaxFactory.SeparatedList<ArgumentSyntax>(
                                                             new SyntaxNodeOrToken[]
                                                             {
-                                                                SyntaxFactory.Argument(
-                                                                    SyntaxFactory.MemberAccessExpression(
-                                                                        SyntaxKind.SimpleMemberAccessExpression,
-                                                                        SyntaxFactory.IdentifierName(nameof(HttpStatusCode)),
-                                                                        SyntaxFactory.IdentifierName(httpStatusCode.ToString()))),
+                                                                SyntaxFactory.Argument(SyntaxMemberAccessExpressionFactory.Create(httpStatusCode.ToString(), nameof(HttpStatusCode))),
                                                                 SyntaxTokenFactory.Comma(),
                                                                 SyntaxFactory.Argument(SyntaxFactory.IdentifierName(parameterName)),
                                                             })))))))))
@@ -655,23 +584,6 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                                         SyntaxFactory.Argument(
                                             SyntaxObjectCreationExpressionFactory.Create(methodName + nameof(ObjectResult))
                                                 .WithArgumentList(SyntaxArgumentListFactory.CreateWithOneItem(parameterName))))))))
-                .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
-        }
-
-        private static ConversionOperatorDeclarationSyntax CreateImplicitOperatorForActionResult(string className)
-        {
-            return SyntaxFactory.ConversionOperatorDeclaration(
-                    SyntaxTokenFactory.ImplicitKeyword(),
-                    SyntaxFactory.IdentifierName(SyntaxFactory.Identifier(nameof(ActionResult))))
-                .WithModifiers(SyntaxTokenListFactory.PublicStaticKeyword(true))
-                .WithOperatorKeyword(SyntaxTokenFactory.OperatorKeyword())
-                .AddParameterListParameters(SyntaxParameterFactory.Create(className, "x"))
-                .WithExpressionBody(SyntaxFactory.ArrowExpressionClause(
-                        SyntaxFactory.MemberAccessExpression(
-                            SyntaxKind.SimpleMemberAccessExpression,
-                            SyntaxFactory.IdentifierName("x"),
-                            SyntaxFactory.IdentifierName("result")))
-                    .WithArrowToken(SyntaxTokenFactory.EqualsGreaterThan()))
                 .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
         }
 

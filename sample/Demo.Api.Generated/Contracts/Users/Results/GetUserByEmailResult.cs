@@ -32,7 +32,7 @@ namespace Demo.Api.Generated.Contracts.Users
         /// <summary>
         /// 400 - BadRequest response.
         /// </summary>
-        public static GetUserByEmailResult BadRequest(string message) => new GetUserByEmailResult(ResultFactory.CreateContentResultWithProblemDetails(HttpStatusCode.BadRequest, message));
+        public static GetUserByEmailResult BadRequest(string? message = null) => new GetUserByEmailResult(ResultFactory.CreateContentResultWithValidationProblemDetails(HttpStatusCode.BadRequest, message));
 
         /// <summary>
         /// 404 - NotFound response.

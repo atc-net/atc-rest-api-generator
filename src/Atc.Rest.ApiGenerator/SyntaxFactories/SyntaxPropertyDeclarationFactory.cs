@@ -199,9 +199,10 @@ namespace Atc.Rest.ApiGenerator.SyntaxFactories
                 propertyDeclaration = propertyDeclaration.WithInitializer(
                         SyntaxFactory.EqualsValueClause(
                             SyntaxFactory.ObjectCreationExpression(
-                                    SyntaxFactory.GenericName(SyntaxFactory.Identifier(Microsoft.OpenApi.Models.NameConstants.List))
-                                        .WithTypeArgumentList(SyntaxTypeArgumentListFactory.CreateWithOneItem(dataType)))
-                                .WithArgumentList(SyntaxFactory.ArgumentList())))
+                                SyntaxFactory.GenericName(SyntaxFactory.Identifier(Microsoft.OpenApi.Models.NameConstants.List))
+                                    .WithTypeArgumentList(SyntaxTypeArgumentListFactory.CreateWithOneItem(dataType)))
+                            .WithArgumentList(
+                                SyntaxFactory.ArgumentList())))
                     .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
             }
 

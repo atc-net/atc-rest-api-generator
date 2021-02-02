@@ -32,7 +32,7 @@ namespace Demo.Api.Generated.Contracts.Users
         /// <summary>
         /// 400 - BadRequest response.
         /// </summary>
-        public static UpdateUserByIdResult BadRequest(string message) => new UpdateUserByIdResult(ResultFactory.CreateContentResultWithProblemDetails(HttpStatusCode.BadRequest, message));
+        public static UpdateUserByIdResult BadRequest(string? message = null) => new UpdateUserByIdResult(ResultFactory.CreateContentResultWithValidationProblemDetails(HttpStatusCode.BadRequest, message));
 
         /// <summary>
         /// 404 - NotFound response.

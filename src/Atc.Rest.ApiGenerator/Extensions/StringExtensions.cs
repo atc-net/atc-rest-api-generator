@@ -45,6 +45,16 @@ namespace System
             return value.Replace($"{Environment.NewLine}{Environment.NewLine}    }}", $"{Environment.NewLine}    }}", StringComparison.Ordinal);
         }
 
+        public static string FormatDoubleLinesFromEndBracket(this string value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return value.Replace($"        }}{Environment.NewLine}{Environment.NewLine}{Environment.NewLine}", $"        }}{Environment.NewLine}{Environment.NewLine}", StringComparison.Ordinal);
+        }
+
         public static string FormatPublicPrivateLines(this string value)
         {
             if (value == null)
@@ -106,11 +116,11 @@ namespace System
         {
             var methodList = new List<string>
             {
-                "FromTemplate",
-                "FromResponse",
-                "AddSuccessResponse",
-                "AddErrorResponse",
-                "BuildResponseAsync",
+                // TODO: "FromTemplate",
+                // TODO: "FromResponse",
+                // TODO: "AddSuccessResponse",
+                // TODO: "AddErrorResponse",
+                // TODO: "BuildResponseAsync",
             };
 
             foreach (var method in methodList)
@@ -138,13 +148,29 @@ namespace System
             return value;
         }
 
-        public static string FormatClientEndpointNewLineSpace(this string value)
+        public static string FormatClientEndpointNewLineSpaceBefore8(this string value)
         {
             var list = new List<string>
             {
-                "var requestBuilder = httpExchangeFactory",
+                "private readonly IHttpMessageFactory httpMessageFactory;",
+            };
+
+            return list.Aggregate(
+                value,
+                (current, item) => current.Replace(
+                    $"        {item}",
+                    $"        {item}{Environment.NewLine}",
+                    StringComparison.Ordinal));
+        }
+
+        public static string FormatClientEndpointNewLineSpaceAfter12(this string value)
+        {
+            var list = new List<string>
+            {
+                "var requestBuilder = httpMessageFactory",
                 "using var requestMessage",
-                "return await httpExchangeFactory",
+                "return await httpMessageFactory",
+                "var responseBuilder = httpMessageFactory",
             };
 
             return list.Aggregate(
@@ -158,6 +184,38 @@ namespace System
         public static string EnsureNewlineAfterMethod(this string value, string methodName)
         {
             return value.Replace(methodName, methodName + Environment.NewLine, StringComparison.Ordinal);
+        }
+
+        public static string FormatClientEndpointResult(this string value)
+        {
+            value = value.Replace(
+                $"{Environment.NewLine}        public ",
+                $"{Environment.NewLine}{Environment.NewLine}        public ",
+                StringComparison.Ordinal);
+
+            value = FormatDoubleLinesFromEndBracket(value);
+
+            value = value.Replace(
+                " => ",
+                $"{Environment.NewLine}            => ",
+                StringComparison.Ordinal);
+
+            value = value.Replace(
+                " ? ",
+                $"{Environment.NewLine}                ? ",
+                StringComparison.Ordinal);
+
+            value = value.Replace(
+                " : ",
+                $"{Environment.NewLine}                : ",
+                StringComparison.Ordinal);
+
+            value = value.Replace(
+                $"{Environment.NewLine}                : EndpointResponse",
+                " : EndpointResponse",
+                StringComparison.Ordinal);
+
+            return value;
         }
     }
 }

@@ -13,6 +13,7 @@ using Atc.Rest.ApiGenerator.Factories;
 using Atc.Rest.ApiGenerator.Helpers;
 using Atc.Rest.ApiGenerator.Models;
 using Atc.Rest.ApiGenerator.ProjectSyntaxFactories;
+using Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
@@ -112,7 +113,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                 .Any(x => x.Identifier.ValueText.Contains($"({Microsoft.OpenApi.Models.NameConstants.Pagination}<", StringComparison.Ordinal));
 
             compilationUnit = compilationUnit.AddUsingStatements(
-                ProjectEndpointsFactory.CreateUsingList(
+                ProjectApiFactory.CreateUsingListForEndpoint(
                     ApiProjectOptions,
                     FocusOnSegmentName,
                     usedApiOperations,
@@ -169,6 +170,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
             {
                 var generatorParameters = new SyntaxGeneratorContractParameters(ApiProjectOptions, FocusOnSegmentName);
                 var generatedParameters = generatorParameters.GenerateSyntaxTrees();
+                var hasGlobalParameters = value.HasParameters();
 
                 foreach (var apiOperation in value.Operations)
                 {
@@ -186,18 +188,18 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
 
                     var sgContractParameter = generatedParameters.FirstOrDefault(x => x.ApiOperation.GetOperationName() == operationName);
 
-                    var responseTypeNames = GetResponseTypeNames(apiOperation.Value.Responses, FocusOnSegmentName, operationName);
+                    var responseTypes = apiOperation.Value.Responses.GetResponseTypes(
+                        OperationSchemaMappings,
+                        FocusOnSegmentName,
+                        ApiProjectOptions.ProjectName,
+                        ensureModelNameWithNamespaceIfNeeded: true,
+                        useProblemDetailsAsDefaultResponseBody: false,
+                        includeEmptyResponseTypes: false,
+                        hasGlobalParameters || apiOperation.Value.HasParametersOrRequestBody(),
+                        includeIfNotDefinedAuthorization: false,
+                        includeIfNotDefinedInternalServerError: false);
 
-                    if (contractParameterTypeName != null &&
-                        responseTypeNames.FirstOrDefault(x => x.Item1 == HttpStatusCode.BadRequest) == null)
-                    {
-                        responseTypeNames.Add(
-                            new Tuple<HttpStatusCode, string>(
-                                HttpStatusCode.BadRequest,
-                                "Validation"));
-                    }
-
-                    var responseTypeNamesAndItemSchema = GetResponseTypeNamesAndItemSchema(responseTypeNames);
+                    var responseTypeNamesAndItemSchema = GetResponseTypeNamesAndItemSchema(responseTypes);
 
                     var endpointMethodMetadata = new EndpointMethodMetadata(
                         ApiProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
@@ -281,67 +283,6 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
             return list;
         }
 
-        private List<Tuple<HttpStatusCode, string>> GetResponseTypeNames(OpenApiResponses openApiResponses, string segmentName, string operationName)
-        {
-            var list = new List<Tuple<HttpStatusCode, string>>();
-
-            var httpStatusCodes = openApiResponses.GetHttpStatusCodes();
-            var producesResponseAttributeParts = openApiResponses.GetProducesResponseAttributeParts(
-                operationName + NameConstants.ContractResult,
-                false,
-                segmentName,
-                OperationSchemaMappings,
-                ApiProjectOptions.ProjectName);
-
-            foreach (var producesResponseAttributePart in producesResponseAttributeParts)
-            {
-                var s = producesResponseAttributePart
-                    .Replace("ProducesResponseType(", string.Empty, StringComparison.Ordinal)
-                    .Replace("typeof(", string.Empty, StringComparison.Ordinal)
-                    .Replace("StatusCodes.Status", string.Empty, StringComparison.Ordinal)
-                    .Replace(")", string.Empty, StringComparison.Ordinal)
-                    .Replace(" ", string.Empty, StringComparison.Ordinal);
-                var sa = s.Split(',');
-
-                switch (sa.Length)
-                {
-                    case 1:
-                        {
-                            foreach (var httpStatusCode in httpStatusCodes)
-                            {
-                                if (sa[0].IndexOf(((int)httpStatusCode).ToString(GlobalizationConstants.EnglishCultureInfo), StringComparison.Ordinal) != -1)
-                                {
-                                    list.Add(
-                                        new Tuple<HttpStatusCode, string>(
-                                            httpStatusCode,
-                                            string.Empty));
-                                }
-                            }
-
-                            break;
-                        }
-
-                    case 2:
-                        {
-                            foreach (var httpStatusCode in httpStatusCodes)
-                            {
-                                if (sa[1].IndexOf(((int)httpStatusCode).ToString(GlobalizationConstants.EnglishCultureInfo), StringComparison.Ordinal) != -1)
-                                {
-                                    list.Add(
-                                        new Tuple<HttpStatusCode, string>(
-                                            httpStatusCode,
-                                            sa[0]));
-                                }
-                            }
-
-                            break;
-                        }
-                }
-            }
-
-            return list;
-        }
-
         private MethodDeclarationSyntax CreateMembersForEndpoints(
             KeyValuePair<OperationType, OpenApiOperation> apiOperation,
             string urlPath,
@@ -353,7 +294,6 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
             var methodName = operationName + "Async";
             var helperMethodName = $"Invoke{operationName}Async";
             var parameterTypeName = operationName + NameConstants.ContractParameters;
-            var resultTypeName = operationName + NameConstants.ContractResult;
 
             // Create method # use CreateParameterList & CreateCodeBlockReturnStatement
             var methodDeclaration = SyntaxFactory.MethodDeclaration(
@@ -379,11 +319,13 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
 
             // Create and add producesResponseTypes-attributes
             var producesResponseAttributeParts = apiOperation.Value.Responses.GetProducesResponseAttributeParts(
-                resultTypeName,
-                ApiProjectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
-                area,
                 OperationSchemaMappings,
-                ApiProjectOptions.ProjectName);
+                area,
+                ApiProjectOptions.ProjectName,
+                ApiProjectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
+                apiOperation.Value.HasParametersOrRequestBody(),
+                includeIfNotDefinedAuthorization: false,
+                includeIfNotDefinedInternalServerError: false);
 
             return producesResponseAttributeParts
                 .Aggregate(
@@ -533,10 +475,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
             return SyntaxFactory.ReturnStatement(
                 SyntaxFactory.AwaitExpression(
                     SyntaxFactory.InvocationExpression(
-                            SyntaxFactory.MemberAccessExpression(
-                                SyntaxKind.SimpleMemberAccessExpression,
-                                SyntaxFactory.IdentifierName("handler"),
-                                SyntaxFactory.IdentifierName("ExecuteAsync")))
+                            SyntaxMemberAccessExpressionFactory.Create("ExecuteAsync", "handler"))
                         .WithArgumentList(
                             SyntaxFactory.ArgumentList(
                                 SyntaxFactory.SeparatedList<ArgumentSyntax>(arguments)))));

@@ -2,16 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Atc.Rest.ApiGenerator.Models;
-using Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.Interfaces;
 using Microsoft.OpenApi.Models;
 
-// ReSharper disable ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
-// ReSharper disable UseDeconstruction
 namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
 {
-    public class SyntaxGeneratorClientEndpoints : ISyntaxGeneratorClientEndpoints
+    // ReSharper disable ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
+    // ReSharper disable UseDeconstruction
+    public class SyntaxGeneratorClientEndpointResultInterfaces
     {
-        public SyntaxGeneratorClientEndpoints(
+        public SyntaxGeneratorClientEndpointResultInterfaces(
             ApiProjectOptions apiProjectOptions,
             List<ApiOperationSchemaMap> operationSchemaMappings,
             string focusOnSegmentName)
@@ -27,9 +26,9 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
 
         public string FocusOnSegmentName { get; }
 
-        public List<SyntaxGeneratorClientEndpoint> GenerateSyntaxTrees()
+        public List<SyntaxGeneratorClientEndpointResultInterface> GenerateSyntaxTrees()
         {
-            var list = new List<SyntaxGeneratorClientEndpoint>();
+            var list = new List<SyntaxGeneratorClientEndpointResultInterface>();
             foreach (var urlPath in ApiProjectOptions.Document.Paths)
             {
                 if (!urlPath.IsPathStartingSegmentName(FocusOnSegmentName))
@@ -39,10 +38,9 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
 
                 list.AddRange(
                     urlPath.Value.Operations
-                        .Select(x => new SyntaxGeneratorClientEndpoint(
+                        .Select(x => new SyntaxGeneratorClientEndpointResultInterface(
                             ApiProjectOptions,
                             OperationSchemaMappings,
-                            urlPath.Value.Parameters,
                             x.Key,
                             x.Value,
                             FocusOnSegmentName,

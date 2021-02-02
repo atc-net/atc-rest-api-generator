@@ -8,6 +8,11 @@ namespace Atc.Rest.ApiGenerator
     {
         public const string Endpoints = "Endpoints";
         public const string Endpoint = "Endpoint";
+        public const string EndpointInterfaces = "Interfaces";
+        public const string EndpointResults = "EndpointResults";
+        public const string EndpointResult = "EndpointResult";
+        public const string EndpointInterfaceResults = "Interfaces";
+
         public const string Contracts = "Contracts";
         public const string ContractsEnumerationTypes = "_EnumerationTypes";
         public const string ContractsSharedModels = "_Shared";
@@ -17,8 +22,11 @@ namespace Atc.Rest.ApiGenerator
         public const string ContractParameters = "Parameters";
         public const string ContractResults = "Results";
         public const string ContractResult = "Result";
+
         public const string Request = "Request";
         public const string Handlers = "Handlers";
         public const string Handler = "Handler";
+
+        public const string ClientRequestParameters = "RequestParameters";
     }
 }

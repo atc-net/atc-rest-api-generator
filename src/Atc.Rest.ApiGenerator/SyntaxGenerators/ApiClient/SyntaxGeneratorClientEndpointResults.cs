@@ -2,16 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Atc.Rest.ApiGenerator.Models;
-using Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.Interfaces;
 using Microsoft.OpenApi.Models;
 
-// ReSharper disable ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
-// ReSharper disable UseDeconstruction
 namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
 {
-    public class SyntaxGeneratorClientEndpoints : ISyntaxGeneratorClientEndpoints
+    public class SyntaxGeneratorClientEndpointResults
     {
-        public SyntaxGeneratorClientEndpoints(
+        public SyntaxGeneratorClientEndpointResults(
             ApiProjectOptions apiProjectOptions,
             List<ApiOperationSchemaMap> operationSchemaMappings,
             string focusOnSegmentName)
@@ -27,9 +24,9 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
 
         public string FocusOnSegmentName { get; }
 
-        public List<SyntaxGeneratorClientEndpoint> GenerateSyntaxTrees()
+        public List<SyntaxGeneratorClientEndpointResult> GenerateSyntaxTrees()
         {
-            var list = new List<SyntaxGeneratorClientEndpoint>();
+            var list = new List<SyntaxGeneratorClientEndpointResult>();
             foreach (var urlPath in ApiProjectOptions.Document.Paths)
             {
                 if (!urlPath.IsPathStartingSegmentName(FocusOnSegmentName))
@@ -39,7 +36,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
 
                 list.AddRange(
                     urlPath.Value.Operations
-                        .Select(x => new SyntaxGeneratorClientEndpoint(
+                        .Select(x => new SyntaxGeneratorClientEndpointResult(
                             ApiProjectOptions,
                             OperationSchemaMappings,
                             urlPath.Value.Parameters,

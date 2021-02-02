@@ -136,10 +136,10 @@ Document
 ```csharp
 DocumentFile
 ```
-#### ForClient
+#### IsForClient
 
 ```csharp
-ForClient
+IsForClient
 ```
 #### PathForSrcGenerate
 
