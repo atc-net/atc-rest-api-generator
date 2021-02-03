@@ -376,7 +376,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
             var equalsClauseSyntax = SyntaxFactory.EqualsValueClause(
                 SyntaxFactory.InvocationExpression(
                         SyntaxMemberAccessExpressionFactory.Create(nameof(IHttpMessageFactory.FromTemplate), "httpMessageFactory"))
-                    .WithArgumentList(CreateOneStringArg($"/{ApiProjectOptions.RouteBase}{ApiUrlPath}")));
+                    .WithArgumentList(CreateOneStringArg($"{ApiProjectOptions.RouteBase}{ApiUrlPath}")));
 
             var requestBuilderSyntax = SyntaxFactory.LocalDeclarationStatement(
                 SyntaxFactory.VariableDeclaration(
