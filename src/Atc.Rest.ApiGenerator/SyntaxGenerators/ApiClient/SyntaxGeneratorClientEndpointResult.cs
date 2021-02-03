@@ -255,7 +255,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                             SyntaxFactory.IdentifierName("result"),
                             SyntaxFactory.ThrowExpression(
                                 SyntaxFactory.ObjectCreationExpression(
-                                        SyntaxFactory.IdentifierName("InvalidOperationException"))
+                                        SyntaxFactory.IdentifierName(nameof(InvalidOperationException)))
                                     .WithArgumentList(
                                         SyntaxFactory.ArgumentList(
                                             SyntaxFactory.SingletonSeparatedList(

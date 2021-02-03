@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 // ReSharper disable InvertIf
@@ -38,6 +38,18 @@ namespace Atc.Rest.ApiGenerator.Helpers
             {
                 new Tuple<string, string, string?>("Atc", atcVersion, null),
                 new Tuple<string, string, string?>("Atc.Rest", atcVersion, null),
+            };
+
+            return packageReference;
+        }
+
+        public static List<Tuple<string, string, string?>> CreateForClientApiProject()
+        {
+            var packageReference = new List<Tuple<string, string, string?>>
+            {
+                new Tuple<string, string, string?>("Atc.Rest.Client", "1.0.25", null),
+                new Tuple<string, string, string?>("Microsoft.AspNetCore.Mvc.Core", "2.2.5", null),
+                new Tuple<string, string, string?>("System.ComponentModel.Annotations", "5.0.0", null),
             };
 
             return packageReference;
