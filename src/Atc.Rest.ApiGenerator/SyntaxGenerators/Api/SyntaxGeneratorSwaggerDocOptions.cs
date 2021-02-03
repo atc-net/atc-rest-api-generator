@@ -1,5 +1,7 @@
-﻿using System.Text;
-using Atc.Rest.ApiGenerator.Helpers;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.OpenApi.Models;
 
@@ -20,7 +22,9 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
 
         public string GenerateCode()
             => SyntaxFactory
-                .ParseSyntaxTree(GetSyntaxTreeText())
+                .ParseSyntaxTree(
+                    GetSyntaxTreeText()
+                        .Replace("\"\"", "null", StringComparison.OrdinalIgnoreCase))
                 .GetCompilationUnitRoot()
                 .ToFullString();
 
@@ -37,6 +41,12 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                     ? string.Empty
                     : $@"
                             Url = new Uri(""{document.Info?.License?.Url}""),";
+
+            var termsOfService =
+                string.IsNullOrWhiteSpace(document.Info?.License?.Url?.ToString())
+                    ? string.Empty
+                    : $@"
+                        TermsOfService = new Uri(""{document.Info?.TermsOfService}""),";
 
             return $@"using System;
 using System.IO;
@@ -66,23 +76,43 @@ namespace {fullNamespace}
                         Version = ""{document.Info?.Version}"",
                         Title = ""{document.Info?.Title}"",
                         Description = @""{document.Info?.Description}"",
-                        Contact = new OpenApiContact()
+                        Contact = new OpenApiContact
                         {{
                             Name = ""{document.Info?.Contact?.Name}"",{contactUrl}
                             Email = ""{document.Info?.Contact?.Email}"",
-                        }},
-                        TermsOfService = new Uri(""{document.Info?.TermsOfService}""),
-                        License = new OpenApiLicense()
+                        }},{termsOfService}
+                        License = new OpenApiLicense
                         {{
                             Name = ""{document.Info?.License?.Name}"",{licenseUrl}
                         }},
                     }});
             }}
-
+{GetServersCode(document.Servers)}
             options.IncludeXmlComments(Path.ChangeExtension(GetType().Assembly.Location, ""xml""));
         }}
     }}
 }}";
+        }
+
+        private static string GetServersCode(IList<OpenApiServer> documentServers)
+        {
+            if (documentServers?.Any() != true)
+            {
+                return string.Empty;
+            }
+
+            const string spaces = "            ";
+            var sb = new StringBuilder();
+
+            foreach (var server in documentServers)
+            {
+                var code = $@"options.AddServer(new OpenApiServer {{ Url = ""{server.Url}"" }});";
+                sb.Append(Environment.NewLine)
+                    .Append(spaces)
+                    .Append(code);
+            }
+
+            return sb.ToString();
         }
     }
 }
