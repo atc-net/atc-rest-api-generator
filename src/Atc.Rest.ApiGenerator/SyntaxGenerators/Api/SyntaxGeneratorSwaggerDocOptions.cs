@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.OpenApi.Models;
 
@@ -87,32 +84,11 @@ namespace {fullNamespace}
                         }},
                     }});
             }}
-{GetServersCode(document.Servers)}
+
             options.IncludeXmlComments(Path.ChangeExtension(GetType().Assembly.Location, ""xml""));
         }}
     }}
 }}";
-        }
-
-        private static string GetServersCode(IList<OpenApiServer> documentServers)
-        {
-            if (documentServers?.Any() != true)
-            {
-                return string.Empty;
-            }
-
-            const string spaces = "            ";
-            var sb = new StringBuilder();
-
-            foreach (var server in documentServers)
-            {
-                var code = $@"options.AddServer(new OpenApiServer {{ Url = ""{server.Url}"" }});";
-                sb.Append(Environment.NewLine)
-                    .Append(spaces)
-                    .Append(code);
-            }
-
-            return sb.ToString();
         }
     }
 }

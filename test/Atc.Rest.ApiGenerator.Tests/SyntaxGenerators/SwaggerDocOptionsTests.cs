@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
 using Microsoft.OpenApi.Models;
 using Xunit;
@@ -35,11 +33,6 @@ Some useful links:
                     Title = "Swagger Petstore - OpenAPI 3.0",
                     Version = "1.0.6",
                     TermsOfService = new Uri("http://swagger.io/terms/"),
-                },
-                Servers = new List<OpenApiServer>
-                {
-                    new () { Url = "/api/v2" },
-                    new () { Url = "/api/v3" },
                 },
             };
 
@@ -86,13 +79,6 @@ Some useful links:
                 code
                     .Replace(Environment.NewLine, string.Empty, StringComparison.Ordinal)
                     .Replace(" ", string.Empty, StringComparison.Ordinal),
-                StringComparison.Ordinal);
-
-        [Fact]
-        public void GeneratedCode_Adds_Servers()
-            => Assert.Contains(
-                "options.AddServer(new OpenApiServer",
-                code,
                 StringComparison.Ordinal);
 
         [Fact]
@@ -143,16 +129,5 @@ Some useful links:
                 openApiDocument.Info.TermsOfService.ToString(),
                 code,
                 StringComparison.OrdinalIgnoreCase);
-
-        [Fact]
-        public void GeneratedCode_Should_Contain_Servers()
-            => openApiDocument
-                .Servers
-                .ToList()
-                .ForEach(
-                    server => Assert.Contains(
-                        server.Url,
-                        code,
-                        StringComparison.OrdinalIgnoreCase));
     }
 }
