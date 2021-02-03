@@ -1,15 +1,14 @@
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using Atc.Rest.ApiGenerator.Models;
 
 namespace Atc.Rest.ApiGenerator.Factories
 {
-    [SuppressMessage("Major Code Smell", "S4144:Methods should not have identical implementations", Justification = "OK for now, need to be optimized.")]
     public static class ProjectApiClientFactory
     {
         public static string[] CreateUsingListForEndpointInterface(
             ApiProjectOptions apiProjectOptions,
             bool includeRestResults,
+            bool hasList,
             bool hasSharedModel)
         {
             var list = new List<string>
@@ -18,6 +17,11 @@ namespace Atc.Rest.ApiGenerator.Factories
                 "System.Threading",
                 "System.Threading.Tasks",
             };
+
+            if (hasList)
+            {
+                list.Add("System.Collections.Generic");
+            }
 
             if (includeRestResults)
             {
@@ -39,10 +43,6 @@ namespace Atc.Rest.ApiGenerator.Factories
             {
                 list.Add(s);
             }
-
-            list.Add("Atc.Rest.Client");
-
-            list.Add("System.Collections.Generic");
 
             return list.ToArray();
         }
@@ -50,15 +50,30 @@ namespace Atc.Rest.ApiGenerator.Factories
         public static string[] CreateUsingListForEndpoint(
             ApiProjectOptions apiProjectOptions,
             bool includeRestResults,
+            bool hasParameter,
+            bool hasList,
             bool hasSharedModel)
         {
             var list = new List<string>
             {
-                "System",
                 "System.CodeDom.Compiler",
+                "System.Net",
+                "System.Net.Http",
                 "System.Threading",
                 "System.Threading.Tasks",
+                "Atc.Rest.Client.Builder",
+                "Microsoft.AspNetCore.Mvc",
             };
+
+            if (hasParameter)
+            {
+                list.Add("System");
+            }
+
+            if (hasList)
+            {
+                list.Add("System.Collections.Generic");
+            }
 
             if (includeRestResults)
             {
@@ -80,15 +95,6 @@ namespace Atc.Rest.ApiGenerator.Factories
             {
                 list.Add(s);
             }
-
-            list.Add("System.Net");
-            list.Add("System.Net.Http");
-            list.Add("Atc.Rest.Client");
-            list.Add("Atc.Rest.Client.Builder");
-
-            list.Add("Microsoft.AspNetCore.Mvc");
-
-            list.Add("System.Collections.Generic"); // TODO: Remove when switching from EndpointResult -> XXXEndpointResult
 
             return list.ToArray();
         }
@@ -96,12 +102,20 @@ namespace Atc.Rest.ApiGenerator.Factories
         public static string[] CreateUsingListForEndpointResultInterface(
             ApiProjectOptions apiProjectOptions,
             bool includeRestResults,
+            bool hasList,
             bool hasSharedModel)
         {
             var list = new List<string>
             {
                 "System.CodeDom.Compiler",
+                "Atc.Rest.Client",
+                "Microsoft.AspNetCore.Mvc",
             };
+
+            if (hasList)
+            {
+                list.Add("System.Collections.Generic");
+            }
 
             if (includeRestResults)
             {
@@ -123,8 +137,6 @@ namespace Atc.Rest.ApiGenerator.Factories
             {
                 list.Add(s);
             }
-
-            list.Add("System.Collections.Generic");
 
             return list.ToArray();
         }
@@ -132,13 +144,22 @@ namespace Atc.Rest.ApiGenerator.Factories
         public static string[] CreateUsingListForEndpointResult(
             ApiProjectOptions apiProjectOptions,
             bool includeRestResults,
+            bool hasList,
             bool hasSharedModel)
         {
             var list = new List<string>
             {
                 "System",
+                "System.Net",
                 "System.CodeDom.Compiler",
+                "Atc.Rest.Client",
+                "Microsoft.AspNetCore.Mvc",
             };
+
+            if (hasList)
+            {
+                list.Add("System.Collections.Generic");
+            }
 
             if (includeRestResults)
             {
@@ -160,12 +181,6 @@ namespace Atc.Rest.ApiGenerator.Factories
             {
                 list.Add(s);
             }
-
-            list.Add("System.Net");
-            list.Add("Atc.Rest.Client");
-            list.Add("Microsoft.AspNetCore.Mvc");
-
-            list.Add("System.Collections.Generic");
 
             return list.ToArray();
         }

@@ -76,10 +76,10 @@
 
 - [ProjectApiClientFactory](Atc.Rest.ApiGenerator.Factories.md#projectapiclientfactory)
   -  Static Methods
-     - CreateUsingListForEndpoint(ApiProjectOptions apiProjectOptions, bool includeRestResults, bool hasSharedModel)
-     - CreateUsingListForEndpointInterface(ApiProjectOptions apiProjectOptions, bool includeRestResults, bool hasSharedModel)
-     - CreateUsingListForEndpointResult(ApiProjectOptions apiProjectOptions, bool includeRestResults, bool hasSharedModel)
-     - CreateUsingListForEndpointResultInterface(ApiProjectOptions apiProjectOptions, bool includeRestResults, bool hasSharedModel)
+     - CreateUsingListForEndpoint(ApiProjectOptions apiProjectOptions, bool includeRestResults, bool hasParameter, bool hasList, bool hasSharedModel)
+     - CreateUsingListForEndpointInterface(ApiProjectOptions apiProjectOptions, bool includeRestResults, bool hasList, bool hasSharedModel)
+     - CreateUsingListForEndpointResult(ApiProjectOptions apiProjectOptions, bool includeRestResults, bool hasList, bool hasSharedModel)
+     - CreateUsingListForEndpointResultInterface(ApiProjectOptions apiProjectOptions, bool includeRestResults, bool hasList, bool hasSharedModel)
 - [ProjectApiFactory](Atc.Rest.ApiGenerator.Factories.md#projectapifactory)
   -  Static Methods
      - CreateUsingListForContractInterface()
@@ -119,6 +119,7 @@
      - CollectMissingContractModelFromOperationSchemaMappings(ApiProjectOptions projectOptions, List&lt;ApiOperationSchemaMap&gt; operationSchemaMappings, List&lt;SyntaxGeneratorContractModel&gt; sgContractModels)
 - [ContractHelper](Atc.Rest.ApiGenerator.Helpers.md#contracthelper)
   -  Static Methods
+     - HasList(string typeName)
      - HasSharedResponseContract(OpenApiDocument document, List&lt;ApiOperationSchemaMap&gt; operationSchemaMappings, string focusOnSegmentName)
 - [GenerateAtcCodingRulesHelper](Atc.Rest.ApiGenerator.Helpers.md#generateatccodingruleshelper)
   -  Static Fields
@@ -264,7 +265,6 @@
 - [BaseProjectOptions](Atc.Rest.ApiGenerator.Models.md#baseprojectoptions)
   -  Properties
      - ApiOptions
-     - ApiVersion
      - BasePathSegmentNames
      - ClientFolderName
      - Document
@@ -276,6 +276,7 @@
      - ProjectPrefixName
      - ProjectSrcCsProj
      - ProjectTestCsProj
+     - RouteBase
      - ToolName
      - ToolNameAndVersion
      - ToolVersion
@@ -508,16 +509,9 @@
 
 - [SyntaxGeneratorClientEndpoint](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md#syntaxgeneratorclientendpoint)
   -  Properties
-     - ApiOperation
-     - ApiOperationType
-     - ApiProjectOptions
-     - ApiUrlPath
      - Code
      - EndpointResultTypeName
      - EndpointTypeName
-     - FocusOnSegmentName
-     - GlobalPathParameters
-     - HasParametersOrRequestBody
      - InterfaceTypeName
      - ParameterTypeName
   -  Methods
@@ -526,16 +520,22 @@
      - ToFile()
      - ToFile(FileInfo file)
      - ToString()
-- [SyntaxGeneratorClientEndpointInterface](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md#syntaxgeneratorclientendpointinterface)
+- [SyntaxGeneratorClientEndpointBase](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md#syntaxgeneratorclientendpointbase)
   -  Properties
      - ApiOperation
      - ApiOperationType
      - ApiProjectOptions
      - ApiUrlPath
+     - FocusOnSegmentName
+     - GlobalPathParameters
+     - HasParametersOrRequestBody
+     - OperationSchemaMappings
+     - ResponseTypes
+     - ResultTypeName
+- [SyntaxGeneratorClientEndpointInterface](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md#syntaxgeneratorclientendpointinterface)
+  -  Properties
      - Code
      - EndpointResultTypeName
-     - FocusOnSegmentName
-     - HasParametersOrRequestBody
      - InterfaceTypeName
      - ParameterTypeName
   -  Methods
@@ -553,15 +553,8 @@
      - GenerateSyntaxTrees()
 - [SyntaxGeneratorClientEndpointResult](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md#syntaxgeneratorclientendpointresult)
   -  Properties
-     - ApiOperation
-     - ApiOperationType
-     - ApiProjectOptions
-     - ApiUrlPath
      - Code
      - EndpointTypeName
-     - FocusOnSegmentName
-     - GlobalPathParameters
-     - HasParametersOrRequestBody
      - InterfaceTypeName
      - ParameterTypeName
   -  Methods
@@ -572,13 +565,7 @@
      - ToString()
 - [SyntaxGeneratorClientEndpointResultInterface](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md#syntaxgeneratorclientendpointresultinterface)
   -  Properties
-     - ApiOperation
-     - ApiOperationType
-     - ApiProjectOptions
-     - ApiUrlPath
      - Code
-     - FocusOnSegmentName
-     - HasParametersOrRequestBody
      - InterfaceTypeName
      - ParameterTypeName
   -  Methods

@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using Atc.CodeAnalysis.CSharp.SyntaxFactories;
 using Atc.Data.Models;
 using Atc.Rest.ApiGenerator.Factories;
 using Atc.Rest.ApiGenerator.Helpers;
 using Atc.Rest.ApiGenerator.Models;
 using Atc.Rest.ApiGenerator.ProjectSyntaxFactories;
+using Atc.Rest.Client;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -15,46 +17,34 @@ using Microsoft.OpenApi.Models;
 
 namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
 {
-    public class SyntaxGeneratorClientEndpointResultInterface
+    public class SyntaxGeneratorClientEndpointResultInterface : SyntaxGeneratorClientEndpointBase, ISyntaxCodeGenerator
     {
         public SyntaxGeneratorClientEndpointResultInterface(
             ApiProjectOptions apiProjectOptions,
             List<ApiOperationSchemaMap> operationSchemaMappings,
+            IList<OpenApiParameter> globalPathParameters,
             OperationType apiOperationType,
             OpenApiOperation apiOperation,
             string focusOnSegmentName,
             string urlPath,
             bool hasParametersOrRequestBody)
+            : base(
+                apiProjectOptions,
+                operationSchemaMappings,
+                globalPathParameters,
+                apiOperationType,
+                apiOperation,
+                focusOnSegmentName,
+                urlPath,
+                hasParametersOrRequestBody)
         {
-            this.ApiProjectOptions = apiProjectOptions ?? throw new ArgumentNullException(nameof(apiProjectOptions));
-            this.OperationSchemaMappings =
-                operationSchemaMappings ?? throw new ArgumentNullException(nameof(apiProjectOptions));
-            this.ApiOperationType = apiOperationType;
-            this.ApiOperation = apiOperation ?? throw new ArgumentNullException(nameof(apiOperation));
-            this.FocusOnSegmentName = focusOnSegmentName ?? throw new ArgumentNullException(nameof(focusOnSegmentName));
-            this.ApiUrlPath = urlPath ?? throw new ArgumentNullException(nameof(urlPath));
-            this.HasParametersOrRequestBody = hasParametersOrRequestBody;
         }
-
-        public ApiProjectOptions ApiProjectOptions { get; }
-
-        private List<ApiOperationSchemaMap> OperationSchemaMappings { get; }
-
-        public OperationType ApiOperationType { get; }
-
-        public OpenApiOperation ApiOperation { get; }
-
-        public string ApiUrlPath { get; }
-
-        public string FocusOnSegmentName { get; }
 
         public CompilationUnitSyntax? Code { get; private set; }
 
         public string InterfaceTypeName => "I" + ApiOperation.GetOperationName() + NameConstants.EndpointResult;
 
         public string ParameterTypeName => ApiOperation.GetOperationName() + NameConstants.ContractParameters;
-
-        public bool HasParametersOrRequestBody { get; }
 
         public bool GenerateCode()
         {
@@ -69,11 +59,12 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
 
             // Create interface
             var interfaceDeclaration = SyntaxInterfaceDeclarationFactory.Create(InterfaceTypeName)
+                .AddBaseListTypes(SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseTypeName(nameof(IEndpointResponse))))
                 .AddGeneratedCodeAttribute(ApiProjectOptions.ToolName, ApiProjectOptions.ToolVersion.ToString())
                 .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForResults(ApiOperation, FocusOnSegmentName));
 
-            // Create interface-method
-            //// TODO: var methodDeclaration = ...
+            interfaceDeclaration = interfaceDeclaration.AddMembers(CreatePropertiesForIsStatusCode());
+            interfaceDeclaration = interfaceDeclaration.AddMembers(CreatePropertiesForStatusCodeContent());
 
             // Add using statement to compilationUnit
             var includeRestResults = interfaceDeclaration
@@ -86,13 +77,11 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                 ProjectApiClientFactory.CreateUsingListForEndpointResultInterface(
                     ApiProjectOptions,
                     includeRestResults,
+                    ContractHelper.HasList(ResultTypeName),
                     ContractHelper.HasSharedResponseContract(
                         ApiProjectOptions.Document,
                         OperationSchemaMappings,
                         FocusOnSegmentName)));
-
-            // Add interface-method to interface
-            //// TODO: interfaceDeclaration = interfaceDeclaration.AddMembers(methodDeclaration);
 
             // Add the interface to the namespace.
             @namespace = @namespace.AddMembers(interfaceDeclaration);
@@ -119,7 +108,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
 
             return Code
                 .NormalizeWhitespace()
-                .ToFullString();
+                .ToFullString()
+                .FormatAutoPropertiesOnOneLine();
         }
 
         public LogKeyValueItem ToFile()
@@ -143,6 +133,60 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
         {
             return
                 $"OperationType: {ApiOperationType}, OperationName: {ApiOperation.GetOperationName()}, SegmentName: {FocusOnSegmentName}";
+        }
+
+        private MemberDeclarationSyntax[] CreatePropertiesForIsStatusCode()
+        {
+            return ResponseTypes
+                .Select(x => CreatePropertyForIsStatusCode(x.Item1))
+                .ToArray();
+        }
+
+        private MemberDeclarationSyntax CreatePropertyForIsStatusCode(HttpStatusCode statusCode)
+        {
+            return SyntaxFactory.PropertyDeclaration(
+                    SyntaxFactory.PredefinedType(
+                        SyntaxFactory.Token(SyntaxKind.BoolKeyword)),
+                    SyntaxFactory.Identifier("Is" + statusCode.ToNormalizedString()))
+                .WithAccessorList(
+                    SyntaxFactory.AccessorList(
+                        SyntaxFactory.SingletonList(
+                            SyntaxFactory.AccessorDeclaration(
+                                SyntaxKind.GetAccessorDeclaration)
+                            .WithSemicolonToken(
+                                SyntaxTokenFactory.Semicolon()))));
+        }
+
+        private MemberDeclarationSyntax[] CreatePropertiesForStatusCodeContent()
+        {
+            var responseTypes = ApiOperation.Responses.GetResponseTypes(
+                OperationSchemaMappings,
+                FocusOnSegmentName,
+                ApiProjectOptions.ProjectName,
+                ensureModelNameWithNamespaceIfNeeded: false,
+                useProblemDetailsAsDefaultResponseBody: true,
+                includeEmptyResponseTypes: false,
+                HasParametersOrRequestBody,
+                ApiProjectOptions.ApiOptions.Generator.UseAuthorization,
+                includeIfNotDefinedInternalServerError: true);
+
+            return responseTypes
+                .Select(x => CreatePropertyForStatusCodeContent(x.Item1, x.Item2))
+                .ToArray();
+        }
+
+        private MemberDeclarationSyntax CreatePropertyForStatusCodeContent(HttpStatusCode statusCode, string resultTypeName)
+        {
+            return SyntaxFactory.PropertyDeclaration(
+                SyntaxFactory.IdentifierName(resultTypeName),
+                SyntaxFactory.Identifier(statusCode.ToNormalizedString() + "Content"))
+                .WithAccessorList(
+                    SyntaxFactory.AccessorList(
+                        SyntaxFactory.SingletonList(
+                            SyntaxFactory.AccessorDeclaration(
+                                    SyntaxKind.GetAccessorDeclaration)
+                                .WithSemicolonToken(
+                                    SyntaxTokenFactory.Semicolon()))));
         }
     }
 }

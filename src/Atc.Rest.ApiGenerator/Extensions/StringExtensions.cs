@@ -28,7 +28,7 @@ namespace System
             }
 
             value = AutoPropGetSetRegex.Replace(value, AutoPropGetSetResultPattern);
-            value = AutoPropGetRegex.Replace(value, AutoPropGetSetResultPattern);
+            value = AutoPropGetRegex.Replace(value, AutoPropGetResultPattern);
             value = AutoPropInitializerGetSetRegex.Replace(value, $"{AutoPropGetSetResultPattern} = ");
             value = AutoPropInitializerGetRegex.Replace(value, $"{AutoPropGetResultPattern} = ");
             value = value.Replace(">();", $">();{Environment.NewLine}", StringComparison.Ordinal);
@@ -110,42 +110,6 @@ namespace System
 
             const string pattern = "CS1998 // Async method lacks 'await' operators and will run synchronously";
             return value.Replace(pattern + Environment.NewLine, pattern, StringComparison.Ordinal);
-        }
-
-        public static string FormatClientEndpointNewLineOnFluentMethod(this string value)
-        {
-            var methodList = new List<string>
-            {
-                // TODO: "FromTemplate",
-                // TODO: "FromResponse",
-                // TODO: "AddSuccessResponse",
-                // TODO: "AddErrorResponse",
-                // TODO: "BuildResponseAsync",
-            };
-
-            foreach (var method in methodList)
-            {
-                var s1 = $".{method}(";
-                var s2 = $".{method}<";
-
-                if (value.Contains(s1, StringComparison.Ordinal))
-                {
-                    value = value.Replace(
-                        s1,
-                        $"{Environment.NewLine}                {s1}",
-                        StringComparison.Ordinal);
-                }
-
-                if (value.Contains(s2, StringComparison.Ordinal))
-                {
-                    value = value.Replace(
-                        s2,
-                        $"{Environment.NewLine}                {s2}",
-                        StringComparison.Ordinal);
-                }
-            }
-
-            return value;
         }
 
         public static string FormatClientEndpointNewLineSpaceBefore8(this string value)

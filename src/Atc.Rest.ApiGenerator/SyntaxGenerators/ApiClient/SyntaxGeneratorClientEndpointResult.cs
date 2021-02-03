@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net;
 using Atc.CodeAnalysis.CSharp.SyntaxFactories;
 using Atc.Data.Models;
-using Atc.Rest.ApiGenerator.Extensions;
 using Atc.Rest.ApiGenerator.Factories;
 using Atc.Rest.ApiGenerator.Helpers;
 using Atc.Rest.ApiGenerator.Models;
@@ -19,7 +18,7 @@ using Microsoft.OpenApi.Models;
 // ReSharper disable InvertIf
 namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
 {
-    public class SyntaxGeneratorClientEndpointResult : ISyntaxCodeGenerator
+    public class SyntaxGeneratorClientEndpointResult : SyntaxGeneratorClientEndpointBase, ISyntaxCodeGenerator
     {
         public SyntaxGeneratorClientEndpointResult(
             ApiProjectOptions apiProjectOptions,
@@ -30,30 +29,17 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
             string focusOnSegmentName,
             string urlPath,
             bool hasParametersOrRequestBody)
+            : base(
+                apiProjectOptions,
+                operationSchemaMappings,
+                globalPathParameters,
+                apiOperationType,
+                apiOperation,
+                focusOnSegmentName,
+                urlPath,
+                hasParametersOrRequestBody)
         {
-            this.ApiProjectOptions = apiProjectOptions ?? throw new ArgumentNullException(nameof(apiProjectOptions));
-            this.OperationSchemaMappings = operationSchemaMappings ?? throw new ArgumentNullException(nameof(apiProjectOptions));
-            this.GlobalPathParameters = globalPathParameters ?? throw new ArgumentNullException(nameof(globalPathParameters));
-            this.ApiOperationType = apiOperationType;
-            this.ApiOperation = apiOperation ?? throw new ArgumentNullException(nameof(apiOperation));
-            this.FocusOnSegmentName = focusOnSegmentName ?? throw new ArgumentNullException(nameof(focusOnSegmentName));
-            this.ApiUrlPath = urlPath ?? throw new ArgumentNullException(nameof(urlPath));
-            this.HasParametersOrRequestBody = hasParametersOrRequestBody;
         }
-
-        public ApiProjectOptions ApiProjectOptions { get; }
-
-        private List<ApiOperationSchemaMap> OperationSchemaMappings { get; }
-
-        public IList<OpenApiParameter> GlobalPathParameters { get; }
-
-        public OperationType ApiOperationType { get; }
-
-        public OpenApiOperation ApiOperation { get; }
-
-        public string ApiUrlPath { get; }
-
-        public string FocusOnSegmentName { get; }
 
         public CompilationUnitSyntax? Code { get; private set; }
 
@@ -62,8 +48,6 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
         public string ParameterTypeName => ApiOperation.GetOperationName() + NameConstants.ContractParameters;
 
         public string EndpointTypeName => ApiOperation.GetOperationName() + NameConstants.EndpointResult;
-
-        public bool HasParametersOrRequestBody { get; }
 
         public bool GenerateCode()
         {
@@ -96,6 +80,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                 ProjectApiClientFactory.CreateUsingListForEndpointResult(
                     ApiProjectOptions,
                     includeRestResults,
+                    ContractHelper.HasList(ResultTypeName),
                     ContractHelper.HasSharedResponseContract(
                         ApiProjectOptions.Document,
                         OperationSchemaMappings,
@@ -180,18 +165,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
 
         private MemberDeclarationSyntax[] CreatePropertiesForIsStatusCode()
         {
-            var responseTypes = ApiOperation.Responses.GetResponseTypes(
-                OperationSchemaMappings,
-                FocusOnSegmentName,
-                ApiProjectOptions.ProjectName,
-                ensureModelNameWithNamespaceIfNeeded: false,
-                useProblemDetailsAsDefaultResponseBody: false,
-                includeEmptyResponseTypes: false,
-                HasParametersOrRequestBody,
-                ApiProjectOptions.ApiOptions.Generator.UseAuthorization,
-                includeIfNotDefinedInternalServerError: true);
-
-            return responseTypes
+            return ResponseTypes
                 .Select(x => CreatePropertyForIsStatusCode(x.Item1))
                 .ToArray();
         }

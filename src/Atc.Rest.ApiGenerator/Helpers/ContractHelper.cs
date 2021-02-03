@@ -52,5 +52,11 @@ namespace Atc.Rest.ApiGenerator.Helpers
 
             return false;
         }
+
+        public static bool HasList(string typeName)
+        {
+            return !string.IsNullOrEmpty(typeName) &&
+                   typeName.Contains(Microsoft.OpenApi.Models.NameConstants.List + "<", StringComparison.Ordinal);
+        }
     }
 }

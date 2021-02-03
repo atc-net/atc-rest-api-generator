@@ -17,37 +17,28 @@ using Microsoft.OpenApi.Models;
 
 namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
 {
-    public class SyntaxGeneratorClientEndpointInterface
+    public class SyntaxGeneratorClientEndpointInterface : SyntaxGeneratorClientEndpointBase, ISyntaxCodeGenerator
     {
         public SyntaxGeneratorClientEndpointInterface(
             ApiProjectOptions apiProjectOptions,
             List<ApiOperationSchemaMap> operationSchemaMappings,
+            IList<OpenApiParameter> globalPathParameters,
             OperationType apiOperationType,
             OpenApiOperation apiOperation,
             string focusOnSegmentName,
             string urlPath,
             bool hasParametersOrRequestBody)
+            : base(
+                apiProjectOptions,
+                operationSchemaMappings,
+                globalPathParameters,
+                apiOperationType,
+                apiOperation,
+                focusOnSegmentName,
+                urlPath,
+                hasParametersOrRequestBody)
         {
-            this.ApiProjectOptions = apiProjectOptions ?? throw new ArgumentNullException(nameof(apiProjectOptions));
-            this.OperationSchemaMappings = operationSchemaMappings ?? throw new ArgumentNullException(nameof(apiProjectOptions));
-            this.ApiOperationType = apiOperationType;
-            this.ApiOperation = apiOperation ?? throw new ArgumentNullException(nameof(apiOperation));
-            this.FocusOnSegmentName = focusOnSegmentName ?? throw new ArgumentNullException(nameof(focusOnSegmentName));
-            this.ApiUrlPath = urlPath ?? throw new ArgumentNullException(nameof(urlPath));
-            this.HasParametersOrRequestBody = hasParametersOrRequestBody;
         }
-
-        public ApiProjectOptions ApiProjectOptions { get; }
-
-        private List<ApiOperationSchemaMap> OperationSchemaMappings { get; }
-
-        public OperationType ApiOperationType { get; }
-
-        public OpenApiOperation ApiOperation { get; }
-
-        public string ApiUrlPath { get; }
-
-        public string FocusOnSegmentName { get; }
 
         public CompilationUnitSyntax? Code { get; private set; }
 
@@ -56,8 +47,6 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
         public string ParameterTypeName => ApiOperation.GetOperationName() + NameConstants.ContractParameters;
 
         public string EndpointResultTypeName => ApiOperation.GetOperationName() + NameConstants.EndpointResult;
-
-        public bool HasParametersOrRequestBody { get; }
 
         public bool GenerateCode()
         {
@@ -89,6 +78,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                 ProjectApiClientFactory.CreateUsingListForEndpointInterface(
                     ApiProjectOptions,
                     includeRestResults,
+                    ContractHelper.HasList(ResultTypeName),
                     ContractHelper.HasSharedResponseContract(
                         ApiProjectOptions.Document,
                         OperationSchemaMappings,

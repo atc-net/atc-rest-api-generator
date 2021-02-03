@@ -11,32 +11,12 @@
 ## SyntaxGeneratorClientEndpoint
 
 ```csharp
-public class SyntaxGeneratorClientEndpoint : ISyntaxCodeGenerator
+public class SyntaxGeneratorClientEndpoint : SyntaxGeneratorClientEndpointBase, ISyntaxCodeGenerator
 ```
 
 ### Properties
 
 
-#### ApiOperation
-
-```csharp
-ApiOperation
-```
-#### ApiOperationType
-
-```csharp
-ApiOperationType
-```
-#### ApiProjectOptions
-
-```csharp
-ApiProjectOptions
-```
-#### ApiUrlPath
-
-```csharp
-ApiUrlPath
-```
 #### Code
 
 ```csharp
@@ -51,21 +31,6 @@ EndpointResultTypeName
 
 ```csharp
 EndpointTypeName
-```
-#### FocusOnSegmentName
-
-```csharp
-FocusOnSegmentName
-```
-#### GlobalPathParameters
-
-```csharp
-GlobalPathParameters
-```
-#### HasParametersOrRequestBody
-
-```csharp
-HasParametersOrRequestBody
 ```
 #### InterfaceTypeName
 
@@ -109,10 +74,10 @@ string ToString()
 <br />
 
 
-## SyntaxGeneratorClientEndpointInterface
+## SyntaxGeneratorClientEndpointBase
 
 ```csharp
-public class SyntaxGeneratorClientEndpointInterface
+public abstract class SyntaxGeneratorClientEndpointBase
 ```
 
 ### Properties
@@ -138,6 +103,49 @@ ApiProjectOptions
 ```csharp
 ApiUrlPath
 ```
+#### FocusOnSegmentName
+
+```csharp
+FocusOnSegmentName
+```
+#### GlobalPathParameters
+
+```csharp
+GlobalPathParameters
+```
+#### HasParametersOrRequestBody
+
+```csharp
+HasParametersOrRequestBody
+```
+#### OperationSchemaMappings
+
+```csharp
+OperationSchemaMappings
+```
+#### ResponseTypes
+
+```csharp
+ResponseTypes
+```
+#### ResultTypeName
+
+```csharp
+ResultTypeName
+```
+
+<br />
+
+
+## SyntaxGeneratorClientEndpointInterface
+
+```csharp
+public class SyntaxGeneratorClientEndpointInterface : SyntaxGeneratorClientEndpointBase, ISyntaxCodeGenerator
+```
+
+### Properties
+
+
 #### Code
 
 ```csharp
@@ -147,16 +155,6 @@ Code
 
 ```csharp
 EndpointResultTypeName
-```
-#### FocusOnSegmentName
-
-```csharp
-FocusOnSegmentName
-```
-#### HasParametersOrRequestBody
-
-```csharp
-HasParametersOrRequestBody
 ```
 #### InterfaceTypeName
 
@@ -239,32 +237,12 @@ List<SyntaxGeneratorClientEndpointInterface> GenerateSyntaxTrees()
 ## SyntaxGeneratorClientEndpointResult
 
 ```csharp
-public class SyntaxGeneratorClientEndpointResult : ISyntaxCodeGenerator
+public class SyntaxGeneratorClientEndpointResult : SyntaxGeneratorClientEndpointBase, ISyntaxCodeGenerator
 ```
 
 ### Properties
 
 
-#### ApiOperation
-
-```csharp
-ApiOperation
-```
-#### ApiOperationType
-
-```csharp
-ApiOperationType
-```
-#### ApiProjectOptions
-
-```csharp
-ApiProjectOptions
-```
-#### ApiUrlPath
-
-```csharp
-ApiUrlPath
-```
 #### Code
 
 ```csharp
@@ -274,21 +252,6 @@ Code
 
 ```csharp
 EndpointTypeName
-```
-#### FocusOnSegmentName
-
-```csharp
-FocusOnSegmentName
-```
-#### GlobalPathParameters
-
-```csharp
-GlobalPathParameters
-```
-#### HasParametersOrRequestBody
-
-```csharp
-HasParametersOrRequestBody
 ```
 #### InterfaceTypeName
 
@@ -335,46 +298,16 @@ string ToString()
 ## SyntaxGeneratorClientEndpointResultInterface
 
 ```csharp
-public class SyntaxGeneratorClientEndpointResultInterface
+public class SyntaxGeneratorClientEndpointResultInterface : SyntaxGeneratorClientEndpointBase, ISyntaxCodeGenerator
 ```
 
 ### Properties
 
 
-#### ApiOperation
-
-```csharp
-ApiOperation
-```
-#### ApiOperationType
-
-```csharp
-ApiOperationType
-```
-#### ApiProjectOptions
-
-```csharp
-ApiProjectOptions
-```
-#### ApiUrlPath
-
-```csharp
-ApiUrlPath
-```
 #### Code
 
 ```csharp
 Code
-```
-#### FocusOnSegmentName
-
-```csharp
-FocusOnSegmentName
-```
-#### HasParametersOrRequestBody
-
-```csharp
-HasParametersOrRequestBody
 ```
 #### InterfaceTypeName
 

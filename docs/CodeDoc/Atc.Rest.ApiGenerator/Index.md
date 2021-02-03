@@ -105,6 +105,7 @@
 ## [Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md)
 
 - [SyntaxGeneratorClientEndpoint](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md#syntaxgeneratorclientendpoint)
+- [SyntaxGeneratorClientEndpointBase](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md#syntaxgeneratorclientendpointbase)
 - [SyntaxGeneratorClientEndpointInterface](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md#syntaxgeneratorclientendpointinterface)
 - [SyntaxGeneratorClientEndpointInterfaces](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md#syntaxgeneratorclientendpointinterfaces)
 - [SyntaxGeneratorClientEndpointResult](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md#syntaxgeneratorclientendpointresult)
