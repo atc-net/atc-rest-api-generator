@@ -23,12 +23,12 @@ namespace Atc.Rest.ApiGenerator.CLI
             }
             catch (TargetInvocationException ex) when (ex.InnerException != null)
             {
-                Colorful.Console.WriteLine($@"Error: {ex.InnerException.Message}", Color.Red);
+                Colorful.Console.WriteLine($"Error: {ex.InnerException.Message}", Color.Red);
                 return ExitStatusCodes.Failure;
             }
             catch (Exception ex)
             {
-                Colorful.Console.WriteLine($@"Error: {ex.Message}", Color.Red);
+                Colorful.Console.WriteLine($"Error: {ex.Message}", Color.Red);
                 return ExitStatusCodes.Failure;
             }
         }
