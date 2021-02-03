@@ -178,6 +178,11 @@ public static class NugetPackageReferenceHelper
 ```csharp
 List<Tuple<string, string, string>> CreateForApiProject()
 ```
+#### CreateForClientApiProject
+
+```csharp
+List<Tuple<string, string, string>> CreateForClientApiProject()
+```
 #### CreateForHostProject
 
 ```csharp

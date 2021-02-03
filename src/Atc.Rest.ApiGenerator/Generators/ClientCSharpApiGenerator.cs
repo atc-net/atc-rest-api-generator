@@ -64,10 +64,10 @@ namespace Atc.Rest.ApiGenerator.Generators
                     createAsWeb: false,
                     createAsTestProject: false,
                     projectName: projectOptions.ProjectName,
-                    "netcoreapp3.1",
+                    "netstandard2.1",
                     useNullableReferenceTypes: projectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
                     frameworkReferences: null,
-                    packageReferences: NugetPackageReferenceHelper.CreateForApiProject(),
+                    packageReferences: NugetPackageReferenceHelper.CreateForClientApiProject(),
                     projectReferences: null,
                     includeApiSpecification: false));
             }

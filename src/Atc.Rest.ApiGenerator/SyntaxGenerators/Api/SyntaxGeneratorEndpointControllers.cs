@@ -442,13 +442,13 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                     SyntaxTokenFactory.Comma(),
                     SyntaxArgumentFactory.Create("handler"),
                     SyntaxTokenFactory.Comma(),
-                    SyntaxArgumentFactory.Create("cancellationToken"),
+                    SyntaxArgumentFactory.Create(nameof(CancellationToken).EnsureFirstCharacterToLower()),
                 }
                 : new SyntaxNodeOrToken[]
                 {
                     SyntaxArgumentFactory.Create("handler"),
                     SyntaxTokenFactory.Comma(),
-                    SyntaxArgumentFactory.Create("cancellationToken"),
+                    SyntaxArgumentFactory.Create(nameof(CancellationToken).EnsureFirstCharacterToLower()),
                 };
 
             return SyntaxFactory.ReturnStatement(
@@ -465,11 +465,11 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                 {
                     SyntaxArgumentFactory.Create("parameters"),
                     SyntaxTokenFactory.Comma(),
-                    SyntaxArgumentFactory.Create("cancellationToken"),
+                    SyntaxArgumentFactory.Create(nameof(CancellationToken).EnsureFirstCharacterToLower()),
                 }
                 : new SyntaxNodeOrToken[]
                 {
-                    SyntaxArgumentFactory.Create("cancellationToken"),
+                    SyntaxArgumentFactory.Create(nameof(CancellationToken).EnsureFirstCharacterToLower()),
                 };
 
             return SyntaxFactory.ReturnStatement(

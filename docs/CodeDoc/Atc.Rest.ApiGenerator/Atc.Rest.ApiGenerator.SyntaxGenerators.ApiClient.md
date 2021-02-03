@@ -8,16 +8,6 @@
 <br />
 
 
-## ISyntaxGeneratorClientEndpoints
-
-```csharp
-public interface ISyntaxGeneratorClientEndpoints
-```
-
-
-<br />
-
-
 ## SyntaxGeneratorClientEndpoint
 
 ```csharp
@@ -51,6 +41,11 @@ ApiUrlPath
 
 ```csharp
 Code
+```
+#### EndpointResultTypeName
+
+```csharp
+EndpointResultTypeName
 ```
 #### EndpointTypeName
 
@@ -147,6 +142,11 @@ ApiUrlPath
 
 ```csharp
 Code
+```
+#### EndpointResultTypeName
+
+```csharp
+EndpointResultTypeName
 ```
 #### FocusOnSegmentName
 

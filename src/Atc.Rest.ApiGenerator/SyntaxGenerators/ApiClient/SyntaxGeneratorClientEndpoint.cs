@@ -12,6 +12,7 @@ using Atc.Rest.ApiGenerator.Factories;
 using Atc.Rest.ApiGenerator.Helpers;
 using Atc.Rest.ApiGenerator.Models;
 using Atc.Rest.ApiGenerator.ProjectSyntaxFactories;
+using Atc.Rest.Client.Builder;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -165,7 +166,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
             return
                 SyntaxFactory.FieldDeclaration(
                     SyntaxFactory
-                        .VariableDeclaration(SyntaxFactory.IdentifierName("IHttpClientFactory"))
+                        .VariableDeclaration(SyntaxFactory.IdentifierName(nameof(IHttpClientFactory)))
                         .WithVariables(
                             SyntaxFactory.SingletonSeparatedList(
                                 SyntaxFactory.VariableDeclarator(
@@ -178,7 +179,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
         {
             return
                 SyntaxFactory.FieldDeclaration(
-                    SyntaxFactory.VariableDeclaration(SyntaxFactory.IdentifierName("IHttpMessageFactory"))
+                    SyntaxFactory.VariableDeclaration(SyntaxFactory.IdentifierName(nameof(IHttpMessageFactory)))
                         .WithVariables(
                             SyntaxFactory.SingletonSeparatedList(
                                 SyntaxFactory.VariableDeclarator(
@@ -201,10 +202,10 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                                 new SyntaxNodeOrToken[]
                                 {
                                     SyntaxFactory.Parameter(SyntaxFactory.Identifier("factory"))
-                                        .WithType(SyntaxFactory.IdentifierName("IHttpClientFactory")),
+                                        .WithType(SyntaxFactory.IdentifierName(nameof(IHttpClientFactory))),
                                     SyntaxTokenFactory.Comma(), SyntaxFactory
                                         .Parameter(SyntaxFactory.Identifier("httpMessageFactory"))
-                                        .WithType(SyntaxFactory.IdentifierName("IHttpMessageFactory")),
+                                        .WithType(SyntaxFactory.IdentifierName(nameof(IHttpMessageFactory))),
                                 })))
                     .WithBody(
                         SyntaxFactory.Block(
@@ -359,7 +360,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                                 .WithInitializer(
                                     SyntaxFactory.EqualsValueClause(
                                         SyntaxFactory.InvocationExpression(
-                                                SyntaxMemberAccessExpressionFactory.Create("CreateClient", "factory"))
+                                                SyntaxMemberAccessExpressionFactory.Create(nameof(IHttpClientFactory.CreateClient), "factory"))
                                             .WithArgumentList(
                                                 SyntaxFactory.ArgumentList(
                                                     SyntaxFactory.SingletonSeparatedList(
@@ -374,7 +375,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
         {
             var equalsClauseSyntax = SyntaxFactory.EqualsValueClause(
                 SyntaxFactory.InvocationExpression(
-                        SyntaxMemberAccessExpressionFactory.Create("FromTemplate", "httpMessageFactory"))
+                        SyntaxMemberAccessExpressionFactory.Create(nameof(IHttpMessageFactory.FromTemplate), "httpMessageFactory"))
                     .WithArgumentList(CreateOneStringArg($"/api/{ApiProjectOptions.ApiVersion}{ApiUrlPath}")));
 
             var requestBuilderSyntax = SyntaxFactory.LocalDeclarationStatement(
@@ -417,9 +418,9 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
         {
             string methodName = parameter.In switch
             {
-                ParameterLocation.Query => "WithQueryParameter",
-                ParameterLocation.Header => "WithHeaderParameter",
-                ParameterLocation.Path => "WithPathParameter",
+                ParameterLocation.Query => nameof(IMessageRequestBuilder.WithQueryParameter),
+                ParameterLocation.Header => nameof(IMessageRequestBuilder.WithHeaderParameter),
+                ParameterLocation.Path => nameof(IMessageRequestBuilder.WithPathParameter),
                 _ => throw new NotSupportedException(nameof(parameter.In))
             };
 
@@ -448,7 +449,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
         {
             return SyntaxFactory.ExpressionStatement(
                 SyntaxFactory.InvocationExpression(
-                    SyntaxMemberAccessExpressionFactory.Create("WithBody", "requestBuilder"))
+                    SyntaxMemberAccessExpressionFactory.Create(nameof(IMessageRequestBuilder.WithBody), "requestBuilder"))
                 .WithArgumentList(
                     SyntaxFactory.ArgumentList(
                         SyntaxFactory.SingletonSeparatedList(
@@ -466,7 +467,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                                     .WithInitializer(
                                         SyntaxFactory.EqualsValueClause(
                                             SyntaxFactory.InvocationExpression(
-                                                    SyntaxMemberAccessExpressionFactory.Create("Build", "requestBuilder")) // TODO: nameof
+                                                    SyntaxMemberAccessExpressionFactory.Create(nameof(IMessageRequestBuilder.Build), "requestBuilder"))
                                                 .WithArgumentList(
                                                     SyntaxFactory.ArgumentList(
                                                         SyntaxFactory.SingletonSeparatedList(
@@ -495,7 +496,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                                                                 {
                                                                     SyntaxFactory.Argument(SyntaxFactory.IdentifierName("requestMessage")),
                                                                     SyntaxFactory.Token(SyntaxKind.CommaToken),
-                                                                    SyntaxFactory.Argument(SyntaxFactory.IdentifierName("cancellationToken")),
+                                                                    SyntaxFactory.Argument(SyntaxFactory.IdentifierName(nameof(CancellationToken).EnsureFirstCharacterToLower())),
                                                                 })))))))))
                 .WithUsingKeyword(
                     SyntaxFactory.Token(SyntaxKind.UsingKeyword));
@@ -526,7 +527,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                                                 SyntaxFactory.MemberAccessExpression(
                                                     SyntaxKind.SimpleMemberAccessExpression,
                                                     SyntaxFactory.IdentifierName("httpMessageFactory"),
-                                                    SyntaxFactory.IdentifierName("FromResponse")))
+                                                    SyntaxFactory.IdentifierName(nameof(IHttpMessageFactory.FromResponse))))
                                             .WithArgumentList(
                                                 SyntaxFactory.ArgumentList(
                                                     SyntaxFactory.SingletonSeparatedList(
@@ -542,7 +543,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                             SyntaxKind.SimpleMemberAccessExpression,
                             SyntaxFactory.IdentifierName("responseBuilder"),
                             SyntaxFactory.GenericName(
-                                    SyntaxFactory.Identifier("AddSuccessResponse"))
+                                    SyntaxFactory.Identifier(nameof(IMessageResponseBuilder.AddSuccessResponse)))
                                 .WithTypeArgumentList(
                                     SyntaxFactory.TypeArgumentList(
                                         SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
@@ -589,7 +590,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                             SyntaxKind.SimpleMemberAccessExpression,
                             SyntaxFactory.IdentifierName("responseBuilder"),
                             SyntaxFactory.GenericName(
-                                    SyntaxFactory.Identifier("AddErrorResponse"))
+                                    SyntaxFactory.Identifier(nameof(IMessageResponseBuilder.AddErrorResponse)))
                                 .WithTypeArgumentList(
                                     SyntaxFactory.TypeArgumentList(
                                         SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
@@ -609,7 +610,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                         SyntaxFactory.MemberAccessExpression(
                             SyntaxKind.SimpleMemberAccessExpression,
                             SyntaxFactory.IdentifierName("responseBuilder"),
-                            SyntaxFactory.IdentifierName("BuildResponseAsync")))
+                            SyntaxFactory.IdentifierName(nameof(IMessageResponseBuilder.BuildResponseAsync))))
                     .WithArgumentList(
                         SyntaxFactory.ArgumentList(
                             SyntaxFactory.SeparatedList<ArgumentSyntax>(
@@ -629,7 +630,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                                                                     SyntaxFactory.IdentifierName("x"))))))),
                                     SyntaxFactory.Token(SyntaxKind.CommaToken),
                                     SyntaxFactory.Argument(
-                                        SyntaxFactory.IdentifierName("cancellationToken")),
+                                        SyntaxFactory.IdentifierName(nameof(CancellationToken).EnsureFirstCharacterToLower())),
                                 })))));
         }
 

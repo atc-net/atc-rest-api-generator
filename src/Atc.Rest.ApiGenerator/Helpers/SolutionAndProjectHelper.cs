@@ -54,7 +54,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
                     sb.AppendLine(4, "<Nullable>enable</Nullable>");
                 }
 
-                sb.AppendLine(4, "<LangVersion>8.0</LangVersion>");
+                sb.AppendLine(4, "<LangVersion>9.0</LangVersion>");
                 sb.AppendLine(2, "</PropertyGroup>");
                 sb.AppendLine();
                 sb.AppendLine(2, "<PropertyGroup>");
@@ -592,7 +592,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
 
             var nullabilityRoot = XElement.Parse(hasLanguageVersion
                 ? @"<PropertyGroup><Nullable>enable</Nullable></PropertyGroup>"
-                : @"<PropertyGroup><Nullable>enable</Nullable><LangVersion>8.0</LangVersion></PropertyGroup>");
+                : @"<PropertyGroup><Nullable>enable</Nullable><LangVersion>9.0</LangVersion></PropertyGroup>");
 
             element.Add(nullabilityRoot);
         }
