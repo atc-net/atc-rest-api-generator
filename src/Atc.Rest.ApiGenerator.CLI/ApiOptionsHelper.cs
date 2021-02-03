@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -47,7 +47,7 @@ namespace Atc.Rest.ApiGenerator.CLI
             var json = stream.ReadToEnd();
             apiOptions = JsonSerializer.Deserialize<ApiOptions>(json, serializeOptions);
 
-            return apiOptions;
+            return apiOptions!;
         }
 
         public static void ApplyValidationOverrides(ApiOptions apiOptions, CommandLineApplication configCmd)

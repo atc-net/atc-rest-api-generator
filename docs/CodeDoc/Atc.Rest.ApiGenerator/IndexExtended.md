@@ -145,6 +145,7 @@
 - [NugetPackageReferenceHelper](Atc.Rest.ApiGenerator.Helpers.md#nugetpackagereferencehelper)
   -  Static Methods
      - CreateForApiProject()
+     - CreateForClientApiProject()
      - CreateForHostProject(bool useRestExtended)
      - CreateForTestProject(bool useMvc)
 - [OpenApiDocumentHelper](Atc.Rest.ApiGenerator.Helpers.md#openapidocumenthelper)
@@ -378,30 +379,6 @@
 
 ## [Atc.Rest.ApiGenerator.SyntaxGenerators.Api](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md)
 
-- [ISyntaxGeneratorContract](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#isyntaxgeneratorcontract)
-  -  Properties
-     - ApiProjectOptions
-     - FocusOnSegmentName
-- [ISyntaxGeneratorContractInterfaces](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#isyntaxgeneratorcontractinterfaces)
-  -  Methods
-     - GenerateSyntaxTrees()
-- [ISyntaxGeneratorContractModels](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#isyntaxgeneratorcontractmodels)
-  -  Properties
-     - OperationSchemaMappings
-  -  Methods
-     - GenerateSyntaxTrees()
-- [ISyntaxGeneratorContractParameters](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#isyntaxgeneratorcontractparameters)
-  -  Methods
-     - GenerateSyntaxTrees()
-- [ISyntaxGeneratorContractResults](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#isyntaxgeneratorcontractresults)
-  -  Methods
-     - GenerateSyntaxTrees()
-- [ISyntaxGeneratorEndpointControllers](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#isyntaxgeneratorendpointcontrollers)
-- [ISyntaxOperationCodeGenerator](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#isyntaxoperationcodegenerator)
-  -  Properties
-     - ApiOperation
-     - ApiOperationType
-     - ApiProjectOptions
 - [SyntaxGeneratorContractInterface](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorcontractinterface)
   -  Properties
      - ApiOperation
@@ -500,9 +477,35 @@
   -  Methods
      - GenerateCode()
 
+## [Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces.md)
+
+- [ISyntaxGeneratorContract](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces.md#isyntaxgeneratorcontract)
+  -  Properties
+     - ApiProjectOptions
+     - FocusOnSegmentName
+- [ISyntaxGeneratorContractInterfaces](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces.md#isyntaxgeneratorcontractinterfaces)
+  -  Methods
+     - GenerateSyntaxTrees()
+- [ISyntaxGeneratorContractModels](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces.md#isyntaxgeneratorcontractmodels)
+  -  Properties
+     - OperationSchemaMappings
+  -  Methods
+     - GenerateSyntaxTrees()
+- [ISyntaxGeneratorContractParameters](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces.md#isyntaxgeneratorcontractparameters)
+  -  Methods
+     - GenerateSyntaxTrees()
+- [ISyntaxGeneratorContractResults](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces.md#isyntaxgeneratorcontractresults)
+  -  Methods
+     - GenerateSyntaxTrees()
+- [ISyntaxGeneratorEndpointControllers](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces.md#isyntaxgeneratorendpointcontrollers)
+- [ISyntaxOperationCodeGenerator](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces.md#isyntaxoperationcodegenerator)
+  -  Properties
+     - ApiOperation
+     - ApiOperationType
+     - ApiProjectOptions
+
 ## [Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md)
 
-- [ISyntaxGeneratorClientEndpoints](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md#isyntaxgeneratorclientendpoints)
 - [SyntaxGeneratorClientEndpoint](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md#syntaxgeneratorclientendpoint)
   -  Properties
      - ApiOperation
@@ -510,6 +513,7 @@
      - ApiProjectOptions
      - ApiUrlPath
      - Code
+     - EndpointResultTypeName
      - EndpointTypeName
      - FocusOnSegmentName
      - GlobalPathParameters
@@ -529,6 +533,7 @@
      - ApiProjectOptions
      - ApiUrlPath
      - Code
+     - EndpointResultTypeName
      - FocusOnSegmentName
      - HasParametersOrRequestBody
      - InterfaceTypeName
@@ -603,6 +608,10 @@
      - OperationSchemaMappings
   -  Methods
      - GenerateSyntaxTrees()
+
+## [Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.Interfaces](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.Interfaces.md)
+
+- [ISyntaxGeneratorClientEndpoints](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.Interfaces.md#isyntaxgeneratorclientendpoints)
 
 ## [Atc.Rest.ApiGenerator.SyntaxGenerators.Domain](Atc.Rest.ApiGenerator.SyntaxGenerators.Domain.md)
 
