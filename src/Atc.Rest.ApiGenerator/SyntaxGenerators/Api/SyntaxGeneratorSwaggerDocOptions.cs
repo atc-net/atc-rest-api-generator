@@ -1,5 +1,4 @@
-﻿using System.Text;
-using Atc.Rest.ApiGenerator.Helpers;
+﻿using System;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.OpenApi.Models;
 
