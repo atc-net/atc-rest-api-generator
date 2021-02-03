@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Atc.Rest.ApiGenerator.Helpers;
 using Microsoft.OpenApi.Models;
 
@@ -43,7 +44,7 @@ namespace Atc.Rest.ApiGenerator.Models
             ToolVersion = GenerateHelper.GetAtcToolVersion();
             ApiOptions = apiOptions;
 
-            ApiVersion = GetApiVersion(openApiDocument);
+            RouteBase = GetApiVersion(openApiDocument);
             ProjectName = string.IsNullOrEmpty(projectSuffixName)
                 ? projectPrefixName
                     .Replace(" ", ".", StringComparison.Ordinal)
@@ -96,7 +97,7 @@ namespace Atc.Rest.ApiGenerator.Models
 
         public string ProjectName { get; }
 
-        public string ApiVersion { get; }
+        public string RouteBase { get; }
 
         public bool IsForClient { get; }
 
@@ -106,21 +107,8 @@ namespace Atc.Rest.ApiGenerator.Models
 
         private static string GetApiVersion(OpenApiDocument openApiDocument)
         {
-            if (openApiDocument.Info?.Version != null)
-            {
-                return openApiDocument.Info.Version switch
-                {
-                    "1" => "v1",
-                    "1.0" => "v1",
-                    "1.0.0" => "v1",
-                    "v1" => "v1",
-                    "v1.0" => "v1",
-                    "v1.0.0" => "v1",
-                    _ => openApiDocument.Info.Version.Replace(".", string.Empty, StringComparison.Ordinal)
-                };
-            }
-
-            return "v1";
+            var server = openApiDocument.Servers?.FirstOrDefault()?.Url;
+            return string.IsNullOrWhiteSpace(server) ? "api/v1" : server;
         }
     }
 }
