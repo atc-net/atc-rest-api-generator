@@ -205,7 +205,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                         ApiProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
                         ApiProjectOptions.ProjectName,
                         FocusOnSegmentName,
-                        $"/{ApiProjectOptions.RouteBase}{routePart}",
+                        $"{ApiProjectOptions.RouteBase}{routePart}",
                         apiOperation.Key,
                         operationName,
                         hasSharedResponseContract,

@@ -108,7 +108,7 @@ namespace Atc.Rest.ApiGenerator.Models
         private static string GetApiVersion(OpenApiDocument openApiDocument)
         {
             var server = openApiDocument.Servers?.FirstOrDefault()?.Url;
-            return string.IsNullOrWhiteSpace(server) ? "api/v1" : server;
+            return string.IsNullOrWhiteSpace(server) ? "/api/v1" : server;
         }
     }
 }
