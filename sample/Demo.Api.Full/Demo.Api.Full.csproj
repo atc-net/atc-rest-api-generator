@@ -4,14 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <Nullable>enable</Nullable>
-    <LangVersion>8.0</LangVersion>
-  </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>bin\Debug\netcoreapp3.1\Demo.Api.Full.xml</DocumentationFile>
-    <NoWarn>1573;1591;1701;1702;1712</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,10 +18,10 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="4.2.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\Demo.Api.Generated\Demo.Api.Generated.csproj" />
     <ProjectReference Include="..\Demo.Domain\Demo.Domain.csproj" />
   </ItemGroup>
-  
+
 </Project>

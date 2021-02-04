@@ -4,14 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <Nullable>enable</Nullable>
-    <LangVersion>8.0</LangVersion>
-  </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>bin\Debug\netcoreapp3.1\Demo.Api.xml</DocumentationFile>
-    <NoWarn>1573;1591;1701;1702;1712</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
