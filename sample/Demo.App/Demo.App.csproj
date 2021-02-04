@@ -2,12 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <IsPackable>false</IsPackable>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <Nullable>enable</Nullable>
-    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -16,7 +10,6 @@
 
   <PropertyGroup>
     <DocumentationFile>bin\Debug\netstandard2.1\Demo.App.xml</DocumentationFile>
-    <NoWarn>1573;1591;1701;1702;1712;8618</NoWarn>
   </PropertyGroup>
 
 </Project>
