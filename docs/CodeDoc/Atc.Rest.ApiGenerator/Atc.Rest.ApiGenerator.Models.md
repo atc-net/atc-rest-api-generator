@@ -111,11 +111,6 @@ public abstract class BaseProjectOptions
 ```csharp
 ApiOptions
 ```
-#### ApiVersion
-
-```csharp
-ApiVersion
-```
 #### BasePathSegmentNames
 
 ```csharp
@@ -170,6 +165,11 @@ ProjectSrcCsProj
 
 ```csharp
 ProjectTestCsProj
+```
+#### RouteBase
+
+```csharp
+RouteBase
 ```
 #### ToolName
 

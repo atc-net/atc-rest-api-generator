@@ -51,5 +51,5 @@ jobs:
 
       - name: 📦 Push packages to NuGet
         run: |
-          dotnet nuget push ${GITHUB_WORKSPACE}/packages/'Atc.Rest.ApiGenerator.'${NBGV_SimpleVersion}'.nupkg' -k ${{ secrets.NUGET_KEY }} -s ${{ env.NUGET_REPO_URL }} --skip-duplicate
-          dotnet nuget push ${GITHUB_WORKSPACE}/packages/'atc-api-gen.'${NBGV_SimpleVersion}'.nupkg' -k ${{ secrets.NUGET_KEY }} -s ${{ env.NUGET_REPO_URL }} --skip-duplicate
+          dotnet nuget push ${GITHUB_WORKSPACE}/packages/'Atc.Rest.ApiGenerator.'${NBGV_SimpleVersion}'.nupkg' -k ${{ secrets.NUGET_KEY }} -s ${{ env.NUGET_REPO_URL }} --skip-duplicate --no-symbols true
+          dotnet nuget push ${GITHUB_WORKSPACE}/packages/'atc-api-gen.'${NBGV_SimpleVersion}'.nupkg' -k ${{ secrets.NUGET_KEY }} -s ${{ env.NUGET_REPO_URL }} --skip-duplicate --no-symbols true

@@ -35,6 +35,11 @@ public static class ContractHelper
 ### Static Methods
 
 
+#### HasList
+
+```csharp
+bool HasList(string typeName)
+```
 #### HasSharedResponseContract
 
 ```csharp

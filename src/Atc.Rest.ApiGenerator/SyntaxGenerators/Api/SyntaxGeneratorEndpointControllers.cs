@@ -68,8 +68,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                         SyntaxAttributeListFactory.Create(nameof(AuthorizeAttribute)));
             }
 
-            classDeclaration =
-                classDeclaration.AddAttributeLists(
+            classDeclaration = classDeclaration.AddAttributeLists(
                     SyntaxAttributeListFactory.Create(nameof(ApiControllerAttribute)),
                     SyntaxAttributeListFactory.CreateWithOneItemWithOneArgument(nameof(RouteAttribute), $"{ApiProjectOptions.RouteBase}/{GetRouteSegment()}"))
                 .AddBaseListTypes(SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseTypeName(nameof(ControllerBase))))

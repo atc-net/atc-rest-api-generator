@@ -47,7 +47,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
         {
             var packageReference = new List<Tuple<string, string, string?>>
             {
-                new Tuple<string, string, string?>("Atc.Rest.Client", "1.0.25", null),
+                new Tuple<string, string, string?>("Atc.Rest.Client", "1.0.29", null),
                 new Tuple<string, string, string?>("Microsoft.AspNetCore.Mvc.Core", "2.2.5", null),
                 new Tuple<string, string, string?>("System.ComponentModel.Annotations", "5.0.0", null),
             };

@@ -20,22 +20,22 @@ public static class ProjectApiClientFactory
 #### CreateUsingListForEndpoint
 
 ```csharp
-string[] CreateUsingListForEndpoint(ApiProjectOptions apiProjectOptions, bool includeRestResults, bool hasSharedModel)
+string[] CreateUsingListForEndpoint(ApiProjectOptions apiProjectOptions, bool includeRestResults, bool hasParameter, bool hasList, bool hasSharedModel)
 ```
 #### CreateUsingListForEndpointInterface
 
 ```csharp
-string[] CreateUsingListForEndpointInterface(ApiProjectOptions apiProjectOptions, bool includeRestResults, bool hasSharedModel)
+string[] CreateUsingListForEndpointInterface(ApiProjectOptions apiProjectOptions, bool includeRestResults, bool hasList, bool hasSharedModel)
 ```
 #### CreateUsingListForEndpointResult
 
 ```csharp
-string[] CreateUsingListForEndpointResult(ApiProjectOptions apiProjectOptions, bool includeRestResults, bool hasSharedModel)
+string[] CreateUsingListForEndpointResult(ApiProjectOptions apiProjectOptions, bool includeRestResults, bool hasList, bool hasSharedModel)
 ```
 #### CreateUsingListForEndpointResultInterface
 
 ```csharp
-string[] CreateUsingListForEndpointResultInterface(ApiProjectOptions apiProjectOptions, bool includeRestResults, bool hasSharedModel)
+string[] CreateUsingListForEndpointResultInterface(ApiProjectOptions apiProjectOptions, bool includeRestResults, bool hasList, bool hasSharedModel)
 ```
 
 <br />
