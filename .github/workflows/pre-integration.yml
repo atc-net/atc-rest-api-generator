@@ -104,3 +104,13 @@ jobs:
       - name: 🛠️ Build Generated Code
         run: dotnet build
         working-directory: petstore3
+
+      - name: 🛠️ Run Generated Code
+        run: dotnet run --project src/Swagger.Petstore.Api/Swagger.Petstore.Api.csproj &
+        working-directory: petstore3
+
+      - name: 🌎 HTTP GET /swagger
+        run: curl -O https://localhost:5001/swagger -v
+
+      - name: 🌎 HTTP GET /api/v3/pet/1
+        run: curl -O https://localhost:5001/api/v3/pet/1 -v
