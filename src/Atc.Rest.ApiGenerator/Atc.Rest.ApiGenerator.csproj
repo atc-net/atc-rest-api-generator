@@ -17,4 +17,9 @@
     <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.2.3" />
   </ItemGroup>
 
+  <ItemGroup>	
+    <EmbeddedResource Include="Resources\launchSettingsExtended.json" />	
+    <EmbeddedResource Include="Resources\launchSettings.json" />	
+  </ItemGroup>
+
 </Project>
