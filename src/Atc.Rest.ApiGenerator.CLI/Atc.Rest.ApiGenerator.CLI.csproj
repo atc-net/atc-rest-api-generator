@@ -8,18 +8,7 @@
     <Title>Atc API Generator CLI</Title>
     <OutputType>Exe</OutputType>
     <AssemblyName>atc-api</AssemblyName>
-    <IsPackable>true</IsPackable>
     <PackAsTool>true</PackAsTool>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="..\..\images\icon.png" Pack="true" PackagePath="\" />
-  </ItemGroup>
-
-  <PropertyGroup>
-    <Nullable>enable</Nullable>
-    <LangVersion>8.0</LangVersion>
-    <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>

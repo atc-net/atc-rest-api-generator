@@ -8,22 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\launchSettings.json" />
-    <None Remove="Resources\launchSettingsExtended.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\launchSettingsExtended.json" />
-    <EmbeddedResource Include="Resources\launchSettings.json" />
-  </ItemGroup>
-
-  <PropertyGroup>
-    <Nullable>enable</Nullable>
-    <LangVersion>8.0</LangVersion>
-    <NeutralLanguage>en-US</NeutralLanguage>
-  </PropertyGroup>
-
-  <ItemGroup>
     <PackageReference Include="Atc" Version="1.1.87" />
     <PackageReference Include="Atc.CodeAnalysis.CSharp" Version="1.1.87" />
     <PackageReference Include="Atc.OpenApi" Version="1.1.87" />
