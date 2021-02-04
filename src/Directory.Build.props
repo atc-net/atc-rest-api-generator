@@ -6,20 +6,51 @@
   -->
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\Directory.Build.props" />
 
-  <PropertyGroup Label="Nuget package metadata">
-    <OrganizationName><!-- Insert organization name here --></OrganizationName>
-    <RepositoryName><!-- Insert repository name here --></RepositoryName>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  <!-- Global nuget package configurations that should not be needed to change -->
+  <PropertyGroup Label="Global Nuget Package metadata">
     <RepositoryUrl>https://github.com/$(OrganizationName)/$(RepositoryName)</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageProjectUrl>https://github.com/$(OrganizationName)/$(RepositoryName)</PackageProjectUrl>
-    <PackageTags></PackageTags>
-    <Product></Product>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/$(OrganizationName)/$(RepositoryName)</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\images\icon.png" Pack="true" PackagePath="\" Visible="false" />
+  </ItemGroup>
+
+  <PropertyGroup Label="Build instructions">
+    <OutputType>Library</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+    <!-- Creates a regular package and a symbols package -->
     <IncludeSymbols>true</IncludeSymbols>
+    <!-- Creates symbol package in the new .snupkg format -->
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <!--
+      Instruct the build system to embed project source files that are not tracked by the source control
+      or imported from a source package to the generated PDB.
+    -->
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <!-- Recommended: Embed symbols containing Source Link in the main file (exe/dll) -->
     <DebugType>embedded</DebugType>
-    <!-- <SymbolPackageFormat>snupkg</SymbolPackageFormat> # NU5017 - https://github.com/NuGet/Home/issues/10372  -->
+    <!-- Will generate nuget packages for each project -->
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <!-- Web projects aren't packable by default. To override the default behavior, add the following -->
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+
+  <!--
+  By default builds are non-deterministic, meaning there is no guarantee that building the same code twice(on the same or different machines)
+  will produce exactly the same binary output. Deterministic builds are important as they enable verification that the resulting
+  binary was built from the specified source and provides traceability.
+
+  To enable deterministic builds a property should be set to through: ContinuousIntegrationBuild.
+
+  Important: This property should not be enabled during local development as the debugger won't be able to find the local source files.
+  -->
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
   <ItemGroup>

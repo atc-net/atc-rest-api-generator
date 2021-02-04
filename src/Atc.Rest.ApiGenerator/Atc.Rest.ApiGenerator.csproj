@@ -1,30 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Library</OutputType>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <AssemblyVersion>1.0.0</AssemblyVersion>
-    <Title>Atc.Rest.ApiGenerator</Title>
-    <Authors>Atc-net</Authors>
-    <Description>Atc.Rest.ApiGenerator is a WebApi C# code generator using a OpenApi 3.0.x specification YAML file.</Description>
-    <PackageProjectUrl>https://github.com/atc-net/atc-rest-api-generator/tree/main/src/Atc.Rest.ApiGenerator</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/atc-net/atc</RepositoryUrl>
-    <PackageIconUrl>https://raw.githubusercontent.com/atc-net/atc/master/images/icon.png</PackageIconUrl>
-    <PackageIcon>icon.png</PackageIcon>
-    <RepositoryUrl>https://github.com/atc-net/atc-rest-api-generator</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <PackageId>Atc.Rest.ApiGenerator</PackageId>
-    <AssemblyName>Atc.Rest.ApiGenerator</AssemblyName>
-    <DebugType>embedded</DebugType>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <IsPackable>true</IsPackable>
-    <PackAsTool>false</PackAsTool>
-    <TieredCompilation>true</TieredCompilation>
-    <IncludeSymbols>true</IncludeSymbols>
-    <DebugType>embedded</DebugType>
-    <Deterministic>true</Deterministic>
+    <PackageTags>rest;api;netstandard;client</PackageTags>
+    <Description>Atc.Rest.ApiGenerator is a WebApi C# code generator using a OpenApi 3.0.x specification YAML file.</Description>
   </PropertyGroup>
 
   <ItemGroup>
@@ -35,10 +15,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\launchSettingsExtended.json" />
     <EmbeddedResource Include="Resources\launchSettings.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\..\images\icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <PropertyGroup>
