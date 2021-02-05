@@ -125,16 +125,17 @@ namespace Atc.Rest.ApiGenerator.Generators
                 throw new ArgumentNullException(nameof(operationSchemaMappings));
             }
 
-            //// TODO: var sgEndpointInterfaces = new List<SyntaxGeneratorClientEndpointInterface>();
-            var sgEndpointResultInterfaces = new List<SyntaxGeneratorClientEndpointResultInterface>();
+            // TODO: If UseEndpointResultInterfaces
+            ////var sgEndpointResultInterfaces = new List<SyntaxGeneratorClientEndpointResultInterface>();
             var sgEndpointResults = new List<SyntaxGeneratorClientEndpointResult>();
             var sgEndpointInterfaces = new List<SyntaxGeneratorClientEndpointInterface>();
             var sgEndpoints = new List<SyntaxGeneratorClientEndpoint>();
             foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
             {
-                var generatorEndpointResultInterfaces = new SyntaxGeneratorClientEndpointResultInterfaces(apiProjectOptions, operationSchemaMappings, basePathSegmentName);
-                var generatedEndpointResultInterfaces = generatorEndpointResultInterfaces.GenerateSyntaxTrees();
-                sgEndpointResultInterfaces.AddRange(generatedEndpointResultInterfaces);
+                // TODO: If UseEndpointResultInterfaces
+                ////var generatorEndpointResultInterfaces = new SyntaxGeneratorClientEndpointResultInterfaces(apiProjectOptions, operationSchemaMappings, basePathSegmentName);
+                ////var generatedEndpointResultInterfaces = generatorEndpointResultInterfaces.GenerateSyntaxTrees();
+                ////sgEndpointResultInterfaces.AddRange(generatedEndpointResultInterfaces);
 
                 var generatorEndpointResults = new SyntaxGeneratorClientEndpointResults(apiProjectOptions, operationSchemaMappings, basePathSegmentName);
                 var generatedEndpointResults = generatorEndpointResults.GenerateSyntaxTrees();
@@ -150,10 +151,12 @@ namespace Atc.Rest.ApiGenerator.Generators
             }
 
             var logItems = new List<LogKeyValueItem>();
-            foreach (var sg in sgEndpointResultInterfaces)
-            {
-                logItems.Add(sg.ToFile());
-            }
+
+            // TODO: If UseEndpointResultInterfaces
+            ////foreach (var sg in sgEndpointResultInterfaces)
+            ////{
+            ////    logItems.Add(sg.ToFile());
+            ////}
 
             foreach (var sg in sgEndpointResults)
             {

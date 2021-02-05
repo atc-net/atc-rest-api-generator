@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.OpenApi.Models;
 
 namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
 {
+    // TODO: FIX THIS - Use CompilationUnit
     public class SyntaxGeneratorSwaggerDocOptions
     {
         private readonly string fullNamespace;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using Atc.Rest.ApiGenerator.Models;
 using Microsoft.OpenApi.Models;
 
@@ -177,7 +178,8 @@ namespace Atc.Rest.ApiGenerator.Factories
 
         public static string[] CreateUsingListForContractResult(
             OpenApiResponses responses,
-            bool useProblemDetailsAsDefaultResponseBody)
+            bool useProblemDetailsAsDefaultResponseBody,
+            bool hasCreateContentResult)
         {
             if (responses == null)
             {
@@ -186,9 +188,7 @@ namespace Atc.Rest.ApiGenerator.Factories
 
             var list = new List<string>
             {
-                "System",
                 "System.CodeDom.Compiler",
-                "System.Diagnostics.CodeAnalysis",
                 "Microsoft.AspNetCore.Mvc",
             };
 
@@ -197,18 +197,27 @@ namespace Atc.Rest.ApiGenerator.Factories
                 list.Add("System.Collections.Generic");
             }
 
+            if (hasCreateContentResult)
+            {
+                if (responses.GetHttpStatusCodes().Any())
+                {
+                    list.Add("System.Net");
+                }
+            }
+            else
+            {
+                if (responses.GetHttpStatusCodes().Any(x => x != HttpStatusCode.OK))
+                {
+                    list.Add("System.Net");
+                }
+            }
+
             if (useProblemDetailsAsDefaultResponseBody)
             {
-                list.Add("System.Net");
                 list.Add("Atc.Rest.Results");
             }
             else
             {
-                if (responses.HasSchemaTypeOfHttpStatusCodeUsingSystemNet())
-                {
-                    list.Add("System.Net");
-                }
-
                 list.Add("Atc.Rest.Results");
 
                 if (responses.HasSchemaTypeOfHttpStatusCodeUsingAspNetCoreHttp())
