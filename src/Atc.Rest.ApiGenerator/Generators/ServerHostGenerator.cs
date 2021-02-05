@@ -117,7 +117,10 @@ namespace Atc.Rest.ApiGenerator.Generators
                 logItems.Add(ScaffoldStartupFile());
             }
 
-            logItems.Add(ScaffoldConfigureSwaggerDocOptions());
+            if (projectOptions.UseRestExtended)
+            {
+                logItems.Add(ScaffoldConfigureSwaggerDocOptions());
+            }
 
             return logItems;
         }
@@ -948,6 +951,7 @@ namespace Atc.Rest.ApiGenerator.Generators
                 : TextFileHelper.Save(file, codeAsString);
         }
 
+        // TODO: FIX THIS - Use CompilationUnit
         private LogKeyValueItem ScaffoldConfigureSwaggerDocOptions()
         {
             var fullNamespace = string.IsNullOrEmpty(projectOptions.ClientFolderName)

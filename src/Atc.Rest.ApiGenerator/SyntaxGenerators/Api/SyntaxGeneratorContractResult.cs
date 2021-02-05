@@ -49,6 +49,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
 
         public CompilationUnitSyntax? Code { get; private set; }
 
+        public bool HasCreateContentResult { get; private set; }
+
         public bool GenerateCode()
         {
             var resultTypeName = ApiOperation.GetOperationName() + NameConstants.ContractResult;
@@ -79,7 +81,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
             compilationUnit = compilationUnit.AddUsingStatements(
                 ProjectApiFactory.CreateUsingListForContractResult(
                     ApiOperation.Responses,
-                    ApiProjectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody));
+                    ApiProjectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
+                    HasCreateContentResult));
 
             // Add the class to the namespace.
             @namespace = @namespace.AddMembers(classDeclaration);
@@ -148,11 +151,6 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
 
             // Methods
             result.AddRange(CreateMethods(className));
-
-            // Add Implicit Operator for ActionResult
-            ////result.Add(
-            ////    CreateImplicitOperatorForActionResult(className)
-            ////        .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForResultsImplicitOperator(className)));
 
             // Add Implicit Operator
             var implicitOperator = CreateImplicitOperator(className, ApiOperation.Responses);
@@ -231,6 +229,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                                 else
                                 {
                                     methodDeclaration = CreateTypeRequestWithSpecifiedResultFactoryMethodWithMessageAllowNull("CreateContentResult", className, httpStatusCode);
+                                    HasCreateContentResult = true;
                                 }
                             }
                             else
