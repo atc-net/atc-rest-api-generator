@@ -61,7 +61,11 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                 FocusOnSegmentName);
 
             // Create class
-            var classDeclaration = SyntaxClassDeclarationFactory.CreateWithInheritClassAndInterface(EndpointTypeName, "EndpointResponse", InterfaceTypeName)
+            // TODO: If UseEndpointResultInterfaces
+            ////var classDeclaration = SyntaxClassDeclarationFactory.CreateWithInheritClassAndInterface(EndpointTypeName, "EndpointResponse", InterfaceTypeName)
+            ////    .AddGeneratedCodeAttribute(ApiProjectOptions.ToolName, ApiProjectOptions.ToolVersion.ToString())
+            ////    .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForResults(ApiOperation, FocusOnSegmentName));
+            var classDeclaration = SyntaxClassDeclarationFactory.CreateWithInheritClassType(EndpointTypeName, "EndpointResponse")
                 .AddGeneratedCodeAttribute(ApiProjectOptions.ToolName, ApiProjectOptions.ToolVersion.ToString())
                 .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForResults(ApiOperation, FocusOnSegmentName));
 
