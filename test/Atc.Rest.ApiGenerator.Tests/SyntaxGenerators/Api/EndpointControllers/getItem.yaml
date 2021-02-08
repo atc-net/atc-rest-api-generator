@@ -1,0 +1,37 @@
+openapi: 3.0.0
+paths:
+  '/items/{id}':
+    get:
+      summary: Get item by id
+      description: Get item by id
+      operationId: getItemById
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+    parameters:
+      - name: id
+        in: path
+        description: Id of the item
+        required: true
+        schema:
+          type: string
+          format: uuid
+components:
+  schemas:
+    Item:
+      title: Item
+      description: A single item.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 00000000-0000-0000-0000-000000000000
+        name:
+          type: string
+        number:
+          type: number
