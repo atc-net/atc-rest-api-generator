@@ -14,6 +14,8 @@
     <PackageReference Include="Atc.CodeDocumentation" Version="1.1.87" />
     <PackageReference Include="Atc.XUnit" Version="1.1.87" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
+    <PackageReference Include="Verify" Version="10.5.0" />
+    <PackageReference Include="Verify.Xunit" Version="10.5.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
       <PrivateAssets>all</PrivateAssets>
@@ -27,6 +29,16 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Atc.Rest.ApiGenerator\Atc.Rest.ApiGenerator.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="**\*.verified.cs" />
+    <Compile Remove="**\*.received.cs" />
+    <None Include="**\*.verified.cs" />
+    <None Include="**\*.received.cs" />
+    <None Update="SyntaxGenerators\**\*.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
