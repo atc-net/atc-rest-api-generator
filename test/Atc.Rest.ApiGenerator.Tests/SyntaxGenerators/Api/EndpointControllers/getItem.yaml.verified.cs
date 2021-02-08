@@ -19,7 +19,7 @@ namespace TestProject.AtcTest.Endpoints
     /// Area: Items.
     /// </summary>
     [ApiController]
-    [Route("api/v1/items")]
+    [Route("/api/v1/items")]
     [GeneratedCode("ApiGenerator", "x.x.x.x")]
     public class ItemsController : ControllerBase
     {
