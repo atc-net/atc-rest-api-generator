@@ -1,0 +1,15 @@
+openapi: 3.0.0
+paths:
+  '/users/{id}':
+    get:
+      summary: Get user by id
+      description: Get user by id
+      operationId: getUserById
+    parameters:
+      - name: id
+        in: path
+        description: Id of the user
+        required: true
+        schema:
+          type: string
+          format: uuid
