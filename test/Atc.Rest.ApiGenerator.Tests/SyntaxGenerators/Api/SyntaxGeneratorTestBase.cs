@@ -16,8 +16,8 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators
     public abstract class SyntaxGeneratorTestBase
     {
         protected static readonly string FocusOnSecment = "Test";
-        private static readonly string ProjectPrefix = "TestProject";
-        private static readonly string ProjectSuffix = "AtcTest";
+        private const string ProjectPrefix = "TestProject";
+        private const string ProjectSuffix = "AtcTest";
 
         protected static IReadOnlyList<YamlSpecFile> AllFiles { get; } = GetYamlFiles();
 
@@ -73,8 +73,7 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators
                 new FileInfo("resources/dummySpec.yaml"),
                 ProjectPrefix,
                 ProjectSuffix,
-                new Models.ApiOptions.ApiOptions(),
-                null);
+                new Models.ApiOptions.ApiOptions());
         }
 
         private OpenApiDocument GenerateApiDocument(string spec)
@@ -88,7 +87,7 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators
         public Stream GenerateStreamFromString(string s)
         {
             var stream = new MemoryStream();
-            var writer = new StreamWriter(stream);
+            using var writer = new StreamWriter(stream);
             writer.Write(s);
             writer.Flush();
             stream.Position = 0;
