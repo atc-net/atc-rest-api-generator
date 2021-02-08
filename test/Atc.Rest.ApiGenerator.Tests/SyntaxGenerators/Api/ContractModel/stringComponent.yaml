@@ -1,0 +1,20 @@
+openapi: 3.0.0
+components:
+  schemas:
+    stringComponent:
+      title: StringComponent
+      description: 'A string component'
+      type: object
+      properties:
+        stringProperty:
+          type: string
+          description: 'normal string'
+        uriProperty:
+          type: string
+          format: uri
+          description: 'uri string'
+        uuidProperty:
+          type: string
+          format: uuid
+          description: 'uuid string'
+      additionalProperties: false
