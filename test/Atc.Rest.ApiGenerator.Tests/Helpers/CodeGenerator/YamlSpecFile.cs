@@ -14,7 +14,9 @@ namespace Atc.Rest.ApiGenerator.Tests.Helpers.CodeGenerator
 
         public string DirectoryName => FileInfo.DirectoryName;
 
-        public YamlSpecFile() { }
+        public YamlSpecFile()
+        {
+        }
 
         public YamlSpecFile(FileInfo fileInfo) => this.FileInfo = fileInfo;
 

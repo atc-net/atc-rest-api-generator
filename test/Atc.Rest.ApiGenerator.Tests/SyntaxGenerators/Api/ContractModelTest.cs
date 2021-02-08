@@ -29,6 +29,10 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators
 
         [Theory(DisplayName = "Contract Model")]
         [MemberData(nameof(YamlFiles))]
-        public Task ExecuteGeneratorTest(YamlSpecFile specFile) => ExecuteTest(specFile);
+        public async Task ExecuteGeneratorTest(YamlSpecFile specFile)
+        {
+            Assert.NotNull(specFile?.FilePath);
+            await ExecuteTest(specFile);
+        }
     }
 }
