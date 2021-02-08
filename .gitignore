@@ -353,7 +353,5 @@ MigrationBackup/
 openapi.yaml
 .idea/
 
-# VerifyTests failed verifications
-*.received.txt
-*.received.cs
+# Verify Tests failed verifications
 *.received.cs
