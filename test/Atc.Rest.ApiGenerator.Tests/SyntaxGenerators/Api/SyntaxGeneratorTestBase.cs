@@ -78,20 +78,15 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators
 
         private OpenApiDocument GenerateApiDocument(string spec)
         {
-            using var specStream = GenerateStreamFromString(spec);
-            var openApiStreamReader = new OpenApiStreamReader();
-            var openApiDocument = openApiStreamReader.Read(specStream, out var diagnostic);
-            return openApiDocument;
-        }
+            var memoryStream = new MemoryStream();
 
-        public Stream GenerateStreamFromString(string s)
-        {
-            var stream = new MemoryStream();
-            using var writer = new StreamWriter(stream);
-            writer.Write(s);
+            using var writer = new StreamWriter(memoryStream);
+            writer.Write(spec);
             writer.Flush();
-            stream.Position = 0;
-            return stream;
+            memoryStream.Position = 0;
+
+            var openApiStreamReader = new OpenApiStreamReader();
+            return openApiStreamReader.Read(memoryStream, out var diagnostic);
         }
     }
 }
