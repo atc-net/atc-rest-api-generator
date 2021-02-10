@@ -68,7 +68,7 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
 
             return new ApiProjectOptions(
                 new DirectoryInfo("resources"),
-                null,
+                projectTestGeneratePath: null,
                 document,
                 new FileInfo("resources/dummySpec.yaml"),
                 ProjectPrefix,
@@ -86,7 +86,7 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
             memoryStream.Position = 0;
 
             var openApiStreamReader = new OpenApiStreamReader();
-            return openApiStreamReader.Read(memoryStream, out var diagnostic);
+            return openApiStreamReader.Read(memoryStream, out _);
         }
     }
 }
