@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Atc.Rest.ApiGenerator.Helpers;
 using Atc.Rest.ApiGenerator.Models;
 using Atc.Rest.ApiGenerator.SyntaxGenerators;
 using Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
@@ -12,24 +11,23 @@ using Xunit;
 namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
 {
     [UsesVerify]
-    public class EndpointControllersTest : SyntaxGeneratorTestBase
+    public class SyntaxGeneratorContractModelTests : SyntaxGeneratorTestBase
     {
         public static IEnumerable<object[]> YamlFiles { get; } = AllFiles
-            .Where(x => x.FilePath.Contains("EndpointControllers", System.StringComparison.Ordinal))
+            .Where(x => x.FilePath.Contains("ContractModel", System.StringComparison.Ordinal))
             .Select(x => new object[] { x });
 
         protected override ISyntaxCodeGenerator CreateApiGenerator(ApiProjectOptions apiProject)
         {
             // Verify spec file supported for unit test
-            Assert.Single(apiProject.BasePathSegmentNames);
-            var segmentName = apiProject.BasePathSegmentNames.First();
-            var operationSchemaMappings = OpenApiOperationSchemaMapHelper.CollectMappings(apiProject.Document);
+            Assert.Single(apiProject.Document.Components.Schemas);
+            var schema = apiProject.Document.Components.Schemas.First().Value;
 
             // Construct SUT
-            return new SyntaxGeneratorEndpointControllers(apiProject, operationSchemaMappings, segmentName);
+            return new SyntaxGeneratorContractModel(apiProject, string.Empty, schema, FocusOnSegment);
         }
 
-        [Theory(DisplayName = "Api Contract Controllers")]
+        [Theory(DisplayName = "Api Contract Model")]
         [MemberData(nameof(YamlFiles))]
         public Task ExecuteGeneratorTest(YamlSpecFile specFile)
         {

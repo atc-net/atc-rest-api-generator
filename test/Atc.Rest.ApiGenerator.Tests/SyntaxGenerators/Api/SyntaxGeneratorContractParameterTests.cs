@@ -12,10 +12,10 @@ using Xunit;
 namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
 {
     [UsesVerify]
-    public class ContractInterfaceTest : SyntaxGeneratorTestBase
+    public class SyntaxGeneratorContractParameterTests : SyntaxGeneratorTestBase
     {
         public static IEnumerable<object[]> YamlFiles { get; } = AllFiles
-            .Where(x => x.FilePath.Contains("ContractInterface", System.StringComparison.Ordinal))
+            .Where(x => x.FilePath.Contains("ContractParameter", System.StringComparison.Ordinal))
             .Select(x => new object[] { x });
 
         protected override ISyntaxCodeGenerator CreateApiGenerator(ApiProjectOptions apiProject)
@@ -26,18 +26,18 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
             Assert.False(urlPath.IsPathStartingSegmentName(FocusOnSegment));
             Assert.Single(urlPath.Value.Operations);
             var (operationType, openApiOperation) = urlPath.Value.Operations.First();
+            Assert.True(openApiOperation.HasParametersOrRequestBody() || urlPath.Value.HasParameters());
 
             // Construct SUT
-            return new SyntaxGeneratorContractInterface(
+            return new SyntaxGeneratorContractParameter(
                         apiProject,
                         urlPath.Value.Parameters,
                         operationType,
                         openApiOperation,
-                        FocusOnSegment,
-                        urlPath.Value.HasParameters() || openApiOperation.HasParametersOrRequestBody());
+                        FocusOnSegment);
         }
 
-        [Theory(DisplayName = "Api Contract Interface")]
+        [Theory(DisplayName = "Api Contract Parameter")]
         [MemberData(nameof(YamlFiles))]
         public Task ExecuteGeneratorTest(YamlSpecFile specFile)
         {
