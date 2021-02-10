@@ -1,18 +1,19 @@
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Xunit.Abstractions;
 
-namespace Atc.Rest.ApiGenerator.Tests.Helpers.CodeGenerator
+namespace Atc.Rest.ApiGenerator.Tests.XUnitTestTypes.CodeGenerator
 {
     public class YamlSpecFile : IXunitSerializable
     {
         public FileInfo FileInfo { get; private set; }
 
-        public string FilePath => FileInfo.FullName;
+        public string FilePath => FileInfo.FullName ?? throw new InvalidOperationException();
 
-        public string FileName => FileInfo.Name;
+        public string FileName => FileInfo.Name ?? throw new InvalidOperationException();
 
-        public string DirectoryName => FileInfo.DirectoryName;
+        public string DirectoryName => FileInfo.DirectoryName ?? throw new InvalidOperationException();
 
         public YamlSpecFile()
         {

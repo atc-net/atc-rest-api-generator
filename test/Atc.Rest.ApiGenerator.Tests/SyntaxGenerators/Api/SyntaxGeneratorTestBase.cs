@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Atc.Rest.ApiGenerator.Models;
 using Atc.Rest.ApiGenerator.SyntaxGenerators;
-using Atc.Rest.ApiGenerator.Tests.Helpers.CodeGenerator;
+using Atc.Rest.ApiGenerator.Tests.XUnitTestTypes.CodeGenerator;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
 using VerifyTests;

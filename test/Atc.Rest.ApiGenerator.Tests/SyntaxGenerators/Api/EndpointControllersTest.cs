@@ -5,7 +5,7 @@ using Atc.Rest.ApiGenerator.Helpers;
 using Atc.Rest.ApiGenerator.Models;
 using Atc.Rest.ApiGenerator.SyntaxGenerators;
 using Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
-using Atc.Rest.ApiGenerator.Tests.Helpers.CodeGenerator;
+using Atc.Rest.ApiGenerator.Tests.XUnitTestTypes.CodeGenerator;
 using VerifyXunit;
 using Xunit;
 
