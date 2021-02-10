@@ -9,7 +9,7 @@ using Microsoft.OpenApi.Models;
 using VerifyXunit;
 using Xunit;
 
-namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators
+namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
 {
     [UsesVerify]
     public class ContractResultTest : SyntaxGeneratorTestBase
@@ -20,10 +20,10 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators
 
         protected override ISyntaxCodeGenerator CreateApiGenerator(ApiProjectOptions apiProject)
         {
-            // Verify spec file suported for unit test
+            // Verify spec file supported for unit test
             Assert.Single(apiProject.Document.Paths);
             var urlPath = apiProject.Document.Paths.First();
-            Assert.False(urlPath.IsPathStartingSegmentName(FocusOnSecment));
+            Assert.False(urlPath.IsPathStartingSegmentName(FocusOnSegment));
             Assert.Single(urlPath.Value.Operations);
             var urlOperation = urlPath.Value.Operations.First();
 
@@ -32,15 +32,15 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators
                 apiProject,
                 urlOperation.Key,
                 urlOperation.Value,
-                FocusOnSecment);
+                FocusOnSegment);
         }
 
-        [Theory(DisplayName = "Contract Result")]
+        [Theory(DisplayName = "Api Contract Result")]
         [MemberData(nameof(YamlFiles))]
-        public async Task ExecuteGeneratorTest(YamlSpecFile specFile)
+        public Task ExecuteGeneratorTest(YamlSpecFile specFile)
         {
-            Assert.NotNull(specFile?.FilePath);
-            await ExecuteTest(specFile);
+            Assert.NotNull(specFile.FilePath);
+            return ExecuteTest(specFile);
         }
     }
 }

@@ -11,11 +11,11 @@ using Microsoft.OpenApi.Readers;
 using VerifyTests;
 using VerifyXunit;
 
-namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators
+namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
 {
     public abstract class SyntaxGeneratorTestBase
     {
-        protected static readonly string FocusOnSecment = "Test";
+        protected static readonly string FocusOnSegment = "Test";
         private const string ProjectPrefix = "TestProject";
         private const string ProjectSuffix = "AtcTest";
 

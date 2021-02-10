@@ -9,7 +9,7 @@ using Atc.Rest.ApiGenerator.Tests.XUnitTestTypes.CodeGenerator;
 using VerifyXunit;
 using Xunit;
 
-namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators
+namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
 {
     [UsesVerify]
     public class EndpointControllersTest : SyntaxGeneratorTestBase
@@ -20,7 +20,7 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators
 
         protected override ISyntaxCodeGenerator CreateApiGenerator(ApiProjectOptions apiProject)
         {
-            // Verify spec file suported for unit test
+            // Verify spec file supported for unit test
             Assert.Single(apiProject.BasePathSegmentNames);
             var segmentName = apiProject.BasePathSegmentNames.First();
             var operationSchemaMappings = OpenApiOperationSchemaMapHelper.CollectMappings(apiProject.Document);
@@ -29,12 +29,12 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators
             return new SyntaxGeneratorEndpointControllers(apiProject, operationSchemaMappings, segmentName);
         }
 
-        [Theory(DisplayName = "Contract Controllers")]
+        [Theory(DisplayName = "Api Contract Controllers")]
         [MemberData(nameof(YamlFiles))]
-        public async Task ExecuteGeneratorTest(YamlSpecFile specFile)
+        public Task ExecuteGeneratorTest(YamlSpecFile specFile)
         {
-            Assert.NotNull(specFile?.FilePath);
-            await ExecuteTest(specFile);
+            Assert.NotNull(specFile.FilePath);
+            return ExecuteTest(specFile);
         }
     }
 }

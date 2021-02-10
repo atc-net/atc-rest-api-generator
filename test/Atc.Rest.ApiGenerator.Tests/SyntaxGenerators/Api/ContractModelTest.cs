@@ -8,7 +8,7 @@ using Atc.Rest.ApiGenerator.Tests.XUnitTestTypes.CodeGenerator;
 using VerifyXunit;
 using Xunit;
 
-namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators
+namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
 {
     [UsesVerify]
     public class ContractModelTest : SyntaxGeneratorTestBase
@@ -19,20 +19,20 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators
 
         protected override ISyntaxCodeGenerator CreateApiGenerator(ApiProjectOptions apiProject)
         {
-            // Verify spec file suported for unit test
+            // Verify spec file supported for unit test
             Assert.Single(apiProject.Document.Components.Schemas);
             var schema = apiProject.Document.Components.Schemas.First().Value;
 
             // Construct SUT
-            return new SyntaxGeneratorContractModel(apiProject, string.Empty, schema, FocusOnSecment);
+            return new SyntaxGeneratorContractModel(apiProject, string.Empty, schema, FocusOnSegment);
         }
 
-        [Theory(DisplayName = "Contract Model")]
+        [Theory(DisplayName = "Api Contract Model")]
         [MemberData(nameof(YamlFiles))]
-        public async Task ExecuteGeneratorTest(YamlSpecFile specFile)
+        public Task ExecuteGeneratorTest(YamlSpecFile specFile)
         {
-            Assert.NotNull(specFile?.FilePath);
-            await ExecuteTest(specFile);
+            Assert.NotNull(specFile.FilePath);
+            return ExecuteTest(specFile);
         }
     }
 }
