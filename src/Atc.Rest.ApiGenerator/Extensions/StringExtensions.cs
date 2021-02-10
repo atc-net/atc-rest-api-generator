@@ -9,8 +9,8 @@ namespace System
     {
         private const string AutoPropGetSetResultPattern = " { get; set; }";
         private const string AutoPropGetResultPattern = " { get; }";
-        private static readonly Regex AutoPropGetSetRegex = new Regex(@"\s*\{\s*get;\s*set;\s*}\s");
-        private static readonly Regex AutoPropGetRegex = new Regex(@"\s*\{\s*get;\s*}\s");
+        private static readonly Regex AutoPropGetSetRegex = new Regex(@"\s*\{\s*get;\s*set;\s*}");
+        private static readonly Regex AutoPropGetRegex = new Regex(@"\s*\{\s*get;\s*}");
         private static readonly Regex AutoPropInitializerGetSetRegex = new Regex(@"\s*\{ get; set; }\s*= \s*");
         private static readonly Regex AutoPropInitializerGetRegex = new Regex(@"\s*\{ get; }\s*= \s*");
         private static readonly Regex AutoPublicLinesRegex = new Regex(@"\s*;\s*public \s*");

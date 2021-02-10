@@ -352,3 +352,6 @@ MigrationBackup/
 /petstore3/
 openapi.yaml
 .idea/
+
+# Verify Tests failed verifications
+*.received.cs
