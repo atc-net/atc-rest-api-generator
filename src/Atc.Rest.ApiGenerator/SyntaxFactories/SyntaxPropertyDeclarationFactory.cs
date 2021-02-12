@@ -94,7 +94,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxFactories
             var propertyDeclaration = schema.Value.Type == OpenApiDataTypeConstants.Array
                 ? CreateListAuto(
                     schema.Value.Items.GetDataType(),
-                    schema.Key.EnsureFirstCharacterToUpper())
+                    schema.Key.EnsureFirstCharacterToUpper(),
+                    !isRequired)
                 : CreateAuto(
                     null,
                     isNullable,
