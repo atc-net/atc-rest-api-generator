@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -31,6 +31,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
             }
 
             var logItems = new List<LogKeyValueItem>();
+            logItems.AddRange(ValidateServers(validationOptions, apiDocument.Servers));
             logItems.AddRange(ValidateSchemas(validationOptions, apiDocument.Components.Schemas.Values));
             logItems.AddRange(ValidateOperations(validationOptions, apiDocument.Paths, apiDocument.Components.Schemas));
             logItems.AddRange(ValidatePathsAndOperations(validationOptions, apiDocument.Paths));
@@ -39,10 +40,59 @@ namespace Atc.Rest.ApiGenerator.Helpers
             return logItems;
         }
 
+        private static List<LogKeyValueItem> ValidateServers(
+            ApiOptionsValidation validationOptions,
+            IEnumerable<OpenApiServer> servers)
+        {
+            var logItems = new List<LogKeyValueItem>();
+            var logCategory = validationOptions.StrictMode
+                ? LogCategoryType.Error
+                : LogCategoryType.Warning;
+
+            var server = servers.FirstOrDefault();
+
+            if (server is not null && !IsServerUrlValid(server.Url))
+            {
+                logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Server01, "Invalid server url."));
+            }
+
+            return logItems;
+        }
+
+        private static bool IsServerUrlValid(string serverUrl)
+        {
+            if (string.IsNullOrWhiteSpace(serverUrl))
+            {
+                return false;
+            }
+
+            if (serverUrl.Equals("/", StringComparison.Ordinal))
+            {
+                return true;
+            }
+
+            if (serverUrl.EndsWith("/", StringComparison.Ordinal))
+            {
+                return false;
+            }
+
+            var s = serverUrl
+                .Replace("http://", string.Empty, StringComparison.OrdinalIgnoreCase)
+                .Replace("https://", string.Empty, StringComparison.OrdinalIgnoreCase);
+            if (s.Contains("//", StringComparison.Ordinal))
+            {
+                return false;
+            }
+
+            return serverUrl.StartsWith("/", StringComparison.Ordinal) ||
+                   serverUrl.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+                   serverUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase);
+        }
+
         [SuppressMessage("Critical Code Smell", "S3776:Cognitive Complexity of methods should not be too high", Justification = "OK.")]
         private static List<LogKeyValueItem> ValidateSchemas(
             ApiOptionsValidation validationOptions,
-            ICollection<OpenApiSchema> schemas)
+            IEnumerable<OpenApiSchema> schemas)
         {
             var logItems = new List<LogKeyValueItem>();
             var logCategory = validationOptions.StrictMode
@@ -54,79 +104,79 @@ namespace Atc.Rest.ApiGenerator.Helpers
                 switch (schema.Type)
                 {
                     case OpenApiDataTypeConstants.Array:
+                    {
+                        if (string.IsNullOrEmpty(schema.Title))
                         {
-                            if (string.IsNullOrEmpty(schema.Title))
-                            {
-                                logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Schema01, $"Missing title on array type '{schema.Reference.ReferenceV3}'."));
-                            }
-                            else if (schema.Title.IsFirstCharacterLowerCase())
-                            {
-                                logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Schema02, $"Title on array type '{schema.Title}' is not starting with uppercase."));
-                            }
-
-                            logItems.AddRange(ValidateSchemaModelNameCasing(validationOptions, schema));
-                            break;
+                            logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Schema01, $"Missing title on array type '{schema.Reference.ReferenceV3}'."));
                         }
+                        else if (schema.Title.IsFirstCharacterLowerCase())
+                        {
+                            logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Schema02, $"Title on array type '{schema.Title}' is not starting with uppercase."));
+                        }
+
+                        logItems.AddRange(ValidateSchemaModelNameCasing(validationOptions, schema));
+                        break;
+                    }
 
                     case OpenApiDataTypeConstants.Object:
+                    {
+                        if (string.IsNullOrEmpty(schema.Title))
                         {
-                            if (string.IsNullOrEmpty(schema.Title))
-                            {
-                                logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Schema03, $"Missing title on object type '{schema.Reference.ReferenceV3}'."));
-                            }
-                            else if (schema.Title.IsFirstCharacterLowerCase())
-                            {
-                                logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Schema04, $"Title on object type '{schema.Title}' is not starting with uppercase."));
-                            }
-
-                            foreach (var (key, value) in schema.Properties)
-                            {
-                                if (value.Nullable && schema.Required.Contains(key))
-                                {
-                                    logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Schema08, $"Nullable property '{key}' must not be present in required property list in type '{schema.Reference.ReferenceV3}'."));
-                                }
-
-                                switch (value.Type)
-                                {
-                                    case OpenApiDataTypeConstants.Object:
-                                        {
-                                            if (!value.IsObjectReferenceTypeDeclared())
-                                            {
-                                                logItems.Add(LogItemHelper.Create(LogCategoryType.Error, ValidationRuleNameConstants.Schema10, $"Implicit object definition on property '{key}' in type '{schema.Reference.ReferenceV3}' is not supported."));
-                                            }
-
-                                            break;
-                                        }
-
-                                    case OpenApiDataTypeConstants.Array:
-                                        {
-                                            if (value.Items == null)
-                                            {
-                                                logItems.Add(LogItemHelper.Create(LogCategoryType.Error, ValidationRuleNameConstants.Schema11, $"Not specifying a data type for array property '{key}' in type '{schema.Reference.ReferenceV3}' is not supported."));
-                                            }
-                                            else
-                                            {
-                                                if (value.Items.Type == null)
-                                                {
-                                                    logItems.Add(LogItemHelper.Create(LogCategoryType.Error, ValidationRuleNameConstants.Schema09, $"Not specifying a data type for array property '{key}' in type '{schema.Reference.ReferenceV3}' is not supported."));
-                                                }
-
-                                                if (value.Items.Type != null && !value.IsArrayReferenceTypeDeclared() && !value.IsItemsOfSimpleDataType())
-                                                {
-                                                    logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Schema05, $"Implicit object definition on property '{key}' in array type '{schema.Reference.ReferenceV3}' is not supported."));
-                                                }
-                                            }
-
-                                            break;
-                                        }
-                                }
-
-                                logItems.AddRange(ValidateSchemaModelPropertyNameCasing(validationOptions, key, schema));
-                            }
-
-                            logItems.AddRange(ValidateSchemaModelNameCasing(validationOptions, schema));
-                            break;
+                            logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Schema03, $"Missing title on object type '{schema.Reference.ReferenceV3}'."));
                         }
+                        else if (schema.Title.IsFirstCharacterLowerCase())
+                        {
+                            logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Schema04, $"Title on object type '{schema.Title}' is not starting with uppercase."));
+                        }
+
+                        foreach (var (key, value) in schema.Properties)
+                        {
+                            if (value.Nullable && schema.Required.Contains(key))
+                            {
+                                logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Schema08, $"Nullable property '{key}' must not be present in required property list in type '{schema.Reference.ReferenceV3}'."));
+                            }
+
+                            switch (value.Type)
+                            {
+                                case OpenApiDataTypeConstants.Object:
+                                {
+                                    if (!value.IsObjectReferenceTypeDeclared())
+                                    {
+                                        logItems.Add(LogItemHelper.Create(LogCategoryType.Error, ValidationRuleNameConstants.Schema10, $"Implicit object definition on property '{key}' in type '{schema.Reference.ReferenceV3}' is not supported."));
+                                    }
+
+                                    break;
+                                }
+
+                                case OpenApiDataTypeConstants.Array:
+                                {
+                                    if (value.Items == null)
+                                    {
+                                        logItems.Add(LogItemHelper.Create(LogCategoryType.Error, ValidationRuleNameConstants.Schema11, $"Not specifying a data type for array property '{key}' in type '{schema.Reference.ReferenceV3}' is not supported."));
+                                    }
+                                    else
+                                    {
+                                        if (value.Items.Type == null)
+                                        {
+                                            logItems.Add(LogItemHelper.Create(LogCategoryType.Error, ValidationRuleNameConstants.Schema09, $"Not specifying a data type for array property '{key}' in type '{schema.Reference.ReferenceV3}' is not supported."));
+                                        }
+
+                                        if (value.Items.Type != null && !value.IsArrayReferenceTypeDeclared() && !value.IsItemsOfSimpleDataType())
+                                        {
+                                            logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Schema05, $"Implicit object definition on property '{key}' in array type '{schema.Reference.ReferenceV3}' is not supported."));
+                                        }
+                                    }
+
+                                    break;
+                                }
+                            }
+
+                            logItems.AddRange(ValidateSchemaModelPropertyNameCasing(validationOptions, key, schema));
+                        }
+
+                        logItems.AddRange(ValidateSchemaModelNameCasing(validationOptions, schema));
+                        break;
+                    }
                 }
             }
 

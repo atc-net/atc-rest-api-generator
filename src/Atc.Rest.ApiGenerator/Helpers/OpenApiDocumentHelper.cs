@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -147,6 +147,27 @@ namespace Atc.Rest.ApiGenerator.Helpers
                 .Select(x => x.PascalCase(true))
                 .OrderBy(x => x)
                 .ToList()!;
+        }
+
+        [SuppressMessage("Design", "CA1055:URI-like return values should not be strings", Justification = "OK.")]
+        public static string GetServerUrl(OpenApiDocument openApiDocument)
+        {
+            var serverUrl = openApiDocument.Servers?.FirstOrDefault()?.Url;
+            if (string.IsNullOrWhiteSpace(serverUrl))
+            {
+                return "/api/v1";
+            }
+
+            serverUrl = serverUrl.Replace("//", "/", StringComparison.Ordinal);
+            serverUrl = serverUrl.Replace("http:/", "http://", StringComparison.OrdinalIgnoreCase);
+            serverUrl = serverUrl.Replace("https:/", "https://", StringComparison.OrdinalIgnoreCase);
+            if (!serverUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase) &&
+                !serverUrl.StartsWith("/", StringComparison.Ordinal))
+            {
+                serverUrl = $"/{serverUrl}";
+            }
+
+            return serverUrl;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "OK.")]

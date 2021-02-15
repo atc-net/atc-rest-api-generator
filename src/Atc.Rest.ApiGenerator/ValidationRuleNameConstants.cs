@@ -1,4 +1,4 @@
-﻿namespace Atc.Rest.ApiGenerator
+namespace Atc.Rest.ApiGenerator
 {
     public static class ValidationRuleNameConstants
     {
@@ -36,6 +36,8 @@
         public const string Operation18 = "CR0218";
 
         public const string Path01 = "CR0301";
+
+        public const string Server01 = "CR0401";
 
         public const string ProjectApiGenerated01 = "CR0801";
         public const string ProjectApiGenerated02 = "CR0802";
