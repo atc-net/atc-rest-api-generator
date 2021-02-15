@@ -71,6 +71,7 @@
      - string Schema09
      - string Schema10
      - string Schema11
+     - string Server01
 
 ## [Atc.Rest.ApiGenerator.Factories](Atc.Rest.ApiGenerator.Factories.md)
 
@@ -85,7 +86,7 @@
      - CreateUsingListForContractInterface()
      - CreateUsingListForContractModel(OpenApiSchema apiSchema)
      - CreateUsingListForContractParameter(IList&lt;OpenApiParameter&gt; globalParameters, IList&lt;OpenApiParameter&gt; parameters, OpenApiRequestBody requestBody, bool forClient)
-     - CreateUsingListForContractResult(OpenApiResponses responses, bool useProblemDetailsAsDefaultResponseBody)
+     - CreateUsingListForContractResult(OpenApiResponses responses, bool useProblemDetailsAsDefaultResponseBody, bool hasCreateContentResult)
      - CreateUsingListForEndpoint(ApiProjectOptions apiProjectOptions, string focusOnSegmentName, List&lt;OpenApiOperation&gt; apiOperations, bool includeRestResults, bool hasSharedModel)
 - [ProjectDomainFactory](Atc.Rest.ApiGenerator.Factories.md#projectdomainfactory)
   -  Static Methods
@@ -153,6 +154,7 @@
   -  Static Methods
      - CombineAndGetApiDocument(string specificationPath)
      - GetBasePathSegmentNames(OpenApiDocument openApiDocument)
+     - GetServerUrl(OpenApiDocument openApiDocument)
      - Validate(Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, ApiOptionsValidation validationOptions)
 - [OpenApiDocumentSchemaModelNameHelper](Atc.Rest.ApiGenerator.Helpers.md#openapidocumentschemamodelnamehelper)
   -  Static Methods
@@ -351,6 +353,7 @@
      - Response
      - UseAuthorization
      - UseNullableReferenceTypes
+     - UseRestExtended
 - [ApiOptionsGeneratorRequest](Atc.Rest.ApiGenerator.Models.ApiOptions.md#apioptionsgeneratorrequest)
 - [ApiOptionsGeneratorResponse](Atc.Rest.ApiGenerator.Models.ApiOptions.md#apioptionsgeneratorresponse)
   -  Properties
@@ -452,6 +455,7 @@
      - ApiProjectOptions
      - Code
      - FocusOnSegmentName
+     - HasCreateContentResult
   -  Methods
      - GenerateCode()
      - ToCodeAsString()
