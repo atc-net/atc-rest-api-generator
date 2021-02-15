@@ -2,7 +2,7 @@
 	"Generator": {
 		"UseNullableReferenceTypes": true,
 		"UseAuthorization": false,
-		"UseRestExtended": false,
+		"UseRestExtended": true,
 		"Request": {
 		},
 		"Response": {
