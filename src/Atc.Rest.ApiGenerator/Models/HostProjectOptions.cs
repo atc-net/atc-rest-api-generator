@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -31,6 +31,7 @@ namespace Atc.Rest.ApiGenerator.Models
         {
             ApiProjectSrcPath = apiProjectSrcPath ?? throw new ArgumentNullException(nameof(projectSrcGeneratePath));
             DomainProjectSrcPath = domainProjectSrcPath ?? throw new ArgumentNullException(nameof(domainProjectSrcPath));
+            UseRestExtended = apiOptions.Generator.UseRestExtended;
         }
 
         public DirectoryInfo ApiProjectSrcPath { get; private set; }
@@ -41,7 +42,7 @@ namespace Atc.Rest.ApiGenerator.Models
 
         public FileInfo? DomainProjectSrcCsProj { get; private set; }
 
-        public bool UseRestExtended { get; set; } = true;
+        public bool UseRestExtended { get; set; }
 
         [SuppressMessage("Critical Code Smell", "S3776:Cognitive Complexity of methods should not be too high", Justification = "OK.")]
         public List<LogKeyValueItem> SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles()
