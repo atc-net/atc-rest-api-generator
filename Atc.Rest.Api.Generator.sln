@@ -26,6 +26,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demo.ApiDesign", "Demo.ApiD
 	ProjectSection(SolutionItems) = preProject
 		sample\Demo.ApiDesign\ApiGeneratorOptions.json = sample\Demo.ApiDesign\ApiGeneratorOptions.json
 		sample\Demo.ApiDesign\DelegateApiGeneratorOptions.json = sample\Demo.ApiDesign\DelegateApiGeneratorOptions.json
+		sample\Demo.ApiDesign\DemoApiGeneratorOptions.json = sample\Demo.ApiDesign\DemoApiGeneratorOptions.json
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SingleFileVersion", "SingleFileVersion", "{C27353DA-1802-4443-80EE-B838A29AC419}"
