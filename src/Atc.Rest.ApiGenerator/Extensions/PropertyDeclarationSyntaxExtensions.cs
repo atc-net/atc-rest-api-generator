@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -124,6 +124,9 @@ namespace Atc.CodeAnalysis.CSharp
                     OpenApiFormatTypeConstants.Byte => propertyDeclaration,
                     OpenApiFormatTypeConstants.Int32 => propertyDeclaration,
                     OpenApiFormatTypeConstants.Int64 => propertyDeclaration,
+
+                    OpenApiFormatTypeConstants.Float => propertyDeclaration,
+                    OpenApiFormatTypeConstants.Double => propertyDeclaration,
 
                     OpenApiFormatTypeConstants.Email => propertyDeclaration.AddValidationAttributeEmail(schema),
                     OpenApiFormatTypeConstants.Uri => propertyDeclaration.AddValidationAttribute(new UriAttribute()),
