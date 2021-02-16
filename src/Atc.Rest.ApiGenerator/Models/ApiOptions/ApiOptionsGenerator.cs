@@ -1,4 +1,4 @@
-﻿// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 namespace Atc.Rest.ApiGenerator.Models.ApiOptions
 {
@@ -7,6 +7,8 @@ namespace Atc.Rest.ApiGenerator.Models.ApiOptions
         public bool UseNullableReferenceTypes { get; set; } = true;
 
         public bool UseAuthorization { get; set; }
+
+        public bool UseRestExtended { get; set; } = true;
 
         public ApiOptionsGeneratorRequest Request { get; set; } = new ApiOptionsGeneratorRequest();
 

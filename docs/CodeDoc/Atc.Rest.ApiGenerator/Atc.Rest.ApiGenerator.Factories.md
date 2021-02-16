@@ -68,7 +68,7 @@ string[] CreateUsingListForContractParameter(IList<OpenApiParameter> globalParam
 #### CreateUsingListForContractResult
 
 ```csharp
-string[] CreateUsingListForContractResult(OpenApiResponses responses, bool useProblemDetailsAsDefaultResponseBody)
+string[] CreateUsingListForContractResult(OpenApiResponses responses, bool useProblemDetailsAsDefaultResponseBody, bool hasCreateContentResult)
 ```
 #### CreateUsingListForEndpoint
 

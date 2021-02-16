@@ -221,6 +221,11 @@ Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> CombineAndGetApiDocument(str
 ```csharp
 List<string> GetBasePathSegmentNames(OpenApiDocument openApiDocument)
 ```
+#### GetServerUrl
+
+```csharp
+string GetServerUrl(OpenApiDocument openApiDocument)
+```
 #### Validate
 
 ```csharp

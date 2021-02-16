@@ -12,6 +12,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
     {
         private const string RawCodingRulesDistribution = "https://raw.githubusercontent.com/atc-net/atc-coding-rules/main/distribution";
         public const string FileNameEditorConfig = ".editorconfig";
+        public const string FileNameDirectoryBuildProps = "Directory.Build.props";
 
         public static IEnumerable<LogKeyValueItem> Generate(
             string outputSlnPath,
@@ -45,23 +46,19 @@ namespace Atc.Rest.ApiGenerator.Helpers
                 logItems.Add(HandleAtcCodingRulesJson(rootPath, outputSrcPath, outputTestPath));
                 logItems.Add(HandleAtcCodingRulesPowerShell(rootPath));
 
-                // -> build folder
-                //// TODO: logItems.AddRange(HandleBuildPropsFiles(new DirectoryInfo(Path.Combine(rootPath.FullName, "build"))));
-
-                // -> root .editorConfig
+                // -> root
                 logItems.Add(HandleFileEditorConfig(rootPath, "root", string.Empty));
+                logItems.Add(HandleFileDirectoryBuildProps(rootPath, "root", string.Empty));
 
-                // -> src folder -> 3 files
+                // -> src
                 logItems.Add(HandleFileEditorConfig(outputSrcPath, "src", "src"));
-                //// TODO: logItems.Add(HandleDirectoryBuildPropsFile(outputSrcPath, "src", "src"));
-                //// TODO: logItems.Add(HandleDirectoryBuildTargetsFile(outputSrcPath, "src", "src"));
+                logItems.Add(HandleFileDirectoryBuildProps(outputSrcPath, "src", "src"));
 
                 if (outputTestPath != null)
                 {
-                    // -> test folder -> 3 files
+                    // -> test
                     logItems.Add(HandleFileEditorConfig(outputTestPath, "test", "test"));
-                    //// TODO: logItems.Add(HandleDirectoryBuildPropsFile(outputTestPath, "test", "test"));
-                    //// TODO: logItems.Add(HandleDirectoryBuildTargetsFile(outputTestPath, "test", "test"));
+                    logItems.Add(HandleFileDirectoryBuildProps(outputTestPath, "test", "test"));
                 }
             }
 
@@ -139,33 +136,6 @@ namespace Atc.Rest.ApiGenerator.Helpers
             }
         }
 
-        private static IEnumerable<LogKeyValueItem> HandleBuildPropsFiles(DirectoryInfo path)
-        {
-            try
-            {
-                Directory.CreateDirectory(path.FullName);
-
-                var rawCommonPropsData = HttpClientHelper.GetRawFile($"{RawCodingRulesDistribution}/build/common.props");
-                File.WriteAllText(Path.Combine(path.FullName, "common.props"), rawCommonPropsData);
-
-                var rawCodeAnalysisPropsData = HttpClientHelper.GetRawFile($"{RawCodingRulesDistribution}/build/code-analysis.props");
-                File.WriteAllText(Path.Combine(path.FullName, "code-analysis.props"), rawCodeAnalysisPropsData);
-
-                return new List<LogKeyValueItem>
-                    {
-                        new LogKeyValueItem(LogCategoryType.Information, "FileUpdate", "common.props updated - Remember to change the CompanyName in the file"),
-                        new LogKeyValueItem(LogCategoryType.Debug, "FileUpdate", "code-analysis.props updated"),
-                    };
-            }
-            catch (Exception ex)
-            {
-                return new List<LogKeyValueItem>
-                {
-                    new LogKeyValueItem(LogCategoryType.Error, "FileSkip", $"build folder skipped - {ex.Message}"),
-                };
-            }
-        }
-
         private static LogKeyValueItem HandleFileEditorConfig(
             DirectoryInfo path,
             string area,
@@ -189,6 +159,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
                 }
 
                 var rawEditorConfig = HttpClientHelper.GetRawFile(rawGitUrl);
+                rawEditorConfig += $"{Environment.NewLine}dotnet_diagnostic.IDE0058.severity = none           # Have to override this for now - to get smoke-test to run";
                 File.WriteAllText(file.FullName, rawEditorConfig);
                 return new LogKeyValueItem(LogCategoryType.Debug, "FileCreate", $"{area} - {descriptionPart} created");
             }
@@ -198,48 +169,21 @@ namespace Atc.Rest.ApiGenerator.Helpers
             }
         }
 
-        private static LogKeyValueItem HandleDirectoryBuildPropsFile(
+        private static LogKeyValueItem HandleFileDirectoryBuildProps(
             DirectoryInfo path,
             string area,
             string urlPart)
         {
             var descriptionPart = string.IsNullOrEmpty(urlPart)
-                ? "directory.build.props"
-                : $"{urlPart}/directory.build.props";
+                ? FileNameDirectoryBuildProps
+                : $"{urlPart}/{FileNameDirectoryBuildProps}";
 
-            var file = new FileInfo(Path.Combine(path.FullName, "directory.build.props"));
-
-            var rawGitUrl = string.IsNullOrEmpty(urlPart)
-                ? $"{RawCodingRulesDistribution}/directory.build.props"
-                : $"{RawCodingRulesDistribution}/{urlPart}/directory.build.props";
-
-            return HandleDirectoryBuildFile(area, file, descriptionPart, rawGitUrl);
-        }
-
-        private static LogKeyValueItem HandleDirectoryBuildTargetsFile(
-            DirectoryInfo path,
-            string area,
-            string urlPart)
-        {
-            var descriptionPart = string.IsNullOrEmpty(urlPart)
-                ? "directory.build.targets"
-                : $"{urlPart}/directory.build.targets";
-
-            var file = new FileInfo(Path.Combine(path.FullName, "directory.build.targets"));
+            var file = new FileInfo(Path.Combine(path.FullName, FileNameDirectoryBuildProps));
 
             var rawGitUrl = string.IsNullOrEmpty(urlPart)
-                ? $"{RawCodingRulesDistribution}/directory.build.targets"
-                : $"{RawCodingRulesDistribution}/{urlPart}/directory.build.targets";
+                ? $"{RawCodingRulesDistribution}/{FileNameDirectoryBuildProps}"
+                : $"{RawCodingRulesDistribution}/{urlPart}/{FileNameDirectoryBuildProps}";
 
-            return HandleDirectoryBuildFile(area, file, descriptionPart, rawGitUrl);
-        }
-
-        private static LogKeyValueItem HandleDirectoryBuildFile(
-            string area,
-            FileInfo file,
-            string descriptionPart,
-            string rawGitUrl)
-        {
             try
             {
                 if (!file.Directory!.Exists)
@@ -247,13 +191,13 @@ namespace Atc.Rest.ApiGenerator.Helpers
                     Directory.CreateDirectory(file.Directory.FullName);
                 }
 
-                var rawGitData = HttpClientHelper.GetRawFile(rawGitUrl);
-                File.WriteAllText(file.FullName, rawGitData);
+                var rawDirectoryBuildProps = HttpClientHelper.GetRawFile(rawGitUrl);
+                File.WriteAllText(file.FullName, rawDirectoryBuildProps);
                 return new LogKeyValueItem(LogCategoryType.Debug, "FileCreate", $"{area} - {descriptionPart} created");
             }
             catch (Exception ex)
             {
-                return new LogKeyValueItem(LogCategoryType.Error, "FileSkip", $"{area} folder skipped - {ex.Message}");
+                return new LogKeyValueItem(LogCategoryType.Error, "FileSkip", $"{area} - {descriptionPart} skipped - {ex.Message}");
             }
         }
     }

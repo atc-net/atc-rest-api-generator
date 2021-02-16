@@ -373,6 +373,11 @@ Code
 ```csharp
 FocusOnSegmentName
 ```
+#### HasCreateContentResult
+
+```csharp
+HasCreateContentResult
+```
 ### Methods
 
 

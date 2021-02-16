@@ -60,6 +60,11 @@ UseAuthorization
 ```csharp
 UseNullableReferenceTypes
 ```
+#### UseRestExtended
+
+```csharp
+UseRestExtended
+```
 
 <br />
 
