@@ -316,6 +316,14 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                         $"Http{apiOperation.Key}",
                         httpAttributeRoutePart));
 
+            // Create and add AuthorizeAttribute
+            var authorizationRoles = GetAuthorizationRoles(apiOperation);
+            if (authorizationRoles.Any())
+            {
+                var authorizeAttribute = SyntaxAttributeListFactory.CreateWithOneItemWithOneArgument("Authorize", $"Roles = \"{string.Join(',', authorizationRoles)}\"");
+                methodDeclaration = methodDeclaration.AddAttributeLists(authorizeAttribute);
+            }
+
             // Create and add producesResponseTypes-attributes
             var producesResponseAttributeParts = apiOperation.Value.Responses.GetProducesResponseAttributeParts(
                 OperationSchemaMappings,
@@ -331,6 +339,24 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                     methodDeclaration,
                     (current, producesResponseAttributePart) => current.AddAttributeLists(
                         SyntaxAttributeListFactory.Create(producesResponseAttributePart)));
+        }
+
+        private IEnumerable<string> GetAuthorizationRoles(KeyValuePair<OperationType, OpenApiOperation> apiOperation)
+        {
+            var result = new SortedSet<string>();
+            foreach (var schema in apiOperation.Value.Security)
+            {
+                var roles = schema.FirstOrDefault(s => s.Key.Reference.Id == "x-atc-azure-ad-application-roles").Value;
+                if (roles is not null)
+                {
+                    foreach (var role in roles)
+                    {
+                        result.Add(role);
+                    }
+                }
+            }
+
+            return result;
         }
 
         private static MethodDeclarationSyntax CreateMembersForEndpointsPrivateHelper(
