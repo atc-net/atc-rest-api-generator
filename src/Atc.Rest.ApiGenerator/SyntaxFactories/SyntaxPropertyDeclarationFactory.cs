@@ -138,13 +138,13 @@ namespace Atc.Rest.ApiGenerator.SyntaxFactories
             var propertyDeclaration = parameter.Schema.Type == OpenApiDataTypeConstants.Array
                 ? CreateListAuto(
                     parameter.Schema.Items.GetDataType(),
-                    parameter.Name.EnsureFirstCharacterToUpper())
+                    parameter.Name.PascalCase(removeSeparators: true))
                 : CreateAuto(
                     parameter.In,
                     parameter.Schema.Nullable,
                     parameter.Required,
                     parameter.Schema.GetDataType(),
-                    parameter.Name.EnsureFirstCharacterToUpper(),
+                    parameter.Name.PascalCase(removeSeparators: true),
                     useNullableReferenceTypes,
                     parameter.Schema.Default);
 

@@ -1,0 +1,14 @@
+openapi: 3.0.0
+paths:
+  '/':
+    get:
+      summary: Get
+      description: Get
+      operationId: get
+    parameters:
+      - name: fooBar
+        in: header
+        description: ''
+        required: false        
+        schema:
+          type: string
