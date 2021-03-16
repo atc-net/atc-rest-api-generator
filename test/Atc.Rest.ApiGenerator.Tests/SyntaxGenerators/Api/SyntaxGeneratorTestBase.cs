@@ -28,11 +28,11 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
             return Verifier.Verify(generatedCode, verifySettings);
         }
 
-        protected async Task ExecuteTest(GeneratorTestInput testInput)
+        protected async Task VerifyGeneratedOutput(GeneratorTestInput input)
         {
             // Arrange
-            var apiProject = await CreateApiProjectAsync(testInput);
-            var verifySettings = CreateVerifySettings(testInput, apiProject);
+            var apiProject = await CreateApiProjectAsync(input);
+            var verifySettings = CreateVerifySettings(input, apiProject);
 
             var sut = CreateApiGenerator(apiProject);
 

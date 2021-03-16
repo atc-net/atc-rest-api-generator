@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Atc.Rest.ApiGenerator.Helpers;
@@ -31,9 +32,9 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
 
         [Theory(DisplayName = "Api Contract Controllers")]
         [MemberData(nameof(TestInput))]
-        public Task ExecuteGeneratorTest(GeneratorTestInput specFile)
+        public Task ExecuteGeneratorTest(GeneratorTestInput input)
         {
-            return ExecuteTest(specFile);
+            return VerifyGeneratedOutput(input);
         }
     }
 }

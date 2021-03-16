@@ -39,9 +39,9 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
 
         [Theory(DisplayName = "Api Contract Interface")]
         [MemberData(nameof(TestInput))]
-        public Task ExecuteGeneratorTest(GeneratorTestInput specFile)
+        public Task ExecuteGeneratorTest(GeneratorTestInput input)
         {
-            return ExecuteTest(specFile);
+            return VerifyGeneratedOutput(input);
         }
     }
 }
