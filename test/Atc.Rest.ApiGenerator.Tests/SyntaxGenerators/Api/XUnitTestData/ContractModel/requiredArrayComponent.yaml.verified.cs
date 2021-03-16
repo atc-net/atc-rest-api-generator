@@ -14,8 +14,7 @@ namespace TestProject.AtcTest.Contracts.Test
     /// CreateItemRequest.
     /// </summary>
     [GeneratedCode("ApiGenerator", "x.x.x.x")]
-    public class
-    
+    public class RequiredArrayComponent
     {
         [Required]
         public List<string> MyItems { get; set; }

@@ -196,6 +196,23 @@ namespace Atc.CodeAnalysis.CSharp
             return propertyDeclaration;
         }
 
+        public static PropertyDeclarationSyntax AddValidationAttributeForPatternIfRequired(
+            this PropertyDeclarationSyntax propertyDeclaration,
+            OpenApiSchema schema)
+        {
+            if (schema == null)
+            {
+                throw new ArgumentNullException(nameof(schema));
+            }
+
+            if (schema.Type == OpenApiDataTypeConstants.String && schema.Pattern is not null)
+            {
+                propertyDeclaration = propertyDeclaration.AddValidationAttribute(new RegularExpressionAttribute(schema.Pattern));
+            }
+
+            return propertyDeclaration;
+        }
+
         private static PropertyDeclarationSyntax RangeAttributeInt(
             PropertyDeclarationSyntax propertyDeclaration,
             OpenApiSchema schema)

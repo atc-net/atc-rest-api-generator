@@ -114,6 +114,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxFactories
 
             propertyDeclaration = propertyDeclaration.AddValidationAttributeForMinMaxIfRequired(schema.Value);
 
+            propertyDeclaration = propertyDeclaration.AddValidationAttributeForPatternIfRequired(schema.Value);
+
             return propertyDeclaration;
         }
 
