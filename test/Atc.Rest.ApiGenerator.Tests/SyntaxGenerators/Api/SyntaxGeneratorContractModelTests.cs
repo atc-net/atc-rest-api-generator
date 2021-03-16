@@ -21,10 +21,10 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
         {
             // Verify spec file supported for unit test
             Assert.Single(apiProject.Document.Components.Schemas);
-            var schema = apiProject.Document.Components.Schemas.First().Value;
+            var schema = apiProject.Document.Components.Schemas.First();
 
             // Construct SUT
-            return new SyntaxGeneratorContractModel(apiProject, string.Empty, schema, FocusOnSegment);
+            return new SyntaxGeneratorContractModel(apiProject, schema.Key, schema.Value, FocusOnSegment);
         }
 
         [Theory(DisplayName = "Api Contract Model")]

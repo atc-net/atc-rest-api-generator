@@ -14,8 +14,7 @@ namespace TestProject.AtcTest.Contracts.Test
     /// A string component.
     /// </summary>
     [GeneratedCode("ApiGenerator", "x.x.x.x")]
-    public class
-    
+    public class StringComponent
     {
         /// <summary>
         /// normal string.
