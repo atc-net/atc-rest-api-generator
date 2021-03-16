@@ -40,6 +40,7 @@ namespace Atc.Rest.ApiGenerator.Tests.XUnitTestTypes.CodeGenerator
         }
 
         public GeneratorTestInput(FileInfo yamlSpec, FileInfo? generatorConfig = null)
+            : this()
         {
             this.yamlSpec = yamlSpec;
             this.generatorConfig = generatorConfig;
