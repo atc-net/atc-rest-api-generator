@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -117,7 +117,7 @@ namespace Atc.Rest.ApiGenerator.ProjectSyntaxFactories
             {
                 foreach (var pathParameter in globalPathParameters)
                 {
-                    dictionary.Add(pathParameter.Name, pathParameter.Schema);
+                    dictionary.Add(pathParameter.Name.PascalCase(removeSeparators: true), pathParameter.Schema);
                 }
             }
 
@@ -125,7 +125,7 @@ namespace Atc.Rest.ApiGenerator.ProjectSyntaxFactories
             {
                 foreach (var apiParameter in apiParameters)
                 {
-                    dictionary.Add(apiParameter.Name, apiParameter.Schema);
+                    dictionary.Add(apiParameter.Name.PascalCase(removeSeparators: true), apiParameter.Schema);
                 }
             }
 
