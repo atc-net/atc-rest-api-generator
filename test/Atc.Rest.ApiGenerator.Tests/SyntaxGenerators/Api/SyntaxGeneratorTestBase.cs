@@ -19,7 +19,7 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
         private const string ProjectPrefix = "TestProject";
         private const string ProjectSuffix = "AtcTest";
 
-        protected static IReadOnlyList<YamlSpecFile> AllFiles { get; } = GetYamlFiles();
+        protected static IReadOnlyList<GeneratorTestInput> AllTestInput { get; } = GetTestInput();
 
         protected abstract ISyntaxCodeGenerator CreateApiGenerator(ApiProjectOptions apiProject);
 
@@ -28,11 +28,11 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
             return Verifier.Verify(generatedCode, verifySettings);
         }
 
-        protected async Task ExecuteTest(YamlSpecFile specFile)
+        protected async Task VerifyGeneratedOutput(GeneratorTestInput input)
         {
             // Arrange
-            var apiProject = await CreateApiProjectAsync(specFile);
-            var verifySettings = CreateVerifySettings(specFile, apiProject);
+            var apiProject = await CreateApiProjectAsync(input);
+            var verifySettings = CreateVerifySettings(input, apiProject);
 
             var sut = CreateApiGenerator(apiProject);
 
@@ -43,27 +43,36 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
             await VerifyGeneratedCode(generatedCode, verifySettings);
         }
 
-        private VerifySettings CreateVerifySettings(YamlSpecFile yamlFile, ApiProjectOptions apiOptions)
+        private VerifySettings CreateVerifySettings(GeneratorTestInput yamlFile, ApiProjectOptions apiOptions)
         {
             var settings = new VerifySettings();
-            settings.UseDirectory(yamlFile.DirectoryName);
-            settings.UseFileName(yamlFile.FileName);
+            settings.UseDirectory(yamlFile.TestDirectory);
+            settings.UseFileName(yamlFile.TestName);
             settings.UseExtension("cs");
             settings.AddScrubber(input => input.Replace(apiOptions.ToolVersion.ToString(), "x.x.x.x"));
             return settings;
         }
 
-        private static IReadOnlyList<YamlSpecFile> GetYamlFiles([CallerFilePath] string sourceFilePath = "")
+        private static IReadOnlyList<GeneratorTestInput> GetTestInput([CallerFilePath] string sourceFilePath = "")
         {
             var directory = Path.GetDirectoryName(sourceFilePath);
             return Directory.EnumerateFiles(directory, "*.yaml", SearchOption.AllDirectories)
-                .Select(x => new YamlSpecFile(new FileInfo(x)))
+                .Select(x =>
+                {
+                    var specFile = new FileInfo(x);
+                    var configFilePath = Path.Combine(specFile.DirectoryName, Path.GetFileNameWithoutExtension(specFile.Name) + ".json");
+                    var configFile = File.Exists(configFilePath)
+                        ? new FileInfo(configFilePath)
+                        : null;
+                    return new GeneratorTestInput(specFile, configFile);
+                })
                 .ToArray();
         }
 
-        private async Task<ApiProjectOptions> CreateApiProjectAsync(YamlSpecFile specFile)
+        private async Task<ApiProjectOptions> CreateApiProjectAsync(GeneratorTestInput testInput)
         {
-            var spec = await specFile.LoadFileContentAsync();
+            var spec = await testInput.LoadYamlSpecContentAsync();
+            var options = testInput.GeneratorOptions.Value;
             var document = GenerateApiDocument(spec);
 
             return new ApiProjectOptions(
@@ -73,7 +82,7 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
                 new FileInfo("resources/dummySpec.yaml"),
                 ProjectPrefix,
                 ProjectSuffix,
-                new Models.ApiOptions.ApiOptions());
+                options);
         }
 
         private OpenApiDocument GenerateApiDocument(string spec)

@@ -13,8 +13,8 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
     [UsesVerify]
     public class SyntaxGeneratorContractModelTests : SyntaxGeneratorTestBase
     {
-        public static IEnumerable<object[]> YamlFiles { get; } = AllFiles
-            .Where(x => x.FilePath.Contains("ContractModel", System.StringComparison.Ordinal))
+        public static IEnumerable<object[]> TestInput { get; } = AllTestInput
+            .Where(x => x.TestDirectory.Contains("ContractModel", System.StringComparison.Ordinal))
             .Select(x => new object[] { x });
 
         protected override ISyntaxCodeGenerator CreateApiGenerator(ApiProjectOptions apiProject)
@@ -28,11 +28,10 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
         }
 
         [Theory(DisplayName = "Api Contract Model")]
-        [MemberData(nameof(YamlFiles))]
-        public Task ExecuteGeneratorTest(YamlSpecFile specFile)
+        [MemberData(nameof(TestInput))]
+        public Task ExecuteGeneratorTest(GeneratorTestInput input)
         {
-            Assert.NotNull(specFile.FilePath);
-            return ExecuteTest(specFile);
+            return VerifyGeneratedOutput(input);
         }
     }
 }
