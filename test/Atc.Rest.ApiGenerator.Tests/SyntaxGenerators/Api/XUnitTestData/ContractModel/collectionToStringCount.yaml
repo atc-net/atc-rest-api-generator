@@ -1,0 +1,18 @@
+openapi: 3.0.0
+components:
+  schemas:
+    TestComponent:
+      title: TestComponent
+      description: 'Test component description'
+      type: object
+      properties:
+        foos:
+          type: array
+          required: true
+          items:
+            type: string
+        nullableFoos:
+          type: array
+          nullable: true
+          items:
+            type: string
