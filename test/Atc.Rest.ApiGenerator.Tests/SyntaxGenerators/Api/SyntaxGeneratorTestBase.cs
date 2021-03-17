@@ -53,7 +53,7 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
             return settings;
         }
 
-        private static IReadOnlyList<GeneratorTestInput> CreateTestInput([CallerFilePath] string sourceFilePath = "")
+        private static IReadOnlyList<GeneratorTestInput> GetTestInput([CallerFilePath] string sourceFilePath = "")
         {
             var directory = Path.GetDirectoryName(sourceFilePath);
             return Directory.EnumerateFiles(directory, "*.yaml", SearchOption.AllDirectories)
