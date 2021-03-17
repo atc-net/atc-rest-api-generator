@@ -19,7 +19,7 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
         private const string ProjectPrefix = "TestProject";
         private const string ProjectSuffix = "AtcTest";
 
-        protected static IReadOnlyList<GeneratorTestInput> AllTestInput { get; } = CreateTestInput();
+        protected static IReadOnlyList<GeneratorTestInput> AllTestInput { get; } = GetTestInput();
 
         protected abstract ISyntaxCodeGenerator CreateApiGenerator(ApiProjectOptions apiProject);
 
