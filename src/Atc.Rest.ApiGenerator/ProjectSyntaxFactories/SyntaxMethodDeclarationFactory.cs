@@ -71,7 +71,7 @@ namespace Atc.Rest.ApiGenerator.ProjectSyntaxFactories
                     if (isArray)
                     {
                         content.Add(SyntaxInterpolatedFactory.CreateNameOf(name));
-                        content.Add(SyntaxInterpolatedFactory.StringTextColon());
+                        content.Add(SyntaxInterpolatedFactory.StringText(".Count: "));
                         var countCoalesceExpression = SyntaxFactory.ParseExpression($"{name}?.Count ?? 0");
                         content.Add(SyntaxFactory.Interpolation(countCoalesceExpression));
                     }

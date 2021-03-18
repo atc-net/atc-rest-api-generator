@@ -24,7 +24,7 @@ namespace TestProject.AtcTest.Contracts.Test
         /// </summary>
         public override string ToString()
         {
-            return $"{nameof(Foos)}: {Foos?.Count ?? 0}, {nameof(NullableFoos)}: {NullableFoos?.Count ?? 0}";
+            return $"{nameof(Foos)}.Count: {Foos?.Count ?? 0}, {nameof(NullableFoos)}.Count: {NullableFoos?.Count ?? 0}";
         }
     }
 }
