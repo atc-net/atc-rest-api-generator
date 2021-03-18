@@ -65,9 +65,17 @@ namespace Atc.Rest.ApiGenerator.ProjectSyntaxFactories
                 foreach (var schema in apiSchemaProperties)
                 {
                     var name = schema.Key.EnsureFirstCharacterToUpper();
+                    var isArray = schema.Value.Type == OpenApiDataTypeConstants.Array;
                     var hasAnyProperties = schema.Value.HasAnyProperties();
 
-                    if (!hasAnyProperties)
+                    if (isArray)
+                    {
+                        content.Add(SyntaxInterpolatedFactory.CreateNameOf(name));
+                        content.Add(SyntaxInterpolatedFactory.StringText(".Count: "));
+                        var countCoalesceExpression = SyntaxFactory.ParseExpression($"{name}?.Count ?? 0");
+                        content.Add(SyntaxFactory.Interpolation(countCoalesceExpression));
+                    }
+                    else if (!hasAnyProperties)
                     {
                         content.Add(SyntaxInterpolatedFactory.CreateNameOf(name));
                         content.Add(SyntaxInterpolatedFactory.StringTextColon());
