@@ -28,5 +28,7 @@ namespace Atc.Rest.ApiGenerator
         public const string Handler = "Handler";
 
         public const string ClientRequestParameters = "RequestParameters";
+
+        public const string AbstractCollectionTypeName = "IEnumerable";
     }
 }

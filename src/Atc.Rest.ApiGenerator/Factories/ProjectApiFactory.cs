@@ -204,6 +204,7 @@ namespace Atc.Rest.ApiGenerator.Factories
 
             if (responses.HasSchemaTypeOfArray())
             {
+                list.Add("System.Linq");
                 list.Add("System.Collections.Generic");
             }
 

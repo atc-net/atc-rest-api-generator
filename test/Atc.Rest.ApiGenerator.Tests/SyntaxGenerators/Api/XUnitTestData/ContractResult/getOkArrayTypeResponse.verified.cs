@@ -1,4 +1,6 @@
 using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Linq;
 using Atc.Rest.Results;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,11 +26,11 @@ namespace TestProject.AtcTest.Contracts.Test
         /// <summary>
         /// 200 - Ok response.
         /// </summary>
-        public static GetResult Ok(string? message = null) => new GetResult(new OkObjectResult(message));
+        public static GetResult Ok(IEnumerable<string> response) => new GetResult(new OkObjectResult(response ?? Enumerable.Empty<string>()));
 
         /// <summary>
         /// Performs an implicit conversion from GetResult to ActionResult.
         /// </summary>
-        public static implicit operator GetResult(string response) => Ok(response);
+        public static implicit operator GetResult(List<string> response) => Ok(response);
     }
 }
