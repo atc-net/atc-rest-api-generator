@@ -18,6 +18,10 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
             .Where(x => x.FilePath.Contains("EndpointControllers", System.StringComparison.Ordinal))
             .Select(x => new object[] { x });
 
+        public static IEnumerable<object[]> ApiOptionsFiles { get; } = AllApiOptionsFiles
+            .Where(x => x.FilePath.Contains("EndpointControllers", System.StringComparison.Ordinal))
+            .Select(x => new object[] { x });
+
         protected override ISyntaxCodeGenerator CreateApiGenerator(ApiProjectOptions apiProject)
         {
             // Verify spec file supported for unit test
@@ -31,7 +35,8 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
 
         [Theory(DisplayName = "Api Contract Controllers")]
         [MemberData(nameof(YamlFiles))]
-        public Task ExecuteGeneratorTest(YamlSpecFile specFile)
+        [MemberData(nameof(ApiOptionsFiles))]
+        public Task ExecuteGeneratorTest(YamlSpecFile specFile, ApiOptionsFile apiOptionsFile)
         {
             Assert.NotNull(specFile.FilePath);
             return ExecuteTest(specFile);

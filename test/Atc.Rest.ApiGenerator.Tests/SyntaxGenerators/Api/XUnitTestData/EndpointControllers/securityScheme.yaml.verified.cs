@@ -2,6 +2,7 @@ using System;
 using System.CodeDom.Compiler;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TestProject.AtcTest.Contracts.Items;
@@ -18,6 +19,7 @@ namespace TestProject.AtcTest.Endpoints
     /// Endpoint definitions.
     /// Area: Items.
     /// </summary>
+    [Authorize]
     [ApiController]
     [Route("/api/v1/items")]
     [GeneratedCode("ApiGenerator", "x.x.x.x")]

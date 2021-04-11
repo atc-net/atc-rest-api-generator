@@ -21,6 +21,8 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
 
         protected static IReadOnlyList<YamlSpecFile> AllFiles { get; } = GetYamlFiles();
 
+        protected static IReadOnlyList<ApiOptionsFile> AllApiOptionsFiles { get; } = GetOptionsFiles();
+
         protected abstract ISyntaxCodeGenerator CreateApiGenerator(ApiProjectOptions apiProject);
 
         protected static Task VerifyGeneratedCode(string generatedCode, VerifySettings verifySettings)
@@ -58,6 +60,14 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
             var directory = Path.GetDirectoryName(sourceFilePath);
             return Directory.EnumerateFiles(directory, "*.yaml", SearchOption.AllDirectories)
                 .Select(x => new YamlSpecFile(new FileInfo(x)))
+                .ToArray();
+        }
+
+        private static IReadOnlyList<ApiOptionsFile> GetOptionsFiles([CallerFilePath] string sourceFilePath = "")
+        {
+            var directory = Path.GetDirectoryName(sourceFilePath);
+            return Directory.EnumerateFiles(directory, "*.json", SearchOption.AllDirectories)
+                .Select(x => new ApiOptionsFile(new FileInfo(x)))
                 .ToArray();
         }
 

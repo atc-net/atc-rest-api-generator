@@ -31,6 +31,10 @@ namespace Atc.Rest.ApiGenerator.CLI.Commands
             var logItems = new List<LogKeyValueItem>();
             logItems.AddRange(OpenApiDocumentHelper.Validate(apiDocument, apiOptions.Validation));
 
+            /////////////////////////////////////////////////////////////
+            // Add validation here
+            /////////////////////////////////////////////////////////////
+
             if (logItems.Any(x => x.LogCategory == LogCategoryType.Error))
             {
                 return ConsoleHelper.WriteLogItemsAndExit(logItems, verboseMode, CommandArea);

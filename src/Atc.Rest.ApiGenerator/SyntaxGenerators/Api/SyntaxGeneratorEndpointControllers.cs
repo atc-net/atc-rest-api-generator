@@ -317,11 +317,14 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                         httpAttributeRoutePart));
 
             // Create and add AuthorizeAttribute
-            var authorizationRoles = GetAuthorizationRoles(apiOperation);
-            if (authorizationRoles.Any())
+            if (ApiProjectOptions.ApiOptions.Generator.UseAuthorization)
             {
-                var authorizeAttribute = SyntaxAttributeListFactory.CreateWithOneItemWithOneArgument("Authorize", $"Roles = \"{string.Join(',', authorizationRoles)}\"");
-                methodDeclaration = methodDeclaration.AddAttributeLists(authorizeAttribute);
+                var authorizationRoles = GetAuthorizationRoles(apiOperation);
+                if (authorizationRoles.Any())
+                {
+                    var authorizeAttribute = SyntaxAttributeListFactory.CreateWithOneItemWithOneArgumentWithNameEquals("Authorize", "Roles", string.Join(',', authorizationRoles));
+                    methodDeclaration = methodDeclaration.AddAttributeLists(authorizeAttribute);
+                }
             }
 
             // Create and add producesResponseTypes-attributes
