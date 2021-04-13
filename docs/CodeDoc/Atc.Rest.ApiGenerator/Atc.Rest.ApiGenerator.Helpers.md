@@ -58,6 +58,11 @@ public static class GenerateAtcCodingRulesHelper
 ### Static Fields
 
 
+#### FileNameDirectoryBuildProps
+
+```csharp
+string FileNameDirectoryBuildProps
+```
 #### FileNameEditorConfig
 
 ```csharp
