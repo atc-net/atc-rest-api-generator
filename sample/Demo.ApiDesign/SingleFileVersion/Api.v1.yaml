@@ -670,12 +670,12 @@ components:
           type: string
           minLength: 2
           maxLength: 2
-          pattern: '^[A-Z]$'
+          pattern: '^[A-Za-z]{2}$'
         alpha3Code:
           type: string
           minLength: 3
           maxLength: 3
-          pattern: '^[A-Z]$'
+          pattern: '^[A-Za-z]{3}$'
       required:
         - name
         - alpha2Code

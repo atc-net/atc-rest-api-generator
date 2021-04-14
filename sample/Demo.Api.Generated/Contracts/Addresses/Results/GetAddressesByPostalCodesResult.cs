@@ -1,5 +1,6 @@
 ﻿using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using Atc.Rest.Results;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +27,7 @@ namespace Demo.Api.Generated.Contracts.Addresses
         /// <summary>
         /// 200 - Ok response.
         /// </summary>
-        public static GetAddressesByPostalCodesResult Ok(List<Address> response) => new GetAddressesByPostalCodesResult(new OkObjectResult(response));
+        public static GetAddressesByPostalCodesResult Ok(IEnumerable<Address> response) => new GetAddressesByPostalCodesResult(new OkObjectResult(response ?? Enumerable.Empty<Address>()));
 
         /// <summary>
         /// 404 - NotFound response.
@@ -36,6 +37,6 @@ namespace Demo.Api.Generated.Contracts.Addresses
         /// <summary>
         /// Performs an implicit conversion from GetAddressesByPostalCodesResult to ActionResult.
         /// </summary>
-        public static implicit operator GetAddressesByPostalCodesResult(List<Address> x) => Ok(x);
+        public static implicit operator GetAddressesByPostalCodesResult(List<Address> response) => Ok(response);
     }
 }

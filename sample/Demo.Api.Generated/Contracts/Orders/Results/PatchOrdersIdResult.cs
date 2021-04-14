@@ -45,6 +45,6 @@ namespace Demo.Api.Generated.Contracts.Orders
         /// <summary>
         /// Performs an implicit conversion from PatchOrdersIdResult to ActionResult.
         /// </summary>
-        public static implicit operator PatchOrdersIdResult(string x) => Ok(x);
+        public static implicit operator PatchOrdersIdResult(string response) => Ok(response);
     }
 }

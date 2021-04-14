@@ -30,6 +30,6 @@ namespace Demo.Api.Generated.Contracts.Accounts
         /// <summary>
         /// Performs an implicit conversion from UpdateAccountNameResult to ActionResult.
         /// </summary>
-        public static implicit operator UpdateAccountNameResult(string x) => Ok(x);
+        public static implicit operator UpdateAccountNameResult(string response) => Ok(response);
     }
 }

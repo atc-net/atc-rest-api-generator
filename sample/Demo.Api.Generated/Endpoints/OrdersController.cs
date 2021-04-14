@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Atc.Rest.Results;
 using Demo.Api.Generated.Contracts.Orders;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,6 +20,7 @@ namespace Demo.Api.Generated.Endpoints
     /// Endpoint definitions.
     /// Area: Orders.
     /// </summary>
+    [Authorize]
     [ApiController]
     [Route("/api/v1/orders")]
     [GeneratedCode("ApiGenerator", "1.1.87.0")]

@@ -35,6 +35,6 @@ namespace Demo.Api.Generated.Contracts.Orders
         /// <summary>
         /// Performs an implicit conversion from GetOrdersResult to ActionResult.
         /// </summary>
-        public static implicit operator GetOrdersResult(Pagination<Order> x) => Ok(x);
+        public static implicit operator GetOrdersResult(Pagination<Order> response) => Ok(response);
     }
 }

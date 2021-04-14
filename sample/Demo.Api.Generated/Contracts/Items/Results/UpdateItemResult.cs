@@ -30,6 +30,6 @@ namespace Demo.Api.Generated.Contracts.Items
         /// <summary>
         /// Performs an implicit conversion from UpdateItemResult to ActionResult.
         /// </summary>
-        public static implicit operator UpdateItemResult(string x) => Ok(x);
+        public static implicit operator UpdateItemResult(string response) => Ok(response);
     }
 }

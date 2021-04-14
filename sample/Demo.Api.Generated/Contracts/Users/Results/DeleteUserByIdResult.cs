@@ -40,6 +40,6 @@ namespace Demo.Api.Generated.Contracts.Users
         /// <summary>
         /// Performs an implicit conversion from DeleteUserByIdResult to ActionResult.
         /// </summary>
-        public static implicit operator DeleteUserByIdResult(string x) => Ok(x);
+        public static implicit operator DeleteUserByIdResult(string response) => Ok(response);
     }
 }

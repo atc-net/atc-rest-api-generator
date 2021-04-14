@@ -45,6 +45,6 @@ namespace Demo.Api.Generated.Contracts.Users
         /// <summary>
         /// Performs an implicit conversion from GetUserByEmailResult to ActionResult.
         /// </summary>
-        public static implicit operator GetUserByEmailResult(User x) => Ok(x);
+        public static implicit operator GetUserByEmailResult(User response) => Ok(response);
     }
 }
