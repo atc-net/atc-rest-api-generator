@@ -45,6 +45,6 @@ namespace Demo.Api.Generated.Contracts.Users
         /// <summary>
         /// Performs an implicit conversion from UpdateUserByIdResult to ActionResult.
         /// </summary>
-        public static implicit operator UpdateUserByIdResult(string x) => Ok(x);
+        public static implicit operator UpdateUserByIdResult(string response) => Ok(response);
     }
 }

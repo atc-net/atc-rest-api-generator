@@ -3,6 +3,7 @@ using System.CodeDom.Compiler;
 using System.Threading;
 using System.Threading.Tasks;
 using Demo.Api.Generated.Contracts.Accounts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,6 +19,7 @@ namespace Demo.Api.Generated.Endpoints
     /// Endpoint definitions.
     /// Area: Accounts.
     /// </summary>
+    [Authorize]
     [ApiController]
     [Route("/api/v1/accounts")]
     [GeneratedCode("ApiGenerator", "1.1.87.0")]

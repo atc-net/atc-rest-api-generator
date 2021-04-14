@@ -30,6 +30,6 @@ namespace Demo.Api.Generated.Contracts.RouteWithDash
         /// <summary>
         /// Performs an implicit conversion from GetRouteWithDashResult to ActionResult.
         /// </summary>
-        public static implicit operator GetRouteWithDashResult(string x) => Ok(x);
+        public static implicit operator GetRouteWithDashResult(string response) => Ok(response);
     }
 }

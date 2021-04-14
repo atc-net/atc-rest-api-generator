@@ -45,6 +45,6 @@ namespace Demo.Api.Generated.Contracts.Users
         /// <summary>
         /// Performs an implicit conversion from UpdateMyTestGenderResult to ActionResult.
         /// </summary>
-        public static implicit operator UpdateMyTestGenderResult(string x) => Ok(x);
+        public static implicit operator UpdateMyTestGenderResult(string response) => Ok(response);
     }
 }

@@ -30,7 +30,7 @@ namespace Demo.Api.Generated.Contracts.Items
         /// </summary>
         public override string ToString()
         {
-            return $"{nameof(Item)}: ({Item}), {nameof(MyItems)}: {MyItems}";
+            return $"{nameof(Item)}: ({Item}), {nameof(MyItems)}.Count: {MyItems?.Count ?? 0}";
         }
     }
 }

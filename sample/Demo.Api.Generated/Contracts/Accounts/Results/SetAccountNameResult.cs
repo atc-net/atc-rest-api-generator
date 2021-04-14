@@ -30,6 +30,6 @@ namespace Demo.Api.Generated.Contracts.Accounts
         /// <summary>
         /// Performs an implicit conversion from SetAccountNameResult to ActionResult.
         /// </summary>
-        public static implicit operator SetAccountNameResult(string x) => Ok(x);
+        public static implicit operator SetAccountNameResult(string response) => Ok(response);
     }
 }

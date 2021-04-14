@@ -1,5 +1,6 @@
 ﻿using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using Atc.Rest.Results;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +27,7 @@ namespace Demo.Api.Generated.Contracts.Users
         /// <summary>
         /// 200 - Ok response.
         /// </summary>
-        public static GetUsersResult Ok(List<User> response) => new GetUsersResult(new OkObjectResult(response));
+        public static GetUsersResult Ok(IEnumerable<User> response) => new GetUsersResult(new OkObjectResult(response ?? Enumerable.Empty<User>()));
 
         /// <summary>
         /// 409 - Conflict response.
@@ -36,6 +37,6 @@ namespace Demo.Api.Generated.Contracts.Users
         /// <summary>
         /// Performs an implicit conversion from GetUsersResult to ActionResult.
         /// </summary>
-        public static implicit operator GetUsersResult(List<User> x) => Ok(x);
+        public static implicit operator GetUsersResult(List<User> response) => Ok(response);
     }
 }
