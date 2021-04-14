@@ -124,6 +124,7 @@
      - HasSharedResponseContract(OpenApiDocument document, List&lt;ApiOperationSchemaMap&gt; operationSchemaMappings, string focusOnSegmentName)
 - [GenerateAtcCodingRulesHelper](Atc.Rest.ApiGenerator.Helpers.md#generateatccodingruleshelper)
   -  Static Fields
+     - string FileNameDirectoryBuildProps
      - string FileNameEditorConfig
   -  Static Methods
      - Generate(string outputSlnPath, DirectoryInfo outputSrcPath, DirectoryInfo outputTestPath)

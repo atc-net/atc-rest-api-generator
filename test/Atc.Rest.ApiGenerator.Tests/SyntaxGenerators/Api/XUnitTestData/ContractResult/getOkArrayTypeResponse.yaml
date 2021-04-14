@@ -3,13 +3,15 @@ paths:
   /:
     get:
       summary: Get
-      description: Get 
+      description: Get
       operationId: get
       tags: []
       responses:
         '200':
           description: OK
           content:
-            text/plain:
+            application/json:
               schema:
-                type: string
+                type: array
+                items:
+                  type: string

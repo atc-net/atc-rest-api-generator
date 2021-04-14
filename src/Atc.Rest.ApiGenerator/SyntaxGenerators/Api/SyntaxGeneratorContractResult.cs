@@ -245,6 +245,16 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                                 {
                                     methodDeclaration = CreateTypeRequestObjectResult(className, httpStatusCode.ToNormalizedString(), schema.GetDataType(), "response", isList, isPagination);
                                 }
+                                else if (schema != null && string.Equals(schema.Type, OpenApiDataTypeConstants.Array, StringComparison.Ordinal))
+                                {
+                                    methodDeclaration = CreateTypeRequestObjectResult(
+                                        className,
+                                        httpStatusCode.ToNormalizedString(),
+                                        schema.Items.GetDataType(),
+                                        "response",
+                                        isList,
+                                        isPagination);
+                                }
                                 else
                                 {
                                     methodDeclaration = CreateTypeRequestWithMessageAllowNull(className, httpStatusCode, nameof(OkObjectResult));
@@ -558,9 +568,13 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
             bool asGenericPagination = false)
         {
             string? genericListTypeName = null;
+            string objectResultParameter = asGenericList
+                ? parameterName + $" ?? Enumerable.Empty<{parameterTypeName}>()"
+                : parameterName;
+
             if (asGenericList)
             {
-                genericListTypeName = Microsoft.OpenApi.Models.NameConstants.List;
+                genericListTypeName = NameConstants.AbstractCollectionTypeName;
             }
             else if (asGenericPagination)
             {
@@ -585,7 +599,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                                     SyntaxFactory.SingletonSeparatedList(
                                         SyntaxFactory.Argument(
                                             SyntaxObjectCreationExpressionFactory.Create(methodName + nameof(ObjectResult))
-                                                .WithArgumentList(SyntaxArgumentListFactory.CreateWithOneItem(parameterName))))))))
+                                                .WithArgumentList(SyntaxArgumentListFactory.CreateWithOneItem(objectResultParameter))))))))
                 .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
         }
 
@@ -669,10 +683,10 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                     SyntaxFactory.IdentifierName(SyntaxFactory.Identifier(className)))
                 .WithModifiers(SyntaxTokenListFactory.PublicStaticKeyword(true))
                 .WithOperatorKeyword(SyntaxTokenFactory.OperatorKeyword())
-                .AddParameterListParameters(SyntaxParameterFactory.Create(typeName, "x", genericListTypeName))
+                .AddParameterListParameters(SyntaxParameterFactory.Create(typeName, "response", genericListTypeName))
                 .WithExpressionBody(SyntaxFactory.ArrowExpressionClause(
                         SyntaxFactory.InvocationExpression(SyntaxFactory.IdentifierName(SyntaxFactory.Identifier(httpStatus)))
-                            .AddArgumentListArguments(SyntaxArgumentFactory.Create("x")))
+                            .AddArgumentListArguments(SyntaxArgumentFactory.Create("response")))
                     .WithArrowToken(SyntaxTokenFactory.EqualsGreaterThan()))
                 .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
         }
