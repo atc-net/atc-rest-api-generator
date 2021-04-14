@@ -1,0 +1,23 @@
+openapi: 3.0.0
+paths:
+  '/tasks':
+    get:
+      summary: Get
+      description: Get
+      operationId: get
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+components:
+  schemas:
+    Task:
+      title: Task
+      description: Task.
+      type: object
+      properties:
+        id:
+          type: string

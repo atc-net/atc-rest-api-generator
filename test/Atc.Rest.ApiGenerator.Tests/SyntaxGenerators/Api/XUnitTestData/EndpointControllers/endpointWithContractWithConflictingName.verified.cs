@@ -13,37 +13,37 @@ using Microsoft.AspNetCore.Mvc;
 //------------------------------------------------------------------------------
 namespace TestProject.AtcTest.Endpoints
 {
-    using TestProject.AtcTest.Contracts.Items;
+    using TestProject.AtcTest.Contracts.Tasks;
 
     /// <summary>
     /// Endpoint definitions.
-    /// Area: Items.
+    /// Area: Tasks.
     /// </summary>
     [ApiController]
-    [Route("/api/v1/items")]
+    [Route("/api/v1/tasks")]
     [GeneratedCode("ApiGenerator", "x.x.x.x")]
-    public class ItemsController : ControllerBase
+    public class TasksController : ControllerBase
     {
         /// <summary>
-        /// Description: Get item by id.
-        /// Operation: GetItemById.
-        /// Area: Items.
+        /// Description: Get.
+        /// Operation: Get.
+        /// Area: Tasks.
         /// </summary>
-        [HttpGet("{id}")]
-        [ProducesResponseType(typeof(Item), StatusCodes.Status200OK)]
-        public Task<ActionResult> GetItemByIdAsync(GetItemByIdParameters parameters, [FromServices] IGetItemByIdHandler handler, CancellationToken cancellationToken)
+        [HttpGet]
+        [ProducesResponseType(typeof(Task), StatusCodes.Status200OK)]
+        public Task<ActionResult> GetAsync([FromServices] IGetHandler handler, CancellationToken cancellationToken)
         {
             if (handler is null)
             {
                 throw new ArgumentNullException(nameof(handler));
             }
 
-            return InvokeGetItemByIdAsync(parameters, handler, cancellationToken);
+            return InvokeGetAsync(handler, cancellationToken);
         }
 
-        private static async Task<ActionResult> InvokeGetItemByIdAsync(GetItemByIdParameters parameters, IGetItemByIdHandler handler, CancellationToken cancellationToken)
+        private static async Task<ActionResult> InvokeGetAsync([FromServices] IGetHandler handler, CancellationToken cancellationToken)
         {
-            return await handler.ExecuteAsync(parameters, cancellationToken);
+            return await handler.ExecuteAsync(cancellationToken);
         }
     }
 }

@@ -104,6 +104,13 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
             }
 
             // Add the class to the namespace.
+            @namespace = @namespace.AddUsings(
+                ProjectApiFactory.CreateProjectUsingListForEndpoint(
+                    ApiProjectOptions,
+                    FocusOnSegmentName,
+                    HasSharedResponseContract()));
+
+            // Add the class to the namespace.
             @namespace = @namespace.AddMembers(classDeclaration);
 
             // Add using statement to compilationUnit
@@ -112,12 +119,10 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                 .Any(x => x.Identifier.ValueText.Contains($"({Microsoft.OpenApi.Models.NameConstants.Pagination}<", StringComparison.Ordinal));
 
             compilationUnit = compilationUnit.AddUsingStatements(
-                ProjectApiFactory.CreateUsingListForEndpoint(
+                ProjectApiFactory.CreateGeneralUsingListForEndpoint(
                     ApiProjectOptions,
-                    FocusOnSegmentName,
                     usedApiOperations,
-                    includeRestResults,
-                    HasSharedResponseContract()));
+                    includeRestResults));
 
             // Add namespace to compilationUnit
             compilationUnit = compilationUnit.AddMembers(@namespace);

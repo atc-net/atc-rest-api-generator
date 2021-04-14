@@ -3,18 +3,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using Atc.Rest.ApiGenerator.Models;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.OpenApi.Models;
 
 namespace Atc.Rest.ApiGenerator.Factories
 {
     public static class ProjectApiFactory
     {
-        public static string[] CreateUsingListForEndpoint(
+        public static UsingDirectiveSyntax[] CreateProjectUsingListForEndpoint(
             ApiProjectOptions apiProjectOptions,
             string focusOnSegmentName,
+            bool hasSharedResponseContract)
+        {
+            var result = new List<UsingDirectiveSyntax>();
+
+            if (hasSharedResponseContract)
+            {
+                result.Add(SyntaxFactory.UsingDirective(SyntaxFactory.ParseName($"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}")));
+            }
+
+            result.Add(SyntaxFactory.UsingDirective(SyntaxFactory.ParseName($"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}.{focusOnSegmentName.EnsureFirstCharacterToUpper()}")));
+
+            return result.ToArray();
+        }
+
+        public static string[] CreateGeneralUsingListForEndpoint(
+            ApiProjectOptions apiProjectOptions,
             List<OpenApiOperation> apiOperations,
-            bool includeRestResults,
-            bool hasSharedModel)
+            bool includeRestResults)
         {
             if (apiOperations == null)
             {
@@ -33,13 +50,6 @@ namespace Atc.Rest.ApiGenerator.Factories
             {
                 list.Add("Atc.Rest.Results");
             }
-
-            if (hasSharedModel)
-            {
-                list.Add($"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}");
-            }
-
-            list.Add($"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}.{focusOnSegmentName.EnsureFirstCharacterToUpper()}");
 
             list.Add("Microsoft.AspNetCore.Http");
             list.Add("Microsoft.AspNetCore.Mvc");
