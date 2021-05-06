@@ -16,7 +16,7 @@ or by following the instructions [here](https://www.nuget.org/packages/atc-api-g
 A successful installation will output something like:
 ```
 You can invoke the tool using the following command: atc-api
-Tool 'atc-api-gen' (version '1.0.104') was successfully installed.`
+Tool 'atc-api-gen' (version '1.0.117') was successfully installed.`
 ```
 
 ## Update:
@@ -68,14 +68,14 @@ Options:
 The following command will generate an API that implements the offcial Pet Store example from Swagger.
 
 ```
-atc-api generate server all --validate-strictMode false -s https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml -p PetStore --outputSlnPath <MY-PROJECT-FOLDER> --outputSrcPath <MY-PROJECT-FOLDER>\src --outputTestPath <MY-PROJECT-FOLDER>\test -v true
+atc-api generate server all --validate-strictMode -s https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml -p PetStore --outputSlnPath <MY-PROJECT-FOLDER> --outputSrcPath <MY-PROJECT-FOLDER>\src --outputTestPath <MY-PROJECT-FOLDER>\test -v
 ```
 
 Replace `<MY-PROJECT-FOLDER>` with an absolute path where you want to projects created. For example, 
 to put the generated solution in a folder called `c:\PetStore`, do the following:
 
 ```
-atc-api generate server all --validate-strictMode false -s https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml -p PetStore --outputSlnPath c:\PetStore --outputSrcPath c:\PetStore\src --outputTestPath c:\PetStore\test -v true
+atc-api generate server all --validate-strictMode -s https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml -p PetStore --outputSlnPath c:\PetStore --outputSrcPath c:\PetStore\src --outputTestPath c:\PetStore\test -v
 ```
 
 Running the command above produces the following output:

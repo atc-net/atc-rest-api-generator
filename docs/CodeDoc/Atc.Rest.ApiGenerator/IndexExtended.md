@@ -83,11 +83,12 @@
      - CreateUsingListForEndpointResultInterface(ApiProjectOptions apiProjectOptions, bool includeRestResults, bool hasList, bool hasSharedModel)
 - [ProjectApiFactory](Atc.Rest.ApiGenerator.Factories.md#projectapifactory)
   -  Static Methods
+     - CreateGeneralUsingListForEndpoint(ApiProjectOptions apiProjectOptions, List&lt;OpenApiOperation&gt; apiOperations, bool includeRestResults)
+     - CreateProjectUsingListForEndpoint(ApiProjectOptions apiProjectOptions, string focusOnSegmentName, bool hasSharedResponseContract)
      - CreateUsingListForContractInterface()
      - CreateUsingListForContractModel(OpenApiSchema apiSchema)
      - CreateUsingListForContractParameter(IList&lt;OpenApiParameter&gt; globalParameters, IList&lt;OpenApiParameter&gt; parameters, OpenApiRequestBody requestBody, bool forClient)
      - CreateUsingListForContractResult(OpenApiResponses responses, bool useProblemDetailsAsDefaultResponseBody, bool hasCreateContentResult)
-     - CreateUsingListForEndpoint(ApiProjectOptions apiProjectOptions, string focusOnSegmentName, List&lt;OpenApiOperation&gt; apiOperations, bool includeRestResults, bool hasSharedModel)
 - [ProjectDomainFactory](Atc.Rest.ApiGenerator.Factories.md#projectdomainfactory)
   -  Static Methods
      - CreateUsingListForHandler(DomainProjectOptions domainProjectOptions, string focusOnSegmentName)
@@ -101,6 +102,8 @@
 ## [Atc.Rest.ApiGenerator.Generators](Atc.Rest.ApiGenerator.Generators.md)
 
 - [ClientCSharpApiGenerator](Atc.Rest.ApiGenerator.Generators.md#clientcsharpapigenerator)
+  -  Properties
+     - ExcludeEndpointGeneration
   -  Methods
      - Generate()
 - [ServerApiGenerator](Atc.Rest.ApiGenerator.Generators.md#serverapigenerator)
@@ -131,7 +134,7 @@
 - [GenerateHelper](Atc.Rest.ApiGenerator.Helpers.md#generatehelper)
   -  Static Methods
      - GenerateServerApi(string projectPrefixName, DirectoryInfo outputPath, DirectoryInfo outputTestPath, Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, ApiOptions apiOptions)
-     - GenerateServerCSharpClient(string projectPrefixName, string clientFolder, DirectoryInfo outputPath, Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, ApiOptions apiOptions)
+     - GenerateServerCSharpClient(string projectPrefixName, string clientFolder, DirectoryInfo outputPath, Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, bool excludeEndpointGeneration, ApiOptions apiOptions)
      - GenerateServerDomain(string projectPrefixName, DirectoryInfo outputPath, DirectoryInfo outputTestPath, Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, ApiOptions apiOptions, DirectoryInfo apiPath)
      - GenerateServerHost(string projectPrefixName, DirectoryInfo outputPath, DirectoryInfo outputTestPath, Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, ApiOptions apiOptions, DirectoryInfo apiPath, DirectoryInfo domainPath)
      - GenerateServerSln(string projectPrefixName, string outputSlnPath, DirectoryInfo outputSrcPath, DirectoryInfo outputTestPath)
@@ -291,6 +294,7 @@
      - ClientFolderName
      - Document
      - DocumentFile
+     - ExcludeEndpointGeneration
      - ForClient
      - PathForSrcGenerate
      - ProjectName
@@ -298,6 +302,8 @@
      - ToolName
      - ToolNameAndVersion
      - ToolVersion
+  -  Methods
+     - ToString()
 - [DomainProjectOptions](Atc.Rest.ApiGenerator.Models.md#domainprojectoptions)
   -  Properties
      - ApiProjectSrcCsProj

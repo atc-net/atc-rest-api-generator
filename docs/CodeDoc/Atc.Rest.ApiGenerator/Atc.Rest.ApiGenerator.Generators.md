@@ -14,6 +14,14 @@
 public class ClientCSharpApiGenerator
 ```
 
+### Properties
+
+
+#### ExcludeEndpointGeneration
+
+```csharp
+ExcludeEndpointGeneration
+```
 ### Methods
 
 

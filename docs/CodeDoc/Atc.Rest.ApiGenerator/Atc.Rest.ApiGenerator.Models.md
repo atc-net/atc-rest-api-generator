@@ -229,6 +229,11 @@ Document
 ```csharp
 DocumentFile
 ```
+#### ExcludeEndpointGeneration
+
+```csharp
+ExcludeEndpointGeneration
+```
 #### ForClient
 
 ```csharp
@@ -263,6 +268,14 @@ ToolNameAndVersion
 
 ```csharp
 ToolVersion
+```
+### Methods
+
+
+#### ToString
+
+```csharp
+string ToString()
 ```
 
 <br />

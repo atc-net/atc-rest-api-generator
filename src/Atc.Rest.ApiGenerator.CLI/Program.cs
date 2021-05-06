@@ -12,6 +12,39 @@ namespace Atc.Rest.ApiGenerator.CLI
     {
         public static int Main(string[] args)
         {
+            //// ATC-DEMO - SERVER
+            args = new[]
+            {
+                "generate",
+                "server",
+                "all",
+                "--validate-strictMode",
+                "--specificationPath", @"C:\Code\atc-net\atc-rest-api-generator\sample\Demo.ApiDesign\SingleFileVersion\Api.v1.yaml",
+                "--projectPrefixName", "Demo",
+                "--outputSlnPath", @"C:\Temp\@X\sample",
+                "--outputSrcPath", @"C:\Temp\@X\sample",
+                "--outputTestPath", @"C:\Temp\@X\sample",
+                "--optionsPath", @"C:\Code\atc-net\atc-rest-api-generator\sample\Demo.ApiDesign\DemoApiGeneratorOptions.json",
+                "-v",
+            };
+
+            //////// ATC-DEMO - CLIENT
+            ////args = new[]
+            ////{
+            ////    "generate",
+            ////    "client",
+            ////    "csharp",
+            ////    "--validate-strictMode",
+            ////    "--specificationPath", @"C:\Code\atc-net\atc-rest-api-generator\sample\Demo.ApiDesign\SingleFileVersion\Api.v1.yaml",
+            ////    "--projectPrefixName", "Demo",
+            ////    "--clientFolderName", "DemoApiClient",
+            ////    "--outputPath", @"C:\Temp\@X",
+            ////    "--optionsPath", @"C:\Code\atc-net\atc-rest-api-generator\sample\Demo.ApiDesign\DemoApiGeneratorOptions.json",
+            ////    "--excludeEndpointGeneration",
+            ////    //"--excludeContractRequestParameterGeneration",
+            ////    "-v",
+            ////};
+
             var builder = new HostBuilder();
 
             try
