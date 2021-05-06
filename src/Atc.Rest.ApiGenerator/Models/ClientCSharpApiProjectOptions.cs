@@ -15,6 +15,7 @@ namespace Atc.Rest.ApiGenerator.Models
             FileInfo openApiDocumentFile,
             string projectPrefixName,
             string projectSuffixName,
+            bool excludeEndpointGeneration,
             ApiOptions.ApiOptions apiOptions)
         {
             if (projectSrcGeneratePath == null)
@@ -45,6 +46,8 @@ namespace Atc.Rest.ApiGenerator.Models
             ProjectSrcCsProj = new FileInfo(Path.Combine(PathForSrcGenerate.FullName, $"{ProjectName}.csproj"));
 
             BasePathSegmentNames = OpenApiDocumentHelper.GetBasePathSegmentNames(openApiDocument);
+
+            ExcludeEndpointGeneration = excludeEndpointGeneration;
         }
 
         public string ToolName { get; }
@@ -72,5 +75,9 @@ namespace Atc.Rest.ApiGenerator.Models
         public string ApiVersion { get; }
 
         public List<string> BasePathSegmentNames { get; }
+
+        public bool ExcludeEndpointGeneration { get; }
+
+        public override string ToString() => $"{nameof(ToolName)}: {ToolName}, {nameof(ToolVersion)}: {ToolVersion}, {nameof(ToolNameAndVersion)}: {ToolNameAndVersion}, {nameof(ApiOptions)}: {ApiOptions}, {nameof(PathForSrcGenerate)}: {PathForSrcGenerate}, {nameof(ProjectSrcCsProj)}: {ProjectSrcCsProj}, {nameof(ForClient)}: {ForClient}, {nameof(ClientFolderName)}: {ClientFolderName}, {nameof(Document)}: {Document}, {nameof(DocumentFile)}: {DocumentFile}, {nameof(ProjectName)}: {ProjectName}, {nameof(ApiVersion)}: {ApiVersion}, {nameof(BasePathSegmentNames)}: {BasePathSegmentNames}, {nameof(ExcludeEndpointGeneration)}: {ExcludeEndpointGeneration}";
     }
 }

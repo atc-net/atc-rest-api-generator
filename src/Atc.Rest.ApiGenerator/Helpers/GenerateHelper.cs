@@ -16,7 +16,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
     {
         public static Version GetAtcToolVersion()
         {
-            var defaultVersion = new Version(1, 1, 87, 0);
+            var defaultVersion = new Version(1, 1, 117, 0);
             var assembly = Assembly.GetEntryAssembly();
             if (assembly == null)
             {
@@ -225,6 +225,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
             string? clientFolder,
             DirectoryInfo outputPath,
             Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument,
+            bool excludeEndpointGeneration,
             ApiOptions apiOptions)
         {
             if (projectPrefixName == null)
@@ -254,6 +255,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
                 apiDocument.Item3,
                 projectPrefixName,
                 "ApiClient.Generated",
+                excludeEndpointGeneration,
                 apiOptions);
             var clientCSharpApiGenerator = new ClientCSharpApiGenerator(clientCSharpApiProjectOptions);
             return clientCSharpApiGenerator.Generate();

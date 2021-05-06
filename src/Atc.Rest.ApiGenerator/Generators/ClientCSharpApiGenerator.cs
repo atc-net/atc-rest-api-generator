@@ -19,6 +19,7 @@ namespace Atc.Rest.ApiGenerator.Generators
         public ClientCSharpApiGenerator(ClientCSharpApiProjectOptions projectOptions)
         {
             this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
+
             this.apiProjectOptions = new ApiProjectOptions(
                 projectOptions.PathForSrcGenerate,
                 projectTestGeneratePath: null,
@@ -29,7 +30,11 @@ namespace Atc.Rest.ApiGenerator.Generators
                 projectOptions.ApiOptions,
                 projectOptions.ForClient,
                 projectOptions.ClientFolderName);
+
+            this.ExcludeEndpointGeneration = projectOptions.ExcludeEndpointGeneration;
         }
+
+        public bool ExcludeEndpointGeneration { get; }
 
         public List<LogKeyValueItem> Generate()
         {
@@ -39,7 +44,11 @@ namespace Atc.Rest.ApiGenerator.Generators
 
             var operationSchemaMappings = OpenApiOperationSchemaMapHelper.CollectMappings(projectOptions.Document);
             logItems.AddRange(GenerateContracts(operationSchemaMappings));
-            logItems.AddRange(GenerateEndpoints(operationSchemaMappings));
+            if (!this.ExcludeEndpointGeneration)
+            {
+                logItems.AddRange(GenerateEndpoints(operationSchemaMappings));
+            }
+
             logItems.AddRange(PerformCleanup(logItems));
             return logItems;
         }

@@ -11,5 +11,8 @@ namespace Atc.Rest.ApiGenerator.CLI.Commands.Options
         [Required]
         [Option("--outputPath", "Path to generated project (directory)", CommandOptionType.SingleValue, ShortName = "o")]
         public string? OutputPath { get; set; }
+
+        [Option("--excludeEndpointGeneration", "Exclude endpoint generation", CommandOptionType.NoValue)]
+        public bool ExcludeEndpointGeneration { get; set; }
     }
 }

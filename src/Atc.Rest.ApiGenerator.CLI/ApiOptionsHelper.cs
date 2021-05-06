@@ -65,10 +65,7 @@ namespace Atc.Rest.ApiGenerator.CLI
             var cmdOptionStrictMode = configCmd
                 .GetOptions()
                 .FirstOrDefault(x => x.LongName!.EndsWith("strictMode", StringComparison.OrdinalIgnoreCase));
-            if (cmdOptionStrictMode != null && !string.IsNullOrEmpty(cmdOptionStrictMode.Value()))
-            {
-                apiOptions.Validation.StrictMode = bool.Parse(cmdOptionStrictMode.Value()!);
-            }
+            apiOptions.Validation.StrictMode = cmdOptionStrictMode != null && cmdOptionStrictMode.HasValue();
 
             var cmdOptionOperationIdCasingStyle = configCmd
                 .GetOptions()
