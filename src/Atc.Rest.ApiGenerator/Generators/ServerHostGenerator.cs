@@ -349,6 +349,7 @@ namespace Atc.Rest.ApiGenerator.Generators
         private static MemberDeclarationSyntax CreateStartupConfigureServices(in bool useRestExtended)
         {
             ArgumentListSyntax argumentList;
+            BlockSyntax bodyBlock;
             if (useRestExtended)
             {
                 argumentList = SyntaxFactory.ArgumentList(
@@ -359,6 +360,30 @@ namespace Atc.Rest.ApiGenerator.Generators
                             SyntaxTokenFactory.Comma(),
                             SyntaxFactory.Argument(SyntaxFactory.IdentifierName("Configuration")),
                         }));
+
+                bodyBlock= SyntaxFactory.Block(
+                    SyntaxFactory.ExpressionStatement(
+                        SyntaxFactory.InvocationExpression(
+                            SyntaxFactory.MemberAccessExpression(
+                                SyntaxKind.SimpleMemberAccessExpression,
+                                SyntaxFactory.IdentifierName("services"),
+                                SyntaxFactory.GenericName(
+                                        SyntaxFactory.Identifier("ConfigureOptions"))
+                                    .WithTypeArgumentList(
+                                        SyntaxFactory.TypeArgumentList(
+                                            SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
+                                                SyntaxFactory.IdentifierName("ConfigureSwaggerDocOptions"))))))),
+                    SyntaxFactory.ExpressionStatement(
+                        SyntaxFactory.InvocationExpression(
+                                SyntaxFactory.MemberAccessExpression(
+                                    SyntaxKind.SimpleMemberAccessExpression,
+                                    SyntaxFactory.IdentifierName("services"),
+                                    SyntaxFactory.GenericName(SyntaxFactory.Identifier("AddRestApi"))
+                                        .WithTypeArgumentList(
+                                            SyntaxFactory.TypeArgumentList(
+                                                SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
+                                                    SyntaxFactory.IdentifierName("Startup"))))))
+                            .WithArgumentList(argumentList)));
             }
             else
             {
@@ -366,6 +391,19 @@ namespace Atc.Rest.ApiGenerator.Generators
                     SyntaxFactory.SingletonSeparatedList(
                         SyntaxFactory.Argument(
                             SyntaxFactory.IdentifierName("restApiOptions"))));
+
+                bodyBlock = SyntaxFactory.Block(
+                    SyntaxFactory.ExpressionStatement(
+                        SyntaxFactory.InvocationExpression(
+                                SyntaxFactory.MemberAccessExpression(
+                                    SyntaxKind.SimpleMemberAccessExpression,
+                                    SyntaxFactory.IdentifierName("services"),
+                                    SyntaxFactory.GenericName(SyntaxFactory.Identifier("AddRestApi"))
+                                        .WithTypeArgumentList(
+                                            SyntaxFactory.TypeArgumentList(
+                                                SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
+                                                    SyntaxFactory.IdentifierName("Startup"))))))
+                            .WithArgumentList(argumentList)));
             }
 
             return SyntaxFactory.MethodDeclaration(
@@ -378,30 +416,7 @@ namespace Atc.Rest.ApiGenerator.Generators
                         SyntaxFactory.SingletonSeparatedList(
                             SyntaxFactory.Parameter(SyntaxFactory.Identifier("services"))
                                 .WithType(SyntaxFactory.IdentifierName("IServiceCollection")))))
-                .WithBody(
-                    SyntaxFactory.Block(
-                        SyntaxFactory.ExpressionStatement(
-                            SyntaxFactory.InvocationExpression(
-                                SyntaxFactory.MemberAccessExpression(
-                                    SyntaxKind.SimpleMemberAccessExpression,
-                                    SyntaxFactory.IdentifierName("services"),
-                                    SyntaxFactory.GenericName(
-                                            SyntaxFactory.Identifier("ConfigureOptions"))
-                                        .WithTypeArgumentList(
-                                            SyntaxFactory.TypeArgumentList(
-                                                SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
-                                                    SyntaxFactory.IdentifierName("ConfigureSwaggerDocOptions"))))))),
-                        SyntaxFactory.ExpressionStatement(
-                            SyntaxFactory.InvocationExpression(
-                                    SyntaxFactory.MemberAccessExpression(
-                                        SyntaxKind.SimpleMemberAccessExpression,
-                                        SyntaxFactory.IdentifierName("services"),
-                                        SyntaxFactory.GenericName(SyntaxFactory.Identifier("AddRestApi"))
-                                            .WithTypeArgumentList(
-                                                SyntaxFactory.TypeArgumentList(
-                                                    SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
-                                                        SyntaxFactory.IdentifierName("Startup"))))))
-                                .WithArgumentList(argumentList))));
+                .WithBody(bodyBlock);
         }
 
         private static MemberDeclarationSyntax CreateStartupConfigure()

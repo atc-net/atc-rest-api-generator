@@ -97,7 +97,7 @@ List<LogKeyValueItem> GenerateServerApi(string projectPrefixName, DirectoryInfo 
 #### GenerateServerCSharpClient
 
 ```csharp
-List<LogKeyValueItem> GenerateServerCSharpClient(string projectPrefixName, string clientFolder, DirectoryInfo outputPath, Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument, ApiOptions apiOptions)
+List<LogKeyValueItem> GenerateServerCSharpClient(string projectPrefixName, string clientFolder, DirectoryInfo outputPath, Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument, bool excludeEndpointGeneration, ApiOptions apiOptions)
 ```
 #### GenerateServerDomain
 

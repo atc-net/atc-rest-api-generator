@@ -19,7 +19,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
             if (useRestExtended)
             {
                 packageReference.Add(new Tuple<string, string, string?>("Atc.Rest.Extended", atcVersion, null));
-                packageReference.Add(new Tuple<string, string, string?>("FluentValidation.AspNetCore", "9.3.0", null));
+                packageReference.Add(new Tuple<string, string, string?>("FluentValidation.AspNetCore", "10.1.0", null));
                 packageReference.Add(new Tuple<string, string, string?>("Microsoft.ApplicationInsights.AspNetCore", "2.16.0", null));
                 packageReference.Add(new Tuple<string, string, string?>("Microsoft.AspNetCore.Authentication.JwtBearer", "3.1.8", null));
                 packageReference.Add(new Tuple<string, string, string?>("Microsoft.AspNetCore.Mvc.Versioning", "4.1.1", null));
@@ -45,11 +45,12 @@ namespace Atc.Rest.ApiGenerator.Helpers
 
         public static List<Tuple<string, string, string?>> CreateForClientApiProject()
         {
+            string atcVersion = GenerateHelper.GetAtcToolVersionAsString3();
+
             var packageReference = new List<Tuple<string, string, string?>>
             {
+                new Tuple<string, string, string?>("Atc", atcVersion, null),
                 new Tuple<string, string, string?>("Atc.Rest.Client", "1.0.29", null),
-                new Tuple<string, string, string?>("Microsoft.AspNetCore.Mvc.Core", "2.2.5", null),
-                new Tuple<string, string, string?>("System.ComponentModel.Annotations", "5.0.0", null),
             };
 
             return packageReference;

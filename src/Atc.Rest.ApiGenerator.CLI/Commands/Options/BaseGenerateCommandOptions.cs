@@ -5,7 +5,7 @@ namespace Atc.Rest.ApiGenerator.CLI.Commands.Options
 {
     public abstract class BaseGenerateCommandOptions : BaseCommandOptions
     {
-        [Option("--validate-strictMode", "Use strictMode", CommandOptionType.SingleValue)]
+        [Option("--validate-strictMode", "Use strictMode", CommandOptionType.NoValue)]
         public bool StrictMode { get; set; }
 
         [Option("--validate-operationIdCasingStyle", "Set casingStyle for operationId", CommandOptionType.SingleValue)]
@@ -21,10 +21,10 @@ namespace Atc.Rest.ApiGenerator.CLI.Commands.Options
         [Option("--projectPrefixName", "Project prefix name (e.g. 'PetStore' becomes 'PetStore.Api.Generated')", CommandOptionType.SingleValue, ShortName = "p")]
         public string? ProjectPrefixName { get; set; }
 
-        [Option("--useNullableReferenceTypes", "Use nullable reference types in csproj", CommandOptionType.SingleValue)]
+        [Option("--useNullableReferenceTypes", "Use nullable reference types in csproj", CommandOptionType.NoValue)]
         public bool UseNullableReferenceTypes { get; set; } = true;
 
-        [Option("--useAuthorization", "Use authorization", CommandOptionType.SingleValue)]
+        [Option("--useAuthorization", "Use authorization", CommandOptionType.NoValue)]
         public bool UseAuthorization { get; set; } = true;
     }
 }

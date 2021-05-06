@@ -12,4 +12,4 @@ SET generatorFile=%rootDirectory%src\Atc.Rest.ApiGenerator.CLI\bin\Debug\netcore
 SET projectName=PetStore
 SET specUrl=https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml
 
-%generatorFile% generate server all -p %projectName% -s %specUrl% --outputSlnPath %slnDirectory% --outputSrcPath %srcDirectory% --outputTestPath %testDirectory% -v true
+%generatorFile% generate server all -p %projectName% -s %specUrl% --outputSlnPath %slnDirectory% --outputSrcPath %srcDirectory% --outputTestPath %testDirectory% -v

@@ -50,6 +50,16 @@ public static class ProjectApiFactory
 ### Static Methods
 
 
+#### CreateGeneralUsingListForEndpoint
+
+```csharp
+string[] CreateGeneralUsingListForEndpoint(ApiProjectOptions apiProjectOptions, List<OpenApiOperation> apiOperations, bool includeRestResults)
+```
+#### CreateProjectUsingListForEndpoint
+
+```csharp
+UsingDirectiveSyntax[] CreateProjectUsingListForEndpoint(ApiProjectOptions apiProjectOptions, string focusOnSegmentName, bool hasSharedResponseContract)
+```
 #### CreateUsingListForContractInterface
 
 ```csharp
@@ -69,11 +79,6 @@ string[] CreateUsingListForContractParameter(IList<OpenApiParameter> globalParam
 
 ```csharp
 string[] CreateUsingListForContractResult(OpenApiResponses responses, bool useProblemDetailsAsDefaultResponseBody, bool hasCreateContentResult)
-```
-#### CreateUsingListForEndpoint
-
-```csharp
-string[] CreateUsingListForEndpoint(ApiProjectOptions apiProjectOptions, string focusOnSegmentName, List<OpenApiOperation> apiOperations, bool includeRestResults, bool hasSharedModel)
 ```
 
 <br />

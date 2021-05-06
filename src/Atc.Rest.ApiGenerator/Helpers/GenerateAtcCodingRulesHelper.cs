@@ -51,12 +51,15 @@ namespace Atc.Rest.ApiGenerator.Helpers
                 logItems.Add(HandleFileDirectoryBuildProps(rootPath, "root", string.Empty));
 
                 // -> src
-                logItems.Add(HandleFileEditorConfig(outputSrcPath, "src", "src"));
-                logItems.Add(HandleFileDirectoryBuildProps(outputSrcPath, "src", "src"));
-
-                if (outputTestPath != null)
+                if (rootPath.FullName != outputSrcPath.FullName)
                 {
-                    // -> test
+                    logItems.Add(HandleFileEditorConfig(outputSrcPath, "src", "src"));
+                    logItems.Add(HandleFileDirectoryBuildProps(outputSrcPath, "src", "src"));
+                }
+
+                // -> test
+                if (outputTestPath != null && rootPath.FullName != outputTestPath.FullName)
+                {
                     logItems.Add(HandleFileEditorConfig(outputTestPath, "test", "test"));
                     logItems.Add(HandleFileDirectoryBuildProps(outputTestPath, "test", "test"));
                 }

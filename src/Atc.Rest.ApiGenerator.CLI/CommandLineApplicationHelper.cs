@@ -9,9 +9,7 @@ namespace Atc.Rest.ApiGenerator.CLI
     {
         public static bool GetVerboseMode(CommandLineApplication configCmd)
         {
-            return TryGetValueForParameter(configCmd, "verboseMode", "v", out string parameterValueResult) &&
-                   bool.TryParse(parameterValueResult, out bool result) &&
-                   result;
+            return IsParameterDefined(configCmd, "verboseMode", "v");
         }
 
         public static string GetSpecificationPath(CommandLineApplication configCmd)
@@ -63,6 +61,11 @@ namespace Atc.Rest.ApiGenerator.CLI
                 : null;
         }
 
+        public static bool GetExcludeEndpointGeneration(CommandLineApplication configCmd)
+        {
+            return IsParameterDefined(configCmd, "excludeEndpointGeneration", shortParameterName: null);
+        }
+
         private static string GetValueForParameter(CommandLineApplication configCmd, string parameterName, string? shortParameterName = null)
         {
             if (TryGetValueForParameter(configCmd, parameterName, shortParameterName, out string value))
@@ -71,6 +74,32 @@ namespace Atc.Rest.ApiGenerator.CLI
             }
 
             throw new ArgumentNullOrDefaultException(parameterName, $"Argument {parameterName} is not specified.");
+        }
+
+        private static bool IsParameterDefined(CommandLineApplication configCmd, string parameterName, string? shortParameterName)
+        {
+            if (configCmd == null)
+            {
+                throw new ArgumentNullException(nameof(configCmd));
+            }
+
+            if (parameterName == null)
+            {
+                throw new ArgumentNullException(nameof(parameterName));
+            }
+
+            var cmdOptionParameter = configCmd
+                .GetOptions()
+                .FirstOrDefault(x => x.LongName!.Equals(parameterName, StringComparison.OrdinalIgnoreCase));
+
+            if (cmdOptionParameter == null && shortParameterName != null)
+            {
+                cmdOptionParameter = configCmd
+                    .GetOptions()
+                    .FirstOrDefault(x => x.ShortName!.Equals(shortParameterName, StringComparison.OrdinalIgnoreCase));
+            }
+
+            return cmdOptionParameter != null && cmdOptionParameter.HasValue();
         }
 
         private static bool TryGetValueForParameter(CommandLineApplication configCmd, string parameterName, string? shortParameterName, out string value)
