@@ -98,9 +98,9 @@ namespace Atc.Rest.ApiGenerator.Helpers
                 throw new ArgumentNullException(nameof(validationOptions));
             }
 
-            var logItems = new List<LogKeyValueItem>();
             if (apiDocument.Item2.Errors.Count > 0)
             {
+                var logItems = new List<LogKeyValueItem>();
                 foreach (var diagnosticError in apiDocument.Item2.Errors)
                 {
                     if (diagnosticError.Message.EndsWith("#/components/schemas", StringComparison.Ordinal))
@@ -123,25 +123,13 @@ namespace Atc.Rest.ApiGenerator.Helpers
 
             if (apiDocument.Item2.SpecificationVersion == OpenApiSpecVersion.OpenApi2_0)
             {
-                logItems.Add(LogItemHelper.Create(LogCategoryType.Error, "#", "OpenApi 2.x is not supported."));
-                return logItems;
-            }
-
-            foreach (var diagnosticError in apiDocument.Item2.Errors)
-            {
-                if (diagnosticError.Message.EndsWith("#/components/schemas", StringComparison.Ordinal))
+                return new List<LogKeyValueItem>
                 {
-                    continue;
-                }
-
-                var description = string.IsNullOrEmpty(diagnosticError.Pointer)
-                    ? $"{diagnosticError.Message}"
-                    : $"{diagnosticError.Message} <#> {diagnosticError.Pointer}";
-                logItems.Add(LogItemHelper.Create(LogCategoryType.Error, ValidationRuleNameConstants.OpenApiCore, description));
+                    LogItemHelper.Create(LogCategoryType.Error, "#", "OpenApi 2.x is not supported."),
+                };
             }
 
-            logItems.AddRange(OpenApiDocumentValidationHelper.ValidateDocument(apiDocument.Item1, validationOptions));
-            return logItems;
+            return OpenApiDocumentValidationHelper.ValidateDocument(apiDocument.Item1, validationOptions);
         }
 
         public static List<string> GetBasePathSegmentNames(OpenApiDocument openApiDocument)
