@@ -99,6 +99,28 @@ namespace Atc.Rest.ApiGenerator.Helpers
             }
 
             var logItems = new List<LogKeyValueItem>();
+            if (apiDocument.Item2.Errors.Count > 0)
+            {
+                foreach (var diagnosticError in apiDocument.Item2.Errors)
+                {
+                    if (diagnosticError.Message.EndsWith("#/components/schemas", StringComparison.Ordinal))
+                    {
+                        continue;
+                    }
+
+                    var description = string.IsNullOrEmpty(diagnosticError.Pointer)
+                        ? $"{diagnosticError.Message}"
+                        : $"{diagnosticError.Message} <#> {diagnosticError.Pointer}";
+
+                    logItems.Add(LogItemHelper.Create(
+                        LogCategoryType.Error,
+                        ValidationRuleNameConstants.OpenApiCore,
+                        description));
+                }
+
+                return logItems;
+            }
+
             if (apiDocument.Item2.SpecificationVersion == OpenApiSpecVersion.OpenApi2_0)
             {
                 logItems.Add(LogItemHelper.Create(LogCategoryType.Error, "#", "OpenApi 2.x is not supported."));
