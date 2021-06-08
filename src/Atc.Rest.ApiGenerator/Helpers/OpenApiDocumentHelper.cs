@@ -100,25 +100,17 @@ namespace Atc.Rest.ApiGenerator.Helpers
 
             if (apiDocument.Item2.Errors.Count > 0)
             {
-                var logItems = new List<LogKeyValueItem>();
-                foreach (var diagnosticError in apiDocument.Item2.Errors)
-                {
-                    if (diagnosticError.Message.EndsWith("#/components/schemas", StringComparison.Ordinal))
-                    {
-                        continue;
-                    }
-
-                    var description = string.IsNullOrEmpty(diagnosticError.Pointer)
-                        ? $"{diagnosticError.Message}"
-                        : $"{diagnosticError.Message} <#> {diagnosticError.Pointer}";
-
-                    logItems.Add(LogItemHelper.Create(
+                return apiDocument.Item2.Errors
+                    .Where(e => !e.Message.EndsWith(
+                        "#/components/schemas",
+                        StringComparison.Ordinal))
+                    .Select(e => LogItemHelper.Create(
                         LogCategoryType.Error,
                         ValidationRuleNameConstants.OpenApiCore,
-                        description));
-                }
-
-                return logItems;
+                        string.IsNullOrEmpty(e.Pointer)
+                            ? $"{e.Message}"
+                            : $"{e.Message} <#> {e.Pointer}"))
+                    .ToList();
             }
 
             if (apiDocument.Item2.SpecificationVersion == OpenApiSpecVersion.OpenApi2_0)
