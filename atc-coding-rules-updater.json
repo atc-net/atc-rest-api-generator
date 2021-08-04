@@ -1,6 +1,5 @@
 {
 	"Mappings": {
-    "Sample": { "Paths": [ "sample" ] },
 		"Src": { "Paths": [ "src" ] },
 		"Test": { "Paths": [ "test" ] }
 	}
