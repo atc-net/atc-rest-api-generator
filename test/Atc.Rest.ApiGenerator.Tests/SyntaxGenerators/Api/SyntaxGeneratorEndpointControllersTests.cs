@@ -1,5 +1,5 @@
+using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Atc.Rest.ApiGenerator.Helpers;
@@ -13,13 +13,13 @@ using Xunit;
 namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
 {
     [UsesVerify]
-    public class SyntaxGeneratorEndpointControllersTests : SyntaxGeneratorTestBase
+    public class SyntaxGeneratorEndpointControllersTests : SyntaxCodeGeneratorTestBase
     {
         public static IEnumerable<object[]> TestInput { get; } = AllTestInput
-            .Where(x => x.TestDirectory.Contains("EndpointControllers", System.StringComparison.Ordinal))
+            .Where(x => x.TestDirectory.Contains("EndpointControllers", StringComparison.Ordinal))
             .Select(x => new object[] { x });
 
-        protected override ISyntaxCodeGenerator CreateApiGenerator(ApiProjectOptions apiProject)
+        protected override ISyntaxCodeGenerator CreateGenerator(ApiProjectOptions apiProject)
         {
             // Verify spec file supported for unit test
             Assert.Single(apiProject.BasePathSegmentNames);
