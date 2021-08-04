@@ -9,15 +9,15 @@ namespace Atc.Rest.ApiGenerator.Tests.XUnitTestTypes.CodeGenerator
 {
     public class GeneratorTestInput : IXunitSerializable
     {
-        private FileInfo yamlSpec;
+        private FileInfo? yamlSpec;
 
         private FileInfo? generatorConfig;
 
         public Lazy<ApiOptions> GeneratorOptions { get; }
 
-        public string TestName => Path.GetFileNameWithoutExtension(yamlSpec?.Name);
+        public string TestName => yamlSpec == null ? string.Empty : Path.GetFileNameWithoutExtension(yamlSpec.Name);
 
-        public string TestDirectory => yamlSpec.DirectoryName ?? throw new InvalidOperationException();
+        public string TestDirectory => yamlSpec?.DirectoryName ?? throw new InvalidOperationException();
 
         public GeneratorTestInput()
         {
@@ -50,7 +50,7 @@ namespace Atc.Rest.ApiGenerator.Tests.XUnitTestTypes.CodeGenerator
         {
             yamlSpec = new FileInfo(info.GetValue<string>(nameof(yamlSpec)));
 
-            if (info.GetValue<string>(nameof(generatorConfig)) is string generatorConfigFileName)
+            if (info.GetValue<string>(nameof(generatorConfig)) is { } generatorConfigFileName)
             {
                 generatorConfig = new FileInfo(generatorConfigFileName);
             }
@@ -58,7 +58,7 @@ namespace Atc.Rest.ApiGenerator.Tests.XUnitTestTypes.CodeGenerator
 
         public void Serialize(IXunitSerializationInfo info)
         {
-            info.AddValue(nameof(yamlSpec), yamlSpec.FullName);
+            info.AddValue(nameof(yamlSpec), yamlSpec!.FullName);
 
             if (generatorConfig is not null)
             {
@@ -67,7 +67,7 @@ namespace Atc.Rest.ApiGenerator.Tests.XUnitTestTypes.CodeGenerator
         }
 
         public Task<string> LoadYamlSpecContentAsync()
-            => yamlSpec.OpenText().ReadToEndAsync();
+            => yamlSpec!.OpenText().ReadToEndAsync();
 
         public override string ToString()
             => this.TestName;
