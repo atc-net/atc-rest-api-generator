@@ -42,7 +42,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
 
         private ApiProjectOptions ApiProjectOptions { get; }
 
-        private bool IsSharedContract { get; set; }
+        private bool IsSharedContract { get; }
 
         public string ApiSchemaKey { get; }
 
@@ -58,7 +58,6 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
 
         public bool UseOwnFolder { get; set; }
 
-        [SuppressMessage("Critical Code Smell", "S3776:Cognitive Complexity of methods should not be too high", Justification = "OK.")]
         public bool GenerateCode()
         {
             // Create compilationUnit
@@ -67,100 +66,15 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
             NamespaceDeclarationSyntax @namespace;
             if (ApiSchema.IsSchemaEnumOrPropertyEnum())
             {
-                IsEnum = true;
-
-                // Create a namespace
-                @namespace = SyntaxProjectFactory.CreateNamespace(
-                    ApiProjectOptions,
-                    NameConstants.Contracts);
-
-                var apiEnumSchema = ApiSchema.GetEnumSchema();
-
-                // Create an enum
-                var enumDeclaration = SyntaxEnumFactory.Create(apiEnumSchema.Item1.EnsureFirstCharacterToUpper(), apiEnumSchema.Item2);
-
-                if (enumDeclaration.HasAttributeOfAttributeType(typeof(FlagsAttribute)))
-                {
-                    // Add using statement to compilationUnit
-                    compilationUnit = compilationUnit.AddUsingStatements(new[] { "System" });
-                }
-
-                if (enumDeclaration.HasAttributeOfAttributeType(typeof(SuppressMessageAttribute)))
-                {
-                    // Add using statement to compilationUnit
-                    compilationUnit = compilationUnit.AddUsingStatements(new[] { "System.Diagnostics.CodeAnalysis" });
-                }
-
-                // Add the enum to the namespace.
-                @namespace = @namespace.AddMembers(enumDeclaration);
+                @namespace = GenerateCodeForEnum(ref compilationUnit);
             }
             else
             {
-                // Create a namespace
-                @namespace = IsSharedContract
-                    ? SyntaxProjectFactory.CreateNamespace(ApiProjectOptions, NameConstants.Contracts)
-                    : SyntaxProjectFactory.CreateNamespace(ApiProjectOptions, NameConstants.Contracts, FocusOnSegmentName);
-
-                // Create class
-                var classDeclaration = SyntaxClassDeclarationFactory.Create(ApiSchemaKey.EnsureFirstCharacterToUpper())
-                    .AddGeneratedCodeAttribute(ApiProjectOptions.ToolName, ApiProjectOptions.ToolVersion.ToString())
-                    .WithLeadingTrivia(SyntaxDocumentationFactory.Create(ApiSchema));
-
-                // Create class-properties and add to class
-                if (ApiSchema.Properties != null)
-                {
-                    if (ApiSchema.Type == OpenApiDataTypeConstants.Array)
-                    {
-                        var (key, _) = ApiProjectOptions.Document.Components.Schemas.FirstOrDefault(x => x.Key.Equals(ApiSchema.Title, StringComparison.OrdinalIgnoreCase));
-                        if (string.IsNullOrEmpty(ApiSchema.Title))
-                        {
-                            ApiSchema.Title = ApiSchemaKey;
-                            key = ApiSchemaKey;
-                        }
-
-                        if (string.IsNullOrEmpty(ApiSchema.Items.Title))
-                        {
-                            ApiSchema.Items.Title = ApiSchemaKey;
-                        }
-
-                        var title = key != null
-                            ? $"{ApiSchema.Title.EnsureFirstCharacterToUpperAndSingular()}List"
-                            : ApiSchema.Title.EnsureFirstCharacterToUpper();
-
-                        var propertyDeclaration = SyntaxPropertyDeclarationFactory.CreateListAuto(ApiSchema.Items.Title, title)
-                            .WithLeadingTrivia(SyntaxDocumentationFactory.CreateSummary($"A list of {ApiSchema.Items.Title}."));
-                        classDeclaration = classDeclaration.AddMembers(propertyDeclaration);
-                    }
-                    else
-                    {
-                        foreach (var property in ApiSchema.Properties)
-                        {
-                            var propertyDeclaration = SyntaxPropertyDeclarationFactory.CreateAuto(
-                                    property,
-                                    ApiSchema.Required,
-                                    ApiProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes)
-                                .WithLeadingTrivia(SyntaxDocumentationFactory.Create(property.Value));
-                            classDeclaration = classDeclaration.AddMembers(propertyDeclaration);
-                        }
-                    }
-
-                    var methodDeclaration = SyntaxMethodDeclarationFactory.CreateToStringMethod(ApiSchema.Properties);
-                    if (methodDeclaration != null)
-                    {
-                        methodDeclaration = methodDeclaration.WithLeadingTrivia(SyntaxDocumentationFactory.CreateForOverrideToString());
-                        classDeclaration = classDeclaration.AddMembers(methodDeclaration);
-                    }
-                }
-
-                // Add using statement to compilationUnit
-                compilationUnit = compilationUnit.AddUsingStatements(ProjectApiFactory.CreateUsingListForContractModel(ApiSchema));
-
-                // Add the class to the namespace.
-                @namespace = @namespace.AddMembers(classDeclaration);
+                @namespace = GenerateCodeForOtherThanEnum(ref compilationUnit);
             }
 
             // Add namespace to compilationUnit
-            compilationUnit = compilationUnit.AddMembers(@namespace);
+            compilationUnit = compilationUnit!.AddMembers(@namespace);
 
             // Set code property
             Code = compilationUnit;
@@ -187,7 +101,6 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                 .FormatDoubleLines();
         }
 
-        [SuppressMessage("Major Code Smell", "S3358:Ternary operators should not be nested", Justification = "OK.")]
         public LogKeyValueItem ToFile()
         {
             var area = FocusOnSegmentName.EnsureFirstCharacterToUpper();
@@ -224,6 +137,105 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
         public override string ToString()
         {
             return $"{nameof(ApiSchemaKey)}: {ApiSchemaKey}, SegmentName: {FocusOnSegmentName}, IsShared: {IsSharedContract}, {nameof(IsEnum)}: {IsEnum}";
+        }
+
+        private NamespaceDeclarationSyntax GenerateCodeForEnum(ref CompilationUnitSyntax compilationUnit)
+        {
+            IsEnum = true;
+
+            // Create a namespace
+            var @namespace = SyntaxProjectFactory.CreateNamespace(
+                ApiProjectOptions,
+                NameConstants.Contracts);
+
+            var apiEnumSchema = ApiSchema.GetEnumSchema();
+
+            // Create an enum
+            var enumDeclaration = SyntaxEnumFactory.Create(apiEnumSchema.Item1.EnsureFirstCharacterToUpper(), apiEnumSchema.Item2);
+
+            if (enumDeclaration.HasAttributeOfAttributeType(typeof(FlagsAttribute)))
+            {
+                // Add using statement to compilationUnit
+                compilationUnit = compilationUnit.AddUsingStatements(new[] { "System" });
+            }
+
+            if (enumDeclaration.HasAttributeOfAttributeType(typeof(SuppressMessageAttribute)))
+            {
+                // Add using statement to compilationUnit
+                compilationUnit = compilationUnit.AddUsingStatements(new[] { "System.Diagnostics.CodeAnalysis" });
+            }
+
+            // Add the enum to the namespace.
+            @namespace = @namespace.AddMembers(enumDeclaration);
+            return @namespace;
+        }
+
+        private NamespaceDeclarationSyntax GenerateCodeForOtherThanEnum(ref CompilationUnitSyntax? compilationUnit)
+        {
+            // Create a namespace
+            var @namespace = IsSharedContract
+                ? SyntaxProjectFactory.CreateNamespace(ApiProjectOptions, NameConstants.Contracts)
+                : SyntaxProjectFactory.CreateNamespace(ApiProjectOptions, NameConstants.Contracts, FocusOnSegmentName);
+
+            // Create class
+            var classDeclaration = SyntaxClassDeclarationFactory.Create(ApiSchemaKey.EnsureFirstCharacterToUpper())
+                .AddGeneratedCodeAttribute(ApiProjectOptions.ToolName, ApiProjectOptions.ToolVersion.ToString())
+                .WithLeadingTrivia(SyntaxDocumentationFactory.Create(ApiSchema));
+
+            // Create class-properties and add to class
+            if (ApiSchema.Properties != null)
+            {
+                if (ApiSchema.Type == OpenApiDataTypeConstants.Array)
+                {
+                    var (key, _) = ApiProjectOptions.Document.Components.Schemas.FirstOrDefault(x =>
+                        x.Key.Equals(ApiSchema.Title, StringComparison.OrdinalIgnoreCase));
+                    if (string.IsNullOrEmpty(ApiSchema.Title))
+                    {
+                        ApiSchema.Title = ApiSchemaKey;
+                        key = ApiSchemaKey;
+                    }
+
+                    if (string.IsNullOrEmpty(ApiSchema.Items.Title))
+                    {
+                        ApiSchema.Items.Title = ApiSchemaKey;
+                    }
+
+                    var title = key != null
+                        ? $"{ApiSchema.Title.EnsureFirstCharacterToUpperAndSingular()}List"
+                        : ApiSchema.Title.EnsureFirstCharacterToUpper();
+
+                    var propertyDeclaration = SyntaxPropertyDeclarationFactory.CreateListAuto(ApiSchema.Items.Title, title)
+                        .WithLeadingTrivia(SyntaxDocumentationFactory.CreateSummary($"A list of {ApiSchema.Items.Title}."));
+                    classDeclaration = classDeclaration.AddMembers(propertyDeclaration);
+                }
+                else
+                {
+                    foreach (var property in ApiSchema.Properties)
+                    {
+                        var propertyDeclaration = SyntaxPropertyDeclarationFactory.CreateAuto(
+                                property,
+                                ApiSchema.Required,
+                                ApiProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes)
+                            .WithLeadingTrivia(SyntaxDocumentationFactory.Create(property.Value));
+                        classDeclaration = classDeclaration.AddMembers(propertyDeclaration);
+                    }
+                }
+
+                var methodDeclaration = SyntaxMethodDeclarationFactory.CreateToStringMethod(ApiSchema.Properties);
+                if (methodDeclaration != null)
+                {
+                    methodDeclaration =
+                        methodDeclaration.WithLeadingTrivia(SyntaxDocumentationFactory.CreateForOverrideToString());
+                    classDeclaration = classDeclaration.AddMembers(methodDeclaration);
+                }
+            }
+
+            // Add using statement to compilationUnit
+            compilationUnit = compilationUnit!.AddUsingStatements(ProjectApiFactory.CreateUsingListForContractModel(ApiSchema));
+
+            // Add the class to the namespace.
+            @namespace = @namespace.AddMembers(classDeclaration);
+            return @namespace;
         }
     }
 }

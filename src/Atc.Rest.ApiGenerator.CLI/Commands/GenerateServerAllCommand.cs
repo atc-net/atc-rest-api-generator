@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -14,10 +15,13 @@ namespace Atc.Rest.ApiGenerator.CLI.Commands
     {
         private const string CommandArea = "Server-API-Domain-Host";
 
-        [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "OK.")]
-        [SuppressMessage("Usage", "CA1801:Review unused parameters", Justification = "Imp. this.")]
         public int OnExecute(CommandLineApplication configCmd)
         {
+            if (configCmd == null)
+            {
+                throw new ArgumentNullException(nameof(configCmd));
+            }
+
             ConsoleHelper.WriteHeader();
 
             var verboseMode = CommandLineApplicationHelper.GetVerboseMode(configCmd);

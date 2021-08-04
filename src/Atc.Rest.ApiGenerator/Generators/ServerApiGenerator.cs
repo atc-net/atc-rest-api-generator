@@ -16,6 +16,7 @@ using Microsoft.OpenApi.Writers;
 
 // ReSharper disable ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
 // ReSharper disable SuggestBaseTypeForParameter
+// ReSharper disable ReplaceSubstringWithRangeIndexer
 // ReSharper disable ReturnTypeCanBeEnumerable.Local
 // ReSharper disable UseObjectOrCollectionInitializer
 namespace Atc.Rest.ApiGenerator.Generators

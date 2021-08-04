@@ -1,10 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Atc.Rest.ApiGenerator.Models;
-using Atc.Rest.ApiGenerator.SyntaxGenerators;
 using Atc.Rest.ApiGenerator.Tests.XUnitTestTypes.CodeGenerator;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
@@ -13,7 +13,7 @@ using VerifyXunit;
 
 namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
 {
-    public abstract class SyntaxGeneratorTestBase
+    public abstract class GeneratorTestBase
     {
         protected static readonly string FocusOnSegment = "Test";
         private const string ProjectPrefix = "TestProject";
@@ -21,29 +21,12 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
 
         protected static IReadOnlyList<GeneratorTestInput> AllTestInput { get; } = GetTestInput();
 
-        protected abstract ISyntaxCodeGenerator CreateApiGenerator(ApiProjectOptions apiProject);
-
         protected static Task VerifyGeneratedCode(string generatedCode, VerifySettings verifySettings)
         {
             return Verifier.Verify(generatedCode, verifySettings);
         }
 
-        protected async Task VerifyGeneratedOutput(GeneratorTestInput input)
-        {
-            // Arrange
-            var apiProject = await CreateApiProjectAsync(input);
-            var verifySettings = CreateVerifySettings(input, apiProject);
-
-            var sut = CreateApiGenerator(apiProject);
-
-            // Act
-            var generatedCode = sut.ToCodeAsString();
-
-            // Assert
-            await VerifyGeneratedCode(generatedCode, verifySettings);
-        }
-
-        private VerifySettings CreateVerifySettings(GeneratorTestInput yamlFile, ApiProjectOptions apiOptions)
+        protected VerifySettings CreateVerifySettings(GeneratorTestInput yamlFile, ApiProjectOptions apiOptions)
         {
             var settings = new VerifySettings();
             settings.UseDirectory(yamlFile.TestDirectory);
@@ -53,23 +36,7 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
             return settings;
         }
 
-        private static IReadOnlyList<GeneratorTestInput> GetTestInput([CallerFilePath] string sourceFilePath = "")
-        {
-            var directory = Path.GetDirectoryName(sourceFilePath);
-            return Directory.EnumerateFiles(directory, "*.yaml", SearchOption.AllDirectories)
-                .Select(x =>
-                {
-                    var specFile = new FileInfo(x);
-                    var configFilePath = Path.Combine(specFile.DirectoryName, Path.GetFileNameWithoutExtension(specFile.Name) + ".json");
-                    var configFile = File.Exists(configFilePath)
-                        ? new FileInfo(configFilePath)
-                        : null;
-                    return new GeneratorTestInput(specFile, configFile);
-                })
-                .ToArray();
-        }
-
-        private async Task<ApiProjectOptions> CreateApiProjectAsync(GeneratorTestInput testInput)
+        protected async Task<ApiProjectOptions> CreateApiProjectAsync(GeneratorTestInput testInput)
         {
             var spec = await testInput.LoadYamlSpecContentAsync();
             var options = testInput.GeneratorOptions.Value;
@@ -96,6 +63,22 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
 
             var openApiStreamReader = new OpenApiStreamReader();
             return openApiStreamReader.Read(memoryStream, out _);
+        }
+
+        private static IReadOnlyList<GeneratorTestInput> GetTestInput([CallerFilePath] string sourceFilePath = "")
+        {
+            var directory = Path.GetDirectoryName(sourceFilePath);
+            return Directory.EnumerateFiles(directory!, "*.yaml", SearchOption.AllDirectories)
+                .Select(x =>
+                {
+                    var specFile = new FileInfo(x);
+                    var configFilePath = Path.Combine(specFile.DirectoryName!, Path.GetFileNameWithoutExtension(specFile.Name) + ".json");
+                    var configFile = File.Exists(configFilePath)
+                        ? new FileInfo(configFilePath)
+                        : null;
+                    return new GeneratorTestInput(specFile, configFile);
+                })
+                .ToArray();
         }
     }
 }

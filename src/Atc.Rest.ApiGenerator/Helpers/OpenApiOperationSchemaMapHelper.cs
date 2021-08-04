@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Atc.Rest.ApiGenerator.Models;
@@ -197,6 +197,29 @@ namespace Atc.Rest.ApiGenerator.Helpers
                         apiOperationType,
                         subSchemaKey,
                         list);
+                }
+            }
+            else if (apiSchema.Type == OpenApiDataTypeConstants.Array &&
+                     apiSchema.Items?.Reference?.Id != null)
+            {
+                var subSchemaKey = apiSchema.Items.GetModelName();
+                var subApiOperationSchemaMap = new ApiOperationSchemaMap(subSchemaKey, locatedArea, apiPath, apiOperationType, parentApiSchema);
+                if (!list.Any(x => x.Equals(subApiOperationSchemaMap)))
+                {
+                    list.Add(subApiOperationSchemaMap);
+
+                    var subApiSchema = componentsSchemas.Single(x => x.Key.Equals(subSchemaKey, StringComparison.OrdinalIgnoreCase)).Value;
+                    if (subApiSchema.Properties.Any())
+                    {
+                        Collect(
+                            componentsSchemas,
+                            subApiSchema.Properties.ToList(),
+                            locatedArea,
+                            apiPath,
+                            apiOperationType,
+                            subSchemaKey,
+                            list);
+                    }
                 }
             }
         }
