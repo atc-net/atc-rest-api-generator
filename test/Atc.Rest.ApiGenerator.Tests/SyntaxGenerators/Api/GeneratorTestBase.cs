@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -31,6 +32,10 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
             settings.UseDirectory(yamlFile.TestDirectory);
             settings.UseFileName(yamlFile.TestName);
             settings.UseExtension("cs");
+            settings.AddScrubber(input => input
+                .Replace("\r\n", Environment.NewLine)
+                .Replace("\r", Environment.NewLine)
+                .Replace("\n", Environment.NewLine));
             settings.AddScrubber(input => input.Replace(apiOptions.ToolVersion.ToString(), "x.x.x.x"));
             return settings;
         }
