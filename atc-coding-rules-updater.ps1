@@ -8,4 +8,4 @@ Write-Host "Running atc-coding-rules-updater to fetch updated rulesets and confi
 atc-coding-rules-updater `
     -r $currentPath `
     --optionsPath $currentPath'\atc-coding-rules-updater.json' `
-    -v true
+    -v
