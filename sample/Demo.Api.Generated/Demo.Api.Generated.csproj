@@ -1,10 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-  </PropertyGroup>
-  <PropertyGroup>
-    <DocumentationFile>bin\Debug\netcoreapp3.1\Demo.Api.Generated.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Resources\ApiSpecification.yaml" />
@@ -17,8 +14,4 @@
     <PackageReference Include="Atc" Version="1.1.117" />
     <PackageReference Include="Atc.Rest" Version="1.1.117" />
   </ItemGroup>
-  <PropertyGroup>
-    <Nullable>enable</Nullable>
-    <LangVersion>9.0</LangVersion>
-  </PropertyGroup>
 </Project>
