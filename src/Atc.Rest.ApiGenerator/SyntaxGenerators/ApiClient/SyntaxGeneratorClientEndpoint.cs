@@ -120,6 +120,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
             return Code
                 .NormalizeWhitespace()
                 .ToFullString()
+                .EnsureEnvironmentNewLines()
                 .FormatClientEndpointNewLineSpaceBefore8()
                 .FormatClientEndpointNewLineSpaceAfter12();
         }

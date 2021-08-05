@@ -109,6 +109,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Domain
             return Code
                 .NormalizeWhitespace()
                 .ToFullString()
+                .EnsureEnvironmentNewLines()
                 .FormatCs1998();
         }
 

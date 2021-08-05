@@ -223,7 +223,8 @@ namespace Atc.Rest.ApiGenerator.Generators
 
             var codeAsString = compilationUnit
                 .NormalizeWhitespace()
-                .ToFullString();
+                .ToFullString()
+                .EnsureEnvironmentNewLines();
 
             var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "DomainRegistration.cs"));
             TextFileHelper.Save(file, codeAsString);

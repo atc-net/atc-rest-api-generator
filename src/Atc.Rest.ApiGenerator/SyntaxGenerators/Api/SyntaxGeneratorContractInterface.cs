@@ -103,7 +103,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
 
             return Code
                 .NormalizeWhitespace()
-                .ToFullString();
+                .ToFullString()
+                .EnsureEnvironmentNewLines();
         }
 
         public LogKeyValueItem ToFile()
