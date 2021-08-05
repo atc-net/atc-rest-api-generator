@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -7,7 +7,7 @@
     <DocumentationFile>bin\Debug\netcoreapp3.1\Demo.Domain.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="FluentValidation.AspNetCore" Version="10.1.0" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Demo.Api.Generated\Demo.Api.Generated.csproj" />

@@ -19,8 +19,8 @@ namespace Atc.Rest.ApiGenerator.Helpers
             if (useRestExtended)
             {
                 packageReference.Add(new Tuple<string, string, string?>("Atc.Rest.Extended", atcVersion, null));
-                packageReference.Add(new Tuple<string, string, string?>("FluentValidation.AspNetCore", "10.1.0", null));
-                packageReference.Add(new Tuple<string, string, string?>("Microsoft.ApplicationInsights.AspNetCore", "2.16.0", null));
+                packageReference.Add(new Tuple<string, string, string?>("FluentValidation.AspNetCore", "10.3.0", null));
+                packageReference.Add(new Tuple<string, string, string?>("Microsoft.ApplicationInsights.AspNetCore", "2.18.0", null));
                 packageReference.Add(new Tuple<string, string, string?>("Microsoft.AspNetCore.Authentication.JwtBearer", "3.1.8", null));
                 packageReference.Add(new Tuple<string, string, string?>("Microsoft.AspNetCore.Mvc.Versioning", "4.1.1", null));
                 packageReference.Add(new Tuple<string, string, string?>("Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer", "4.1.1", null));
@@ -73,7 +73,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
 
             packageReference.AddRange(new List<Tuple<string, string, string?>>
             {
-                new Tuple<string, string, string?>("Microsoft.NET.Test.Sdk", "16.7.1", null),
+                new Tuple<string, string, string?>("Microsoft.NET.Test.Sdk", "16.10.0", null),
                 new Tuple<string, string, string?>("NSubstitute", "4.2.2", null),
                 new Tuple<string, string, string?>("xunit", "2.4.1", null),
                 new Tuple<string, string, string?>("xunit.runner.visualstudio", "2.4.3", "<PrivateAssets>all</PrivateAssets>\n<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>"),
