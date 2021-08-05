@@ -24,7 +24,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                     GetSyntaxTreeText()
                         .Replace("\"\"", "null", StringComparison.OrdinalIgnoreCase))
                 .GetCompilationUnitRoot()
-                .ToFullString();
+                .ToFullString()
+                .EnsureEnvironmentNewLines();
 
         private string GetSyntaxTreeText()
         {

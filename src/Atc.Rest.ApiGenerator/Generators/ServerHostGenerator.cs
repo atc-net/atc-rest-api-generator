@@ -909,7 +909,8 @@ namespace Atc.Rest.ApiGenerator.Generators
 
             var codeAsString = compilationUnit
                 .NormalizeWhitespace()
-                .ToFullString();
+                .ToFullString()
+                .EnsureEnvironmentNewLines();
 
             var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "Program.cs"));
             return File.Exists(file.FullName)
@@ -956,6 +957,7 @@ namespace Atc.Rest.ApiGenerator.Generators
             var codeAsString = compilationUnit
                 .NormalizeWhitespace()
                 .ToFullString()
+                .EnsureEnvironmentNewLines()
                 .FormatAutoPropertiesOnOneLine()
                 .FormatRemoveEmptyBracketsInitialize()
                 .FormatPublicPrivateLines();
@@ -1032,6 +1034,7 @@ namespace Atc.Rest.ApiGenerator.Generators
             var codeAsString = compilationUnit
                 .NormalizeWhitespace()
                 .ToFullString()
+                .EnsureEnvironmentNewLines()
                 .EnsureNewlineAfterMethod("partial void ModifyConfiguration(IConfigurationBuilder config);");
 
             var file = new FileInfo(Path.Combine(projectOptions.PathForTestGenerate!.FullName, "WebApiStartupFactory.cs"));
@@ -1088,7 +1091,8 @@ namespace Atc.Rest.ApiGenerator.Generators
 
             var codeAsString = compilationUnit
                 .NormalizeWhitespace()
-                .ToFullString();
+                .ToFullString()
+                .EnsureEnvironmentNewLines();
 
             var file = new FileInfo(Path.Combine(projectOptions.PathForTestGenerate!.FullName, "WebApiControllerBaseTest.cs"));
             return TextFileHelper.Save(file, codeAsString);

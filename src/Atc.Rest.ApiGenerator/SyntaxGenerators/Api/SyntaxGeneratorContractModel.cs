@@ -96,6 +96,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
             return Code
                 .NormalizeWhitespace()
                 .ToFullString()
+                .EnsureEnvironmentNewLines()
                 .FormatAutoPropertiesOnOneLine()
                 .FormatPublicPrivateLines()
                 .FormatDoubleLines();

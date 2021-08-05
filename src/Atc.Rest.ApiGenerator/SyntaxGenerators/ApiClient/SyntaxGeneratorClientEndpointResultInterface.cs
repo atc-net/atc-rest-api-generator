@@ -109,6 +109,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
             return Code
                 .NormalizeWhitespace()
                 .ToFullString()
+                .EnsureEnvironmentNewLines()
                 .FormatAutoPropertiesOnOneLine();
         }
 

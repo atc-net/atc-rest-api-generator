@@ -110,6 +110,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
             return Code
                 .NormalizeWhitespace()
                 .ToFullString()
+                .EnsureEnvironmentNewLines()
                 .FormatPublicPrivateLines()
                 .FormatDoubleLines()
                 .FormatBracketSpacing()

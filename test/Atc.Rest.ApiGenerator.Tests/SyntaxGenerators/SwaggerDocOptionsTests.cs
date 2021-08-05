@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
 using Microsoft.OpenApi.Models;
 using Xunit;
@@ -25,7 +25,7 @@ That way, with time, we can improve the API in general, and expose some of the n
 
 Some useful links:
 - [The Pet Store repository](https://github.com/swagger-api/swagger-petstore)
-- [The source API definition for the Pet Store](https://github.com/swagger-api/swagger-petstore/blob/master/src/main/resources/openapi.yaml)",
+- [The source API definition for the Pet Store](https://github.com/swagger-api/swagger-petstore/blob/master/src/main/resources/openapi.yaml)".EnsureEnvironmentNewLines(),
                     License = new OpenApiLicense
                     {
                         Name = "Apache 2.0", Url = new Uri("http://www.apache.org/licenses/LICENSE-2.0.html"),
@@ -77,7 +77,7 @@ Some useful links:
             => Assert.Contains(
                 "options.SwaggerDoc(version.GroupName",
                 code
-                    .Replace(Environment.NewLine, string.Empty, StringComparison.Ordinal)
+                    .RemoveNewLines()
                     .Replace(" ", string.Empty, StringComparison.Ordinal),
                 StringComparison.Ordinal);
 
