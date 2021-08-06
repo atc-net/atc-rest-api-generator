@@ -434,6 +434,11 @@ bool HasContractParameterRequestBody()
 ```csharp
 bool HasContractParameterRequiredHeader()
 ```
+#### HasContractReturnTypeNamesOnlySimpleTypes
+
+```csharp
+bool HasContractReturnTypeNamesOnlySimpleTypes()
+```
 #### IsListUsed
 
 ```csharp

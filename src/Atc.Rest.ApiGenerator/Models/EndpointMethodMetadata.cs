@@ -91,6 +91,9 @@ namespace Atc.Rest.ApiGenerator.Models
             return GetHeaderRequiredParameters().Count > 0;
         }
 
+        public bool HasContractReturnTypeNamesOnlySimpleTypes()
+            => ContractReturnTypeNames.All(contractReturnTypeName => contractReturnTypeName.Item3 is null);
+
         public List<OpenApiParameter> GetRouteParameters()
         {
             var list = new List<OpenApiParameter>();

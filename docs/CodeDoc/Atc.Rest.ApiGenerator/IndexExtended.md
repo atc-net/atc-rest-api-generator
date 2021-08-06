@@ -338,6 +338,7 @@
      - GetRouteParameters()
      - HasContractParameterRequestBody()
      - HasContractParameterRequiredHeader()
+     - HasContractReturnTypeNamesOnlySimpleTypes()
      - IsListUsed()
      - IsPaginationOrListUsed()
      - IsPaginationUsed()

@@ -60,7 +60,8 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 sb.AppendLine("using Atc.Rest.Results;");
             }
 
-            if (!OpenApiDocumentSchemaModelNameHelper.HasReservedSystemNameInContractReturnTypes(endpointMethodMetadata.ContractReturnTypeNames))
+            if (!endpointMethodMetadata.HasContractReturnTypeNamesOnlySimpleTypes() &&
+                !OpenApiDocumentSchemaModelNameHelper.HasReservedSystemNameInContractReturnTypes(endpointMethodMetadata.ContractReturnTypeNames))
             {
                 sb.AppendLine($"using {hostProjectOptions.ProjectName}.Generated.Contracts;");
             }
