@@ -341,6 +341,19 @@ paths:
           schema:
             type: string
             format: uuid
+  /tasks:
+    get:
+      operationId: getTasks
+      summary: Returns tasks
+      description: Returns tasks
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tasks'
 components:
   parameters:
     pagingPageSize:
@@ -719,3 +732,19 @@ components:
           $ref: '#/components/schemas/Item'
       required:
         - item
+    Task:
+      title: Task
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+      description: Describes a single task.
+    Tasks:
+      title: Tasks
+      type: array
+      items:
+        $ref: '#/components/schemas/Task'
+      description: Contains a list of Tasks
