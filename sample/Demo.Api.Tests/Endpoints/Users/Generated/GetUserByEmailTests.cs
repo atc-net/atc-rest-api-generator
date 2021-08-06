@@ -18,9 +18,6 @@ using Xunit;
 //------------------------------------------------------------------------------
 namespace Demo.Api.Tests.Endpoints.Users.Generated
 {
-    using Demo.Api.Generated.Contracts;
-    using Demo.Api.Generated.Contracts.Users;
-
     [GeneratedCode("ApiGenerator", "1.1.124.0")]
     [Collection("Sequential-Endpoints")]
     public class GetUserByEmailTests : WebApiControllerBaseTest
@@ -29,7 +26,7 @@ namespace Demo.Api.Tests.Endpoints.Users.Generated
 
         [Theory]
         [InlineData("/api/v1/users/email?email=john.doe@example.com")]
-        public async System.Threading.Tasks.Task GetUserByEmail_Ok(string relativeRef)
+        public async Task GetUserByEmail_Ok(string relativeRef)
         {
             // Act
             var response = await HttpClient.GetAsync(relativeRef);
@@ -44,7 +41,7 @@ namespace Demo.Api.Tests.Endpoints.Users.Generated
 
         [Theory]
         [InlineData("/api/v1/users/email?email=john.doe_example.com")]
-        public async System.Threading.Tasks.Task GetUserByEmail_BadRequest_InQuery(string relativeRef)
+        public async Task GetUserByEmail_BadRequest_InQuery(string relativeRef)
         {
             // Act
             var response = await HttpClient.GetAsync(relativeRef);

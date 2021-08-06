@@ -18,9 +18,6 @@ using Xunit;
 //------------------------------------------------------------------------------
 namespace Demo.Api.Tests.Endpoints.Users.Generated
 {
-    using Demo.Api.Generated.Contracts;
-    using Demo.Api.Generated.Contracts.Users;
-
     [GeneratedCode("ApiGenerator", "1.1.124.0")]
     [Collection("Sequential-Endpoints")]
     public class UpdateUserByIdTests : WebApiControllerBaseTest
@@ -29,7 +26,7 @@ namespace Demo.Api.Tests.Endpoints.Users.Generated
 
         [Theory]
         [InlineData("/api/v1/users/77a33260-0000-441f-ba60-b0a833803fab")]
-        public async System.Threading.Tasks.Task UpdateUserById_Ok(string relativeRef)
+        public async Task UpdateUserById_Ok(string relativeRef)
         {
             // Arrange
             var data = new UpdateUserRequest
@@ -50,7 +47,7 @@ namespace Demo.Api.Tests.Endpoints.Users.Generated
 
         [Theory]
         [InlineData("/api/v1/users/x77a33260-0000-441f-ba60-b0a833803fab")]
-        public async System.Threading.Tasks.Task UpdateUserById_BadRequest_InPath(string relativeRef)
+        public async Task UpdateUserById_BadRequest_InPath(string relativeRef)
         {
             // Arrange
             var data = new UpdateUserRequest
@@ -71,7 +68,7 @@ namespace Demo.Api.Tests.Endpoints.Users.Generated
 
         [Theory]
         [InlineData("/api/v1/users/77a33260-0000-441f-ba60-b0a833803fab")]
-        public async System.Threading.Tasks.Task UpdateUserById_BadRequest_InBody_Email(string relativeRef)
+        public async Task UpdateUserById_BadRequest_InBody_Email(string relativeRef)
         {
             // Arrange
             var sb = new StringBuilder();

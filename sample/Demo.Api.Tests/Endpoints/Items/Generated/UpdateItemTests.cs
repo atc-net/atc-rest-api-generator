@@ -18,9 +18,6 @@ using Xunit;
 //------------------------------------------------------------------------------
 namespace Demo.Api.Tests.Endpoints.Items.Generated
 {
-    using Demo.Api.Generated.Contracts;
-    using Demo.Api.Generated.Contracts.Items;
-
     [GeneratedCode("ApiGenerator", "1.1.124.0")]
     [Collection("Sequential-Endpoints")]
     public class UpdateItemTests : WebApiControllerBaseTest
@@ -29,7 +26,7 @@ namespace Demo.Api.Tests.Endpoints.Items.Generated
 
         [Theory]
         [InlineData("/api/v1/items/77a33260-0000-441f-ba60-b0a833803fab")]
-        public async System.Threading.Tasks.Task UpdateItem_Ok(string relativeRef)
+        public async Task UpdateItem_Ok(string relativeRef)
         {
             // Arrange
             var data = new UpdateItemRequest
@@ -50,7 +47,7 @@ namespace Demo.Api.Tests.Endpoints.Items.Generated
 
         [Theory]
         [InlineData("/api/v1/items/x77a33260-0000-441f-ba60-b0a833803fab")]
-        public async System.Threading.Tasks.Task UpdateItem_BadRequest_InPath(string relativeRef)
+        public async Task UpdateItem_BadRequest_InPath(string relativeRef)
         {
             // Arrange
             var data = new UpdateItemRequest
@@ -71,7 +68,7 @@ namespace Demo.Api.Tests.Endpoints.Items.Generated
 
         [Theory]
         [InlineData("/api/v1/items/77a33260-0000-441f-ba60-b0a833803fab")]
-        public async System.Threading.Tasks.Task UpdateItem_BadRequest_InBody_Item(string relativeRef)
+        public async Task UpdateItem_BadRequest_InBody_Item(string relativeRef)
         {
             // Arrange
             var sb = new StringBuilder();

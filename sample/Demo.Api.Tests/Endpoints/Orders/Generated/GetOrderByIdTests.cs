@@ -18,9 +18,6 @@ using Xunit;
 //------------------------------------------------------------------------------
 namespace Demo.Api.Tests.Endpoints.Orders.Generated
 {
-    using Demo.Api.Generated.Contracts;
-    using Demo.Api.Generated.Contracts.Orders;
-
     [GeneratedCode("ApiGenerator", "1.1.124.0")]
     [Collection("Sequential-Endpoints")]
     public class GetOrderByIdTests : WebApiControllerBaseTest
@@ -29,7 +26,7 @@ namespace Demo.Api.Tests.Endpoints.Orders.Generated
 
         [Theory]
         [InlineData("/api/v1/orders/77a33260-0000-441f-ba60-b0a833803fab")]
-        public async System.Threading.Tasks.Task GetOrderById_Ok(string relativeRef)
+        public async Task GetOrderById_Ok(string relativeRef)
         {
             // Act
             var response = await HttpClient.GetAsync(relativeRef);
@@ -44,7 +41,7 @@ namespace Demo.Api.Tests.Endpoints.Orders.Generated
 
         [Theory]
         [InlineData("/api/v1/orders/x77a33260-0000-441f-ba60-b0a833803fab")]
-        public async System.Threading.Tasks.Task GetOrderById_BadRequest_InPath(string relativeRef)
+        public async Task GetOrderById_BadRequest_InPath(string relativeRef)
         {
             // Act
             var response = await HttpClient.GetAsync(relativeRef);

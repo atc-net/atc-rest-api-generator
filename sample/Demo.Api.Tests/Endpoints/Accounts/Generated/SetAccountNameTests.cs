@@ -18,9 +18,6 @@ using Xunit;
 //------------------------------------------------------------------------------
 namespace Demo.Api.Tests.Endpoints.Accounts.Generated
 {
-    using Demo.Api.Generated.Contracts;
-    using Demo.Api.Generated.Contracts.Accounts;
-
     [GeneratedCode("ApiGenerator", "1.1.124.0")]
     [Collection("Sequential-Endpoints")]
     public class SetAccountNameTests : WebApiControllerBaseTest
@@ -29,7 +26,7 @@ namespace Demo.Api.Tests.Endpoints.Accounts.Generated
 
         [Theory]
         [InlineData("/api/v1/accounts/77a33260-0000-441f-ba60-b0a833803fab/name")]
-        public async System.Threading.Tasks.Task SetAccountName_Ok(string relativeRef)
+        public async Task SetAccountName_Ok(string relativeRef)
         {
             // Act
             var response = await HttpClient.PostAsync(relativeRef, ToJson(new {}));
@@ -41,7 +38,7 @@ namespace Demo.Api.Tests.Endpoints.Accounts.Generated
 
         [Theory]
         [InlineData("/api/v1/accounts/x77a33260-0000-441f-ba60-b0a833803fab/name")]
-        public async System.Threading.Tasks.Task SetAccountName_BadRequest_InPath(string relativeRef)
+        public async Task SetAccountName_BadRequest_InPath(string relativeRef)
         {
             // Act
             var response = await HttpClient.PostAsync(relativeRef, ToJson(new {}));

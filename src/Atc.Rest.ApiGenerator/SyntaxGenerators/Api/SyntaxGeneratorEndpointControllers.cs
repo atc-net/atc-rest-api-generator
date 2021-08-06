@@ -35,7 +35,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
             string focusOnSegmentName)
         {
             this.ApiProjectOptions = apiProjectOptions ?? throw new ArgumentNullException(nameof(apiProjectOptions));
-            this.OperationSchemaMappings = operationSchemaMappings ?? throw new ArgumentNullException(nameof(apiProjectOptions));
+            this.OperationSchemaMappings = operationSchemaMappings ?? throw new ArgumentNullException(nameof(operationSchemaMappings));
             this.FocusOnSegmentName = focusOnSegmentName ?? throw new ArgumentNullException(nameof(focusOnSegmentName));
         }
 
@@ -104,13 +104,6 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
             }
 
             // Add the class to the namespace.
-            @namespace = @namespace.AddUsings(
-                ProjectApiFactory.CreateProjectUsingListForEndpoint(
-                    ApiProjectOptions,
-                    FocusOnSegmentName,
-                    HasSharedResponseContract()));
-
-            // Add the class to the namespace.
             @namespace = @namespace.AddMembers(classDeclaration);
 
             // Add using statement to compilationUnit
@@ -119,10 +112,12 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                 .Any(x => x.Identifier.ValueText.Contains($"({Microsoft.OpenApi.Models.NameConstants.Pagination}<", StringComparison.Ordinal));
 
             compilationUnit = compilationUnit.AddUsingStatements(
-                ProjectApiFactory.CreateGeneralUsingListForEndpoint(
+                ProjectApiFactory.CreateUsingListForEndpoint(
                     ApiProjectOptions,
                     usedApiOperations,
-                    includeRestResults));
+                    HasSharedResponseContract(),
+                    includeRestResults,
+                    FocusOnSegmentName));
 
             // Add namespace to compilationUnit
             compilationUnit = compilationUnit.AddMembers(@namespace);

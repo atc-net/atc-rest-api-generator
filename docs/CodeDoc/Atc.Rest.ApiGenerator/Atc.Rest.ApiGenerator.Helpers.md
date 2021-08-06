@@ -249,6 +249,11 @@ public static class OpenApiDocumentSchemaModelNameHelper
 ### Static Methods
 
 
+#### ContainsModelNameTask
+
+```csharp
+bool ContainsModelNameTask(string modelName)
+```
 #### EnsureModelNameWithNamespaceIfNeeded
 
 ```csharp
@@ -259,10 +264,25 @@ string EnsureModelNameWithNamespaceIfNeeded(EndpointMethodMetadata endpointMetho
 ```csharp
 string EnsureModelNameWithNamespaceIfNeeded(string projectName, string segmentName, string modelName, bool isShared = False)
 ```
+#### EnsureTaskNameWithNamespaceIfNeeded
+
+```csharp
+string EnsureTaskNameWithNamespaceIfNeeded(string contractReturnTypeName)
+```
+#### EnsureTaskNameWithNameWithNeeded
+
+```csharp
+string EnsureTaskNameWithNameWithNeeded(List<Tuple<HttpStatusCode, string, OpenApiSchema>> contractReturnTypeNames)
+```
 #### GetRawModelName
 
 ```csharp
 string GetRawModelName(string modelName)
+```
+#### HasReservedSystemNameInContractReturnTypes
+
+```csharp
+bool HasReservedSystemNameInContractReturnTypes(List<Tuple<HttpStatusCode, string, OpenApiSchema>> contractReturnTypeNames)
 ```
 
 <br />

@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Demo.Api.Generated.Contracts;
-using Demo.Api.Generated.Contracts.RouteWithDash;
+using Demo.Api.Generated.Contracts.Tasks;
 using FluentAssertions;
 using Xunit;
 
@@ -16,17 +16,17 @@ using Xunit;
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace Demo.Api.Tests.Endpoints.RouteWithDash.Generated
+namespace Demo.Api.Tests.Endpoints.Tasks.Generated
 {
     [GeneratedCode("ApiGenerator", "1.1.124.0")]
     [Collection("Sequential-Endpoints")]
-    public class GetRouteWithDashTests : WebApiControllerBaseTest
+    public class GetTasksTests : WebApiControllerBaseTest
     {
-        public GetRouteWithDashTests(WebApiStartupFactory fixture) : base(fixture) { }
+        public GetTasksTests(WebApiStartupFactory fixture) : base(fixture) { }
 
         [Theory]
-        [InlineData("/api/v1/route-with-dash")]
-        public async Task GetRouteWithDash_Ok(string relativeRef)
+        [InlineData("/api/v1/tasks")]
+        public async System.Threading.Tasks.Task GetTasks_Ok(string relativeRef)
         {
             // Act
             var response = await HttpClient.GetAsync(relativeRef);
@@ -34,6 +34,9 @@ namespace Demo.Api.Tests.Endpoints.RouteWithDash.Generated
             // Assert
             response.Should().NotBeNull();
             response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            var responseData = await response.DeserializeAsync<List<Demo.Api.Generated.Contracts.Tasks.Task>>(JsonSerializerOptions);
+            responseData.Should().NotBeNull();
         }
     }
 }

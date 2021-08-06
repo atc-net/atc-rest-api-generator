@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Demo.Api.Generated.Contracts.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,8 +15,6 @@ using Microsoft.AspNetCore.Mvc;
 //------------------------------------------------------------------------------
 namespace Demo.Api.Generated.Endpoints
 {
-    using Demo.Api.Generated.Contracts.Tasks;
-
     /// <summary>
     /// Endpoint definitions.
     /// Area: Tasks.

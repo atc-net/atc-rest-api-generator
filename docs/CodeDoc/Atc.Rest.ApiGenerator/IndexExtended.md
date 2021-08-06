@@ -83,12 +83,11 @@
      - CreateUsingListForEndpointResultInterface(ApiProjectOptions apiProjectOptions, bool includeRestResults, bool hasList, bool hasSharedModel)
 - [ProjectApiFactory](Atc.Rest.ApiGenerator.Factories.md#projectapifactory)
   -  Static Methods
-     - CreateGeneralUsingListForEndpoint(ApiProjectOptions apiProjectOptions, List&lt;OpenApiOperation&gt; apiOperations, bool includeRestResults)
-     - CreateProjectUsingListForEndpoint(ApiProjectOptions apiProjectOptions, string focusOnSegmentName, bool hasSharedResponseContract)
      - CreateUsingListForContractInterface()
      - CreateUsingListForContractModel(OpenApiSchema apiSchema)
      - CreateUsingListForContractParameter(IList&lt;OpenApiParameter&gt; globalParameters, IList&lt;OpenApiParameter&gt; parameters, OpenApiRequestBody requestBody, bool forClient)
      - CreateUsingListForContractResult(OpenApiResponses responses, bool useProblemDetailsAsDefaultResponseBody, bool hasCreateContentResult)
+     - CreateUsingListForEndpoint(ApiProjectOptions apiProjectOptions, List&lt;OpenApiOperation&gt; apiOperations, bool hasSharedModel, bool includeRestResults, string focusOnSegmentName)
 - [ProjectDomainFactory](Atc.Rest.ApiGenerator.Factories.md#projectdomainfactory)
   -  Static Methods
      - CreateUsingListForHandler(DomainProjectOptions domainProjectOptions, string focusOnSegmentName)
@@ -162,9 +161,13 @@
      - Validate(Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, ApiOptionsValidation validationOptions)
 - [OpenApiDocumentSchemaModelNameHelper](Atc.Rest.ApiGenerator.Helpers.md#openapidocumentschemamodelnamehelper)
   -  Static Methods
+     - ContainsModelNameTask(string modelName)
      - EnsureModelNameWithNamespaceIfNeeded(EndpointMethodMetadata endpointMethodMetadata, string modelName)
      - EnsureModelNameWithNamespaceIfNeeded(string projectName, string segmentName, string modelName, bool isShared = False)
+     - EnsureTaskNameWithNamespaceIfNeeded(string contractReturnTypeName)
+     - EnsureTaskNameWithNameWithNeeded(List&lt;Tuple&lt;HttpStatusCode, string, OpenApiSchema&gt;&gt; contractReturnTypeNames)
      - GetRawModelName(string modelName)
+     - HasReservedSystemNameInContractReturnTypes(List&lt;Tuple&lt;HttpStatusCode, string, OpenApiSchema&gt;&gt; contractReturnTypeNames)
 - [OpenApiDocumentValidationHelper](Atc.Rest.ApiGenerator.Helpers.md#openapidocumentvalidationhelper)
   -  Static Methods
      - ValidateDocument(OpenApiDocument apiDocument, ApiOptionsValidation validationOptions)
@@ -335,6 +338,8 @@
      - GetRouteParameters()
      - HasContractParameterRequestBody()
      - HasContractParameterRequiredHeader()
+     - IsListUsed()
+     - IsPaginationOrListUsed()
      - IsPaginationUsed()
      - ToString()
 - [HostProjectOptions](Atc.Rest.ApiGenerator.Models.md#hostprojectoptions)

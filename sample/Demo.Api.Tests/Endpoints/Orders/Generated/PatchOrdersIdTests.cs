@@ -18,9 +18,6 @@ using Xunit;
 //------------------------------------------------------------------------------
 namespace Demo.Api.Tests.Endpoints.Orders.Generated
 {
-    using Demo.Api.Generated.Contracts;
-    using Demo.Api.Generated.Contracts.Orders;
-
     [GeneratedCode("ApiGenerator", "1.1.124.0")]
     [Collection("Sequential-Endpoints")]
     public class PatchOrdersIdTests : WebApiControllerBaseTest
@@ -29,7 +26,7 @@ namespace Demo.Api.Tests.Endpoints.Orders.Generated
 
         [Theory]
         [InlineData("/api/v1/orders/77a33260-0000-441f-ba60-b0a833803fab")]
-        public async System.Threading.Tasks.Task PatchOrdersId_Ok(string relativeRef)
+        public async Task PatchOrdersId_Ok(string relativeRef)
         {
             // Arrange
             HttpClient.DefaultRequestHeaders.Add("myTestHeader", "Hallo");
@@ -51,7 +48,7 @@ namespace Demo.Api.Tests.Endpoints.Orders.Generated
 
         [Theory]
         [InlineData("/api/v1/orders/x77a33260-0000-441f-ba60-b0a833803fab")]
-        public async System.Threading.Tasks.Task PatchOrdersId_BadRequest_InPath(string relativeRef)
+        public async Task PatchOrdersId_BadRequest_InPath(string relativeRef)
         {
             // Arrange
             HttpClient.DefaultRequestHeaders.Add("myTestHeader", "Hallo");
@@ -73,7 +70,7 @@ namespace Demo.Api.Tests.Endpoints.Orders.Generated
 
         [Theory]
         [InlineData("/api/v1/orders/77a33260-0000-441f-ba60-b0a833803fab")]
-        public async System.Threading.Tasks.Task PatchOrdersId_BadRequest_InHeader_MyTestHeaderBool(string relativeRef)
+        public async Task PatchOrdersId_BadRequest_InHeader_MyTestHeaderBool(string relativeRef)
         {
             // Arrange
             HttpClient.DefaultRequestHeaders.Add("myTestHeader", "Hallo");
@@ -95,7 +92,7 @@ namespace Demo.Api.Tests.Endpoints.Orders.Generated
 
         [Theory]
         [InlineData("/api/v1/orders/77a33260-0000-441f-ba60-b0a833803fab")]
-        public async System.Threading.Tasks.Task PatchOrdersId_BadRequest_InHeader_MyTestHeaderInt(string relativeRef)
+        public async Task PatchOrdersId_BadRequest_InHeader_MyTestHeaderInt(string relativeRef)
         {
             // Arrange
             HttpClient.DefaultRequestHeaders.Add("myTestHeader", "Hallo");
@@ -117,7 +114,7 @@ namespace Demo.Api.Tests.Endpoints.Orders.Generated
 
         [Theory]
         [InlineData("/api/v1/orders/77a33260-0000-441f-ba60-b0a833803fab")]
-        public async System.Threading.Tasks.Task PatchOrdersId_BadRequest_InBody_MyEmail(string relativeRef)
+        public async Task PatchOrdersId_BadRequest_InBody_MyEmail(string relativeRef)
         {
             // Arrange
             HttpClient.DefaultRequestHeaders.Add("myTestHeader", "Hallo");

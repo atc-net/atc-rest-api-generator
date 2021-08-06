@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Net;
@@ -18,9 +18,6 @@ using Xunit;
 //------------------------------------------------------------------------------
 namespace Demo.Api.Tests.Endpoints.Items.Generated
 {
-    using Demo.Api.Generated.Contracts;
-    using Demo.Api.Generated.Contracts.Items;
-
     [GeneratedCode("ApiGenerator", "1.1.124.0")]
     [Collection("Sequential-Endpoints")]
     public class CreateItemTests : WebApiControllerBaseTest
@@ -29,7 +26,7 @@ namespace Demo.Api.Tests.Endpoints.Items.Generated
 
         [Theory]
         [InlineData("/api/v1/items")]
-        public async System.Threading.Tasks.Task CreateItem_Ok(string relativeRef)
+        public async Task CreateItem_Ok(string relativeRef)
         {
             // Arrange
             var data = new CreateItemRequest
@@ -65,7 +62,7 @@ namespace Demo.Api.Tests.Endpoints.Items.Generated
 
         [Theory]
         [InlineData("/api/v1/items")]
-        public async System.Threading.Tasks.Task CreateItem_BadRequest_InBody_Item(string relativeRef)
+        public async Task CreateItem_BadRequest_InBody_Item(string relativeRef)
         {
             // Arrange
             var sb = new StringBuilder();

@@ -18,9 +18,6 @@ using Xunit;
 //------------------------------------------------------------------------------
 namespace Demo.Api.Tests.Endpoints.Addresses.Generated
 {
-    using Demo.Api.Generated.Contracts;
-    using Demo.Api.Generated.Contracts.Addresses;
-
     [GeneratedCode("ApiGenerator", "1.1.124.0")]
     [Collection("Sequential-Endpoints")]
     public class GetAddressesByPostalCodesTests : WebApiControllerBaseTest
@@ -29,7 +26,7 @@ namespace Demo.Api.Tests.Endpoints.Addresses.Generated
 
         [Theory]
         [InlineData("/api/v1/addresses/Hallo")]
-        public async System.Threading.Tasks.Task GetAddressesByPostalCodes_Ok(string relativeRef)
+        public async Task GetAddressesByPostalCodes_Ok(string relativeRef)
         {
             // Act
             var response = await HttpClient.GetAsync(relativeRef);

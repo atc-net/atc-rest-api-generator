@@ -3,35 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using Atc.Rest.ApiGenerator.Models;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.OpenApi.Models;
 
 namespace Atc.Rest.ApiGenerator.Factories
 {
     public static class ProjectApiFactory
     {
-        public static UsingDirectiveSyntax[] CreateProjectUsingListForEndpoint(
-            ApiProjectOptions apiProjectOptions,
-            string focusOnSegmentName,
-            bool hasSharedResponseContract)
-        {
-            var result = new List<UsingDirectiveSyntax>();
-
-            if (hasSharedResponseContract)
-            {
-                result.Add(SyntaxFactory.UsingDirective(SyntaxFactory.ParseName($"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}")));
-            }
-
-            result.Add(SyntaxFactory.UsingDirective(SyntaxFactory.ParseName($"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}.{focusOnSegmentName.EnsureFirstCharacterToUpper()}")));
-
-            return result.ToArray();
-        }
-
-        public static string[] CreateGeneralUsingListForEndpoint(
+        public static string[] CreateUsingListForEndpoint(
             ApiProjectOptions apiProjectOptions,
             List<OpenApiOperation> apiOperations,
-            bool includeRestResults)
+            bool hasSharedModel,
+            bool includeRestResults,
+            string focusOnSegmentName)
         {
             if (apiOperations == null)
             {
@@ -63,6 +46,13 @@ namespace Atc.Rest.ApiGenerator.Factories
             {
                 list.Add("Microsoft.AspNetCore.Authorization");
             }
+
+            if (hasSharedModel)
+            {
+                list.Add($"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}");
+            }
+
+            list.Add($"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}.{focusOnSegmentName.EnsureFirstCharacterToUpper()}");
 
             return list.ToArray();
         }

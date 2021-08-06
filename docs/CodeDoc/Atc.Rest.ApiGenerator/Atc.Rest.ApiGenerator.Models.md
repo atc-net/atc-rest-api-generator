@@ -434,6 +434,16 @@ bool HasContractParameterRequestBody()
 ```csharp
 bool HasContractParameterRequiredHeader()
 ```
+#### IsListUsed
+
+```csharp
+bool IsListUsed()
+```
+#### IsPaginationOrListUsed
+
+```csharp
+bool IsPaginationOrListUsed()
+```
 #### IsPaginationUsed
 
 ```csharp
