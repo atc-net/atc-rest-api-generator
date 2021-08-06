@@ -72,6 +72,15 @@ namespace Atc.Rest.ApiGenerator.Models
                    returnType.StartsWith(Microsoft.OpenApi.Models.NameConstants.Pagination, StringComparison.Ordinal);
         }
 
+        public bool IsListUsed()
+        {
+            var returnType = ContractReturnTypeNames.FirstOrDefault(x => x.Item1 == HttpStatusCode.OK)?.Item2;
+            return returnType != null &&
+                   returnType.StartsWith(Microsoft.OpenApi.Models.NameConstants.List, StringComparison.Ordinal);
+        }
+
+        public bool IsPaginationOrListUsed() => IsPaginationUsed() || IsListUsed();
+
         public bool HasContractParameterRequestBody()
         {
             return ContractParameter?.ApiOperation.RequestBody?.Content.GetSchema() != null;
