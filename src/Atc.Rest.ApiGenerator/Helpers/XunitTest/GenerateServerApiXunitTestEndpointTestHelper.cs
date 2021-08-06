@@ -59,12 +59,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
         {
             sb.AppendLine($"namespace {hostProjectOptions.ProjectName}.Tests.Endpoints.{endpointMethodMetadata.SegmentName}.Generated");
             sb.AppendLine("{");
-            foreach (var statement in GetUsingStatementsForContracts(hostProjectOptions, endpointMethodMetadata))
-            {
-                sb.AppendLine(4, $"using {statement};");
-            }
 
-            sb.AppendLine();
             GenerateCodeHelper.AppendGeneratedCodeAttribute(sb, hostProjectOptions.ToolName, hostProjectOptions.ToolVersion);
             sb.AppendLine(4, "[Collection(\"Sequential-Endpoints\")]");
             sb.AppendLine(4, $"public class {endpointMethodMetadata.MethodName}Tests : WebApiControllerBaseTest");
@@ -151,15 +146,6 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 .ToList();
         }
 
-        private static List<string> GetUsingStatementsForContracts(HostProjectOptions hostProjectOptions, EndpointMethodMetadata endpointMethodMetadata)
-        {
-            return new List<string>
-            {
-                $"{hostProjectOptions.ProjectName}.Generated.Contracts",
-                $"{hostProjectOptions.ProjectName}.Generated.Contracts.{endpointMethodMetadata.SegmentName}",
-            };
-        }
-
         private static void AppendTest200Ok(StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata, Tuple<HttpStatusCode, string, OpenApiSchema> contractReturnTypeName)
         {
             var renderRelativeRefs = RenderRelativeRefsForQuery(endpointMethodMetadata);
@@ -175,7 +161,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 sb.AppendLine(8, $"[InlineData(\"{renderRelativeRef}\")]");
             }
 
-            sb.AppendLine(8, $"public async System.Threading.Tasks.Task {endpointMethodMetadata.MethodName}_Ok(string relativeRef)");
+            sb.AppendLine(8, $"public async {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName.Item2)} {endpointMethodMetadata.MethodName}_Ok(string relativeRef)");
             AppendTextContent(sb, endpointMethodMetadata, HttpStatusCode.OK, contractReturnTypeName);
         }
 
@@ -194,7 +180,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 sb.AppendLine(8, $"[InlineData(\"{renderRelativeRef}\")]");
             }
 
-            sb.AppendLine(8, $"public async System.Threading.Tasks.Task {endpointMethodMetadata.MethodName}_Created(string relativeRef)");
+            sb.AppendLine(8, $"public async {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName.Item2)} {endpointMethodMetadata.MethodName}_Created(string relativeRef)");
             AppendTextContent(sb, endpointMethodMetadata, HttpStatusCode.Created, contractReturnTypeName);
         }
 
@@ -213,7 +199,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 sb.AppendLine(8, $"[InlineData(\"{renderRelativeRef}\")]");
             }
 
-            sb.AppendLine(8, $"public async System.Threading.Tasks.Task {endpointMethodMetadata.MethodName}_BadRequest_InPath(string relativeRef)");
+            sb.AppendLine(8, $"public async {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName.Item2)} {endpointMethodMetadata.MethodName}_BadRequest_InPath(string relativeRef)");
             AppendTextContent(sb, endpointMethodMetadata, HttpStatusCode.BadRequest, contractReturnTypeName);
         }
 
@@ -234,7 +220,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 sb.AppendLine();
                 sb.AppendLine(8, "[Theory]");
                 sb.AppendLine(8, $"[InlineData(\"{relativeRef}\")]");
-                sb.AppendLine(8, $"public async System.Threading.Tasks.Task {endpointMethodMetadata.MethodName}_BadRequest_InHeader_{testForParameter.Name.EnsureFirstCharacterToUpper()}(string relativeRef)");
+                sb.AppendLine(8, $"public async {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName.Item2)} {endpointMethodMetadata.MethodName}_BadRequest_InHeader_{testForParameter.Name.EnsureFirstCharacterToUpper()}(string relativeRef)");
                 sb.AppendLine(8, "{");
                 sb.AppendLine(12, "// Arrange");
                 if (headerRequiredParameters.Count > 0)
@@ -277,7 +263,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 sb.AppendLine(8, $"[InlineData(\"{renderRelativeRef}\")]");
             }
 
-            sb.AppendLine(8, $"public async System.Threading.Tasks.Task {endpointMethodMetadata.MethodName}_BadRequest_InQuery(string relativeRef)");
+            sb.AppendLine(8, $"public async {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName.Item2)} {endpointMethodMetadata.MethodName}_BadRequest_InQuery(string relativeRef)");
             AppendTextContent(sb, endpointMethodMetadata, HttpStatusCode.BadRequest, contractReturnTypeName);
         }
 
@@ -329,7 +315,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 sb.AppendLine();
                 sb.AppendLine(8, "[Theory]");
                 sb.AppendLine(8, $"[InlineData(\"{relativeRef}\")]");
-                sb.AppendLine(8, $"public async System.Threading.Tasks.Task {endpointMethodMetadata.MethodName}_BadRequest_InBody_{testForSchema.Key.EnsureFirstCharacterToUpper()}(string relativeRef)");
+                sb.AppendLine(8, $"public async {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName.Item2)} {endpointMethodMetadata.MethodName}_BadRequest_InBody_{testForSchema.Key.EnsureFirstCharacterToUpper()}(string relativeRef)");
                 sb.AppendLine(8, "{");
                 sb.AppendLine(12, "// Arrange");
                 if (headerRequiredParameters.Count > 0)

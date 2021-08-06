@@ -46,13 +46,26 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
         {
             sb.AppendLine("using System;");
             sb.AppendLine("using System.CodeDom.Compiler;");
-            sb.AppendLine("using System.Collections.Generic;");
+
+            if (endpointMethodMetadata.IsPaginationOrListUsed())
+            {
+                sb.AppendLine("using System.Collections.Generic;");
+            }
+
             sb.AppendLine("using System.Threading;");
             sb.AppendLine("using System.Threading.Tasks;");
+
             if (endpointMethodMetadata.IsPaginationUsed())
             {
                 sb.AppendLine("using Atc.Rest.Results;");
             }
+
+            if (!OpenApiDocumentSchemaModelNameHelper.HasReservedSystemNameInContractReturnTypes(endpointMethodMetadata.ContractReturnTypeNames))
+            {
+                sb.AppendLine($"using {hostProjectOptions.ProjectName}.Generated.Contracts;");
+            }
+
+            sb.AppendLine($"using {hostProjectOptions.ProjectName}.Generated.Contracts.{endpointMethodMetadata.SegmentName};");
         }
 
         private static void AppendNamespaceAndClassStart(
@@ -62,10 +75,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
         {
             sb.AppendLine($"namespace {hostProjectOptions.ProjectName}.Tests.Endpoints.{endpointMethodMetadata.SegmentName}.Generated");
             sb.AppendLine("{");
-            sb.AppendLine(4, $"using {hostProjectOptions.ProjectName}.Generated.Contracts;");
-            sb.AppendLine(4, $"using {hostProjectOptions.ProjectName}.Generated.Contracts.{endpointMethodMetadata.SegmentName};");
 
-            sb.AppendLine();
             GenerateCodeHelper.AppendGeneratedCodeAttribute(sb, hostProjectOptions.ToolName, hostProjectOptions.ToolVersion);
             sb.AppendLine(4, $"public class {endpointMethodMetadata.MethodName}HandlerStub : {endpointMethodMetadata.ContractInterfaceHandlerTypeName}");
             sb.AppendLine(4, "{");
@@ -113,31 +123,31 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                     sb.AppendLine(
                         12,
                         httpStatusCode == HttpStatusCode.Created
-                            ? $"return System.Threading.Tasks.Task.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}());"
-                            : $"return System.Threading.Tasks.Task.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}(\"Hallo world\"));");
+                            ? $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName.Item2)}.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}());"
+                            : $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName.Item2)}.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}(\"Hallo world\"));");
                     break;
                 case "bool":
                     sb.AppendLine(
                         12,
                         httpStatusCode == HttpStatusCode.Created
-                            ? $"return System.Threading.Tasks.Task.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}());"
-                            : $"return System.Threading.Tasks.Task.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}(true));");
+                            ? $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName.Item2)}.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}());"
+                            : $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName.Item2)}.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}(true));");
                     break;
                 case "int":
                 case "long":
                     sb.AppendLine(
                         12,
                         httpStatusCode == HttpStatusCode.Created
-                            ? $"return System.Threading.Tasks.Task.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}());"
-                            : $"return System.Threading.Tasks.Task.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}(42));");
+                            ? $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName.Item2)}.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}());"
+                            : $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName.Item2)}.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}(42));");
                     break;
                 case "float":
                 case "double":
                     sb.AppendLine(
                         12,
                         httpStatusCode == HttpStatusCode.Created
-                            ? $"return System.Threading.Tasks.Task.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}());"
-                            : $"return System.Threading.Tasks.Task.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}(42.2));");
+                            ? $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName.Item2)}.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}());"
+                            : $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName.Item2)}.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}(42.2));");
                     break;
                 default:
                 {
@@ -186,16 +196,16 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                                 sb.AppendLine(12, $"var paginationData = new {contractReturnTypeName.Item2}(data, 10, null, null);");
                             }
 
-                            sb.AppendLine(12, $"return System.Threading.Tasks.Task.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}(paginationData));");
+                            sb.AppendLine(12, $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName.Item2)}.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}(paginationData));");
                         }
                         else
                         {
-                            sb.AppendLine(12, $"return System.Threading.Tasks.Task.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}(data));");
+                            sb.AppendLine(12, $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName.Item2)}.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}(data));");
                         }
                     }
                     else
                     {
-                        sb.AppendLine(12, $"return System.Threading.Tasks.Task.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}(data));");
+                        sb.AppendLine(12, $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName.Item2)}.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}(data));");
                     }
 
                     break;
