@@ -91,6 +91,33 @@ namespace Atc.Rest.ApiGenerator.Models
             return GetHeaderRequiredParameters().Count > 0;
         }
 
+        public bool IsContractReturnTypeUsingSystemNamespace()
+        {
+            if (ContractResultTypeName.Equals("GetUserByEmailResult", StringComparison.Ordinal))
+            {
+            }
+
+            foreach (var contractReturnTypeName in ContractReturnTypeNames)
+            {
+                if (contractReturnTypeName.Item3 is not null &&
+                    contractReturnTypeName.Item3.IsObjectReferenceTypeDeclared())
+                {
+                    if (contractReturnTypeName.Item3.HasAnyPropertiesFormatTypeFromSystemNamespace())
+                    {
+                        // TODO-OK: return true;
+                    }
+
+                    //if (contractReturnTypeName.Item2.IsObjectReferenceTypeDeclared())
+                    //{
+
+                    //}
+                }
+
+            }
+
+            return false;
+        }
+
         public bool HasContractReturnTypeNamesOnlySimpleTypes()
             => ContractReturnTypeNames.All(contractReturnTypeName => contractReturnTypeName.Item3 is null);
 

@@ -44,7 +44,11 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             HostProjectOptions hostProjectOptions,
             EndpointMethodMetadata endpointMethodMetadata)
         {
-            sb.AppendLine("using System;");
+            if (endpointMethodMetadata.IsContractReturnTypeUsingSystemNamespace())
+            {
+                sb.AppendLine("using System;");
+            }
+
             sb.AppendLine("using System.CodeDom.Compiler;");
 
             if (endpointMethodMetadata.IsPaginationOrListUsed())
