@@ -1,11 +1,10 @@
-// ReSharper disable once CheckNamespace
-
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Atc.Rest.ApiGenerator.Extensions;
 using Atc.Rest.ApiGenerator.Models;
 
+// ReSharper disable once CheckNamespace
 namespace Microsoft.OpenApi.Models
 {
     // TODO: Move to ATC.OpenApi

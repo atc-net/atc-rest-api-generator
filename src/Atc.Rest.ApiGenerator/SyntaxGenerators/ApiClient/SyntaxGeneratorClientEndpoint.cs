@@ -88,8 +88,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                     ApiProjectOptions,
                     includeRestResults,
                     HasParametersOrRequestBody,
-                    ContractHelper.HasList(ResultTypeName),
-                    ContractHelper.HasSharedResponseContract(
+                    OpenApiDocumentSchemaModelNameHelper.HasList(ResultTypeName),
+                    OpenApiDocumentSchemaModelNameHelper.HasSharedResponseContract(
                         ApiProjectOptions.Document,
                         OperationSchemaMappings,
                         FocusOnSegmentName)));

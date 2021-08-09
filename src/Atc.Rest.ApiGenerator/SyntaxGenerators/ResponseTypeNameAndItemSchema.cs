@@ -18,6 +18,10 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators
 
         public OpenApiSchema? Schema { get; }
 
+        public bool HasModelName => !string.IsNullOrEmpty(FullModelName);
+
+        public bool HasSchema => Schema != null;
+
         public override string ToString() => $"{nameof(StatusCode)}: {StatusCode}, {nameof(FullModelName)}: {FullModelName}, {nameof(Schema)}: {Schema?.GetModelType()}";
     }
 }

@@ -75,7 +75,6 @@ namespace Atc.Rest.ApiGenerator.Tests
             typeof(ProjectApiClientFactory),
             typeof(ProjectHostFactory),
             typeof(ProjectDomainFactory),
-            typeof(ContractHelper),
             typeof(SyntaxGeneratorSwaggerDocOptions),
         };
 

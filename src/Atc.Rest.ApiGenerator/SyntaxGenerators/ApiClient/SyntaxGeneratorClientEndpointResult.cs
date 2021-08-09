@@ -84,8 +84,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                 ProjectApiClientFactory.CreateUsingListForEndpointResult(
                     ApiProjectOptions,
                     includeRestResults,
-                    ContractHelper.HasList(ResultTypeName),
-                    ContractHelper.HasSharedResponseContract(
+                    OpenApiDocumentSchemaModelNameHelper.HasList(ResultTypeName),
+                    OpenApiDocumentSchemaModelNameHelper.HasSharedResponseContract(
                         ApiProjectOptions.Document,
                         OperationSchemaMappings,
                         FocusOnSegmentName)));
