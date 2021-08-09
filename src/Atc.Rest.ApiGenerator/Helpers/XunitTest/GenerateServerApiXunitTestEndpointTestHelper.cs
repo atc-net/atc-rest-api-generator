@@ -125,8 +125,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 "System.Threading.Tasks",
             };
 
-            if (endpointMethodMetadata.IsContractReturnTypeUsingSystemNamespace() ||
-                endpointMethodMetadata.IsContractParameterRequestBodyUsingSystemNamespace())
+            if (endpointMethodMetadata.IsContractParameterRequestBodyUsingSystemNamespace())
             {
                 systemList.Add("System");
             }
