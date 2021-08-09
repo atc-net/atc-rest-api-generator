@@ -214,7 +214,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                         operationName + NameConstants.ContractResult,
                         responseTypeNamesAndItemSchema,
                         sgContractParameter,
-                        ApiProjectOptions.Document.Components.Schemas);
+                        ApiProjectOptions.Document.Components.Schemas,
+                        OperationSchemaMappings);
 
                     list.Add(endpointMethodMetadata);
                 }
@@ -257,14 +258,14 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
             return false;
         }
 
-        private List<Tuple<HttpStatusCode, string, OpenApiSchema?>> GetResponseTypeNamesAndItemSchema(List<Tuple<HttpStatusCode, string>> responseTypeNames)
+        private List<ResponseTypeNameAndItemSchema> GetResponseTypeNamesAndItemSchema(List<Tuple<HttpStatusCode, string>> responseTypeNames)
         {
-            var list = new List<Tuple<HttpStatusCode, string, OpenApiSchema?>>();
+            var list = new List<ResponseTypeNameAndItemSchema>();
             foreach (var responseTypeName in responseTypeNames)
             {
                 if (string.IsNullOrEmpty(responseTypeName.Item2))
                 {
-                    list.Add(new Tuple<HttpStatusCode, string, OpenApiSchema?>(responseTypeName.Item1, responseTypeName.Item2, null!));
+                    list.Add(new ResponseTypeNameAndItemSchema(responseTypeName.Item1, responseTypeName.Item2, null!));
                 }
                 else
                 {
@@ -276,7 +277,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                         responseTypeName.Item2);
 
                     var schema = ApiProjectOptions.Document.Components.Schemas.FirstOrDefault(x => x.Key.Equals(rawModelName, StringComparison.OrdinalIgnoreCase));
-                    list.Add(new Tuple<HttpStatusCode, string, OpenApiSchema?>(responseTypeName.Item1, fullModelName, schema.Value));
+                    list.Add(new ResponseTypeNameAndItemSchema(responseTypeName.Item1, fullModelName, schema.Value));
                 }
             }
 

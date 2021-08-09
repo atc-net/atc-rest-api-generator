@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using Atc.Rest.ApiGenerator.Extensions;
+using Atc.Rest.ApiGenerator.Helpers;
+using Atc.Rest.ApiGenerator.SyntaxGenerators;
 using Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
 using Microsoft.OpenApi.Models;
 
@@ -20,9 +23,10 @@ namespace Atc.Rest.ApiGenerator.Models
             string contractInterfaceHandlerTypeName,
             string? contractParameterTypeName,
             string? contractResultTypeName,
-            List<Tuple<HttpStatusCode, string, OpenApiSchema?>> contractReturnTypeNames,
+            List<ResponseTypeNameAndItemSchema> contractReturnTypeNames,
             SyntaxGeneratorContractParameter? sgContractParameter,
-            IDictionary<string, OpenApiSchema> componentsSchemas)
+            IDictionary<string, OpenApiSchema> componentsSchemas,
+            List<ApiOperationSchemaMap> apiOperationSchemaMappings)
         {
             UseNullableReferenceTypes = useNullableReferenceTypes;
             ProjectName = projectName;
@@ -37,6 +41,7 @@ namespace Atc.Rest.ApiGenerator.Models
             ContractReturnTypeNames = contractReturnTypeNames;
             ContractParameter = sgContractParameter;
             ComponentsSchemas = componentsSchemas;
+            OperationSchemaMappings = apiOperationSchemaMappings;
         }
 
         public bool UseNullableReferenceTypes { get; private set; }
@@ -59,31 +64,80 @@ namespace Atc.Rest.ApiGenerator.Models
 
         public string? ContractResultTypeName { get; private set; }
 
-        public List<Tuple<HttpStatusCode, string, OpenApiSchema?>> ContractReturnTypeNames { get; private set; }
+        public List<ResponseTypeNameAndItemSchema> ContractReturnTypeNames { get; private set; }
 
         public SyntaxGeneratorContractParameter? ContractParameter { get; private set; }
 
         public IDictionary<string, OpenApiSchema> ComponentsSchemas { get; private set; }
 
-        public bool IsPaginationUsed()
+        private List<ApiOperationSchemaMap> OperationSchemaMappings { get; }
+
+        public bool IsContractReturnTypeUsingPagination()
         {
-            var returnType = ContractReturnTypeNames.FirstOrDefault(x => x.Item1 == HttpStatusCode.OK)?.Item2;
-            return returnType != null &&
+            var returnType = ContractReturnTypeNames.FirstOrDefault(x => x.StatusCode == HttpStatusCode.OK)?.FullModelName;
+            return !string.IsNullOrEmpty(returnType) &&
                    returnType.StartsWith(Microsoft.OpenApi.Models.NameConstants.Pagination, StringComparison.Ordinal);
         }
 
-        public bool IsListUsed()
+        public bool IsContractReturnTypeUsingList()
         {
-            var returnType = ContractReturnTypeNames.FirstOrDefault(x => x.Item1 == HttpStatusCode.OK)?.Item2;
-            return returnType != null &&
+            var returnType = ContractReturnTypeNames.FirstOrDefault(x => x.StatusCode == HttpStatusCode.OK)?.FullModelName;
+            return !string.IsNullOrEmpty(returnType) &&
                    returnType.StartsWith(Microsoft.OpenApi.Models.NameConstants.List, StringComparison.Ordinal);
         }
 
-        public bool IsPaginationOrListUsed() => IsPaginationUsed() || IsListUsed();
+        public bool IsContractReturnTypeUsingPaginationOrListUsed()
+            => IsContractReturnTypeUsingPagination() || IsContractReturnTypeUsingList();
+
+        public bool IsContractReturnTypeUsingSystemNamespace()
+        {
+            return ContractReturnTypeNames
+                .Where(x => x.Schema != null &&
+                            x.Schema.IsObjectReferenceTypeDeclared())
+                .Any(x => x.Schema != null &&
+                          x.Schema.HasAnyPropertiesFormatTypeFromSystemNamespace(ComponentsSchemas));
+        }
+
+        public bool IsContractParameterRequestBodyUsed()
+        {
+            var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchema();
+            return schema is not null;
+        }
+
+        public bool IsContractParameterRequestBodyUsingList()
+        {
+            var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchema();
+            return schema is not null &&
+                   schema.HasAnyPropertiesFormatFromSystemCollectionGenericNamespace(ComponentsSchemas);
+        }
+
+        public bool IsContractParameterRequestBodyUsingSystemNamespace()
+        {
+            var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchema();
+            return schema is not null &&
+                   schema.HasAnyPropertiesFormatTypeFromSystemNamespace(ComponentsSchemas);
+        }
+
+        public bool IsContractReturnTypeUsingStringBuilder()
+        {
+            if (!HasContractParameterRequestBody())
+            {
+                return false;
+            }
+
+            var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchema();
+            if (schema == null)
+            {
+                return false;
+            }
+
+            var relevantSchemas = GetRelevantSchemasForBadRequestBodyParameters(schema);
+            return relevantSchemas.Count > 0;
+        }
 
         public bool HasContractParameterRequestBody()
         {
-            return ContractParameter?.ApiOperation.RequestBody?.Content.GetSchema() != null;
+            return ContractParameter?.ApiOperation.RequestBody?.Content.GetSchema() is not null;
         }
 
         public bool HasContractParameterRequiredHeader()
@@ -91,35 +145,47 @@ namespace Atc.Rest.ApiGenerator.Models
             return GetHeaderRequiredParameters().Count > 0;
         }
 
-        public bool IsContractReturnTypeUsingSystemNamespace()
+        public bool HasContractReturnTypeAsComplexAndNotSharedModel()
         {
-            if (ContractResultTypeName.Equals("GetUserByEmailResult", StringComparison.Ordinal))
+            var returnType = ContractReturnTypeNames.FirstOrDefault(x => x.StatusCode == HttpStatusCode.OK);
+            if (returnType is null ||
+                string.IsNullOrEmpty(returnType.FullModelName) ||
+                returnType.Schema?.Type != OpenApiDataTypeConstants.Object)
             {
+                return false;
             }
 
-            foreach (var contractReturnTypeName in ContractReturnTypeNames)
+            var rawModelName = OpenApiDocumentSchemaModelNameHelper.GetRawModelName(returnType.FullModelName);
+            return !OperationSchemaMappings.IsShared(rawModelName);
+        }
+
+        public bool HasContractReturnTypeNamesOnlySimpleTypes()
+            => ContractReturnTypeNames.All(x => x.Schema is null);
+
+        public bool HasSharedModelOrEnumInContractParameterRequestBody()
+        {
+            var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchema();
+            return schema is not null &&
+                   schema.HasAnySharedModelOrEnum(OperationSchemaMappings);
+        }
+
+        public bool HasSharedModelInContractReturnType()
+        {
+            foreach (var item in ContractReturnTypeNames)
             {
-                if (contractReturnTypeName.Item3 is not null &&
-                    contractReturnTypeName.Item3.IsObjectReferenceTypeDeclared())
+                if (item.Schema is null)
                 {
-                    if (contractReturnTypeName.Item3.HasAnyPropertiesFormatTypeFromSystemNamespace())
-                    {
-                        // TODO-OK: return true;
-                    }
-
-                    //if (contractReturnTypeName.Item2.IsObjectReferenceTypeDeclared())
-                    //{
-
-                    //}
+                    continue;
                 }
 
+                if (item.Schema.HasAnySharedModel(OperationSchemaMappings))
+                {
+                    return true;
+                }
             }
 
             return false;
         }
-
-        public bool HasContractReturnTypeNamesOnlySimpleTypes()
-            => ContractReturnTypeNames.All(contractReturnTypeName => contractReturnTypeName.Item3 is null);
 
         public List<OpenApiParameter> GetRouteParameters()
         {
@@ -160,6 +226,70 @@ namespace Atc.Rest.ApiGenerator.Models
             return GetQueryParameters()
                 .Where(parameter => parameter.Required)
                 .ToList();
+        }
+
+        public List<KeyValuePair<string, OpenApiSchema>> GetRelevantSchemasForBadRequestBodyParameters(OpenApiSchema modelSchema)
+        {
+            var relevantSchemas = new List<KeyValuePair<string, OpenApiSchema>>();
+            foreach (var schemaProperty in modelSchema.Properties)
+            {
+                if (UseNullableReferenceTypes &&
+                    schemaProperty.Value.Type == OpenApiDataTypeConstants.Array)
+                {
+                    continue;
+                }
+
+                if (modelSchema.Required.Contains(schemaProperty.Key) ||
+                    schemaProperty.Value.IsFormatTypeOfEmail() ||
+                    schemaProperty.Value.IsFormatTypeOfDate() ||
+                    schemaProperty.Value.IsFormatTypeOfDateTime() ||
+                    schemaProperty.Value.IsFormatTypeOfTime() ||
+                    schemaProperty.Value.IsFormatTypeOfTimestamp())
+                {
+                    relevantSchemas.Add(schemaProperty);
+                }
+            }
+
+            return relevantSchemas;
+        }
+
+        public bool Contains(string value)
+        {
+            if (ContractParameterTypeName is not null &&
+                ContractParameterTypeName.Contains(value, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            if (ContractResultTypeName is not null &&
+                ContractResultTypeName.Contains(value, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            if (ContractParameter is not null)
+            {
+                if (ContractParameter.ApiOperation.GetOperationName().Contains(value, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+
+                var requestModelName = ContractParameter.ApiOperation.GetModelSchemaFromRequest()?.GetModelName();
+                if (requestModelName is not null &&
+                    requestModelName.Contains(value, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+
+                var responseModelName = ContractParameter.ApiOperation.GetModelSchemaFromResponse()?.GetModelName();
+                if (responseModelName is not null &&
+                    responseModelName.Contains(value, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public override string ToString()

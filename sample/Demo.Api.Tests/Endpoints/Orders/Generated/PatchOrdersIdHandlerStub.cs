@@ -1,8 +1,6 @@
-﻿using System;
-using System.CodeDom.Compiler;
+﻿using System.CodeDom.Compiler;
 using System.Threading;
 using System.Threading.Tasks;
-using Demo.Api.Generated.Contracts;
 using Demo.Api.Generated.Contracts.Orders;
 
 //------------------------------------------------------------------------------

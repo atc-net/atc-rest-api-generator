@@ -3,7 +3,6 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Demo.Api.Generated.Contracts;
 using Demo.Api.Generated.Contracts.Users;

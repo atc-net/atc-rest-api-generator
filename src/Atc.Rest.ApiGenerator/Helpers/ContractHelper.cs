@@ -5,8 +5,8 @@ using Atc.Rest.ApiGenerator.Extensions;
 using Atc.Rest.ApiGenerator.Models;
 using Microsoft.OpenApi.Models;
 
-// ReSharper disable LoopCanBeConvertedToQuery
 // ReSharper disable ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
+// ReSharper disable LoopCanBeConvertedToQuery
 namespace Atc.Rest.ApiGenerator.Helpers
 {
     public static class ContractHelper

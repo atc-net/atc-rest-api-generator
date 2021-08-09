@@ -17,19 +17,20 @@ namespace Atc.Rest.ApiGenerator.Helpers
                 return string.Empty;
             }
 
-            var strippedModelName = modelName;
-            if (strippedModelName.Contains(Microsoft.OpenApi.Models.NameConstants.Pagination + "<", StringComparison.Ordinal) ||
-                strippedModelName.Contains(Microsoft.OpenApi.Models.NameConstants.List + "<", StringComparison.Ordinal))
+            var s = modelName;
+            var indexEnd = s.IndexOf(">", StringComparison.Ordinal);
+            if (indexEnd != -1)
             {
-                strippedModelName = strippedModelName.GetValueBetweenLessAndGreaterThanCharsIfExist();
+                s = s.Substring(0, indexEnd);
+                s = s.Substring(s.IndexOf("<", StringComparison.Ordinal) + 1);
             }
 
-            if (strippedModelName.Contains('.', StringComparison.Ordinal))
+            if (s.Contains(".", StringComparison.Ordinal))
             {
-                strippedModelName = strippedModelName.Split('.', StringSplitOptions.RemoveEmptyEntries).Last();
+                s = s.Substring(s.LastIndexOf(".", StringComparison.Ordinal) + 1);
             }
 
-            return strippedModelName;
+            return s;
         }
 
         public static string EnsureModelNameWithNamespaceIfNeeded(EndpointMethodMetadata endpointMethodMetadata, string modelName)
@@ -105,19 +106,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
                 exportedTypes.AddRange(assembly.GetExportedTypes());
             }
 
-            var rawModelName = modelName;
-            if (ContractHelper.HasList(modelName))
-            {
-                rawModelName = modelName
-                    .Replace(Microsoft.OpenApi.Models.NameConstants.List + "<", string.Empty, StringComparison.Ordinal)
-                    .Replace(">", string.Empty, StringComparison.Ordinal);
-            }
-
-            if (rawModelName.Contains(".", StringComparison.Ordinal))
-            {
-                rawModelName = rawModelName.Substring(rawModelName.LastIndexOf('.') + 1);
-            }
-
+            var rawModelName = GetRawModelName(modelName);
             return exportedTypes.Find(x => x.Name.Equals(rawModelName, StringComparison.Ordinal)) is not null;
         }
 
