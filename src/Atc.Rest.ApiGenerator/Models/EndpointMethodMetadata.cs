@@ -81,16 +81,22 @@ namespace Atc.Rest.ApiGenerator.Models
 
         public bool IsContractReturnTypeUsingList()
         {
+            var returnType = ContractReturnTypeNames.FirstOrDefault(x => x.StatusCode == HttpStatusCode.OK)?.FullModelName;
+            return !string.IsNullOrEmpty(returnType) &&
+                   returnType.StartsWith(Microsoft.OpenApi.Models.NameConstants.List, StringComparison.Ordinal);
+        }
+
+        public bool IsContractReturnTypeUsingSystemCollectionGenericNamespace()
+        {
+            if (IsContractReturnTypeUsingList())
+            {
+                return true;
+            }
+
             var responseType = ContractReturnTypeNames.FirstOrDefault(x => x.StatusCode == HttpStatusCode.OK);
             if (responseType is null)
             {
                 return false;
-            }
-
-            if (!string.IsNullOrEmpty(responseType.FullModelName) &&
-                responseType.FullModelName.StartsWith(Microsoft.OpenApi.Models.NameConstants.List, StringComparison.Ordinal))
-            {
-                return true;
             }
 
             return responseType.Schema is not null &&
@@ -120,7 +126,7 @@ namespace Atc.Rest.ApiGenerator.Models
             return schema is not null;
         }
 
-        public bool IsContractParameterRequestBodyUsingList()
+        public bool IsContractParameterRequestBodyUsingSystemCollectionGenericNamespace()
         {
             var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchema();
             return schema is not null &&
@@ -137,13 +143,8 @@ namespace Atc.Rest.ApiGenerator.Models
 
         public bool IsContractParameterRequestBodyUsingStringBuilder()
         {
-            if (!HasContractParameterRequestBody())
-            {
-                return false;
-            }
-
             var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchema();
-            if (schema == null)
+            if (schema is null)
             {
                 return false;
             }

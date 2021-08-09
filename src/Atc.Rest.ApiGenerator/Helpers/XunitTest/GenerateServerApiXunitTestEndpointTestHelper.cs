@@ -136,7 +136,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             }
 
             if (endpointMethodMetadata.IsContractReturnTypeUsingList() ||
-                endpointMethodMetadata.IsContractParameterRequestBodyUsingList())
+                endpointMethodMetadata.IsContractParameterRequestBodyUsingSystemCollectionGenericNamespace())
             {
                 systemList.Add("System.Collections.Generic");
             }
