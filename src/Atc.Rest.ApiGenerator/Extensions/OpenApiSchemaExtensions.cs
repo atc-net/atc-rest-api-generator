@@ -126,7 +126,7 @@ namespace Microsoft.OpenApi.Models
                    schema.Properties.Any(x => HasAnySharedModel(x.Value, apiOperationSchemaMaps));
         }
 
-        public static bool HasAnySharedModelOrEnum(this OpenApiSchema schema, List<ApiOperationSchemaMap> apiOperationSchemaMaps)
+        public static bool HasAnySharedModelOrEnum(this OpenApiSchema schema, List<ApiOperationSchemaMap> apiOperationSchemaMaps, bool includeProperties = true)
         {
             if (!schema.IsObjectReferenceTypeDeclared())
             {
@@ -144,8 +144,13 @@ namespace Microsoft.OpenApi.Models
                 return true;
             }
 
+            if (!includeProperties)
+            {
+                return false;
+            }
+
             return schema.HasAnyProperties() &&
-                   schema.Properties.Any(schemaProperty => schemaProperty.Value.HasAnySharedModelOrEnum(apiOperationSchemaMaps));
+                   schema.Properties.Any(x => x.Value.HasAnySharedModelOrEnum(apiOperationSchemaMaps));
         }
     }
 }

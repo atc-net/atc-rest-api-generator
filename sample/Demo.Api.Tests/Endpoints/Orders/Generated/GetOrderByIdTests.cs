@@ -2,7 +2,6 @@
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Demo.Api.Generated.Contracts;
 using Demo.Api.Generated.Contracts.Orders;
 using FluentAssertions;
 using Xunit;

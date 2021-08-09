@@ -8,6 +8,7 @@ using Atc.Rest.ApiGenerator.SyntaxGenerators;
 using Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
 using Microsoft.OpenApi.Models;
 
+// ReSharper disable ReplaceSubstringWithRangeIndexer
 namespace Atc.Rest.ApiGenerator.Models
 {
     public class EndpointMethodMetadata
@@ -199,7 +200,7 @@ namespace Atc.Rest.ApiGenerator.Models
                    schema.HasAnySharedModelOrEnum(OperationSchemaMappings);
         }
 
-        public bool HasSharedModelInContractReturnType()
+        public bool HasSharedModelInContractReturnType(bool includeProperties = true)
         {
             foreach (var item in ContractReturnTypeNames)
             {
@@ -208,7 +209,7 @@ namespace Atc.Rest.ApiGenerator.Models
                     continue;
                 }
 
-                if (item.Schema.HasAnySharedModelOrEnum(OperationSchemaMappings))
+                if (item.Schema.HasAnySharedModelOrEnum(OperationSchemaMappings, includeProperties))
                 {
                     return true;
                 }
@@ -285,6 +286,15 @@ namespace Atc.Rest.ApiGenerator.Models
 
         public bool Contains(string value)
         {
+            if (value.EndsWith("Tests", StringComparison.Ordinal))
+            {
+                value = value.Substring(0, value.IndexOf("Tests", StringComparison.Ordinal));
+            }
+            else if (value.EndsWith("HandlerStub", StringComparison.Ordinal))
+            {
+                value = value.Substring(0, value.IndexOf("HandlerStub", StringComparison.Ordinal));
+            }
+
             if (ContractParameterTypeName is not null &&
                 ContractParameterTypeName.Contains(value, StringComparison.OrdinalIgnoreCase))
             {
