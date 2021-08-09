@@ -20,7 +20,6 @@ namespace Atc.Rest.ApiGenerator.Models
             string route,
             OperationType httpOperation,
             string methodName,
-            bool isSharedResponseModel,
             string contractInterfaceHandlerTypeName,
             string? contractParameterTypeName,
             string? contractResultTypeName,
@@ -35,7 +34,6 @@ namespace Atc.Rest.ApiGenerator.Models
             Route = route;
             HttpOperation = httpOperation;
             MethodName = methodName;
-            IsSharedResponseModel = isSharedResponseModel;
             ContractInterfaceHandlerTypeName = contractInterfaceHandlerTypeName;
             ContractParameterTypeName = contractParameterTypeName;
             ContractResultTypeName = contractResultTypeName;
@@ -45,31 +43,29 @@ namespace Atc.Rest.ApiGenerator.Models
             OperationSchemaMappings = apiOperationSchemaMappings;
         }
 
-        public bool UseNullableReferenceTypes { get; private set; }
+        public bool UseNullableReferenceTypes { get; }
 
-        public string ProjectName { get; private set; }
+        public string ProjectName { get; }
 
-        public string SegmentName { get; private set; }
+        public string SegmentName { get; }
 
-        public string Route { get; private set; }
+        public string Route { get; }
 
-        public OperationType HttpOperation { get; private set; }
+        public OperationType HttpOperation { get; }
 
-        public string MethodName { get; private set; }
+        public string MethodName { get; }
 
-        public bool IsSharedResponseModel { get; private set; }
+        public string ContractInterfaceHandlerTypeName { get; }
 
-        public string ContractInterfaceHandlerTypeName { get; private set; }
+        public string? ContractParameterTypeName { get; }
 
-        public string? ContractParameterTypeName { get; private set; }
+        public string? ContractResultTypeName { get; }
 
-        public string? ContractResultTypeName { get; private set; }
+        public List<ResponseTypeNameAndItemSchema> ContractReturnTypeNames { get; }
 
-        public List<ResponseTypeNameAndItemSchema> ContractReturnTypeNames { get; private set; }
+        public SyntaxGeneratorContractParameter? ContractParameter { get; }
 
-        public SyntaxGeneratorContractParameter? ContractParameter { get; private set; }
-
-        public IDictionary<string, OpenApiSchema> ComponentsSchemas { get; private set; }
+        public IDictionary<string, OpenApiSchema> ComponentsSchemas { get; }
 
         private List<ApiOperationSchemaMap> OperationSchemaMappings { get; }
 

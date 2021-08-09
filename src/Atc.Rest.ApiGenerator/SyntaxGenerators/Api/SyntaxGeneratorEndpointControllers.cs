@@ -165,7 +165,6 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
         public List<EndpointMethodMetadata> GetMetadataForMethods()
         {
             var list = new List<EndpointMethodMetadata>();
-            var hasSharedResponseContract = HasSharedResponseContract();
             foreach (var (key, value) in ApiProjectOptions.Document.GetPathsByBasePathSegmentName(FocusOnSegmentName))
             {
                 var generatorParameters = new SyntaxGeneratorContractParameters(ApiProjectOptions, FocusOnSegmentName);
@@ -208,7 +207,6 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                         $"{ApiProjectOptions.RouteBase}{routePart}",
                         apiOperation.Key,
                         operationName,
-                        hasSharedResponseContract,
                         "I" + operationName + NameConstants.ContractHandler,
                         contractParameterTypeName,
                         operationName + NameConstants.ContractResult,
