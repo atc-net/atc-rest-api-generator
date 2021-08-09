@@ -190,6 +190,20 @@ namespace Atc.Rest.ApiGenerator.Models
             return !OperationSchemaMappings.IsShared(rawModelName);
         }
 
+        public bool HasContractReturnTypeAsComplexAsListOrPagination()
+        {
+            var returnType = ContractReturnTypeNames.FirstOrDefault(x => x.StatusCode == HttpStatusCode.OK);
+            if (returnType is null ||
+                string.IsNullOrEmpty(returnType.FullModelName) ||
+                returnType.Schema?.Type != OpenApiDataTypeConstants.Object)
+            {
+                return false;
+            }
+
+            return returnType.FullModelName.StartsWith(Microsoft.OpenApi.Models.NameConstants.List, StringComparison.Ordinal) ||
+                   returnType.FullModelName.StartsWith(Microsoft.OpenApi.Models.NameConstants.Pagination, StringComparison.Ordinal);
+        }
+
         public bool HasContractReturnTypeNamesOnlySimpleTypes()
             => ContractReturnTypeNames.All(x => x.Schema is null);
 

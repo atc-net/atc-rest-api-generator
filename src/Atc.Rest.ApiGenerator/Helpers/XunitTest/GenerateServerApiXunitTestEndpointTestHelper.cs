@@ -121,7 +121,6 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             {
                 "System.CodeDom.Compiler",
                 "System.Net",
-                "System.Net.Http",
                 "System.Threading.Tasks",
             };
 
@@ -161,7 +160,12 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             if (endpointMethodMetadata.IsContractParameterRequestBodyUsed() ||
                 endpointMethodMetadata.HasContractReturnTypeAsComplexAndNotSharedModel())
             {
+                systemList.Add("System.Net.Http");
                 list.Add($"{hostProjectOptions.ProjectName}.Generated.Contracts.{endpointMethodMetadata.SegmentName}");
+            }
+            else if (endpointMethodMetadata.HasContractReturnTypeAsComplexAsListOrPagination())
+            {
+                systemList.Add("System.Net.Http");
             }
 
             return systemList
