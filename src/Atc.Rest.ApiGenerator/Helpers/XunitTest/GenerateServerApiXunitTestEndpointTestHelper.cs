@@ -131,7 +131,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 systemList.Add("System");
             }
 
-            if (endpointMethodMetadata.IsContractReturnTypeUsingStringBuilder())
+            if (endpointMethodMetadata.IsContractParameterRequestBodyUsingStringBuilder())
             {
                 systemList.Add("System.Text");
             }

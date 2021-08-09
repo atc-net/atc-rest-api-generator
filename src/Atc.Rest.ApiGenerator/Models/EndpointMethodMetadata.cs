@@ -81,13 +81,29 @@ namespace Atc.Rest.ApiGenerator.Models
 
         public bool IsContractReturnTypeUsingList()
         {
-            var returnType = ContractReturnTypeNames.FirstOrDefault(x => x.StatusCode == HttpStatusCode.OK)?.FullModelName;
-            return !string.IsNullOrEmpty(returnType) &&
-                   returnType.StartsWith(Microsoft.OpenApi.Models.NameConstants.List, StringComparison.Ordinal);
+            var responseType = ContractReturnTypeNames.FirstOrDefault(x => x.StatusCode == HttpStatusCode.OK);
+            if (responseType is null)
+            {
+                return false;
+            }
+
+            if (!string.IsNullOrEmpty(responseType.FullModelName) &&
+                responseType.FullModelName.StartsWith(Microsoft.OpenApi.Models.NameConstants.List, StringComparison.Ordinal))
+            {
+                return true;
+            }
+
+            return responseType.Schema is not null &&
+                   responseType.Schema.HasAnyPropertiesFormatFromSystemCollectionGenericNamespace(ComponentsSchemas);
         }
 
-        public bool IsContractReturnTypeUsingPaginationOrListUsed()
-            => IsContractReturnTypeUsingPagination() || IsContractReturnTypeUsingList();
+        public bool IsContractReturnTypeUsingString()
+        {
+            var responseType = ContractReturnTypeNames.FirstOrDefault(x => x.StatusCode is HttpStatusCode.OK or HttpStatusCode.Created);
+
+            return responseType is not null &&
+                   OpenApiDataTypeConstants.String.Equals(responseType.FullModelName, StringComparison.Ordinal);
+        }
 
         public bool IsContractReturnTypeUsingSystemNamespace()
         {
@@ -108,7 +124,8 @@ namespace Atc.Rest.ApiGenerator.Models
         {
             var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchema();
             return schema is not null &&
-                   schema.HasAnyPropertiesFormatFromSystemCollectionGenericNamespace(ComponentsSchemas);
+                   (schema.IsArrayReferenceTypeDeclared2() ||
+                   schema.HasAnyPropertiesFormatFromSystemCollectionGenericNamespace(ComponentsSchemas));
         }
 
         public bool IsContractParameterRequestBodyUsingSystemNamespace()
@@ -118,7 +135,7 @@ namespace Atc.Rest.ApiGenerator.Models
                    schema.HasAnyPropertiesFormatTypeFromSystemNamespace(ComponentsSchemas);
         }
 
-        public bool IsContractReturnTypeUsingStringBuilder()
+        public bool IsContractParameterRequestBodyUsingStringBuilder()
         {
             if (!HasContractParameterRequestBody())
             {
@@ -129,6 +146,18 @@ namespace Atc.Rest.ApiGenerator.Models
             if (schema == null)
             {
                 return false;
+            }
+
+            if (schema.IsArrayReferenceTypeDeclared2())
+            {
+                var childSchemaKey = schema.Items.GetModelName();
+                var childSchema = ComponentsSchemas.FirstOrDefault(x => x.Key.Equals(childSchemaKey, StringComparison.Ordinal));
+
+                if (childSchema.Key is not null)
+                {
+                    var childRelevantSchemas = GetRelevantSchemasForBadRequestBodyParameters(childSchema.Value);
+                    return childRelevantSchemas.Count > 0;
+                }
             }
 
             var relevantSchemas = GetRelevantSchemasForBadRequestBodyParameters(schema);
@@ -178,7 +207,7 @@ namespace Atc.Rest.ApiGenerator.Models
                     continue;
                 }
 
-                if (item.Schema.HasAnySharedModel(OperationSchemaMappings))
+                if (item.Schema.HasAnySharedModelOrEnum(OperationSchemaMappings))
                 {
                     return true;
                 }

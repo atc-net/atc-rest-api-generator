@@ -234,7 +234,8 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 systemList.Add("System");
             }
 
-            if (endpointMethodMetadata.IsContractReturnTypeUsingPaginationOrListUsed())
+            if (endpointMethodMetadata.IsContractReturnTypeUsingList() ||
+                endpointMethodMetadata.IsContractParameterRequestBodyUsingList())
             {
                 systemList.Add("System.Collections.Generic");
             }
@@ -246,7 +247,9 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 list.Add("Atc.Rest.Results");
             }
 
-            if (endpointMethodMetadata.HasSharedModelInContractReturnType())
+            if (!endpointMethodMetadata.IsContractReturnTypeUsingString() &&
+                (endpointMethodMetadata.HasSharedModelOrEnumInContractParameterRequestBody() ||
+                endpointMethodMetadata.HasSharedModelInContractReturnType()))
             {
                 list.Add($"{hostProjectOptions.ProjectName}.Generated.Contracts");
             }

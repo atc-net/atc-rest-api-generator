@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -95,6 +96,17 @@ namespace Microsoft.OpenApi.Models
             }
 
             return false;
+        }
+
+        public static bool IsArrayReferenceTypeDeclared2(this OpenApiSchema schema)
+        {
+            if (schema == null)
+            {
+                throw new ArgumentNullException(nameof(schema));
+            }
+
+            return schema.Type == OpenApiDataTypeConstants.Array &&
+                   schema.Items?.Reference != null;
         }
 
         public static bool HasAnySharedModel(this OpenApiSchema schema, List<ApiOperationSchemaMap> apiOperationSchemaMaps)
