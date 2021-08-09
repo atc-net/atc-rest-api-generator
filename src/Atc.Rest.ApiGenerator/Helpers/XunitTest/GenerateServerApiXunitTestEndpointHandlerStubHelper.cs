@@ -234,8 +234,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 systemList.Add("System");
             }
 
-            if (endpointMethodMetadata.IsContractReturnTypeUsingList() ||
-                endpointMethodMetadata.IsContractParameterRequestBodyUsingList())
+            if (endpointMethodMetadata.IsContractReturnTypeUsingList())
             {
                 systemList.Add("System.Collections.Generic");
             }
