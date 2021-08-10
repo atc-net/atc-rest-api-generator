@@ -354,6 +354,43 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Tasks'
+  '/eventArgs/{id}':
+    parameters:
+      - name: id
+        in: path
+        description: The id of the eventArgs
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Get EventArgs By Id
+      description: Get EventArgs By Id
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventArgs'
+        '404':
+          description: Not Found
+      operationId: getEventArgsById
+  /eventArgs:
+    get:
+      summary: Get EventArgs List
+      description: Get EventArgs List
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EventArgs'
+      operationId: getEventArgs
 components:
   parameters:
     pagingPageSize:
@@ -748,3 +785,12 @@ components:
       items:
         $ref: '#/components/schemas/Task'
       description: Contains a list of Tasks
+    EventArgs:
+      title: EventArgs
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        eventName:
+          type: string

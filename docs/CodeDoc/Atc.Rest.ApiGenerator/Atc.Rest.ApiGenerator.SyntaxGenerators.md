@@ -91,6 +91,16 @@ public class ResponseTypeNameAndItemSchema
 ```csharp
 FullModelName
 ```
+#### HasModelName
+
+```csharp
+HasModelName
+```
+#### HasSchema
+
+```csharp
+HasSchema
+```
 #### Schema
 
 ```csharp

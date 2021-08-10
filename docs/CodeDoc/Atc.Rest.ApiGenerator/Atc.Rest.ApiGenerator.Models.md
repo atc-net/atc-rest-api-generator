@@ -366,11 +366,6 @@ ContractReturnTypeNames
 ```csharp
 HttpOperation
 ```
-#### IsSharedResponseModel
-
-```csharp
-IsSharedResponseModel
-```
 #### MethodName
 
 ```csharp
@@ -449,6 +444,11 @@ bool HasContractParameterRequiredHeader()
 ```csharp
 bool HasContractReturnTypeAsComplexAndNotSharedModel()
 ```
+#### HasContractReturnTypeAsComplexAsListOrPagination
+
+```csharp
+bool HasContractReturnTypeAsComplexAsListOrPagination()
+```
 #### HasContractReturnTypeNamesOnlySimpleTypes
 
 ```csharp
@@ -457,7 +457,7 @@ bool HasContractReturnTypeNamesOnlySimpleTypes()
 #### HasSharedModelInContractReturnType
 
 ```csharp
-bool HasSharedModelInContractReturnType()
+bool HasSharedModelInContractReturnType(bool includeProperties = True)
 ```
 #### HasSharedModelOrEnumInContractParameterRequestBody
 
@@ -469,10 +469,15 @@ bool HasSharedModelOrEnumInContractParameterRequestBody()
 ```csharp
 bool IsContractParameterRequestBodyUsed()
 ```
-#### IsContractParameterRequestBodyUsingList
+#### IsContractParameterRequestBodyUsingStringBuilder
 
 ```csharp
-bool IsContractParameterRequestBodyUsingList()
+bool IsContractParameterRequestBodyUsingStringBuilder()
+```
+#### IsContractParameterRequestBodyUsingSystemCollectionGenericNamespace
+
+```csharp
+bool IsContractParameterRequestBodyUsingSystemCollectionGenericNamespace()
 ```
 #### IsContractParameterRequestBodyUsingSystemNamespace
 
@@ -489,15 +494,15 @@ bool IsContractReturnTypeUsingList()
 ```csharp
 bool IsContractReturnTypeUsingPagination()
 ```
-#### IsContractReturnTypeUsingPaginationOrListUsed
+#### IsContractReturnTypeUsingString
 
 ```csharp
-bool IsContractReturnTypeUsingPaginationOrListUsed()
+bool IsContractReturnTypeUsingString()
 ```
-#### IsContractReturnTypeUsingStringBuilder
+#### IsContractReturnTypeUsingSystemCollectionGenericNamespace
 
 ```csharp
-bool IsContractReturnTypeUsingStringBuilder()
+bool IsContractReturnTypeUsingSystemCollectionGenericNamespace()
 ```
 #### IsContractReturnTypeUsingSystemNamespace
 
