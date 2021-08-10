@@ -127,7 +127,7 @@ namespace Atc.Rest.ApiGenerator.Models
         {
             var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchema();
             return schema is not null &&
-                   (schema.IsArrayReferenceTypeDeclared2() ||
+                   (schema.IsArrayReferenceTypeDeclared() ||
                    schema.HasAnyPropertiesFormatFromSystemCollectionGenericNamespace(ComponentsSchemas));
         }
 
@@ -146,7 +146,7 @@ namespace Atc.Rest.ApiGenerator.Models
                 return false;
             }
 
-            if (schema.IsArrayReferenceTypeDeclared2())
+            if (schema.IsArrayReferenceTypeDeclared())
             {
                 var childSchemaKey = schema.Items.GetModelName();
                 var childSchema = ComponentsSchemas.FirstOrDefault(x => x.Key.Equals(childSchemaKey, StringComparison.Ordinal));
