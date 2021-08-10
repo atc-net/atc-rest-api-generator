@@ -39,7 +39,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 case SchemaMapLocatedAreaType.RequestBody:
                     if (schema.Type == OpenApiDataTypeConstants.Array)
                     {
-                        int indentSpacesForData = indentSpaces;
+                        var indentSpacesForData = indentSpaces;
                         if (asJsonBody)
                         {
                             sb.AppendLine(indentSpaces, "var sb = new StringBuilder();");
@@ -97,14 +97,14 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
 
                     break;
                 case SchemaMapLocatedAreaType.Response:
-                    var contractReturnTypeName = endpointMethodMetadata.ContractReturnTypeNames.First(x => x.Item1 == httpStatusCode);
-                    if (GenerateXunitTestPartsHelper.IsListKind(contractReturnTypeName.Item2))
+                    var contractReturnTypeName = endpointMethodMetadata.ContractReturnTypeNames.First(x => x.StatusCode == httpStatusCode);
+                    if (GenerateXunitTestPartsHelper.IsListKind(contractReturnTypeName.FullModelName))
                     {
                         AppendVarDataEqualNewListOfModel(
                             indentSpaces,
                             sb,
                             endpointMethodMetadata,
-                            new KeyValuePair<string, OpenApiSchema>("data", contractReturnTypeName.Item3!),
+                            new KeyValuePair<string, OpenApiSchema>("data", contractReturnTypeName.Schema!),
                             trailingChar,
                             maxItemsForList,
                             depthHierarchy,
@@ -119,8 +119,8 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                             indentSpaces,
                             sb,
                             endpointMethodMetadata,
-                            contractReturnTypeName.Item2,
-                            contractReturnTypeName.Item3!,
+                            contractReturnTypeName.FullModelName,
+                            contractReturnTypeName.Schema!,
                             trailingChar,
                             0,
                             maxItemsForList,

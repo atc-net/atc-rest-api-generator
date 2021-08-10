@@ -1,12 +1,6 @@
-﻿using System;
-using System.CodeDom.Compiler;
-using System.Collections.Generic;
+﻿using System.CodeDom.Compiler;
 using System.Net;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
-using Demo.Api.Generated.Contracts;
-using Demo.Api.Generated.Contracts.RouteWithDash;
 using FluentAssertions;
 using Xunit;
 
@@ -18,9 +12,6 @@ using Xunit;
 //------------------------------------------------------------------------------
 namespace Demo.Api.Tests.Endpoints.RouteWithDash.Generated
 {
-    using Demo.Api.Generated.Contracts;
-    using Demo.Api.Generated.Contracts.RouteWithDash;
-
     [GeneratedCode("ApiGenerator", "1.1.124.0")]
     [Collection("Sequential-Endpoints")]
     public class GetRouteWithDashTests : WebApiControllerBaseTest
@@ -29,7 +20,7 @@ namespace Demo.Api.Tests.Endpoints.RouteWithDash.Generated
 
         [Theory]
         [InlineData("/api/v1/route-with-dash")]
-        public async System.Threading.Tasks.Task GetRouteWithDash_Ok(string relativeRef)
+        public async Task GetRouteWithDash_Ok(string relativeRef)
         {
             // Act
             var response = await HttpClient.GetAsync(relativeRef);

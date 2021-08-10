@@ -1,11 +1,7 @@
-using System;
-using System.CodeDom.Compiler;
-using System.Collections.Generic;
+﻿using System.CodeDom.Compiler;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
-using Demo.Api.Generated.Contracts;
 using Demo.Api.Generated.Contracts.Users;
 using FluentAssertions;
 using Xunit;
@@ -18,9 +14,6 @@ using Xunit;
 //------------------------------------------------------------------------------
 namespace Demo.Api.Tests.Endpoints.Users.Generated
 {
-    using Demo.Api.Generated.Contracts;
-    using Demo.Api.Generated.Contracts.Users;
-
     [GeneratedCode("ApiGenerator", "1.1.124.0")]
     [Collection("Sequential-Endpoints")]
     public class GetUserByIdTests : WebApiControllerBaseTest
@@ -29,7 +22,7 @@ namespace Demo.Api.Tests.Endpoints.Users.Generated
 
         [Theory]
         [InlineData("/api/v1/users/77a33260-0000-441f-ba60-b0a833803fab")]
-        public async System.Threading.Tasks.Task GetUserById_Ok(string relativeRef)
+        public async Task GetUserById_Ok(string relativeRef)
         {
             // Act
             var response = await HttpClient.GetAsync(relativeRef);
@@ -44,7 +37,7 @@ namespace Demo.Api.Tests.Endpoints.Users.Generated
 
         [Theory]
         [InlineData("/api/v1/users/x77a33260-0000-441f-ba60-b0a833803fab")]
-        public async System.Threading.Tasks.Task GetUserById_BadRequest_InPath(string relativeRef)
+        public async Task GetUserById_BadRequest_InPath(string relativeRef)
         {
             // Act
             var response = await HttpClient.GetAsync(relativeRef);

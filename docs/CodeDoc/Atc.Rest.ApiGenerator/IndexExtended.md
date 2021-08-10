@@ -83,12 +83,11 @@
      - CreateUsingListForEndpointResultInterface(ApiProjectOptions apiProjectOptions, bool includeRestResults, bool hasList, bool hasSharedModel)
 - [ProjectApiFactory](Atc.Rest.ApiGenerator.Factories.md#projectapifactory)
   -  Static Methods
-     - CreateGeneralUsingListForEndpoint(ApiProjectOptions apiProjectOptions, List&lt;OpenApiOperation&gt; apiOperations, bool includeRestResults)
-     - CreateProjectUsingListForEndpoint(ApiProjectOptions apiProjectOptions, string focusOnSegmentName, bool hasSharedResponseContract)
      - CreateUsingListForContractInterface()
      - CreateUsingListForContractModel(OpenApiSchema apiSchema)
      - CreateUsingListForContractParameter(IList&lt;OpenApiParameter&gt; globalParameters, IList&lt;OpenApiParameter&gt; parameters, OpenApiRequestBody requestBody, bool forClient)
      - CreateUsingListForContractResult(OpenApiResponses responses, bool useProblemDetailsAsDefaultResponseBody, bool hasCreateContentResult)
+     - CreateUsingListForEndpoint(ApiProjectOptions apiProjectOptions, List&lt;OpenApiOperation&gt; apiOperations, bool hasSharedModel, bool includeRestResults, string focusOnSegmentName)
 - [ProjectDomainFactory](Atc.Rest.ApiGenerator.Factories.md#projectdomainfactory)
   -  Static Methods
      - CreateUsingListForHandler(DomainProjectOptions domainProjectOptions, string focusOnSegmentName)
@@ -121,10 +120,6 @@
 - [ApiGeneratorHelper](Atc.Rest.ApiGenerator.Helpers.md#apigeneratorhelper)
   -  Static Methods
      - CollectMissingContractModelFromOperationSchemaMappings(ApiProjectOptions projectOptions, List&lt;ApiOperationSchemaMap&gt; operationSchemaMappings, List&lt;SyntaxGeneratorContractModel&gt; sgContractModels)
-- [ContractHelper](Atc.Rest.ApiGenerator.Helpers.md#contracthelper)
-  -  Static Methods
-     - HasList(string typeName)
-     - HasSharedResponseContract(OpenApiDocument document, List&lt;ApiOperationSchemaMap&gt; operationSchemaMappings, string focusOnSegmentName)
 - [GenerateAtcCodingRulesHelper](Atc.Rest.ApiGenerator.Helpers.md#generateatccodingruleshelper)
   -  Static Fields
      - string FileNameDirectoryBuildProps
@@ -162,9 +157,13 @@
      - Validate(Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, ApiOptionsValidation validationOptions)
 - [OpenApiDocumentSchemaModelNameHelper](Atc.Rest.ApiGenerator.Helpers.md#openapidocumentschemamodelnamehelper)
   -  Static Methods
+     - ContainsModelNameTask(string modelName)
      - EnsureModelNameWithNamespaceIfNeeded(EndpointMethodMetadata endpointMethodMetadata, string modelName)
      - EnsureModelNameWithNamespaceIfNeeded(string projectName, string segmentName, string modelName, bool isShared = False)
+     - EnsureTaskNameWithNamespaceIfNeeded(string contractReturnTypeName)
      - GetRawModelName(string modelName)
+     - HasList(string typeName)
+     - HasSharedResponseContract(OpenApiDocument document, List&lt;ApiOperationSchemaMap&gt; operationSchemaMappings, string focusOnSegmentName)
 - [OpenApiDocumentValidationHelper](Atc.Rest.ApiGenerator.Helpers.md#openapidocumentvalidationhelper)
   -  Static Methods
      - ValidateDocument(OpenApiDocument apiDocument, ApiOptionsValidation validationOptions)
@@ -321,21 +320,35 @@
      - ContractResultTypeName
      - ContractReturnTypeNames
      - HttpOperation
-     - IsSharedResponseModel
      - MethodName
      - ProjectName
      - Route
      - SegmentName
      - UseNullableReferenceTypes
   -  Methods
+     - Contains(string value)
      - GetHeaderParameters()
      - GetHeaderRequiredParameters()
      - GetQueryParameters()
      - GetQueryRequiredParameters()
+     - GetRelevantSchemasForBadRequestBodyParameters(OpenApiSchema modelSchema)
      - GetRouteParameters()
      - HasContractParameterRequestBody()
      - HasContractParameterRequiredHeader()
-     - IsPaginationUsed()
+     - HasContractReturnTypeAsComplexAndNotSharedModel()
+     - HasContractReturnTypeAsComplexAsListOrPagination()
+     - HasContractReturnTypeNamesOnlySimpleTypes()
+     - HasSharedModelInContractReturnType(bool includeProperties = True)
+     - HasSharedModelOrEnumInContractParameterRequestBody()
+     - IsContractParameterRequestBodyUsed()
+     - IsContractParameterRequestBodyUsingStringBuilder()
+     - IsContractParameterRequestBodyUsingSystemCollectionGenericNamespace()
+     - IsContractParameterRequestBodyUsingSystemNamespace()
+     - IsContractReturnTypeUsingList()
+     - IsContractReturnTypeUsingPagination()
+     - IsContractReturnTypeUsingString()
+     - IsContractReturnTypeUsingSystemCollectionGenericNamespace()
+     - IsContractReturnTypeUsingSystemNamespace()
      - ToString()
 - [HostProjectOptions](Atc.Rest.ApiGenerator.Models.md#hostprojectoptions)
   -  Properties
@@ -387,6 +400,15 @@
   -  Properties
      - ApiSchema
      - ApiSchemaKey
+- [ResponseTypeNameAndItemSchema](Atc.Rest.ApiGenerator.SyntaxGenerators.md#responsetypenameanditemschema)
+  -  Properties
+     - FullModelName
+     - HasModelName
+     - HasSchema
+     - Schema
+     - StatusCode
+  -  Methods
+     - ToString()
 
 ## [Atc.Rest.ApiGenerator.SyntaxGenerators.Api](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md)
 
@@ -643,6 +665,13 @@
      - FocusOnSegmentName
   -  Methods
      - GenerateSyntaxTrees()
+
+## [Microsoft.OpenApi.Models](Microsoft.OpenApi.Models.md)
+
+- [OpenApiSchemaExtensions](Microsoft.OpenApi.Models.md#openapischemaextensions)
+  -  Static Methods
+     - HasAnySharedModel(this OpenApiSchema schema, List&lt;ApiOperationSchemaMap&gt; apiOperationSchemaMaps)
+     - HasAnySharedModelOrEnum(this OpenApiSchema schema, List&lt;ApiOperationSchemaMap&gt; apiOperationSchemaMaps, bool includeProperties = True)
 
 <hr /><div style='text-align: right'><i>Generated by MarkdownCodeDoc version 1.2</i></div>
 

@@ -366,11 +366,6 @@ ContractReturnTypeNames
 ```csharp
 HttpOperation
 ```
-#### IsSharedResponseModel
-
-```csharp
-IsSharedResponseModel
-```
 #### MethodName
 
 ```csharp
@@ -399,6 +394,11 @@ UseNullableReferenceTypes
 ### Methods
 
 
+#### Contains
+
+```csharp
+bool Contains(string value)
+```
 #### GetHeaderParameters
 
 ```csharp
@@ -419,6 +419,11 @@ List<OpenApiParameter> GetQueryParameters()
 ```csharp
 List<OpenApiParameter> GetQueryRequiredParameters()
 ```
+#### GetRelevantSchemasForBadRequestBodyParameters
+
+```csharp
+List<KeyValuePair<string, OpenApiSchema>> GetRelevantSchemasForBadRequestBodyParameters(OpenApiSchema modelSchema)
+```
 #### GetRouteParameters
 
 ```csharp
@@ -434,10 +439,75 @@ bool HasContractParameterRequestBody()
 ```csharp
 bool HasContractParameterRequiredHeader()
 ```
-#### IsPaginationUsed
+#### HasContractReturnTypeAsComplexAndNotSharedModel
 
 ```csharp
-bool IsPaginationUsed()
+bool HasContractReturnTypeAsComplexAndNotSharedModel()
+```
+#### HasContractReturnTypeAsComplexAsListOrPagination
+
+```csharp
+bool HasContractReturnTypeAsComplexAsListOrPagination()
+```
+#### HasContractReturnTypeNamesOnlySimpleTypes
+
+```csharp
+bool HasContractReturnTypeNamesOnlySimpleTypes()
+```
+#### HasSharedModelInContractReturnType
+
+```csharp
+bool HasSharedModelInContractReturnType(bool includeProperties = True)
+```
+#### HasSharedModelOrEnumInContractParameterRequestBody
+
+```csharp
+bool HasSharedModelOrEnumInContractParameterRequestBody()
+```
+#### IsContractParameterRequestBodyUsed
+
+```csharp
+bool IsContractParameterRequestBodyUsed()
+```
+#### IsContractParameterRequestBodyUsingStringBuilder
+
+```csharp
+bool IsContractParameterRequestBodyUsingStringBuilder()
+```
+#### IsContractParameterRequestBodyUsingSystemCollectionGenericNamespace
+
+```csharp
+bool IsContractParameterRequestBodyUsingSystemCollectionGenericNamespace()
+```
+#### IsContractParameterRequestBodyUsingSystemNamespace
+
+```csharp
+bool IsContractParameterRequestBodyUsingSystemNamespace()
+```
+#### IsContractReturnTypeUsingList
+
+```csharp
+bool IsContractReturnTypeUsingList()
+```
+#### IsContractReturnTypeUsingPagination
+
+```csharp
+bool IsContractReturnTypeUsingPagination()
+```
+#### IsContractReturnTypeUsingString
+
+```csharp
+bool IsContractReturnTypeUsingString()
+```
+#### IsContractReturnTypeUsingSystemCollectionGenericNamespace
+
+```csharp
+bool IsContractReturnTypeUsingSystemCollectionGenericNamespace()
+```
+#### IsContractReturnTypeUsingSystemNamespace
+
+```csharp
+bool IsContractReturnTypeUsingSystemNamespace()
 ```
 #### ToString
 

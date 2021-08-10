@@ -35,7 +35,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
             string focusOnSegmentName)
         {
             this.ApiProjectOptions = apiProjectOptions ?? throw new ArgumentNullException(nameof(apiProjectOptions));
-            this.OperationSchemaMappings = operationSchemaMappings ?? throw new ArgumentNullException(nameof(apiProjectOptions));
+            this.OperationSchemaMappings = operationSchemaMappings ?? throw new ArgumentNullException(nameof(operationSchemaMappings));
             this.FocusOnSegmentName = focusOnSegmentName ?? throw new ArgumentNullException(nameof(focusOnSegmentName));
         }
 
@@ -104,13 +104,6 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
             }
 
             // Add the class to the namespace.
-            @namespace = @namespace.AddUsings(
-                ProjectApiFactory.CreateProjectUsingListForEndpoint(
-                    ApiProjectOptions,
-                    FocusOnSegmentName,
-                    HasSharedResponseContract()));
-
-            // Add the class to the namespace.
             @namespace = @namespace.AddMembers(classDeclaration);
 
             // Add using statement to compilationUnit
@@ -119,10 +112,12 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                 .Any(x => x.Identifier.ValueText.Contains($"({Microsoft.OpenApi.Models.NameConstants.Pagination}<", StringComparison.Ordinal));
 
             compilationUnit = compilationUnit.AddUsingStatements(
-                ProjectApiFactory.CreateGeneralUsingListForEndpoint(
+                ProjectApiFactory.CreateUsingListForEndpoint(
                     ApiProjectOptions,
                     usedApiOperations,
-                    includeRestResults));
+                    HasSharedResponseContract(),
+                    includeRestResults,
+                    FocusOnSegmentName));
 
             // Add namespace to compilationUnit
             compilationUnit = compilationUnit.AddMembers(@namespace);
@@ -170,7 +165,6 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
         public List<EndpointMethodMetadata> GetMetadataForMethods()
         {
             var list = new List<EndpointMethodMetadata>();
-            var hasSharedResponseContract = HasSharedResponseContract();
             foreach (var (key, value) in ApiProjectOptions.Document.GetPathsByBasePathSegmentName(FocusOnSegmentName))
             {
                 var generatorParameters = new SyntaxGeneratorContractParameters(ApiProjectOptions, FocusOnSegmentName);
@@ -213,13 +207,13 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                         $"{ApiProjectOptions.RouteBase}{routePart}",
                         apiOperation.Key,
                         operationName,
-                        hasSharedResponseContract,
                         "I" + operationName + NameConstants.ContractHandler,
                         contractParameterTypeName,
                         operationName + NameConstants.ContractResult,
                         responseTypeNamesAndItemSchema,
                         sgContractParameter,
-                        ApiProjectOptions.Document.Components.Schemas);
+                        ApiProjectOptions.Document.Components.Schemas,
+                        OperationSchemaMappings);
 
                     list.Add(endpointMethodMetadata);
                 }
@@ -262,14 +256,14 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
             return false;
         }
 
-        private List<Tuple<HttpStatusCode, string, OpenApiSchema?>> GetResponseTypeNamesAndItemSchema(List<Tuple<HttpStatusCode, string>> responseTypeNames)
+        private List<ResponseTypeNameAndItemSchema> GetResponseTypeNamesAndItemSchema(List<Tuple<HttpStatusCode, string>> responseTypeNames)
         {
-            var list = new List<Tuple<HttpStatusCode, string, OpenApiSchema?>>();
+            var list = new List<ResponseTypeNameAndItemSchema>();
             foreach (var responseTypeName in responseTypeNames)
             {
                 if (string.IsNullOrEmpty(responseTypeName.Item2))
                 {
-                    list.Add(new Tuple<HttpStatusCode, string, OpenApiSchema?>(responseTypeName.Item1, responseTypeName.Item2, null!));
+                    list.Add(new ResponseTypeNameAndItemSchema(responseTypeName.Item1, responseTypeName.Item2, null!));
                 }
                 else
                 {
@@ -281,7 +275,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                         responseTypeName.Item2);
 
                     var schema = ApiProjectOptions.Document.Components.Schemas.FirstOrDefault(x => x.Key.Equals(rawModelName, StringComparison.OrdinalIgnoreCase));
-                    list.Add(new Tuple<HttpStatusCode, string, OpenApiSchema?>(responseTypeName.Item1, fullModelName, schema.Value));
+                    list.Add(new ResponseTypeNameAndItemSchema(responseTypeName.Item1, fullModelName, schema.Value));
                 }
             }
 

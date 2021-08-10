@@ -1,11 +1,8 @@
-﻿using System;
-using System.CodeDom.Compiler;
+﻿using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
-using Demo.Api.Generated.Contracts;
 using Demo.Api.Generated.Contracts.Users;
 using FluentAssertions;
 using Xunit;
@@ -18,9 +15,6 @@ using Xunit;
 //------------------------------------------------------------------------------
 namespace Demo.Api.Tests.Endpoints.Users.Generated
 {
-    using Demo.Api.Generated.Contracts;
-    using Demo.Api.Generated.Contracts.Users;
-
     [GeneratedCode("ApiGenerator", "1.1.124.0")]
     [Collection("Sequential-Endpoints")]
     public class GetUsersTests : WebApiControllerBaseTest
@@ -29,7 +23,7 @@ namespace Demo.Api.Tests.Endpoints.Users.Generated
 
         [Theory]
         [InlineData("/api/v1/users")]
-        public async System.Threading.Tasks.Task GetUsers_Ok(string relativeRef)
+        public async Task GetUsers_Ok(string relativeRef)
         {
             // Act
             var response = await HttpClient.GetAsync(relativeRef);

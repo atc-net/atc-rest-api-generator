@@ -1,6 +1,5 @@
 ﻿using System;
 using System.CodeDom.Compiler;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -18,9 +17,6 @@ using Xunit;
 //------------------------------------------------------------------------------
 namespace Demo.Api.Tests.Endpoints.Users.Generated
 {
-    using Demo.Api.Generated.Contracts;
-    using Demo.Api.Generated.Contracts.Users;
-
     [GeneratedCode("ApiGenerator", "1.1.124.0")]
     [Collection("Sequential-Endpoints")]
     public class PostUserTests : WebApiControllerBaseTest
@@ -29,7 +25,7 @@ namespace Demo.Api.Tests.Endpoints.Users.Generated
 
         [Theory]
         [InlineData("/api/v1/users")]
-        public async System.Threading.Tasks.Task PostUser_Created(string relativeRef)
+        public async Task PostUser_Created(string relativeRef)
         {
             // Arrange
             var data = new CreateUserRequest
@@ -66,7 +62,7 @@ namespace Demo.Api.Tests.Endpoints.Users.Generated
 
         [Theory]
         [InlineData("/api/v1/users")]
-        public async System.Threading.Tasks.Task PostUser_BadRequest_InBody_FirstName(string relativeRef)
+        public async Task PostUser_BadRequest_InBody_FirstName(string relativeRef)
         {
             // Arrange
             var sb = new StringBuilder();
@@ -102,7 +98,7 @@ namespace Demo.Api.Tests.Endpoints.Users.Generated
 
         [Theory]
         [InlineData("/api/v1/users")]
-        public async System.Threading.Tasks.Task PostUser_BadRequest_InBody_LastName(string relativeRef)
+        public async Task PostUser_BadRequest_InBody_LastName(string relativeRef)
         {
             // Arrange
             var sb = new StringBuilder();
@@ -138,7 +134,7 @@ namespace Demo.Api.Tests.Endpoints.Users.Generated
 
         [Theory]
         [InlineData("/api/v1/users")]
-        public async System.Threading.Tasks.Task PostUser_BadRequest_InBody_MyNullableDateTime(string relativeRef)
+        public async Task PostUser_BadRequest_InBody_MyNullableDateTime(string relativeRef)
         {
             // Arrange
             var sb = new StringBuilder();
@@ -174,7 +170,7 @@ namespace Demo.Api.Tests.Endpoints.Users.Generated
 
         [Theory]
         [InlineData("/api/v1/users")]
-        public async System.Threading.Tasks.Task PostUser_BadRequest_InBody_MyDateTime(string relativeRef)
+        public async Task PostUser_BadRequest_InBody_MyDateTime(string relativeRef)
         {
             // Arrange
             var sb = new StringBuilder();
@@ -210,7 +206,7 @@ namespace Demo.Api.Tests.Endpoints.Users.Generated
 
         [Theory]
         [InlineData("/api/v1/users")]
-        public async System.Threading.Tasks.Task PostUser_BadRequest_InBody_Email(string relativeRef)
+        public async Task PostUser_BadRequest_InBody_Email(string relativeRef)
         {
             // Arrange
             var sb = new StringBuilder();
@@ -246,7 +242,7 @@ namespace Demo.Api.Tests.Endpoints.Users.Generated
 
         [Theory]
         [InlineData("/api/v1/users")]
-        public async System.Threading.Tasks.Task PostUser_BadRequest_InBody_Gender(string relativeRef)
+        public async Task PostUser_BadRequest_InBody_Gender(string relativeRef)
         {
             // Arrange
             var sb = new StringBuilder();

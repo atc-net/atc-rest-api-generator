@@ -1,12 +1,8 @@
-﻿using System;
-using System.CodeDom.Compiler;
-using System.Collections.Generic;
+﻿using System.CodeDom.Compiler;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Atc.Rest.Results;
-using Demo.Api.Generated.Contracts;
 using Demo.Api.Generated.Contracts.Orders;
 using FluentAssertions;
 using Xunit;
@@ -19,9 +15,6 @@ using Xunit;
 //------------------------------------------------------------------------------
 namespace Demo.Api.Tests.Endpoints.Orders.Generated
 {
-    using Demo.Api.Generated.Contracts;
-    using Demo.Api.Generated.Contracts.Orders;
-
     [GeneratedCode("ApiGenerator", "1.1.124.0")]
     [Collection("Sequential-Endpoints")]
     public class GetOrdersTests : WebApiControllerBaseTest
@@ -45,7 +38,7 @@ namespace Demo.Api.Tests.Endpoints.Orders.Generated
         [InlineData("/api/v1/orders?pageSize=42&pageIndex=42&queryStringArray=Hallo&queryStringArray=Hallo1&queryStringArray=Hallo2&continuationToken=Hallo")]
         [InlineData("/api/v1/orders?pageSize=42&queryString=Hallo&queryStringArray=Hallo&queryStringArray=Hallo1&queryStringArray=Hallo2&continuationToken=Hallo")]
         [InlineData("/api/v1/orders?pageSize=42&pageIndex=42&queryString=Hallo&queryStringArray=Hallo&queryStringArray=Hallo1&queryStringArray=Hallo2&continuationToken=Hallo")]
-        public async System.Threading.Tasks.Task GetOrders_Ok(string relativeRef)
+        public async Task GetOrders_Ok(string relativeRef)
         {
             // Act
             var response = await HttpClient.GetAsync(relativeRef);
@@ -60,7 +53,7 @@ namespace Demo.Api.Tests.Endpoints.Orders.Generated
 
         [Theory]
         [InlineData("/api/v1/orders?pageSize=@")]
-        public async System.Threading.Tasks.Task GetOrders_BadRequest_InQuery(string relativeRef)
+        public async Task GetOrders_BadRequest_InQuery(string relativeRef)
         {
             // Act
             var response = await HttpClient.GetAsync(relativeRef);

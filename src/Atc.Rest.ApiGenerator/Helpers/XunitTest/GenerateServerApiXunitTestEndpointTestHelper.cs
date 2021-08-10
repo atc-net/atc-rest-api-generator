@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using Atc.Data.Models;
 using Atc.Rest.ApiGenerator.Models;
+using Atc.Rest.ApiGenerator.SyntaxGenerators;
 using Microsoft.OpenApi.Models;
 
 // ReSharper disable ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
@@ -59,12 +60,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
         {
             sb.AppendLine($"namespace {hostProjectOptions.ProjectName}.Tests.Endpoints.{endpointMethodMetadata.SegmentName}.Generated");
             sb.AppendLine("{");
-            foreach (var statement in GetUsingStatementsForContracts(hostProjectOptions, endpointMethodMetadata))
-            {
-                sb.AppendLine(4, $"using {statement};");
-            }
 
-            sb.AppendLine();
             GenerateCodeHelper.AppendGeneratedCodeAttribute(sb, hostProjectOptions.ToolName, hostProjectOptions.ToolVersion);
             sb.AppendLine(4, "[Collection(\"Sequential-Endpoints\")]");
             sb.AppendLine(4, $"public class {endpointMethodMetadata.MethodName}Tests : WebApiControllerBaseTest");
@@ -82,19 +78,19 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
         {
             foreach (var contractReturnTypeName in endpointMethodMetadata.ContractReturnTypeNames)
             {
-                switch (contractReturnTypeName.Item1)
+                switch (contractReturnTypeName.StatusCode)
                 {
                     case HttpStatusCode.OK:
-                        AppendTest200Ok(sb, endpointMethodMetadata, contractReturnTypeName!);
+                        AppendTest200Ok(sb, endpointMethodMetadata, contractReturnTypeName);
                         break;
                     case HttpStatusCode.Created:
-                        AppendTest201Created(sb, endpointMethodMetadata, contractReturnTypeName!);
+                        AppendTest201Created(sb, endpointMethodMetadata, contractReturnTypeName);
                         break;
                     case HttpStatusCode.BadRequest:
-                        AppendTest400BadRequestInPath(sb, endpointMethodMetadata, contractReturnTypeName!);
-                        AppendTest400BadRequestInHeader(sb, endpointMethodMetadata, contractReturnTypeName!);
-                        AppendTest400BadRequestInQuery(sb, endpointMethodMetadata, contractReturnTypeName!);
-                        AppendTest400BadRequestInBody(sb, endpointMethodMetadata, contractReturnTypeName!);
+                        AppendTest400BadRequestInPath(sb, endpointMethodMetadata, contractReturnTypeName);
+                        AppendTest400BadRequestInHeader(sb, endpointMethodMetadata, contractReturnTypeName);
+                        AppendTest400BadRequestInQuery(sb, endpointMethodMetadata, contractReturnTypeName);
+                        AppendTest400BadRequestInBody(sb, endpointMethodMetadata, contractReturnTypeName);
                         break;
                 }
             }
@@ -123,44 +119,63 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
         {
             var systemList = new List<string>
             {
-                "System",
                 "System.CodeDom.Compiler",
-                "System.Collections.Generic",
                 "System.Net",
-                "System.Net.Http",
-                "System.Text",
                 "System.Threading.Tasks",
-            }.OrderBy(x => x);
+            };
 
-            var generalList = new List<string>
+            if (endpointMethodMetadata.IsContractParameterRequestBodyUsingSystemNamespace())
+            {
+                systemList.Add("System");
+            }
+
+            if (endpointMethodMetadata.IsContractParameterRequestBodyUsingStringBuilder())
+            {
+                systemList.Add("System.Text");
+            }
+
+            if (endpointMethodMetadata.IsContractReturnTypeUsingList() ||
+                endpointMethodMetadata.IsContractParameterRequestBodyUsingSystemCollectionGenericNamespace())
+            {
+                systemList.Add("System.Collections.Generic");
+            }
+
+            var list = new List<string>
             {
                 "FluentAssertions",
                 "Xunit",
-                $"{hostProjectOptions.ProjectName}.Generated.Contracts",
-                $"{hostProjectOptions.ProjectName}.Generated.Contracts.{endpointMethodMetadata.SegmentName}",
             };
-            if (endpointMethodMetadata.IsPaginationUsed())
+
+            if (endpointMethodMetadata.IsContractReturnTypeUsingPagination())
             {
-                generalList.Add("Atc.Rest.Results");
+                list.Add("Atc.Rest.Results");
+            }
+
+            if (endpointMethodMetadata.HasSharedModelOrEnumInContractParameterRequestBody() ||
+                endpointMethodMetadata.HasSharedModelInContractReturnType(false))
+            {
+                list.Add($"{hostProjectOptions.ProjectName}.Generated.Contracts");
+            }
+
+            if (endpointMethodMetadata.IsContractParameterRequestBodyUsed() ||
+                endpointMethodMetadata.HasContractReturnTypeAsComplexAndNotSharedModel())
+            {
+                systemList.Add("System.Net.Http");
+                list.Add($"{hostProjectOptions.ProjectName}.Generated.Contracts.{endpointMethodMetadata.SegmentName}");
+            }
+            else if (endpointMethodMetadata.HasContractReturnTypeAsComplexAsListOrPagination())
+            {
+                systemList.Add("System.Net.Http");
             }
 
             return systemList
                 .OrderBy(x => x)
-                .Concat(generalList
+                .Concat(list
                     .OrderBy(x => x))
                 .ToList();
         }
 
-        private static List<string> GetUsingStatementsForContracts(HostProjectOptions hostProjectOptions, EndpointMethodMetadata endpointMethodMetadata)
-        {
-            return new List<string>
-            {
-                $"{hostProjectOptions.ProjectName}.Generated.Contracts",
-                $"{hostProjectOptions.ProjectName}.Generated.Contracts.{endpointMethodMetadata.SegmentName}",
-            };
-        }
-
-        private static void AppendTest200Ok(StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata, Tuple<HttpStatusCode, string, OpenApiSchema> contractReturnTypeName)
+        private static void AppendTest200Ok(StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata, ResponseTypeNameAndItemSchema contractReturnTypeName)
         {
             var renderRelativeRefs = RenderRelativeRefsForQuery(endpointMethodMetadata);
             if (renderRelativeRefs.Count == 0)
@@ -175,11 +190,11 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 sb.AppendLine(8, $"[InlineData(\"{renderRelativeRef}\")]");
             }
 
-            sb.AppendLine(8, $"public async System.Threading.Tasks.Task {endpointMethodMetadata.MethodName}_Ok(string relativeRef)");
+            sb.AppendLine(8, $"public async {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName.FullModelName)} {endpointMethodMetadata.MethodName}_Ok(string relativeRef)");
             AppendTextContent(sb, endpointMethodMetadata, HttpStatusCode.OK, contractReturnTypeName);
         }
 
-        private static void AppendTest201Created(StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata, Tuple<HttpStatusCode, string, OpenApiSchema> contractReturnTypeName)
+        private static void AppendTest201Created(StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata, ResponseTypeNameAndItemSchema contractReturnTypeName)
         {
             var renderRelativeRefs = RenderRelativeRefsForQuery(endpointMethodMetadata);
             if (renderRelativeRefs.Count == 0)
@@ -194,11 +209,11 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 sb.AppendLine(8, $"[InlineData(\"{renderRelativeRef}\")]");
             }
 
-            sb.AppendLine(8, $"public async System.Threading.Tasks.Task {endpointMethodMetadata.MethodName}_Created(string relativeRef)");
+            sb.AppendLine(8, $"public async {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName.FullModelName)} {endpointMethodMetadata.MethodName}_Created(string relativeRef)");
             AppendTextContent(sb, endpointMethodMetadata, HttpStatusCode.Created, contractReturnTypeName);
         }
 
-        private static void AppendTest400BadRequestInPath(StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata, Tuple<HttpStatusCode, string, OpenApiSchema> contractReturnTypeName)
+        private static void AppendTest400BadRequestInPath(StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata, ResponseTypeNameAndItemSchema contractReturnTypeName)
         {
             var renderRelativeRefs = RenderRelativeRefsForBadRequestInPath(endpointMethodMetadata, true);
             if (renderRelativeRefs.Count == 0)
@@ -213,11 +228,11 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 sb.AppendLine(8, $"[InlineData(\"{renderRelativeRef}\")]");
             }
 
-            sb.AppendLine(8, $"public async System.Threading.Tasks.Task {endpointMethodMetadata.MethodName}_BadRequest_InPath(string relativeRef)");
+            sb.AppendLine(8, $"public async {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName.FullModelName)} {endpointMethodMetadata.MethodName}_BadRequest_InPath(string relativeRef)");
             AppendTextContent(sb, endpointMethodMetadata, HttpStatusCode.BadRequest, contractReturnTypeName);
         }
 
-        private static void AppendTest400BadRequestInHeader(StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata, Tuple<HttpStatusCode, string, OpenApiSchema> contractReturnTypeName)
+        private static void AppendTest400BadRequestInHeader(StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata, ResponseTypeNameAndItemSchema contractReturnTypeName)
         {
             var headerRequiredParameters = endpointMethodMetadata.GetHeaderRequiredParameters();
             var testForParameters = headerRequiredParameters
@@ -234,7 +249,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 sb.AppendLine();
                 sb.AppendLine(8, "[Theory]");
                 sb.AppendLine(8, $"[InlineData(\"{relativeRef}\")]");
-                sb.AppendLine(8, $"public async System.Threading.Tasks.Task {endpointMethodMetadata.MethodName}_BadRequest_InHeader_{testForParameter.Name.EnsureFirstCharacterToUpper()}(string relativeRef)");
+                sb.AppendLine(8, $"public async {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName.FullModelName)} {endpointMethodMetadata.MethodName}_BadRequest_InHeader_{testForParameter.Name.EnsureFirstCharacterToUpper()}(string relativeRef)");
                 sb.AppendLine(8, "{");
                 sb.AppendLine(12, "// Arrange");
                 if (headerRequiredParameters.Count > 0)
@@ -251,7 +266,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                     sb.AppendLine();
                 }
 
-                AppendNewRequestModel(12, sb, endpointMethodMetadata, contractReturnTypeName.Item1);
+                AppendNewRequestModel(12, sb, endpointMethodMetadata, contractReturnTypeName.StatusCode);
                 sb.AppendLine();
                 AppendActHttpClientOperation(12, sb, endpointMethodMetadata.HttpOperation, true);
                 sb.AppendLine();
@@ -262,7 +277,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             }
         }
 
-        private static void AppendTest400BadRequestInQuery(StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata, Tuple<HttpStatusCode, string, OpenApiSchema> contractReturnTypeName)
+        private static void AppendTest400BadRequestInQuery(StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata, ResponseTypeNameAndItemSchema contractReturnTypeName)
         {
             var renderRelativeRefs = RenderRelativeRefsForQuery(endpointMethodMetadata, true);
             if (renderRelativeRefs.Count == 0)
@@ -277,11 +292,11 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 sb.AppendLine(8, $"[InlineData(\"{renderRelativeRef}\")]");
             }
 
-            sb.AppendLine(8, $"public async System.Threading.Tasks.Task {endpointMethodMetadata.MethodName}_BadRequest_InQuery(string relativeRef)");
+            sb.AppendLine(8, $"public async {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName.FullModelName)} {endpointMethodMetadata.MethodName}_BadRequest_InQuery(string relativeRef)");
             AppendTextContent(sb, endpointMethodMetadata, HttpStatusCode.BadRequest, contractReturnTypeName);
         }
 
-        private static void AppendTest400BadRequestInBody(StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata, Tuple<HttpStatusCode, string, OpenApiSchema> contractReturnTypeName)
+        private static void AppendTest400BadRequestInBody(StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata, ResponseTypeNameAndItemSchema contractReturnTypeName)
         {
             if (!endpointMethodMetadata.HasContractParameterRequestBody())
             {
@@ -301,27 +316,9 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             }
 
             var modelSchema = endpointMethodMetadata.ComponentsSchemas.GetSchemaByModelName(modelName);
+            var relevantSchemas = endpointMethodMetadata.GetRelevantSchemasForBadRequestBodyParameters(modelSchema);
+
             var headerRequiredParameters = endpointMethodMetadata.GetHeaderRequiredParameters();
-
-            var relevantSchemas = new List<KeyValuePair<string, OpenApiSchema>>();
-            foreach (var schemaProperty in modelSchema.Properties)
-            {
-                if (endpointMethodMetadata.UseNullableReferenceTypes &&
-                    schemaProperty.Value.Type == OpenApiDataTypeConstants.Array)
-                {
-                    continue;
-                }
-
-                if (modelSchema.Required.Contains(schemaProperty.Key) ||
-                    schemaProperty.Value.IsFormatTypeOfEmail() ||
-                    schemaProperty.Value.IsFormatTypeOfDate() ||
-                    schemaProperty.Value.IsFormatTypeOfDateTime() ||
-                    schemaProperty.Value.IsFormatTypeOfTime() ||
-                    schemaProperty.Value.IsFormatTypeOfTimestamp())
-                {
-                    relevantSchemas.Add(schemaProperty);
-                }
-            }
 
             var relativeRef = RenderRelativeRef(endpointMethodMetadata);
             foreach (var testForSchema in relevantSchemas)
@@ -329,7 +326,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 sb.AppendLine();
                 sb.AppendLine(8, "[Theory]");
                 sb.AppendLine(8, $"[InlineData(\"{relativeRef}\")]");
-                sb.AppendLine(8, $"public async System.Threading.Tasks.Task {endpointMethodMetadata.MethodName}_BadRequest_InBody_{testForSchema.Key.EnsureFirstCharacterToUpper()}(string relativeRef)");
+                sb.AppendLine(8, $"public async {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName.FullModelName)} {endpointMethodMetadata.MethodName}_BadRequest_InBody_{testForSchema.Key.EnsureFirstCharacterToUpper()}(string relativeRef)");
                 sb.AppendLine(8, "{");
                 sb.AppendLine(12, "// Arrange");
                 if (headerRequiredParameters.Count > 0)
@@ -345,7 +342,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                     sb.AppendLine();
                 }
 
-                AppendNewRequestModelForBadRequest(12, sb, endpointMethodMetadata, contractReturnTypeName.Item1, testForSchema);
+                AppendNewRequestModelForBadRequest(12, sb, endpointMethodMetadata, contractReturnTypeName.StatusCode, testForSchema);
                 sb.AppendLine();
                 AppendActHttpClientOperation(12, sb, endpointMethodMetadata.HttpOperation, true, true);
                 sb.AppendLine();
@@ -360,7 +357,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             StringBuilder sb,
             EndpointMethodMetadata endpointMethodMetadata,
             HttpStatusCode testExpectedHttpStatusCode,
-            Tuple<HttpStatusCode, string, OpenApiSchema> contractReturnTypeName)
+            ResponseTypeNameAndItemSchema contractReturnTypeName)
         {
             sb.AppendLine(8, "{");
             if (endpointMethodMetadata.HasContractParameterRequestBody())
@@ -380,7 +377,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                     sb.AppendLine();
                 }
 
-                AppendNewRequestModel(12, sb, endpointMethodMetadata, contractReturnTypeName.Item1);
+                AppendNewRequestModel(12, sb, endpointMethodMetadata, contractReturnTypeName.StatusCode);
                 sb.AppendLine();
                 AppendActHttpClientOperation(12, sb, endpointMethodMetadata.HttpOperation, true);
             }
@@ -395,10 +392,11 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             sb.AppendLine(12, $"response.StatusCode.Should().Be(HttpStatusCode.{testExpectedHttpStatusCode});");
 
             if (testExpectedHttpStatusCode == HttpStatusCode.OK &&
-                !string.IsNullOrEmpty(contractReturnTypeName.Item2) &&
-                contractReturnTypeName.Item3 != null && !contractReturnTypeName.Item3.IsSimpleDataType())
+                !string.IsNullOrEmpty(contractReturnTypeName.FullModelName) &&
+                contractReturnTypeName.Schema != null &&
+                !contractReturnTypeName.Schema.IsSimpleDataType())
             {
-                var modelName = OpenApiDocumentSchemaModelNameHelper.EnsureModelNameWithNamespaceIfNeeded(endpointMethodMetadata, contractReturnTypeName.Item2);
+                var modelName = OpenApiDocumentSchemaModelNameHelper.EnsureModelNameWithNamespaceIfNeeded(endpointMethodMetadata, contractReturnTypeName.FullModelName);
 
                 sb.AppendLine();
                 sb.AppendLine(12, $"var responseData = await response.DeserializeAsync<{modelName}>(JsonSerializerOptions);");

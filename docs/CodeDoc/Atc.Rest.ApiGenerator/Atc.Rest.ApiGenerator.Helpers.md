@@ -26,29 +26,6 @@ void CollectMissingContractModelFromOperationSchemaMappings(ApiProjectOptions pr
 <br />
 
 
-## ContractHelper
-
-```csharp
-public static class ContractHelper
-```
-
-### Static Methods
-
-
-#### HasList
-
-```csharp
-bool HasList(string typeName)
-```
-#### HasSharedResponseContract
-
-```csharp
-bool HasSharedResponseContract(OpenApiDocument document, List<ApiOperationSchemaMap> operationSchemaMappings, string focusOnSegmentName)
-```
-
-<br />
-
-
 ## GenerateAtcCodingRulesHelper
 
 ```csharp
@@ -249,6 +226,11 @@ public static class OpenApiDocumentSchemaModelNameHelper
 ### Static Methods
 
 
+#### ContainsModelNameTask
+
+```csharp
+bool ContainsModelNameTask(string modelName)
+```
 #### EnsureModelNameWithNamespaceIfNeeded
 
 ```csharp
@@ -259,10 +241,25 @@ string EnsureModelNameWithNamespaceIfNeeded(EndpointMethodMetadata endpointMetho
 ```csharp
 string EnsureModelNameWithNamespaceIfNeeded(string projectName, string segmentName, string modelName, bool isShared = False)
 ```
+#### EnsureTaskNameWithNamespaceIfNeeded
+
+```csharp
+string EnsureTaskNameWithNamespaceIfNeeded(string contractReturnTypeName)
+```
 #### GetRawModelName
 
 ```csharp
 string GetRawModelName(string modelName)
+```
+#### HasList
+
+```csharp
+bool HasList(string typeName)
+```
+#### HasSharedResponseContract
+
+```csharp
+bool HasSharedResponseContract(OpenApiDocument document, List<ApiOperationSchemaMap> operationSchemaMappings, string focusOnSegmentName)
 ```
 
 <br />
