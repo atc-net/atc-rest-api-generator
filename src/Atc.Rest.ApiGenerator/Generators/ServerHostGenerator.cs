@@ -899,7 +899,8 @@ namespace Atc.Rest.ApiGenerator.Generators
                                                 SyntaxFactory.InitializerExpression(
                                                     SyntaxKind.ObjectInitializerExpression,
                                                     SyntaxFactory.SeparatedList<ExpressionSyntax>(
-                                                        new SyntaxNodeOrToken[]{
+                                                        new SyntaxNodeOrToken[]
+                                                        {
                                                             SyntaxFactory.AssignmentExpression(
                                                                 SyntaxKind.SimpleAssignmentExpression,
                                                                 SyntaxFactory.IdentifierName("Headers"),
