@@ -15,6 +15,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             EndpointMethodMetadata endpointMethodMetadata,
             KeyValuePair<string, OpenApiSchema> schemaProperty,
             string dataType,
+            bool isRequired,
             string propertyValueGenerated,
             int countString,
             bool asJsonBody,
@@ -22,6 +23,34 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             TrailingCharType trailingChar)
         {
             var propertyName = schemaProperty.Key.EnsureFirstCharacterToUpper();
+
+            var isHandled = false;
+            if (isRequired &&
+                OpenApiDataTypeConstants.Array.Equals(dataType, StringComparison.OrdinalIgnoreCase))
+            {
+                var itemsDataType = schemaProperty.Value.Items.GetDataType()!;
+                switch (itemsDataType)
+                {
+                    case OpenApiDataTypeConstants.String:
+                        sb.AppendLine(indentSpaces + 4, $"{propertyName} = new List<string>() {{ \"Hallo\", \"World\" }},");
+                        isHandled = true;
+                        break;
+                    case OpenApiDataTypeConstants.Integer:
+                        sb.AppendLine(indentSpaces + 4, $"{propertyName} = new List<int>() {{ 42, 17 }},");
+                        isHandled = true;
+                        break;
+                    case OpenApiDataTypeConstants.Boolean:
+                        sb.AppendLine(indentSpaces + 4, $"{propertyName} = new List<bool>() {{ true, false, true }},");
+                        isHandled = true;
+                        break;
+                }
+            }
+
+            if (isHandled)
+            {
+                return countString;
+            }
+
             switch (dataType)
             {
                 case "string":
@@ -58,6 +87,16 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                     break;
                 case "Uri":
                     AppendModelSimplePropertyForUri(
+                        indentSpaces,
+                        sb,
+                        propertyName,
+                        propertyValueGenerated,
+                        asJsonBody,
+                        depthHierarchy,
+                        trailingChar);
+                    break;
+                case "IFormFile":
+                    AppendModelSimplePropertyForIFormFile(
                         indentSpaces,
                         sb,
                         propertyName,
@@ -228,6 +267,27 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 sb.AppendLine(
                     indentSpaces + 4,
                     $"{propertyName} = new Uri(\"{propertyValueGenerated}\"),");
+            }
+        }
+
+        public static void AppendModelSimplePropertyForIFormFile(
+            int indentSpaces,
+            StringBuilder sb,
+            string propertyName,
+            string propertyValueGenerated,
+            bool asJsonBody,
+            int depthHierarchy,
+            TrailingCharType trailingChar)
+        {
+            if (asJsonBody)
+            {
+                throw new NotSupportedException("IFormFile");
+            }
+            else
+            {
+                sb.AppendLine(
+                    indentSpaces + 4,
+                    $"{propertyName} = GetTestFile(),");
             }
         }
 

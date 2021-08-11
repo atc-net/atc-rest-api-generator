@@ -175,6 +175,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                                        schemaProperty.Key.Equals(badPropertySchema.Value.Key, StringComparison.Ordinal);
 
                 string dataType = schemaProperty.Value.GetDataType();
+
                 string propertyValueGenerated = GenerateXunitTestPartsHelper.PropertyValueGenerator(schemaProperty, endpointMethodMetadata.ComponentsSchemas, useForBadRequest, itemNumber, null);
 
                 if ("NEW-INSTANCE-LIST".Equals(propertyValueGenerated, StringComparison.Ordinal))
@@ -215,6 +216,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                         endpointMethodMetadata,
                         schemaProperty,
                         dataType,
+                        schema.Required.Contains(schemaProperty.Key),
                         propertyValueGenerated,
                         countString,
                         asJsonBody,
