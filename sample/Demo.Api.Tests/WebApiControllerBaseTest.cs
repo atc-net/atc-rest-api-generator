@@ -1,8 +1,10 @@
-﻿using System.CodeDom.Compiler;
+using System.CodeDom.Compiler;
+using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Xunit;
 
@@ -31,5 +33,17 @@ namespace Demo.Api.Tests
 
         protected static StringContent ToJson(object data) => new StringContent(JsonSerializer.Serialize(data, JsonSerializerOptions), Encoding.UTF8, "application/json");
         protected static StringContent Json(string data) => new StringContent(data, Encoding.UTF8, "application/json");
+
+        protected static IFormFile GetTestFile()
+        {
+            var readAllBytes = Encoding.UTF8.GetBytes("HelloWorld");
+            var stream = new MemoryStream(readAllBytes);
+
+            return new FormFile(stream, 0, stream.Length, null, "dummy.txt")
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = "application/octet-stream",
+            };
+        }
     }
 }

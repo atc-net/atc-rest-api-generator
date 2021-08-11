@@ -100,7 +100,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                 }
             }
 
-            var requestSchema = ApiOperation.RequestBody?.Content?.GetSchema();
+            var requestSchema = ApiOperation.RequestBody?.Content?.GetSchemaByFirstMediaType();
+
             if (ApiOperation.RequestBody != null && requestSchema != null)
             {
                 var requestBodyType = requestSchema.Reference != null
@@ -125,8 +126,9 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                 }
                 else
                 {
-                    propertyDeclaration = ApiProjectOptions.IsForClient
-                        ? SyntaxPropertyDeclarationFactory.CreateAuto(
+                    if (ApiProjectOptions.IsForClient)
+                    {
+                        propertyDeclaration = SyntaxPropertyDeclarationFactory.CreateAuto(
                                 parameterLocation: null,
                                 isNullable: false,
                                 isRequired: true,
@@ -134,19 +136,28 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                                 NameConstants.Request,
                                 ApiProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
                                 initializer: null)
-                            .AddValidationAttribute(new RequiredAttribute())
-                            .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForParameter(ApiOperation.RequestBody))
-                        : SyntaxPropertyDeclarationFactory.CreateAuto(
-                                parameterLocation: null,
-                                isNullable: false,
-                                isRequired: true,
-                                requestBodyType,
-                                NameConstants.Request,
-                                ApiProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
-                                initializer: null)
-                            .AddFromBodyAttribute()
                             .AddValidationAttribute(new RequiredAttribute())
                             .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForParameter(ApiOperation.RequestBody));
+                    }
+                    else
+                    {
+                        propertyDeclaration = SyntaxPropertyDeclarationFactory.CreateAuto(
+                                parameterLocation: null,
+                                isNullable: false,
+                                isRequired: true,
+                                requestBodyType,
+                                NameConstants.Request,
+                                ApiProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
+                                initializer: null);
+
+                        propertyDeclaration = requestSchema.HasAnyPropertiesFormatTypeBinary()
+                            ? propertyDeclaration.AddFromFormAttribute()
+                            : propertyDeclaration.AddFromBodyAttribute();
+
+                        propertyDeclaration = propertyDeclaration
+                            .AddValidationAttribute(new RequiredAttribute())
+                            .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForParameter(ApiOperation.RequestBody));
+                    }
                 }
 
                 classDeclaration = classDeclaration.AddMembers(propertyDeclaration);

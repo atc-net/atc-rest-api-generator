@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Atc.Data.Models;
 using Atc.Rest.ApiGenerator.CLI.Commands.Options;

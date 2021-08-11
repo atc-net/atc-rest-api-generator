@@ -98,6 +98,11 @@ namespace Atc.Rest.ApiGenerator.Factories
                 list.Add("System.ComponentModel.DataAnnotations");
             }
 
+            if (schemasToCheck.HasFormatTypeFromAspNetCoreHttpNamespace())
+            {
+                list.Add("Microsoft.AspNetCore.Http");
+            }
+
             return list.ToArray();
         }
 
@@ -152,7 +157,7 @@ namespace Atc.Rest.ApiGenerator.Factories
                 }
             }
 
-            var contentSchema = requestBody?.Content?.GetSchema();
+            var contentSchema = requestBody?.Content?.GetSchemaByFirstMediaType();
             if (contentSchema != null)
             {
                 if (list.All(x => x != "System") &&

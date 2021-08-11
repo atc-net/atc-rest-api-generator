@@ -447,7 +447,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             EndpointMethodMetadata endpointMethodMetadata,
             HttpStatusCode httpStatusCode)
         {
-            var schema = endpointMethodMetadata.ContractParameter?.ApiOperation.RequestBody?.Content.GetSchema();
+            var schema = endpointMethodMetadata.ContractParameter?.ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
             if (schema == null)
             {
                 return;

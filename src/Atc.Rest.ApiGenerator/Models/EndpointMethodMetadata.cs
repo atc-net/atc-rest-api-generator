@@ -119,13 +119,13 @@ namespace Atc.Rest.ApiGenerator.Models
 
         public bool IsContractParameterRequestBodyUsed()
         {
-            var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchema();
+            var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
             return schema is not null;
         }
 
         public bool IsContractParameterRequestBodyUsingSystemCollectionGenericNamespace()
         {
-            var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchema();
+            var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
             return schema is not null &&
                    (schema.IsArrayReferenceTypeDeclared() ||
                    schema.HasAnyPropertiesFormatFromSystemCollectionGenericNamespace(ComponentsSchemas));
@@ -133,14 +133,14 @@ namespace Atc.Rest.ApiGenerator.Models
 
         public bool IsContractParameterRequestBodyUsingSystemNamespace()
         {
-            var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchema();
+            var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
             return schema is not null &&
                    schema.HasAnyPropertiesFormatTypeFromSystemNamespace(ComponentsSchemas);
         }
 
         public bool IsContractParameterRequestBodyUsingStringBuilder()
         {
-            var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchema();
+            var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
             if (schema is null)
             {
                 return false;
@@ -164,12 +164,8 @@ namespace Atc.Rest.ApiGenerator.Models
 
         public bool HasContractParameterRequestBody()
         {
-            return ContractParameter?.ApiOperation.RequestBody?.Content.GetSchema() is not null;
-        }
-
-        public bool HasContractParameterRequiredHeader()
-        {
-            return GetHeaderRequiredParameters().Count > 0;
+            var openApiSchema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
+            return openApiSchema is not null;
         }
 
         public bool HasContractReturnTypeAsComplexAndNotSharedModel()
@@ -199,9 +195,6 @@ namespace Atc.Rest.ApiGenerator.Models
             return returnType.FullModelName.StartsWith(Microsoft.OpenApi.Models.NameConstants.List, StringComparison.Ordinal) ||
                    returnType.FullModelName.StartsWith(Microsoft.OpenApi.Models.NameConstants.Pagination, StringComparison.Ordinal);
         }
-
-        public bool HasContractReturnTypeNamesOnlySimpleTypes()
-            => ContractReturnTypeNames.All(x => x.Schema is null);
 
         public bool HasSharedModelOrEnumInContractParameterRequestBody()
         {
