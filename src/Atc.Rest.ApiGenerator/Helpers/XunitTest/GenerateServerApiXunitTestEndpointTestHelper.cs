@@ -38,6 +38,11 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             AppendNamespaceAndClassStart(sb, hostProjectOptions, endpointMethodMetadata);
             AppendConstructor(sb, endpointMethodMetadata);
             AppendTestMethod(sb, endpointMethodMetadata);
+            if (endpointMethodMetadata.IsContractParameterRequestBodyUsedAsMultipartFormData())
+            {
+                AppendGetMultipartFormDataContentRequestMethod(sb, endpointMethodMetadata);
+            }
+
             AppendNamespaceAndClassEnd(sb);
             return SaveFile(sb, hostProjectOptions, endpointMethodMetadata);
         }
@@ -166,6 +171,11 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             else if (endpointMethodMetadata.HasContractReturnTypeAsComplexAsListOrPagination())
             {
                 systemList.Add("System.Net.Http");
+            }
+
+            if (endpointMethodMetadata.IsContractParameterRequestBodyUsedAsMultipartFormData())
+            {
+                list.Add("Microsoft.AspNetCore.Http");
             }
 
             return systemList
@@ -379,7 +389,19 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
 
                 AppendNewRequestModel(12, sb, endpointMethodMetadata, contractReturnTypeName.StatusCode);
                 sb.AppendLine();
-                AppendActHttpClientOperation(12, sb, endpointMethodMetadata.HttpOperation, true);
+
+                if (endpointMethodMetadata.IsContractParameterRequestBodyUsedAsMultipartFormData())
+                {
+                    AppendActHttpClientOperationForMultipartFormData(
+                        12,
+                        sb,
+                        endpointMethodMetadata.HttpOperation,
+                        endpointMethodMetadata.GetRequestBodyModelName()!);
+                }
+                else
+                {
+                    AppendActHttpClientOperation(12, sb, endpointMethodMetadata.HttpOperation, true);
+                }
             }
             else
             {
@@ -439,6 +461,68 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 default:
                     throw new ArgumentOutOfRangeException(nameof(operationType), operationType, null);
             }
+        }
+
+        private static void AppendActHttpClientOperationForMultipartFormData(int indentSpaces, StringBuilder sb, OperationType operationType, string modelName)
+        {
+            sb.AppendLine(indentSpaces, "// Act");
+            switch (operationType)
+            {
+                case OperationType.Post:
+                    sb.AppendLine(12, $"var response = await HttpClient.{operationType}Async(relativeRef, await GetMultipartFormDataContentFrom{modelName}(data, \"dummy.txt\"));");
+                    break;
+                case OperationType.Get:
+                case OperationType.Delete:
+                case OperationType.Put:
+                case OperationType.Patch:
+                    throw new NotSupportedException("Append-MultipartFormData");
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(operationType), operationType, null);
+            }
+        }
+
+        private static void AppendGetMultipartFormDataContentRequestMethod(StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata)
+        {
+            var modelSchema = endpointMethodMetadata.GetRequestBodySchema()!;
+            var modelName = modelSchema.GetModelName();
+
+            sb.AppendLine();
+            sb.AppendLine(8, $"private async Task<MultipartFormDataContent> GetMultipartFormDataContentFrom{modelName}(");
+            sb.AppendLine(12, $"{modelName} request,");
+            sb.AppendLine(12, "string fileName)");
+            sb.AppendLine(8, "{");
+            sb.AppendLine(12, "var formDataContent = new MultipartFormDataContent();");
+            foreach (var schemaProperty in modelSchema.Properties)
+            {
+                var propertyName = schemaProperty.Key.EnsureFirstCharacterToUpper();
+                if (schemaProperty.Value.IsFormatTypeOfBinary())
+                {
+                    sb.AppendLine(12, $"if (request.{propertyName} is not null)");
+                    sb.AppendLine(12, "{");
+                    sb.AppendLine(16, $"var bytesContent = new ByteArrayContent(await request.{propertyName}.GetBytes());");
+                    sb.AppendLine(16, $"formDataContent.Add(bytesContent, \"Request.{propertyName}\", fileName);");
+                    sb.AppendLine(12, "}");
+                    sb.AppendLine();
+                }
+                else if (schemaProperty.Value.IsDataTypeOfList())
+                {
+                    sb.AppendLine(12, $"if (request.{propertyName} is not null && request.{propertyName}.Count > 0)");
+                    sb.AppendLine(12, "{");
+                    sb.AppendLine(16, $"foreach (var item in request.{propertyName})");
+                    sb.AppendLine(16, "{");
+                    sb.AppendLine(20, $"formDataContent.Add(new StringContent(item), \"Request.{propertyName}\");");
+                    sb.AppendLine(16, "}");
+                    sb.AppendLine(12, "}");
+                    sb.AppendLine();
+                }
+                else
+                {
+                    sb.AppendLine(12, $"formDataContent.Add(new StringContent(request.{propertyName}), \"Request.{propertyName}\");");
+                }
+            }
+
+            sb.AppendLine(12, "return formDataContent;");
+            sb.AppendLine(8, "}");
         }
 
         private static void AppendNewRequestModel(
