@@ -298,6 +298,20 @@ namespace Atc.Rest.ApiGenerator.Models
             return relevantSchemas;
         }
 
+        public OpenApiSchema? GetRequestBodySchema()
+        {
+            return ContractParameter?
+                .ApiOperation
+                .RequestBody?
+                .Content
+                .GetSchemaByFirstMediaType();
+        }
+
+        public string? GetRequestBodyModelName()
+        {
+            return GetRequestBodySchema()?.GetModelName();
+        }
+
         public bool Contains(string value)
         {
             if (value.EndsWith("Tests", StringComparison.Ordinal))
