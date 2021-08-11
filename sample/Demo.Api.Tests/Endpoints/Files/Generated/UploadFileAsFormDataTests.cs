@@ -1,8 +1,8 @@
-using System.CodeDom.Compiler;
+﻿using System.CodeDom.Compiler;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Demo.Api.Generated.Contracts.Files;
 using FluentAssertions;
@@ -32,33 +32,30 @@ namespace Demo.Api.Tests.Endpoints.Files.Generated
             {
                 ItemName = "Hallo1",
                 File = GetTestFile(),
-                Items = new List<string>() { "1", "2" },
+                Items = new List<string>() { "Hallo", "World" },
             };
 
             // Act
-            var fileBytes = await data.File.GetBytes();
-            var multipartFormDataContentFromRequest = await GetMultipartFormDataContentFromRequest(data, "test.html");
-            var response = await HttpClient.PostAsync(relativeRef, multipartFormDataContentFromRequest);
+            var response = await HttpClient.PostAsync(relativeRef, await GetMultipartFormDataContentFromFileAsFormDataRequest(data, "dummy.txt"));
 
             // Assert
             response.Should().NotBeNull();
             response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
 
-        private async Task<MultipartFormDataContent> GetMultipartFormDataContentFromRequest(
+        private async Task<MultipartFormDataContent> GetMultipartFormDataContentFromFileAsFormDataRequest(
             FileAsFormDataRequest request,
             string fileName)
         {
             var formDataContent = new MultipartFormDataContent();
+            formDataContent.Add(new StringContent(request.ItemName), "Request.ItemName");
             if (request.File is not null)
             {
                 var bytesContent = new ByteArrayContent(await request.File.GetBytes());
                 formDataContent.Add(bytesContent, "Request.File", fileName);
             }
 
-            formDataContent.Add(new StringContent(request.ItemName), "Request.ItemName");
-
-            if (request.Items.Any())
+            if (request.Items is not null && request.Items.Count > 0)
             {
                 foreach (var item in request.Items)
                 {
