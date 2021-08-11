@@ -123,6 +123,17 @@ namespace Atc.Rest.ApiGenerator.Models
             return schema is not null;
         }
 
+        public bool IsContractParameterRequestBodyUsedAsMultipartFormData()
+        {
+            if (!IsContractParameterRequestBodyUsed())
+            {
+                return false;
+            }
+
+            var pair = ContractParameter?.ApiOperation.RequestBody?.Content.First();
+            return "multipart/form-data".Equals(pair!.Value.Key, StringComparison.Ordinal);
+        }
+
         public bool IsContractParameterRequestBodyUsingSystemCollectionGenericNamespace()
         {
             var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
