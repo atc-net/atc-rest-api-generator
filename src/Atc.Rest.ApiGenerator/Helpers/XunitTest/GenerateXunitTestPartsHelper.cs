@@ -28,21 +28,43 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             if (isRequired &&
                 OpenApiDataTypeConstants.Array.Equals(dataType, StringComparison.OrdinalIgnoreCase))
             {
-                var itemsDataType = schemaProperty.Value.Items.GetDataType()!;
-                switch (itemsDataType)
+                var itemsDataType = schemaProperty.Value.Items.GetDataType();
+
+                if (asJsonBody)
                 {
-                    case OpenApiDataTypeConstants.String:
-                        sb.AppendLine(indentSpaces + 4, $"{propertyName} = new List<string>() {{ \"Hallo\", \"World\" }},");
-                        isHandled = true;
-                        break;
-                    case OpenApiDataTypeConstants.Integer:
-                        sb.AppendLine(indentSpaces + 4, $"{propertyName} = new List<int>() {{ 42, 17 }},");
-                        isHandled = true;
-                        break;
-                    case OpenApiDataTypeConstants.Boolean:
-                        sb.AppendLine(indentSpaces + 4, $"{propertyName} = new List<bool>() {{ true, false, true }},");
-                        isHandled = true;
-                        break;
+                    switch (itemsDataType)
+                    {
+                        case OpenApiDataTypeConstants.String:
+                            sb.AppendLine(indentSpaces, $"sb.AppendLine(\"  {WrapInQuotes(propertyName)}: [ {WrapInQuotes("Hallo")}, {WrapInQuotes("World")} ]{GenerateCodeHelper.GetTrailingChar(trailingChar)}\");");
+                            isHandled = true;
+                            break;
+                        case OpenApiDataTypeConstants.Integer:
+                            sb.AppendLine(indentSpaces, $"sb.AppendLine(\"  {WrapInQuotes(propertyName)}: [ 42, 17 ]{GenerateCodeHelper.GetTrailingChar(trailingChar)}\");");
+                            isHandled = true;
+                            break;
+                        case OpenApiDataTypeConstants.Boolean:
+                            sb.AppendLine(indentSpaces, $"sb.AppendLine(\"  {WrapInQuotes(propertyName)}: [ true, false, true ]{GenerateCodeHelper.GetTrailingChar(trailingChar)}\");");
+                            isHandled = true;
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (itemsDataType)
+                    {
+                        case OpenApiDataTypeConstants.String:
+                            sb.AppendLine(indentSpaces + 4, $"{propertyName} = new List<string>() {{ \"Hallo\", \"World\" }},");
+                            isHandled = true;
+                            break;
+                        case OpenApiDataTypeConstants.Integer:
+                            sb.AppendLine(indentSpaces + 4, $"{propertyName} = new List<int>() {{ 42, 17 }},");
+                            isHandled = true;
+                            break;
+                        case OpenApiDataTypeConstants.Boolean:
+                            sb.AppendLine(indentSpaces + 4, $"{propertyName} = new List<bool>() {{ true, false, true }},");
+                            isHandled = true;
+                            break;
+                    }
                 }
             }
 
@@ -381,7 +403,12 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             return trailingCharForProperty;
         }
 
-        public static string PropertyValueGenerator(KeyValuePair<string, OpenApiSchema> schema, IDictionary<string, OpenApiSchema> componentsSchemas, bool useForBadRequest, int itemNumber, string? customValue)
+        public static string PropertyValueGenerator(
+            KeyValuePair<string, OpenApiSchema> schema,
+            IDictionary<string, OpenApiSchema> componentsSchemas,
+            bool useForBadRequest,
+            int itemNumber,
+            string? customValue)
         {
             var name = schema.Key.EnsureFirstCharacterToUpper();
 
