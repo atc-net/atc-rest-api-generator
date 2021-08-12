@@ -394,8 +394,9 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
 
                 var queryParameters = endpointMethodMetadata.GetQueryParameters();
 
-                if (!AppendNewRequestModel(12, sb, endpointMethodMetadata, contractReturnTypeName.StatusCode) &&
-                    (headerParameters.Count > 0 || queryParameters.Count > 0))
+                var isModelCreated = AppendNewRequestModel(12, sb, endpointMethodMetadata, contractReturnTypeName.StatusCode);
+
+                if (endpointMethodMetadata.HttpOperation != OperationType.Get && !isModelCreated && (headerParameters.Count > 0 || queryParameters.Count > 0))
                 {
                     sb.AppendLine(12, "var data = \"{ }\";");
                 }
