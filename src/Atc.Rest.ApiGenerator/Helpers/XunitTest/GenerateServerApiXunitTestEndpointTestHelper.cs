@@ -313,7 +313,12 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 return;
             }
 
-            var schema = endpointMethodMetadata.ContractParameter?.ApiOperation.RequestBody?.Content.GetSchema();
+            if (endpointMethodMetadata.IsContractParameterRequestBodyUsedAsMultipartFormData())
+            {
+                return;
+            }
+
+            var schema = endpointMethodMetadata.ContractParameter?.ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
             if (schema == null)
             {
                 return;
