@@ -349,10 +349,6 @@ namespace Atc.Rest.ApiGenerator.Helpers
                             logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation17, $"RequestBody is defined with inline model for operation '{value.OperationId}' - only reference to component-schemas are supported."));
                         }
                     }
-                    else if (operationType is OperationType.Post or OperationType.Put or OperationType.Patch)
-                    {
-                        logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation19, $"Operation is defined without parameters or RequestBody for operation '{value.OperationId}'."));
-                    }
 
                     foreach (var parameter in value.Parameters)
                     {

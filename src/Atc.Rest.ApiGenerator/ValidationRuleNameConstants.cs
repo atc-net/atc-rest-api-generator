@@ -34,7 +34,6 @@ namespace Atc.Rest.ApiGenerator
         public const string Operation16 = "CR0216";
         public const string Operation17 = "CR0217";
         public const string Operation18 = "CR0218";
-        public const string Operation19 = "CR0219";
 
         public const string Path01 = "CR0301";
 
