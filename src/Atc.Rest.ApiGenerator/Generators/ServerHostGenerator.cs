@@ -812,8 +812,7 @@ namespace Atc.Rest.ApiGenerator.Generators
                                         SyntaxFactory.TriviaList())))
                             .WithVariables(
                                 SyntaxFactory.SingletonSeparatedList(
-                                    SyntaxFactory.VariableDeclarator(
-                                        SyntaxFactory.Identifier("bytes"))
+                                    SyntaxFactory.VariableDeclarator(SyntaxFactory.Identifier("bytes"))
                                     .WithInitializer(
                                         SyntaxFactory.EqualsValueClause(
                                             SyntaxFactory.InvocationExpression(
@@ -839,8 +838,7 @@ namespace Atc.Rest.ApiGenerator.Generators
                                         SyntaxFactory.TriviaList())))
                             .WithVariables(
                                 SyntaxFactory.SingletonSeparatedList(
-                                    SyntaxFactory.VariableDeclarator(
-                                        SyntaxFactory.Identifier("stream"))
+                                    SyntaxFactory.VariableDeclarator(SyntaxFactory.Identifier("stream"))
                                     .WithInitializer(
                                         SyntaxFactory.EqualsValueClause(
                                             SyntaxFactory.ObjectCreationExpression(
@@ -872,8 +870,7 @@ namespace Atc.Rest.ApiGenerator.Generators
                                                     SyntaxFactory.SeparatedList<ArgumentSyntax>(
                                                         new SyntaxNodeOrToken[]
                                                         {
-                                                            SyntaxFactory.Argument(
-                                                                SyntaxFactory.IdentifierName("stream")),
+                                                            SyntaxFactory.Argument(SyntaxFactory.IdentifierName("stream")),
                                                             SyntaxTokenFactory.Comma(),
                                                             SyntaxFactory.Argument(
                                                                 SyntaxFactory.LiteralExpression(
@@ -887,8 +884,7 @@ namespace Atc.Rest.ApiGenerator.Generators
                                                                     SyntaxFactory.IdentifierName("Length"))),
                                                             SyntaxTokenFactory.Comma(),
                                                             SyntaxFactory.Argument(
-                                                                SyntaxFactory.LiteralExpression(
-                                                                    SyntaxKind.NullLiteralExpression)),
+                                                                SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)),
                                                             SyntaxTokenFactory.Comma(),
                                                             SyntaxFactory.Argument(
                                                                 SyntaxFactory.LiteralExpression(
@@ -904,10 +900,8 @@ namespace Atc.Rest.ApiGenerator.Generators
                                                             SyntaxFactory.AssignmentExpression(
                                                                 SyntaxKind.SimpleAssignmentExpression,
                                                                 SyntaxFactory.IdentifierName("Headers"),
-                                                                SyntaxFactory.ObjectCreationExpression(
-                                                                    SyntaxFactory.IdentifierName("HeaderDictionary"))
-                                                                .WithArgumentList(
-                                                                    SyntaxFactory.ArgumentList())),
+                                                                SyntaxFactory.ObjectCreationExpression(SyntaxFactory.IdentifierName("HeaderDictionary"))
+                                                                .WithArgumentList(SyntaxFactory.ArgumentList())),
                                                             SyntaxTokenFactory.Comma(),
                                                             SyntaxFactory.AssignmentExpression(
                                                                 SyntaxKind.SimpleAssignmentExpression,
