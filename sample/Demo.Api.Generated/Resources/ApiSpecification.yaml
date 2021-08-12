@@ -259,6 +259,11 @@ paths:
       responses:
         '200':
           description: OK
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: name
     post:
       summary: Set name of account
       description: Set name of account
@@ -266,6 +271,11 @@ paths:
       responses:
         '200':
           description: OK
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAccountRequest'
     parameters:
       - name: accountId
         in: path
@@ -851,3 +861,9 @@ components:
       required:
         - itemName
         - items
+    UpdateAccountRequest:
+      title: UpdateAccountRequest
+      type: object
+      properties:
+        name:
+          type: string
