@@ -375,7 +375,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             ResponseTypeNameAndItemSchema contractReturnTypeName)
         {
             sb.AppendLine(8, "{");
-            if (endpointMethodMetadata.HasContractParameterRequestBody())
+            if (endpointMethodMetadata.HasContractParameterAnyParametersOrRequestBody())
             {
                 sb.AppendLine(12, "// Arrange");
                 var headerParameters = endpointMethodMetadata.GetHeaderParameters();
@@ -392,7 +392,11 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                     sb.AppendLine();
                 }
 
-                AppendNewRequestModel(12, sb, endpointMethodMetadata, contractReturnTypeName.StatusCode);
+                if (!AppendNewRequestModel(12, sb, endpointMethodMetadata, contractReturnTypeName.StatusCode) && headerParameters.Count > 0)
+                {
+                    sb.AppendLine(12, "var data = \"{ }\";");
+                }
+
                 sb.AppendLine();
 
                 if (endpointMethodMetadata.IsContractParameterRequestBodyUsedAsMultipartFormData())
@@ -530,7 +534,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             sb.AppendLine(8, "}");
         }
 
-        private static void AppendNewRequestModel(
+        private static bool AppendNewRequestModel(
             int indentSpaces,
             StringBuilder sb,
             EndpointMethodMetadata endpointMethodMetadata,
@@ -539,7 +543,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             var schema = endpointMethodMetadata.ContractParameter?.ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
             if (schema == null)
             {
-                return;
+                return false;
             }
 
             GenerateXunitTestHelper.AppendVarDataModelOrListOfModel(
@@ -549,6 +553,8 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 schema,
                 httpStatusCode,
                 SchemaMapLocatedAreaType.RequestBody);
+
+            return true;
         }
 
         private static void AppendNewRequestModelForBadRequest(

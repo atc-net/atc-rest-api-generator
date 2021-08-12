@@ -40,6 +40,8 @@ namespace Demo.Api.Tests.Endpoints.Orders.Generated
         [InlineData("/api/v1/orders?pageSize=42&pageIndex=42&queryString=Hallo&queryStringArray=Hallo&queryStringArray=Hallo1&queryStringArray=Hallo2&continuationToken=Hallo")]
         public async Task GetOrders_Ok(string relativeRef)
         {
+            // Arrange
+
             // Act
             var response = await HttpClient.GetAsync(relativeRef);
 
@@ -55,6 +57,8 @@ namespace Demo.Api.Tests.Endpoints.Orders.Generated
         [InlineData("/api/v1/orders?pageSize=@")]
         public async Task GetOrders_BadRequest_InQuery(string relativeRef)
         {
+            // Arrange
+
             // Act
             var response = await HttpClient.GetAsync(relativeRef);
 

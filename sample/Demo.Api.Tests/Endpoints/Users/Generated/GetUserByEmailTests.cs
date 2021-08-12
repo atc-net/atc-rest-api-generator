@@ -24,6 +24,8 @@ namespace Demo.Api.Tests.Endpoints.Users.Generated
         [InlineData("/api/v1/users/email?email=john.doe@example.com")]
         public async Task GetUserByEmail_Ok(string relativeRef)
         {
+            // Arrange
+
             // Act
             var response = await HttpClient.GetAsync(relativeRef);
 
@@ -39,6 +41,8 @@ namespace Demo.Api.Tests.Endpoints.Users.Generated
         [InlineData("/api/v1/users/email?email=john.doe_example.com")]
         public async Task GetUserByEmail_BadRequest_InQuery(string relativeRef)
         {
+            // Arrange
+
             // Act
             var response = await HttpClient.GetAsync(relativeRef);
 

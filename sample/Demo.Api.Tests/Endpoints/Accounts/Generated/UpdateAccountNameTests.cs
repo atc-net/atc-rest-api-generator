@@ -22,8 +22,13 @@ namespace Demo.Api.Tests.Endpoints.Accounts.Generated
         [InlineData("/api/v1/accounts/77a33260-0000-441f-ba60-b0a833803fab/name")]
         public async Task UpdateAccountName_Ok(string relativeRef)
         {
+            // Arrange
+            HttpClient.DefaultRequestHeaders.Add("name", "Hallo");
+
+            var data = "{ }";
+
             // Act
-            var response = await HttpClient.PutAsync(relativeRef, ToJson(new {}));
+            var response = await HttpClient.PutAsync(relativeRef, ToJson(data));
 
             // Assert
             response.Should().NotBeNull();
@@ -34,8 +39,13 @@ namespace Demo.Api.Tests.Endpoints.Accounts.Generated
         [InlineData("/api/v1/accounts/x77a33260-0000-441f-ba60-b0a833803fab/name")]
         public async Task UpdateAccountName_BadRequest_InPath(string relativeRef)
         {
+            // Arrange
+            HttpClient.DefaultRequestHeaders.Add("name", "Hallo");
+
+            var data = "{ }";
+
             // Act
-            var response = await HttpClient.PutAsync(relativeRef, ToJson(new {}));
+            var response = await HttpClient.PutAsync(relativeRef, ToJson(data));
 
             // Assert
             response.Should().NotBeNull();
