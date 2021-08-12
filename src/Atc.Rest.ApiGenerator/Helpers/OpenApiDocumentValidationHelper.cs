@@ -214,21 +214,21 @@ namespace Atc.Rest.ApiGenerator.Helpers
                             if (!operationValue.OperationId.StartsWith("Get", StringComparison.OrdinalIgnoreCase) &&
                                 !operationValue.OperationId.StartsWith("List", StringComparison.OrdinalIgnoreCase))
                             {
-                                logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation03, $"OperationId should start with the prefix 'Get' or 'List' for operation '{operationValue.GetOperationName()}'."));
+                                logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation03, $"OperationId should start with the prefix 'Get' or 'List' for operation '{operationValue.OperationId}'."));
                             }
                         }
                         else if (operationKey == OperationType.Post)
                         {
                             if (operationValue.OperationId.StartsWith("Delete", StringComparison.OrdinalIgnoreCase))
                             {
-                                logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation04, $"OperationId should not start with the prefix 'Delete' for operation '{operationValue.GetOperationName()}'."));
+                                logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation04, $"OperationId should not start with the prefix 'Delete' for operation '{operationValue.OperationId}'."));
                             }
                         }
                         else if (operationKey == OperationType.Put)
                         {
                             if (!operationValue.OperationId.StartsWith("Update", StringComparison.OrdinalIgnoreCase))
                             {
-                                logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation05, $"OperationId should start with the prefix 'Update' for operation '{operationValue.GetOperationName()}'."));
+                                logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation05, $"OperationId should start with the prefix 'Update' for operation '{operationValue.OperationId}'."));
                             }
                         }
                         else if (operationKey == OperationType.Patch)
@@ -236,14 +236,14 @@ namespace Atc.Rest.ApiGenerator.Helpers
                             if (!operationValue.OperationId.StartsWith("Patch", StringComparison.OrdinalIgnoreCase) &&
                                 !operationValue.OperationId.StartsWith("Update", StringComparison.OrdinalIgnoreCase))
                             {
-                                logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation06, $"OperationId should start with the prefix 'Update' for operation '{operationValue.GetOperationName()}'."));
+                                logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation06, $"OperationId should start with the prefix 'Update' for operation '{operationValue.OperationId}'."));
                             }
                         }
                         else if (operationKey == OperationType.Delete &&
                                  !operationValue.OperationId.StartsWith("Delete", StringComparison.OrdinalIgnoreCase) &&
                                  !operationValue.OperationId.StartsWith("Remove", StringComparison.OrdinalIgnoreCase))
                         {
-                            logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation07, $"OperationId should start with the prefix 'Delete' for operation '{operationValue.GetOperationName()}'."));
+                            logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation07, $"OperationId should start with the prefix 'Delete' for operation '{operationValue.OperationId}'."));
                         }
                     }
                 }
@@ -258,14 +258,14 @@ namespace Atc.Rest.ApiGenerator.Helpers
                         {
                             if (!IsModelOfTypeArray(responseModelSchema, modelSchemas))
                             {
-                                logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation08, $"OperationId '{operationValue.GetOperationName()}' is not singular - Response model is defined as a single item."));
+                                logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation08, $"OperationId '{operationValue.OperationId}' is not singular - Response model is defined as a single item."));
                             }
                         }
                         else
                         {
                             if (IsModelOfTypeArray(responseModelSchema, modelSchemas))
                             {
-                                logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation09, $"OperationId '{operationValue.GetOperationName()}' is not pluralized - Response model is defined as an array."));
+                                logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation09, $"OperationId '{operationValue.OperationId}' is not pluralized - Response model is defined as an array."));
                             }
                         }
                     }
@@ -326,28 +326,32 @@ namespace Atc.Rest.ApiGenerator.Helpers
 
             foreach (var path in paths)
             {
-                foreach (var (_, value) in path.Operations)
+                foreach (var (operationType, value) in path.Operations)
                 {
                     var httpStatusCodes = value.Responses.GetHttpStatusCodes();
                     if (httpStatusCodes.Contains(HttpStatusCode.BadRequest) &&
                         !value.HasParametersOrRequestBody() && !path.HasParameters())
                     {
-                        logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation10, $"Contains BadRequest response type for operation '{value.GetOperationName()}', but has no parameters."));
+                        logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation10, $"Contains BadRequest response type for operation '{value.OperationId}', but has no parameters."));
                     }
 
                     if (httpStatusCodes.Contains(HttpStatusCode.OK) && httpStatusCodes.Contains(HttpStatusCode.Created))
                     {
                         // We do not support both 200 and 201, since our ActionResult - implicit operators only supports 1 type.
-                        logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation18, $"The operation '{value.GetOperationName()}' contains both 200 and 201, which is not supported."));
+                        logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation18, $"The operation '{value.OperationId}' contains both 200 and 201, which is not supported."));
                     }
 
                     if (value.HasParametersOrRequestBody())
                     {
-                        var schema = value.RequestBody?.Content.GetSchema();
+                        var schema = value.RequestBody?.Content.GetSchemaByFirstMediaType();
                         if (schema != null && string.IsNullOrEmpty(schema.GetModelName()))
                         {
-                            logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation17, $"RequestBody is defined without model for operation '{value.GetOperationName()}'."));
+                            logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation17, $"RequestBody is defined with inline model for operation '{value.OperationId}' - only reference to component-schemas are supported."));
                         }
+                    }
+                    else if (operationType is OperationType.Post or OperationType.Put or OperationType.Patch)
+                    {
+                        logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation19, $"Operation is defined without parameters or RequestBody for operation '{value.OperationId}'."));
                     }
 
                     foreach (var parameter in value.Parameters)
@@ -357,12 +361,12 @@ namespace Atc.Rest.ApiGenerator.Helpers
                             case ParameterLocation.Path:
                                 if (!parameter.Required)
                                 {
-                                    logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation15, $"Path parameter '{parameter.Name}' for operation '{value.GetOperationName()}' is missing required=true."));
+                                    logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation15, $"Path parameter '{parameter.Name}' for operation '{value.OperationId}' is missing required=true."));
                                 }
 
                                 if (parameter.Schema.Nullable)
                                 {
-                                    logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation16, $"Path parameter '{parameter.Name}' for operation '{value.GetOperationName()}' must not be nullable."));
+                                    logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation16, $"Path parameter '{parameter.Name}' for operation '{value.OperationId}' must not be nullable."));
                                 }
 
                                 break;
