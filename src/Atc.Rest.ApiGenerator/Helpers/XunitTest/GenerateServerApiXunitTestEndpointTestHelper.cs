@@ -553,7 +553,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             HttpStatusCode httpStatusCode,
             KeyValuePair<string, OpenApiSchema> badPropertySchema)
         {
-            var schema = endpointMethodMetadata.ContractParameter?.ApiOperation.RequestBody?.Content.GetSchema();
+            var schema = endpointMethodMetadata.ContractParameter?.ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
             if (schema == null)
             {
                 return;

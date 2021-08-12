@@ -209,7 +209,7 @@ namespace Atc.Rest.ApiGenerator.Models
 
         public bool HasSharedModelOrEnumInContractParameterRequestBody()
         {
-            var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchema();
+            var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
             return schema is not null &&
                    schema.HasAnySharedModelOrEnum(OperationSchemaMappings);
         }
