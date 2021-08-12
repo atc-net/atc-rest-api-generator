@@ -179,6 +179,17 @@ namespace Atc.Rest.ApiGenerator.Models
             return openApiSchema is not null;
         }
 
+        public bool HasContractParameterAnyParametersOrRequestBody()
+        {
+            var apiOperationParameters = ContractParameter?.ApiOperation.Parameters;
+            if (apiOperationParameters is not null && apiOperationParameters.Any())
+            {
+                return true;
+            }
+
+            return HasContractParameterRequestBody();
+        }
+
         public bool HasContractReturnTypeAsComplexAndNotSharedModel()
         {
             var returnType = ContractReturnTypeNames.FirstOrDefault(x => x.StatusCode == HttpStatusCode.OK);
