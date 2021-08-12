@@ -37,7 +37,7 @@ namespace Atc.Rest.ApiGenerator.CLI.Commands
             var projectPrefixName = CommandLineApplicationHelper.GetProjectPrefixName(configCmd);
             var clientFolderName = CommandLineApplicationHelper.GetClientFolderName(configCmd);
             var outputPath = CommandLineApplicationHelper.GetOutputPath(configCmd);
-            bool excludeEndpointGeneration = CommandLineApplicationHelper.GetExcludeEndpointGeneration(configCmd);
+            var excludeEndpointGeneration = CommandLineApplicationHelper.GetExcludeEndpointGeneration(configCmd);
 
             logItems.AddRange(GenerateHelper.GenerateServerCSharpClient(
                 projectPrefixName,
