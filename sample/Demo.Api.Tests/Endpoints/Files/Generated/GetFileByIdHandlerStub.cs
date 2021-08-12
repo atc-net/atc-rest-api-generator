@@ -16,7 +16,8 @@ namespace Demo.Api.Tests.Endpoints.Files.Generated
     {
         public Task<GetFileByIdResult> ExecuteAsync(GetFileByIdParameters parameters, CancellationToken cancellationToken = default)
         {
-            return Task.FromResult(GetFileByIdResult.Ok("Hallo world"));
+            var bytes = System.Text.Encoding.UTF8.GetBytes("Hello World");
+            return Task.FromResult(GetFileByIdResult.Ok(bytes, "dummy.txt"));
         }
     }
 }

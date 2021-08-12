@@ -28,8 +28,8 @@ namespace Demo.Api.Generated.Endpoints
         /// Operation: GetFileById.
         /// Area: Files.
         /// </summary>
-        [HttpGet("form-data/{id}")]
-        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(byte[]), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         public Task<ActionResult> GetFileByIdAsync(GetFileByIdParameters parameters, [FromServices] IGetFileByIdHandler handler, CancellationToken cancellationToken)
         {

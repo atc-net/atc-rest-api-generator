@@ -88,29 +88,37 @@ namespace Microsoft.OpenApi.Models
                     case HttpStatusCode.Created:
                         var dataType = modelName;
 
-                        if (string.IsNullOrEmpty(modelName))
+                        var useBinaryResponse = responses.IsSchemaUsingBinaryFormatForOkResponse();
+                        if (useBinaryResponse)
                         {
-                            var schema = responses.GetSchemaForStatusCode(httpStatusCode);
-                            if (schema != null && schema.IsSimpleDataType())
-                            {
-                                dataType = schema.GetDataType();
-                            }
-                            else
-                            {
-                                dataType = "string";
-                            }
-                        }
-
-                        if (isList)
-                        {
-                            typeResponseName = $"{NameConstants.List}<{dataType}>";
+                            typeResponseName = "byte[]";
                         }
                         else
                         {
-                            var isPagination = responses.IsSchemaTypePaginationForStatusCode(httpStatusCode);
-                            typeResponseName = isPagination
-                                ? $"{NameConstants.Pagination}<{dataType}>"
-                                : dataType;
+                            if (string.IsNullOrEmpty(modelName))
+                            {
+                                var schema = responses.GetSchemaForStatusCode(httpStatusCode);
+                                if (schema != null && schema.IsSimpleDataType())
+                                {
+                                    dataType = schema.GetDataType();
+                                }
+                                else
+                                {
+                                    dataType = "string";
+                                }
+                            }
+
+                            if (isList)
+                            {
+                                typeResponseName = $"{NameConstants.List}<{dataType}>";
+                            }
+                            else
+                            {
+                                var isPagination = responses.IsSchemaTypePaginationForStatusCode(httpStatusCode);
+                                typeResponseName = isPagination
+                                    ? $"{NameConstants.Pagination}<{dataType}>"
+                                    : dataType;
+                            }
                         }
 
                         break;

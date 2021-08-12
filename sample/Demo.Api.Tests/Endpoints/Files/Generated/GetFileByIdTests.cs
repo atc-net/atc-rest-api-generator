@@ -19,7 +19,7 @@ namespace Demo.Api.Tests.Endpoints.Files.Generated
         public GetFileByIdTests(WebApiStartupFactory fixture) : base(fixture) { }
 
         [Theory]
-        [InlineData("/api/v1/files/form-data/27")]
+        [InlineData("/api/v1/files/27")]
         public async Task GetFileById_Ok(string relativeRef)
         {
             // Act

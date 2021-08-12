@@ -1,4 +1,5 @@
-﻿using System.Threading;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Demo.Api.Generated.Contracts.Files;
 
@@ -22,11 +23,11 @@ namespace Demo.Domain.Handlers.Files
             return InvokeExecuteAsync(parameters, cancellationToken);
         }
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         private async Task<GetFileByIdResult> InvokeExecuteAsync(GetFileByIdParameters parameters, CancellationToken cancellationToken)
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
-            throw new System.NotImplementedException();
+            await Task.Delay(10, cancellationToken);
+            var bytes = Encoding.UTF8.GetBytes(parameters.Id);
+            return GetFileByIdResult.Ok(bytes, "dummy.txt");
         }
     }
 }
