@@ -144,9 +144,6 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
         {
             var result = new List<MemberDeclarationSyntax>();
 
-            // Add Field
-            ////result.Add(CreateActionResultField());
-
             // Add Constructor
             result.AddRange(CreateConstructor(className, "result"));
 
