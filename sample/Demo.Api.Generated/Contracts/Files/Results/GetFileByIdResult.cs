@@ -25,16 +25,11 @@ namespace Demo.Api.Generated.Contracts.Files
         /// <summary>
         /// 200 - Ok response.
         /// </summary>
-        public static GetFileByIdResult Ok(string? message = null) => new GetFileByIdResult(ResultFactory.CreateContentResult(HttpStatusCode.OK, message));
+        public static GetFileByIdResult Ok(byte[] bytes, string fileName) => new GetFileByIdResult(ResultFactory.CreateFileContentResult(bytes, fileName));
 
         /// <summary>
         /// 404 - NotFound response.
         /// </summary>
         public static GetFileByIdResult NotFound(string? message = null) => new GetFileByIdResult(ResultFactory.CreateContentResultWithProblemDetails(HttpStatusCode.NotFound, message));
-
-        /// <summary>
-        /// Performs an implicit conversion from GetFileByIdResult to ActionResult.
-        /// </summary>
-        public static implicit operator GetFileByIdResult(string response) => Ok(response);
     }
 }

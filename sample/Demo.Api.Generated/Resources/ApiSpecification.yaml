@@ -401,7 +401,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/EventArgs'
-  '/files/form-data/{id}':
+  '/files/{id}':
     parameters:
       - name: id
         in: path

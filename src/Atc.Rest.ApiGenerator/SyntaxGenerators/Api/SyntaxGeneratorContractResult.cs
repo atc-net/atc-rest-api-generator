@@ -144,9 +144,6 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
         {
             var result = new List<MemberDeclarationSyntax>();
 
-            // Add Field
-            ////result.Add(CreateActionResultField());
-
             // Add Constructor
             result.AddRange(CreateConstructor(className, "result"));
 
@@ -208,6 +205,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                 var isList = ApiOperation.Responses.IsSchemaTypeArrayForStatusCode(httpStatusCode);
                 var modelName = ApiOperation.Responses.GetModelNameForStatusCode(httpStatusCode);
                 var schema = ApiOperation.Responses.GetSchemaForStatusCode(httpStatusCode);
+
                 var useProblemDetails = ApiOperation.Responses.IsSchemaTypeProblemDetailsForStatusCode(httpStatusCode);
                 if (!useProblemDetails && ApiProjectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody)
                 {
@@ -218,52 +216,60 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                 switch (httpStatusCode)
                 {
                     case HttpStatusCode.OK:
-                        var isPagination = ApiOperation.Responses.IsSchemaTypePaginationForStatusCode(httpStatusCode);
-                        if (useProblemDetails)
+                        var useBinaryResponse = ApiOperation.Responses.IsSchemaUsingBinaryFormatForOkResponse();
+                        if (useBinaryResponse)
                         {
-                            if (string.IsNullOrEmpty(modelName))
-                            {
-                                if (schema != null && schema.IsSimpleDataType())
-                                {
-                                    methodDeclaration = CreateTypeRequestObjectResult(className, httpStatusCode.ToNormalizedString(), schema.GetDataType(), "response", isList, isPagination);
-                                }
-                                else
-                                {
-                                    methodDeclaration = CreateTypeRequestWithSpecifiedResultFactoryMethodWithMessageAllowNull("CreateContentResult", className, httpStatusCode);
-                                    HasCreateContentResult = true;
-                                }
-                            }
-                            else
-                            {
-                                methodDeclaration = CreateTypeRequestObjectResult(className, httpStatusCode.ToNormalizedString(), modelName, "response", isList, isPagination);
-                            }
+                            methodDeclaration = CreateTypeRequestFileContentResult(className, httpStatusCode.ToNormalizedString());
                         }
                         else
                         {
-                            if (string.IsNullOrEmpty(modelName))
+                            var isPagination = ApiOperation.Responses.IsSchemaTypePaginationForStatusCode(httpStatusCode);
+                            if (useProblemDetails)
                             {
-                                if (schema != null && schema.IsSimpleDataType())
+                                if (string.IsNullOrEmpty(modelName))
                                 {
-                                    methodDeclaration = CreateTypeRequestObjectResult(className, httpStatusCode.ToNormalizedString(), schema.GetDataType(), "response", isList, isPagination);
-                                }
-                                else if (schema != null && string.Equals(schema.Type, OpenApiDataTypeConstants.Array, StringComparison.Ordinal))
-                                {
-                                    methodDeclaration = CreateTypeRequestObjectResult(
-                                        className,
-                                        httpStatusCode.ToNormalizedString(),
-                                        schema.Items.GetDataType(),
-                                        "response",
-                                        isList,
-                                        isPagination);
+                                    if (schema != null && schema.IsSimpleDataType())
+                                    {
+                                        methodDeclaration = CreateTypeRequestObjectResult(className, httpStatusCode.ToNormalizedString(), schema.GetDataType(), "response", isList, isPagination);
+                                    }
+                                    else
+                                    {
+                                        methodDeclaration = CreateTypeRequestWithSpecifiedResultFactoryMethodWithMessageAllowNull("CreateContentResult", className, httpStatusCode);
+                                        HasCreateContentResult = true;
+                                    }
                                 }
                                 else
                                 {
-                                    methodDeclaration = CreateTypeRequestWithMessageAllowNull(className, httpStatusCode, nameof(OkObjectResult));
+                                    methodDeclaration = CreateTypeRequestObjectResult(className, httpStatusCode.ToNormalizedString(), modelName, "response", isList, isPagination);
                                 }
                             }
                             else
                             {
-                                methodDeclaration = CreateTypeRequestObjectResult(className, httpStatusCode.ToNormalizedString(), modelName, "response", isList, isPagination);
+                                if (string.IsNullOrEmpty(modelName))
+                                {
+                                    if (schema != null && schema.IsSimpleDataType())
+                                    {
+                                        methodDeclaration = CreateTypeRequestObjectResult(className, httpStatusCode.ToNormalizedString(), schema.GetDataType(), "response", isList, isPagination);
+                                    }
+                                    else if (schema != null && string.Equals(schema.Type, OpenApiDataTypeConstants.Array, StringComparison.Ordinal))
+                                    {
+                                        methodDeclaration = CreateTypeRequestObjectResult(
+                                            className,
+                                            httpStatusCode.ToNormalizedString(),
+                                            schema.Items.GetDataType(),
+                                            "response",
+                                            isList,
+                                            isPagination);
+                                    }
+                                    else
+                                    {
+                                        methodDeclaration = CreateTypeRequestWithMessageAllowNull(className, httpStatusCode, nameof(OkObjectResult));
+                                    }
+                                }
+                                else
+                                {
+                                    methodDeclaration = CreateTypeRequestObjectResult(className, httpStatusCode.ToNormalizedString(), modelName, "response", isList, isPagination);
+                                }
                             }
                         }
 
@@ -604,6 +610,55 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                 .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
         }
 
+        private static MethodDeclarationSyntax CreateTypeRequestFileContentResult(string className, string methodName)
+        {
+            return SyntaxFactory.MethodDeclaration(
+                    SyntaxFactory.IdentifierName(className),
+                    SyntaxFactory.Identifier(methodName))
+                .WithModifiers(SyntaxTokenListFactory.PublicStaticKeyword())
+                .WithParameterList(
+                    SyntaxFactory.ParameterList(
+                        SyntaxFactory.SeparatedList<ParameterSyntax>(
+                            new SyntaxNodeOrToken[]
+                            {
+                                SyntaxFactory.Parameter(SyntaxFactory.Identifier("bytes"))
+                                .WithType(
+                                    SyntaxFactory.ArrayType(
+                                        SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.ByteKeyword)))
+                                    .WithRankSpecifiers(
+                                        SyntaxFactory.SingletonList(
+                                            SyntaxFactory.ArrayRankSpecifier(
+                                                SyntaxFactory.SingletonSeparatedList<ExpressionSyntax>(
+                                                    SyntaxFactory.OmittedArraySizeExpression()))))),
+                                SyntaxTokenFactory.Comma(),
+                                SyntaxFactory.Parameter(SyntaxFactory.Identifier("fileName"))
+                                .WithType(SyntaxFactory.PredefinedType(SyntaxTokenFactory.StringKeyword())),
+                            })))
+                .WithExpressionBody(
+                    SyntaxFactory.ArrowExpressionClause(
+                        SyntaxFactory.ObjectCreationExpression(
+                            SyntaxFactory.IdentifierName("GetFileByIdResult"))
+                        .WithArgumentList(
+                            SyntaxFactory.ArgumentList(
+                                SyntaxFactory.SingletonSeparatedList(
+                                    SyntaxFactory.Argument(
+                                        SyntaxFactory.InvocationExpression(
+                                            SyntaxFactory.MemberAccessExpression(
+                                                SyntaxKind.SimpleMemberAccessExpression,
+                                                SyntaxFactory.IdentifierName("ResultFactory"),
+                                                SyntaxFactory.IdentifierName("CreateFileContentResult")))
+                                        .WithArgumentList(
+                                            SyntaxFactory.ArgumentList(
+                                                SyntaxFactory.SeparatedList<ArgumentSyntax>(
+                                                    new SyntaxNodeOrToken[]
+                                                    {
+                                                        SyntaxFactory.Argument(SyntaxFactory.IdentifierName("bytes")),
+                                                        SyntaxTokenFactory.Comma(),
+                                                        SyntaxFactory.Argument(SyntaxFactory.IdentifierName("fileName")),
+                                                    })))))))))
+                .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
+        }
+
         private static ConversionOperatorDeclarationSyntax? CreateImplicitOperator(string className, OpenApiResponses responses)
         {
             var httpStatusCodes = responses.GetHttpStatusCodes();
@@ -631,6 +686,12 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
 
             var modelName = responses.GetModelNameForStatusCode(httpStatusCode);
             if (string.IsNullOrEmpty(modelName) && httpStatusCode == HttpStatusCode.Created)
+            {
+                return null;
+            }
+
+            var useBinaryResponse = responses.IsSchemaUsingBinaryFormatForOkResponse();
+            if (useBinaryResponse)
             {
                 return null;
             }
