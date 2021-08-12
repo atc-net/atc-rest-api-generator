@@ -30,6 +30,7 @@ namespace Demo.Api.Generated.Endpoints
         /// </summary>
         [HttpPut("{accountId}/name")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public Task<ActionResult> UpdateAccountNameAsync(UpdateAccountNameParameters parameters, [FromServices] IUpdateAccountNameHandler handler, CancellationToken cancellationToken)
         {
             if (handler is null)
@@ -47,6 +48,7 @@ namespace Demo.Api.Generated.Endpoints
         /// </summary>
         [HttpPost("{accountId}/name")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public Task<ActionResult> SetAccountNameAsync(SetAccountNameParameters parameters, [FromServices] ISetAccountNameHandler handler, CancellationToken cancellationToken)
         {
             if (handler is null)

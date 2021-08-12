@@ -117,7 +117,7 @@ public static class GenerateXunitTestPartsHelper
 #### AppendModelSimpleProperty
 
 ```csharp
-int AppendModelSimpleProperty(int indentSpaces, StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata, KeyValuePair<string, OpenApiSchema> schemaProperty, string dataType, string propertyValueGenerated, int countString, bool asJsonBody, int depthHierarchy, TrailingCharType trailingChar)
+int AppendModelSimpleProperty(int indentSpaces, StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata, KeyValuePair<string, OpenApiSchema> schemaProperty, string dataType, bool isRequired, string propertyValueGenerated, int countString, bool asJsonBody, int depthHierarchy, TrailingCharType trailingChar)
 ```
 #### AppendModelSimplePropertyDefault
 
@@ -133,6 +133,11 @@ void AppendModelSimplePropertyForDateTimeOffset(int indentSpaces, StringBuilder 
 
 ```csharp
 void AppendModelSimplePropertyForGuid(int indentSpaces, StringBuilder sb, string propertyName, string propertyValueGenerated, bool asJsonBody, int depthHierarchy, TrailingCharType trailingChar)
+```
+#### AppendModelSimplePropertyForIFormFile
+
+```csharp
+void AppendModelSimplePropertyForIFormFile(int indentSpaces, StringBuilder sb, string propertyName, string propertyValueGenerated, bool asJsonBody, int depthHierarchy, TrailingCharType trailingChar)
 ```
 #### AppendModelSimplePropertyForString
 

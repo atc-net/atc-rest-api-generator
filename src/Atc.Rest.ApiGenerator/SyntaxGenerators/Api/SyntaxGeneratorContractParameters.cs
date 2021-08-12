@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Atc.Rest.ApiGenerator.Models;
 using Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces;

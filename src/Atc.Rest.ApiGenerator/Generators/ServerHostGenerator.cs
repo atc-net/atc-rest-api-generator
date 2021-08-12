@@ -793,6 +793,127 @@ namespace Atc.Rest.ApiGenerator.Generators
                 .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
         }
 
+        private static MemberDeclarationSyntax CreateWebApiControllerBaseTestGetTestFile()
+        {
+            return SyntaxFactory.MethodDeclaration(
+                    SyntaxFactory.IdentifierName("IFormFile"),
+                    SyntaxFactory.Identifier("GetTestFile"))
+                .WithModifiers(SyntaxTokenListFactory.ProtectedStaticKeyword())
+                .WithBody(
+                    SyntaxFactory.Block(
+                        SyntaxFactory.LocalDeclarationStatement(
+                            SyntaxFactory.VariableDeclaration(
+                                SyntaxFactory.IdentifierName(
+                                    SyntaxFactory.Identifier(
+                                        SyntaxFactory.TriviaList(),
+                                        SyntaxKind.VarKeyword,
+                                        "var",
+                                        "var",
+                                        SyntaxFactory.TriviaList())))
+                            .WithVariables(
+                                SyntaxFactory.SingletonSeparatedList(
+                                    SyntaxFactory.VariableDeclarator(SyntaxFactory.Identifier("bytes"))
+                                    .WithInitializer(
+                                        SyntaxFactory.EqualsValueClause(
+                                            SyntaxFactory.InvocationExpression(
+                                                SyntaxFactory.MemberAccessExpression(
+                                                    SyntaxKind.SimpleMemberAccessExpression,
+                                                    SyntaxMemberAccessExpressionFactory.Create("UTF8", "Encoding"),
+                                                    SyntaxFactory.IdentifierName("GetBytes")))
+                                            .WithArgumentList(
+                                                SyntaxFactory.ArgumentList(
+                                                    SyntaxFactory.SingletonSeparatedList(
+                                                        SyntaxFactory.Argument(
+                                                            SyntaxFactory.LiteralExpression(
+                                                                SyntaxKind.StringLiteralExpression,
+                                                                SyntaxFactory.Literal("Hello World"))))))))))),
+                        SyntaxFactory.LocalDeclarationStatement(
+                            SyntaxFactory.VariableDeclaration(
+                                SyntaxFactory.IdentifierName(
+                                    SyntaxFactory.Identifier(
+                                        SyntaxFactory.TriviaList(),
+                                        SyntaxKind.VarKeyword,
+                                        "var",
+                                        "var",
+                                        SyntaxFactory.TriviaList())))
+                            .WithVariables(
+                                SyntaxFactory.SingletonSeparatedList(
+                                    SyntaxFactory.VariableDeclarator(SyntaxFactory.Identifier("stream"))
+                                    .WithInitializer(
+                                        SyntaxFactory.EqualsValueClause(
+                                            SyntaxFactory.ObjectCreationExpression(
+                                                SyntaxFactory.IdentifierName("MemoryStream"))
+                                            .WithArgumentList(
+                                                SyntaxFactory.ArgumentList(
+                                                    SyntaxFactory.SingletonSeparatedList(
+                                                        SyntaxFactory.Argument(
+                                                            SyntaxFactory.IdentifierName("bytes")))))))))),
+                        SyntaxFactory.LocalDeclarationStatement(
+                            SyntaxFactory.VariableDeclaration(
+                                SyntaxFactory.IdentifierName(
+                                    SyntaxFactory.Identifier(
+                                        SyntaxFactory.TriviaList(),
+                                        SyntaxKind.VarKeyword,
+                                        "var",
+                                        "var",
+                                        SyntaxFactory.TriviaList())))
+                            .WithVariables(
+                                SyntaxFactory.SingletonSeparatedList(
+                                    SyntaxFactory.VariableDeclarator(
+                                        SyntaxFactory.Identifier("formFile"))
+                                    .WithInitializer(
+                                        SyntaxFactory.EqualsValueClause(
+                                            SyntaxFactory.ObjectCreationExpression(
+                                                SyntaxFactory.IdentifierName("FormFile"))
+                                            .WithArgumentList(
+                                                SyntaxFactory.ArgumentList(
+                                                    SyntaxFactory.SeparatedList<ArgumentSyntax>(
+                                                        new SyntaxNodeOrToken[]
+                                                        {
+                                                            SyntaxFactory.Argument(SyntaxFactory.IdentifierName("stream")),
+                                                            SyntaxTokenFactory.Comma(),
+                                                            SyntaxFactory.Argument(
+                                                                SyntaxFactory.LiteralExpression(
+                                                                    SyntaxKind.NumericLiteralExpression,
+                                                                    SyntaxFactory.Literal(0))),
+                                                            SyntaxTokenFactory.Comma(),
+                                                            SyntaxFactory.Argument(
+                                                                SyntaxFactory.MemberAccessExpression(
+                                                                    SyntaxKind.SimpleMemberAccessExpression,
+                                                                    SyntaxFactory.IdentifierName("stream"),
+                                                                    SyntaxFactory.IdentifierName("Length"))),
+                                                            SyntaxTokenFactory.Comma(),
+                                                            SyntaxFactory.Argument(
+                                                                SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)),
+                                                            SyntaxTokenFactory.Comma(),
+                                                            SyntaxFactory.Argument(
+                                                                SyntaxFactory.LiteralExpression(
+                                                                    SyntaxKind.StringLiteralExpression,
+                                                                    SyntaxFactory.Literal("dummy.txt"))),
+                                                        })))
+                                            .WithInitializer(
+                                                SyntaxFactory.InitializerExpression(
+                                                    SyntaxKind.ObjectInitializerExpression,
+                                                    SyntaxFactory.SeparatedList<ExpressionSyntax>(
+                                                        new SyntaxNodeOrToken[]
+                                                        {
+                                                            SyntaxFactory.AssignmentExpression(
+                                                                SyntaxKind.SimpleAssignmentExpression,
+                                                                SyntaxFactory.IdentifierName("Headers"),
+                                                                SyntaxFactory.ObjectCreationExpression(SyntaxFactory.IdentifierName("HeaderDictionary"))
+                                                                .WithArgumentList(SyntaxFactory.ArgumentList())),
+                                                            SyntaxTokenFactory.Comma(),
+                                                            SyntaxFactory.AssignmentExpression(
+                                                                SyntaxKind.SimpleAssignmentExpression,
+                                                                SyntaxFactory.IdentifierName("ContentType"),
+                                                                SyntaxFactory.LiteralExpression(
+                                                                    SyntaxKind.StringLiteralExpression,
+                                                                    SyntaxFactory.Literal("application/octet-stream"))),
+                                                            SyntaxTokenFactory.Comma(),
+                                                        })))))))),
+                        SyntaxFactory.ReturnStatement(SyntaxFactory.IdentifierName("formFile"))));
+        }
+
         [SuppressMessage("Critical Code Smell", "S3776:Cognitive Complexity of methods should not be too high", Justification = "OK.")]
         private List<LogKeyValueItem> ScaffoldTest()
         {
@@ -1070,6 +1191,7 @@ namespace Atc.Rest.ApiGenerator.Generators
             var memberDeclarationConstructor = CreateWebApiControllerBaseTestConstructor();
             var memberDeclarationToJson = CreateWebApiControllerBaseTestToJson();
             var memberDeclarationJson = CreateWebApiControllerBaseTestJson();
+            var memberDeclarationGetTestFile = CreateWebApiControllerBaseTestGetTestFile();
 
             // Add member to class
             classDeclaration = classDeclaration.AddMembers(memberDeclarationFactory);
@@ -1079,6 +1201,7 @@ namespace Atc.Rest.ApiGenerator.Generators
             classDeclaration = classDeclaration.AddMembers(memberDeclarationConstructor);
             classDeclaration = classDeclaration.AddMembers(memberDeclarationToJson);
             classDeclaration = classDeclaration.AddMembers(memberDeclarationJson);
+            classDeclaration = classDeclaration.AddMembers(memberDeclarationGetTestFile);
 
             // Add class to namespace
             @namespace = @namespace.AddMembers(classDeclaration);

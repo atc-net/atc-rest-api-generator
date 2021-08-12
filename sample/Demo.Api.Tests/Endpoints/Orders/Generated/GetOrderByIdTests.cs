@@ -24,6 +24,8 @@ namespace Demo.Api.Tests.Endpoints.Orders.Generated
         [InlineData("/api/v1/orders/77a33260-0000-441f-ba60-b0a833803fab")]
         public async Task GetOrderById_Ok(string relativeRef)
         {
+            // Arrange
+
             // Act
             var response = await HttpClient.GetAsync(relativeRef);
 
@@ -39,6 +41,8 @@ namespace Demo.Api.Tests.Endpoints.Orders.Generated
         [InlineData("/api/v1/orders/x77a33260-0000-441f-ba60-b0a833803fab")]
         public async Task GetOrderById_BadRequest_InPath(string relativeRef)
         {
+            // Arrange
+
             // Act
             var response = await HttpClient.GetAsync(relativeRef);
 

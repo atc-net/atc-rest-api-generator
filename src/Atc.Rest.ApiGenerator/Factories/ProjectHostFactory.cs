@@ -43,10 +43,12 @@ namespace Atc.Rest.ApiGenerator.Factories
             var list = new List<string>
             {
                 "System.CodeDom.Compiler",
+                "System.IO",
                 "System.Net.Http",
                 "System.Text",
                 "System.Text.Json",
                 "System.Text.Json.Serialization",
+                "Microsoft.AspNetCore.Http",
                 "Microsoft.Extensions.Configuration",
                 "Xunit",
             };

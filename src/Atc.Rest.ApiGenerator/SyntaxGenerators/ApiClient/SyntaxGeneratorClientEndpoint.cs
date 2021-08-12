@@ -376,7 +376,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                     result.AddRange(ApiOperation.Parameters.Select(CreateExpressionStatementForWithMethodParameterMap));
                 }
 
-                var bodySchema = ApiOperation.RequestBody?.Content.GetSchema();
+                var bodySchema = ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
                 if (bodySchema != null)
                 {
                     result.Add(CreateExpressionStatementForWithMethodBodyMap());

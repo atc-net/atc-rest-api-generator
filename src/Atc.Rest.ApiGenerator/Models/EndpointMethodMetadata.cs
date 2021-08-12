@@ -119,13 +119,24 @@ namespace Atc.Rest.ApiGenerator.Models
 
         public bool IsContractParameterRequestBodyUsed()
         {
-            var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchema();
+            var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
             return schema is not null;
+        }
+
+        public bool IsContractParameterRequestBodyUsedAsMultipartFormData()
+        {
+            if (!IsContractParameterRequestBodyUsed())
+            {
+                return false;
+            }
+
+            var pair = ContractParameter?.ApiOperation.RequestBody?.Content.First();
+            return "multipart/form-data".Equals(pair!.Value.Key, StringComparison.Ordinal);
         }
 
         public bool IsContractParameterRequestBodyUsingSystemCollectionGenericNamespace()
         {
-            var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchema();
+            var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
             return schema is not null &&
                    (schema.IsArrayReferenceTypeDeclared() ||
                    schema.HasAnyPropertiesFormatFromSystemCollectionGenericNamespace(ComponentsSchemas));
@@ -133,14 +144,14 @@ namespace Atc.Rest.ApiGenerator.Models
 
         public bool IsContractParameterRequestBodyUsingSystemNamespace()
         {
-            var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchema();
+            var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
             return schema is not null &&
                    schema.HasAnyPropertiesFormatTypeFromSystemNamespace(ComponentsSchemas);
         }
 
         public bool IsContractParameterRequestBodyUsingStringBuilder()
         {
-            var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchema();
+            var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
             if (schema is null)
             {
                 return false;
@@ -164,12 +175,19 @@ namespace Atc.Rest.ApiGenerator.Models
 
         public bool HasContractParameterRequestBody()
         {
-            return ContractParameter?.ApiOperation.RequestBody?.Content.GetSchema() is not null;
+            var openApiSchema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
+            return openApiSchema is not null;
         }
 
-        public bool HasContractParameterRequiredHeader()
+        public bool HasContractParameterAnyParametersOrRequestBody()
         {
-            return GetHeaderRequiredParameters().Count > 0;
+            var apiOperationParameters = ContractParameter?.ApiOperation.Parameters;
+            if (apiOperationParameters is not null && apiOperationParameters.Any())
+            {
+                return true;
+            }
+
+            return HasContractParameterRequestBody();
         }
 
         public bool HasContractReturnTypeAsComplexAndNotSharedModel()
@@ -200,12 +218,9 @@ namespace Atc.Rest.ApiGenerator.Models
                    returnType.FullModelName.StartsWith(Microsoft.OpenApi.Models.NameConstants.Pagination, StringComparison.Ordinal);
         }
 
-        public bool HasContractReturnTypeNamesOnlySimpleTypes()
-            => ContractReturnTypeNames.All(x => x.Schema is null);
-
         public bool HasSharedModelOrEnumInContractParameterRequestBody()
         {
-            var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchema();
+            var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
             return schema is not null &&
                    schema.HasAnySharedModelOrEnum(OperationSchemaMappings);
         }
@@ -292,6 +307,20 @@ namespace Atc.Rest.ApiGenerator.Models
             }
 
             return relevantSchemas;
+        }
+
+        public OpenApiSchema? GetRequestBodySchema()
+        {
+            return ContractParameter?
+                .ApiOperation
+                .RequestBody?
+                .Content
+                .GetSchemaByFirstMediaType();
+        }
+
+        public string? GetRequestBodyModelName()
+        {
+            return GetRequestBodySchema()?.GetModelName();
         }
 
         public bool Contains(string value)

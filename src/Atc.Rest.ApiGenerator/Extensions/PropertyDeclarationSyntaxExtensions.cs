@@ -84,6 +84,16 @@ namespace Atc.CodeAnalysis.CSharp
             return propertyDeclaration.AddAttributeLists(SyntaxAttributeListFactory.Create(nameof(FromBodyAttribute)));
         }
 
+        public static PropertyDeclarationSyntax AddFromFormAttribute(this PropertyDeclarationSyntax propertyDeclaration)
+        {
+            if (propertyDeclaration == null)
+            {
+                throw new ArgumentNullException(nameof(propertyDeclaration));
+            }
+
+            return propertyDeclaration.AddAttributeLists(SyntaxAttributeListFactory.Create(nameof(FromFormAttribute)));
+        }
+
         public static PropertyDeclarationSyntax AddValidationAttribute(this PropertyDeclarationSyntax propertyDeclaration, ValidationAttribute validationAttribute)
         {
             if (propertyDeclaration == null)
@@ -122,6 +132,7 @@ namespace Atc.CodeAnalysis.CSharp
                     OpenApiFormatTypeConstants.DateTime => propertyDeclaration,
 
                     OpenApiFormatTypeConstants.Byte => propertyDeclaration,
+                    OpenApiFormatTypeConstants.Binary => propertyDeclaration,
                     OpenApiFormatTypeConstants.Int32 => propertyDeclaration,
                     OpenApiFormatTypeConstants.Int64 => propertyDeclaration,
 

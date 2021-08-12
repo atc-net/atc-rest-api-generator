@@ -424,20 +424,30 @@ List<OpenApiParameter> GetQueryRequiredParameters()
 ```csharp
 List<KeyValuePair<string, OpenApiSchema>> GetRelevantSchemasForBadRequestBodyParameters(OpenApiSchema modelSchema)
 ```
+#### GetRequestBodyModelName
+
+```csharp
+string GetRequestBodyModelName()
+```
+#### GetRequestBodySchema
+
+```csharp
+OpenApiSchema GetRequestBodySchema()
+```
 #### GetRouteParameters
 
 ```csharp
 List<OpenApiParameter> GetRouteParameters()
 ```
+#### HasContractParameterAnyParametersOrRequestBody
+
+```csharp
+bool HasContractParameterAnyParametersOrRequestBody()
+```
 #### HasContractParameterRequestBody
 
 ```csharp
 bool HasContractParameterRequestBody()
-```
-#### HasContractParameterRequiredHeader
-
-```csharp
-bool HasContractParameterRequiredHeader()
 ```
 #### HasContractReturnTypeAsComplexAndNotSharedModel
 
@@ -448,11 +458,6 @@ bool HasContractReturnTypeAsComplexAndNotSharedModel()
 
 ```csharp
 bool HasContractReturnTypeAsComplexAsListOrPagination()
-```
-#### HasContractReturnTypeNamesOnlySimpleTypes
-
-```csharp
-bool HasContractReturnTypeNamesOnlySimpleTypes()
 ```
 #### HasSharedModelInContractReturnType
 
@@ -468,6 +473,11 @@ bool HasSharedModelOrEnumInContractParameterRequestBody()
 
 ```csharp
 bool IsContractParameterRequestBodyUsed()
+```
+#### IsContractParameterRequestBodyUsedAsMultipartFormData
+
+```csharp
+bool IsContractParameterRequestBodyUsedAsMultipartFormData()
 ```
 #### IsContractParameterRequestBodyUsingStringBuilder
 

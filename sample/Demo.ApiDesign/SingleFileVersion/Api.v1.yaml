@@ -259,6 +259,11 @@ paths:
       responses:
         '200':
           description: OK
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: name
     post:
       summary: Set name of account
       description: Set name of account
@@ -266,6 +271,11 @@ paths:
       responses:
         '200':
           description: OK
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAccountRequest'
     parameters:
       - name: accountId
         in: path
@@ -378,6 +388,7 @@ paths:
       operationId: getEventArgsById
   /eventArgs:
     get:
+      operationId: getEventArgs
       summary: Get EventArgs List
       description: Get EventArgs List
       tags: []
@@ -390,7 +401,46 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/EventArgs'
-      operationId: getEventArgs
+  '/files/form-data/{id}':
+    parameters:
+      - name: id
+        in: path
+        description: The file id
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: getFileById
+      summary: Get File By Id
+      description: Get File By Id
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+          headers: {}
+        '404':
+          description: Not Found
+  /files/form-data/single:
+    post:
+      operationId: uploadFileAsFormData
+      summary: Upload a file as FormData
+      description: Upload a file as FormData
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FileAsFormDataRequest'
+    parameters: []
 components:
   parameters:
     pagingPageSize:
@@ -793,4 +843,27 @@ components:
           type: string
           format: uuid
         eventName:
+          type: string
+    FileAsFormDataRequest:
+      title: FileAsFormDataRequest
+      type: object
+      properties:
+        itemName:
+          type: string
+        file:
+          type: string
+          format: binary
+          nullable: true
+        items:
+          type: array
+          items:
+            type: string
+      required:
+        - itemName
+        - items
+    UpdateAccountRequest:
+      title: UpdateAccountRequest
+      type: object
+      properties:
+        name:
           type: string

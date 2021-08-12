@@ -137,7 +137,7 @@ namespace Atc.Rest.ApiGenerator.ProjectSyntaxFactories
                 }
             }
 
-            var schema = apiRequestBody?.Content?.GetSchema();
+            var schema = apiRequestBody?.Content?.GetSchemaByFirstMediaType();
             if (schema != null && !dictionary.ContainsKey(NameConstants.Request))
             {
                 dictionary.Add(NameConstants.Request, schema);
