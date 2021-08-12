@@ -392,7 +392,10 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                     sb.AppendLine();
                 }
 
-                if (!AppendNewRequestModel(12, sb, endpointMethodMetadata, contractReturnTypeName.StatusCode) && headerParameters.Count > 0)
+                var queryParameters = endpointMethodMetadata.GetQueryParameters();
+
+                if (!AppendNewRequestModel(12, sb, endpointMethodMetadata, contractReturnTypeName.StatusCode) &&
+                    (headerParameters.Count > 0 || queryParameters.Count > 0))
                 {
                     sb.AppendLine(12, "var data = \"{ }\";");
                 }
