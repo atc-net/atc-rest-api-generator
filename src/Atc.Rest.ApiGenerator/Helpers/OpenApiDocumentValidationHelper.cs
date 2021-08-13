@@ -346,7 +346,11 @@ namespace Atc.Rest.ApiGenerator.Helpers
                         var schema = value.RequestBody?.Content.GetSchemaByFirstMediaType();
                         if (schema != null && string.IsNullOrEmpty(schema.GetModelName()))
                         {
-                            logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation17, $"RequestBody is defined with inline model for operation '{value.OperationId}' - only reference to component-schemas are supported."));
+                            var isFormatTypeOfBinary = schema.IsFormatTypeOfBinary();
+                            if (!isFormatTypeOfBinary)
+                            {
+                                logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation17, $"RequestBody is defined with inline model for operation '{value.OperationId}' - only reference to component-schemas are supported."));
+                            }
                         }
                     }
 

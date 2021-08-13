@@ -134,6 +134,17 @@ namespace Atc.Rest.ApiGenerator.Models
             return "multipart/form-data".Equals(pair!.Value.Key, StringComparison.Ordinal);
         }
 
+        public bool IsContractParameterRequestBodyUsedAsMultipartOctetStreamData()
+        {
+            if (!IsContractParameterRequestBodyUsed())
+            {
+                return false;
+            }
+
+            var pair = ContractParameter?.ApiOperation.RequestBody?.Content.First();
+            return "application/octet-stream".Equals(pair!.Value.Key, StringComparison.Ordinal);
+        }
+
         public bool IsContractParameterRequestBodyUsingSystemCollectionGenericNamespace()
         {
             var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();

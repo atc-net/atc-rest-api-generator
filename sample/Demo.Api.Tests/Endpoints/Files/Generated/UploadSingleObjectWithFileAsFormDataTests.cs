@@ -19,13 +19,13 @@ namespace Demo.Api.Tests.Endpoints.Files.Generated
 {
     [GeneratedCode("ApiGenerator", "1.1.124.0")]
     [Collection("Sequential-Endpoints")]
-    public class UploadFileAsFormDataTests : WebApiControllerBaseTest
+    public class UploadSingleObjectWithFileAsFormDataTests : WebApiControllerBaseTest
     {
-        public UploadFileAsFormDataTests(WebApiStartupFactory fixture) : base(fixture) { }
+        public UploadSingleObjectWithFileAsFormDataTests(WebApiStartupFactory fixture) : base(fixture) { }
 
         [Theory]
-        [InlineData("/api/v1/files/form-data/single")]
-        public async Task UploadFileAsFormData_Ok(string relativeRef)
+        [InlineData("/api/v1/files/form-data/singleObject")]
+        public async Task UploadSingleObjectWithFileAsFormData_Ok(string relativeRef)
         {
             // Arrange
             var data = new FileAsFormDataRequest
@@ -36,7 +36,7 @@ namespace Demo.Api.Tests.Endpoints.Files.Generated
             };
 
             // Act
-            var response = await HttpClient.PostAsync(relativeRef, await GetMultipartFormDataContentFromFileAsFormDataRequest(data, "dummy.txt"));
+            var response = await HttpClient.PostAsync(relativeRef, await GetMultipartFormDataContentFromFileAsFormDataRequest(data, data.File.FileName));
 
             // Assert
             response.Should().NotBeNull();

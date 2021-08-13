@@ -7,12 +7,12 @@ namespace Demo.Domain.Handlers.Files
     /// <summary>
     /// Handler for operation request.
     /// Description: Upload a file as FormData.
-    /// Operation: UploadFileAsFormData.
+    /// Operation: UploadSingleObjectWithFileAsFormData.
     /// Area: Files.
     /// </summary>
-    public class UploadFileAsFormDataHandler : IUploadFileAsFormDataHandler
+    public class UploadSingleObjectWithFileAsFormDataHandler : IUploadSingleObjectWithFileAsFormDataHandler
     {
-        public Task<UploadFileAsFormDataResult> ExecuteAsync(UploadFileAsFormDataParameters parameters, CancellationToken cancellationToken = default)
+        public Task<UploadSingleObjectWithFileAsFormDataResult> ExecuteAsync(UploadSingleObjectWithFileAsFormDataParameters parameters, CancellationToken cancellationToken = default)
         {
             if (parameters is null)
             {
@@ -23,7 +23,7 @@ namespace Demo.Domain.Handlers.Files
         }
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-        private async Task<UploadFileAsFormDataResult> InvokeExecuteAsync(UploadFileAsFormDataParameters parameters, CancellationToken cancellationToken)
+        private async Task<UploadSingleObjectWithFileAsFormDataResult> InvokeExecuteAsync(UploadSingleObjectWithFileAsFormDataParameters parameters, CancellationToken cancellationToken)
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             throw new System.NotImplementedException();

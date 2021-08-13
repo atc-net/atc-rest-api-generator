@@ -1,6 +1,6 @@
-﻿using System;
-using System.CodeDom.Compiler;
+﻿using System.CodeDom.Compiler;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 //------------------------------------------------------------------------------
@@ -9,36 +9,27 @@ using Microsoft.AspNetCore.Mvc;
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace Demo.Api.Generated.Contracts.Accounts
+namespace Demo.Api.Generated.Contracts.Files
 {
     /// <summary>
     /// Parameters for operation request.
-    /// Description: Update name of account.
-    /// Operation: UpdateAccountName.
-    /// Area: Accounts.
+    /// Description: Upload a file as OctetStream.
+    /// Operation: UploadSingleFileAsFormData.
+    /// Area: Files.
     /// </summary>
     [GeneratedCode("ApiGenerator", "1.1.124.0")]
-    public class UpdateAccountNameParameters
+    public class UploadSingleFileAsFormDataParameters
     {
-        /// <summary>
-        /// The accountId.
-        /// </summary>
-        [FromRoute(Name = "accountId")]
+        [FromBody]
         [Required]
-        public Guid AccountId { get; set; }
-
-        /// <summary>
-        /// The account name.
-        /// </summary>
-        [FromHeader(Name = "name")]
-        public string Name { get; set; }
+        public IFormFile Request { get; set; }
 
         /// <summary>
         /// Converts to string.
         /// </summary>
         public override string ToString()
         {
-            return $"{nameof(AccountId)}: {AccountId}, {nameof(Name)}: {Name}";
+            return $"{nameof(Request)}: {Request}";
         }
     }
 }

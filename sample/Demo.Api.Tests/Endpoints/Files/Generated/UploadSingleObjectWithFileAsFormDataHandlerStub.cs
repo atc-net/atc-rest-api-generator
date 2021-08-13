@@ -12,11 +12,11 @@ using Demo.Api.Generated.Contracts.Files;
 namespace Demo.Api.Tests.Endpoints.Files.Generated
 {
     [GeneratedCode("ApiGenerator", "1.1.124.0")]
-    public class UploadFileAsFormDataHandlerStub : IUploadFileAsFormDataHandler
+    public class UploadSingleObjectWithFileAsFormDataHandlerStub : IUploadSingleObjectWithFileAsFormDataHandler
     {
-        public Task<UploadFileAsFormDataResult> ExecuteAsync(UploadFileAsFormDataParameters parameters, CancellationToken cancellationToken = default)
+        public Task<UploadSingleObjectWithFileAsFormDataResult> ExecuteAsync(UploadSingleObjectWithFileAsFormDataParameters parameters, CancellationToken cancellationToken = default)
         {
-            return Task.FromResult(UploadFileAsFormDataResult.Ok("Hallo world"));
+            return Task.FromResult(UploadSingleObjectWithFileAsFormDataResult.Ok("Hallo world"));
         }
     }
 }

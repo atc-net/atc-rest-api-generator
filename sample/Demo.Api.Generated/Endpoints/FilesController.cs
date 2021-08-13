@@ -42,21 +42,39 @@ namespace Demo.Api.Generated.Endpoints
         }
 
         /// <summary>
-        /// Description: Upload a file as FormData.
-        /// Operation: UploadFileAsFormData.
+        /// Description: Upload a file as OctetStream.
+        /// Operation: UploadSingleFileAsFormData.
         /// Area: Files.
         /// </summary>
-        [HttpPost("form-data/single")]
+        [HttpPost("form-data/singleFile")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-        public Task<ActionResult> UploadFileAsFormDataAsync(UploadFileAsFormDataParameters parameters, [FromServices] IUploadFileAsFormDataHandler handler, CancellationToken cancellationToken)
+        public Task<ActionResult> UploadSingleFileAsFormDataAsync(UploadSingleFileAsFormDataParameters parameters, [FromServices] IUploadSingleFileAsFormDataHandler handler, CancellationToken cancellationToken)
         {
             if (handler is null)
             {
                 throw new ArgumentNullException(nameof(handler));
             }
 
-            return InvokeUploadFileAsFormDataAsync(parameters, handler, cancellationToken);
+            return InvokeUploadSingleFileAsFormDataAsync(parameters, handler, cancellationToken);
+        }
+
+        /// <summary>
+        /// Description: Upload a file as FormData.
+        /// Operation: UploadSingleObjectWithFileAsFormData.
+        /// Area: Files.
+        /// </summary>
+        [HttpPost("form-data/singleObject")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        public Task<ActionResult> UploadSingleObjectWithFileAsFormDataAsync(UploadSingleObjectWithFileAsFormDataParameters parameters, [FromServices] IUploadSingleObjectWithFileAsFormDataHandler handler, CancellationToken cancellationToken)
+        {
+            if (handler is null)
+            {
+                throw new ArgumentNullException(nameof(handler));
+            }
+
+            return InvokeUploadSingleObjectWithFileAsFormDataAsync(parameters, handler, cancellationToken);
         }
 
         private static async Task<ActionResult> InvokeGetFileByIdAsync(GetFileByIdParameters parameters, IGetFileByIdHandler handler, CancellationToken cancellationToken)
@@ -64,7 +82,12 @@ namespace Demo.Api.Generated.Endpoints
             return await handler.ExecuteAsync(parameters, cancellationToken);
         }
 
-        private static async Task<ActionResult> InvokeUploadFileAsFormDataAsync(UploadFileAsFormDataParameters parameters, IUploadFileAsFormDataHandler handler, CancellationToken cancellationToken)
+        private static async Task<ActionResult> InvokeUploadSingleFileAsFormDataAsync(UploadSingleFileAsFormDataParameters parameters, IUploadSingleFileAsFormDataHandler handler, CancellationToken cancellationToken)
+        {
+            return await handler.ExecuteAsync(parameters, cancellationToken);
+        }
+
+        private static async Task<ActionResult> InvokeUploadSingleObjectWithFileAsFormDataAsync(UploadSingleObjectWithFileAsFormDataParameters parameters, IUploadSingleObjectWithFileAsFormDataHandler handler, CancellationToken cancellationToken)
         {
             return await handler.ExecuteAsync(parameters, cancellationToken);
         }

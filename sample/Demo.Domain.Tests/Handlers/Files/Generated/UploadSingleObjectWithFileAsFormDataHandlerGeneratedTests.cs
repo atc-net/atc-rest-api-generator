@@ -12,13 +12,13 @@ using Xunit;
 namespace Demo.Domain.Tests.Handlers.Files.Generated
 {
     [GeneratedCode("ApiGenerator", "1.1.124.0")]
-    public class UploadFileAsFormDataHandlerGeneratedTests
+    public class UploadSingleObjectWithFileAsFormDataHandlerGeneratedTests
     {
         [Fact]
         public void InstantiateConstructor()
         {
             // Act
-            var actual = new UploadFileAsFormDataHandler();
+            var actual = new UploadSingleObjectWithFileAsFormDataHandler();
 
             // Assert
             Assert.NotNull(actual);
@@ -28,7 +28,7 @@ namespace Demo.Domain.Tests.Handlers.Files.Generated
         public void ParameterArgumentNullCheck()
         {
             // Arrange
-            var sut = new UploadFileAsFormDataHandler();
+            var sut = new UploadSingleObjectWithFileAsFormDataHandler();
 
             // Act & Assert
             Assert.ThrowsAsync<ArgumentException>(() => sut.ExecuteAsync(null!));
