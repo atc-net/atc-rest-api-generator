@@ -42,6 +42,10 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             {
                 AppendGetMultipartFormDataContentRequestMethod(sb, endpointMethodMetadata);
             }
+            else if (endpointMethodMetadata.IsContractParameterRequestBodyUsedAsMultipartOctetStreamData())
+            {
+                AppendGetSingleFormDataContentRequestMethod(sb, endpointMethodMetadata);
+            }
 
             AppendNamespaceAndClassEnd(sb);
             return SaveFile(sb, hostProjectOptions, endpointMethodMetadata);
@@ -166,14 +170,19 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 endpointMethodMetadata.HasContractReturnTypeAsComplexAndNotSharedModel())
             {
                 systemList.Add("System.Net.Http");
-                list.Add($"{hostProjectOptions.ProjectName}.Generated.Contracts.{endpointMethodMetadata.SegmentName}");
+
+                if (!endpointMethodMetadata.IsContractParameterRequestBodyUsedAsMultipartOctetStreamData())
+                {
+                    list.Add($"{hostProjectOptions.ProjectName}.Generated.Contracts.{endpointMethodMetadata.SegmentName}");
+                }
             }
             else if (endpointMethodMetadata.HasContractReturnTypeAsComplexAsListOrPagination())
             {
                 systemList.Add("System.Net.Http");
             }
 
-            if (endpointMethodMetadata.IsContractParameterRequestBodyUsedAsMultipartFormData())
+            if (endpointMethodMetadata.IsContractParameterRequestBodyUsedAsMultipartFormData() ||
+                endpointMethodMetadata.IsContractParameterRequestBodyUsedAsMultipartOctetStreamData())
             {
                 list.Add("Microsoft.AspNetCore.Http");
             }
@@ -394,11 +403,18 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
 
                 var queryParameters = endpointMethodMetadata.GetQueryParameters();
 
-                var isModelCreated = AppendNewRequestModel(12, sb, endpointMethodMetadata, contractReturnTypeName.StatusCode);
-
-                if (endpointMethodMetadata.HttpOperation != OperationType.Get && !isModelCreated && (headerParameters.Count > 0 || queryParameters.Count > 0))
+                var isContractParameterRequestBodyUsedAsMultipartOctetStreamData = endpointMethodMetadata.IsContractParameterRequestBodyUsedAsMultipartOctetStreamData();
+                if (isContractParameterRequestBodyUsedAsMultipartOctetStreamData)
                 {
-                    sb.AppendLine(12, "var data = \"{ }\";");
+                    sb.AppendLine(12, "var data = GetTestFile();");
+                }
+                else
+                {
+                    var isModelCreated = AppendNewRequestModel(12, sb, endpointMethodMetadata, contractReturnTypeName.StatusCode);
+                    if (endpointMethodMetadata.HttpOperation != OperationType.Get && !isModelCreated && (headerParameters.Count > 0 || queryParameters.Count > 0))
+                    {
+                        sb.AppendLine(12, "var data = \"{ }\";");
+                    }
                 }
 
                 sb.AppendLine();
@@ -409,7 +425,17 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                         12,
                         sb,
                         endpointMethodMetadata.HttpOperation,
-                        endpointMethodMetadata.GetRequestBodyModelName()!);
+                        endpointMethodMetadata.GetRequestBodyModelName()!,
+                        false);
+                }
+                else if (isContractParameterRequestBodyUsedAsMultipartOctetStreamData)
+                {
+                    AppendActHttpClientOperationForMultipartFormData(
+                        12,
+                        sb,
+                        endpointMethodMetadata.HttpOperation,
+                        $"{endpointMethodMetadata.MethodName}{NameConstants.Request}",
+                        true);
                 }
                 else
                 {
@@ -429,7 +455,8 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             if (testExpectedHttpStatusCode == HttpStatusCode.OK &&
                 !string.IsNullOrEmpty(contractReturnTypeName.FullModelName) &&
                 contractReturnTypeName.Schema != null &&
-                !contractReturnTypeName.Schema.IsSimpleDataType())
+                !contractReturnTypeName.Schema.IsSimpleDataType() &&
+                !(endpointMethodMetadata.IsContractParameterRequestBodyUsedAsMultipartOctetStreamData() || endpointMethodMetadata.IsContractParameterRequestBodyUsedAsMultipartFormData()))
             {
                 var modelName = OpenApiDocumentSchemaModelNameHelper.EnsureModelNameWithNamespaceIfNeeded(endpointMethodMetadata, contractReturnTypeName.FullModelName);
 
@@ -476,13 +503,17 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             }
         }
 
-        private static void AppendActHttpClientOperationForMultipartFormData(int indentSpaces, StringBuilder sb, OperationType operationType, string modelName)
+        private static void AppendActHttpClientOperationForMultipartFormData(int indentSpaces, StringBuilder sb, OperationType operationType, string modelName, bool useIFormFileDirectly)
         {
             sb.AppendLine(indentSpaces, "// Act");
             switch (operationType)
             {
                 case OperationType.Post:
-                    sb.AppendLine(12, $"var response = await HttpClient.{operationType}Async(relativeRef, await GetMultipartFormDataContentFrom{modelName}(data, \"dummy.txt\"));");
+                    sb.AppendLine(
+                            12,
+                            useIFormFileDirectly
+                                ? $"var response = await HttpClient.{operationType}Async(relativeRef, await GetMultipartFormDataContentFrom{modelName}(data, data.FileName));"
+                                : $"var response = await HttpClient.{operationType}Async(relativeRef, await GetMultipartFormDataContentFrom{modelName}(data, data.File.FileName));");
                     break;
                 case OperationType.Get:
                 case OperationType.Delete:
@@ -533,6 +564,28 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                     sb.AppendLine(12, $"formDataContent.Add(new StringContent(request.{propertyName}), \"Request.{propertyName}\");");
                 }
             }
+
+            sb.AppendLine(12, "return formDataContent;");
+            sb.AppendLine(8, "}");
+        }
+
+        private static void AppendGetSingleFormDataContentRequestMethod(StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata)
+        {
+            var modelName = $"{endpointMethodMetadata.MethodName}{NameConstants.Request}";
+
+            sb.AppendLine();
+            sb.AppendLine(8, $"private async Task<MultipartFormDataContent> GetMultipartFormDataContentFrom{modelName}(");
+            sb.AppendLine(12, "IFormFile request,");
+            sb.AppendLine(12, "string fileName)");
+            sb.AppendLine(8, "{");
+            sb.AppendLine(12, "var formDataContent = new MultipartFormDataContent();");
+
+            sb.AppendLine(12, "if (request is not null)");
+            sb.AppendLine(12, "{");
+            sb.AppendLine(16, "var bytesContent = new ByteArrayContent(await request.GetBytes());");
+            sb.AppendLine(16, "formDataContent.Add(bytesContent, \"Request\", fileName);");
+            sb.AppendLine(12, "}");
+            sb.AppendLine();
 
             sb.AppendLine(12, "return formDataContent;");
             sb.AppendLine(8, "}");

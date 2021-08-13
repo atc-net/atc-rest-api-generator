@@ -479,6 +479,11 @@ bool IsContractParameterRequestBodyUsed()
 ```csharp
 bool IsContractParameterRequestBodyUsedAsMultipartFormData()
 ```
+#### IsContractParameterRequestBodyUsedAsMultipartOctetStreamData
+
+```csharp
+bool IsContractParameterRequestBodyUsedAsMultipartOctetStreamData()
+```
 #### IsContractParameterRequestBodyUsingStringBuilder
 
 ```csharp

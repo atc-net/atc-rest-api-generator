@@ -104,9 +104,21 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
 
             if (ApiOperation.RequestBody != null && requestSchema != null)
             {
-                var requestBodyType = requestSchema.Reference != null
-                    ? requestSchema.Reference.Id.EnsureFirstCharacterToUpper()
-                    : requestSchema.Items.Reference.Id.EnsureFirstCharacterToUpper();
+                var isFormatTypeOfBinary = requestSchema.IsFormatTypeOfBinary();
+
+                var requestBodyType = "string?";
+                if (requestSchema.Reference is not null)
+                {
+                    requestBodyType = requestSchema.Reference.Id.EnsureFirstCharacterToUpper();
+                }
+                else if (requestSchema.Items is not null)
+                {
+                    requestBodyType = requestSchema.Items.Reference.Id.EnsureFirstCharacterToUpper();
+                }
+                else if (isFormatTypeOfBinary)
+                {
+                    requestBodyType = "IFormFile";
+                }
 
                 PropertyDeclarationSyntax propertyDeclaration;
                 if (requestSchema.Type == OpenApiDataTypeConstants.Array)

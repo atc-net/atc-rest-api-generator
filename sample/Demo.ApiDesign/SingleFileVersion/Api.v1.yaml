@@ -260,10 +260,11 @@ paths:
         '200':
           description: OK
       parameters:
-        - schema:
-            type: string
+        - name: name
           in: header
-          name: name
+          description: The account name
+          schema:
+            type: string
     post:
       summary: Set name of account
       description: Set name of account
@@ -425,9 +426,9 @@ paths:
           headers: {}
         '404':
           description: Not Found
-  /files/form-data/single:
+  /files/form-data/singleObject:
     post:
-      operationId: uploadFileAsFormData
+      operationId: uploadSingleObjectWithFileAsFormData
       summary: Upload a file as FormData
       description: Upload a file as FormData
       responses:
@@ -440,6 +441,21 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/FileAsFormDataRequest'
+    parameters: []
+  /files/form-data/singleFile:
+    post:
+      operationId: uploadSingleFileAsFormData
+      summary: Upload a file as OctetStream
+      description: Upload a file as OctetStream
+      responses:
+        '200':
+          description: OK
+      requestBody:
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
     parameters: []
 components:
   parameters:
