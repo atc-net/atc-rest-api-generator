@@ -442,6 +442,22 @@ paths:
             schema:
               $ref: '#/components/schemas/FileAsFormDataRequest'
     parameters: []
+  /files/form-data/singleObjectMultiFile:
+    post:
+      operationId: uploadSingleObjectWithFilesAsFormData
+      summary: Upload files as FormData
+      description: Upload files as FormData
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FilesAsFormDataRequest'
+    parameters: []
   /files/form-data/singleFile:
     post:
       operationId: uploadSingleFileAsFormData
@@ -457,6 +473,22 @@ paths:
               type: string
               format: binary
     parameters: []
+  /files/form-data/multiFile:
+    post:
+      summary: Upload multi files as form data
+      description: Upload multi files as form data
+      operationId: uploadMultiFilesAsFormData
+      responses:
+        '200':
+          description: OK
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: array
+              items:
+                type: string
+                format: binary
 components:
   parameters:
     pagingPageSize:
@@ -877,6 +909,17 @@ components:
       required:
         - itemName
         - items
+    FilesAsFormDataRequest:
+      title: FilesAsFormDataRequest
+      type: object
+      properties:
+        files:
+          type: array
+          items:
+            type: string
+            format: binary
+      required:
+        - files
     UpdateAccountRequest:
       title: UpdateAccountRequest
       type: object
