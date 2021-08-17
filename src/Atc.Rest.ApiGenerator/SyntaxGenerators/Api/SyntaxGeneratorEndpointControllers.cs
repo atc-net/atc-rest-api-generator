@@ -195,7 +195,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                         includeEmptyResponseTypes: false,
                         hasGlobalParameters || apiOperation.Value.HasParametersOrRequestBody(),
                         includeIfNotDefinedAuthorization: false,
-                        includeIfNotDefinedInternalServerError: false);
+                        includeIfNotDefinedInternalServerError: false,
+                        isClient: false);
 
                     var responseTypeNamesAndItemSchema = GetResponseTypeNamesAndItemSchema(responseTypes);
 

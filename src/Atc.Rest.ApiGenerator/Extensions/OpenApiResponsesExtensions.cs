@@ -33,7 +33,8 @@ namespace Microsoft.OpenApi.Models
                 includeEmptyResponseTypes: true,
                 includeIfNotDefinedValidation,
                 includeIfNotDefinedAuthorization,
-                includeIfNotDefinedInternalServerError);
+                includeIfNotDefinedInternalServerError,
+                isClient: false);
 
             return responseTypes
                 .OrderBy(x => x.Item1)
@@ -52,7 +53,8 @@ namespace Microsoft.OpenApi.Models
             bool includeEmptyResponseTypes,
             bool includeIfNotDefinedValidation,
             bool includeIfNotDefinedAuthorization,
-            bool includeIfNotDefinedInternalServerError)
+            bool includeIfNotDefinedInternalServerError,
+            bool isClient)
         {
             var result = new List<Tuple<HttpStatusCode, string>>();
             foreach (var response in responses.OrderBy(x => x.Key))
@@ -68,7 +70,7 @@ namespace Microsoft.OpenApi.Models
                 var modelName = responses.GetModelNameForStatusCode(httpStatusCode);
 
                 var isShared = apiOperationSchemaMappings.IsShared(modelName);
-                modelName = OpenApiDocumentSchemaModelNameHelper.EnsureModelNameWithNamespaceIfNeeded(projectName, contractArea, modelName, isShared, true);
+                modelName = OpenApiDocumentSchemaModelNameHelper.EnsureModelNameWithNamespaceIfNeeded(projectName, contractArea, modelName, isShared, isClient);
 
                 var useProblemDetails = responses.IsSchemaTypeProblemDetailsForStatusCode(httpStatusCode);
                 if (!useProblemDetails && useProblemDetailsAsDefaultResponseBody)

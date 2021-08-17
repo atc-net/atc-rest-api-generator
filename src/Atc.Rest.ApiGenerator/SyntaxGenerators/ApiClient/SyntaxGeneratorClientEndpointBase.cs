@@ -36,7 +36,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                 includeEmptyResponseTypes: false,
                 HasParametersOrRequestBody,
                 ApiProjectOptions.ApiOptions.Generator.UseAuthorization,
-                includeIfNotDefinedInternalServerError: true);
+                includeIfNotDefinedInternalServerError: true,
+                isClient: true);
 
             this.ResultTypeName = ResponseTypes
                 .FirstOrDefault(x => x.Item1 == HttpStatusCode.OK)?.Item2 ?? ResponseTypes

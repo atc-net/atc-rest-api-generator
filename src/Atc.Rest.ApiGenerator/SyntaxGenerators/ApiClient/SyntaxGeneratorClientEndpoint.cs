@@ -540,7 +540,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                 includeEmptyResponseTypes: false,
                 HasParametersOrRequestBody,
                 ApiProjectOptions.ApiOptions.Generator.UseAuthorization,
-                includeIfNotDefinedInternalServerError: true);
+                includeIfNotDefinedInternalServerError: true,
+                isClient: true);
 
             var result = new List<StatementSyntax>();
             foreach (var responseType in responseTypes
