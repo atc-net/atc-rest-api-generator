@@ -344,6 +344,7 @@
      - HasSharedModelOrEnumInContractParameterRequestBody()
      - IsContractParameterRequestBodyUsed()
      - IsContractParameterRequestBodyUsedAsMultipartFormData()
+     - IsContractParameterRequestBodyUsedAsMultipartFormDataAndHasInlineSchemaFile()
      - IsContractParameterRequestBodyUsedAsMultipartOctetStreamData()
      - IsContractParameterRequestBodyUsingStringBuilder()
      - IsContractParameterRequestBodyUsingSystemCollectionGenericNamespace()
