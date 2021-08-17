@@ -134,6 +134,17 @@ namespace Atc.Rest.ApiGenerator.Models
             return "multipart/form-data".Equals(pair!.Value.Key, StringComparison.Ordinal);
         }
 
+        public bool IsContractParameterRequestBodyUsedAsMultipartFormDataAndHasInlineSchemaFile()
+        {
+            if (!IsContractParameterRequestBodyUsedAsMultipartFormData())
+            {
+                return false;
+            }
+
+            var pair = ContractParameter?.ApiOperation.RequestBody?.Content.First();
+            return !pair?.Value?.Schema.HasAnyPropertiesFormatTypeBinary() ?? true;
+        }
+
         public bool IsContractParameterRequestBodyUsedAsMultipartOctetStreamData()
         {
             if (!IsContractParameterRequestBodyUsed())
@@ -150,7 +161,8 @@ namespace Atc.Rest.ApiGenerator.Models
             var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
             return schema is not null &&
                    (schema.IsArrayReferenceTypeDeclared() ||
-                   schema.HasAnyPropertiesFormatFromSystemCollectionGenericNamespace(ComponentsSchemas));
+                   schema.HasAnyPropertiesFormatFromSystemCollectionGenericNamespace(ComponentsSchemas) ||
+                   schema.IsItemsOfFormatTypeBinary());
         }
 
         public bool IsContractParameterRequestBodyUsingSystemNamespace()

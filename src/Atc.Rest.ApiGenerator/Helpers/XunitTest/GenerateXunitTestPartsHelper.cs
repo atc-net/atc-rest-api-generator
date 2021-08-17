@@ -25,8 +25,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             var propertyName = schemaProperty.Key.EnsureFirstCharacterToUpper();
 
             var isHandled = false;
-            if (isRequired &&
-                OpenApiDataTypeConstants.Array.Equals(dataType, StringComparison.OrdinalIgnoreCase))
+            if (isRequired && OpenApiDataTypeConstants.Array.Equals(dataType, StringComparison.OrdinalIgnoreCase))
             {
                 var itemsDataType = schemaProperty.Value.Items.GetDataType();
 
@@ -46,6 +45,8 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                             sb.AppendLine(indentSpaces, $"sb.AppendLine(\"  {WrapInQuotes(propertyName)}: [ true, false, true ]{GenerateCodeHelper.GetTrailingChar(trailingChar)}\");");
                             isHandled = true;
                             break;
+                        case "IFormFile":
+                            throw new NotSupportedException("IFormFile is not supported when working with Json.");
                     }
                 }
                 else
@@ -62,6 +63,10 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                             break;
                         case OpenApiDataTypeConstants.Boolean:
                             sb.AppendLine(indentSpaces + 4, $"{propertyName} = new List<bool>() {{ true, false, true }},");
+                            isHandled = true;
+                            break;
+                        case "IFormFile":
+                            sb.AppendLine(indentSpaces + 4, $"{propertyName} = GetTestFiles(),");
                             isHandled = true;
                             break;
                     }

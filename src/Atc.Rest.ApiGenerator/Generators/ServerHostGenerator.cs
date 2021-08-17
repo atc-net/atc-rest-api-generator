@@ -914,6 +914,38 @@ namespace Atc.Rest.ApiGenerator.Generators
                         SyntaxFactory.ReturnStatement(SyntaxFactory.IdentifierName("formFile"))));
         }
 
+        private static MemberDeclarationSyntax CreateWebApiControllerBaseTestGetTestFiles()
+        {
+            return SyntaxFactory.MethodDeclaration(
+                    SyntaxFactory.GenericName(SyntaxFactory.Identifier("List"))
+                        .WithTypeArgumentList(
+                            SyntaxFactory.TypeArgumentList(
+                                SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
+                                    SyntaxFactory.IdentifierName("IFormFile")))),
+                    SyntaxFactory.Identifier("GetTestFiles"))
+                .WithModifiers(SyntaxFactory.TokenList(SyntaxTokenFactory.ProtectedKeyword(), SyntaxTokenFactory.StaticKeyword()))
+                .WithExpressionBody(
+                    SyntaxFactory.ArrowExpressionClause(
+                        SyntaxFactory.ObjectCreationExpression(
+                                SyntaxFactory.GenericName(
+                                        SyntaxFactory.Identifier("List"))
+                                    .WithTypeArgumentList(
+                                        SyntaxFactory.TypeArgumentList(
+                                            SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
+                                                SyntaxFactory.IdentifierName("IFormFile")))))
+                            .WithInitializer(
+                                SyntaxFactory.InitializerExpression(
+                                    SyntaxKind.CollectionInitializerExpression,
+                                    SyntaxFactory.SeparatedList<ExpressionSyntax>(
+                                        new SyntaxNodeOrToken[]
+                                        {
+                                            SyntaxFactory.InvocationExpression(SyntaxFactory.IdentifierName("GetTestFile")),
+                                            SyntaxTokenFactory.Comma(),
+                                            SyntaxFactory.InvocationExpression(SyntaxFactory.IdentifierName("GetTestFile")),
+                                        })))))
+                .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
+        }
+
         [SuppressMessage("Critical Code Smell", "S3776:Cognitive Complexity of methods should not be too high", Justification = "OK.")]
         private List<LogKeyValueItem> ScaffoldTest()
         {
@@ -1192,6 +1224,7 @@ namespace Atc.Rest.ApiGenerator.Generators
             var memberDeclarationToJson = CreateWebApiControllerBaseTestToJson();
             var memberDeclarationJson = CreateWebApiControllerBaseTestJson();
             var memberDeclarationGetTestFile = CreateWebApiControllerBaseTestGetTestFile();
+            var memberDeclarationGetTestFiles = CreateWebApiControllerBaseTestGetTestFiles();
 
             // Add member to class
             classDeclaration = classDeclaration.AddMembers(memberDeclarationFactory);
@@ -1202,6 +1235,7 @@ namespace Atc.Rest.ApiGenerator.Generators
             classDeclaration = classDeclaration.AddMembers(memberDeclarationToJson);
             classDeclaration = classDeclaration.AddMembers(memberDeclarationJson);
             classDeclaration = classDeclaration.AddMembers(memberDeclarationGetTestFile);
+            classDeclaration = classDeclaration.AddMembers(memberDeclarationGetTestFiles);
 
             // Add class to namespace
             @namespace = @namespace.AddMembers(classDeclaration);

@@ -183,10 +183,12 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                 .AddGeneratedCodeAttribute(ApiProjectOptions.ToolName, ApiProjectOptions.ToolVersion.ToString())
                 .WithLeadingTrivia(SyntaxDocumentationFactory.Create(ApiSchema));
 
+            var hasAnyPropertiesOfArrayWithFormatTypeBinary = ApiSchema.HasAnyPropertiesOfArrayWithFormatTypeBinary();
+
             // Create class-properties and add to class
             if (ApiSchema.Properties != null)
             {
-                if (ApiSchema.Type == OpenApiDataTypeConstants.Array)
+                if (ApiSchema.Type == OpenApiDataTypeConstants.Array || hasAnyPropertiesOfArrayWithFormatTypeBinary)
                 {
                     var (key, _) = ApiProjectOptions.Document.Components.Schemas.FirstOrDefault(x =>
                         x.Key.Equals(ApiSchema.Title, StringComparison.OrdinalIgnoreCase));
@@ -196,7 +198,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                         key = ApiSchemaKey;
                     }
 
-                    if (string.IsNullOrEmpty(ApiSchema.Items.Title))
+                    if (ApiSchema.Items is not null && string.IsNullOrEmpty(ApiSchema.Items.Title))
                     {
                         ApiSchema.Items.Title = ApiSchemaKey;
                     }
@@ -205,8 +207,14 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                         ? $"{ApiSchema.Title.EnsureFirstCharacterToUpperAndSingular()}List"
                         : ApiSchema.Title.EnsureFirstCharacterToUpper();
 
-                    var propertyDeclaration = SyntaxPropertyDeclarationFactory.CreateListAuto(ApiSchema.Items.Title, title)
-                        .WithLeadingTrivia(SyntaxDocumentationFactory.CreateSummary($"A list of {ApiSchema.Items.Title}."));
+                    var propertyDeclaration = hasAnyPropertiesOfArrayWithFormatTypeBinary
+                        ? SyntaxPropertyDeclarationFactory.CreateListAuto("IFormFile", ApiSchema.ExtractPropertyNameWhenHasAnyPropertiesOfArrayWithFormatTypeBinary())
+                            .WithLeadingTrivia(
+                                SyntaxDocumentationFactory.CreateSummary("A list of File(s)."))
+                        : SyntaxPropertyDeclarationFactory.CreateListAuto(ApiSchema.Items!.Title, title)
+                            .WithLeadingTrivia(
+                                SyntaxDocumentationFactory.CreateSummary($"A list of {ApiSchema.Items.Title}."));
+
                     classDeclaration = classDeclaration.AddMembers(propertyDeclaration);
                 }
                 else

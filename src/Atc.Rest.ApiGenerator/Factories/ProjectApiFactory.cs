@@ -177,7 +177,7 @@ namespace Atc.Rest.ApiGenerator.Factories
                     list.Add("System.ComponentModel.DataAnnotations");
                 }
 
-                if (contentSchema.IsFormatTypeOfBinary())
+                if (contentSchema.IsFormatTypeOfBinary() || contentSchema.IsItemsOfFormatTypeBinary())
                 {
                     list.Add("Microsoft.AspNetCore.Http");
                 }

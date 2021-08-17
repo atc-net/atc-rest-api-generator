@@ -38,9 +38,10 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             AppendNamespaceAndClassStart(sb, hostProjectOptions, endpointMethodMetadata);
             AppendConstructor(sb, endpointMethodMetadata);
             AppendTestMethod(sb, endpointMethodMetadata);
+
             if (endpointMethodMetadata.IsContractParameterRequestBodyUsedAsMultipartFormData())
             {
-                AppendGetMultipartFormDataContentRequestMethod(sb, endpointMethodMetadata);
+                AppendGetMultipartFormDataContentRequestMethod(sb, endpointMethodMetadata, endpointMethodMetadata.IsContractParameterRequestBodyUsedAsMultipartFormDataAndHasInlineSchemaFile());
             }
             else if (endpointMethodMetadata.IsContractParameterRequestBodyUsedAsMultipartOctetStreamData())
             {
@@ -401,8 +402,6 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                     sb.AppendLine();
                 }
 
-                var queryParameters = endpointMethodMetadata.GetQueryParameters();
-
                 var isContractParameterRequestBodyUsedAsMultipartOctetStreamData = endpointMethodMetadata.IsContractParameterRequestBodyUsedAsMultipartOctetStreamData();
                 if (isContractParameterRequestBodyUsedAsMultipartOctetStreamData)
                 {
@@ -411,7 +410,9 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 else
                 {
                     var isModelCreated = AppendNewRequestModel(12, sb, endpointMethodMetadata, contractReturnTypeName.StatusCode);
-                    if (endpointMethodMetadata.HttpOperation != OperationType.Get && !isModelCreated && (headerParameters.Count > 0 || queryParameters.Count > 0))
+                    if (endpointMethodMetadata.HttpOperation != OperationType.Get &&
+                        !isModelCreated &&
+                        headerParameters.Count > 0)
                     {
                         sb.AppendLine(12, "var data = \"{ }\";");
                     }
@@ -425,8 +426,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                         12,
                         sb,
                         endpointMethodMetadata.HttpOperation,
-                        endpointMethodMetadata.GetRequestBodyModelName()!,
-                        false);
+                        endpointMethodMetadata.GetRequestBodyModelName()!);
                 }
                 else if (isContractParameterRequestBodyUsedAsMultipartOctetStreamData)
                 {
@@ -434,8 +434,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                         12,
                         sb,
                         endpointMethodMetadata.HttpOperation,
-                        $"{endpointMethodMetadata.MethodName}{NameConstants.Request}",
-                        true);
+                        $"{endpointMethodMetadata.MethodName}{NameConstants.Request}");
                 }
                 else
                 {
@@ -503,17 +502,22 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             }
         }
 
-        private static void AppendActHttpClientOperationForMultipartFormData(int indentSpaces, StringBuilder sb, OperationType operationType, string modelName, bool useIFormFileDirectly)
+        private static void AppendActHttpClientOperationForMultipartFormData(
+            int indentSpaces,
+            StringBuilder sb,
+            OperationType operationType,
+            string modelName)
         {
             sb.AppendLine(indentSpaces, "// Act");
             switch (operationType)
             {
                 case OperationType.Post:
                     sb.AppendLine(
-                            12,
-                            useIFormFileDirectly
-                                ? $"var response = await HttpClient.{operationType}Async(relativeRef, await GetMultipartFormDataContentFrom{modelName}(data, data.FileName));"
-                                : $"var response = await HttpClient.{operationType}Async(relativeRef, await GetMultipartFormDataContentFrom{modelName}(data, data.File.FileName));");
+                        indentSpaces,
+                        string.IsNullOrEmpty(modelName)
+                            ? $"var response = await HttpClient.{operationType}Async(relativeRef, await GetMultipartFormDataContentFromFiles(data));"
+                            : $"var response = await HttpClient.{operationType}Async(relativeRef, await GetMultipartFormDataContentFrom{modelName}(data));");
+
                     break;
                 case OperationType.Get:
                 case OperationType.Delete:
@@ -521,47 +525,88 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 case OperationType.Patch:
                     throw new NotSupportedException("Append-MultipartFormData");
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(operationType), operationType, null);
+                    throw new ArgumentOutOfRangeException(nameof(operationType), operationType, message: null);
             }
         }
 
-        private static void AppendGetMultipartFormDataContentRequestMethod(StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata)
+        private static void AppendGetMultipartFormDataContentRequestMethod(
+            StringBuilder sb,
+            EndpointMethodMetadata endpointMethodMetadata,
+            bool useIFormFileDirectly)
         {
             var modelSchema = endpointMethodMetadata.GetRequestBodySchema()!;
             var modelName = modelSchema.GetModelName();
 
             sb.AppendLine();
-            sb.AppendLine(8, $"private async Task<MultipartFormDataContent> GetMultipartFormDataContentFrom{modelName}(");
-            sb.AppendLine(12, $"{modelName} request,");
-            sb.AppendLine(12, "string fileName)");
+
+            sb.AppendLine(
+                8,
+                string.IsNullOrEmpty(modelName)
+                    ? "private async Task<MultipartFormDataContent> GetMultipartFormDataContentFromFiles(List<IFormFile> request)"
+                    : $"private async Task<MultipartFormDataContent> GetMultipartFormDataContentFrom{modelName}({modelName} request)");
+
             sb.AppendLine(8, "{");
             sb.AppendLine(12, "var formDataContent = new MultipartFormDataContent();");
-            foreach (var schemaProperty in modelSchema.Properties)
+
+            if (OpenApiDataTypeConstants.Array.Equals(modelSchema.Type, StringComparison.OrdinalIgnoreCase))
             {
-                var propertyName = schemaProperty.Key.EnsureFirstCharacterToUpper();
-                if (schemaProperty.Value.IsFormatTypeOfBinary())
+                sb.AppendLine(12, "if (request is not null)");
+                sb.AppendLine(12, "{");
+                sb.AppendLine(16, "foreach (var item in request)");
+                sb.AppendLine(16, "{");
+                sb.AppendLine(20, "var bytesContent = new ByteArrayContent(await item.GetBytes());");
+                sb.AppendLine(20, "formDataContent.Add(bytesContent, \"Request\", item.FileName);");
+                sb.AppendLine(16, "}");
+                sb.AppendLine(12, "}");
+                sb.AppendLine();
+            }
+            else
+            {
+                foreach (var schemaProperty in modelSchema.Properties)
                 {
-                    sb.AppendLine(12, $"if (request.{propertyName} is not null)");
-                    sb.AppendLine(12, "{");
-                    sb.AppendLine(16, $"var bytesContent = new ByteArrayContent(await request.{propertyName}.GetBytes());");
-                    sb.AppendLine(16, $"formDataContent.Add(bytesContent, \"Request.{propertyName}\", fileName);");
-                    sb.AppendLine(12, "}");
-                    sb.AppendLine();
-                }
-                else if (schemaProperty.Value.IsDataTypeOfList())
-                {
-                    sb.AppendLine(12, $"if (request.{propertyName} is not null && request.{propertyName}.Count > 0)");
-                    sb.AppendLine(12, "{");
-                    sb.AppendLine(16, $"foreach (var item in request.{propertyName})");
-                    sb.AppendLine(16, "{");
-                    sb.AppendLine(20, $"formDataContent.Add(new StringContent(item), \"Request.{propertyName}\");");
-                    sb.AppendLine(16, "}");
-                    sb.AppendLine(12, "}");
-                    sb.AppendLine();
-                }
-                else
-                {
-                    sb.AppendLine(12, $"formDataContent.Add(new StringContent(request.{propertyName}), \"Request.{propertyName}\");");
+                    var propertyName = schemaProperty.Key.EnsureFirstCharacterToUpper();
+                    if (schemaProperty.Value.IsFormatTypeOfBinary())
+                    {
+                        sb.AppendLine(12, $"if (request.{propertyName} is not null)");
+                        sb.AppendLine(12, "{");
+                        sb.AppendLine(16, $"var bytesContent = new ByteArrayContent(await request.{propertyName}.GetBytes());");
+
+                        sb.AppendLine(
+                            16,
+                            useIFormFileDirectly
+                                ? $"formDataContent.Add(bytesContent, \"Request.{propertyName}\", request.FileName);"
+                                : $"formDataContent.Add(bytesContent, \"Request.{propertyName}\", request.{propertyName}.FileName);");
+
+                        sb.AppendLine(12, "}");
+                        sb.AppendLine();
+                    }
+                    else if (schemaProperty.Value.IsItemsOfFormatTypeBinary())
+                    {
+                        sb.AppendLine(12, $"if (request.{propertyName} is not null)");
+                        sb.AppendLine(12, "{");
+                        sb.AppendLine(16, $"foreach (var item in request.{propertyName})");
+                        sb.AppendLine(16, "{");
+                        sb.AppendLine(20, "var bytesContent = new ByteArrayContent(await item.GetBytes());");
+                        sb.AppendLine(20, $"formDataContent.Add(bytesContent, \"Request.{propertyName}\", item.FileName);");
+                        sb.AppendLine(16, "}");
+                        sb.AppendLine(12, "}");
+                        sb.AppendLine();
+                    }
+                    else if (schemaProperty.Value.IsDataTypeOfList())
+                    {
+                        sb.AppendLine(12, $"if (request.{propertyName} is not null && request.{propertyName}.Count > 0)");
+                        sb.AppendLine(12, "{");
+                        sb.AppendLine(16, $"foreach (var item in request.{propertyName})");
+                        sb.AppendLine(16, "{");
+                        sb.AppendLine(20, $"formDataContent.Add(new StringContent(item), \"Request.{propertyName}\");");
+                        sb.AppendLine(16, "}");
+                        sb.AppendLine(12, "}");
+                        sb.AppendLine();
+                    }
+                    else
+                    {
+                        sb.AppendLine(12, $"formDataContent.Add(new StringContent(request.{propertyName}), \"Request.{propertyName}\");");
+                    }
                 }
             }
 
@@ -574,16 +619,14 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             var modelName = $"{endpointMethodMetadata.MethodName}{NameConstants.Request}";
 
             sb.AppendLine();
-            sb.AppendLine(8, $"private async Task<MultipartFormDataContent> GetMultipartFormDataContentFrom{modelName}(");
-            sb.AppendLine(12, "IFormFile request,");
-            sb.AppendLine(12, "string fileName)");
+            sb.AppendLine(8, $"private async Task<MultipartFormDataContent> GetMultipartFormDataContentFrom{modelName}(IFormFile request)");
             sb.AppendLine(8, "{");
             sb.AppendLine(12, "var formDataContent = new MultipartFormDataContent();");
 
             sb.AppendLine(12, "if (request is not null)");
             sb.AppendLine(12, "{");
             sb.AppendLine(16, "var bytesContent = new ByteArrayContent(await request.GetBytes());");
-            sb.AppendLine(16, "formDataContent.Add(bytesContent, \"Request\", fileName);");
+            sb.AppendLine(16, "formDataContent.Add(bytesContent, \"Request\", request.FileName);");
             sb.AppendLine(12, "}");
             sb.AppendLine();
 

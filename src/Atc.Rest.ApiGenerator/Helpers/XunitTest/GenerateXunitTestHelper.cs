@@ -46,17 +46,29 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                             indentSpacesForData = indentSpacesForData - 4;
                         }
 
-                        AppendVarDataEqualNewListOfModel(
-                            indentSpacesForData,
-                            sb,
-                            endpointMethodMetadata,
-                            new KeyValuePair<string, OpenApiSchema>("data", schema),
-                            trailingChar,
-                            maxItemsForList,
-                            depthHierarchy,
-                            maxDepthHierarchy,
-                            badPropertySchema,
-                            asJsonBody);
+                        if (schema.IsItemsOfFormatTypeBinary())
+                        {
+                            if (asJsonBody)
+                            {
+                                throw new NotSupportedException("JSON not supported when RequestBody is type Array and format type is Binary.");
+                            }
+
+                            sb.AppendLine(indentSpaces, "var data = GetTestFiles();");
+                        }
+                        else
+                        {
+                            AppendVarDataEqualNewListOfModel(
+                                indentSpacesForData,
+                                sb,
+                                endpointMethodMetadata,
+                                new KeyValuePair<string, OpenApiSchema>("data", schema),
+                                trailingChar,
+                                maxItemsForList,
+                                depthHierarchy,
+                                maxDepthHierarchy,
+                                badPropertySchema,
+                                asJsonBody);
+                        }
 
                         if (asJsonBody)
                         {
@@ -151,7 +163,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             bool asJsonBody,
             string? parentModelNameToJsonBody = null)
         {
-            int countString = 1;
+            var countString = 1;
             var renderModelName = OpenApiDocumentSchemaModelNameHelper.EnsureModelNameWithNamespaceIfNeeded(endpointMethodMetadata, modelName);
             var jsonSpaces = string.Empty.PadLeft(depthHierarchy * 2);
             if (asJsonBody)
