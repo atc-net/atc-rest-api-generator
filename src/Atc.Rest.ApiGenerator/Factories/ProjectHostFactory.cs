@@ -43,6 +43,7 @@ namespace Atc.Rest.ApiGenerator.Factories
             var list = new List<string>
             {
                 "System.CodeDom.Compiler",
+                "System.Collections.Generic",
                 "System.IO",
                 "System.Net.Http",
                 "System.Text",

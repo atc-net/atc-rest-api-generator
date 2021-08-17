@@ -161,7 +161,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
                                             logItems.Add(LogItemHelper.Create(LogCategoryType.Error, ValidationRuleNameConstants.Schema09, $"Not specifying a data type for array property '{key}' in type '{schema.Reference.ReferenceV3}' is not supported."));
                                         }
 
-                                        if (value.Items.Type != null && !value.IsArrayReferenceTypeDeclared() && !value.IsItemsOfSimpleDataType())
+                                        if (value.Items.Type != null && !value.IsArrayReferenceTypeDeclared() && !value.IsItemsOfSimpleDataType() && !value.IsItemsOfFormatTypeBinary())
                                         {
                                             logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Schema05, $"Implicit object definition on property '{key}' in array type '{schema.Reference.ReferenceV3}' is not supported."));
                                         }
@@ -344,13 +344,12 @@ namespace Atc.Rest.ApiGenerator.Helpers
                     if (value.HasParametersOrRequestBody())
                     {
                         var schema = value.RequestBody?.Content.GetSchemaByFirstMediaType();
-                        if (schema != null && string.IsNullOrEmpty(schema.GetModelName()))
+                        if (schema != null &&
+                            string.IsNullOrEmpty(schema.GetModelName()) &&
+                            !schema.IsFormatTypeOfBinary() &&
+                            !schema.IsItemsOfFormatTypeBinary())
                         {
-                            var isFormatTypeOfBinary = schema.IsFormatTypeOfBinary();
-                            if (!isFormatTypeOfBinary)
-                            {
-                                logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation17, $"RequestBody is defined with inline model for operation '{value.OperationId}' - only reference to component-schemas are supported."));
-                            }
+                            logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation17, $"RequestBody is defined with inline model for operation '{value.OperationId}' - only reference to component-schemas are supported."));
                         }
                     }
 

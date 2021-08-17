@@ -1,7 +1,9 @@
 ﻿using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Demo.Api.Generated.Contracts.Files;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Xunit;
@@ -16,32 +18,35 @@ namespace Demo.Api.Tests.Endpoints.Files.Generated
 {
     [GeneratedCode("ApiGenerator", "1.1.154.0")]
     [Collection("Sequential-Endpoints")]
-    public class UploadSingleFileAsFormDataTests : WebApiControllerBaseTest
+    public class UploadMultiFilesAsFormDataTests : WebApiControllerBaseTest
     {
-        public UploadSingleFileAsFormDataTests(WebApiStartupFactory fixture) : base(fixture) { }
+        public UploadMultiFilesAsFormDataTests(WebApiStartupFactory fixture) : base(fixture) { }
 
         [Theory]
-        [InlineData("/api/v1/files/form-data/singleFile")]
-        public async Task UploadSingleFileAsFormData_Ok(string relativeRef)
+        [InlineData("/api/v1/files/form-data/multiFile")]
+        public async Task UploadMultiFilesAsFormData_Ok(string relativeRef)
         {
             // Arrange
-            var data = GetTestFile();
+            var data = GetTestFiles();
 
             // Act
-            var response = await HttpClient.PostAsync(relativeRef, await GetMultipartFormDataContentFromUploadSingleFileAsFormDataRequest(data));
+            var response = await HttpClient.PostAsync(relativeRef, await GetMultipartFormDataContentFromFiles(data));
 
             // Assert
             response.Should().NotBeNull();
             response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
 
-        private async Task<MultipartFormDataContent> GetMultipartFormDataContentFromUploadSingleFileAsFormDataRequest(IFormFile request)
+        private async Task<MultipartFormDataContent> GetMultipartFormDataContentFromFiles(List<IFormFile> request)
         {
             var formDataContent = new MultipartFormDataContent();
             if (request is not null)
             {
-                var bytesContent = new ByteArrayContent(await request.GetBytes());
-                formDataContent.Add(bytesContent, "Request", request.FileName);
+                foreach (var item in request)
+                {
+                    var bytesContent = new ByteArrayContent(await item.GetBytes());
+                    formDataContent.Add(bytesContent, "Request", item.FileName);
+                }
             }
 
             return formDataContent;

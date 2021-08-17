@@ -105,36 +105,47 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
             if (ApiOperation.RequestBody != null && requestSchema != null)
             {
                 var isFormatTypeOfBinary = requestSchema.IsFormatTypeOfBinary();
+                var isItemsOfFormatTypeBinary = requestSchema.IsItemsOfFormatTypeBinary();
 
                 var requestBodyType = "string?";
                 if (requestSchema.Reference is not null)
                 {
                     requestBodyType = requestSchema.Reference.Id.EnsureFirstCharacterToUpper();
                 }
-                else if (requestSchema.Items is not null)
-                {
-                    requestBodyType = requestSchema.Items.Reference.Id.EnsureFirstCharacterToUpper();
-                }
                 else if (isFormatTypeOfBinary)
                 {
                     requestBodyType = "IFormFile";
+                }
+                else if (isItemsOfFormatTypeBinary)
+                {
+                    requestBodyType = "IFormFile";
+                }
+                else if (requestSchema.Items is not null)
+                {
+                    requestBodyType = requestSchema.Items.Reference.Id.EnsureFirstCharacterToUpper();
                 }
 
                 PropertyDeclarationSyntax propertyDeclaration;
                 if (requestSchema.Type == OpenApiDataTypeConstants.Array)
                 {
-                    propertyDeclaration = ApiProjectOptions.IsForClient
-                        ? SyntaxPropertyDeclarationFactory.CreateListAuto(
-                                requestBodyType,
-                                NameConstants.Request)
-                            .AddValidationAttribute(new RequiredAttribute())
-                            .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForParameter(ApiOperation.RequestBody))
-                        : SyntaxPropertyDeclarationFactory.CreateListAuto(
-                                requestBodyType,
-                                NameConstants.Request)
-                            .AddFromBodyAttribute()
+                    if (ApiProjectOptions.IsForClient)
+                    {
+                        propertyDeclaration = SyntaxPropertyDeclarationFactory.CreateListAuto(requestBodyType, NameConstants.Request)
                             .AddValidationAttribute(new RequiredAttribute())
                             .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForParameter(ApiOperation.RequestBody));
+                    }
+                    else
+                    {
+                        propertyDeclaration = SyntaxPropertyDeclarationFactory.CreateListAuto(requestBodyType, NameConstants.Request);
+
+                        propertyDeclaration = requestSchema.IsItemsOfFormatTypeBinary()
+                            ? propertyDeclaration.AddFromFormAttribute()
+                            : propertyDeclaration.AddFromBodyAttribute();
+
+                        propertyDeclaration = propertyDeclaration
+                            .AddValidationAttribute(new RequiredAttribute())
+                            .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForParameter(ApiOperation.RequestBody));
+                    }
                 }
                 else
                 {
@@ -162,7 +173,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                                 ApiProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
                                 initializer: null);
 
-                        propertyDeclaration = requestSchema.HasAnyPropertiesFormatTypeBinary()
+                        propertyDeclaration = requestSchema.HasAnyPropertiesFormatTypeBinary() || requestSchema.HasAnyPropertiesOfArrayWithFormatTypeBinary()
                             ? propertyDeclaration.AddFromFormAttribute()
                             : propertyDeclaration.AddFromBodyAttribute();
 
