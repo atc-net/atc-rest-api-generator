@@ -29,7 +29,6 @@ namespace Microsoft.OpenApi.Models
                 apiOperationSchemaMappings,
                 contractArea,
                 projectName,
-                ensureModelNameWithNamespaceIfNeeded: true,
                 useProblemDetailsAsDefaultResponseBody,
                 includeEmptyResponseTypes: true,
                 includeIfNotDefinedValidation,
@@ -49,7 +48,6 @@ namespace Microsoft.OpenApi.Models
             List<ApiOperationSchemaMap> apiOperationSchemaMappings,
             string contractArea,
             string projectName,
-            bool ensureModelNameWithNamespaceIfNeeded,
             bool useProblemDetailsAsDefaultResponseBody,
             bool includeEmptyResponseTypes,
             bool includeIfNotDefinedValidation,
@@ -69,11 +67,8 @@ namespace Microsoft.OpenApi.Models
                 var isList = responses.IsSchemaTypeArrayForStatusCode(httpStatusCode);
                 var modelName = responses.GetModelNameForStatusCode(httpStatusCode);
 
-                if (ensureModelNameWithNamespaceIfNeeded && !string.IsNullOrEmpty(modelName))
-                {
-                    var isShared = apiOperationSchemaMappings.IsShared(modelName);
-                    modelName = OpenApiDocumentSchemaModelNameHelper.EnsureModelNameWithNamespaceIfNeeded(projectName, contractArea, modelName, isShared);
-                }
+                var isShared = apiOperationSchemaMappings.IsShared(modelName);
+                modelName = OpenApiDocumentSchemaModelNameHelper.EnsureModelNameWithNamespaceIfNeeded(projectName, contractArea, modelName, isShared, true);
 
                 var useProblemDetails = responses.IsSchemaTypeProblemDetailsForStatusCode(httpStatusCode);
                 if (!useProblemDetails && useProblemDetailsAsDefaultResponseBody)

@@ -61,10 +61,6 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                 FocusOnSegmentName);
 
             // Create class
-            // TODO: If UseEndpointResultInterfaces
-            ////var classDeclaration = SyntaxClassDeclarationFactory.CreateWithInheritClassAndInterface(EndpointTypeName, "EndpointResponse", InterfaceTypeName)
-            ////    .AddGeneratedCodeAttribute(ApiProjectOptions.ToolName, ApiProjectOptions.ToolVersion.ToString())
-            ////    .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForResults(ApiOperation, FocusOnSegmentName));
             var classDeclaration = SyntaxClassDeclarationFactory.CreateWithInheritClassType(EndpointTypeName, "EndpointResponse")
                 .AddGeneratedCodeAttribute(ApiProjectOptions.ToolName, ApiProjectOptions.ToolVersion.ToString())
                 .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForResults(ApiOperation, FocusOnSegmentName));
@@ -200,7 +196,6 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                 OperationSchemaMappings,
                 FocusOnSegmentName,
                 ApiProjectOptions.ProjectName,
-                ensureModelNameWithNamespaceIfNeeded: false,
                 useProblemDetailsAsDefaultResponseBody: true,
                 includeEmptyResponseTypes: false,
                 HasParametersOrRequestBody,

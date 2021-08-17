@@ -191,7 +191,6 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                         OperationSchemaMappings,
                         FocusOnSegmentName,
                         ApiProjectOptions.ProjectName,
-                        ensureModelNameWithNamespaceIfNeeded: true,
                         useProblemDetailsAsDefaultResponseBody: false,
                         includeEmptyResponseTypes: false,
                         hasGlobalParameters || apiOperation.Value.HasParametersOrRequestBody(),

@@ -536,7 +536,6 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                 OperationSchemaMappings,
                 FocusOnSegmentName,
                 ApiProjectOptions.ProjectName,
-                ensureModelNameWithNamespaceIfNeeded: false,
                 useProblemDetailsAsDefaultResponseBody: true,
                 includeEmptyResponseTypes: false,
                 HasParametersOrRequestBody,
