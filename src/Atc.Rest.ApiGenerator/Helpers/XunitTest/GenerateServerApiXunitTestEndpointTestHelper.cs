@@ -410,9 +410,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 else
                 {
                     var isModelCreated = AppendNewRequestModel(12, sb, endpointMethodMetadata, contractReturnTypeName.StatusCode);
-                    if (endpointMethodMetadata.HttpOperation != OperationType.Get &&
-                        !isModelCreated &&
-                        headerParameters.Count > 0)
+                    if (!isModelCreated && endpointMethodMetadata.HttpOperation.IsRequestBodySupported())
                     {
                         sb.AppendLine(12, "var data = \"{ }\";");
                     }

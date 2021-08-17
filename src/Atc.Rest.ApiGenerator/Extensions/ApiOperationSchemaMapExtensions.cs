@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Atc.Rest.ApiGenerator.Models;
 
 namespace Atc.Rest.ApiGenerator.Extensions
 {
-    internal static class ApiOperationSchemaMapExtension
+    internal static class ApiOperationSchemaMapExtensions
     {
         public static bool IsShared(this List<ApiOperationSchemaMap> apiOperationSchemaMaps, string schemaKey)
         {
