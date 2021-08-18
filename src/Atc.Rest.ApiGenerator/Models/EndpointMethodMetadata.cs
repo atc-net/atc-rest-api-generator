@@ -97,7 +97,7 @@ namespace Atc.Rest.ApiGenerator.Models
             }
 
             return responseType.Schema is not null &&
-                   responseType.Schema.HasAnyPropertiesFormatFromSystemCollectionGenericNamespace(ComponentsSchemas);
+                   responseType.Schema.HasAnyPropertiesFormatTypeFromSystemCollectionGenericNamespace(ComponentsSchemas);
         }
 
         public bool IsContractReturnTypeUsingString()
@@ -161,7 +161,7 @@ namespace Atc.Rest.ApiGenerator.Models
             var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
             return schema is not null &&
                    (schema.IsArrayReferenceTypeDeclared() ||
-                   schema.HasAnyPropertiesFormatFromSystemCollectionGenericNamespace(ComponentsSchemas) ||
+                   schema.HasAnyPropertiesFormatTypeFromSystemCollectionGenericNamespace(ComponentsSchemas) ||
                    schema.HasItemsWithFormatTypeBinary());
         }
 
