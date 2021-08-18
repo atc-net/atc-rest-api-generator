@@ -1,3 +1,4 @@
+using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,9 +26,12 @@ namespace Demo.Domain.Handlers.Files
 
         private async Task<GetFileByIdResult> InvokeExecuteAsync(GetFileByIdParameters parameters, CancellationToken cancellationToken)
         {
-            await Task.Delay(10, cancellationToken);
-            var bytes = Encoding.UTF8.GetBytes(parameters.Id);
-            return GetFileByIdResult.Ok(bytes, "dummy.txt");
+            var bytes = await File.ReadAllBytesAsync(@"c:\temp\stoplight-studio-win.exe", cancellationToken);
+            return GetFileByIdResult.Ok(bytes, "stoplight-studio-win.exe");
+
+            //await Task.Delay(10, cancellationToken);
+            //var bytes = Encoding.UTF8.GetBytes(parameters.Id);
+            //return GetFileByIdResult.Ok(bytes, "dummy.txt");
         }
     }
 }

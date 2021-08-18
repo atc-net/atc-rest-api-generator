@@ -47,6 +47,7 @@ namespace Demo.Api.Generated.Endpoints
         /// Area: Files.
         /// </summary>
         [HttpPost("form-data/multiFile")]
+        [RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue)]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public Task<ActionResult> UploadMultiFilesAsFormDataAsync(UploadMultiFilesAsFormDataParameters parameters, [FromServices] IUploadMultiFilesAsFormDataHandler handler, CancellationToken cancellationToken)
@@ -65,6 +66,7 @@ namespace Demo.Api.Generated.Endpoints
         /// Area: Files.
         /// </summary>
         [HttpPost("form-data/singleFile")]
+        [RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue)]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public Task<ActionResult> UploadSingleFileAsFormDataAsync(UploadSingleFileAsFormDataParameters parameters, [FromServices] IUploadSingleFileAsFormDataHandler handler, CancellationToken cancellationToken)
@@ -83,6 +85,7 @@ namespace Demo.Api.Generated.Endpoints
         /// Area: Files.
         /// </summary>
         [HttpPost("form-data/singleObject")]
+        [RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue)]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public Task<ActionResult> UploadSingleObjectWithFileAsFormDataAsync(UploadSingleObjectWithFileAsFormDataParameters parameters, [FromServices] IUploadSingleObjectWithFileAsFormDataHandler handler, CancellationToken cancellationToken)
@@ -101,6 +104,7 @@ namespace Demo.Api.Generated.Endpoints
         /// Area: Files.
         /// </summary>
         [HttpPost("form-data/singleObjectMultiFile")]
+        [RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue)]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public Task<ActionResult> UploadSingleObjectWithFilesAsFormDataAsync(UploadSingleObjectWithFilesAsFormDataParameters parameters, [FromServices] IUploadSingleObjectWithFilesAsFormDataHandler handler, CancellationToken cancellationToken)
