@@ -164,12 +164,12 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                 OperationSchemaMappings,
                 FocusOnSegmentName,
                 ApiProjectOptions.ProjectName,
-                ensureModelNameWithNamespaceIfNeeded: false,
                 useProblemDetailsAsDefaultResponseBody: true,
                 includeEmptyResponseTypes: false,
                 HasParametersOrRequestBody,
                 ApiProjectOptions.ApiOptions.Generator.UseAuthorization,
-                includeIfNotDefinedInternalServerError: true);
+                includeIfNotDefinedInternalServerError: true,
+                isClient: true);
 
             return responseTypes
                 .Select(x => CreatePropertyForStatusCodeContent(x.Item1, x.Item2))

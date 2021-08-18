@@ -191,12 +191,12 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                         OperationSchemaMappings,
                         FocusOnSegmentName,
                         ApiProjectOptions.ProjectName,
-                        ensureModelNameWithNamespaceIfNeeded: true,
                         useProblemDetailsAsDefaultResponseBody: false,
                         includeEmptyResponseTypes: false,
                         hasGlobalParameters || apiOperation.Value.HasParametersOrRequestBody(),
                         includeIfNotDefinedAuthorization: false,
-                        includeIfNotDefinedInternalServerError: false);
+                        includeIfNotDefinedInternalServerError: false,
+                        isClient: false);
 
                     var responseTypeNamesAndItemSchema = GetResponseTypeNamesAndItemSchema(responseTypes);
 
@@ -315,6 +315,14 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                     SyntaxAttributeListFactory.CreateWithOneItemWithOneArgument(
                         $"Http{apiOperation.Key}",
                         httpAttributeRoutePart));
+
+            // Create and add RequestFormLimits-attribute
+            if (apiOperation.Value.HasRequestBodyAnyOfFormatTypeBinary())
+            {
+                methodDeclaration = methodDeclaration.AddAttributeLists(
+                    SyntaxAttributeListFactory.Create(
+                        "RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue)"));
+            }
 
             // Create and add producesResponseTypes-attributes
             var producesResponseAttributeParts = apiOperation.Value.Responses.GetProducesResponseAttributeParts(

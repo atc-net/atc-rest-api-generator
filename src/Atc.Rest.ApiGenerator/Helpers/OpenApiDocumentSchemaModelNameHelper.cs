@@ -55,7 +55,8 @@ namespace Atc.Rest.ApiGenerator.Helpers
             string projectName,
             string segmentName,
             string modelName,
-            bool isShared = false)
+            bool isShared = false,
+            bool isClient = false)
         {
             if (string.IsNullOrEmpty(modelName))
             {
@@ -66,12 +67,16 @@ namespace Atc.Rest.ApiGenerator.Helpers
 
             if (isModelNameInNamespace)
             {
-                return $"{projectName}.{NameConstants.Contracts}.{segmentName}.{modelName}";
+                return isClient
+                    ? modelName
+                    : $"{projectName}.{NameConstants.Contracts}.{segmentName}.{modelName}";
             }
 
             if (!modelName.Contains(".", StringComparison.Ordinal) && IsReservedSystemTypeName(modelName))
             {
-                return $"{projectName}.{NameConstants.Contracts}.{segmentName}.{modelName}";
+                return isClient
+                    ? $"{NameConstants.Contracts}.{modelName}"
+                    : $"{projectName}.{NameConstants.Contracts}.{segmentName}.{modelName}";
             }
 
             if (isShared)

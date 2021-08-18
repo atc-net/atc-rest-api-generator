@@ -134,18 +134,11 @@ namespace Atc.Rest.ApiGenerator.Generators
                 throw new ArgumentNullException(nameof(operationSchemaMappings));
             }
 
-            // TODO: If UseEndpointResultInterfaces
-            ////var sgEndpointResultInterfaces = new List<SyntaxGeneratorClientEndpointResultInterface>();
             var sgEndpointResults = new List<SyntaxGeneratorClientEndpointResult>();
             var sgEndpointInterfaces = new List<SyntaxGeneratorClientEndpointInterface>();
             var sgEndpoints = new List<SyntaxGeneratorClientEndpoint>();
             foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
             {
-                // TODO: If UseEndpointResultInterfaces
-                ////var generatorEndpointResultInterfaces = new SyntaxGeneratorClientEndpointResultInterfaces(apiProjectOptions, operationSchemaMappings, basePathSegmentName);
-                ////var generatedEndpointResultInterfaces = generatorEndpointResultInterfaces.GenerateSyntaxTrees();
-                ////sgEndpointResultInterfaces.AddRange(generatedEndpointResultInterfaces);
-
                 var generatorEndpointResults = new SyntaxGeneratorClientEndpointResults(apiProjectOptions, operationSchemaMappings, basePathSegmentName);
                 var generatedEndpointResults = generatorEndpointResults.GenerateSyntaxTrees();
                 sgEndpointResults.AddRange(generatedEndpointResults);
@@ -160,12 +153,6 @@ namespace Atc.Rest.ApiGenerator.Generators
             }
 
             var logItems = new List<LogKeyValueItem>();
-
-            // TODO: If UseEndpointResultInterfaces
-            ////foreach (var sg in sgEndpointResultInterfaces)
-            ////{
-            ////    logItems.Add(sg.ToFile());
-            ////}
 
             foreach (var sg in sgEndpointResults)
             {
@@ -194,6 +181,7 @@ namespace Atc.Rest.ApiGenerator.Generators
 
             var logItems = new List<LogKeyValueItem>();
 
+            // TODO: Fix Cleanup
             ////var apiProjectOptions = new ApiProjectOptions(
             ////    projectOptions.PathForSrcGenerate,
             ////    projectTestGeneratePath: null,

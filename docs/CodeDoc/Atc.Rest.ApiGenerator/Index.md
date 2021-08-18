@@ -126,6 +126,7 @@
 
 ## [Microsoft.OpenApi.Models](Microsoft.OpenApi.Models.md)
 
+- [OpenApiOperationExtensions](Microsoft.OpenApi.Models.md#openapioperationextensions)
 - [OpenApiSchemaExtensions](Microsoft.OpenApi.Models.md#openapischemaextensions)
 - [OperationTypeExtensions](Microsoft.OpenApi.Models.md#operationtypeextensions)
 

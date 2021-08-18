@@ -32,12 +32,12 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                 OperationSchemaMappings,
                 FocusOnSegmentName,
                 ApiProjectOptions.ProjectName,
-                ensureModelNameWithNamespaceIfNeeded: false,
                 useProblemDetailsAsDefaultResponseBody: false,
                 includeEmptyResponseTypes: false,
                 HasParametersOrRequestBody,
                 ApiProjectOptions.ApiOptions.Generator.UseAuthorization,
-                includeIfNotDefinedInternalServerError: true);
+                includeIfNotDefinedInternalServerError: true,
+                isClient: true);
 
             this.ResultTypeName = ResponseTypes
                 .FirstOrDefault(x => x.Item1 == HttpStatusCode.OK)?.Item2 ?? ResponseTypes

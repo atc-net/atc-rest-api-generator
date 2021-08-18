@@ -536,12 +536,12 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient
                 OperationSchemaMappings,
                 FocusOnSegmentName,
                 ApiProjectOptions.ProjectName,
-                ensureModelNameWithNamespaceIfNeeded: false,
                 useProblemDetailsAsDefaultResponseBody: true,
                 includeEmptyResponseTypes: false,
                 HasParametersOrRequestBody,
                 ApiProjectOptions.ApiOptions.Generator.UseAuthorization,
-                includeIfNotDefinedInternalServerError: true);
+                includeIfNotDefinedInternalServerError: true,
+                isClient: true);
 
             var result = new List<StatementSyntax>();
             foreach (var responseType in responseTypes

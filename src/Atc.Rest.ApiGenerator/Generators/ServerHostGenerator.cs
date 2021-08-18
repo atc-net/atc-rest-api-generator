@@ -115,6 +115,7 @@ namespace Atc.Rest.ApiGenerator.Generators
                     projectOptions.UseRestExtended));
                 logItems.Add(ScaffoldProgramFile());
                 logItems.Add(ScaffoldStartupFile());
+                logItems.Add(ScaffoldWebConfig());
             }
 
             if (projectOptions.UseRestExtended)
@@ -1119,6 +1120,26 @@ namespace Atc.Rest.ApiGenerator.Generators
             return File.Exists(file.FullName)
                 ? new LogKeyValueItem(LogCategoryType.Debug, "FileSkip", "#", file.FullName)
                 : TextFileHelper.Save(file, codeAsString);
+        }
+
+        private LogKeyValueItem ScaffoldWebConfig()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("<?xml version=\"1.0\" encoding=\"utf - 8\"?>");
+            sb.AppendLine("<configuration>");
+            sb.AppendLine("  <system.webServer>");
+            sb.AppendLine("    <security>");
+            sb.AppendLine("      <requestFiltering>");
+            sb.AppendLine("        <requestLimits maxAllowedContentLength=\"2147483647\" />");
+            sb.AppendLine("      </requestFiltering>");
+            sb.AppendLine("    </security>");
+            sb.AppendLine("  </system.webServer>");
+            sb.AppendLine("</configuration>");
+
+            var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "web.config"));
+            return File.Exists(file.FullName)
+                ? new LogKeyValueItem(LogCategoryType.Debug, "FileSkip", "#", file.FullName)
+                : TextFileHelper.Save(file, sb.ToString());
         }
 
         // TODO: FIX THIS - Use CompilationUnit
