@@ -316,6 +316,14 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                         $"Http{apiOperation.Key}",
                         httpAttributeRoutePart));
 
+            // Create and add RequestFormLimits-attribute
+            if (apiOperation.Value.HasRequestBodyAnyOfFormatTypeBinary())
+            {
+                methodDeclaration = methodDeclaration.AddAttributeLists(
+                    SyntaxAttributeListFactory.Create(
+                        "RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue)"));
+            }
+
             // Create and add producesResponseTypes-attributes
             var producesResponseAttributeParts = apiOperation.Value.Responses.GetProducesResponseAttributeParts(
                 OperationSchemaMappings,
