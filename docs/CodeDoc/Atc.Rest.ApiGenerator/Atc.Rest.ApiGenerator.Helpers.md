@@ -239,7 +239,7 @@ string EnsureModelNameWithNamespaceIfNeeded(EndpointMethodMetadata endpointMetho
 #### EnsureModelNameWithNamespaceIfNeeded
 
 ```csharp
-string EnsureModelNameWithNamespaceIfNeeded(string projectName, string segmentName, string modelName, bool isShared = False)
+string EnsureModelNameWithNamespaceIfNeeded(string projectName, string segmentName, string modelName, bool isShared = False, bool isClient = False)
 ```
 #### EnsureTaskNameWithNamespaceIfNeeded
 

@@ -8,6 +8,24 @@
 <br />
 
 
+## OpenApiOperationExtensions
+
+```csharp
+public static class OpenApiOperationExtensions
+```
+
+### Static Methods
+
+
+#### HasRequestBodyAnyOfFormatTypeBinary
+
+```csharp
+bool HasRequestBodyAnyOfFormatTypeBinary(this OpenApiOperation operation)
+```
+
+<br />
+
+
 ## OpenApiSchemaExtensions
 
 ```csharp

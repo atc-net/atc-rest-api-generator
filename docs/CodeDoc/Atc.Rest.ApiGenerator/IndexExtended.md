@@ -159,7 +159,7 @@
   -  Static Methods
      - ContainsModelNameTask(string modelName)
      - EnsureModelNameWithNamespaceIfNeeded(EndpointMethodMetadata endpointMethodMetadata, string modelName)
-     - EnsureModelNameWithNamespaceIfNeeded(string projectName, string segmentName, string modelName, bool isShared = False)
+     - EnsureModelNameWithNamespaceIfNeeded(string projectName, string segmentName, string modelName, bool isShared = False, bool isClient = False)
      - EnsureTaskNameWithNamespaceIfNeeded(string contractReturnTypeName)
      - GetRawModelName(string modelName)
      - HasList(string typeName)
@@ -673,6 +673,9 @@
 
 ## [Microsoft.OpenApi.Models](Microsoft.OpenApi.Models.md)
 
+- [OpenApiOperationExtensions](Microsoft.OpenApi.Models.md#openapioperationextensions)
+  -  Static Methods
+     - HasRequestBodyAnyOfFormatTypeBinary(this OpenApiOperation operation)
 - [OpenApiSchemaExtensions](Microsoft.OpenApi.Models.md#openapischemaextensions)
   -  Static Methods
      - HasAnySharedModel(this OpenApiSchema schema, List&lt;ApiOperationSchemaMap&gt; apiOperationSchemaMaps)
