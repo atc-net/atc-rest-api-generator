@@ -1,9 +1,11 @@
-using Microsoft.OpenApi.Models;
+using System.Diagnostics.CodeAnalysis;
 
-namespace Atc.Rest.ApiGenerator.Extensions
+// ReSharper disable once CheckNamespace
+namespace Microsoft.OpenApi.Models
 {
     public static class OpenApiOperationExtensions
     {
+        [ExcludeFromCodeCoverage]
         public static bool HasRequestBodyAnyOfFormatTypeBinary(this OpenApiOperation operation)
         {
             var schema = operation.RequestBody?.Content?.GetSchemaByFirstMediaType();
