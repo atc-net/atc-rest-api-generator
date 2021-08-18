@@ -46,7 +46,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                             indentSpacesForData = indentSpacesForData - 4;
                         }
 
-                        if (schema.IsItemsOfFormatTypeBinary())
+                        if (schema.HasItemsWithFormatTypeBinary())
                         {
                             if (asJsonBody)
                             {

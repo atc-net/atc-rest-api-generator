@@ -200,7 +200,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             }
             else
             {
-                if (!schemaProperty.Value.IsFormatTypeOfEmail() &&
+                if (!schemaProperty.Value.IsFormatTypeEmail() &&
                     !schemaProperty.Value.IsRuleValidationString())
                 {
                     if (countString > 0)

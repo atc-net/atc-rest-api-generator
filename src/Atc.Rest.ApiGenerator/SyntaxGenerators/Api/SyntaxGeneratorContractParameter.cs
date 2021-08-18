@@ -104,8 +104,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
 
             if (ApiOperation.RequestBody != null && requestSchema != null)
             {
-                var isFormatTypeOfBinary = requestSchema.IsFormatTypeOfBinary();
-                var isItemsOfFormatTypeBinary = requestSchema.IsItemsOfFormatTypeBinary();
+                var isFormatTypeOfBinary = requestSchema.IsFormatTypeBinary();
+                var isItemsOfFormatTypeBinary = requestSchema.HasItemsWithFormatTypeBinary();
 
                 var requestBodyType = "string?";
                 if (requestSchema.Reference is not null)
@@ -138,7 +138,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                     {
                         propertyDeclaration = SyntaxPropertyDeclarationFactory.CreateListAuto(requestBodyType, NameConstants.Request);
 
-                        propertyDeclaration = requestSchema.IsItemsOfFormatTypeBinary()
+                        propertyDeclaration = requestSchema.HasItemsWithFormatTypeBinary()
                             ? propertyDeclaration.AddFromFormAttribute()
                             : propertyDeclaration.AddFromBodyAttribute();
 
@@ -173,7 +173,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                                 ApiProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
                                 initializer: null);
 
-                        propertyDeclaration = requestSchema.HasAnyPropertiesFormatTypeBinary() || requestSchema.HasAnyPropertiesOfArrayWithFormatTypeBinary()
+                        propertyDeclaration = requestSchema.HasAnyPropertiesWithFormatTypeBinary() || requestSchema.HasAnyPropertiesAsArrayWithFormatTypeBinary()
                             ? propertyDeclaration.AddFromFormAttribute()
                             : propertyDeclaration.AddFromBodyAttribute();
 

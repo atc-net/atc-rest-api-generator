@@ -183,12 +183,12 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                 .AddGeneratedCodeAttribute(ApiProjectOptions.ToolName, ApiProjectOptions.ToolVersion.ToString())
                 .WithLeadingTrivia(SyntaxDocumentationFactory.Create(ApiSchema));
 
-            var hasAnyPropertiesOfArrayWithFormatTypeBinary = ApiSchema.HasAnyPropertiesOfArrayWithFormatTypeBinary();
+            var hasAnyPropertiesAsArrayWithFormatTypeBinary = ApiSchema.HasAnyPropertiesAsArrayWithFormatTypeBinary();
 
             // Create class-properties and add to class
             if (ApiSchema.Properties != null)
             {
-                if (ApiSchema.Type == OpenApiDataTypeConstants.Array || hasAnyPropertiesOfArrayWithFormatTypeBinary)
+                if (ApiSchema.Type == OpenApiDataTypeConstants.Array || hasAnyPropertiesAsArrayWithFormatTypeBinary)
                 {
                     var (key, _) = ApiProjectOptions.Document.Components.Schemas.FirstOrDefault(x =>
                         x.Key.Equals(ApiSchema.Title, StringComparison.OrdinalIgnoreCase));
@@ -207,7 +207,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                         ? $"{ApiSchema.Title.EnsureFirstCharacterToUpperAndSingular()}List"
                         : ApiSchema.Title.EnsureFirstCharacterToUpper();
 
-                    var propertyDeclaration = hasAnyPropertiesOfArrayWithFormatTypeBinary
+                    var propertyDeclaration = hasAnyPropertiesAsArrayWithFormatTypeBinary
                         ? SyntaxPropertyDeclarationFactory.CreateListAuto("IFormFile", ApiSchema.ExtractPropertyNameWhenHasAnyPropertiesOfArrayWithFormatTypeBinary())
                             .WithLeadingTrivia(
                                 SyntaxDocumentationFactory.CreateSummary("A list of File(s)."))

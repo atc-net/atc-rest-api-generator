@@ -317,7 +317,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                         httpAttributeRoutePart));
 
             // Create and add RequestFormLimits-attribute
-            if (apiOperation.Value.HasRequestBodyAnyOfFormatTypeBinary())
+            if (apiOperation.Value.HasRequestBodyWithAnythingAsFormatTypeBinary())
             {
                 methodDeclaration = methodDeclaration.AddAttributeLists(
                     SyntaxAttributeListFactory.Create(

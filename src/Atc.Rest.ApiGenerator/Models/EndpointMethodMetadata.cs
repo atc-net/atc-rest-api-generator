@@ -142,7 +142,7 @@ namespace Atc.Rest.ApiGenerator.Models
             }
 
             var pair = ContractParameter?.ApiOperation.RequestBody?.Content.First();
-            return !pair?.Value?.Schema.HasAnyPropertiesFormatTypeBinary() ?? true;
+            return !pair?.Value?.Schema.HasAnyPropertiesWithFormatTypeBinary() ?? true;
         }
 
         public bool IsContractParameterRequestBodyUsedAsMultipartOctetStreamData()
@@ -162,7 +162,7 @@ namespace Atc.Rest.ApiGenerator.Models
             return schema is not null &&
                    (schema.IsArrayReferenceTypeDeclared() ||
                    schema.HasAnyPropertiesFormatFromSystemCollectionGenericNamespace(ComponentsSchemas) ||
-                   schema.IsItemsOfFormatTypeBinary());
+                   schema.HasItemsWithFormatTypeBinary());
         }
 
         public bool IsContractParameterRequestBodyUsingSystemNamespace()
@@ -319,11 +319,11 @@ namespace Atc.Rest.ApiGenerator.Models
                 }
 
                 if (modelSchema.Required.Contains(schemaProperty.Key) ||
-                    schemaProperty.Value.IsFormatTypeOfEmail() ||
-                    schemaProperty.Value.IsFormatTypeOfDate() ||
-                    schemaProperty.Value.IsFormatTypeOfDateTime() ||
-                    schemaProperty.Value.IsFormatTypeOfTime() ||
-                    schemaProperty.Value.IsFormatTypeOfTimestamp())
+                    schemaProperty.Value.IsFormatTypeEmail() ||
+                    schemaProperty.Value.IsFormatTypeDate() ||
+                    schemaProperty.Value.IsFormatTypeDateTime() ||
+                    schemaProperty.Value.IsFormatTypeTime() ||
+                    schemaProperty.Value.IsFormatTypeTimestamp())
                 {
                     relevantSchemas.Add(schemaProperty);
                 }

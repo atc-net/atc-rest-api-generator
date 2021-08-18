@@ -199,7 +199,7 @@ namespace Atc.CodeAnalysis.CSharp
                 propertyDeclaration = schema.Type switch
                 {
                     OpenApiDataTypeConstants.Number when !schema.HasFormatType() => RangeAttributeDouble(propertyDeclaration, schema),
-                    OpenApiDataTypeConstants.Integer when schema.HasFormatType() && schema.IsFormatTypeOfInt64() => RangeAttributeLong(propertyDeclaration, schema),
+                    OpenApiDataTypeConstants.Integer when schema.HasFormatType() && schema.IsFormatTypeInt64() => RangeAttributeLong(propertyDeclaration, schema),
                     _ => RangeAttributeInt(propertyDeclaration, schema)
                 };
             }

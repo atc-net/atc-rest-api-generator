@@ -563,7 +563,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 foreach (var schemaProperty in modelSchema.Properties)
                 {
                     var propertyName = schemaProperty.Key.EnsureFirstCharacterToUpper();
-                    if (schemaProperty.Value.IsFormatTypeOfBinary())
+                    if (schemaProperty.Value.IsFormatTypeBinary())
                     {
                         sb.AppendLine(12, $"if (request.{propertyName} is not null)");
                         sb.AppendLine(12, "{");
@@ -578,7 +578,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                         sb.AppendLine(12, "}");
                         sb.AppendLine();
                     }
-                    else if (schemaProperty.Value.IsItemsOfFormatTypeBinary())
+                    else if (schemaProperty.Value.HasItemsWithFormatTypeBinary())
                     {
                         sb.AppendLine(12, $"if (request.{propertyName} is not null)");
                         sb.AppendLine(12, "{");
@@ -590,7 +590,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                         sb.AppendLine(12, "}");
                         sb.AppendLine();
                     }
-                    else if (schemaProperty.Value.IsDataTypeOfList())
+                    else if (schemaProperty.Value.IsTypeArray())
                     {
                         sb.AppendLine(12, $"if (request.{propertyName} is not null && request.{propertyName}.Count > 0)");
                         sb.AppendLine(12, "{");
