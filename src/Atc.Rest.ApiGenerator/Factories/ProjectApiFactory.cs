@@ -86,7 +86,7 @@ namespace Atc.Rest.ApiGenerator.Factories
 
             list.Add("System.CodeDom.Compiler");
 
-            if (apiSchema.Type == OpenApiDataTypeConstants.Array ||
+            if (apiSchema.IsTypeArray() ||
                 schemasToCheck.HasDataTypeFromSystemCollectionGenericNamespace())
             {
                 list.Add("System.Collections.Generic");
@@ -117,7 +117,7 @@ namespace Atc.Rest.ApiGenerator.Factories
             if (globalParameters != null)
             {
                 if (globalParameters.HasFormatTypeFromSystemNamespace() ||
-                    globalParameters.Any(x => x.Schema.GetDataType().Equals(OpenApiDataTypeConstants.Array, StringComparison.OrdinalIgnoreCase)))
+                    globalParameters.Any(x => x.Schema.IsTypeArray()))
                 {
                     list.Add("System");
                 }
@@ -132,13 +132,13 @@ namespace Atc.Rest.ApiGenerator.Factories
             {
                 if (list.All(x => x != "System") &&
                     (parameters.HasFormatTypeFromSystemNamespace() ||
-                    parameters.Any(x => x.Schema.GetDataType().Equals(OpenApiDataTypeConstants.Array, StringComparison.OrdinalIgnoreCase))))
+                    parameters.Any(x => x.Schema.IsTypeArray())))
                 {
                     list.Add("System");
                 }
 
                 if (list.All(x => x != "System.Collections.Generic") &&
-                    parameters.Any(x => x.Schema.Type == OpenApiDataTypeConstants.Array || x.Schema.HasDataTypeFromSystemCollectionGenericNamespace()))
+                    parameters.Any(x => x.Schema.IsTypeArray() || x.Schema.HasDataTypeFromSystemCollectionGenericNamespace()))
                 {
                     list.Add("System.Collections.Generic");
                 }
@@ -167,7 +167,7 @@ namespace Atc.Rest.ApiGenerator.Factories
                 }
 
                 if (list.All(x => x != "System.Collections.Generic") &&
-                    (contentSchema.Type == OpenApiDataTypeConstants.Array || contentSchema.HasDataTypeFromSystemCollectionGenericNamespace()))
+                    (contentSchema.IsTypeArray() || contentSchema.HasDataTypeFromSystemCollectionGenericNamespace()))
                 {
                     list.Add("System.Collections.Generic");
                 }

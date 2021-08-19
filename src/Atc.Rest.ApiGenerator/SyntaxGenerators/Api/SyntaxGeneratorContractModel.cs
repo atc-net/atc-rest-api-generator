@@ -188,7 +188,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
             // Create class-properties and add to class
             if (ApiSchema.Properties != null)
             {
-                if (ApiSchema.Type == OpenApiDataTypeConstants.Array || hasAnyPropertiesAsArrayWithFormatTypeBinary)
+                if (ApiSchema.IsTypeArray() || hasAnyPropertiesAsArrayWithFormatTypeBinary)
                 {
                     var (key, _) = ApiProjectOptions.Document.Components.Schemas.FirstOrDefault(x =>
                         x.Key.Equals(ApiSchema.Title, StringComparison.OrdinalIgnoreCase));

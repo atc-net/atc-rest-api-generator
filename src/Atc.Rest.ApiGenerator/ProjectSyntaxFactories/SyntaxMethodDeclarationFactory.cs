@@ -65,10 +65,9 @@ namespace Atc.Rest.ApiGenerator.ProjectSyntaxFactories
                 foreach (var schema in apiSchemaProperties)
                 {
                     var name = schema.Key.EnsureFirstCharacterToUpper();
-                    var isArray = schema.Value.Type == OpenApiDataTypeConstants.Array;
                     var hasAnyProperties = schema.Value.HasAnyProperties();
 
-                    if (isArray)
+                    if (schema.Value.IsTypeArray())
                     {
                         content.Add(SyntaxInterpolatedFactory.CreateNameOf(name));
                         content.Add(SyntaxInterpolatedFactory.StringText(".Count: "));

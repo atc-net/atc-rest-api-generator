@@ -199,7 +199,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
                         list);
                 }
             }
-            else if (apiSchema.Type == OpenApiDataTypeConstants.Array &&
+            else if (apiSchema.IsTypeArray() &&
                      apiSchema.Items?.Reference?.Id != null)
             {
                 var subSchemaKey = apiSchema.Items.GetModelName();
@@ -253,7 +253,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
             {
                 schemaKey = apiSchema.Reference.Id.EnsureFirstCharacterToUpper();
             }
-            else if (apiSchema.Type == OpenApiDataTypeConstants.Array &&
+            else if (apiSchema.IsTypeArray() &&
                      apiSchema.Items?.Reference?.Id != null)
             {
                 schemaKey = apiSchema.Items.Reference.Id.EnsureFirstCharacterToUpper();

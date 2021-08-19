@@ -37,7 +37,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 case SchemaMapLocatedAreaType.Parameter:
                     break;
                 case SchemaMapLocatedAreaType.RequestBody:
-                    if (schema.Type == OpenApiDataTypeConstants.Array)
+                    if (schema.IsTypeArray())
                     {
                         var indentSpacesForData = indentSpaces;
                         if (asJsonBody)

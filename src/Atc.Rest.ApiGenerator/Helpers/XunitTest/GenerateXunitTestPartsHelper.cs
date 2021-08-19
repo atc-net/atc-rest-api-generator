@@ -438,7 +438,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             var name = schema.Key.EnsureFirstCharacterToUpper();
             var schemaForDataType = componentsSchemas.FirstOrDefault(x => x.Key.Equals(schema.Value.GetDataType(), StringComparison.OrdinalIgnoreCase));
 
-            if (schemaForDataType.Key is null && schema.Value.Type == OpenApiDataTypeConstants.Array)
+            if (schemaForDataType.Key is null && schema.Value.IsTypeArray())
             {
                 var modelName = schema.Value.GetModelName();
                 if (!string.IsNullOrEmpty(modelName))

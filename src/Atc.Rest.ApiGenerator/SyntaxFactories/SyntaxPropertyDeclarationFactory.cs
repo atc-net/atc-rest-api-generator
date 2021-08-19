@@ -91,7 +91,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxFactories
             var isNullable = schema.Value.Nullable;
             var isRequired = requiredProperties.Contains(schema.Key);
 
-            var propertyDeclaration = schema.Value.Type == OpenApiDataTypeConstants.Array
+            var propertyDeclaration = schema.Value.IsTypeArray()
                 ? CreateListAuto(
                     schema.Value.Items.GetDataType(),
                     schema.Key.EnsureFirstCharacterToUpper(),
@@ -137,7 +137,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxFactories
                 useNullableReferenceTypes = false;
             }
 
-            var propertyDeclaration = parameter.Schema.Type == OpenApiDataTypeConstants.Array
+            var propertyDeclaration = parameter.Schema.IsTypeArray()
                 ? CreateListAuto(
                     parameter.Schema.Items.GetDataType(),
                     parameter.Name.PascalCase(removeSeparators: true))
