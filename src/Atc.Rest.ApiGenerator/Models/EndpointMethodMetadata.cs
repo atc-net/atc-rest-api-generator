@@ -122,6 +122,19 @@ namespace Atc.Rest.ApiGenerator.Models
                           x.Schema.HasAnyPropertiesFormatTypeFromSystemNamespace(ComponentsSchemas));
         }
 
+        public bool IsContractReturnTypeUsingTaskName()
+        {
+            if (ContractResultTypeName is null ||
+                !ContractResultTypeName.Contains("Task", StringComparison.Ordinal))
+            {
+                return false;
+            }
+
+            var responseType = ContractReturnTypeNames.FirstOrDefault(x => x.StatusCode is HttpStatusCode.OK or HttpStatusCode.Created);
+            return responseType is not null &&
+                   OpenApiDocumentSchemaModelNameHelper.ContainsModelNameTask(responseType.FullModelName);
+        }
+
         public bool IsContractParameterRequestBodyUsed()
         {
             var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
@@ -230,6 +243,14 @@ namespace Atc.Rest.ApiGenerator.Models
 
             var rawModelName = OpenApiDocumentSchemaModelNameHelper.GetRawModelName(returnType.FullModelName);
             return !OperationSchemaMappings.IsShared(rawModelName);
+        }
+
+        public bool HasContractReturnTypeAsComplex()
+        {
+            var returnType = ContractReturnTypeNames.FirstOrDefault(x => x.StatusCode == HttpStatusCode.OK);
+            return returnType is not null &&
+                   !string.IsNullOrEmpty(returnType.FullModelName) &&
+                   returnType.Schema?.Type == OpenApiDataTypeConstants.Object;
         }
 
         public bool HasContractReturnTypeAsComplexAsListOrPagination()
