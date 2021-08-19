@@ -339,7 +339,7 @@ namespace Atc.Rest.ApiGenerator.Models
             foreach (var schemaProperty in modelSchema.Properties)
             {
                 if (UseNullableReferenceTypes &&
-                    schemaProperty.Value.Type == OpenApiDataTypeConstants.Array)
+                    schemaProperty.Value.IsTypeArray())
                 {
                     continue;
                 }

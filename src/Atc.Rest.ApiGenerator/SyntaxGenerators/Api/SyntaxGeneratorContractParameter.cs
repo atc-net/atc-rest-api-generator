@@ -126,7 +126,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                 }
 
                 PropertyDeclarationSyntax propertyDeclaration;
-                if (requestSchema.Type == OpenApiDataTypeConstants.Array)
+                if (requestSchema.IsTypeArray())
                 {
                     if (ApiProjectOptions.IsForClient)
                     {

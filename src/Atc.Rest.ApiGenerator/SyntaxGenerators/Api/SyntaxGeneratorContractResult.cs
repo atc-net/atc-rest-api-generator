@@ -251,7 +251,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                                     {
                                         methodDeclaration = CreateTypeRequestObjectResult(className, httpStatusCode.ToNormalizedString(), schema.GetDataType(), "response", isList, isPagination);
                                     }
-                                    else if (schema != null && string.Equals(schema.Type, OpenApiDataTypeConstants.Array, StringComparison.Ordinal))
+                                    else if (schema != null && schema.IsTypeArray())
                                     {
                                         methodDeclaration = CreateTypeRequestObjectResult(
                                             className,

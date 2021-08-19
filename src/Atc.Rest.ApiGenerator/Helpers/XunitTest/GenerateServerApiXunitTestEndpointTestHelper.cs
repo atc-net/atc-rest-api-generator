@@ -548,7 +548,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             sb.AppendLine(8, "{");
             sb.AppendLine(12, "var formDataContent = new MultipartFormDataContent();");
 
-            if (OpenApiDataTypeConstants.Array.Equals(modelSchema.Type, StringComparison.OrdinalIgnoreCase))
+            if (modelSchema.IsTypeArray())
             {
                 sb.AppendLine(12, "if (request is not null)");
                 sb.AppendLine(12, "{");
