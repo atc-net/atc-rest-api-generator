@@ -162,7 +162,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             }
 
             if (endpointMethodMetadata.HasSharedModelOrEnumInContractParameterRequestBody() ||
-                endpointMethodMetadata.HasSharedModelInContractReturnType(false))
+                endpointMethodMetadata.HasSharedModelOrEnumInContractReturnType(false))
             {
                 list.Add($"{hostProjectOptions.ProjectName}.Generated.Contracts");
             }

@@ -250,9 +250,13 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 list.Add("Atc.Rest.Results");
             }
 
+            if (endpointMethodMetadata.Contains("GetMouldByMouldIdHandlerStub"))
+            {
+            }
+
             if (!endpointMethodMetadata.IsContractReturnTypeUsingString() &&
                 (endpointMethodMetadata.HasSharedModelOrEnumInContractParameterRequestBody() ||
-                endpointMethodMetadata.HasSharedModelInContractReturnType()))
+                endpointMethodMetadata.HasSharedModelOrEnumInContractReturnType()))
             {
                 list.Add($"{hostProjectOptions.ProjectName}.Generated.Contracts");
             }

@@ -248,7 +248,7 @@ namespace Atc.Rest.ApiGenerator.Models
                    schema.HasAnySharedModelOrEnum(OperationSchemaMappings);
         }
 
-        public bool HasSharedModelInContractReturnType(bool includeProperties = true)
+        public bool HasSharedModelOrEnumInContractReturnType(bool includeProperties = true)
         {
             foreach (var item in ContractReturnTypeNames)
             {
