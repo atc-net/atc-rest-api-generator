@@ -177,7 +177,7 @@ namespace Atc.Rest.ApiGenerator.Factories
                     list.Add("System.ComponentModel.DataAnnotations");
                 }
 
-                if (contentSchema.IsFormatTypeOfBinary() || contentSchema.IsItemsOfFormatTypeBinary())
+                if (contentSchema.IsFormatTypeBinary() || contentSchema.HasItemsWithFormatTypeBinary())
                 {
                     list.Add("Microsoft.AspNetCore.Http");
                 }
@@ -202,7 +202,7 @@ namespace Atc.Rest.ApiGenerator.Factories
                 "Microsoft.AspNetCore.Mvc",
             };
 
-            if (responses.HasSchemaTypeOfArray())
+            if (responses.HasSchemaTypeArray())
             {
                 list.Add("System.Linq");
                 list.Add("System.Collections.Generic");
@@ -231,7 +231,7 @@ namespace Atc.Rest.ApiGenerator.Factories
             {
                 list.Add("Atc.Rest.Results");
 
-                if (responses.HasSchemaTypeOfHttpStatusCodeUsingAspNetCoreHttp())
+                if (responses.HasSchemaHttpStatusCodeUsingAspNetCoreHttp())
                 {
                     list.Add("Microsoft.AspNetCore.Http");
                 }

@@ -269,10 +269,13 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                 {
                     var rawModelName = OpenApiDocumentSchemaModelNameHelper.GetRawModelName(responseTypeName.Item2);
 
+                    var isShared = OperationSchemaMappings.IsShared(rawModelName);
                     var fullModelName = OpenApiDocumentSchemaModelNameHelper.EnsureModelNameWithNamespaceIfNeeded(
                         ApiProjectOptions.ProjectName,
                         FocusOnSegmentName,
-                        responseTypeName.Item2);
+                        responseTypeName.Item2,
+                        isShared,
+                        false);
 
                     var schema = ApiProjectOptions.Document.Components.Schemas.FirstOrDefault(x => x.Key.Equals(rawModelName, StringComparison.OrdinalIgnoreCase));
                     list.Add(new ResponseTypeNameAndItemSchema(responseTypeName.Item1, fullModelName, schema.Value));
@@ -317,7 +320,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                         httpAttributeRoutePart));
 
             // Create and add RequestFormLimits-attribute
-            if (apiOperation.Value.HasRequestBodyAnyOfFormatTypeBinary())
+            if (apiOperation.Value.HasRequestBodyWithAnythingAsFormatTypeBinary())
             {
                 methodDeclaration = methodDeclaration.AddAttributeLists(
                     SyntaxAttributeListFactory.Create(

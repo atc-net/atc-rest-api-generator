@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using Atc.Rest.ApiGenerator.Extensions;
 using Atc.Rest.ApiGenerator.Models;
+using Atc.Rest.ApiGenerator.SyntaxGenerators;
 using Microsoft.OpenApi.Models;
 
 // ReSharper disable ReplaceSubstringWithRangeIndexer
@@ -11,6 +12,10 @@ namespace Atc.Rest.ApiGenerator.Helpers
 {
     public static class OpenApiDocumentSchemaModelNameHelper
     {
+        public static bool ContainsModelNameTask(string modelName)
+            => modelName.Equals("Task", StringComparison.Ordinal) ||
+               modelName.EndsWith("Task>", StringComparison.Ordinal);
+
         public static string GetRawModelName(string modelName)
         {
             if (string.IsNullOrEmpty(modelName))
@@ -34,10 +39,6 @@ namespace Atc.Rest.ApiGenerator.Helpers
             return s;
         }
 
-        public static bool ContainsModelNameTask(string modelName)
-            => modelName.Equals("Task", StringComparison.Ordinal) ||
-               modelName.EndsWith("Task>", StringComparison.Ordinal);
-
         public static string EnsureModelNameWithNamespaceIfNeeded(EndpointMethodMetadata endpointMethodMetadata, string modelName)
         {
             if (endpointMethodMetadata == null)
@@ -48,7 +49,8 @@ namespace Atc.Rest.ApiGenerator.Helpers
             return EnsureModelNameWithNamespaceIfNeeded(
                 endpointMethodMetadata.ProjectName,
                 endpointMethodMetadata.SegmentName,
-                modelName);
+                modelName,
+                endpointMethodMetadata.IsSharedModel(modelName));
         }
 
         public static string EnsureModelNameWithNamespaceIfNeeded(
@@ -74,21 +76,26 @@ namespace Atc.Rest.ApiGenerator.Helpers
 
             if (!modelName.Contains(".", StringComparison.Ordinal) && IsReservedSystemTypeName(modelName))
             {
-                return isClient
-                    ? $"{NameConstants.Contracts}.{modelName}"
-                    : $"{projectName}.{NameConstants.Contracts}.{segmentName}.{modelName}";
-            }
+                if (isShared)
+                {
+                    return $"{projectName}.{NameConstants.Contracts}.{modelName}";
+                }
 
-            if (isShared)
-            {
-                // TO-DO: Maybe use it?..
+                if (isClient)
+                {
+                    return $"{NameConstants.Contracts}.{modelName}";
+                }
+
+                return $"{projectName}.{NameConstants.Contracts}.{segmentName}.{modelName}";
             }
 
             return modelName;
         }
 
-        public static string EnsureTaskNameWithNamespaceIfNeeded(string contractReturnTypeName)
-            => ContainsModelNameTask(contractReturnTypeName)
+        public static string EnsureTaskNameWithNamespaceIfNeeded(ResponseTypeNameAndItemSchema contractReturnTypeNameAndSchema)
+            => ContainsModelNameTask(contractReturnTypeNameAndSchema.FullModelName) ||
+               (contractReturnTypeNameAndSchema.HasSchema &&
+                contractReturnTypeNameAndSchema.Schema!.HasModelNameOrAnyPropertiesWithModelName("Task"))
                 ? "System.Threading.Tasks.Task"
                 : "Task";
 

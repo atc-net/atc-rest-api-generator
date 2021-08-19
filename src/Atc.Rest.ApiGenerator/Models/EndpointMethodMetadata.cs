@@ -67,7 +67,12 @@ namespace Atc.Rest.ApiGenerator.Models
 
         public IDictionary<string, OpenApiSchema> ComponentsSchemas { get; }
 
-        private List<ApiOperationSchemaMap> OperationSchemaMappings { get; }
+        public List<ApiOperationSchemaMap> OperationSchemaMappings { get; }
+
+        public bool IsSharedModel(string modelName)
+        {
+            return OperationSchemaMappings.IsShared(modelName);
+        }
 
         public bool IsContractReturnTypeUsingPagination()
         {
@@ -97,7 +102,7 @@ namespace Atc.Rest.ApiGenerator.Models
             }
 
             return responseType.Schema is not null &&
-                   responseType.Schema.HasAnyPropertiesFormatFromSystemCollectionGenericNamespace(ComponentsSchemas);
+                   responseType.Schema.HasAnyPropertiesFormatTypeFromSystemCollectionGenericNamespace(ComponentsSchemas);
         }
 
         public bool IsContractReturnTypeUsingString()
@@ -115,6 +120,19 @@ namespace Atc.Rest.ApiGenerator.Models
                             x.Schema.IsObjectReferenceTypeDeclared())
                 .Any(x => x.Schema != null &&
                           x.Schema.HasAnyPropertiesFormatTypeFromSystemNamespace(ComponentsSchemas));
+        }
+
+        public bool IsContractReturnTypeUsingTaskName()
+        {
+            if (ContractResultTypeName is null ||
+                !ContractResultTypeName.Contains("Task", StringComparison.Ordinal))
+            {
+                return false;
+            }
+
+            var responseType = ContractReturnTypeNames.FirstOrDefault(x => x.StatusCode is HttpStatusCode.OK or HttpStatusCode.Created);
+            return responseType is not null &&
+                   OpenApiDocumentSchemaModelNameHelper.ContainsModelNameTask(responseType.FullModelName);
         }
 
         public bool IsContractParameterRequestBodyUsed()
@@ -142,7 +160,7 @@ namespace Atc.Rest.ApiGenerator.Models
             }
 
             var pair = ContractParameter?.ApiOperation.RequestBody?.Content.First();
-            return !pair?.Value?.Schema.HasAnyPropertiesFormatTypeBinary() ?? true;
+            return !pair?.Value?.Schema.HasAnyPropertiesWithFormatTypeBinary() ?? true;
         }
 
         public bool IsContractParameterRequestBodyUsedAsMultipartOctetStreamData()
@@ -161,8 +179,8 @@ namespace Atc.Rest.ApiGenerator.Models
             var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
             return schema is not null &&
                    (schema.IsArrayReferenceTypeDeclared() ||
-                   schema.HasAnyPropertiesFormatFromSystemCollectionGenericNamespace(ComponentsSchemas) ||
-                   schema.IsItemsOfFormatTypeBinary());
+                   schema.HasAnyPropertiesFormatTypeFromSystemCollectionGenericNamespace(ComponentsSchemas) ||
+                   schema.HasItemsWithFormatTypeBinary());
         }
 
         public bool IsContractParameterRequestBodyUsingSystemNamespace()
@@ -227,6 +245,14 @@ namespace Atc.Rest.ApiGenerator.Models
             return !OperationSchemaMappings.IsShared(rawModelName);
         }
 
+        public bool HasContractReturnTypeAsComplex()
+        {
+            var returnType = ContractReturnTypeNames.FirstOrDefault(x => x.StatusCode == HttpStatusCode.OK);
+            return returnType is not null &&
+                   !string.IsNullOrEmpty(returnType.FullModelName) &&
+                   returnType.Schema?.Type == OpenApiDataTypeConstants.Object;
+        }
+
         public bool HasContractReturnTypeAsComplexAsListOrPagination()
         {
             var returnType = ContractReturnTypeNames.FirstOrDefault(x => x.StatusCode == HttpStatusCode.OK);
@@ -248,7 +274,7 @@ namespace Atc.Rest.ApiGenerator.Models
                    schema.HasAnySharedModelOrEnum(OperationSchemaMappings);
         }
 
-        public bool HasSharedModelInContractReturnType(bool includeProperties = true)
+        public bool HasSharedModelOrEnumInContractReturnType(bool includeProperties = true)
         {
             foreach (var item in ContractReturnTypeNames)
             {
@@ -319,11 +345,11 @@ namespace Atc.Rest.ApiGenerator.Models
                 }
 
                 if (modelSchema.Required.Contains(schemaProperty.Key) ||
-                    schemaProperty.Value.IsFormatTypeOfEmail() ||
-                    schemaProperty.Value.IsFormatTypeOfDate() ||
-                    schemaProperty.Value.IsFormatTypeOfDateTime() ||
-                    schemaProperty.Value.IsFormatTypeOfTime() ||
-                    schemaProperty.Value.IsFormatTypeOfTimestamp())
+                    schemaProperty.Value.IsFormatTypeEmail() ||
+                    schemaProperty.Value.IsFormatTypeDate() ||
+                    schemaProperty.Value.IsFormatTypeDateTime() ||
+                    schemaProperty.Value.IsFormatTypeTime() ||
+                    schemaProperty.Value.IsFormatTypeTimestamp())
                 {
                     relevantSchemas.Add(schemaProperty);
                 }

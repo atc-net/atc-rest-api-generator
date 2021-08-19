@@ -50,8 +50,27 @@ namespace Microsoft.OpenApi.Models
                 return false;
             }
 
-            return schema.HasAnyProperties() &&
-                   schema.Properties.Any(x => x.Value.HasAnySharedModelOrEnum(apiOperationSchemaMaps));
+            if (!schema.HasAnyProperties())
+            {
+                return false;
+            }
+
+            foreach (var schemaProperty in schema.Properties)
+            {
+                if (schemaProperty.Value.HasAnySharedModelOrEnum(apiOperationSchemaMaps))
+                {
+                    return true;
+                }
+
+                if (schemaProperty.Value.OneOf is not null &&
+                    schemaProperty.Value.OneOf.Count > 0 &&
+                    schemaProperty.Value.OneOf.Any(x => x.HasAnySharedModelOrEnum(apiOperationSchemaMaps)))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

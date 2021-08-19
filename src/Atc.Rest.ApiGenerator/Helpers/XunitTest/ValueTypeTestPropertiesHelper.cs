@@ -49,7 +49,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             return schema.Type switch
             {
                 OpenApiDataTypeConstants.Number when !schema.HasFormatType() => CreateNumberDouble(schema),
-                OpenApiDataTypeConstants.Integer when schema.HasFormatType() && schema.IsFormatTypeOfInt64() => CreateNumberLong(schema),
+                OpenApiDataTypeConstants.Integer when schema.HasFormatType() && schema.IsFormatTypeInt64() => CreateNumberLong(schema),
                 _ => CreateNumberInt(schema)
             };
         }
