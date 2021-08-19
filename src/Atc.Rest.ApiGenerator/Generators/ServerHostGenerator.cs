@@ -1003,7 +1003,7 @@ namespace Atc.Rest.ApiGenerator.Generators
         {
             var apiProjectOptions = new ApiProjectOptions(
                 projectOptions.ApiProjectSrcPath,
-                null,
+                projectTestGeneratePath: null,
                 projectOptions.Document,
                 projectOptions.DocumentFile,
                 projectOptions.ProjectName.Replace(".Api", string.Empty, StringComparison.Ordinal),

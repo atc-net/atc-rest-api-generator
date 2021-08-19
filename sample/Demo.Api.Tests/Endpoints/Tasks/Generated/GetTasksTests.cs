@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Demo.Api.Generated.Contracts.Tasks;
 using FluentAssertions;
 using Xunit;
 
@@ -23,7 +22,7 @@ namespace Demo.Api.Tests.Endpoints.Tasks.Generated
 
         [Theory]
         [InlineData("/api/v1/tasks")]
-        public async System.Threading.Tasks.Task GetTasks_Ok(string relativeRef)
+        public async Task GetTasks_Ok(string relativeRef)
         {
             // Act
             var response = await HttpClient.GetAsync(relativeRef);

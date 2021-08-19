@@ -71,9 +71,6 @@ namespace Microsoft.OpenApi.Models
             }
 
             return false;
-
-            //return schema.HasAnyProperties() &&
-            //       schema.Properties.Any(x => x.Value.HasAnySharedModelOrEnum2(apiOperationSchemaMaps));
         }
     }
 }
