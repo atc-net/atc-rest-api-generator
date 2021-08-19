@@ -67,7 +67,12 @@ namespace Atc.Rest.ApiGenerator.Models
 
         public IDictionary<string, OpenApiSchema> ComponentsSchemas { get; }
 
-        private List<ApiOperationSchemaMap> OperationSchemaMappings { get; }
+        public List<ApiOperationSchemaMap> OperationSchemaMappings { get; }
+
+        public bool IsSharedModel(string modelName)
+        {
+            return OperationSchemaMappings.IsShared(modelName);
+        }
 
         public bool IsContractReturnTypeUsingPagination()
         {

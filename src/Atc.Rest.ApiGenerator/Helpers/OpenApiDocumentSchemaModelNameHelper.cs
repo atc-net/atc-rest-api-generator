@@ -48,7 +48,8 @@ namespace Atc.Rest.ApiGenerator.Helpers
             return EnsureModelNameWithNamespaceIfNeeded(
                 endpointMethodMetadata.ProjectName,
                 endpointMethodMetadata.SegmentName,
-                modelName);
+                modelName,
+                endpointMethodMetadata.IsSharedModel(modelName));
         }
 
         public static string EnsureModelNameWithNamespaceIfNeeded(
@@ -74,14 +75,17 @@ namespace Atc.Rest.ApiGenerator.Helpers
 
             if (!modelName.Contains(".", StringComparison.Ordinal) && IsReservedSystemTypeName(modelName))
             {
-                return isClient
-                    ? $"{NameConstants.Contracts}.{modelName}"
-                    : $"{projectName}.{NameConstants.Contracts}.{segmentName}.{modelName}";
-            }
+                if (isShared)
+                {
+                    return $"{projectName}.{NameConstants.Contracts}.{modelName}";
+                }
 
-            if (isShared)
-            {
-                // TO-DO: Maybe use it?..
+                if (isClient)
+                {
+                    return $"{NameConstants.Contracts}.{modelName}";
+                }
+
+                return $"{projectName}.{NameConstants.Contracts}.{segmentName}.{modelName}";
             }
 
             return modelName;
