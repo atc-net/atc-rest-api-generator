@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using Atc.Rest.ApiGenerator.Extensions;
 using Atc.Rest.ApiGenerator.Models;
+using Atc.Rest.ApiGenerator.SyntaxGenerators;
 using Microsoft.OpenApi.Models;
 
 // ReSharper disable ReplaceSubstringWithRangeIndexer
@@ -11,6 +12,10 @@ namespace Atc.Rest.ApiGenerator.Helpers
 {
     public static class OpenApiDocumentSchemaModelNameHelper
     {
+        public static bool ContainsModelNameTask(string modelName)
+            => modelName.Equals("Task", StringComparison.Ordinal) ||
+               modelName.EndsWith("Task>", StringComparison.Ordinal);
+
         public static string GetRawModelName(string modelName)
         {
             if (string.IsNullOrEmpty(modelName))
@@ -33,10 +38,6 @@ namespace Atc.Rest.ApiGenerator.Helpers
 
             return s;
         }
-
-        public static bool ContainsModelNameTask(string modelName)
-            => modelName.Equals("Task", StringComparison.Ordinal) ||
-               modelName.EndsWith("Task>", StringComparison.Ordinal);
 
         public static string EnsureModelNameWithNamespaceIfNeeded(EndpointMethodMetadata endpointMethodMetadata, string modelName)
         {
@@ -91,8 +92,10 @@ namespace Atc.Rest.ApiGenerator.Helpers
             return modelName;
         }
 
-        public static string EnsureTaskNameWithNamespaceIfNeeded(string contractReturnTypeName)
-            => ContainsModelNameTask(contractReturnTypeName)
+        public static string EnsureTaskNameWithNamespaceIfNeeded(ResponseTypeNameAndItemSchema contractReturnTypeNameAndSchema)
+            => ContainsModelNameTask(contractReturnTypeNameAndSchema.FullModelName) ||
+               (contractReturnTypeNameAndSchema.HasSchema &&
+                contractReturnTypeNameAndSchema.Schema!.HasModelNameOrAnyPropertiesWithModelName("Task"))
                 ? "System.Threading.Tasks.Task"
                 : "Task";
 
