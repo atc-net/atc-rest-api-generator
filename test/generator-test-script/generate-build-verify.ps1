@@ -25,12 +25,13 @@ function HandleProject
     $projectRootFolder = "$($tmpFolderPath)\$($projectName)"
     [System.IO.Directory]::CreateDirectory($projectRootFolder) | Out-Null
 
-    if($fileLocation.StartsWith("http","CurrentCultureIgnoreCase"))
+    if ($fileLocation.StartsWith("http","CurrentCultureIgnoreCase"))
     {
         Write-Host "   Downloading specification file for '$($projectName)'" -ForegroundColor Yellow
         Invoke-WebRequest -Uri $fileLocation -OutFile "$($tmpFolderPath)\$($projectName)\$($projectName).yaml"
     }
-    else {
+    else
+    {
         Write-Host "   Copy specification file for '$($projectName)'" -ForegroundColor Yellow
         Copy-Item $fileLocation -Destination "$($tmpFolderPath)\$($projectName)\$($projectName).yaml"
     }
@@ -38,7 +39,8 @@ function HandleProject
     Write-Host "   Generating server API for '$($projectName)'" -ForegroundColor Yellow
     Set-Location $cliBasePath
 
-    if ($validateStrictMode) {
+    if ($validateStrictMode)
+    {
         dotnet run -- `
         generate server all `
         --validate-strictMode `
@@ -49,7 +51,8 @@ function HandleProject
         --outputTestPath "$($projectRootFolder)\$($projectName)\test" `
         -v | Out-Null
     }
-    else {
+    else
+    {
         dotnet run -- `
         generate server all `
         -p "$($projectName)" `
@@ -64,7 +67,8 @@ function HandleProject
     Set-Location "$($projectRootFolder)\$($projectName)"
 
     $buildErrors = dotnet build -c Debug -v q -clp:NoSummary | out-string -stream | select-string "error"
-    if ($buildErrors.Length -gt 0) {
+    if ($buildErrors.Length -gt 0)
+    {
         Write-Host "   Building project FAILED for '$($projectName)'" -ForegroundColor Red
 
         ForEach ($buildError In $buildErrors)
