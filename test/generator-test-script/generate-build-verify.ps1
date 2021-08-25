@@ -2,7 +2,7 @@ Clear-Host
 
 $originalLocation = Get-Location
 $tmpFolderPath = "$(Get-Location)\tmp"
-$generatorBasePath = (get-item $originalLocation ).parent.parent.FullName
+$generatorBasePath = (get-item $originalLocation).parent.parent.FullName
 $cliBasePath = "$($generatorBasePath)\src\Atc.Rest.ApiGenerator.CLI"
 
 $oldProgressPreference = $progressPreference;
