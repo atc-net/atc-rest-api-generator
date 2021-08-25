@@ -102,7 +102,8 @@ Set-Location $tmpFolderPath
 Write-Host "Cleaning tmp folder" -ForegroundColor Green
 Get-ChildItem -Path $tmpFolderPath -Recurse | Remove-Item -force -recurse
 
-foreach ($project in $projects) {
+foreach ($project in $projects)
+{
     Write-Host "Working on $($project.Name)" -ForegroundColor Green
     HandleProject `
         $project.Name `
