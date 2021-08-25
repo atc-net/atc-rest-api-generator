@@ -49,7 +49,7 @@ function HandleProject
         --outputSlnPath "$($projectRootFolder)\$($projectName)" `
         --outputSrcPath "$($projectRootFolder)\$($projectName)\src" `
         --outputTestPath "$($projectRootFolder)\$($projectName)\test" `
-        -v | Out-Null
+        -v
     }
     else
     {
@@ -60,16 +60,16 @@ function HandleProject
         --outputSlnPath "$($projectRootFolder)\$($projectName)" `
         --outputSrcPath "$($projectRootFolder)\$($projectName)\src" `
         --outputTestPath "$($projectRootFolder)\$($projectName)\test" `
-        -v | Out-Null
+        -v
     }
 
-    Write-Host "   Building project for '$($projectName)'" -ForegroundColor Yellow
+    Write-Host "   Building '$($projectName)' project" -ForegroundColor Yellow
     Set-Location "$($projectRootFolder)\$($projectName)"
 
     $buildErrors = dotnet build -c Debug -v q -clp:NoSummary | out-string -stream | select-string "error"
     if ($buildErrors.Length -gt 0)
     {
-        Write-Host "   Building project FAILED for '$($projectName)'" -ForegroundColor Red
+        Write-Host "   Build FAILED for project '$($projectName)'" -ForegroundColor Red
 
         ForEach ($buildError In $buildErrors)
         {
