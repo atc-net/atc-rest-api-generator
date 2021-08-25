@@ -108,6 +108,7 @@ foreach ($project in $projects) {
 
 Write-Host "Cleaning tmp folder" -ForegroundColor Green
 Get-ChildItem -Path $tmpFolderPath -Recurse | Remove-Item -force -recurse
+
 Write-Host "Removing tmp folder" -ForegroundColor Green
 [System.IO.Directory]::Delete($tmpFolderPath)
 
