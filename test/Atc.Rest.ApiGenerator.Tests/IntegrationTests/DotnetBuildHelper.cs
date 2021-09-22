@@ -37,6 +37,7 @@ namespace Atc.Rest.ApiGenerator.Tests.IntegrationTests
             return parsedErrors;
         }
 
+        [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "OK.")]
         private static Tuple<string, string> RunBuildCommand(DirectoryInfo rootPath, int runNumber, FileInfo? buildFile)
         {
             var arguments = "build -c Release -v q -clp:NoSummary";
