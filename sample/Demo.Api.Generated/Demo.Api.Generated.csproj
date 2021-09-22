@@ -14,8 +14,9 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Atc" Version="1.1.179" />
-    <PackageReference Include="Atc.Rest" Version="1.1.179" />
+    <PackageReference Include="Atc" Version="1.1.247" />
+    <PackageReference Include="Atc.Rest" Version="1.1.247" />
+    <PackageReference Include="Atc.Rest.Extended" Version="1.1.247" />
   </ItemGroup>
   <PropertyGroup>
     <Nullable>enable</Nullable>
