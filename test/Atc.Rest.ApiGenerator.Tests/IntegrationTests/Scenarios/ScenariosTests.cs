@@ -1,4 +1,6 @@
+using Atc.DotNet;
 using Atc.Helpers;
+using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.IO;
 using System.Linq;
@@ -89,7 +91,11 @@ namespace Atc.Rest.ApiGenerator.Tests.IntegrationTests.Scenarios
                 // Step 4:
                 // Build the generated project and assert no errors.
                 //----------------------------------------------------------------------------------------
-                var buildErrors = DotnetBuildHelper.BuildAndCollectErrors(new DirectoryInfo(outputPath), 1);
+                var buildErrors = await DotnetBuildHelper.BuildAndCollectErrors(
+                    NullLogger.Instance,
+                    new DirectoryInfo(outputPath),
+                    1);
+
                 Assert.Empty(buildErrors);
             }
         }
