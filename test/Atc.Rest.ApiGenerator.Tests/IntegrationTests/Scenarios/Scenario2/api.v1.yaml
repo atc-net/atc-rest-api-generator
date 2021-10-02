@@ -1,0 +1,988 @@
+openapi: 3.0.0
+info:
+  title: Demo Api
+  description: Demo Api - SingleFileVersion
+  version: '1.0'
+  contact:
+    name: atc-net A/S
+servers:
+  - url: /api/v1
+    description: Api version 1.0
+paths:
+  /orders:
+    get:
+      tags:
+        - Orders
+      summary: Get orders
+      description: Get orders
+      operationId: getOrders
+      parameters:
+        - $ref: '#/components/parameters/pagingPageSize'
+        - $ref: '#/components/parameters/pagingPageIndex'
+        - $ref: '#/components/parameters/queryString'
+        - $ref: '#/components/parameters/queryStringArray'
+        - $ref: '#/components/parameters/continuationToken'
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Pagination'
+                  - $ref: '#/components/schemas/Orders'
+        '404':
+          description: Not Found
+  '/orders/{id}':
+    get:
+      tags:
+        - Orders
+      summary: Get order by id
+      description: Get order by id
+      operationId: getOrderById
+      parameters:
+        - name: myEmail
+          in: query
+          description: The email for filter orders to retrieve
+          schema:
+            type: string
+            format: email
+            nullable: true
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '404':
+          description: Not Found
+    patch:
+      summary: Update part of order by id
+      description: Update part of order by id
+      operationId: patchOrdersId
+      parameters:
+        - name: myTestHeader
+          in: header
+          required: true
+          description: The myTestHeader special key
+          schema:
+            type: string
+        - name: myTestHeaderBool
+          in: header
+          required: true
+          description: The myTestHeaderBool special key
+          schema:
+            type: boolean
+        - name: myTestHeaderInt
+          in: header
+          required: true
+          description: The myTestHeaderInt special key
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrderRequest'
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not Found
+        '409':
+          description: Conflict
+        '502':
+          description: Bad Gateway
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    parameters:
+      - name: id
+        in: path
+        description: The id of the order
+        required: true
+        schema:
+          type: string
+          format: uuid
+  /users/email:
+    get:
+      tags:
+        - Users
+      summary: Get user by email
+      description: Get user by email
+      operationId: getUserByEmail
+      parameters:
+        - name: email
+          in: query
+          description: The email of the user to retrieve
+          required: true
+          schema:
+            type: string
+            format: email
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '409':
+          description: Conflict
+  '/users/{id}':
+    get:
+      summary: Get user by id
+      description: Get user by id
+      operationId: getUserById
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Not Found
+        '409':
+          description: Conflict
+    put:
+      summary: Update user by id
+      description: Update user by id
+      operationId: updateUserById
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '409':
+          description: Conflict
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+    delete:
+      summary: Delete user by id
+      description: Delete user by id
+      operationId: deleteUserById
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not Found
+        '409':
+          description: Conflict
+    parameters:
+      - name: id
+        in: path
+        description: Id of the user
+        required: true
+        schema:
+          type: string
+          format: uuid
+  /users:
+    get:
+      summary: Get all users
+      description: Get all users
+      operationId: getUsers
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Users'
+        '409':
+          description: Conflict
+    post:
+      summary: Create a new user
+      description: Create a new user
+      operationId: postUser
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '409':
+          description: Conflict
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+  '/users/{id}/gender':
+    put:
+      summary: Update gender on a user
+      description: Update gender on a user
+      operationId: updateMyTestGender
+      parameters:
+        - name: genderParam
+          in: query
+          description: The gender to set on the user
+          schema:
+            $ref: '#/components/schemas/GenderType'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '409':
+          description: Conflict
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTestGenderRequest'
+    parameters:
+      - name: id
+        description: Id of the user
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+  '/accounts/{accountId}/name':
+    put:
+      summary: Update name of account
+      description: Update name of account
+      operationId: updateAccountName
+      responses:
+        '200':
+          description: OK
+      parameters:
+        - name: name
+          in: header
+          description: The account name
+          schema:
+            type: string
+    post:
+      summary: Set name of account
+      description: Set name of account
+      operationId: setAccountName
+      responses:
+        '200':
+          description: OK
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAccountRequest'
+    parameters:
+      - name: accountId
+        in: path
+        required: true
+        description: The accountId
+        schema:
+          type: string
+          format: uuid
+  '/addresses/{postalCode}':
+    get:
+      summary: Get addresses by postal code
+      description: Get addresses by postal code
+      operationId: getAddressesByPostalCodes
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Address'
+        '404':
+          description: Not Found
+    parameters:
+      - name: postalCode
+        in: path
+        required: true
+        description: The postalCode to limit addresses on
+        schema:
+          type: string
+  /route-with-dash:
+    get:
+      summary: Your GET endpoint
+      description: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+      operationId: getRouteWithDash
+  /items:
+    post:
+      summary: Create a new item
+      description: Create a new item
+      operationId: createItem
+      responses:
+        '200':
+          description: OK
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateItemRequest'
+  '/items/{id}':
+    put:
+      summary: Updates an item
+      description: Updates an item
+      operationId: updateItem
+      responses:
+        '200':
+          description: OK
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateItemRequest'
+      parameters:
+        - name: id
+          in: path
+          description: The id of the order
+          required: true
+          schema:
+            type: string
+            format: uuid
+  /tasks:
+    get:
+      operationId: getTasks
+      summary: Returns tasks
+      description: Returns tasks
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tasks'
+  '/eventArgs/{id}':
+    parameters:
+      - name: id
+        in: path
+        description: The id of the eventArgs
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Get EventArgs By Id
+      description: Get EventArgs By Id
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventArgs'
+        '404':
+          description: Not Found
+      operationId: getEventArgsById
+  /eventArgs:
+    get:
+      operationId: getEventArgs
+      summary: Get EventArgs List
+      description: Get EventArgs List
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EventArgs'
+  '/files/{id}':
+    parameters:
+      - name: id
+        in: path
+        description: The file id
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: getFileById
+      summary: Get File By Id
+      description: Get File By Id
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+          headers: {}
+        '404':
+          description: Not Found
+  /files/form-data/singleObject:
+    post:
+      operationId: uploadSingleObjectWithFileAsFormData
+      summary: Upload a file as FormData
+      description: Upload a file as FormData
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FileAsFormDataRequest'
+    parameters: []
+  /files/form-data/singleObjectMultiFile:
+    post:
+      operationId: uploadSingleObjectWithFilesAsFormData
+      summary: Upload files as FormData
+      description: Upload files as FormData
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FilesAsFormDataRequest'
+    parameters: []
+  /files/form-data/singleFile:
+    post:
+      operationId: uploadSingleFileAsFormData
+      summary: Upload a file as OctetStream
+      description: Upload a file as OctetStream
+      responses:
+        '200':
+          description: OK
+      requestBody:
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+    parameters: []
+  /files/form-data/multiFile:
+    post:
+      summary: Upload multi files as form data
+      description: Upload multi files as form data
+      operationId: uploadMultiFilesAsFormData
+      responses:
+        '200':
+          description: OK
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: array
+              items:
+                type: string
+                format: binary
+  /list/string:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+      operationId: getListOfStrings
+  /list/int:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: integer
+      operationId: getListOfInts
+  /pagination/list/string:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Pagination'
+                  - type: array
+                    items:
+                      type: string
+      operationId: getPaginatedListOfStrings
+  /pagination/list/int:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Pagination'
+                  - type: array
+                    items:
+                      type: integer
+      operationId: getPaginatedListOfInts
+components:
+  parameters:
+    pagingPageSize:
+      name: pageSize
+      in: query
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+      description: The numbers of items to return.
+    pagingPageIndex:
+      name: pageIndex
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+      description: The number of items to skip before starting to collect the result set.
+    queryString:
+      name: queryString
+      in: query
+      required: false
+      schema:
+        type: string
+        nullable: true
+      description: The query string.
+    queryStringArray:
+      name: queryStringArray
+      in: query
+      required: false
+      schema:
+        type: array
+        items:
+          type: string
+        nullable: true
+      description: The query array of string.
+    continuationToken:
+      name: continuationToken
+      in: query
+      required: false
+      schema:
+        type: string
+        nullable: true
+      description: The continuation token.
+  schemas:
+    Pagination:
+      type: object
+      title: Pagination
+      description: A item result subset of a data query.
+      properties:
+        pageSize:
+          type: number
+          description: The number of items to request.
+        pageIndex:
+          type: number
+          nullable: true
+          description: The given page index starting with 0.
+        queryString:
+          type: string
+          nullable: true
+          description: The query to filter items by.
+        continuationToken:
+          type: string
+          nullable: true
+          description: Token to indicate next result set.
+        count:
+          type: number
+          description: Items count in result set.
+        totalCount:
+          type: number
+          nullable: true
+          description: Total items count.
+        totalPages:
+          type: number
+          nullable: true
+          description: Total pages.
+      required:
+        - pageSize
+        - count
+    ProblemDetails:
+      type: object
+      title: ProblemDetails
+      description: 'A machine-readable format for specifying errors in HTTP API responses based on https://tools.ietf.org/html/rfc7807.'
+      properties:
+        type:
+          type: string
+          description: 'A URI reference [RFC3986] that identifies the problem type. This specification encourages that, when dereferenced, it provide human-readable documentation for the problem type (e.g., using HTML [W3C.REC-html5-20141028]).'
+        title:
+          type: string
+          description: 'A short, human-readable summary of the problem type.It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization(e.g., using proactive content negotiation; see[RFC7231], Section 3.4).'
+        status:
+          type: integer
+          format: int32
+          description: 'The HTTP status code([RFC7231], Section 6) generated by the origin server for this occurrence of the problem.'
+        detail:
+          type: string
+          description: A human-readable explanation specific to this occurrence of the problem.
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
+    Order:
+      title: Order
+      description: |-
+        A single order.
+        Hallo description with multiline and no ending dot
+      type: object
+      x-examples:
+        MyExample:
+          id: 123
+          name: Hallo world
+        MyExample2: {}
+      properties:
+        id:
+          type: string
+          format: uuid
+        description:
+          type: string
+        myTime:
+          type: string
+          format: time
+        myEmail:
+          type: string
+          format: email
+          default: a@a.com
+        myNullableDateTime:
+          type: string
+          format: date-time
+          nullable: true
+        myDateTime:
+          type: string
+          format: date-time
+        myNumber:
+          type: number
+          minimum: 1.1
+          maximum: 20.2
+        myInteger:
+          type: integer
+          maximum: 50
+          default: 15
+        myBool:
+          type: boolean
+          description: MyBool is great
+        myUri:
+          type: string
+          format: uri
+          description: 'This is the good uri :-)'
+        myByte:
+          type: string
+          format: byte
+        myStringList:
+          type: array
+          description: 'Hallo myStringList desc :-)'
+          items:
+            type: string
+        myLong:
+          type: integer
+          format: int64
+          minimum: 10
+          exclusiveMinimum: false
+        deliveryAddress:
+          $ref: '#/components/schemas/Address'
+    Orders:
+      description: A list of orders.
+      type: array
+      x-tags:
+        - Orders
+      title: Orders
+      items:
+        $ref: '#/components/schemas/Order'
+    GenderType:
+      title: GenderType
+      description: ''
+      type: object
+      properties:
+        gender:
+          type: string
+          description: The users gender type
+          enum:
+            - None
+            - NonBinary
+            - Male
+            - Female
+      required:
+        - gender
+    ColorType:
+      title: ColorType
+      description: ''
+      type: object
+      properties:
+        color:
+          type: string
+          description: The users color type
+          enum:
+            - None = 0
+            - Black = 1
+            - White = 2
+            - Yellow = 4
+            - Red = 8
+      required:
+        - color
+    User:
+      title: User
+      description: A single user.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 00000000-0000-0000-0000-000000000000
+        gender:
+          $ref: '#/components/schemas/GenderType'
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+          example: email@email.dk
+        homepage:
+          type: string
+          format: uri
+        color:
+          $ref: '#/components/schemas/ColorType'
+        homeAddress:
+          $ref: '#/components/schemas/Address'
+        companyAddress:
+          $ref: '#/components/schemas/Address'
+    Users:
+      description: A list of users.
+      type: array
+      items:
+        $ref: '#/components/schemas/User'
+      x-tags:
+        - Users
+      title: Users
+    CreateUserRequest:
+      title: CreateUserRequest
+      description: Request to create a user
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        myNullableDateTime:
+          type: string
+          format: date-time
+          nullable: true
+        myDateTime:
+          type: string
+          format: date-time
+        email:
+          type: string
+          format: email
+          example: email@email.dk
+        homepage:
+          type: string
+          format: uri
+        gender:
+          $ref: '#/components/schemas/GenderType'
+        myNullableAddress:
+          nullable: true
+          oneOf:
+            - $ref: '#/components/schemas/Address'
+      required:
+        - firstName
+        - lastName
+        - myDateTime
+        - email
+        - gender
+    CreateUsersRequest:
+      description: A list of users.
+      type: array
+      x-tags:
+        - CreateUsersRequest
+      title: CreateUsersRequest
+      items:
+        $ref: '#/components/schemas/CreateUserRequest'
+    UpdateUserRequest:
+      title: UpdateUserRequest
+      description: Request to update a user
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+          example: email@email.dk
+        gender:
+          $ref: '#/components/schemas/GenderType'
+    UpdateTestGenderRequest:
+      title: Update test-gender Request
+      description: ''
+      type: object
+      properties:
+        gender:
+          $ref: '#/components/schemas/GenderType'
+    Address:
+      title: Address
+      type: object
+      properties:
+        streetName:
+          type: string
+          maxLength: 255
+        streetNumber:
+          type: string
+        postalCode:
+          type: string
+        cityName:
+          type: string
+        myCountry:
+          $ref: '#/components/schemas/Country'
+    Country:
+      title: Country
+      type: object
+      properties:
+        name:
+          type: string
+        alpha2Code:
+          type: string
+          minLength: 2
+          maxLength: 2
+          pattern: '^[A-Za-z]{2}$'
+        alpha3Code:
+          type: string
+          minLength: 3
+          maxLength: 3
+          pattern: '^[A-Za-z]{3}$'
+      required:
+        - name
+        - alpha2Code
+        - alpha3Code
+    UpdateOrderRequest:
+      title: UpdateOrderRequest
+      description: Request to update an order
+      type: object
+      properties:
+        myEmail:
+          type: string
+          format: email
+      required:
+        - myEmail
+    Item:
+      title: Item
+      type: object
+      properties:
+        name:
+          type: string
+      required:
+        - name
+    CreateItemRequest:
+      title: CreateItemRequest
+      type: object
+      properties:
+        item:
+          $ref: '#/components/schemas/Item'
+        myItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/Item'
+      required:
+        - item
+        - myItems
+    UpdateItemRequest:
+      title: UpdateItemRequest
+      type: object
+      properties:
+        item:
+          $ref: '#/components/schemas/Item'
+      required:
+        - item
+    Task:
+      title: Task
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+      description: Describes a single task.
+    Tasks:
+      title: Tasks
+      type: array
+      items:
+        $ref: '#/components/schemas/Task'
+      description: Contains a list of Tasks
+    EventArgs:
+      title: EventArgs
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        eventName:
+          type: string
+    FileAsFormDataRequest:
+      title: FileAsFormDataRequest
+      type: object
+      properties:
+        itemName:
+          type: string
+        file:
+          type: string
+          format: binary
+          nullable: true
+        items:
+          type: array
+          items:
+            type: string
+      required:
+        - itemName
+        - items
+    FilesAsFormDataRequest:
+      title: FilesAsFormDataRequest
+      type: object
+      properties:
+        files:
+          type: array
+          items:
+            type: string
+            format: binary
+      required:
+        - files
+    UpdateAccountRequest:
+      title: UpdateAccountRequest
+      type: object
+      properties:
+        name:
+          type: string
