@@ -95,11 +95,23 @@ namespace Microsoft.OpenApi.Models
                             if (string.IsNullOrEmpty(modelName))
                             {
                                 var schema = responses.GetSchemaForStatusCode(httpStatusCode);
-                                if (schema != null && schema.IsSimpleDataType())
+                                if (schema is not null)
                                 {
-                                    dataType = schema.GetDataType();
+                                    if (schema.IsSimpleDataType())
+                                    {
+                                        dataType = schema.GetDataType();
+                                    }
+                                    else if (schema.HasArrayItemsWithSimpleDataType())
+                                    {
+                                        dataType = schema.GetSimpleDataTypeFromArray();
+                                    }
+                                    else if (schema.HasPaginationItemsWithSimpleDataType())
+                                    {
+                                        dataType = schema.GetSimpleDataTypeFromPagination();
+                                    }
                                 }
-                                else
+
+                                if (string.IsNullOrEmpty(dataType))
                                 {
                                     dataType = "string";
                                 }
