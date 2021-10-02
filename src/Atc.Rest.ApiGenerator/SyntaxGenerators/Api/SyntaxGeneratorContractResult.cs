@@ -228,9 +228,25 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                             {
                                 if (string.IsNullOrEmpty(modelName))
                                 {
-                                    if (schema != null && schema.IsSimpleDataType())
+                                    if (schema != null && (schema.IsSimpleDataType() || schema.IsTypeArrayOrPagination()))
                                     {
-                                        methodDeclaration = CreateTypeRequestObjectResult(className, httpStatusCode.ToNormalizedString(), schema.GetDataType(), "response", isList, isPagination);
+                                        if (schema.IsSimpleDataType())
+                                        {
+                                            methodDeclaration = CreateTypeRequestObjectResult(className, httpStatusCode.ToNormalizedString(), schema.GetDataType(), "response", isList, isPagination);
+                                        }
+                                        else if (schema.IsTypeArray() && schema.HasItemsWithSimpleDataType())
+                                        {
+                                            methodDeclaration = CreateTypeRequestObjectResult(className, httpStatusCode.ToNormalizedString(), schema.GetSimpleDataTypeFromArray(), "response", isList, isPagination);
+                                        }
+                                        else if (schema.IsTypePagination() && schema.HasPaginationItemsWithSimpleDataType())
+                                        {
+                                            methodDeclaration = CreateTypeRequestObjectResult(className, httpStatusCode.ToNormalizedString(), schema.GetSimpleDataTypeFromPagination(), "response", isList, isPagination);
+                                        }
+                                        else
+                                        {
+                                            // This should not happen
+                                            methodDeclaration = CreateTypeRequestObjectResult(className, httpStatusCode.ToNormalizedString(), "UnexpectedDataType");
+                                        }
                                     }
                                     else
                                     {
@@ -247,9 +263,25 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                             {
                                 if (string.IsNullOrEmpty(modelName))
                                 {
-                                    if (schema != null && schema.IsSimpleDataType())
+                                    if (schema != null && (schema.IsSimpleDataType() || schema.IsTypeArrayOrPagination()))
                                     {
-                                        methodDeclaration = CreateTypeRequestObjectResult(className, httpStatusCode.ToNormalizedString(), schema.GetDataType(), "response", isList, isPagination);
+                                        if (schema.IsSimpleDataType())
+                                        {
+                                            methodDeclaration = CreateTypeRequestObjectResult(className, httpStatusCode.ToNormalizedString(), schema.GetDataType(), "response", isList, isPagination);
+                                        }
+                                        else if (schema.IsTypeArray() && schema.HasItemsWithSimpleDataType())
+                                        {
+                                            methodDeclaration = CreateTypeRequestObjectResult(className, httpStatusCode.ToNormalizedString(), schema.GetSimpleDataTypeFromArray(), "response", isList, isPagination);
+                                        }
+                                        else if (schema.IsTypePagination() && schema.HasPaginationItemsWithSimpleDataType())
+                                        {
+                                            methodDeclaration = CreateTypeRequestObjectResult(className, httpStatusCode.ToNormalizedString(), schema.GetSimpleDataTypeFromPagination(), "response", isList, isPagination);
+                                        }
+                                        else
+                                        {
+                                            // This should not happen
+                                            methodDeclaration = CreateTypeRequestObjectResult(className, httpStatusCode.ToNormalizedString(), "UnexpectedDataType");
+                                        }
                                     }
                                     else if (schema != null && schema.IsTypeArray())
                                     {
@@ -704,9 +736,25 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                 if (string.IsNullOrEmpty(modelName))
                 {
                     var schema = responses.GetSchemaForStatusCode(HttpStatusCode.OK);
-                    if (schema != null && schema.IsSimpleDataType())
+                    if (schema != null && (schema.IsSimpleDataType() || schema.IsTypeArrayOrPagination()))
                     {
-                        return CreateImplicitOperator(className, schema.GetDataType(), httpStatusCode, isList, isPagination);
+                        if (schema.IsSimpleDataType())
+                        {
+                            return CreateImplicitOperator(className, schema.GetDataType(), httpStatusCode, isList, isPagination);
+                        }
+
+                        if (schema.IsTypeArray() && schema.HasItemsWithSimpleDataType())
+                        {
+                            return CreateImplicitOperator(className, schema.GetSimpleDataTypeFromArray(), httpStatusCode, isList, isPagination);
+                        }
+
+                        if (schema.IsTypePagination() && schema.HasPaginationItemsWithSimpleDataType())
+                        {
+                            return CreateImplicitOperator(className, schema.GetSimpleDataTypeFromPagination(), httpStatusCode, isList, isPagination);
+                        }
+
+                        // This should not happen
+                        return CreateImplicitOperator(className, "UnexpectedDataType", httpStatusCode, isList, isPagination);
                     }
                 }
 

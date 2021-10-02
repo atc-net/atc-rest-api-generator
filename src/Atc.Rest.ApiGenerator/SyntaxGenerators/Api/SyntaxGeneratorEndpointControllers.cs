@@ -275,7 +275,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                         FocusOnSegmentName,
                         responseTypeName.Item2,
                         isShared,
-                        false);
+                        isClient: false);
 
                     var schema = ApiProjectOptions.Document.Components.Schemas.FirstOrDefault(x => x.Key.Equals(rawModelName, StringComparison.OrdinalIgnoreCase));
                     list.Add(new ResponseTypeNameAndItemSchema(responseTypeName.Item1, fullModelName, schema.Value));

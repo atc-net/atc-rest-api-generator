@@ -13,6 +13,44 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
 {
     public static class GenerateXunitTestHelper
     {
+        public static void AppendVarDataListSimpleType(
+            int indentSpaces,
+            StringBuilder sb,
+            string simpleDataType,
+            int maxItemsForList = 3)
+        {
+            sb.AppendLine(indentSpaces, $"var data = new List<{simpleDataType}>()");
+            sb.AppendLine(indentSpaces, "{");
+            for (int i = 0; i < maxItemsForList; i++)
+            {
+                switch (simpleDataType)
+                {
+                    case "string":
+                        sb.AppendLine(indentSpaces + 4, $"\"Hallo {i}\",");
+                        break;
+                    case "double":
+                    case "long":
+                    case "int":
+                        sb.AppendLine(indentSpaces + 4, $"{i},");
+                        break;
+                    case "bool":
+                        sb.AppendLine(indentSpaces + 4, i.IsEven() ? "true," : "false,");
+                        break;
+                    case "guid":
+                        var x = i;
+                        if (x is > 9 or < 0)
+                        {
+                            x = 9;
+                        }
+
+                        sb.AppendLine(indentSpaces + 4, $"\"a6ed4bde-0f0e-4f58-b432-a668e21c800{x}\",");
+                        break;
+                }
+            }
+
+            sb.AppendLine(indentSpaces, "};");
+        }
+
         public static void AppendVarDataModelOrListOfModel(
             int indentSpaces,
             StringBuilder sb,
@@ -43,7 +81,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                         if (asJsonBody)
                         {
                             sb.AppendLine(indentSpaces, "var sb = new StringBuilder();");
-                            indentSpacesForData = indentSpacesForData - 4;
+                            indentSpacesForData -= 4;
                         }
 
                         if (schema.HasItemsWithFormatTypeBinary())
@@ -144,7 +182,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
 
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(locatedAreaType), locatedAreaType, null);
+                    throw new ArgumentOutOfRangeException(nameof(locatedAreaType), locatedAreaType, message: null);
             }
         }
 
@@ -188,7 +226,12 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
 
                 string dataType = schemaProperty.Value.GetDataType();
 
-                string propertyValueGenerated = GenerateXunitTestPartsHelper.PropertyValueGenerator(schemaProperty, endpointMethodMetadata.ComponentsSchemas, useForBadRequest, itemNumber, null);
+                string propertyValueGenerated = GenerateXunitTestPartsHelper.PropertyValueGenerator(
+                    schemaProperty,
+                    endpointMethodMetadata.ComponentsSchemas,
+                    useForBadRequest,
+                    itemNumber,
+                    customValue: null);
 
                 if ("NEW-INSTANCE-LIST".Equals(propertyValueGenerated, StringComparison.Ordinal))
                 {
