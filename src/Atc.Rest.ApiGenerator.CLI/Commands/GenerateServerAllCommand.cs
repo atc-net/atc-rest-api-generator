@@ -43,6 +43,7 @@ namespace Atc.Rest.ApiGenerator.CLI.Commands
             var outputSlnPath = CommandLineApplicationHelper.GetOutputSlnPath(configCmd);
             var outputSrcPath = CommandLineApplicationHelper.GetOutputSrcPath(configCmd);
             var outputTestPath = CommandLineApplicationHelper.GetOutputTestPath(configCmd);
+            var useCodingRules = CommandLineApplicationHelper.GetDisableCodingRules(configCmd);
 
             logItems.AddRange(GenerateHelper.GenerateServerApi(
                 projectPrefixName,
@@ -84,10 +85,13 @@ namespace Atc.Rest.ApiGenerator.CLI.Commands
                 outputSrcPath,
                 outputTestPath));
 
-            logItems.AddRange(GenerateAtcCodingRulesHelper.Generate(
-                outputSlnPath,
-                outputSrcPath,
-                outputTestPath));
+            if (useCodingRules)
+            {
+                logItems.AddRange(GenerateAtcCodingRulesHelper.Generate(
+                    outputSlnPath,
+                    outputSrcPath,
+                    outputTestPath));
+            }
 
             return ConsoleHelper.WriteLogItemsAndExit(logItems, verboseMode, CommandArea);
         }

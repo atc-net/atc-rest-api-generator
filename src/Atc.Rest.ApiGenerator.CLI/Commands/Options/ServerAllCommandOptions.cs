@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using McMaster.Extensions.CommandLineUtils;
 
 namespace Atc.Rest.ApiGenerator.CLI.Commands.Options
@@ -15,5 +15,8 @@ namespace Atc.Rest.ApiGenerator.CLI.Commands.Options
 
         [Option("--outputTestPath", "Path to generated test projects (directory)", CommandOptionType.SingleValue)]
         public string? OutputTestPath { get; set; }
+
+        [Option("--disableCodingRules", "Disable ATC-Coding-Rules", CommandOptionType.NoValue)]
+        public bool DisableCodingRules { get; set; }
     }
 }
