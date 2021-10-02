@@ -7,588 +7,490 @@
 
 <br />
 
-
 ## ApiOperationSchemaMap
 
-```csharp
-public class ApiOperationSchemaMap
-```
+>```csharp
+>public class ApiOperationSchemaMap
+>```
 
 ### Properties
 
-
 #### LocatedArea
-
-```csharp
-LocatedArea
-```
+>```csharp
+>LocatedArea
+>```
 #### OperationType
-
-```csharp
-OperationType
-```
+>```csharp
+>OperationType
+>```
 #### ParentSchemaKey
-
-```csharp
-ParentSchemaKey
-```
+>```csharp
+>ParentSchemaKey
+>```
 #### Path
-
-```csharp
-Path
-```
+>```csharp
+>Path
+>```
 #### SchemaKey
-
-```csharp
-SchemaKey
-```
+>```csharp
+>SchemaKey
+>```
 #### SegmentName
-
-```csharp
-SegmentName
-```
+>```csharp
+>SegmentName
+>```
 ### Methods
 
-
 #### Equals
-
-```csharp
-bool Equals(object obj)
-```
+>```csharp
+>bool Equals(object obj)
+>```
 #### GetHashCode
-
-```csharp
-int GetHashCode()
-```
+>```csharp
+>int GetHashCode()
+>```
 #### ToString
-
-```csharp
-string ToString()
-```
+>```csharp
+>string ToString()
+>```
 
 <br />
-
 
 ## ApiProjectOptions
 
-```csharp
-public class ApiProjectOptions : BaseProjectOptions
-```
+>```csharp
+>public class ApiProjectOptions : BaseProjectOptions
+>```
 
 ### Properties
 
-
 #### PathForContracts
-
-```csharp
-PathForContracts
-```
+>```csharp
+>PathForContracts
+>```
 #### PathForContractsShared
-
-```csharp
-PathForContractsShared
-```
+>```csharp
+>PathForContractsShared
+>```
 #### PathForEndpoints
-
-```csharp
-PathForEndpoints
-```
+>```csharp
+>PathForEndpoints
+>```
 
 <br />
-
 
 ## BaseProjectOptions
 
-```csharp
-public abstract class BaseProjectOptions
-```
+>```csharp
+>public abstract class BaseProjectOptions
+>```
 
 ### Properties
 
-
 #### ApiOptions
-
-```csharp
-ApiOptions
-```
+>```csharp
+>ApiOptions
+>```
 #### BasePathSegmentNames
-
-```csharp
-BasePathSegmentNames
-```
+>```csharp
+>BasePathSegmentNames
+>```
 #### ClientFolderName
-
-```csharp
-ClientFolderName
-```
+>```csharp
+>ClientFolderName
+>```
 #### Document
-
-```csharp
-Document
-```
+>```csharp
+>Document
+>```
 #### DocumentFile
-
-```csharp
-DocumentFile
-```
+>```csharp
+>DocumentFile
+>```
 #### IsForClient
-
-```csharp
-IsForClient
-```
+>```csharp
+>IsForClient
+>```
 #### PathForSrcGenerate
-
-```csharp
-PathForSrcGenerate
-```
+>```csharp
+>PathForSrcGenerate
+>```
 #### PathForTestGenerate
-
-```csharp
-PathForTestGenerate
-```
+>```csharp
+>PathForTestGenerate
+>```
 #### ProjectName
-
-```csharp
-ProjectName
-```
+>```csharp
+>ProjectName
+>```
 #### ProjectPrefixName
-
-```csharp
-ProjectPrefixName
-```
+>```csharp
+>ProjectPrefixName
+>```
 #### ProjectSrcCsProj
-
-```csharp
-ProjectSrcCsProj
-```
+>```csharp
+>ProjectSrcCsProj
+>```
 #### ProjectTestCsProj
-
-```csharp
-ProjectTestCsProj
-```
+>```csharp
+>ProjectTestCsProj
+>```
 #### RouteBase
-
-```csharp
-RouteBase
-```
+>```csharp
+>RouteBase
+>```
 #### ToolName
-
-```csharp
-ToolName
-```
+>```csharp
+>ToolName
+>```
 #### ToolNameAndVersion
-
-```csharp
-ToolNameAndVersion
-```
+>```csharp
+>ToolNameAndVersion
+>```
 #### ToolVersion
-
-```csharp
-ToolVersion
-```
+>```csharp
+>ToolVersion
+>```
 
 <br />
-
 
 ## ClientCSharpApiProjectOptions
 
-```csharp
-public class ClientCSharpApiProjectOptions
-```
+>```csharp
+>public class ClientCSharpApiProjectOptions
+>```
 
 ### Properties
 
-
 #### ApiOptions
-
-```csharp
-ApiOptions
-```
+>```csharp
+>ApiOptions
+>```
 #### ApiVersion
-
-```csharp
-ApiVersion
-```
+>```csharp
+>ApiVersion
+>```
 #### BasePathSegmentNames
-
-```csharp
-BasePathSegmentNames
-```
+>```csharp
+>BasePathSegmentNames
+>```
 #### ClientFolderName
-
-```csharp
-ClientFolderName
-```
+>```csharp
+>ClientFolderName
+>```
 #### Document
-
-```csharp
-Document
-```
+>```csharp
+>Document
+>```
 #### DocumentFile
-
-```csharp
-DocumentFile
-```
+>```csharp
+>DocumentFile
+>```
 #### ExcludeEndpointGeneration
-
-```csharp
-ExcludeEndpointGeneration
-```
+>```csharp
+>ExcludeEndpointGeneration
+>```
 #### ForClient
-
-```csharp
-ForClient
-```
+>```csharp
+>ForClient
+>```
 #### PathForSrcGenerate
-
-```csharp
-PathForSrcGenerate
-```
+>```csharp
+>PathForSrcGenerate
+>```
 #### ProjectName
-
-```csharp
-ProjectName
-```
+>```csharp
+>ProjectName
+>```
 #### ProjectSrcCsProj
-
-```csharp
-ProjectSrcCsProj
-```
+>```csharp
+>ProjectSrcCsProj
+>```
 #### ToolName
-
-```csharp
-ToolName
-```
+>```csharp
+>ToolName
+>```
 #### ToolNameAndVersion
-
-```csharp
-ToolNameAndVersion
-```
+>```csharp
+>ToolNameAndVersion
+>```
 #### ToolVersion
-
-```csharp
-ToolVersion
-```
+>```csharp
+>ToolVersion
+>```
 ### Methods
 
-
 #### ToString
-
-```csharp
-string ToString()
-```
+>```csharp
+>string ToString()
+>```
 
 <br />
-
 
 ## DomainProjectOptions
 
-```csharp
-public class DomainProjectOptions : BaseProjectOptions
-```
+>```csharp
+>public class DomainProjectOptions : BaseProjectOptions
+>```
 
 ### Properties
 
-
 #### ApiProjectSrcCsProj
-
-```csharp
-ApiProjectSrcCsProj
-```
+>```csharp
+>ApiProjectSrcCsProj
+>```
 #### ApiProjectSrcPath
-
-```csharp
-ApiProjectSrcPath
-```
+>```csharp
+>ApiProjectSrcPath
+>```
 #### PathForSrcHandlers
-
-```csharp
-PathForSrcHandlers
-```
+>```csharp
+>PathForSrcHandlers
+>```
 #### PathForTestHandlers
-
-```csharp
-PathForTestHandlers
-```
+>```csharp
+>PathForTestHandlers
+>```
 ### Methods
 
-
 #### SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles
-
-```csharp
-List<LogKeyValueItem> SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles()
-```
+>```csharp
+>List<LogKeyValueItem> SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles()
+>```
 
 <br />
-
 
 ## EndpointMethodMetadata
 
-```csharp
-public class EndpointMethodMetadata
-```
+>```csharp
+>public class EndpointMethodMetadata
+>```
 
 ### Properties
 
-
 #### ComponentsSchemas
-
-```csharp
-ComponentsSchemas
-```
+>```csharp
+>ComponentsSchemas
+>```
 #### ContractInterfaceHandlerTypeName
-
-```csharp
-ContractInterfaceHandlerTypeName
-```
+>```csharp
+>ContractInterfaceHandlerTypeName
+>```
 #### ContractParameter
-
-```csharp
-ContractParameter
-```
+>```csharp
+>ContractParameter
+>```
 #### ContractParameterTypeName
-
-```csharp
-ContractParameterTypeName
-```
+>```csharp
+>ContractParameterTypeName
+>```
 #### ContractResultTypeName
-
-```csharp
-ContractResultTypeName
-```
+>```csharp
+>ContractResultTypeName
+>```
 #### ContractReturnTypeNames
-
-```csharp
-ContractReturnTypeNames
-```
+>```csharp
+>ContractReturnTypeNames
+>```
 #### HttpOperation
-
-```csharp
-HttpOperation
-```
+>```csharp
+>HttpOperation
+>```
 #### MethodName
-
-```csharp
-MethodName
-```
+>```csharp
+>MethodName
+>```
+#### OperationSchemaMappings
+>```csharp
+>OperationSchemaMappings
+>```
 #### ProjectName
-
-```csharp
-ProjectName
-```
+>```csharp
+>ProjectName
+>```
 #### Route
-
-```csharp
-Route
-```
+>```csharp
+>Route
+>```
 #### SegmentName
-
-```csharp
-SegmentName
-```
+>```csharp
+>SegmentName
+>```
 #### UseNullableReferenceTypes
-
-```csharp
-UseNullableReferenceTypes
-```
+>```csharp
+>UseNullableReferenceTypes
+>```
 ### Methods
 
-
 #### Contains
-
-```csharp
-bool Contains(string value)
-```
+>```csharp
+>bool Contains(string value)
+>```
 #### GetHeaderParameters
-
-```csharp
-List<OpenApiParameter> GetHeaderParameters()
-```
+>```csharp
+>List<OpenApiParameter> GetHeaderParameters()
+>```
 #### GetHeaderRequiredParameters
-
-```csharp
-List<OpenApiParameter> GetHeaderRequiredParameters()
-```
+>```csharp
+>List<OpenApiParameter> GetHeaderRequiredParameters()
+>```
 #### GetQueryParameters
-
-```csharp
-List<OpenApiParameter> GetQueryParameters()
-```
+>```csharp
+>List<OpenApiParameter> GetQueryParameters()
+>```
 #### GetQueryRequiredParameters
-
-```csharp
-List<OpenApiParameter> GetQueryRequiredParameters()
-```
+>```csharp
+>List<OpenApiParameter> GetQueryRequiredParameters()
+>```
 #### GetRelevantSchemasForBadRequestBodyParameters
-
-```csharp
-List<KeyValuePair<string, OpenApiSchema>> GetRelevantSchemasForBadRequestBodyParameters(OpenApiSchema modelSchema)
-```
+>```csharp
+>List<KeyValuePair<string, OpenApiSchema>> GetRelevantSchemasForBadRequestBodyParameters(OpenApiSchema modelSchema)
+>```
 #### GetRequestBodyModelName
-
-```csharp
-string GetRequestBodyModelName()
-```
+>```csharp
+>string GetRequestBodyModelName()
+>```
 #### GetRequestBodySchema
-
-```csharp
-OpenApiSchema GetRequestBodySchema()
-```
+>```csharp
+>OpenApiSchema GetRequestBodySchema()
+>```
 #### GetRouteParameters
-
-```csharp
-List<OpenApiParameter> GetRouteParameters()
-```
+>```csharp
+>List<OpenApiParameter> GetRouteParameters()
+>```
 #### HasContractParameterAnyParametersOrRequestBody
-
-```csharp
-bool HasContractParameterAnyParametersOrRequestBody()
-```
+>```csharp
+>bool HasContractParameterAnyParametersOrRequestBody()
+>```
 #### HasContractParameterRequestBody
-
-```csharp
-bool HasContractParameterRequestBody()
-```
+>```csharp
+>bool HasContractParameterRequestBody()
+>```
+#### HasContractReturnTypeAsComplex
+>```csharp
+>bool HasContractReturnTypeAsComplex()
+>```
 #### HasContractReturnTypeAsComplexAndNotSharedModel
-
-```csharp
-bool HasContractReturnTypeAsComplexAndNotSharedModel()
-```
+>```csharp
+>bool HasContractReturnTypeAsComplexAndNotSharedModel()
+>```
 #### HasContractReturnTypeAsComplexAsListOrPagination
-
-```csharp
-bool HasContractReturnTypeAsComplexAsListOrPagination()
-```
-#### HasSharedModelInContractReturnType
-
-```csharp
-bool HasSharedModelInContractReturnType(bool includeProperties = True)
-```
+>```csharp
+>bool HasContractReturnTypeAsComplexAsListOrPagination()
+>```
 #### HasSharedModelOrEnumInContractParameterRequestBody
-
-```csharp
-bool HasSharedModelOrEnumInContractParameterRequestBody()
-```
+>```csharp
+>bool HasSharedModelOrEnumInContractParameterRequestBody()
+>```
+#### HasSharedModelOrEnumInContractReturnType
+>```csharp
+>bool HasSharedModelOrEnumInContractReturnType(bool includeProperties = True)
+>```
 #### IsContractParameterRequestBodyUsed
-
-```csharp
-bool IsContractParameterRequestBodyUsed()
-```
+>```csharp
+>bool IsContractParameterRequestBodyUsed()
+>```
 #### IsContractParameterRequestBodyUsedAsMultipartFormData
-
-```csharp
-bool IsContractParameterRequestBodyUsedAsMultipartFormData()
-```
+>```csharp
+>bool IsContractParameterRequestBodyUsedAsMultipartFormData()
+>```
 #### IsContractParameterRequestBodyUsedAsMultipartFormDataAndHasInlineSchemaFile
-
-```csharp
-bool IsContractParameterRequestBodyUsedAsMultipartFormDataAndHasInlineSchemaFile()
-```
+>```csharp
+>bool IsContractParameterRequestBodyUsedAsMultipartFormDataAndHasInlineSchemaFile()
+>```
 #### IsContractParameterRequestBodyUsedAsMultipartOctetStreamData
-
-```csharp
-bool IsContractParameterRequestBodyUsedAsMultipartOctetStreamData()
-```
+>```csharp
+>bool IsContractParameterRequestBodyUsedAsMultipartOctetStreamData()
+>```
 #### IsContractParameterRequestBodyUsingStringBuilder
-
-```csharp
-bool IsContractParameterRequestBodyUsingStringBuilder()
-```
+>```csharp
+>bool IsContractParameterRequestBodyUsingStringBuilder()
+>```
 #### IsContractParameterRequestBodyUsingSystemCollectionGenericNamespace
-
-```csharp
-bool IsContractParameterRequestBodyUsingSystemCollectionGenericNamespace()
-```
+>```csharp
+>bool IsContractParameterRequestBodyUsingSystemCollectionGenericNamespace()
+>```
 #### IsContractParameterRequestBodyUsingSystemNamespace
-
-```csharp
-bool IsContractParameterRequestBodyUsingSystemNamespace()
-```
+>```csharp
+>bool IsContractParameterRequestBodyUsingSystemNamespace()
+>```
 #### IsContractReturnTypeUsingList
-
-```csharp
-bool IsContractReturnTypeUsingList()
-```
+>```csharp
+>bool IsContractReturnTypeUsingList()
+>```
 #### IsContractReturnTypeUsingPagination
-
-```csharp
-bool IsContractReturnTypeUsingPagination()
-```
+>```csharp
+>bool IsContractReturnTypeUsingPagination()
+>```
 #### IsContractReturnTypeUsingString
-
-```csharp
-bool IsContractReturnTypeUsingString()
-```
+>```csharp
+>bool IsContractReturnTypeUsingString()
+>```
 #### IsContractReturnTypeUsingSystemCollectionGenericNamespace
-
-```csharp
-bool IsContractReturnTypeUsingSystemCollectionGenericNamespace()
-```
+>```csharp
+>bool IsContractReturnTypeUsingSystemCollectionGenericNamespace()
+>```
 #### IsContractReturnTypeUsingSystemNamespace
-
-```csharp
-bool IsContractReturnTypeUsingSystemNamespace()
-```
+>```csharp
+>bool IsContractReturnTypeUsingSystemNamespace()
+>```
+#### IsContractReturnTypeUsingTaskName
+>```csharp
+>bool IsContractReturnTypeUsingTaskName()
+>```
+#### IsSharedModel
+>```csharp
+>bool IsSharedModel(string modelName)
+>```
 #### ToString
-
-```csharp
-string ToString()
-```
+>```csharp
+>string ToString()
+>```
 
 <br />
-
 
 ## HostProjectOptions
 
-```csharp
-public class HostProjectOptions : BaseProjectOptions
-```
+>```csharp
+>public class HostProjectOptions : BaseProjectOptions
+>```
 
 ### Properties
 
-
 #### ApiProjectSrcCsProj
-
-```csharp
-ApiProjectSrcCsProj
-```
+>```csharp
+>ApiProjectSrcCsProj
+>```
 #### ApiProjectSrcPath
-
-```csharp
-ApiProjectSrcPath
-```
+>```csharp
+>ApiProjectSrcPath
+>```
 #### DomainProjectSrcCsProj
-
-```csharp
-DomainProjectSrcCsProj
-```
+>```csharp
+>DomainProjectSrcCsProj
+>```
 #### DomainProjectSrcPath
-
-```csharp
-DomainProjectSrcPath
-```
+>```csharp
+>DomainProjectSrcPath
+>```
 #### UseRestExtended
-
-```csharp
-UseRestExtended
-```
+>```csharp
+>UseRestExtended
+>```
 ### Methods
 
-
 #### SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles
-
-```csharp
-List<LogKeyValueItem> SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles()
-```
+>```csharp
+>List<LogKeyValueItem> SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles()
+>```
 
 <br />
 
-
 ## SchemaMapLocatedAreaType
 
-```csharp
-public enum SchemaMapLocatedAreaType
-```
+>```csharp
+>public enum SchemaMapLocatedAreaType
+>```
 
 
 | Value | Name | Description | Summary | 
