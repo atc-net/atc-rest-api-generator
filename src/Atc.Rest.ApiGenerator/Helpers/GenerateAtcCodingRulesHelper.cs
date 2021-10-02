@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Atc.Data;
 using Atc.Data.Models;
 
 // ReSharper disable SuggestBaseTypeForParameter
@@ -104,11 +105,11 @@ namespace Atc.Rest.ApiGenerator.Helpers
                 sb.AppendLine("  }");
                 sb.AppendLine("}");
                 File.WriteAllText(filePath, sb.ToString());
-                return new LogKeyValueItem(LogCategoryType.Debug, "FileCreate", $"{file} created");
+                return LogItemFactory.CreateDebug("FileCreate", $"{file} created");
             }
             catch (Exception ex)
             {
-                return new LogKeyValueItem(LogCategoryType.Error, "FileSkip", $"atc-coding-rules-updater.json - {ex.Message}");
+                return LogItemFactory.CreateError("FileSkip", $"atc-coding-rules-updater.json - {ex.Message}");
             }
         }
 
@@ -131,11 +132,11 @@ namespace Atc.Rest.ApiGenerator.Helpers
                 sb.AppendLine("-v true");
                 File.WriteAllText(file, sb.ToString());
                 File.WriteAllText(filePath, sb.ToString());
-                return new LogKeyValueItem(LogCategoryType.Debug, "FileCreate", $"{file} created");
+                return LogItemFactory.CreateDebug("FileCreate", $"{file} created");
             }
             catch (Exception ex)
             {
-                return new LogKeyValueItem(LogCategoryType.Error, "FileSkip", $"atc-coding-rules-updater.json - {ex.Message}");
+                return LogItemFactory.CreateError("FileSkip", $"atc-coding-rules-updater.json - {ex.Message}");
             }
         }
 
@@ -164,11 +165,11 @@ namespace Atc.Rest.ApiGenerator.Helpers
                 var rawEditorConfig = HttpClientHelper.GetRawFile(rawGitUrl);
                 rawEditorConfig += $"{Environment.NewLine}dotnet_diagnostic.IDE0058.severity = none           # Have to override this for now - to get smoke-test to run";
                 File.WriteAllText(file.FullName, rawEditorConfig);
-                return new LogKeyValueItem(LogCategoryType.Debug, "FileCreate", $"{area} - {descriptionPart} created");
+                return LogItemFactory.CreateDebug("FileCreate", $"{area} - {descriptionPart} created");
             }
             catch (Exception ex)
             {
-                return new LogKeyValueItem(LogCategoryType.Error, "FileSkip", $"{area} - {descriptionPart} skipped - {ex.Message}");
+                return LogItemFactory.CreateError("FileSkip", $"{area} - {descriptionPart} skipped - {ex.Message}");
             }
         }
 
@@ -196,11 +197,11 @@ namespace Atc.Rest.ApiGenerator.Helpers
 
                 var rawDirectoryBuildProps = HttpClientHelper.GetRawFile(rawGitUrl);
                 File.WriteAllText(file.FullName, rawDirectoryBuildProps);
-                return new LogKeyValueItem(LogCategoryType.Debug, "FileCreate", $"{area} - {descriptionPart} created");
+                return LogItemFactory.CreateDebug("FileCreate", $"{area} - {descriptionPart} created");
             }
             catch (Exception ex)
             {
-                return new LogKeyValueItem(LogCategoryType.Error, "FileSkip", $"{area} - {descriptionPart} skipped - {ex.Message}");
+                return LogItemFactory.CreateError("FileSkip", $"{area} - {descriptionPart} skipped - {ex.Message}");
             }
         }
     }

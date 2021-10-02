@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Atc.Data;
 using Atc.Data.Models;
 
 namespace Atc.Rest.ApiGenerator.Helpers
@@ -9,7 +10,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
     {
         public static LogKeyValueItem Create(LogCategoryType logCategoryType, string ruleName, string description)
         {
-            return new LogKeyValueItem(logCategoryType, ruleName, ExtractAreaFromRuleName(ruleName), description);
+            return LogItemFactory.Create(logCategoryType, ruleName, ExtractAreaFromRuleName(ruleName), description);
         }
 
         private static string ExtractAreaFromRuleName(string ruleName)

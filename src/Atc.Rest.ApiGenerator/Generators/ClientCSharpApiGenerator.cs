@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Atc.Data;
 using Atc.Data.Models;
 using Atc.Rest.ApiGenerator.Helpers;
 using Atc.Rest.ApiGenerator.Models;
@@ -64,7 +65,7 @@ namespace Atc.Rest.ApiGenerator.Generators
 
             if (projectOptions.PathForSrcGenerate.Exists && projectOptions.ProjectSrcCsProj.Exists)
             {
-                logItems.Add(new LogKeyValueItem(LogCategoryType.Debug, "FileSkip", "#", "No updates for csproj"));
+                logItems.Add(LogItemFactory.CreateDebug("FileSkip", "#", "No updates for csproj"));
             }
             else
             {
@@ -203,7 +204,7 @@ namespace Atc.Rest.ApiGenerator.Generators
             ////        }
 
             ////        File.Delete(file);
-            ////        logItems.Add(new LogKeyValueItem(LogCategoryType.Debug, "FileDelete", "#", file));
+            ////        logItems.Add(LogItemFactory.CreateDebug("FileDelete", "#", file));
             ////    }
             ////}
 
@@ -218,7 +219,7 @@ namespace Atc.Rest.ApiGenerator.Generators
             ////        }
 
             ////        File.Delete(file);
-            ////        logItems.Add(new LogKeyValueItem(LogCategoryType.Debug, "FileDelete", "#", file));
+            ////        logItems.Add(LogItemFactory.CreateDebug("FileDelete", "#", file));
             ////    }
             ////}
 

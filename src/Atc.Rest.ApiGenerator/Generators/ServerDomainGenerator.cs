@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using Atc.CodeAnalysis.CSharp.SyntaxFactories;
+using Atc.Data;
 using Atc.Data.Models;
 using Atc.Rest.ApiGenerator.Helpers;
 using Atc.Rest.ApiGenerator.Helpers.XunitTest;
@@ -122,13 +123,13 @@ namespace Atc.Rest.ApiGenerator.Generators
                     var newNullableValue = SolutionAndProjectHelper.GetNullableStringFromBool(projectOptions.ApiOptions.Generator.UseNullableReferenceTypes);
                     SolutionAndProjectHelper.SetNullableValueForProject(element, newNullableValue);
                     element.Save(projectOptions.ProjectSrcCsProj.FullName);
-                    logItems.Add(new LogKeyValueItem(LogCategoryType.Debug, "FileUpdate", "#", $"Update domain csproj - Nullable value={newNullableValue}"));
+                    logItems.Add(LogItemFactory.CreateDebug("FileUpdate", "#", $"Update domain csproj - Nullable value={newNullableValue}"));
                     hasUpdates = true;
                 }
 
                 if (!hasUpdates)
                 {
-                    logItems.Add(new LogKeyValueItem(LogCategoryType.Debug, "FileSkip", "#", "No updates for domain csproj"));
+                    logItems.Add(LogItemFactory.CreateDebug("FileSkip", "#", "No updates for domain csproj"));
                 }
             }
             else
