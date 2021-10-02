@@ -19,7 +19,7 @@ namespace Atc.Rest.ApiGenerator.Tests.IntegrationTests.Scenarios
         [Fact]
         public async Task ValidateAndBuildScenarios()
         {
-            var cliExeFile = GetExecutableFileForCli(typeof(CLI.Program), "src");
+            var cliExeFile = GetExecutableFileForCli(typeof(CLI.Program), "test");
 
             foreach (var scenario in CollectScenarios())
             {
@@ -54,6 +54,7 @@ namespace Atc.Rest.ApiGenerator.Tests.IntegrationTests.Scenarios
                     $"--outputSlnPath {outputPath} " +
                     $"--outputSrcPath {Path.Combine(outputPath, "src")} " +
                     $"--outputTestPath {Path.Combine(outputPath, "test")} " +
+                    "--disableCodingRules " +
                     "-v");
 
                 Assert.True(cliExecutionResult.isSuccessful);
@@ -63,11 +64,12 @@ namespace Atc.Rest.ApiGenerator.Tests.IntegrationTests.Scenarios
                 // Iterate files in this scenario's Verify folder and compare them to the generated output.
                 //----------------------------------------------------------------------------------------
                 var verifyPath = Path.Combine(scenario.FullName, "Verify");
-                var verifyFiles = Directory
-                    .GetFiles(verifyPath, "*.verified.*", SearchOption.AllDirectories)
-                    .Select(x => new FileInfo(x));
+                var verifyCsFiles = Directory
+                    .GetFiles(verifyPath, "*.verified.cs", SearchOption.AllDirectories)
+                    .Select(x => new FileInfo(x))
+                    .ToArray();
 
-                foreach (var verifyFile in verifyFiles)
+                foreach (var verifyFile in verifyCsFiles)
                 {
                     var generatedFile = verifyFile
                         .FullName
@@ -78,7 +80,7 @@ namespace Atc.Rest.ApiGenerator.Tests.IntegrationTests.Scenarios
 
                     var fileExtension = Path.GetExtension(generatedFile)[1..];
                     var settings = new VerifySettings();
-                    settings.UseDirectory(verifyFile.Directory.FullName);
+                    settings.UseDirectory(verifyFile.Directory!.FullName);
                     settings.UseFileName(verifyFile.Name.Replace($".verified.{fileExtension}", string.Empty, StringComparison.Ordinal));
                     settings.UseExtension(fileExtension);
 
@@ -89,6 +91,13 @@ namespace Atc.Rest.ApiGenerator.Tests.IntegrationTests.Scenarios
 
                 //----------------------------------------------------------------------------------------
                 // Step 4:
+                // Check that all *.cs is verified.
+                //----------------------------------------------------------------------------------------
+                var outputCsFiles = Directory.GetFiles(outputPath, "*.cs", SearchOption.AllDirectories);
+                Assert.Equal(outputCsFiles.Length, verifyCsFiles.Length);
+
+                //----------------------------------------------------------------------------------------
+                // Step 5:
                 // Build the generated project and assert no errors.
                 //----------------------------------------------------------------------------------------
                 var buildErrors = await DotnetBuildHelper.BuildAndCollectErrors(
