@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text;
+using Atc.Data;
 using Atc.Data.Models;
 
 namespace Atc.Rest.ApiGenerator.Helpers
@@ -51,7 +52,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
             {
                 if (!overrideIfExist)
                 {
-                    return new LogKeyValueItem(LogCategoryType.Debug, "FileSkip", "#", fileInfo.FullName);
+                    return LogItemFactory.CreateDebug("FileSkip", "#", fileInfo.FullName);
                 }
 
                 if (fileInfo.Extension.Equals(".cs", StringComparison.OrdinalIgnoreCase) ||
@@ -62,21 +63,21 @@ namespace Atc.Rest.ApiGenerator.Helpers
                     string orgText = File.ReadAllText(fileInfo.FullName, Encoding.UTF8);
                     if (orgText == text)
                     {
-                        return new LogKeyValueItem(LogCategoryType.Debug, "FileSkip", "#", fileInfo.FullName);
+                        return LogItemFactory.CreateDebug("FileSkip", "#", fileInfo.FullName);
                     }
 
                     if (RemoveApiGeneratorVersionLine(orgText, true) == RemoveApiGeneratorVersionLine(text, true))
                     {
-                        return new LogKeyValueItem(LogCategoryType.Debug, "FileSkip", "#", fileInfo.FullName);
+                        return LogItemFactory.CreateDebug("FileSkip", "#", fileInfo.FullName);
                     }
                 }
 
                 File.WriteAllText(fileInfo.FullName, text, Encoding.UTF8);
-                return new LogKeyValueItem(LogCategoryType.Debug, "FileUpdate", "#", fileInfo.FullName);
+                return LogItemFactory.CreateDebug("FileUpdate", "#", fileInfo.FullName);
             }
 
             File.WriteAllText(fileInfo.FullName, text, Encoding.UTF8);
-            return new LogKeyValueItem(LogCategoryType.Debug, "FileCreate", "#", fileInfo.FullName);
+            return LogItemFactory.CreateDebug("FileCreate", "#", fileInfo.FullName);
         }
 
         private static string RemoveApiGeneratorVersionLine(string text, bool removeNewLines = false)

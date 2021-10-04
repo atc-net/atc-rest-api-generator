@@ -163,7 +163,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
 
             if (!endpointMethodMetadata.IsContractReturnTypeUsingTaskName() &&
                 (endpointMethodMetadata.HasSharedModelOrEnumInContractParameterRequestBody() ||
-                endpointMethodMetadata.HasSharedModelOrEnumInContractReturnType(false)))
+                endpointMethodMetadata.HasSharedModelOrEnumInContractReturnType(includeProperties: false)))
             {
                 list.Add($"{hostProjectOptions.ProjectName}.Generated.Contracts");
             }
@@ -237,7 +237,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
 
         private static void AppendTest400BadRequestInPath(StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata, ResponseTypeNameAndItemSchema contractReturnTypeName)
         {
-            var renderRelativeRefs = RenderRelativeRefsForBadRequestInPath(endpointMethodMetadata, true);
+            var renderRelativeRefs = RenderRelativeRefsForBadRequestInPath(endpointMethodMetadata, useForBadRequest: true);
             if (renderRelativeRefs.Count == 0)
             {
                 return;
@@ -279,7 +279,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                     foreach (var headerParameter in headerRequiredParameters)
                     {
                         var useInvalidData = headerParameter.Name == testForParameter.Name;
-                        string propertyValueGenerated = PropertyValueGenerator(headerParameter, endpointMethodMetadata.ComponentsSchemas, useInvalidData, null);
+                        string propertyValueGenerated = PropertyValueGenerator(headerParameter, endpointMethodMetadata.ComponentsSchemas, useInvalidData, customValue: null);
                         sb.AppendLine(
                             12,
                             $"HttpClient.DefaultRequestHeaders.Add(\"{headerParameter.Name}\", \"{propertyValueGenerated}\");");
@@ -290,7 +290,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
 
                 AppendNewRequestModel(12, sb, endpointMethodMetadata, contractReturnTypeName.StatusCode);
                 sb.AppendLine();
-                AppendActHttpClientOperation(12, sb, endpointMethodMetadata.HttpOperation, true);
+                AppendActHttpClientOperation(12, sb, endpointMethodMetadata.HttpOperation, useData: true);
                 sb.AppendLine();
                 sb.AppendLine(12, "// Assert");
                 sb.AppendLine(12, "response.Should().NotBeNull();");
@@ -301,7 +301,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
 
         private static void AppendTest400BadRequestInQuery(StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata, ResponseTypeNameAndItemSchema contractReturnTypeName)
         {
-            var renderRelativeRefs = RenderRelativeRefsForQuery(endpointMethodMetadata, true);
+            var renderRelativeRefs = RenderRelativeRefsForQuery(endpointMethodMetadata, useForBadRequest: true);
             if (renderRelativeRefs.Count == 0)
             {
                 return;
@@ -360,7 +360,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 {
                     foreach (var headerParameter in headerRequiredParameters)
                     {
-                        string propertyValueGenerated = PropertyValueGenerator(headerParameter, endpointMethodMetadata.ComponentsSchemas, false, null);
+                        string propertyValueGenerated = PropertyValueGenerator(headerParameter, endpointMethodMetadata.ComponentsSchemas, useForBadRequest: false, customValue: null);
                         sb.AppendLine(
                             12,
                             $"HttpClient.DefaultRequestHeaders.Add(\"{headerParameter.Name}\", \"{propertyValueGenerated}\");");
@@ -371,7 +371,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
 
                 AppendNewRequestModelForBadRequest(12, sb, endpointMethodMetadata, contractReturnTypeName.StatusCode, testForSchema);
                 sb.AppendLine();
-                AppendActHttpClientOperation(12, sb, endpointMethodMetadata.HttpOperation, true, true);
+                AppendActHttpClientOperation(12, sb, endpointMethodMetadata.HttpOperation, useData: true, isDataJson: true);
                 sb.AppendLine();
                 sb.AppendLine(12, "// Assert");
                 sb.AppendLine(12, "response.Should().NotBeNull();");
@@ -395,7 +395,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 {
                     foreach (var headerParameter in headerParameters)
                     {
-                        string propertyValueGenerated = PropertyValueGenerator(headerParameter, endpointMethodMetadata.ComponentsSchemas, false, null);
+                        string propertyValueGenerated = PropertyValueGenerator(headerParameter, endpointMethodMetadata.ComponentsSchemas, useForBadRequest: false, customValue: null);
                         sb.AppendLine(
                             12,
                             $"HttpClient.DefaultRequestHeaders.Add(\"{headerParameter.Name}\", \"{propertyValueGenerated}\");");
@@ -438,7 +438,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 }
                 else
                 {
-                    AppendActHttpClientOperation(12, sb, endpointMethodMetadata.HttpOperation, true);
+                    AppendActHttpClientOperation(12, sb, endpointMethodMetadata.HttpOperation, useData: true);
                 }
             }
             else
@@ -498,7 +498,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
 
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(operationType), operationType, null);
+                    throw new ArgumentOutOfRangeException(nameof(operationType), operationType, message: null);
             }
         }
 
@@ -550,7 +550,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
 
             if (modelSchema.IsTypeArray())
             {
-                sb.AppendLine(12, "if (request is not null)");
+                sb.AppendLine(12, "if (request != null)");
                 sb.AppendLine(12, "{");
                 sb.AppendLine(16, "foreach (var item in request)");
                 sb.AppendLine(16, "{");
@@ -567,7 +567,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                     var propertyName = schemaProperty.Key.EnsureFirstCharacterToUpper();
                     if (schemaProperty.Value.IsFormatTypeBinary())
                     {
-                        sb.AppendLine(12, $"if (request.{propertyName} is not null)");
+                        sb.AppendLine(12, $"if (request.{propertyName} != null)");
                         sb.AppendLine(12, "{");
                         sb.AppendLine(16, $"var bytesContent = new ByteArrayContent(await request.{propertyName}.GetBytes());");
 
@@ -582,7 +582,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                     }
                     else if (schemaProperty.Value.HasItemsWithFormatTypeBinary())
                     {
-                        sb.AppendLine(12, $"if (request.{propertyName} is not null)");
+                        sb.AppendLine(12, $"if (request.{propertyName} != null)");
                         sb.AppendLine(12, "{");
                         sb.AppendLine(16, $"foreach (var item in request.{propertyName})");
                         sb.AppendLine(16, "{");
@@ -594,7 +594,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                     }
                     else if (schemaProperty.Value.IsTypeArray())
                     {
-                        sb.AppendLine(12, $"if (request.{propertyName} is not null && request.{propertyName}.Count > 0)");
+                        sb.AppendLine(12, $"if (request.{propertyName} != null && request.{propertyName}.Count > 0)");
                         sb.AppendLine(12, "{");
                         sb.AppendLine(16, $"foreach (var item in request.{propertyName})");
                         sb.AppendLine(16, "{");
@@ -623,7 +623,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             sb.AppendLine(8, "{");
             sb.AppendLine(12, "var formDataContent = new MultipartFormDataContent();");
 
-            sb.AppendLine(12, "if (request is not null)");
+            sb.AppendLine(12, "if (request != null)");
             sb.AppendLine(12, "{");
             sb.AppendLine(16, "var bytesContent = new ByteArrayContent(await request.GetBytes());");
             sb.AppendLine(16, "formDataContent.Add(bytesContent, \"Request\", request.FileName);");
@@ -730,14 +730,14 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 return relativeRefPath;
             }
 
-            string relativeRefQuery = RenderRelativeRefQuery(queryRequiredParameters, endpointMethodMetadata.ComponentsSchemas, false);
+            string relativeRefQuery = RenderRelativeRefQuery(queryRequiredParameters, endpointMethodMetadata.ComponentsSchemas, useForBadRequest: false);
             return $"{relativeRefPath}{relativeRefQuery}";
         }
 
         private static string RenderRelativeRef(EndpointMethodMetadata endpointMethodMetadata)
         {
             var queryParameters = endpointMethodMetadata.GetQueryParameters();
-            return RenderRelativeRefsForQueryHelper(endpointMethodMetadata, queryParameters, false);
+            return RenderRelativeRefsForQueryHelper(endpointMethodMetadata, queryParameters, useForBadRequest: false);
         }
 
         private static List<string> RenderRelativeRefsForQuery(EndpointMethodMetadata endpointMethodMetadata, bool useForBadRequest = false)
@@ -750,7 +750,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 if (!useForBadRequest)
                 {
                     // Create without queryParameters
-                    renderRelativeRefs.Add(RenderRelativeRefsForQueryHelper(endpointMethodMetadata, null, useForBadRequest));
+                    renderRelativeRefs.Add(RenderRelativeRefsForQueryHelper(endpointMethodMetadata, queryParameters: null, useForBadRequest));
                 }
             }
             else
@@ -775,7 +775,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             }
 
             var routeParameters = endpointMethodMetadata.GetRouteParameters();
-            string relativeRefPath = RenderRelativeRefPath(route, routeParameters, routeParameters, endpointMethodMetadata.ComponentsSchemas, false);
+            string relativeRefPath = RenderRelativeRefPath(route, routeParameters, routeParameters, endpointMethodMetadata.ComponentsSchemas, useForBadRequest: false);
 
             if (queryParameters == null || queryParameters.Count == 0)
             {
@@ -804,11 +804,11 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 if (fromRoute == null)
                 {
                     fromRoute = allRouteParameters.Find(x => x.Name.Equals(pn, StringComparison.OrdinalIgnoreCase));
-                    sa[i] = PropertyValueGenerator(fromRoute, componentsSchemas, false, null);
+                    sa[i] = PropertyValueGenerator(fromRoute, componentsSchemas, useForBadRequest: false, customValue: null);
                 }
                 else
                 {
-                    sa[i] = PropertyValueGenerator(fromRoute, componentsSchemas, useForBadRequest, null);
+                    sa[i] = PropertyValueGenerator(fromRoute, componentsSchemas, useForBadRequest, customValue: null);
                 }
             }
 
@@ -821,7 +821,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             sb.Append('?');
             foreach (var queryParameter in queryParameters)
             {
-                var val = PropertyValueGenerator(queryParameter, componentsSchemas, useForBadRequest, null);
+                var val = PropertyValueGenerator(queryParameter, componentsSchemas, useForBadRequest, customValue: null);
                 if ("null".Equals(val, StringComparison.Ordinal))
                 {
                     val = string.Empty;

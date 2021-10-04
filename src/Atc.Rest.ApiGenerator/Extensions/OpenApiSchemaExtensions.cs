@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -12,6 +13,11 @@ namespace Microsoft.OpenApi.Models
     {
         public static bool HasAnySharedModel(this OpenApiSchema schema, List<ApiOperationSchemaMap> apiOperationSchemaMaps)
         {
+            if (schema is null)
+            {
+                throw new ArgumentNullException(nameof(schema));
+            }
+
             if (!schema.IsObjectReferenceTypeDeclared())
             {
                 return false;
@@ -29,6 +35,11 @@ namespace Microsoft.OpenApi.Models
 
         public static bool HasAnySharedModelOrEnum(this OpenApiSchema schema, List<ApiOperationSchemaMap> apiOperationSchemaMaps, bool includeProperties = true)
         {
+            if (schema is null)
+            {
+                throw new ArgumentNullException(nameof(schema));
+            }
+
             if (!schema.IsObjectReferenceTypeDeclared())
             {
                 return false;

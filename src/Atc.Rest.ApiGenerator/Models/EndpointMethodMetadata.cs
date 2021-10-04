@@ -101,8 +101,9 @@ namespace Atc.Rest.ApiGenerator.Models
                 return false;
             }
 
-            return responseType.Schema is not null &&
-                   responseType.Schema.HasAnyPropertiesFormatTypeFromSystemCollectionGenericNamespace(ComponentsSchemas);
+            return (responseType.Schema is not null &&
+                   responseType.Schema.HasAnyPropertiesFormatTypeFromSystemCollectionGenericNamespace(ComponentsSchemas)) ||
+                   responseType.FullModelName.StartsWith(Microsoft.OpenApi.Models.NameConstants.Pagination, StringComparison.Ordinal);
         }
 
         public bool IsContractReturnTypeUsingString()

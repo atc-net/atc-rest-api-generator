@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using Atc.Data.Models;
+using Atc.Helpers;
 using Atc.Rest.ApiGenerator.Models;
 using Microsoft.OpenApi.Models;
 
@@ -139,16 +140,29 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 default:
                 {
                     var singleReturnTypeName = OpenApiDocumentSchemaModelNameHelper.GetRawModelName(returnTypeName);
-                    var modelSchema = endpointMethodMetadata.ComponentsSchemas.GetSchemaByModelName(singleReturnTypeName);
+                    var simpleTypePair = SimpleTypeHelper.BeautifySimpleTypeLookup.FirstOrDefault(x => x.Value == singleReturnTypeName);
 
-                    GenerateXunitTestHelper.AppendVarDataModelOrListOfModel(
-                        12,
-                        sb,
-                        endpointMethodMetadata,
-                        modelSchema,
-                        httpStatusCode,
-                        SchemaMapLocatedAreaType.Response);
-                    sb.AppendLine();
+                    if (simpleTypePair.Key is not null)
+                    {
+                        GenerateXunitTestHelper.AppendVarDataListSimpleType(
+                            12,
+                            sb,
+                            simpleTypePair.Value);
+                        sb.AppendLine();
+                    }
+                    else
+                    {
+                        var modelSchema = endpointMethodMetadata.ComponentsSchemas.GetSchemaByModelName(singleReturnTypeName);
+
+                        GenerateXunitTestHelper.AppendVarDataModelOrListOfModel(
+                            12,
+                            sb,
+                            endpointMethodMetadata,
+                            modelSchema,
+                            httpStatusCode,
+                            SchemaMapLocatedAreaType.Response);
+                        sb.AppendLine();
+                    }
 
                     if (contractReturnTypeName.Schema == null ||
                         GenerateXunitTestPartsHelper.IsListKind(returnTypeName))

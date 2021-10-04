@@ -7,452 +7,364 @@
 
 <br />
 
-
 ## SyntaxGeneratorClientEndpoint
 
-```csharp
-public class SyntaxGeneratorClientEndpoint : SyntaxGeneratorClientEndpointBase, ISyntaxCodeGenerator
-```
+>```csharp
+>public class SyntaxGeneratorClientEndpoint : SyntaxGeneratorClientEndpointBase, ISyntaxCodeGenerator
+>```
 
 ### Properties
 
-
 #### Code
-
-```csharp
-Code
-```
+>```csharp
+>Code
+>```
 #### EndpointResultTypeName
-
-```csharp
-EndpointResultTypeName
-```
+>```csharp
+>EndpointResultTypeName
+>```
 #### EndpointTypeName
-
-```csharp
-EndpointTypeName
-```
+>```csharp
+>EndpointTypeName
+>```
 #### InterfaceTypeName
-
-```csharp
-InterfaceTypeName
-```
+>```csharp
+>InterfaceTypeName
+>```
 #### ParameterTypeName
-
-```csharp
-ParameterTypeName
-```
+>```csharp
+>ParameterTypeName
+>```
 ### Methods
 
-
 #### GenerateCode
-
-```csharp
-bool GenerateCode()
-```
+>```csharp
+>bool GenerateCode()
+>```
 #### ToCodeAsString
-
-```csharp
-string ToCodeAsString()
-```
+>```csharp
+>string ToCodeAsString()
+>```
 #### ToFile
-
-```csharp
-LogKeyValueItem ToFile()
-```
+>```csharp
+>LogKeyValueItem ToFile()
+>```
 #### ToFile
-
-```csharp
-void ToFile(FileInfo file)
-```
+>```csharp
+>void ToFile(FileInfo file)
+>```
 #### ToString
-
-```csharp
-string ToString()
-```
+>```csharp
+>string ToString()
+>```
 
 <br />
-
 
 ## SyntaxGeneratorClientEndpointBase
 
-```csharp
-public abstract class SyntaxGeneratorClientEndpointBase
-```
+>```csharp
+>public abstract class SyntaxGeneratorClientEndpointBase
+>```
 
 ### Properties
 
-
 #### ApiOperation
-
-```csharp
-ApiOperation
-```
+>```csharp
+>ApiOperation
+>```
 #### ApiOperationType
-
-```csharp
-ApiOperationType
-```
+>```csharp
+>ApiOperationType
+>```
 #### ApiProjectOptions
-
-```csharp
-ApiProjectOptions
-```
+>```csharp
+>ApiProjectOptions
+>```
 #### ApiUrlPath
-
-```csharp
-ApiUrlPath
-```
+>```csharp
+>ApiUrlPath
+>```
 #### FocusOnSegmentName
-
-```csharp
-FocusOnSegmentName
-```
+>```csharp
+>FocusOnSegmentName
+>```
 #### GlobalPathParameters
-
-```csharp
-GlobalPathParameters
-```
+>```csharp
+>GlobalPathParameters
+>```
 #### HasParametersOrRequestBody
-
-```csharp
-HasParametersOrRequestBody
-```
+>```csharp
+>HasParametersOrRequestBody
+>```
 #### OperationSchemaMappings
-
-```csharp
-OperationSchemaMappings
-```
+>```csharp
+>OperationSchemaMappings
+>```
 #### ResponseTypes
-
-```csharp
-ResponseTypes
-```
+>```csharp
+>ResponseTypes
+>```
 #### ResultTypeName
-
-```csharp
-ResultTypeName
-```
+>```csharp
+>ResultTypeName
+>```
 
 <br />
-
 
 ## SyntaxGeneratorClientEndpointInterface
 
-```csharp
-public class SyntaxGeneratorClientEndpointInterface : SyntaxGeneratorClientEndpointBase, ISyntaxCodeGenerator
-```
+>```csharp
+>public class SyntaxGeneratorClientEndpointInterface : SyntaxGeneratorClientEndpointBase, ISyntaxCodeGenerator
+>```
 
 ### Properties
 
-
 #### Code
-
-```csharp
-Code
-```
+>```csharp
+>Code
+>```
 #### EndpointResultTypeName
-
-```csharp
-EndpointResultTypeName
-```
+>```csharp
+>EndpointResultTypeName
+>```
 #### InterfaceTypeName
-
-```csharp
-InterfaceTypeName
-```
+>```csharp
+>InterfaceTypeName
+>```
 #### ParameterTypeName
-
-```csharp
-ParameterTypeName
-```
+>```csharp
+>ParameterTypeName
+>```
 ### Methods
 
-
 #### GenerateCode
-
-```csharp
-bool GenerateCode()
-```
+>```csharp
+>bool GenerateCode()
+>```
 #### ToCodeAsString
-
-```csharp
-string ToCodeAsString()
-```
+>```csharp
+>string ToCodeAsString()
+>```
 #### ToFile
-
-```csharp
-LogKeyValueItem ToFile()
-```
+>```csharp
+>LogKeyValueItem ToFile()
+>```
 #### ToFile
-
-```csharp
-void ToFile(FileInfo file)
-```
+>```csharp
+>void ToFile(FileInfo file)
+>```
 #### ToString
-
-```csharp
-string ToString()
-```
+>```csharp
+>string ToString()
+>```
 
 <br />
-
 
 ## SyntaxGeneratorClientEndpointInterfaces
 
-```csharp
-public class SyntaxGeneratorClientEndpointInterfaces
-```
+>```csharp
+>public class SyntaxGeneratorClientEndpointInterfaces
+>```
 
 ### Properties
 
-
 #### ApiProjectOptions
-
-```csharp
-ApiProjectOptions
-```
+>```csharp
+>ApiProjectOptions
+>```
 #### FocusOnSegmentName
-
-```csharp
-FocusOnSegmentName
-```
+>```csharp
+>FocusOnSegmentName
+>```
 #### OperationSchemaMappings
-
-```csharp
-OperationSchemaMappings
-```
+>```csharp
+>OperationSchemaMappings
+>```
 ### Methods
 
-
 #### GenerateSyntaxTrees
-
-```csharp
-List<SyntaxGeneratorClientEndpointInterface> GenerateSyntaxTrees()
-```
+>```csharp
+>List<SyntaxGeneratorClientEndpointInterface> GenerateSyntaxTrees()
+>```
 
 <br />
-
 
 ## SyntaxGeneratorClientEndpointResult
 
-```csharp
-public class SyntaxGeneratorClientEndpointResult : SyntaxGeneratorClientEndpointBase, ISyntaxCodeGenerator
-```
+>```csharp
+>public class SyntaxGeneratorClientEndpointResult : SyntaxGeneratorClientEndpointBase, ISyntaxCodeGenerator
+>```
 
 ### Properties
 
-
 #### Code
-
-```csharp
-Code
-```
+>```csharp
+>Code
+>```
 #### EndpointTypeName
-
-```csharp
-EndpointTypeName
-```
+>```csharp
+>EndpointTypeName
+>```
 #### InterfaceTypeName
-
-```csharp
-InterfaceTypeName
-```
+>```csharp
+>InterfaceTypeName
+>```
 #### ParameterTypeName
-
-```csharp
-ParameterTypeName
-```
+>```csharp
+>ParameterTypeName
+>```
 ### Methods
 
-
 #### GenerateCode
-
-```csharp
-bool GenerateCode()
-```
+>```csharp
+>bool GenerateCode()
+>```
 #### ToCodeAsString
-
-```csharp
-string ToCodeAsString()
-```
+>```csharp
+>string ToCodeAsString()
+>```
 #### ToFile
-
-```csharp
-LogKeyValueItem ToFile()
-```
+>```csharp
+>LogKeyValueItem ToFile()
+>```
 #### ToFile
-
-```csharp
-void ToFile(FileInfo file)
-```
+>```csharp
+>void ToFile(FileInfo file)
+>```
 #### ToString
-
-```csharp
-string ToString()
-```
+>```csharp
+>string ToString()
+>```
 
 <br />
-
 
 ## SyntaxGeneratorClientEndpointResultInterface
 
-```csharp
-public class SyntaxGeneratorClientEndpointResultInterface : SyntaxGeneratorClientEndpointBase, ISyntaxCodeGenerator
-```
+>```csharp
+>public class SyntaxGeneratorClientEndpointResultInterface : SyntaxGeneratorClientEndpointBase, ISyntaxCodeGenerator
+>```
 
 ### Properties
 
-
 #### Code
-
-```csharp
-Code
-```
+>```csharp
+>Code
+>```
 #### InterfaceTypeName
-
-```csharp
-InterfaceTypeName
-```
+>```csharp
+>InterfaceTypeName
+>```
 #### ParameterTypeName
-
-```csharp
-ParameterTypeName
-```
+>```csharp
+>ParameterTypeName
+>```
 ### Methods
 
-
 #### GenerateCode
-
-```csharp
-bool GenerateCode()
-```
+>```csharp
+>bool GenerateCode()
+>```
 #### ToCodeAsString
-
-```csharp
-string ToCodeAsString()
-```
+>```csharp
+>string ToCodeAsString()
+>```
 #### ToFile
-
-```csharp
-LogKeyValueItem ToFile()
-```
+>```csharp
+>LogKeyValueItem ToFile()
+>```
 #### ToFile
-
-```csharp
-void ToFile(FileInfo file)
-```
+>```csharp
+>void ToFile(FileInfo file)
+>```
 #### ToString
-
-```csharp
-string ToString()
-```
+>```csharp
+>string ToString()
+>```
 
 <br />
-
 
 ## SyntaxGeneratorClientEndpointResultInterfaces
 
-```csharp
-public class SyntaxGeneratorClientEndpointResultInterfaces
-```
+>```csharp
+>public class SyntaxGeneratorClientEndpointResultInterfaces
+>```
 
 ### Properties
 
-
 #### ApiProjectOptions
-
-```csharp
-ApiProjectOptions
-```
+>```csharp
+>ApiProjectOptions
+>```
 #### FocusOnSegmentName
-
-```csharp
-FocusOnSegmentName
-```
+>```csharp
+>FocusOnSegmentName
+>```
 #### OperationSchemaMappings
-
-```csharp
-OperationSchemaMappings
-```
+>```csharp
+>OperationSchemaMappings
+>```
 ### Methods
 
-
 #### GenerateSyntaxTrees
-
-```csharp
-List<SyntaxGeneratorClientEndpointResultInterface> GenerateSyntaxTrees()
-```
+>```csharp
+>List<SyntaxGeneratorClientEndpointResultInterface> GenerateSyntaxTrees()
+>```
 
 <br />
-
 
 ## SyntaxGeneratorClientEndpointResults
 
-```csharp
-public class SyntaxGeneratorClientEndpointResults
-```
+>```csharp
+>public class SyntaxGeneratorClientEndpointResults
+>```
 
 ### Properties
 
-
 #### ApiProjectOptions
-
-```csharp
-ApiProjectOptions
-```
+>```csharp
+>ApiProjectOptions
+>```
 #### FocusOnSegmentName
-
-```csharp
-FocusOnSegmentName
-```
+>```csharp
+>FocusOnSegmentName
+>```
 #### OperationSchemaMappings
-
-```csharp
-OperationSchemaMappings
-```
+>```csharp
+>OperationSchemaMappings
+>```
 ### Methods
 
-
 #### GenerateSyntaxTrees
-
-```csharp
-List<SyntaxGeneratorClientEndpointResult> GenerateSyntaxTrees()
-```
+>```csharp
+>List<SyntaxGeneratorClientEndpointResult> GenerateSyntaxTrees()
+>```
 
 <br />
 
-
 ## SyntaxGeneratorClientEndpoints
 
-```csharp
-public class SyntaxGeneratorClientEndpoints : ISyntaxGeneratorClientEndpoints
-```
+>```csharp
+>public class SyntaxGeneratorClientEndpoints : ISyntaxGeneratorClientEndpoints
+>```
 
 ### Properties
 
-
 #### ApiProjectOptions
-
-```csharp
-ApiProjectOptions
-```
+>```csharp
+>ApiProjectOptions
+>```
 #### FocusOnSegmentName
-
-```csharp
-FocusOnSegmentName
-```
+>```csharp
+>FocusOnSegmentName
+>```
 #### OperationSchemaMappings
-
-```csharp
-OperationSchemaMappings
-```
+>```csharp
+>OperationSchemaMappings
+>```
 ### Methods
 
-
 #### GenerateSyntaxTrees
-
-```csharp
-List<SyntaxGeneratorClientEndpoint> GenerateSyntaxTrees()
-```
+>```csharp
+>List<SyntaxGeneratorClientEndpoint> GenerateSyntaxTrees()
+>```
 <hr /><div style='text-align: right'><i>Generated by MarkdownCodeDoc version 1.2</i></div>

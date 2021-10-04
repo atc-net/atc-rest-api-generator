@@ -12,6 +12,11 @@ namespace Atc.Rest.ApiGenerator.CLI
             return IsParameterDefined(configCmd, "verboseMode", "v");
         }
 
+        public static bool GetDisableCodingRules(CommandLineApplication configCmd)
+        {
+            return !IsParameterDefined(configCmd, "disableCodingRules", shortParameterName: null);
+        }
+
         public static string GetSpecificationPath(CommandLineApplication configCmd)
         {
             return GetValueForParameter(configCmd, "specificationPath");

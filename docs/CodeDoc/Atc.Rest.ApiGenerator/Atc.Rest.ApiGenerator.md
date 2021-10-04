@@ -7,327 +7,264 @@
 
 <br />
 
-
 ## AtcRestApiGeneratorAssemblyTypeInitializer
 
-```csharp
-public class AtcRestApiGeneratorAssemblyTypeInitializer
-```
+>```csharp
+>public class AtcRestApiGeneratorAssemblyTypeInitializer
+>```
 
 
 <br />
-
 
 ## Util
 
-```csharp
-public static class Util
-```
+>```csharp
+>public static class Util
+>```
 
 ### Static Methods
 
-
 #### GetCsFileNameForContract
-
-```csharp
-string GetCsFileNameForContract(DirectoryInfo pathForContracts, string area, string modelName)
-```
+>```csharp
+>string GetCsFileNameForContract(DirectoryInfo pathForContracts, string area, string modelName)
+>```
 #### GetCsFileNameForContract
-
-```csharp
-string GetCsFileNameForContract(DirectoryInfo pathForContracts, string area, string subArea, string modelName)
-```
+>```csharp
+>string GetCsFileNameForContract(DirectoryInfo pathForContracts, string area, string subArea, string modelName)
+>```
 #### GetCsFileNameForContractEnumTypes
-
-```csharp
-string GetCsFileNameForContractEnumTypes(DirectoryInfo pathForContracts, string modelName)
-```
+>```csharp
+>string GetCsFileNameForContractEnumTypes(DirectoryInfo pathForContracts, string modelName)
+>```
 #### GetCsFileNameForContractShared
-
-```csharp
-string GetCsFileNameForContractShared(DirectoryInfo pathForContracts, string modelName)
-```
+>```csharp
+>string GetCsFileNameForContractShared(DirectoryInfo pathForContracts, string modelName)
+>```
 #### GetCsFileNameForEndpoints
-
-```csharp
-string GetCsFileNameForEndpoints(DirectoryInfo pathForEndpoints, string modelName)
-```
+>```csharp
+>string GetCsFileNameForEndpoints(DirectoryInfo pathForEndpoints, string modelName)
+>```
 #### GetCsFileNameForHandler
-
-```csharp
-string GetCsFileNameForHandler(DirectoryInfo pathForHandlers, string area, string handlerName)
-```
+>```csharp
+>string GetCsFileNameForHandler(DirectoryInfo pathForHandlers, string area, string handlerName)
+>```
 #### GetProjectPath
-
-```csharp
-DirectoryInfo GetProjectPath()
-```
+>```csharp
+>DirectoryInfo GetProjectPath()
+>```
 
 <br />
 
-
 ## ValidationRuleNameConstants
 
-```csharp
-public static class ValidationRuleNameConstants
-```
+>```csharp
+>public static class ValidationRuleNameConstants
+>```
 
 ### Static Fields
 
-
 #### OpenApiCore
-
-```csharp
-string OpenApiCore
-```
+>```csharp
+>string OpenApiCore
+>```
 #### Operation01
-
-```csharp
-string Operation01
-```
+>```csharp
+>string Operation01
+>```
 #### Operation02
-
-```csharp
-string Operation02
-```
+>```csharp
+>string Operation02
+>```
 #### Operation03
-
-```csharp
-string Operation03
-```
+>```csharp
+>string Operation03
+>```
 #### Operation04
-
-```csharp
-string Operation04
-```
+>```csharp
+>string Operation04
+>```
 #### Operation05
-
-```csharp
-string Operation05
-```
+>```csharp
+>string Operation05
+>```
 #### Operation06
-
-```csharp
-string Operation06
-```
+>```csharp
+>string Operation06
+>```
 #### Operation07
-
-```csharp
-string Operation07
-```
+>```csharp
+>string Operation07
+>```
 #### Operation08
-
-```csharp
-string Operation08
-```
+>```csharp
+>string Operation08
+>```
 #### Operation09
-
-```csharp
-string Operation09
-```
+>```csharp
+>string Operation09
+>```
 #### Operation10
-
-```csharp
-string Operation10
-```
+>```csharp
+>string Operation10
+>```
 #### Operation11
-
-```csharp
-string Operation11
-```
+>```csharp
+>string Operation11
+>```
 #### Operation12
-
-```csharp
-string Operation12
-```
+>```csharp
+>string Operation12
+>```
 #### Operation13
-
-```csharp
-string Operation13
-```
+>```csharp
+>string Operation13
+>```
 #### Operation14
-
-```csharp
-string Operation14
-```
+>```csharp
+>string Operation14
+>```
 #### Operation15
-
-```csharp
-string Operation15
-```
+>```csharp
+>string Operation15
+>```
 #### Operation16
-
-```csharp
-string Operation16
-```
+>```csharp
+>string Operation16
+>```
 #### Operation17
-
-```csharp
-string Operation17
-```
+>```csharp
+>string Operation17
+>```
 #### Operation18
-
-```csharp
-string Operation18
-```
+>```csharp
+>string Operation18
+>```
 #### Path01
-
-```csharp
-string Path01
-```
+>```csharp
+>string Path01
+>```
 #### ProjectApiGenerated01
-
-```csharp
-string ProjectApiGenerated01
-```
+>```csharp
+>string ProjectApiGenerated01
+>```
 #### ProjectApiGenerated02
-
-```csharp
-string ProjectApiGenerated02
-```
+>```csharp
+>string ProjectApiGenerated02
+>```
 #### ProjectApiGenerated03
-
-```csharp
-string ProjectApiGenerated03
-```
+>```csharp
+>string ProjectApiGenerated03
+>```
 #### ProjectApiGenerated04
-
-```csharp
-string ProjectApiGenerated04
-```
+>```csharp
+>string ProjectApiGenerated04
+>```
 #### ProjectApiGenerated05
-
-```csharp
-string ProjectApiGenerated05
-```
+>```csharp
+>string ProjectApiGenerated05
+>```
 #### ProjectApiGenerated06
-
-```csharp
-string ProjectApiGenerated06
-```
+>```csharp
+>string ProjectApiGenerated06
+>```
 #### ProjectDomainGenerated01
-
-```csharp
-string ProjectDomainGenerated01
-```
+>```csharp
+>string ProjectDomainGenerated01
+>```
 #### ProjectDomainGenerated02
-
-```csharp
-string ProjectDomainGenerated02
-```
+>```csharp
+>string ProjectDomainGenerated02
+>```
 #### ProjectDomainGenerated03
-
-```csharp
-string ProjectDomainGenerated03
-```
+>```csharp
+>string ProjectDomainGenerated03
+>```
 #### ProjectDomainGenerated04
-
-```csharp
-string ProjectDomainGenerated04
-```
+>```csharp
+>string ProjectDomainGenerated04
+>```
 #### ProjectDomainGenerated05
-
-```csharp
-string ProjectDomainGenerated05
-```
+>```csharp
+>string ProjectDomainGenerated05
+>```
 #### ProjectDomainGenerated06
-
-```csharp
-string ProjectDomainGenerated06
-```
+>```csharp
+>string ProjectDomainGenerated06
+>```
 #### ProjectDomainGenerated07
-
-```csharp
-string ProjectDomainGenerated07
-```
+>```csharp
+>string ProjectDomainGenerated07
+>```
 #### ProjectDomainGenerated08
-
-```csharp
-string ProjectDomainGenerated08
-```
+>```csharp
+>string ProjectDomainGenerated08
+>```
 #### ProjectHostGenerated01
-
-```csharp
-string ProjectHostGenerated01
-```
+>```csharp
+>string ProjectHostGenerated01
+>```
 #### ProjectHostGenerated02
-
-```csharp
-string ProjectHostGenerated02
-```
+>```csharp
+>string ProjectHostGenerated02
+>```
 #### ProjectHostGenerated03
-
-```csharp
-string ProjectHostGenerated03
-```
+>```csharp
+>string ProjectHostGenerated03
+>```
 #### ProjectHostGenerated04
-
-```csharp
-string ProjectHostGenerated04
-```
+>```csharp
+>string ProjectHostGenerated04
+>```
 #### ProjectHostGenerated05
-
-```csharp
-string ProjectHostGenerated05
-```
+>```csharp
+>string ProjectHostGenerated05
+>```
 #### Schema01
-
-```csharp
-string Schema01
-```
+>```csharp
+>string Schema01
+>```
 #### Schema02
-
-```csharp
-string Schema02
-```
+>```csharp
+>string Schema02
+>```
 #### Schema03
-
-```csharp
-string Schema03
-```
+>```csharp
+>string Schema03
+>```
 #### Schema04
-
-```csharp
-string Schema04
-```
+>```csharp
+>string Schema04
+>```
 #### Schema05
-
-```csharp
-string Schema05
-```
+>```csharp
+>string Schema05
+>```
 #### Schema06
-
-```csharp
-string Schema06
-```
+>```csharp
+>string Schema06
+>```
 #### Schema07
-
-```csharp
-string Schema07
-```
+>```csharp
+>string Schema07
+>```
 #### Schema08
-
-```csharp
-string Schema08
-```
+>```csharp
+>string Schema08
+>```
 #### Schema09
-
-```csharp
-string Schema09
-```
+>```csharp
+>string Schema09
+>```
 #### Schema10
-
-```csharp
-string Schema10
-```
+>```csharp
+>string Schema10
+>```
 #### Schema11
-
-```csharp
-string Schema11
-```
+>```csharp
+>string Schema11
+>```
 #### Server01
-
-```csharp
-string Server01
-```
+>```csharp
+>string Server01
+>```
 <hr /><div style='text-align: right'><i>Generated by MarkdownCodeDoc version 1.2</i></div>

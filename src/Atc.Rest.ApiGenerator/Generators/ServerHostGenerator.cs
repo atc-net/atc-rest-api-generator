@@ -7,6 +7,7 @@ using System.Net.Mime;
 using System.Text;
 using System.Xml.Linq;
 using Atc.CodeAnalysis.CSharp.SyntaxFactories;
+using Atc.Data;
 using Atc.Data.Models;
 using Atc.Rest.ApiGenerator.Factories;
 using Atc.Rest.ApiGenerator.Helpers;
@@ -19,6 +20,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Hosting;
 
+// ReSharper disable ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
 // ReSharper disable SuggestBaseTypeForParameter
 // ReSharper disable ReturnTypeCanBeEnumerable.Local
 namespace Atc.Rest.ApiGenerator.Generators
@@ -76,13 +78,13 @@ namespace Atc.Rest.ApiGenerator.Generators
                     var newNullableValue = SolutionAndProjectHelper.GetNullableStringFromBool(projectOptions.ApiOptions.Generator.UseNullableReferenceTypes);
                     SolutionAndProjectHelper.SetNullableValueForProject(element, newNullableValue);
                     element.Save(projectOptions.ProjectSrcCsProj.FullName);
-                    logItems.Add(new LogKeyValueItem(LogCategoryType.Debug, "FileUpdate", "#", $"Update host csproj - Nullable value={newNullableValue}"));
+                    logItems.Add(LogItemFactory.CreateDebug("FileUpdate", "#", $"Update host csproj - Nullable value={newNullableValue}"));
                     hasUpdates = true;
                 }
 
                 if (!hasUpdates)
                 {
-                    logItems.Add(new LogKeyValueItem(LogCategoryType.Debug, "FileSkip", "#", "No updates for host csproj"));
+                    logItems.Add(LogItemFactory.CreateDebug("FileSkip", "#", "No updates for host csproj"));
                 }
             }
             else
@@ -100,15 +102,15 @@ namespace Atc.Rest.ApiGenerator.Generators
 
                 logItems.Add(SolutionAndProjectHelper.ScaffoldProjFile(
                     projectOptions.ProjectSrcCsProj,
-                    true,
-                    false,
+                    createAsWeb: true,
+                    createAsTestProject: false,
                     projectOptions.ProjectName,
                     "netcoreapp3.1",
                     projectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
-                    null,
+                    frameworkReferences: null,
                     NugetPackageReferenceHelper.CreateForHostProject(projectOptions.UseRestExtended),
                     projectReferences,
-                    false));
+                    includeApiSpecification: false));
 
                 logItems.Add(ScaffoldPropertiesLaunchSettingsFile(
                     projectOptions.PathForSrcGenerate,
@@ -142,7 +144,7 @@ namespace Atc.Rest.ApiGenerator.Generators
 
             var file = new FileInfo(Path.Combine(propertiesPath.FullName, "launchSettings.json"));
             return File.Exists(file.FullName)
-                ? new LogKeyValueItem(LogCategoryType.Debug, "FileSkip", "#", file.FullName)
+                ? LogItemFactory.CreateDebug("FileSkip", "#", file.FullName)
                 : TextFileHelper.Save(file, json);
         }
 
@@ -1068,7 +1070,7 @@ namespace Atc.Rest.ApiGenerator.Generators
 
             var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "Program.cs"));
             return File.Exists(file.FullName)
-                ? new LogKeyValueItem(LogCategoryType.Debug, "FileSkip", "#", file.FullName)
+                ? LogItemFactory.CreateDebug("FileSkip", "#", file.FullName)
                 : TextFileHelper.Save(file, codeAsString);
         }
 
@@ -1118,14 +1120,14 @@ namespace Atc.Rest.ApiGenerator.Generators
 
             var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "Startup.cs"));
             return File.Exists(file.FullName)
-                ? new LogKeyValueItem(LogCategoryType.Debug, "FileSkip", "#", file.FullName)
+                ? LogItemFactory.CreateDebug("FileSkip", "#", file.FullName)
                 : TextFileHelper.Save(file, codeAsString);
         }
 
         private LogKeyValueItem ScaffoldWebConfig()
         {
             var sb = new StringBuilder();
-            sb.AppendLine("<?xml version=\"1.0\" encoding=\"utf - 8\"?>");
+            sb.AppendLine("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
             sb.AppendLine("<configuration>");
             sb.AppendLine("  <system.webServer>");
             sb.AppendLine("    <security>");
@@ -1138,7 +1140,7 @@ namespace Atc.Rest.ApiGenerator.Generators
 
             var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "web.config"));
             return File.Exists(file.FullName)
-                ? new LogKeyValueItem(LogCategoryType.Debug, "FileSkip", "#", file.FullName)
+                ? LogItemFactory.CreateDebug("FileSkip", "#", file.FullName)
                 : TextFileHelper.Save(file, sb.ToString());
         }
 
