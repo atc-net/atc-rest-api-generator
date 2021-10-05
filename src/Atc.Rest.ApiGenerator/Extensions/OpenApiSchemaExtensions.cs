@@ -79,6 +79,12 @@ namespace Microsoft.OpenApi.Models
                 {
                     return true;
                 }
+
+                if (schemaProperty.Value.IsArrayReferenceTypeDeclared() &&
+                    schemaProperty.Value.Items.HasAnySharedModelOrEnum(apiOperationSchemaMaps))
+                {
+                    return true;
+                }
             }
 
             return false;
