@@ -66,22 +66,22 @@ namespace Microsoft.OpenApi.Models
                 return false;
             }
 
-            foreach (var schemaProperty in schema.Properties)
+            foreach (var (_, openApiSchema) in schema.Properties)
             {
-                if (schemaProperty.Value.HasAnySharedModelOrEnum(apiOperationSchemaMaps))
+                if (openApiSchema.HasAnySharedModelOrEnum(apiOperationSchemaMaps))
                 {
                     return true;
                 }
 
-                if (schemaProperty.Value.OneOf is not null &&
-                    schemaProperty.Value.OneOf.Count > 0 &&
-                    schemaProperty.Value.OneOf.Any(x => x.HasAnySharedModelOrEnum(apiOperationSchemaMaps)))
+                if (openApiSchema.OneOf is not null &&
+                    openApiSchema.OneOf.Count > 0 &&
+                    openApiSchema.OneOf.Any(x => x.HasAnySharedModelOrEnum(apiOperationSchemaMaps)))
                 {
                     return true;
                 }
 
-                if (schemaProperty.Value.IsArrayReferenceTypeDeclared() &&
-                    schemaProperty.Value.Items.HasAnySharedModelOrEnum(apiOperationSchemaMaps))
+                if (openApiSchema.IsArrayReferenceTypeDeclared() &&
+                    openApiSchema.Items.HasAnySharedModelOrEnum(apiOperationSchemaMaps))
                 {
                     return true;
                 }
