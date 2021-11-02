@@ -23,16 +23,15 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
         {
             // Verify spec file supported for unit test
             Assert.Single(apiProject.Document.Paths);
-            var urlPath = apiProject.Document.Paths.First();
-            Assert.False(urlPath.IsPathStartingSegmentName(FocusOnSegment));
-            Assert.Single(urlPath.Value.Operations);
-            var (operationType, openApiOperation) = urlPath.Value.Operations.First();
-            Assert.True(openApiOperation.HasParametersOrRequestBody() || urlPath.Value.HasParameters());
+            var (_, openApiPathItem) = apiProject.Document.Paths.First();
+            Assert.Single(openApiPathItem.Operations);
+            var (operationType, openApiOperation) = openApiPathItem.Operations.First();
+            Assert.True(openApiOperation.HasParametersOrRequestBody() || openApiPathItem.HasParameters());
 
             // Construct SUT
             return new SyntaxGeneratorContractParameter(
                         apiProject,
-                        urlPath.Value.Parameters,
+                        openApiPathItem.Parameters,
                         operationType,
                         openApiOperation,
                         FocusOnSegment);
