@@ -523,7 +523,7 @@ dotnet_diagnostic.MA0065.severity = none
 dotnet_diagnostic.S1128.severity = none             # Sample: unused usings
 dotnet_diagnostic.S1172.severity = none             # Sample: unused method parameter
 dotnet_diagnostic.S4457.severity = none
-
+dotnet_diagnostic.S3267.severity = none
 
 dotnet_diagnostic.SA1003.severity = none
 dotnet_diagnostic.SA1111.severity = none
