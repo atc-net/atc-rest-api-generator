@@ -74,7 +74,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
                     : $"{projectName}.{NameConstants.Contracts}.{segmentName}.{modelName}";
             }
 
-            if (!modelName.Contains(".", StringComparison.Ordinal) && IsReservedSystemTypeName(modelName))
+            if (!modelName.Contains(".", StringComparison.Ordinal) && IsReservedTypeName(modelName))
             {
                 if (isShared)
                 {
@@ -152,12 +152,18 @@ namespace Atc.Rest.ApiGenerator.Helpers
                 .Split('.', StringSplitOptions.RemoveEmptyEntries)
                 .Any(s => s.Equals(rawModelName, StringComparison.Ordinal));
 
-        private static bool IsReservedSystemTypeName(string modelName)
+        private static bool IsReservedTypeName(string modelName)
         {
+            if ("endpoint".Equals(modelName, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
             var exportedTypes = new List<Type>();
             var assemblies = AppDomain.CurrentDomain
                 .GetAssemblies()
-                .Where(x => x.FullName.StartsWith("System", StringComparison.Ordinal));
+                .Where(x => x.FullName.StartsWith("System", StringComparison.Ordinal) ||
+                            x.FullName.StartsWith("Microsoft", StringComparison.Ordinal));
 
             foreach (var assembly in assemblies)
             {
