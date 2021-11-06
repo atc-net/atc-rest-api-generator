@@ -40,7 +40,7 @@ namespace Demo.Api.Tests.Endpoints.Files.Generated
         private async Task<MultipartFormDataContent> GetMultipartFormDataContentFromFiles(List<IFormFile> request)
         {
             var formDataContent = new MultipartFormDataContent();
-            if (request is not null)
+            if (request != null)
             {
                 foreach (var item in request)
                 {
