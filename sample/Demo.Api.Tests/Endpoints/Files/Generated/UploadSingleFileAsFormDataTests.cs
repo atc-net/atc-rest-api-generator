@@ -38,7 +38,7 @@ namespace Demo.Api.Tests.Endpoints.Files.Generated
         private async Task<MultipartFormDataContent> GetMultipartFormDataContentFromUploadSingleFileAsFormDataRequest(IFormFile request)
         {
             var formDataContent = new MultipartFormDataContent();
-            if (request is not null)
+            if (request != null)
             {
                 var bytesContent = new ByteArrayContent(await request.GetBytes());
                 formDataContent.Add(bytesContent, "Request", request.FileName);

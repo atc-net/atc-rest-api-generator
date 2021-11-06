@@ -47,13 +47,13 @@ namespace Demo.Api.Tests.Endpoints.Files.Generated
         {
             var formDataContent = new MultipartFormDataContent();
             formDataContent.Add(new StringContent(request.ItemName), "Request.ItemName");
-            if (request.File is not null)
+            if (request.File != null)
             {
                 var bytesContent = new ByteArrayContent(await request.File.GetBytes());
                 formDataContent.Add(bytesContent, "Request.File", request.File.FileName);
             }
 
-            if (request.Items is not null && request.Items.Count > 0)
+            if (request.Items != null && request.Items.Count > 0)
             {
                 foreach (var item in request.Items)
                 {

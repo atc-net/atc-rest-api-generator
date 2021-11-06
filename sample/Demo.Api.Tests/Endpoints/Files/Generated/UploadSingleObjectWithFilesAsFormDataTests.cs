@@ -43,7 +43,7 @@ namespace Demo.Api.Tests.Endpoints.Files.Generated
         private async Task<MultipartFormDataContent> GetMultipartFormDataContentFromFilesAsFormDataRequest(FilesAsFormDataRequest request)
         {
             var formDataContent = new MultipartFormDataContent();
-            if (request.Files is not null)
+            if (request.Files != null)
             {
                 foreach (var item in request.Files)
                 {
