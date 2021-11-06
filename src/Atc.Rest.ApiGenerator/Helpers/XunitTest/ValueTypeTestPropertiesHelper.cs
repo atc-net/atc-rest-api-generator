@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text;
+using Microsoft.CodeAnalysis;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 
@@ -112,11 +114,12 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             return val;
         }
 
-        public static string CreateValueDateTimeOffset(bool useForBadRequest)
+        public static string CreateValueDateTimeOffset(bool useForBadRequest, int itemNumber = 0)
         {
+            int sec = 23 + itemNumber;
             return useForBadRequest
-                ? "x2020-10-12T21:22:23"
-                : "2020-10-12T21:22:23";
+                ? $"x2020-10-12T21:22:{sec:D2}"
+                : $"2020-10-12T21:22:{sec:D2}";
         }
 
         [SuppressMessage("Design", "CA1055:URI-like return values should not be strings", Justification = "OK.")]
@@ -153,7 +156,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
         public static string CreateValueArray(string name, OpenApiSchema itemSchema, ParameterLocation? parameterLocation, bool useForBadRequest, int count)
         {
             return Enumerable.Range(0, count)
-                .Select(i => CreateValueArrayItem(name, itemSchema, parameterLocation, i))
+                .Select(i => CreateValueArrayItem(name, itemSchema, parameterLocation, useForBadRequest, i))
                 .Aggregate((item1, item2) => item1 + $"&{name}=" + item2);
         }
 
@@ -305,19 +308,19 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             return "42.2";
         }
 
-        private static string CreateValueArrayItem(string name, OpenApiSchema itemSchema, ParameterLocation? parameterLocation, int itemNumber = 0)
+        private static string CreateValueArrayItem(string name, OpenApiSchema itemSchema, ParameterLocation? parameterLocation, bool useForBadRequest, int itemNumber = 0)
         {
             return itemSchema.GetDataType() switch
             {
-                "double" => Number(name, itemSchema, false),
-                "long" => Number(name, itemSchema, false),
-                "int" => Number(name, itemSchema, false),
-                "bool" => CreateValueBool(false),
-                "string" => CreateValueString(name, itemSchema, parameterLocation, false, itemNumber, null),
-                "DateTimeOffset" => CreateValueDateTimeOffset(false),
-                "Guid" => CreateValueGuid(false),
-                "Uri" => CreateValueUri(false),
-                "Email" => CreateValueEmail(false),
+                "double" => Number(name, itemSchema, useForBadRequest),
+                "long" => Number(name, itemSchema, useForBadRequest),
+                "int" => Number(name, itemSchema, useForBadRequest),
+                "bool" => CreateValueBool(useForBadRequest),
+                "string" => CreateValueString(name, itemSchema, parameterLocation, useForBadRequest, itemNumber, null),
+                "DateTimeOffset" => CreateValueDateTimeOffset(useForBadRequest, itemNumber),
+                "Guid" => CreateValueGuid(useForBadRequest, itemNumber),
+                "Uri" => CreateValueUri(useForBadRequest),
+                "Email" => CreateValueEmail(useForBadRequest, itemNumber),
                 _ => throw new NotSupportedException($"PropertyValueGenerator: {name} - array of ({itemSchema.GetDataType()})")
             };
         }

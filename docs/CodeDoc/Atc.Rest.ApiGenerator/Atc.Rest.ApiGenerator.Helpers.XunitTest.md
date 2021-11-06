@@ -241,7 +241,7 @@
 >```
 #### CreateValueDateTimeOffset
 >```csharp
->string CreateValueDateTimeOffset(bool useForBadRequest)
+>string CreateValueDateTimeOffset(bool useForBadRequest, int itemNumber = 0)
 >```
 #### CreateValueEmail
 >```csharp

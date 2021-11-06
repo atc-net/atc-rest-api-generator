@@ -239,7 +239,7 @@
   -  Static Methods
      - CreateValueArray(string name, OpenApiSchema itemSchema, ParameterLocation? parameterLocation, bool useForBadRequest, int count)
      - CreateValueBool(bool useForBadRequest)
-     - CreateValueDateTimeOffset(bool useForBadRequest)
+     - CreateValueDateTimeOffset(bool useForBadRequest, int itemNumber = 0)
      - CreateValueEmail(bool useForBadRequest, int itemNumber = 0)
      - CreateValueEnum(string name, KeyValuePair&lt;string, OpenApiSchema&gt; schemaForEnum, bool useForBadRequest)
      - CreateValueGuid(bool useForBadRequest, int itemNumber = 0)
