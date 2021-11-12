@@ -224,9 +224,9 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 var useForBadRequest = badPropertySchema != null &&
                                        schemaProperty.Key.Equals(badPropertySchema.Value.Key, StringComparison.Ordinal);
 
-                string dataType = schemaProperty.Value.GetDataType();
+                var dataType = schemaProperty.Value.GetDataType();
 
-                string propertyValueGenerated = GenerateXunitTestPartsHelper.PropertyValueGenerator(
+                var propertyValueGenerated = GenerateXunitTestPartsHelper.PropertyValueGenerator(
                     schemaProperty,
                     endpointMethodMetadata.ComponentsSchemas,
                     useForBadRequest,
@@ -397,10 +397,10 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             }
 
             var modelSchema = endpointMethodMetadata.ComponentsSchemas.GetSchemaByModelName(modelName);
-            for (int i = 0; i < maxItemsForList; i++)
+            for (var i = 0; i < maxItemsForList; i++)
             {
                 var trailingCharForProperty = GenerateXunitTestPartsHelper.GetTrailingCharForProperty(asJsonBody, i, maxItemsForList);
-                int indentSpacesForItem = indentSpaces + 4;
+                var indentSpacesForItem = indentSpaces + 4;
                 if (!asJsonBody)
                 {
                     indentSpacesForItem = indentSpaces + 4;
