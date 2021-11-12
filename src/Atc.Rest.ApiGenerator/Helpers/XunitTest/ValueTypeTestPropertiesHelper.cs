@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
-using Microsoft.CodeAnalysis;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 
@@ -94,16 +92,16 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             }
 
             var val = CreateValueStringDefault(useForBadRequest, itemNumber, customValue);
-            if (schema.IsRuleValidationString())
+            if (!useForBadRequest && schema.IsRuleValidationString())
             {
-                int min = schema.MinLength ?? 0;
+                var min = schema.MinLength ?? 0;
                 if (val.Length < min)
                 {
                     val = val.PadRight(min, 'X');
                 }
                 else
                 {
-                    int max = schema.MaxLength ?? 20;
+                    var max = schema.MaxLength ?? 20;
                     if (val.Length > max)
                     {
                         val = val.Substring(0, max);
