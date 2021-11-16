@@ -8,10 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc" Version="1.1.338" />
-    <PackageReference Include="Atc.CodeAnalysis.CSharp" Version="1.1.338" />
-    <PackageReference Include="Atc.OpenApi" Version="1.1.338" />
-    <PackageReference Include="Atc.Rest.Client" Version="1.0.29" />
+    <PackageReference Include="Atc" Version="1.1.347" />
+    <PackageReference Include="Atc.CodeAnalysis.CSharp" Version="1.1.347" />
+    <PackageReference Include="Atc.OpenApi" Version="1.1.347" />
+    <PackageReference Include="Atc.Rest.Client" Version="1.0.31" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.11.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.8" />
     <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.2.3" />

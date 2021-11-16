@@ -131,11 +131,6 @@ namespace Atc.Rest.ApiGenerator.Helpers
 
                         foreach (var (key, value) in schema.Properties)
                         {
-                            if (value.Nullable && schema.Required.Contains(key))
-                            {
-                                logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Schema08, $"Nullable property '{key}' must not be present in required property list in type '{schema.Reference.ReferenceV3}'."));
-                            }
-
                             switch (value.Type)
                             {
                                 case OpenApiDataTypeConstants.Object:

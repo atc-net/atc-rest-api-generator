@@ -11,11 +11,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc.DotNet" Version="1.1.338" />
+    <PackageReference Include="Atc.DotNet" Version="1.1.347" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
-    <PackageReference Include="Atc.CodeDocumentation" Version="1.1.338" />
-    <PackageReference Include="Atc.XUnit" Version="1.1.338" />
+    <PackageReference Include="Atc.CodeDocumentation" Version="1.1.347" />
+    <PackageReference Include="Atc.XUnit" Version="1.1.347" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
     <PackageReference Include="Verify" Version="11.23.0" />
     <PackageReference Include="Verify.Xunit" Version="11.23.0" />
@@ -46,6 +46,10 @@
     <None Update="SyntaxGenerators\**\*.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="NSubstitute.Analyzers.CSharp" Version="1.0.15" />
   </ItemGroup>
 
 </Project>
