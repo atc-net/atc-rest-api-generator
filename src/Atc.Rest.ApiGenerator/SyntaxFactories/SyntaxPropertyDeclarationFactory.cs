@@ -21,11 +21,12 @@ namespace Atc.Rest.ApiGenerator.SyntaxFactories
             bool useNullableReferenceTypes,
             IOpenApiAny? initializer)
         {
-            if (useNullableReferenceTypes &&
-                !isRequired &&
-                (isNullable || parameterLocation == ParameterLocation.Query))
+            switch (useNullableReferenceTypes)
             {
-                dataType += "?";
+                case true when !isRequired && (isNullable || parameterLocation == ParameterLocation.Query):
+                case true when isRequired && isNullable:
+                    dataType += "?";
+                    break;
             }
 
             var propertyDeclaration = CreateAuto(dataType, propertyName);
