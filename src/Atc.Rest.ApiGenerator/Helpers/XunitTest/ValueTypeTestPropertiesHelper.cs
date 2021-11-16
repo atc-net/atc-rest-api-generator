@@ -314,7 +314,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 "long" => Number(name, itemSchema, useForBadRequest),
                 "int" => Number(name, itemSchema, useForBadRequest),
                 "bool" => CreateValueBool(useForBadRequest),
-                "string" => CreateValueString(name, itemSchema, parameterLocation, useForBadRequest, itemNumber, null),
+                "string" => CreateValueString(name, itemSchema, parameterLocation, useForBadRequest, itemNumber, customValue: null),
                 "DateTimeOffset" => CreateValueDateTimeOffset(useForBadRequest, itemNumber),
                 "Guid" => CreateValueGuid(useForBadRequest, itemNumber),
                 "Uri" => CreateValueUri(useForBadRequest),
