@@ -50,7 +50,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
             var packageReference = new List<Tuple<string, string, string?>>
             {
                 new Tuple<string, string, string?>("Atc", atcVersion, null),
-                new Tuple<string, string, string?>("Atc.Rest.Client", "1.0.29", null),
+                new Tuple<string, string, string?>("Atc.Rest.Client", "1.0.31", null),
             };
 
             return packageReference;
@@ -60,10 +60,10 @@ namespace Atc.Rest.ApiGenerator.Helpers
         {
             var packageReference = new List<Tuple<string, string, string?>>
             {
-                new Tuple<string, string, string?>("AutoFixture", "4.14.0", null),
-                new Tuple<string, string, string?>("AutoFixture.AutoNSubstitute", "4.14.0", null),
-                new Tuple<string, string, string?>("AutoFixture.Xunit2", "4.14.0", null),
-                new Tuple<string, string, string?>("FluentAssertions", "5.10.3", null),
+                new Tuple<string, string, string?>("AutoFixture", "4.17.0", null),
+                new Tuple<string, string, string?>("AutoFixture.AutoNSubstitute", "4.17.0", null),
+                new Tuple<string, string, string?>("AutoFixture.Xunit2", "4.17.0", null),
+                new Tuple<string, string, string?>("FluentAssertions", "6.1.0", null),
             };
 
             if (useMvc)
