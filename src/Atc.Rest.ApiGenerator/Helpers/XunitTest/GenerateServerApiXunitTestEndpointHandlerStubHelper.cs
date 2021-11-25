@@ -79,11 +79,11 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             StringBuilder sb,
             EndpointMethodMetadata endpointMethodMetadata)
         {
-            if (endpointMethodMetadata.ContractReturnTypeNames.FirstOrDefault(x => x.StatusCode == HttpStatusCode.OK) != null)
+            if (endpointMethodMetadata.ContractReturnTypeNames.Find(x => x.StatusCode == HttpStatusCode.OK) != null)
             {
                 AppendContentForExecuteAsynchronous(sb, endpointMethodMetadata, HttpStatusCode.OK);
             }
-            else if (endpointMethodMetadata.ContractReturnTypeNames.FirstOrDefault(x => x.StatusCode == HttpStatusCode.Created) != null)
+            else if (endpointMethodMetadata.ContractReturnTypeNames.Find(x => x.StatusCode == HttpStatusCode.Created) != null)
             {
                 AppendContentForExecuteAsynchronous(sb, endpointMethodMetadata, HttpStatusCode.Created);
             }
@@ -173,19 +173,19 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                             {
                                 var queryParameters = endpointMethodMetadata.ContractParameter.ApiOperation.Parameters.GetAllFromQuery();
                                 var sPageSize = "10";
-                                if (queryParameters.FirstOrDefault(x => x.Name.Equals("PageSize", StringComparison.OrdinalIgnoreCase)) != null)
+                                if (queryParameters.Find(x => x.Name.Equals("PageSize", StringComparison.OrdinalIgnoreCase)) != null)
                                 {
                                     sPageSize = "parameters.PageSize";
                                 }
 
                                 var sQueryString = "null";
-                                if (queryParameters.FirstOrDefault(x => x.Name.Equals("QueryString", StringComparison.OrdinalIgnoreCase)) != null)
+                                if (queryParameters.Find(x => x.Name.Equals("QueryString", StringComparison.OrdinalIgnoreCase)) != null)
                                 {
                                     sQueryString = "parameters.QueryString";
                                 }
 
                                 var sContinuationToken = "null";
-                                if (queryParameters.FirstOrDefault(x => x.Name.Equals("ContinuationToken", StringComparison.OrdinalIgnoreCase)) != null)
+                                if (queryParameters.Find(x => x.Name.Equals("ContinuationToken", StringComparison.OrdinalIgnoreCase)) != null)
                                 {
                                     sContinuationToken = "parameters.ContinuationToken";
                                 }
