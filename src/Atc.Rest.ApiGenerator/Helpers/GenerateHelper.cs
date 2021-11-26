@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 using Atc.Data.Models;
@@ -14,10 +15,11 @@ namespace Atc.Rest.ApiGenerator.Helpers
 {
     public static class GenerateHelper
     {
-        public static Version GetAtcVersion()
-        {
-            return new Version(1, 1, 349, 0);
-        }
+        private static readonly Version AtcVersion = new Version(1, 1, 349, 0);
+        private static readonly Version AtcToolVersion = new Version(1, 1, 371, 0);
+
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "OK.")]
+        public static Version GetAtcVersion() => AtcVersion;
 
         public static string GetAtcVersionAsString3()
         {
@@ -39,10 +41,9 @@ namespace Atc.Rest.ApiGenerator.Helpers
                 assembly = Assembly.GetExecutingAssembly();
             }
 
-            var defaultVersion = new Version(1, 1, 371, 0);
-            return assembly.GetName().Version.GreaterThan(defaultVersion)
+            return assembly.GetName().Version.GreaterThan(AtcToolVersion)
                 ? assembly.GetName().Version
-                : defaultVersion;
+                : AtcToolVersion;
         }
 
         public static string GetAtcToolVersionAsString3()
