@@ -57,7 +57,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxFactories
 
                 lines.Add(openApiString.Value.Trim());
 
-                if (!openApiString.Value.Contains("=", StringComparison.Ordinal))
+                if (!openApiString.Value.Contains('=', StringComparison.Ordinal))
                 {
                     continue;
                 }

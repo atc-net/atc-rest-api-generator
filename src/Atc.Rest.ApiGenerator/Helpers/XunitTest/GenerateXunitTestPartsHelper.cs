@@ -147,7 +147,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                     }
                     else
                     {
-                        if (propertyValueGenerated.Contains("=", StringComparison.Ordinal))
+                        if (propertyValueGenerated.Contains('=', StringComparison.Ordinal))
                         {
                             propertyValueGenerated = propertyValueGenerated.Split('=').First().Trim();
                         }
