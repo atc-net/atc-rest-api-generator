@@ -48,18 +48,12 @@ namespace Atc.Rest.ApiGenerator.Helpers
             sb.AppendLine();
             if (!createAsTestProject)
             {
-                sb.AppendLine(2, "<PropertyGroup>");
-                if (useNullableReferenceTypes)
-                {
-                    sb.AppendLine(4, "<Nullable>enable</Nullable>");
-                }
-
-                sb.AppendLine(4, "<LangVersion>9.0</LangVersion>");
-                sb.AppendLine(2, "</PropertyGroup>");
                 sb.AppendLine();
                 sb.AppendLine(2, "<PropertyGroup>");
                 sb.AppendLine(4, "<GenerateDocumentationFile>true</GenerateDocumentationFile>");
                 sb.AppendLine(2, "</PropertyGroup>");
+                sb.AppendLine();
+                sb.AppendLine(2, "<!-- PropertyGroup: Compile settings with LangVersion & TargetFramework is inherit from root/Directory.Build.props -->");
                 sb.AppendLine();
                 sb.AppendLine(2, "<PropertyGroup>");
                 sb.AppendLine(4, $"<DocumentationFile>bin{Path.DirectorySeparatorChar}Debug{Path.DirectorySeparatorChar}{targetFramework}{Path.DirectorySeparatorChar}{projectName}.xml</DocumentationFile>");
