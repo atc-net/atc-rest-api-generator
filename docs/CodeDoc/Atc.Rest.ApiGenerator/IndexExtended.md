@@ -133,6 +133,9 @@
      - GetAtcToolVersion()
      - GetAtcToolVersionAsString3()
      - GetAtcToolVersionAsString4()
+     - GetAtcVersion()
+     - GetAtcVersionAsString3()
+     - GetAtcVersionAsString4()
 - [HttpClientHelper](Atc.Rest.ApiGenerator.Helpers.md#httpclienthelper)
   -  Static Methods
      - DownloadToTempFile(string apiDesignPath)

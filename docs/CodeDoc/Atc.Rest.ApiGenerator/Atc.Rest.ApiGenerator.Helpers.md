@@ -87,6 +87,18 @@
 >```csharp
 >string GetAtcToolVersionAsString4()
 >```
+#### GetAtcVersion
+>```csharp
+>Version GetAtcVersion()
+>```
+#### GetAtcVersionAsString3
+>```csharp
+>string GetAtcVersionAsString3()
+>```
+#### GetAtcVersionAsString4
+>```csharp
+>string GetAtcVersionAsString4()
+>```
 
 <br />
 

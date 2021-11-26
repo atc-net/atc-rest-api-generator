@@ -791,7 +791,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
             var sa = route.Split('/');
             for (var i = 0; i < sa.Length; i++)
             {
-                if (!sa[i].Contains("{", StringComparison.Ordinal))
+                if (!sa[i].Contains('{', StringComparison.Ordinal))
                 {
                     continue;
                 }

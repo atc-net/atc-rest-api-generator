@@ -31,9 +31,9 @@ namespace Atc.Rest.ApiGenerator.Helpers
                 s = s.Substring(s.IndexOf("<", StringComparison.Ordinal) + 1);
             }
 
-            if (s.Contains(".", StringComparison.Ordinal))
+            if (s.Contains('.', StringComparison.Ordinal))
             {
-                s = s.Substring(s.LastIndexOf(".", StringComparison.Ordinal) + 1);
+                s = s.Substring(s.LastIndexOf('.') + 1);
             }
 
             return s;
@@ -74,7 +74,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
                     : $"{projectName}.{NameConstants.Contracts}.{segmentName}.{modelName}";
             }
 
-            if (!modelName.Contains(".", StringComparison.Ordinal) && IsReservedTypeName(modelName))
+            if (!modelName.Contains('.', StringComparison.Ordinal) && IsReservedTypeName(modelName))
             {
                 if (isShared)
                 {

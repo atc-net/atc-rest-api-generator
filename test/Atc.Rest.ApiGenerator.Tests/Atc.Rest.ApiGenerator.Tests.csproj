@@ -11,14 +11,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc.DotNet" Version="1.1.347" />
+    <PackageReference Include="Atc.DotNet" Version="1.1.349" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
-    <PackageReference Include="Atc.CodeDocumentation" Version="1.1.347" />
-    <PackageReference Include="Atc.XUnit" Version="1.1.347" />
+    <PackageReference Include="Atc.CodeDocumentation" Version="1.1.349" />
+    <PackageReference Include="Atc.XUnit" Version="1.1.349" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
-    <PackageReference Include="Verify" Version="11.23.0" />
-    <PackageReference Include="Verify.Xunit" Version="11.23.0" />
+    <PackageReference Include="Verify" Version="14.6.2" />
+    <PackageReference Include="Verify.Xunit" Version="14.6.2" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
       <PrivateAssets>all</PrivateAssets>
