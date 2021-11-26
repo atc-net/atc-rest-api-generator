@@ -14,30 +14,46 @@ namespace Atc.Rest.ApiGenerator.Helpers
 {
     public static class GenerateHelper
     {
+        private static readonly Version AtcVersion = new Version(1, 1, 349, 0);
+        private static readonly Version AtcToolVersion = new Version(1, 1, 371, 0);
+
+        public static Version GetAtcVersion() => AtcVersion;
+
+        public static string GetAtcVersionAsString3()
+        {
+            var atcVersion = GetAtcVersion();
+            return $"{atcVersion.Major}.{atcVersion.Minor}.{atcVersion.Build}";
+        }
+
+        public static string GetAtcVersionAsString4()
+        {
+            var atcVersion = GetAtcVersion();
+            return $"{atcVersion.Major}.{atcVersion.Minor}.{atcVersion.Build}.{atcVersion.Revision}";
+        }
+
         public static Version GetAtcToolVersion()
         {
-            var defaultVersion = new Version(1, 1, 371, 0);
             var assembly = Assembly.GetEntryAssembly();
             if (assembly == null)
             {
                 assembly = Assembly.GetExecutingAssembly();
             }
 
-            return assembly.GetName().Version.GreaterThan(defaultVersion)
+            return assembly.GetName().Version.GreaterThan(AtcToolVersion)
                 ? assembly.GetName().Version
-                : defaultVersion;
+                : AtcToolVersion;
         }
 
         public static string GetAtcToolVersionAsString3()
         {
-            var atcVersion = GetAtcToolVersion();
-            return $"{atcVersion.Major}.{atcVersion.Minor}.{atcVersion.Build}";
+            var atcToolVersion = GetAtcToolVersion();
+            return $"{atcToolVersion.Major}.{atcToolVersion.Minor}.{atcToolVersion.Build}";
         }
 
         public static string GetAtcToolVersionAsString4()
         {
-            var atcVersion = GetAtcToolVersion();
-            return $"{atcVersion.Major}.{atcVersion.Minor}.{atcVersion.Build}.{atcVersion.Revision}";
+            var atcToolVersion = GetAtcToolVersion();
+            return $"{atcToolVersion.Major}.{atcToolVersion.Minor}.{atcToolVersion.Build}.{atcToolVersion.Revision}";
         }
 
         public static List<LogKeyValueItem> GenerateServerApi(

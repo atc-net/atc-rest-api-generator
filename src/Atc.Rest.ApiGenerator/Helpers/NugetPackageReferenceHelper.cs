@@ -8,7 +8,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
     {
         public static List<Tuple<string, string, string?>> CreateForHostProject(bool useRestExtended)
         {
-            string atcVersion = GenerateHelper.GetAtcToolVersionAsString3();
+            string atcVersion = GenerateHelper.GetAtcVersionAsString3();
 
             var packageReference = new List<Tuple<string, string, string?>>
             {
@@ -19,9 +19,9 @@ namespace Atc.Rest.ApiGenerator.Helpers
             if (useRestExtended)
             {
                 packageReference.Add(new Tuple<string, string, string?>("Atc.Rest.Extended", atcVersion, null));
-                packageReference.Add(new Tuple<string, string, string?>("FluentValidation.AspNetCore", "10.3.0", null));
+                packageReference.Add(new Tuple<string, string, string?>("FluentValidation.AspNetCore", "10.3.4", null));
                 packageReference.Add(new Tuple<string, string, string?>("Microsoft.ApplicationInsights.AspNetCore", "2.18.0", null));
-                packageReference.Add(new Tuple<string, string, string?>("Microsoft.AspNetCore.Authentication.JwtBearer", "3.1.8", null));
+                packageReference.Add(new Tuple<string, string, string?>("Microsoft.AspNetCore.Authentication.JwtBearer", "3.1.18", null));
                 packageReference.Add(new Tuple<string, string, string?>("Microsoft.AspNetCore.Mvc.Versioning", "4.1.1", null));
                 packageReference.Add(new Tuple<string, string, string?>("Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer", "4.1.1", null));
                 packageReference.Add(new Tuple<string, string, string?>("Swashbuckle.AspNetCore", "5.6.3", null));
@@ -32,7 +32,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
 
         public static List<Tuple<string, string, string?>> CreateForApiProject()
         {
-            string atcVersion = GenerateHelper.GetAtcToolVersionAsString3();
+            string atcVersion = GenerateHelper.GetAtcVersionAsString3();
 
             var packageReference = new List<Tuple<string, string, string?>>
             {
@@ -45,7 +45,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
 
         public static List<Tuple<string, string, string?>> CreateForClientApiProject()
         {
-            string atcVersion = GenerateHelper.GetAtcToolVersionAsString3();
+            string atcVersion = GenerateHelper.GetAtcVersionAsString3();
 
             var packageReference = new List<Tuple<string, string, string?>>
             {
@@ -68,7 +68,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
 
             if (useMvc)
             {
-                packageReference.Add(new Tuple<string, string, string?>("Microsoft.AspNetCore.Mvc.Testing", "3.1.8", null));
+                packageReference.Add(new Tuple<string, string, string?>("Microsoft.AspNetCore.Mvc.Testing", "3.1.18", null));
             }
 
             packageReference.AddRange(new List<Tuple<string, string, string?>>
