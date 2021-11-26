@@ -14,12 +14,9 @@ namespace Atc.Rest.ApiGenerator.Helpers
 {
     public static class GenerateHelper
     {
-        private static readonly Version AtcVersion = new Version(1, 1, 349, 0);
-        private static readonly Version AtcToolVersion = new Version(1, 1, 371, 0);
-
         public static Version GetAtcVersion()
         {
-            return AtcVersion;
+            return new Version(1, 1, 349, 0);
         }
 
         public static string GetAtcVersionAsString3()
@@ -42,9 +39,10 @@ namespace Atc.Rest.ApiGenerator.Helpers
                 assembly = Assembly.GetExecutingAssembly();
             }
 
-            return assembly.GetName().Version.GreaterThan(AtcToolVersion)
+            var defaultVersion = new Version(1, 1, 371, 0);
+            return assembly.GetName().Version.GreaterThan(defaultVersion)
                 ? assembly.GetName().Version
-                : AtcToolVersion;
+                : defaultVersion;
         }
 
         public static string GetAtcToolVersionAsString3()
