@@ -17,7 +17,10 @@ namespace Atc.Rest.ApiGenerator.Helpers
         private static readonly Version AtcVersion = new Version(1, 1, 349, 0);
         private static readonly Version AtcToolVersion = new Version(1, 1, 371, 0);
 
-        public static Version GetAtcVersion() => AtcVersion;
+        public static Version GetAtcVersion()
+        {
+            return AtcVersion;
+        }
 
         public static string GetAtcVersionAsString3()
         {
