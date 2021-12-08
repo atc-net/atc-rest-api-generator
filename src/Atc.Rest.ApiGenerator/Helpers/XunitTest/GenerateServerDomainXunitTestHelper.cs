@@ -240,47 +240,19 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
                 .Select<ParameterSyntax>()
                 .ToList();
 
-            var interfaceNames = new List<string>();
-            if (parametersSyntax.Count > 0)
-            {
-                interfaceNames.AddRange(parametersSyntax
-                    .Select(p => p.Select<IdentifierNameSyntax>()
-                        .Select(x => x.Identifier.Text)
-                        .ToArray())
-                    .Select(sa => sa.Length == 1
-                        ? sa[0]
-                        : string.Join('.', sa)));
-            }
-
-            var interfaceGenericNames = parameterListSyntax
-                .Select<GenericNameSyntax>()
-                .Select(x => x.GetText().ToString().Trim())
-                .ToArray();
-
-            var names = parameterListSyntax
-                .Select<ParameterSyntax>()
-                .Select(x => x.Identifier.Text)
-                .ToArray();
-
-            if (interfaceNames.Count <= 0 || interfaceNames.Count != names.Length)
-            {
-                return new List<Tuple<string, string>>();
-            }
-
-            if (interfaceGenericNames.Length == 0)
-            {
-                return interfaceNames
-                    .Select((t, i) => new Tuple<string, string>(t, names[i]))
-                    .ToList();
-            }
-
             var list = new List<Tuple<string, string>>();
-            for (int i = 0; i < interfaceNames.Count; i++)
+            foreach (var parameterSyntax in parametersSyntax)
             {
-                var interfaceGenericName = interfaceGenericNames.FirstOrDefault(x => x.Contains($"<{interfaceNames[i]}>", StringComparison.Ordinal));
-                list.Add(string.IsNullOrEmpty(interfaceGenericName)
-                    ? new Tuple<string, string>(interfaceNames[i], names[i])
-                    : new Tuple<string, string>(interfaceGenericName, names[i]));
+                var s = parameterSyntax.ToString();
+                var lastSpaceIndex = s.LastIndexOf(' ');
+                if (lastSpaceIndex == -1)
+                {
+                    continue;
+                }
+
+                var s1 = s.Substring(0, lastSpaceIndex);
+                var s2 = s.Substring(lastSpaceIndex + 1);
+                list.Add(new Tuple<string, string>(s1, s2));
             }
 
             return list;

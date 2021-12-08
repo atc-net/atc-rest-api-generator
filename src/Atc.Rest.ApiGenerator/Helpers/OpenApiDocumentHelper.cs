@@ -76,7 +76,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
                 };
             }
 
-            if (apiDocFile == null || !apiDocFile.Exists)
+            if (apiDocFile is not { Exists: true })
             {
                 throw new IOException("Api specification file don't exist");
             }

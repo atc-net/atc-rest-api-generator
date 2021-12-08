@@ -233,8 +233,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                 var methodDeclaration = SyntaxMethodDeclarationFactory.CreateToStringMethod(ApiSchema.Properties);
                 if (methodDeclaration != null)
                 {
-                    methodDeclaration =
-                        methodDeclaration.WithLeadingTrivia(SyntaxDocumentationFactory.CreateForOverrideToString());
+                    methodDeclaration = methodDeclaration.WithLeadingTrivia(SyntaxDocumentationFactory.CreateForOverrideToString());
                     classDeclaration = classDeclaration.AddMembers(methodDeclaration);
                 }
             }
