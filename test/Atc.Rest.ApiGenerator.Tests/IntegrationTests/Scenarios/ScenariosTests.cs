@@ -1,10 +1,10 @@
-using Atc.DotNet;
-using Atc.Helpers;
-using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Atc.DotNet;
+using Atc.Helpers;
+using Microsoft.Extensions.Logging.Abstractions;
 using VerifyTests;
 using VerifyXunit;
 using Xunit;
@@ -105,7 +105,7 @@ namespace Atc.Rest.ApiGenerator.Tests.IntegrationTests.Scenarios
                     new DirectoryInfo(outputPath),
                     1);
 
-                Assert.Empty(buildErrors);
+                Assert.True(buildErrors.Count == 0, $"BuildErrors: {string.Join(" # ", buildErrors)}");
             }
         }
 
