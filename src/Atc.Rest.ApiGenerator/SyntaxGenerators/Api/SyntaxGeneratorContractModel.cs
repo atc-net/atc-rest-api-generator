@@ -171,6 +171,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
             return @namespace;
         }
 
+        [SuppressMessage("Maintainability", "CA1508:Avoid dead conditional code", Justification = "Bug in CA1508.")]
         private NamespaceDeclarationSyntax GenerateCodeForOtherThanEnum(ref CompilationUnitSyntax? compilationUnit)
         {
             // Create a namespace
