@@ -39,6 +39,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
             sb.AppendLine();
             sb.AppendLine(2, "<PropertyGroup>");
             sb.AppendLine(4, $"<TargetFramework>{targetFramework}</TargetFramework>");
+            sb.AppendLine(4, "<LangVersion>9.0</LangVersion>"); //// TODO FIx after upgrading everything to .NET 6/C# 10
             if (!createAsTestProject)
             {
                 sb.AppendLine(4, "<IsPackable>false</IsPackable>");
