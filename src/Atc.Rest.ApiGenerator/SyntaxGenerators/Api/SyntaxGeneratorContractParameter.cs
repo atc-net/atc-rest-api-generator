@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using Atc.CodeAnalysis.CSharp;
@@ -55,6 +56,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
 
         public bool UseOwnFolder { get; set; }
 
+        [SuppressMessage("Maintainability", "CA1508:Avoid dead conditional code", Justification = "Bug in CA1508.")]
         public bool GenerateCode()
         {
             var parameterTypeName = ApiOperation.GetOperationName() + NameConstants.ContractParameters;
