@@ -44,7 +44,7 @@
     <PackageReference Include="Meziantou.Analyzer" Version="1.0.679" PrivateAssets="All" />
     <PackageReference Include="SecurityCodeScan.VS2019" Version="5.2.1" PrivateAssets="All" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="All" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.32.0.39516" PrivateAssets="All" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.33.0.40503" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>

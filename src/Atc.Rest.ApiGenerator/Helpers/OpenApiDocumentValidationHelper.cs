@@ -71,7 +71,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
                 return true;
             }
 
-            if (serverUrl.EndsWith("/", StringComparison.Ordinal))
+            if (serverUrl.EndsWith('/'))
             {
                 return false;
             }
@@ -84,7 +84,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
                 return false;
             }
 
-            return serverUrl.StartsWith("/", StringComparison.Ordinal) ||
+            return serverUrl.StartsWith('/') ||
                    serverUrl.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
                    serverUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase);
         }
@@ -383,7 +383,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
                 ? LogCategoryType.Error
                 : LogCategoryType.Warning;
 
-            var modelName = schema.GetModelName(false);
+            var modelName = schema.GetModelName(ensureFirstCharacterToUpper: false);
             if (!modelName.IsCasingStyleValid(validationOptions.ModelNameCasingStyle))
             {
                 logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Schema06, $"Object '{modelName}' is not using {validationOptions.ModelNameCasingStyle}."));
