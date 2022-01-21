@@ -6,13 +6,13 @@ namespace Demo.Domain.Handlers.Eventargs
 {
     /// <summary>
     /// Handler for operation request.
-    /// Description: Your GET endpoint.
-    /// Operation: GetEventArgsById.
+    /// Description: Get EventArgs By Id.
+    /// Operation: GetEventArgById.
     /// Area: Eventargs.
     /// </summary>
-    public class GetEventArgsByIdHandler : IGetEventArgsByIdHandler
+    public class GetEventArgByIdHandler : IGetEventArgByIdHandler
     {
-        public Task<GetEventArgsByIdResult> ExecuteAsync(GetEventArgsByIdParameters parameters, CancellationToken cancellationToken = default)
+        public Task<GetEventArgByIdResult> ExecuteAsync(GetEventArgByIdParameters parameters, CancellationToken cancellationToken = default)
         {
             if (parameters is null)
             {
@@ -23,7 +23,7 @@ namespace Demo.Domain.Handlers.Eventargs
         }
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-        private async Task<GetEventArgsByIdResult> InvokeExecuteAsync(GetEventArgsByIdParameters parameters, CancellationToken cancellationToken)
+        private async Task<GetEventArgByIdResult> InvokeExecuteAsync(GetEventArgByIdParameters parameters, CancellationToken cancellationToken)
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             throw new System.NotImplementedException();
