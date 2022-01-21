@@ -4,7 +4,7 @@ dotnet tool update -g atc-coding-rules-updater
 
 $currentPath = Get-Location
 
-atc-coding-rules-updater `
--r $currentPath `
+atc-coding-rules-updater run `
+-p $currentPath `
 --optionsPath $currentPath'\atc-coding-rules-updater.json' `
 -v

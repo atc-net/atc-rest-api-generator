@@ -669,7 +669,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
                 .WithExpressionBody(
                     SyntaxFactory.ArrowExpressionClause(
                         SyntaxFactory.ObjectCreationExpression(
-                            SyntaxFactory.IdentifierName("GetFileByIdResult"))
+                            SyntaxFactory.IdentifierName(className))
                         .WithArgumentList(
                             SyntaxFactory.ArgumentList(
                                 SyntaxFactory.SingletonSeparatedList(

@@ -386,7 +386,7 @@ paths:
                 $ref: '#/components/schemas/EventArgs'
         '404':
           description: Not Found
-      operationId: getEventArgsById
+      operationId: getEventArgById
   /eventArgs:
     get:
       operationId: getEventArgs

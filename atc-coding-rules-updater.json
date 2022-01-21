@@ -1,6 +1,7 @@
 {
-	"Mappings": {
-		"Src": { "Paths": [ "src" ] },
-		"Test": { "Paths": [ "test" ] }
+  "projectTarget": "DotNet5",
+	"mappings": {
+		"src": { "paths": [ "src" ] },
+		"test": { "paths": [ "test" ] }
 	}
 }
