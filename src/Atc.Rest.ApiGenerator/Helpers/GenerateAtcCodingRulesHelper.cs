@@ -11,7 +11,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
 {
     public static class GenerateAtcCodingRulesHelper
     {
-        private const string RawCodingRulesDistribution = "https://raw.githubusercontent.com/atc-net/atc-coding-rules/main/distribution";
+        private const string RawCodingRulesDistribution = "https://raw.githubusercontent.com/atc-net/atc-coding-rules/main/distribution/dotnetcore";
         public const string FileNameEditorConfig = ".editorconfig";
         public const string FileNameDirectoryBuildProps = "Directory.Build.props";
 
@@ -86,8 +86,9 @@ namespace Atc.Rest.ApiGenerator.Helpers
             {
                 var sb = new StringBuilder();
                 sb.AppendLine("{");
-                sb.AppendLine("  \"Mappings\": {");
-                sb.Append("    \"Src\": { \"Paths\": [ \"");
+                sb.AppendLine("  \"projectTarget\": \"DotNet5\",");
+                sb.AppendLine("  \"mappings\": {");
+                sb.Append("    \"src\": { \"paths\": [ \"");
                 if (outputTestPath == null)
                 {
                     sb.Append(outputSrcPath.FullName.Replace("\\", "\\\\", StringComparison.Ordinal));
@@ -97,7 +98,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
                 {
                     sb.Append(outputSrcPath.FullName.Replace("\\", "\\\\", StringComparison.Ordinal));
                     sb.AppendLine("\" ] },");
-                    sb.Append("    \"Test\": { \"Paths\": [ \"");
+                    sb.Append("    \"test\": { \"paths\": [ \"");
                     sb.Append(outputTestPath.FullName.Replace("\\", "\\\\", StringComparison.Ordinal));
                 }
 
