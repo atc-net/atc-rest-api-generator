@@ -134,26 +134,25 @@ namespace Atc.Rest.ApiGenerator.Helpers
             DirectoryInfo apiPath,
             DirectoryInfo domainPath,
             DirectoryInfo hostPath,
-            DirectoryInfo? apiTestPath = null,
             DirectoryInfo? domainTestPath = null,
             DirectoryInfo? hostTestPath = null)
         {
-            if (slnFile == null)
+            if (slnFile is null)
             {
                 throw new ArgumentNullException(nameof(slnFile));
             }
 
-            if (apiPath == null)
+            if (apiPath is null)
             {
                 throw new ArgumentNullException(nameof(apiPath));
             }
 
-            if (domainPath == null)
+            if (domainPath is null)
             {
                 throw new ArgumentNullException(nameof(domainPath));
             }
 
-            if (hostPath == null)
+            if (hostPath is null)
             {
                 throw new ArgumentNullException(nameof(hostPath));
             }
@@ -162,7 +161,6 @@ namespace Atc.Rest.ApiGenerator.Helpers
             var apiId = Guid.NewGuid();
             var domainId = Guid.NewGuid();
             var hostId = Guid.NewGuid();
-            var apiTestId = Guid.NewGuid();
             var domainTestId = Guid.NewGuid();
             var hostTestId = Guid.NewGuid();
 
@@ -175,24 +173,19 @@ namespace Atc.Rest.ApiGenerator.Helpers
             if (slnFile.Exists)
             {
                 var lines = File.ReadAllLines(slnFile.FullName);
-                if (TryGetGuidByProject(lines, "Api.Generated.csproj", out Guid idApiGenerated))
+                if (TryGetGuidByProject(lines, "Api.Generated.csproj", out var idApiGenerated))
                 {
                     codeInspectionExcludeProjects.Add(idApiGenerated);
                 }
 
-                if (TryGetGuidByProject(lines, "Api.Generated.Tests.csproj", out Guid idApiGeneratedTest))
-                {
-                    codeInspectionExcludeProjects.Add(idApiGeneratedTest);
-                }
-
-                if (hostTestPath != null && TryGetGuidByProject(lines, "Api.Tests.csproj", out Guid idHostTest))
+                if (hostTestPath != null && TryGetGuidByProject(lines, "Api.Tests.csproj", out var idHostTest))
                 {
                     var hostTestDirectory = new DirectoryInfo(hostTestPath.FullName + ".Tests");
                     var generatedDirectories = hostTestDirectory.GetDirectories("Generated", SearchOption.AllDirectories).ToList();
                     codeInspectionExcludeProjectsFolders.Add(new Tuple<Guid, DirectoryInfo, List<DirectoryInfo>>(idHostTest, hostTestDirectory, generatedDirectories));
                 }
 
-                if (domainTestPath != null && TryGetGuidByProject(lines, "Domain.Tests.csproj", out Guid idDomainTest))
+                if (domainTestPath != null && TryGetGuidByProject(lines, "Domain.Tests.csproj", out var idDomainTest))
                 {
                     var domainTestDirectory = new DirectoryInfo(domainTestPath.FullName + ".Tests");
                     var generatedDirectories = domainTestDirectory.GetDirectories("Generated", SearchOption.AllDirectories).ToList();
@@ -202,10 +195,6 @@ namespace Atc.Rest.ApiGenerator.Helpers
             else
             {
                 codeInspectionExcludeProjects.Add(apiId);
-                if (apiTestPath != null)
-                {
-                    codeInspectionExcludeProjects.Add(apiTestId);
-                }
 
                 if (hostTestPath != null)
                 {
@@ -225,7 +214,6 @@ namespace Atc.Rest.ApiGenerator.Helpers
             var slnFileContent = CreateSlnFileContent(
                 slnFile,
                 projectName,
-                apiTestPath,
                 domainTestPath,
                 hostTestPath,
                 apiPrefixPath,
@@ -235,7 +223,6 @@ namespace Atc.Rest.ApiGenerator.Helpers
                 hostPrefixPath,
                 hostId,
                 hostTestId,
-                apiTestId,
                 domainTestId,
                 slnId);
 
@@ -296,7 +283,6 @@ namespace Atc.Rest.ApiGenerator.Helpers
         private static string CreateSlnFileContent(
             FileInfo slnFile,
             string projectName,
-            DirectoryInfo? apiTestPath,
             DirectoryInfo? domainTestPath,
             DirectoryInfo? hostTestPath,
             string apiPrefixPath,
@@ -306,7 +292,6 @@ namespace Atc.Rest.ApiGenerator.Helpers
             string hostPrefixPath,
             Guid hostId,
             Guid hostTestId,
-            Guid apiTestId,
             Guid domainTestId,
             Guid slnId)
         {
@@ -322,24 +307,11 @@ namespace Atc.Rest.ApiGenerator.Helpers
             sb.AppendLine("EndProject");
             sb.AppendLine($"Project(\"{{9A19103F-16F7-4668-BE54-9A1E7A4F7556}}\") = \"{projectName}.Api\", \"{hostPrefixPath}{projectName}.Api\\{projectName}.Api.csproj\", \"{{{hostId}}}\"");
             sb.AppendLine("EndProject");
-            if (apiTestPath != null)
-            {
-                var apiTestPrefixPath = GetProjectReference(slnFile, apiTestPath, projectName);
-                sb.AppendLine($"Project(\"{{9A19103F-16F7-4668-BE54-9A1E7A4F7556}}\") = \"{projectName}.Api.Generated.Tests\", \"{apiTestPrefixPath}{projectName}.Api.Generated.Tests\\{projectName}.Api.Generated.Tests.csproj\", \"{{{hostTestId}}}\"");
-                sb.AppendLine("EndProject");
-            }
 
             if (domainTestPath != null)
             {
                 var domainTestPrefixPath = GetProjectReference(slnFile, domainTestPath, projectName);
                 sb.AppendLine($"Project(\"{{9A19103F-16F7-4668-BE54-9A1E7A4F7556}}\") = \"{projectName}.Domain.Tests\", \"{domainTestPrefixPath}{projectName}.Domain.Tests\\{projectName}.Domain.Tests.csproj\", \"{{{domainTestId}}}\"");
-                sb.AppendLine("EndProject");
-            }
-
-            if (hostTestPath != null)
-            {
-                var hostTestPrefixPath = GetProjectReference(slnFile, hostTestPath, projectName);
-                sb.AppendLine($"Project(\"{{9A19103F-16F7-4668-BE54-9A1E7A4F7556}}\") = \"{projectName}.Api.Tests\", \"{hostTestPrefixPath}{projectName}.Api.Tests\\{projectName}.Api.Tests.csproj\", \"{{{apiTestId}}}\"");
                 sb.AppendLine("EndProject");
             }
 
@@ -376,14 +348,6 @@ namespace Atc.Rest.ApiGenerator.Helpers
                 sb.AppendLine($"\t\t{{{domainTestId}}}.Debug|Any CPU.Build.0 = Debug|Any CPU");
                 sb.AppendLine($"\t\t{{{domainTestId}}}.Release|Any CPU.ActiveCfg = Release|Any CPU");
                 sb.AppendLine($"\t\t{{{domainTestId}}}.Release|Any CPU.Build.0 = Release|Any CPU");
-            }
-
-            if (apiTestPath != null)
-            {
-                sb.AppendLine($"\t\t{{{apiTestId}}}.Debug|Any CPU.ActiveCfg = Debug|Any CPU");
-                sb.AppendLine($"\t\t{{{apiTestId}}}.Debug|Any CPU.Build.0 = Debug|Any CPU");
-                sb.AppendLine($"\t\t{{{apiTestId}}}.Release|Any CPU.ActiveCfg = Release|Any CPU");
-                sb.AppendLine($"\t\t{{{apiTestId}}}.Release|Any CPU.Build.0 = Release|Any CPU");
             }
 
             sb.AppendLine("\tEndGlobalSection");

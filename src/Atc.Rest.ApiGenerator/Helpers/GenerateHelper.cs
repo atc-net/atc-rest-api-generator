@@ -215,7 +215,6 @@ namespace Atc.Rest.ApiGenerator.Helpers
 
             if (outputTestPath != null)
             {
-                var apiTestPath = new DirectoryInfo(Path.Combine(outputTestPath.FullName, $"{projectName}.Api.Generated"));
                 var domainTestPath = new DirectoryInfo(Path.Combine(outputTestPath.FullName, $"{projectName}.Domain"));
                 var hostTestPath = new DirectoryInfo(Path.Combine(outputTestPath.FullName, $"{projectName}.Api"));
 
@@ -225,7 +224,6 @@ namespace Atc.Rest.ApiGenerator.Helpers
                     apiPath,
                     domainPath,
                     hostPath,
-                    apiTestPath,
                     domainTestPath,
                     hostTestPath);
             }

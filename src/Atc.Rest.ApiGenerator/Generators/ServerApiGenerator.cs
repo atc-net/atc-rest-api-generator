@@ -42,10 +42,6 @@ namespace Atc.Rest.ApiGenerator.Generators
             }
 
             logItems.AddRange(ScaffoldSrc());
-            if (projectOptions.PathForTestGenerate != null)
-            {
-                logItems.AddRange(ScaffoldTest());
-            }
 
             CopyApiSpecification();
 
@@ -152,47 +148,6 @@ namespace Atc.Rest.ApiGenerator.Generators
             ScaffoldBasicFileApiGenerated();
             DeleteLegacyScaffoldBasicFileResultFactory();
             DeleteLegacyScaffoldBasicFilePagination();
-
-            return logItems;
-        }
-
-        private List<LogKeyValueItem> ScaffoldTest()
-        {
-            var logItems = new List<LogKeyValueItem>();
-
-            if (projectOptions.PathForTestGenerate == null || projectOptions.ProjectTestCsProj == null)
-            {
-                return logItems;
-            }
-
-            if (projectOptions.PathForTestGenerate.Exists && projectOptions.ProjectTestCsProj.Exists)
-            {
-                logItems.Add(LogItemFactory.CreateDebug("FileSkip", "#", "No updates for API test csproj"));
-            }
-            else
-            {
-                if (!Directory.Exists(projectOptions.PathForTestGenerate.FullName))
-                {
-                    Directory.CreateDirectory(projectOptions.PathForTestGenerate.FullName);
-                }
-
-                var projectReferences = new List<FileInfo>
-                {
-                    projectOptions.ProjectSrcCsProj,
-                };
-
-                logItems.Add(SolutionAndProjectHelper.ScaffoldProjFile(
-                    projectOptions.ProjectTestCsProj,
-                    false,
-                    true,
-                    $"{projectOptions.ProjectName}.Tests",
-                    "netcoreapp3.1",
-                    projectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
-                    null,
-                    NugetPackageReferenceHelper.CreateForTestProject(false),
-                    projectReferences,
-                    true));
-            }
 
             return logItems;
         }
