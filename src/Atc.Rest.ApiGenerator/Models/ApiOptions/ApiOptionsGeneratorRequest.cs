@@ -1,6 +1,5 @@
-﻿namespace Atc.Rest.ApiGenerator.Models.ApiOptions
+namespace Atc.Rest.ApiGenerator.Models.ApiOptions;
+
+public class ApiOptionsGeneratorRequest
 {
-    public class ApiOptionsGeneratorRequest
-    {
-    }
 }

@@ -1,6 +1,5 @@
-﻿namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces
+namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces;
+
+public interface ISyntaxGeneratorEndpointControllers : ISyntaxCodeGenerator
 {
-    public interface ISyntaxGeneratorEndpointControllers : ISyntaxCodeGenerator
-    {
-    }
 }

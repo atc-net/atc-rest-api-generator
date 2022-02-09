@@ -1,11 +1,8 @@
-﻿using Microsoft.OpenApi.Models;
+namespace Atc.Rest.ApiGenerator.SyntaxGenerators;
 
-namespace Atc.Rest.ApiGenerator.SyntaxGenerators
+public interface ISyntaxSchemaCodeGenerator : ISyntaxCodeGenerator
 {
-    public interface ISyntaxSchemaCodeGenerator : ISyntaxCodeGenerator
-    {
-        string ApiSchemaKey { get; }
+    string ApiSchemaKey { get; }
 
-        OpenApiSchema ApiSchema { get; }
-    }
+    OpenApiSchema ApiSchema { get; }
 }

@@ -1,53 +1,61 @@
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using Atc.Data.Models;
-using Atc.Rest.ApiGenerator.CLI.Commands.Options;
-using Atc.Rest.ApiGenerator.Helpers;
-using McMaster.Extensions.CommandLineUtils;
-
 // ReSharper disable LocalizableElement
-namespace Atc.Rest.ApiGenerator.CLI.Commands
+namespace Atc.Rest.ApiGenerator.CLI.Commands;
+
+public class GenerateClientCSharpCommand : AsyncCommand<ClientApiCommandSettings>
 {
-    [Command("csharp", Description = "Generate client project in C#.")]
-    public class GenerateClientCSharpCommand : ClientApiCommandOptions
+    private readonly ILogger<GenerateClientCSharpCommand> logger;
+    ////private const string CommandArea = "Client-CSharp";
+
+    public GenerateClientCSharpCommand(ILogger<GenerateClientCSharpCommand> logger) => this.logger = logger;
+
+    public override Task<int> ExecuteAsync(
+        CommandContext context,
+        ClientApiCommandSettings settings)
     {
-        private const string CommandArea = "Client-CSharp";
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(settings);
+        return ExecuteInternalAsync(settings);
+    }
 
-        [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "OK.")]
-        public int OnExecute(CommandLineApplication configCmd)
+    private async Task<int> ExecuteInternalAsync(
+        ClientApiCommandSettings settings)
+    {
+        ConsoleHelper.WriteHeader();
+
+        var apiOptions = await ApiOptionsHelper.CreateApiOptions(settings);
+        var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(settings.SpecificationPath);
+
+        var logItems = new List<LogKeyValueItem>();
+
+        try
         {
-            ConsoleHelper.WriteHeader();
-
-            var verboseMode = CommandLineApplicationHelper.GetVerboseMode(configCmd);
-            var apiOptions = ApiOptionsHelper.CreateDefault(configCmd);
-            ApiOptionsHelper.ApplyValidationOverrides(apiOptions, configCmd);
-
-            var specificationPath = CommandLineApplicationHelper.GetSpecificationPath(configCmd);
-            var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(specificationPath);
-
-            var logItems = new List<LogKeyValueItem>();
             logItems.AddRange(OpenApiDocumentHelper.Validate(apiDocument, apiOptions.Validation));
 
-            if (logItems.Any(x => x.LogCategory == LogCategoryType.Error))
+            if (logItems.HasAnyErrorsLogIfNeeded(logger))
             {
-                return ConsoleHelper.WriteLogItemsAndExit(logItems, verboseMode, CommandArea);
+                return ConsoleExitStatusCodes.Failure;
             }
 
-            var projectPrefixName = CommandLineApplicationHelper.GetProjectPrefixName(configCmd);
-            var clientFolderName = CommandLineApplicationHelper.GetClientFolderName(configCmd);
-            var outputPath = CommandLineApplicationHelper.GetOutputPath(configCmd);
-            var excludeEndpointGeneration = CommandLineApplicationHelper.GetExcludeEndpointGeneration(configCmd);
-
             logItems.AddRange(GenerateHelper.GenerateServerCSharpClient(
-                projectPrefixName,
-                clientFolderName,
-                outputPath,
+                settings.ProjectPrefixName,
+                settings.ClientFolderName,
+                new DirectoryInfo(settings.OutputPath),
                 apiDocument,
-                excludeEndpointGeneration,
+                settings.ExcludeEndpointGeneration,
                 apiOptions));
-
-            return ConsoleHelper.WriteLogItemsAndExit(logItems, verboseMode, CommandArea);
         }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Generation failed.");
+            return ConsoleExitStatusCodes.Failure;
+        }
+
+        if (logItems.HasAnyErrorsLogIfNeeded(logger))
+        {
+            return ConsoleExitStatusCodes.Failure;
+        }
+
+        logger.LogInformation("Done");
+        return ConsoleExitStatusCodes.Success;
     }
 }

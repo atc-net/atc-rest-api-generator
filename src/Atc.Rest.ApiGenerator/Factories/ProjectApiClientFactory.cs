@@ -1,188 +1,184 @@
-using System.Collections.Generic;
-using Atc.Rest.ApiGenerator.Models;
+namespace Atc.Rest.ApiGenerator.Factories;
 
-namespace Atc.Rest.ApiGenerator.Factories
+public static class ProjectApiClientFactory
 {
-    public static class ProjectApiClientFactory
+    public static string[] CreateUsingListForEndpointInterface(
+        ApiProjectOptions apiProjectOptions,
+        bool includeRestResults,
+        bool hasList,
+        bool hasSharedModel)
     {
-        public static string[] CreateUsingListForEndpointInterface(
-            ApiProjectOptions apiProjectOptions,
-            bool includeRestResults,
-            bool hasList,
-            bool hasSharedModel)
+        var list = new List<string>
         {
-            var list = new List<string>
-            {
-                "System.CodeDom.Compiler",
-                "System.Threading",
-                "System.Threading.Tasks",
-            };
+            "System.CodeDom.Compiler",
+            "System.Threading",
+            "System.Threading.Tasks",
+        };
 
-            if (hasList)
-            {
-                list.Add("System.Collections.Generic");
-            }
-
-            if (includeRestResults)
-            {
-                list.Add("Atc.Rest.Results");
-            }
-
-            if (hasSharedModel)
-            {
-                list.Add(string.IsNullOrEmpty(apiProjectOptions.ClientFolderName)
-                    ? $"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}"
-                    : $"{apiProjectOptions.ProjectName}.{apiProjectOptions.ClientFolderName}.{NameConstants.Contracts}");
-            }
-
-            var s = string.IsNullOrEmpty(apiProjectOptions.ClientFolderName)
-                ? $"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}"
-                : $"{apiProjectOptions.ProjectName}.{apiProjectOptions.ClientFolderName}.{NameConstants.Contracts}";
-
-            if (!list.Contains(s))
-            {
-                list.Add(s);
-            }
-
-            return list.ToArray();
+        if (hasList)
+        {
+            list.Add("System.Collections.Generic");
         }
 
-        public static string[] CreateUsingListForEndpoint(
-            ApiProjectOptions apiProjectOptions,
-            bool includeRestResults,
-            bool hasParameter,
-            bool hasList,
-            bool hasSharedModel)
+        if (includeRestResults)
         {
-            var list = new List<string>
-            {
-                "System.CodeDom.Compiler",
-                "System.Net",
-                "System.Net.Http",
-                "System.Threading",
-                "System.Threading.Tasks",
-                "Atc.Rest.Client.Builder",
-                "Microsoft.AspNetCore.Mvc",
-            };
-
-            if (hasParameter)
-            {
-                list.Add("System");
-            }
-
-            if (hasList)
-            {
-                list.Add("System.Collections.Generic");
-            }
-
-            if (includeRestResults)
-            {
-                list.Add("Atc.Rest.Results");
-            }
-
-            if (hasSharedModel)
-            {
-                list.Add(string.IsNullOrEmpty(apiProjectOptions.ClientFolderName)
-                    ? $"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}"
-                    : $"{apiProjectOptions.ProjectName}.{apiProjectOptions.ClientFolderName}.{NameConstants.Contracts}");
-            }
-
-            var s = string.IsNullOrEmpty(apiProjectOptions.ClientFolderName)
-                ? $"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}"
-                : $"{apiProjectOptions.ProjectName}.{apiProjectOptions.ClientFolderName}.{NameConstants.Contracts}";
-
-            if (!list.Contains(s))
-            {
-                list.Add(s);
-            }
-
-            return list.ToArray();
+            list.Add("Atc.Rest.Results");
         }
 
-        public static string[] CreateUsingListForEndpointResultInterface(
-            ApiProjectOptions apiProjectOptions,
-            bool includeRestResults,
-            bool hasList,
-            bool hasSharedModel)
+        if (hasSharedModel)
         {
-            var list = new List<string>
-            {
-                "System.CodeDom.Compiler",
-                "Atc.Rest.Client",
-                "Microsoft.AspNetCore.Mvc",
-            };
-
-            if (hasList)
-            {
-                list.Add("System.Collections.Generic");
-            }
-
-            if (includeRestResults)
-            {
-                list.Add("Atc.Rest.Results");
-            }
-
-            if (hasSharedModel)
-            {
-                list.Add(string.IsNullOrEmpty(apiProjectOptions.ClientFolderName)
-                    ? $"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}"
-                    : $"{apiProjectOptions.ProjectName}.{apiProjectOptions.ClientFolderName}.{NameConstants.Contracts}");
-            }
-
-            var s = string.IsNullOrEmpty(apiProjectOptions.ClientFolderName)
+            list.Add(string.IsNullOrEmpty(apiProjectOptions.ClientFolderName)
                 ? $"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}"
-                : $"{apiProjectOptions.ProjectName}.{apiProjectOptions.ClientFolderName}.{NameConstants.Contracts}";
-
-            if (!list.Contains(s))
-            {
-                list.Add(s);
-            }
-
-            return list.ToArray();
+                : $"{apiProjectOptions.ProjectName}.{apiProjectOptions.ClientFolderName}.{NameConstants.Contracts}");
         }
 
-        public static string[] CreateUsingListForEndpointResult(
-            ApiProjectOptions apiProjectOptions,
-            bool includeRestResults,
-            bool hasList,
-            bool hasSharedModel)
+        var s = string.IsNullOrEmpty(apiProjectOptions.ClientFolderName)
+            ? $"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}"
+            : $"{apiProjectOptions.ProjectName}.{apiProjectOptions.ClientFolderName}.{NameConstants.Contracts}";
+
+        if (!list.Contains(s))
         {
-            var list = new List<string>
-            {
-                "System",
-                "System.Net",
-                "System.CodeDom.Compiler",
-                "Atc.Rest.Client",
-                "Microsoft.AspNetCore.Mvc",
-            };
-
-            if (hasList)
-            {
-                list.Add("System.Collections.Generic");
-            }
-
-            if (includeRestResults)
-            {
-                list.Add("Atc.Rest.Results");
-            }
-
-            if (hasSharedModel)
-            {
-                list.Add(string.IsNullOrEmpty(apiProjectOptions.ClientFolderName)
-                    ? $"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}"
-                    : $"{apiProjectOptions.ProjectName}.{apiProjectOptions.ClientFolderName}.{NameConstants.Contracts}");
-            }
-
-            var s = string.IsNullOrEmpty(apiProjectOptions.ClientFolderName)
-                ? $"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}"
-                : $"{apiProjectOptions.ProjectName}.{apiProjectOptions.ClientFolderName}.{NameConstants.Contracts}";
-
-            if (!list.Contains(s))
-            {
-                list.Add(s);
-            }
-
-            return list.ToArray();
+            list.Add(s);
         }
+
+        return list.ToArray();
+    }
+
+    public static string[] CreateUsingListForEndpoint(
+        ApiProjectOptions apiProjectOptions,
+        bool includeRestResults,
+        bool hasParameter,
+        bool hasList,
+        bool hasSharedModel)
+    {
+        var list = new List<string>
+        {
+            "System.CodeDom.Compiler",
+            "System.Net",
+            "System.Net.Http",
+            "System.Threading",
+            "System.Threading.Tasks",
+            "Atc.Rest.Client.Builder",
+            "Microsoft.AspNetCore.Mvc",
+        };
+
+        if (hasParameter)
+        {
+            list.Add("System");
+        }
+
+        if (hasList)
+        {
+            list.Add("System.Collections.Generic");
+        }
+
+        if (includeRestResults)
+        {
+            list.Add("Atc.Rest.Results");
+        }
+
+        if (hasSharedModel)
+        {
+            list.Add(string.IsNullOrEmpty(apiProjectOptions.ClientFolderName)
+                ? $"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}"
+                : $"{apiProjectOptions.ProjectName}.{apiProjectOptions.ClientFolderName}.{NameConstants.Contracts}");
+        }
+
+        var s = string.IsNullOrEmpty(apiProjectOptions.ClientFolderName)
+            ? $"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}"
+            : $"{apiProjectOptions.ProjectName}.{apiProjectOptions.ClientFolderName}.{NameConstants.Contracts}";
+
+        if (!list.Contains(s))
+        {
+            list.Add(s);
+        }
+
+        return list.ToArray();
+    }
+
+    public static string[] CreateUsingListForEndpointResultInterface(
+        ApiProjectOptions apiProjectOptions,
+        bool includeRestResults,
+        bool hasList,
+        bool hasSharedModel)
+    {
+        var list = new List<string>
+        {
+            "System.CodeDom.Compiler",
+            "Atc.Rest.Client",
+            "Microsoft.AspNetCore.Mvc",
+        };
+
+        if (hasList)
+        {
+            list.Add("System.Collections.Generic");
+        }
+
+        if (includeRestResults)
+        {
+            list.Add("Atc.Rest.Results");
+        }
+
+        if (hasSharedModel)
+        {
+            list.Add(string.IsNullOrEmpty(apiProjectOptions.ClientFolderName)
+                ? $"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}"
+                : $"{apiProjectOptions.ProjectName}.{apiProjectOptions.ClientFolderName}.{NameConstants.Contracts}");
+        }
+
+        var s = string.IsNullOrEmpty(apiProjectOptions.ClientFolderName)
+            ? $"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}"
+            : $"{apiProjectOptions.ProjectName}.{apiProjectOptions.ClientFolderName}.{NameConstants.Contracts}";
+
+        if (!list.Contains(s))
+        {
+            list.Add(s);
+        }
+
+        return list.ToArray();
+    }
+
+    public static string[] CreateUsingListForEndpointResult(
+        ApiProjectOptions apiProjectOptions,
+        bool includeRestResults,
+        bool hasList,
+        bool hasSharedModel)
+    {
+        var list = new List<string>
+        {
+            "System",
+            "System.Net",
+            "System.CodeDom.Compiler",
+            "Atc.Rest.Client",
+            "Microsoft.AspNetCore.Mvc",
+        };
+
+        if (hasList)
+        {
+            list.Add("System.Collections.Generic");
+        }
+
+        if (includeRestResults)
+        {
+            list.Add("Atc.Rest.Results");
+        }
+
+        if (hasSharedModel)
+        {
+            list.Add(string.IsNullOrEmpty(apiProjectOptions.ClientFolderName)
+                ? $"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}"
+                : $"{apiProjectOptions.ProjectName}.{apiProjectOptions.ClientFolderName}.{NameConstants.Contracts}");
+        }
+
+        var s = string.IsNullOrEmpty(apiProjectOptions.ClientFolderName)
+            ? $"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}"
+            : $"{apiProjectOptions.ProjectName}.{apiProjectOptions.ClientFolderName}.{NameConstants.Contracts}";
+
+        if (!list.Contains(s))
+        {
+            list.Add(s);
+        }
+
+        return list.ToArray();
     }
 }

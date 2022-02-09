@@ -1,53 +1,49 @@
-using System;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.OpenApi.Models;
+namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
 
-namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api
+// TODO: FIX THIS - Use CompilationUnit
+public class SyntaxGeneratorSwaggerDocOptions
 {
-    // TODO: FIX THIS - Use CompilationUnit
-    public class SyntaxGeneratorSwaggerDocOptions
+    private readonly string fullNamespace;
+    private readonly OpenApiDocument document;
+
+    public SyntaxGeneratorSwaggerDocOptions(
+        string fullNamespace,
+        OpenApiDocument document)
     {
-        private readonly string fullNamespace;
-        private readonly OpenApiDocument document;
+        this.fullNamespace = fullNamespace;
+        this.document = document;
+    }
 
-        public SyntaxGeneratorSwaggerDocOptions(
-            string fullNamespace,
-            OpenApiDocument document)
-        {
-            this.fullNamespace = fullNamespace;
-            this.document = document;
-        }
+    public string GenerateCode()
+        => SyntaxFactory
+            .ParseSyntaxTree(
+                GetSyntaxTreeText()
+                    .Replace("\"\"", "null", StringComparison.OrdinalIgnoreCase))
+            .GetCompilationUnitRoot()
+            .ToFullString()
+            .EnsureEnvironmentNewLines();
 
-        public string GenerateCode()
-            => SyntaxFactory
-                .ParseSyntaxTree(
-                    GetSyntaxTreeText()
-                        .Replace("\"\"", "null", StringComparison.OrdinalIgnoreCase))
-                .GetCompilationUnitRoot()
-                .ToFullString()
-                .EnsureEnvironmentNewLines();
-
-        private string GetSyntaxTreeText()
-        {
-            var contactUrl =
-                string.IsNullOrWhiteSpace(document.Info?.Contact?.Url?.ToString())
-                    ? string.Empty
-                    : $@"
+    private string GetSyntaxTreeText()
+    {
+        var contactUrl =
+            string.IsNullOrWhiteSpace(document.Info?.Contact?.Url?.ToString())
+                ? string.Empty
+                : $@"
                             Url = new Uri(""{document.Info?.Contact?.Url}""),";
 
-            var licenseUrl =
-                string.IsNullOrWhiteSpace(document.Info?.License?.Url?.ToString())
-                    ? string.Empty
-                    : $@"
+        var licenseUrl =
+            string.IsNullOrWhiteSpace(document.Info?.License?.Url?.ToString())
+                ? string.Empty
+                : $@"
                             Url = new Uri(""{document.Info?.License?.Url}""),";
 
-            var termsOfService =
-                string.IsNullOrWhiteSpace(document.Info?.License?.Url?.ToString())
-                    ? string.Empty
-                    : $@"
+        var termsOfService =
+            string.IsNullOrWhiteSpace(document.Info?.License?.Url?.ToString())
+                ? string.Empty
+                : $@"
                         TermsOfService = new Uri(""{document.Info?.TermsOfService}""),";
 
-            return $@"using System;
+        return $@"using System;
 using System.IO;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
@@ -91,6 +87,5 @@ namespace {fullNamespace}
         }}
     }}
 }}";
-        }
     }
 }

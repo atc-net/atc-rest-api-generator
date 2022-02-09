@@ -1,13 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using Atc.Data;
-using Atc.Data.Models;
-using Atc.Rest.ApiGenerator.Helpers;
-using Atc.Rest.ApiGenerator.Models;
-using Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
-using Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient;
-
 // ReSharper disable ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
 // ReSharper disable ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
 namespace Atc.Rest.ApiGenerator.Generators
@@ -17,7 +7,8 @@ namespace Atc.Rest.ApiGenerator.Generators
         private readonly ClientCSharpApiProjectOptions projectOptions;
         private readonly ApiProjectOptions apiProjectOptions;
 
-        public ClientCSharpApiGenerator(ClientCSharpApiProjectOptions projectOptions)
+        public ClientCSharpApiGenerator(
+            ClientCSharpApiProjectOptions projectOptions)
         {
             this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
 
@@ -85,12 +76,10 @@ namespace Atc.Rest.ApiGenerator.Generators
             return logItems;
         }
 
-        private List<LogKeyValueItem> GenerateContracts(List<ApiOperationSchemaMap> operationSchemaMappings)
+        private List<LogKeyValueItem> GenerateContracts(
+            List<ApiOperationSchemaMap> operationSchemaMappings)
         {
-            if (operationSchemaMappings == null)
-            {
-                throw new ArgumentNullException(nameof(operationSchemaMappings));
-            }
+            ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 
             var sgContractModels = new List<SyntaxGeneratorContractModel>();
             var sgContractParameters = new List<SyntaxGeneratorContractParameter>();
@@ -128,12 +117,10 @@ namespace Atc.Rest.ApiGenerator.Generators
             return logItems;
         }
 
-        private List<LogKeyValueItem> GenerateEndpoints(List<ApiOperationSchemaMap> operationSchemaMappings)
+        private List<LogKeyValueItem> GenerateEndpoints(
+            List<ApiOperationSchemaMap> operationSchemaMappings)
         {
-            if (operationSchemaMappings == null)
-            {
-                throw new ArgumentNullException(nameof(operationSchemaMappings));
-            }
+            ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 
             var sgEndpointResults = new List<SyntaxGeneratorClientEndpointResult>();
             var sgEndpointInterfaces = new List<SyntaxGeneratorClientEndpointInterface>();
@@ -173,12 +160,10 @@ namespace Atc.Rest.ApiGenerator.Generators
             return logItems;
         }
 
-        private List<LogKeyValueItem> PerformCleanup(List<LogKeyValueItem> orgLogItems)
+        private List<LogKeyValueItem> PerformCleanup(
+            List<LogKeyValueItem> orgLogItems)
         {
-            if (orgLogItems == null)
-            {
-                throw new ArgumentNullException(nameof(orgLogItems));
-            }
+            ArgumentNullException.ThrowIfNull(orgLogItems);
 
             var logItems = new List<LogKeyValueItem>();
 

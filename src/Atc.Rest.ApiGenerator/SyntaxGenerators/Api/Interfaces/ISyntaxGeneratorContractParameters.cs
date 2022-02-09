@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
+namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces;
 
-namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces
+public interface ISyntaxGeneratorContractParameters : ISyntaxGeneratorContract
 {
-    public interface ISyntaxGeneratorContractParameters : ISyntaxGeneratorContract
-    {
-        List<SyntaxGeneratorContractParameter> GenerateSyntaxTrees();
-    }
+    List<SyntaxGeneratorContractParameter> GenerateSyntaxTrees();
 }

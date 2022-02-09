@@ -1,156 +1,94 @@
-using System;
-using System.IO;
+namespace Atc.Rest.ApiGenerator;
 
-namespace Atc.Rest.ApiGenerator
+public static class Util
 {
-    public static class Util
+    public static DirectoryInfo GetProjectPath()
     {
-        public static DirectoryInfo GetProjectPath()
-        {
-            var currentDomainBaseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+        var currentDomainBaseDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
-            var projectPath = currentDomainBaseDirectory!
-                .Replace("\\Bin", string.Empty, StringComparison.OrdinalIgnoreCase)
-                .Replace("\\netcoreapp3.1", string.Empty, StringComparison.OrdinalIgnoreCase)
-                .Replace("\\Debug", string.Empty, StringComparison.OrdinalIgnoreCase)
-                .Replace("\\ApiGenerator", string.Empty, StringComparison.OrdinalIgnoreCase);
+        var projectPath = currentDomainBaseDirectory!
+            .Replace("\\Bin", string.Empty, StringComparison.OrdinalIgnoreCase)
+            .Replace("\\netcoreapp3.1", string.Empty, StringComparison.OrdinalIgnoreCase)
+            .Replace("\\Debug", string.Empty, StringComparison.OrdinalIgnoreCase)
+            .Replace("\\ApiGenerator", string.Empty, StringComparison.OrdinalIgnoreCase);
 
-            return new DirectoryInfo(projectPath!);
-        }
+        return new DirectoryInfo(projectPath!);
+    }
 
-        public static string GetCsFileNameForEndpoints(
-            DirectoryInfo pathForEndpoints,
-            string modelName)
-        {
-            if (pathForEndpoints == null)
-            {
-                throw new ArgumentNullException(nameof(pathForEndpoints));
-            }
+    public static string GetCsFileNameForEndpoints(
+        DirectoryInfo pathForEndpoints,
+        string modelName)
+    {
+        ArgumentNullException.ThrowIfNull(pathForEndpoints);
+        ArgumentNullException.ThrowIfNull(modelName);
 
-            if (modelName == null)
-            {
-                throw new ArgumentNullException(nameof(modelName));
-            }
+        return Path.Combine(pathForEndpoints.FullName, $"{modelName}.cs");
+    }
 
-            return Path.Combine(pathForEndpoints.FullName, $"{modelName}.cs");
-        }
+    public static string GetCsFileNameForContract(
+        DirectoryInfo pathForContracts,
+        string area,
+        string modelName)
+    {
+        ArgumentNullException.ThrowIfNull(pathForContracts);
+        ArgumentNullException.ThrowIfNull(area);
+        ArgumentNullException.ThrowIfNull(modelName);
 
-        public static string GetCsFileNameForContract(
-            DirectoryInfo pathForContracts,
-            string area,
-            string modelName)
-        {
-            if (pathForContracts == null)
-            {
-                throw new ArgumentNullException(nameof(pathForContracts));
-            }
+        var a = Path.Combine(pathForContracts.FullName, area);
+        var b = Path.Combine(a, $"{modelName}.cs");
+        return b;
+    }
 
-            if (area == null)
-            {
-                throw new ArgumentNullException(nameof(area));
-            }
+    public static string GetCsFileNameForContract(
+        DirectoryInfo pathForContracts,
+        string area,
+        string subArea,
+        string modelName)
+    {
+        ArgumentNullException.ThrowIfNull(pathForContracts);
+        ArgumentNullException.ThrowIfNull(area);
+        ArgumentNullException.ThrowIfNull(subArea);
+        ArgumentNullException.ThrowIfNull(modelName);
 
-            if (modelName == null)
-            {
-                throw new ArgumentNullException(nameof(modelName));
-            }
+        var a = Path.Combine(pathForContracts.FullName, area);
+        var b = Path.Combine(a, subArea);
+        var c = Path.Combine(b, $"{modelName}.cs");
+        return c;
+    }
 
-            var a = Path.Combine(pathForContracts.FullName, area);
-            var b = Path.Combine(a, $"{modelName}.cs");
-            return b;
-        }
+    public static string GetCsFileNameForContractEnumTypes(
+        DirectoryInfo pathForContracts,
+        string modelName)
+    {
+        ArgumentNullException.ThrowIfNull(pathForContracts);
+        ArgumentNullException.ThrowIfNull(modelName);
 
-        public static string GetCsFileNameForContract(
-            DirectoryInfo pathForContracts,
-            string area,
-            string subArea,
-            string modelName)
-        {
-            if (pathForContracts == null)
-            {
-                throw new ArgumentNullException(nameof(pathForContracts));
-            }
+        var a = Path.Combine(pathForContracts.FullName, NameConstants.ContractsEnumerationTypes);
+        var b = Path.Combine(a, $"{modelName}.cs");
+        return b;
+    }
 
-            if (area == null)
-            {
-                throw new ArgumentNullException(nameof(area));
-            }
+    public static string GetCsFileNameForContractShared(
+        DirectoryInfo pathForContracts,
+        string modelName)
+    {
+        ArgumentNullException.ThrowIfNull(pathForContracts);
+        ArgumentNullException.ThrowIfNull(modelName);
 
-            if (subArea == null)
-            {
-                throw new ArgumentNullException(nameof(subArea));
-            }
+        return Path.Combine(pathForContracts.FullName, $"{modelName}.cs");
+    }
 
-            if (modelName == null)
-            {
-                throw new ArgumentNullException(nameof(modelName));
-            }
+    public static string GetCsFileNameForHandler(
+        DirectoryInfo pathForHandlers,
+        string area,
+        string handlerName)
+    {
+        ArgumentNullException.ThrowIfNull(pathForHandlers);
+        ArgumentNullException.ThrowIfNull(area);
+        ArgumentNullException.ThrowIfNull(handlerName);
 
-            var a = Path.Combine(pathForContracts.FullName, area);
-            var b = Path.Combine(a, subArea);
-            var c = Path.Combine(b, $"{modelName}.cs");
-            return c;
-        }
-
-        public static string GetCsFileNameForContractEnumTypes(
-            DirectoryInfo pathForContracts,
-            string modelName)
-        {
-            if (pathForContracts == null)
-            {
-                throw new ArgumentNullException(nameof(pathForContracts));
-            }
-
-            if (modelName == null)
-            {
-                throw new ArgumentNullException(nameof(modelName));
-            }
-
-            var a = Path.Combine(pathForContracts.FullName, NameConstants.ContractsEnumerationTypes);
-            var b = Path.Combine(a, $"{modelName}.cs");
-            return b;
-        }
-
-        public static string GetCsFileNameForContractShared(
-            DirectoryInfo pathForContracts,
-            string modelName)
-        {
-            if (pathForContracts == null)
-            {
-                throw new ArgumentNullException(nameof(pathForContracts));
-            }
-
-            if (modelName == null)
-            {
-                throw new ArgumentNullException(nameof(modelName));
-            }
-
-            return Path.Combine(pathForContracts.FullName, $"{modelName}.cs");
-        }
-
-        public static string GetCsFileNameForHandler(
-            DirectoryInfo pathForHandlers,
-            string area,
-            string handlerName)
-        {
-            if (pathForHandlers == null)
-            {
-                throw new ArgumentNullException(nameof(pathForHandlers));
-            }
-
-            if (area == null)
-            {
-                throw new ArgumentNullException(nameof(area));
-            }
-
-            if (handlerName == null)
-            {
-                throw new ArgumentNullException(nameof(handlerName));
-            }
-
-            var a = Path.Combine(pathForHandlers.FullName, area);
-            var b = Path.Combine(a, $"{handlerName}.cs");
-            return b;
-        }
+        var a = Path.Combine(pathForHandlers.FullName, area);
+        var b = Path.Combine(a, $"{handlerName}.cs");
+        return b;
     }
 }

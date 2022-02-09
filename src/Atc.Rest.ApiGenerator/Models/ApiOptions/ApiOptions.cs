@@ -1,9 +1,8 @@
-﻿namespace Atc.Rest.ApiGenerator.Models.ApiOptions
-{
-    public class ApiOptions
-    {
-        public ApiOptionsGenerator Generator { get; set; } = new ApiOptionsGenerator();
+namespace Atc.Rest.ApiGenerator.Models.ApiOptions;
 
-        public ApiOptionsValidation Validation { get; set; } = new ApiOptionsValidation();
-    }
+public class ApiOptions
+{
+    public ApiOptionsGenerator Generator { get; set; } = new ();
+
+    public ApiOptionsValidation Validation { get; set; } = new ();
 }

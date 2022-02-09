@@ -9,21 +9,21 @@ The Atc.Rest.ApiGenerator.CLI library mentioned above is available through a cro
 
 The tool can be installed as a .NET Core global tool that you can call from the shell / command line
 ```
-dotnet tool install --global atc-api-gen
+dotnet tool install --global atc-rest-api-generator
 ```
-or by following the instructions [here](https://www.nuget.org/packages/atc-api-gen/) to install a specific version of the tool.
+or by following the instructions [here](https://www.nuget.org/packages/atc-rest-api-generator/) to install a specific version of the tool.
 
 A successful installation will output something like:
 ```
 You can invoke the tool using the following command: atc-api
-Tool 'atc-api-gen' (version '1.0.117') was successfully installed.`
+Tool 'atc-rest-api-generator' (version '1.0.117') was successfully installed.`
 ```
 
 ## Update:
 
 The tool can also be updated by following command.
 ```
-dotnet tool update --global atc-api-gen
+dotnet tool update --global atc-rest-api-generator
 ```
 
 ## Usage
@@ -71,7 +71,7 @@ The following command will generate an API that implements the offcial Pet Store
 atc-api generate server all --validate-strictMode -s https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml -p PetStore --outputSlnPath <MY-PROJECT-FOLDER> --outputSrcPath <MY-PROJECT-FOLDER>\src --outputTestPath <MY-PROJECT-FOLDER>\test -v
 ```
 
-Replace `<MY-PROJECT-FOLDER>` with an absolute path where you want to projects created. For example, 
+Replace `<MY-PROJECT-FOLDER>` with an absolute path where you want to projects created. For example,
 to put the generated solution in a folder called `c:\PetStore`, do the following:
 
 ```

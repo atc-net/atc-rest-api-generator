@@ -14,7 +14,7 @@ namespace Atc.Rest.ApiGenerator.Tests.IntegrationTests.Scenarios
     [UsesVerify]
     public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
     {
-        private static readonly string WorkingDirectory = Path.Combine(Path.GetTempPath(), "atc-api-gen-integration-test");
+        private static readonly string WorkingDirectory = Path.Combine(Path.GetTempPath(), "atc-rest-api-generator-integration-test");
 
         [Fact]
         public async Task ValidateAndBuildScenarios()

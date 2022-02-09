@@ -1,9 +1,8 @@
-﻿namespace Atc.Rest.ApiGenerator.Models
+namespace Atc.Rest.ApiGenerator.Models;
+
+public enum SchemaMapLocatedAreaType
 {
-    public enum SchemaMapLocatedAreaType
-    {
-        Parameter,
-        RequestBody,
-        Response,
-    }
+    Parameter,
+    RequestBody,
+    Response,
 }
