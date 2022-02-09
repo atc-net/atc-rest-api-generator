@@ -1,19 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <PackageId>Atc.Rest.ApiGenerator</PackageId>
     <PackageTags>rest;api;netstandard;generator</PackageTags>
     <Description>Atc.Rest.ApiGenerator is a WebApi C# code generator using a OpenApi 3.0.x specification YAML file.</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc" Version="1.1.388" />
-    <PackageReference Include="Atc.CodeAnalysis.CSharp" Version="1.1.388" />
-    <PackageReference Include="Atc.OpenApi" Version="1.1.388" />
+    <PackageReference Include="Atc" Version="2.0.36" />
+    <PackageReference Include="Atc.CodeAnalysis.CSharp" Version="2.0.36" />
+    <PackageReference Include="Atc.OpenApi" Version="2.0.36" />
     <PackageReference Include="Atc.Rest.Client" Version="1.0.36" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.11.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.18" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.2.3" />
   </ItemGroup>
 

@@ -1,7 +1,8 @@
 # ATC coding rules - https://github.com/atc-net/atc-coding-rules
-# Version: 1.0.7
-# Updated: 18-06-2021
+# Version: 1.0.9
+# Updated: 01-02-2022
 # Location: Root
+# Distribution: DotNet5
 # Inspired by: https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/code-style-rule-options
 
 ##########################################
@@ -45,6 +46,7 @@ indent_size = 2
 
 # Markdown Files
 [*.md]
+trim_trailing_whitespace = false
 
 # Web Files
 [*.{htm,html,js,jsm,ts,tsx,css,sass,scss,less,svg,vue}]
@@ -57,6 +59,12 @@ end_of_line = crlf
 # Bash Files
 [*.sh]
 end_of_line = lf
+indent_size = 2
+
+# Powershell
+[*.ps1]
+end_of_line = lf
+indent_size = 2
 
 # Makefiles
 [Makefile]
@@ -483,6 +491,11 @@ dotnet_diagnostic.SA1649.severity = error           # https://github.com/atc-net
 # SonarAnalyzer.CSharp
 # https://rules.sonarsource.com/csharp
 dotnet_diagnostic.S1135.severity = suggestion       # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/SonarAnalyzerCSharp/S1135.md
+
+
+##########################################
+# Custom - File Extension Settings
+##########################################
 
 
 ##########################################
