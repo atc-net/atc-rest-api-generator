@@ -1,4 +1,4 @@
-# ATC coding rules - https://github.com/atc-net/atc-coding-rules
+﻿# ATC coding rules - https://github.com/atc-net/atc-coding-rules
 # Version: 1.0.9
 # Updated: 01-02-2022
 # Location: Root
@@ -501,47 +501,53 @@ dotnet_diagnostic.S1135.severity = suggestion       # https://github.com/atc-net
 ##########################################
 # Custom - Code Analyzers Rules
 ##########################################
+[*.cs]
+##########################################
+# ATC temporary suppressions
+# generated @ Thursday, February 10, 2022 11:50:28 PM
+# Please fix all generated temporary suppressions
+# either by code changes or move the
+# suppressions one by one to the relevant
+# 'Custom - Code Analyzers Rules' section.
+##########################################
+[*.cs]
 
+# Meziantou.Analyzer
+dotnet_diagnostic.MA0002.severity = none			# 12 occurrences - Category: 'Usage' - IEqualityComparer<string> or IComparer<string> is missing - https://github.com/meziantou/Meziantou.Analyzer/blob/main/docs/Rules/MA0002.md
+dotnet_diagnostic.MA0009.severity = none			# 10 occurrences - Category: 'Security' - Add regex evaluation timeout - https://github.com/meziantou/Meziantou.Analyzer/blob/main/docs/Rules/MA0009.md
+dotnet_diagnostic.MA0011.severity = none			# 39 occurrences - Category: 'Usage' - IFormatProvider is missing - https://github.com/meziantou/Meziantou.Analyzer/blob/main/docs/Rules/MA0011.md
+dotnet_diagnostic.MA0016.severity = none			# 62 occurrences - Category: 'Design' - Prefer return collection abstraction instead of implementation - https://github.com/meziantou/Meziantou.Analyzer/blob/main/docs/Rules/MA0016.md
+dotnet_diagnostic.MA0049.severity = none			# 1 occurrence - Category: 'Design' - Type name should not match containing namespace - https://github.com/meziantou/Meziantou.Analyzer/blob/main/docs/Rules/MA0049.md
+dotnet_diagnostic.MA0051.severity = none			# 32 occurrences - Category: 'Design' - Method is too long - https://github.com/meziantou/Meziantou.Analyzer/blob/main/docs/Rules/MA0051.md
+dotnet_diagnostic.MA0065.severity = none			# 1 occurrence - Category: 'Performance' - Default ValueType.Equals or HashCode is used for struct's equality - https://github.com/meziantou/Meziantou.Analyzer/blob/main/docs/Rules/MA0065.md
 
-# Fix later
-#dotnet_diagnostic.IDE0058.severity = none           # Have to override this for now - to get smoketest to run
+# Microsoft.CodeAnalysis.NetAnalyzers
+dotnet_diagnostic.CA1002.severity = none			# 75 occurrences - Do not expose generic lists - https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1002
+dotnet_diagnostic.CA1031.severity = none			# 5 occurrences - Do not catch general exception types - https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1031
+dotnet_diagnostic.CA1040.severity = none			# 1 occurrence - Avoid empty interfaces - https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1040
+dotnet_diagnostic.CA1054.severity = none			# 6 occurrences - URI parameters should not be strings - https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1054
+dotnet_diagnostic.CA1056.severity = none			# 1 occurrence - URI properties should not be strings - https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1056
+dotnet_diagnostic.CA1062.severity = none			# 26 occurrences - Validate arguments of public methods - https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1062
+dotnet_diagnostic.CA1305.severity = none			# 38 occurrences - Specify IFormatProvider - https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1305
+dotnet_diagnostic.CA1724.severity = none			# 2 occurrences - Type Names Should Not Match Namespaces - https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1724
+dotnet_diagnostic.CA1822.severity = none			# 5 occurrences - Mark members as static - https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1822
 
-dotnet_diagnostic.AsyncFixer01.severity = none
+# Microsoft.CompilerErrors.Undocumented
+dotnet_diagnostic.CS8602.severity = none			# 1 occurrence - Dereference of a possibly null reference.
+dotnet_diagnostic.CS8603.severity = none			# 1 occurrence - Possible null reference return.
+dotnet_diagnostic.CS8604.severity = none			# 3 occurrences - Possible null reference argument.
+dotnet_diagnostic.CS8618.severity = none			# 6 occurrences - Non-nullable field is uninitialized. Consider declaring as nullable.
+dotnet_diagnostic.CS8620.severity = none			# 1 occurrence - Argument cannot be used for parameter due to differences in the nullability of reference types.
+dotnet_diagnostic.CS8625.severity = none			# 1 occurrence - Cannot convert null literal to non-nullable reference type.
 
-dotnet_diagnostic.CA1002.severity = none
-dotnet_diagnostic.CA1031.severity = none
-dotnet_diagnostic.CA1040.severity = none
-dotnet_diagnostic.CA1054.severity = none
-dotnet_diagnostic.CA1056.severity = none
-dotnet_diagnostic.CA1062.severity = none
-dotnet_diagnostic.CA1724.severity = none
-dotnet_diagnostic.CA1801.severity = none
-dotnet_diagnostic.CA1822.severity = none
-dotnet_diagnostic.CA2201.severity = none
+# StyleCop.Analyzers
+dotnet_diagnostic.SA1003.severity = none			# 2 occurrences - Category: 'Spacing' - Symbols must be spaced correctly - https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/documentation/SA1003.md
+dotnet_diagnostic.SA1118.severity = none			# 13 occurrences - Category: 'Readability' - Parameter must not span multiple lines - https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/documentation/SA1118.md
+dotnet_diagnostic.SA1516.severity = none			# 2 occurrences - Category: 'Layout' - Elements must be separated by blank line - https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/documentation/SA1516.md
+dotnet_diagnostic.SA1615.severity = none			# 4 occurrences - Category: 'Documentation' - Element return value must be documented - https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/documentation/SA1615.md
 
-dotnet_diagnostic.CS0006.severity = none
-dotnet_diagnostic.CS8618.severity = none
-dotnet_diagnostic.CS8625.severity = none
-
-
-dotnet_diagnostic.MA0002.severity = none
-dotnet_diagnostic.MA0009.severity = none
-dotnet_diagnostic.MA0011.severity = none
-dotnet_diagnostic.MA0016.severity = none            # Have to override this for now - To be fixed in a separate PR
-dotnet_diagnostic.MA0049.severity = none
-dotnet_diagnostic.MA0051.severity = none
-dotnet_diagnostic.MA0065.severity = none
-
-
-dotnet_diagnostic.S1128.severity = none             # Sample: unused usings
-dotnet_diagnostic.S1172.severity = none             # Sample: unused method parameter
-dotnet_diagnostic.S4457.severity = none
-dotnet_diagnostic.S3267.severity = none
-
-dotnet_diagnostic.SA1003.severity = none
-dotnet_diagnostic.SA1111.severity = none
-dotnet_diagnostic.SA1118.severity = none
-dotnet_diagnostic.SA1208.severity = none
-dotnet_diagnostic.SA1516.severity = none
-dotnet_diagnostic.SA1601.severity = none
-dotnet_diagnostic.SA1615.severity = none
+# Unknown
+dotnet_diagnostic.CA1848.severity = none			# 15 occurrences
+dotnet_diagnostic.CA2254.severity = none			# 3 occurrences
+dotnet_diagnostic.S3267.severity = none				# 6 occurrences
+dotnet_diagnostic.SYSLIB0014.severity = none			# 2 occurrences
