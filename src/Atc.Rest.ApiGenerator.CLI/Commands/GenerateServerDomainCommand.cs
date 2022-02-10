@@ -31,17 +31,18 @@ namespace Atc.Rest.ApiGenerator.CLI.Commands
             var apiOptions = await ApiOptionsHelper.CreateApiOptions(settings);
             var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(settings.SpecificationPath);
 
-            var logItems = new List<LogKeyValueItem>();
-
             try
             {
+                var logItems = new List<LogKeyValueItem>();
                 logItems.AddRange(OpenApiDocumentHelper.Validate(apiDocument, apiOptions.Validation));
 
-                if (logItems.HasAnyErrorsLogIfNeeded(logger))
+                if (logItems.HasAnyErrors())
                 {
+                    logItems.LogAndClear(logger);
                     return ConsoleExitStatusCodes.Failure;
                 }
 
+                logItems.LogAndClear(logger);
                 logItems.AddRange(GenerateHelper.GenerateServerDomain(
                     settings.ProjectPrefixName,
                     new DirectoryInfo(settings.OutputPath),
@@ -49,15 +50,18 @@ namespace Atc.Rest.ApiGenerator.CLI.Commands
                     apiDocument,
                     apiOptions,
                     new DirectoryInfo(settings.ApiPath)));
+
+                if (logItems.HasAnyErrors())
+                {
+                    logItems.LogAndClear(logger);
+                    return ConsoleExitStatusCodes.Failure;
+                }
+
+                logItems.LogAndClear(logger);
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, "Generation failed.");
-                return ConsoleExitStatusCodes.Failure;
-            }
-
-            if (logItems.HasAnyErrorsLogIfNeeded(logger))
-            {
                 return ConsoleExitStatusCodes.Failure;
             }
 

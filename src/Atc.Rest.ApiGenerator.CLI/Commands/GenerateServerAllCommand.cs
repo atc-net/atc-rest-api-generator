@@ -35,17 +35,18 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
         var apiOptions = await ApiOptionsHelper.CreateApiOptions(settings);
         var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(settings.SpecificationPath);
 
-        var logItems = new List<LogKeyValueItem>();
-
         try
         {
+            var logItems = new List<LogKeyValueItem>();
             logItems.AddRange(OpenApiDocumentHelper.Validate(apiDocument, apiOptions.Validation));
 
-            if (logItems.HasAnyErrorsLogIfNeeded(logger))
+            if (logItems.HasAnyErrors())
             {
+                logItems.LogAndClear(logger);
                 return ConsoleExitStatusCodes.Failure;
             }
 
+            logItems.LogAndClear(logger);
             logItems.AddRange(GenerateHelper.GenerateServerApi(
                 projectPrefixName,
                 outputSrcPath,
@@ -53,11 +54,13 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
                 apiDocument,
                 apiOptions));
 
-            if (logItems.HasAnyErrorsLogIfNeeded(logger))
+            if (logItems.HasAnyErrors())
             {
+                logItems.LogAndClear(logger);
                 return ConsoleExitStatusCodes.Failure;
             }
 
+            logItems.LogAndClear(logger);
             logItems.AddRange(GenerateHelper.GenerateServerDomain(
                 projectPrefixName,
                 outputSrcPath,
@@ -66,11 +69,13 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
                 apiOptions,
                 outputSrcPath));
 
-            if (logItems.HasAnyErrorsLogIfNeeded(logger))
+            if (logItems.HasAnyErrors())
             {
+                logItems.LogAndClear(logger);
                 return ConsoleExitStatusCodes.Failure;
             }
 
+            logItems.LogAndClear(logger);
             logItems.AddRange(GenerateHelper.GenerateServerHost(
                 projectPrefixName,
                 outputSrcPath,
@@ -80,28 +85,45 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
                 outputSrcPath,
                 outputSrcPath));
 
+            if (logItems.HasAnyErrors())
+            {
+                logItems.LogAndClear(logger);
+                return ConsoleExitStatusCodes.Failure;
+            }
+
+            logItems.LogAndClear(logger);
             logItems.AddRange(GenerateHelper.GenerateServerSln(
                 projectPrefixName,
                 outputSlnPath,
                 outputSrcPath,
                 outputTestPath));
 
+            if (logItems.HasAnyErrors())
+            {
+                logItems.LogAndClear(logger);
+                return ConsoleExitStatusCodes.Failure;
+            }
+
+            logItems.LogAndClear(logger);
             if (!settings.DisableCodingRules)
             {
                 logItems.AddRange(GenerateAtcCodingRulesHelper.Generate(
                     outputSlnPath,
                     outputSrcPath,
                     outputTestPath));
+
+                if (logItems.HasAnyErrors())
+                {
+                    logItems.LogAndClear(logger);
+                    return ConsoleExitStatusCodes.Failure;
+                }
+
+                logItems.LogAndClear(logger);
             }
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Generation failed.");
-            return ConsoleExitStatusCodes.Failure;
-        }
-
-        if (logItems.HasAnyErrorsLogIfNeeded(logger))
-        {
             return ConsoleExitStatusCodes.Failure;
         }
 

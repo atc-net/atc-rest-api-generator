@@ -11,7 +11,6 @@ global using System.Text.RegularExpressions;
 global using System.Xml.Linq;
 
 global using Atc.CodeAnalysis.CSharp;
-global using Atc.CodeAnalysis.CSharp.Factories;
 global using Atc.CodeAnalysis.CSharp.SyntaxFactories;
 global using Atc.Data;
 global using Atc.Data.Models;

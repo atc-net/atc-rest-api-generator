@@ -23,17 +23,17 @@ public class GenerateClientCSharpCommand : AsyncCommand<ClientApiCommandSettings
         var apiOptions = await ApiOptionsHelper.CreateApiOptions(settings);
         var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(settings.SpecificationPath);
 
-        var logItems = new List<LogKeyValueItem>();
-
         try
         {
+            var logItems = new List<LogKeyValueItem>();
             logItems.AddRange(OpenApiDocumentHelper.Validate(apiDocument, apiOptions.Validation));
-
-            if (logItems.HasAnyErrorsLogIfNeeded(logger))
+            if (logItems.HasAnyErrors())
             {
+                logItems.LogAndClear(logger);
                 return ConsoleExitStatusCodes.Failure;
             }
 
+            logItems.LogAndClear(logger);
             logItems.AddRange(GenerateHelper.GenerateServerCSharpClient(
                 settings.ProjectPrefixName,
                 settings.ClientFolderName,
@@ -41,15 +41,18 @@ public class GenerateClientCSharpCommand : AsyncCommand<ClientApiCommandSettings
                 apiDocument,
                 settings.ExcludeEndpointGeneration,
                 apiOptions));
+
+            if (logItems.HasAnyErrors())
+            {
+                logItems.LogAndClear(logger);
+                return ConsoleExitStatusCodes.Failure;
+            }
+
+            logItems.LogAndClear(logger);
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Generation failed.");
-            return ConsoleExitStatusCodes.Failure;
-        }
-
-        if (logItems.HasAnyErrorsLogIfNeeded(logger))
-        {
             return ConsoleExitStatusCodes.Failure;
         }
 

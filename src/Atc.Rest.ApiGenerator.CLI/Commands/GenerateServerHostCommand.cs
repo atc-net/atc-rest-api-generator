@@ -31,17 +31,18 @@ public class GenerateServerHostCommand : AsyncCommand<ServerHostCommandSettings>
         var apiOptions = await ApiOptionsHelper.CreateApiOptions(settings);
         var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(settings.SpecificationPath);
 
-        var logItems = new List<LogKeyValueItem>();
-
         try
         {
+            var logItems = new List<LogKeyValueItem>();
             logItems.AddRange(OpenApiDocumentHelper.Validate(apiDocument, apiOptions.Validation));
 
-            if (logItems.HasAnyErrorsLogIfNeeded(logger))
+            if (logItems.HasAnyErrors())
             {
+                logItems.LogAndClear(logger);
                 return ConsoleExitStatusCodes.Failure;
             }
 
+            logItems.LogAndClear(logger);
             logItems.AddRange(GenerateHelper.GenerateServerHost(
                 settings.ProjectPrefixName,
                 new DirectoryInfo(settings.OutputPath),
@@ -50,15 +51,18 @@ public class GenerateServerHostCommand : AsyncCommand<ServerHostCommandSettings>
                 apiOptions,
                 new DirectoryInfo(settings.ApiPath),
                 new DirectoryInfo(settings.DomainPath)));
+
+            if (logItems.HasAnyErrors())
+            {
+                logItems.LogAndClear(logger);
+                return ConsoleExitStatusCodes.Failure;
+            }
+
+            logItems.LogAndClear(logger);
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Generation failed.");
-            return ConsoleExitStatusCodes.Failure;
-        }
-
-        if (logItems.HasAnyErrorsLogIfNeeded(logger))
-        {
             return ConsoleExitStatusCodes.Failure;
         }
 

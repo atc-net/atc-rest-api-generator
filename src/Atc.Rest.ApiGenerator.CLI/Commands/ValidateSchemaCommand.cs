@@ -23,20 +23,21 @@ public class ValidateSchemaCommand : AsyncCommand<BaseConfigurationCommandSettin
         var apiOptions = await ApiOptionsHelper.CreateApiOptions(settings);
         var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(settings.SpecificationPath);
 
-        var logItems = new List<LogKeyValueItem>();
-
         try
         {
+            var logItems = new List<LogKeyValueItem>();
             logItems.AddRange(OpenApiDocumentHelper.Validate(apiDocument, apiOptions.Validation));
+            if (logItems.HasAnyErrors())
+            {
+                logItems.LogAndClear(logger);
+                return ConsoleExitStatusCodes.Failure;
+            }
+
+            logItems.LogAndClear(logger);
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Validation failed.");
-            return ConsoleExitStatusCodes.Failure;
-        }
-
-        if (logItems.HasAnyErrorsLogIfNeeded(logger))
-        {
             return ConsoleExitStatusCodes.Failure;
         }
 
