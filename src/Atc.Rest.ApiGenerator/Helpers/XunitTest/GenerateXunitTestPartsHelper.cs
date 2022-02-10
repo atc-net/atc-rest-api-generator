@@ -127,7 +127,7 @@ public static class GenerateXunitTestPartsHelper
                 break;
             default:
                 var enumDataType = GetDataTypeIfEnum(schemaProperty, endpointMethodMetadata.ComponentsSchemas);
-                if (enumDataType == null)
+                if (enumDataType is null)
                 {
                     AppendModelSimplePropertyDefault(
                         indentSpaces,
@@ -334,52 +334,72 @@ public static class GenerateXunitTestPartsHelper
         }
     }
 
-    public static bool IsListKind(string typeName)
-    {
-        return !string.IsNullOrEmpty(typeName) &&
-               (typeName.StartsWith(Microsoft.OpenApi.Models.NameConstants.Pagination + "<", StringComparison.Ordinal) ||
-                typeName.StartsWith(Microsoft.OpenApi.Models.NameConstants.List + "<", StringComparison.Ordinal));
-    }
+    public static bool IsListKind(
+        string typeName)
+        => !string.IsNullOrEmpty(typeName) &&
+           (typeName.StartsWith(Microsoft.OpenApi.Models.NameConstants.Pagination + "<", StringComparison.Ordinal) ||
+            typeName.StartsWith(Microsoft.OpenApi.Models.NameConstants.List + "<", StringComparison.Ordinal));
 
-    public static void AppendPartDataNew(int indentSpaces, StringBuilder sb)
+    public static void AppendPartDataNew(
+        int indentSpaces,
+        StringBuilder sb)
     {
-        var value = "new ";
+        const string value = "new ";
         sb.Append(value.PadLeft(value.Length + indentSpaces));
     }
 
-    public static void AppendPartDataEqualNew(int indentSpaces, StringBuilder sb, string variableName)
+    public static void AppendPartDataEqualNew(
+        int indentSpaces,
+        StringBuilder sb,
+        string variableName)
     {
         var value = $"{variableName} = new ";
         sb.Append(value.PadLeft(value.Length + indentSpaces));
     }
 
-    public static void AppendPartVarDataEqualNew(int indentSpaces, StringBuilder sb, string variableName = "data")
+    public static void AppendPartVarDataEqualNew(
+        int indentSpaces,
+        StringBuilder sb,
+        string variableName = "data")
     {
         var value = $"var {variableName} = new ";
         sb.Append(value.PadLeft(value.Length + indentSpaces));
     }
 
-    public static void AppendPartDataEqualNewListOf(int indentSpaces, StringBuilder sb, string variableName, string dataType)
+    public static void AppendPartDataEqualNewListOf(
+        int indentSpaces,
+        StringBuilder sb,
+        string variableName,
+        string dataType)
     {
         var value = $"{variableName} = new List<{dataType}>";
         sb.Append(value.PadLeft(value.Length + indentSpaces));
     }
 
-    public static void AppendPartVarDataEqualNewListOf(int indentSpaces, StringBuilder sb, string variableName, string dataType)
+    public static void AppendPartVarDataEqualNewListOf(
+        int indentSpaces,
+        StringBuilder sb,
+        string variableName,
+        string dataType)
     {
         var value = $"var {variableName} = new List<{dataType}>";
         sb.Append(value.PadLeft(value.Length + indentSpaces));
     }
 
-    public static string? GetDataTypeIfEnum(KeyValuePair<string, OpenApiSchema> schema, IDictionary<string, OpenApiSchema> componentsSchemas)
+    public static string? GetDataTypeIfEnum(
+        KeyValuePair<string, OpenApiSchema> schema,
+        IDictionary<string, OpenApiSchema> componentsSchemas)
     {
         var schemaForDataType = componentsSchemas.FirstOrDefault(x => x.Key.Equals(schema.Value.GetDataType(), StringComparison.OrdinalIgnoreCase));
-        return schemaForDataType.Key != null && schemaForDataType.Value.IsSchemaEnumOrPropertyEnum()
+        return schemaForDataType.Key is not null && schemaForDataType.Value.IsSchemaEnumOrPropertyEnum()
             ? schemaForDataType.Key
             : null;
     }
 
-    public static TrailingCharType GetTrailingCharForProperty(bool asJsonBody, int currentItem, int totalItems)
+    public static TrailingCharType GetTrailingCharForProperty(
+        bool asJsonBody,
+        int currentItem,
+        int totalItems)
     {
         var trailingCharForProperty = TrailingCharType.Comma;
         if (asJsonBody && (currentItem + 1) == totalItems)
@@ -390,7 +410,10 @@ public static class GenerateXunitTestPartsHelper
         return trailingCharForProperty;
     }
 
-    public static TrailingCharType GetTrailingCharForProperty(bool asJsonBody, KeyValuePair<string, OpenApiSchema> currentSchema, IDictionary<string, OpenApiSchema> totalSchema)
+    public static TrailingCharType GetTrailingCharForProperty(
+        bool asJsonBody,
+        KeyValuePair<string, OpenApiSchema> currentSchema,
+        IDictionary<string, OpenApiSchema> totalSchema)
     {
         var trailingCharForProperty = TrailingCharType.Comma;
         if (asJsonBody && totalSchema.Last().Key == currentSchema.Key)
@@ -426,7 +449,10 @@ public static class GenerateXunitTestPartsHelper
         };
     }
 
-    public static string PropertyValueGeneratorTypeResolver(KeyValuePair<string, OpenApiSchema> schema, IDictionary<string, OpenApiSchema> componentsSchemas, bool useForBadRequest)
+    public static string PropertyValueGeneratorTypeResolver(
+        KeyValuePair<string, OpenApiSchema> schema,
+        IDictionary<string, OpenApiSchema> componentsSchemas,
+        bool useForBadRequest)
     {
         var name = schema.Key.EnsureFirstCharacterToUpper();
         var schemaForDataType = componentsSchemas.FirstOrDefault(x => x.Key.Equals(schema.Value.GetDataType(), StringComparison.OrdinalIgnoreCase));
@@ -440,7 +466,7 @@ public static class GenerateXunitTestPartsHelper
             }
         }
 
-        if (schemaForDataType.Key != null)
+        if (schemaForDataType.Key is not null)
         {
             if (schemaForDataType.Value.IsSchemaEnumOrPropertyEnum())
             {
@@ -455,17 +481,29 @@ public static class GenerateXunitTestPartsHelper
         return "null";
     }
 
-    public static string WrapInQuotes(string str) => $"\\\"{str}\\\"";
+    public static string WrapInQuotes(
+        string str)
+        => $"\\\"{str}\\\"";
 
-    public static string WrapInStringBuilderAppendLine(string str) => $"sb.AppendLine(\"{str}\");";
+    public static string WrapInStringBuilderAppendLine(
+        string str)
+        => $"sb.AppendLine(\"{str}\");";
 
-    public static string WrapInStringBuilderAppendLineWithKeyQuotes(int depthHierarchy, string key, string value, TrailingCharType trailingChar)
+    public static string WrapInStringBuilderAppendLineWithKeyQuotes(
+        int depthHierarchy,
+        string key,
+        string value,
+        TrailingCharType trailingChar)
     {
         var jsonSpaces = string.Empty.PadLeft(depthHierarchy * 2);
         return WrapInStringBuilderAppendLine($"{jsonSpaces}  {WrapInQuotes(key)}: {value}{GenerateCodeHelper.GetTrailingChar(trailingChar)}");
     }
 
-    public static string WrapInStringBuilderAppendLineWithKeyAndValueQuotes(int depthHierarchy, string key, string value, TrailingCharType trailingChar)
+    public static string WrapInStringBuilderAppendLineWithKeyAndValueQuotes(
+        int depthHierarchy,
+        string key,
+        string value,
+        TrailingCharType trailingChar)
     {
         var jsonSpaces = string.Empty.PadLeft(depthHierarchy * 2);
         return WrapInStringBuilderAppendLine($"{jsonSpaces}  {WrapInQuotes(key)}: {WrapInQuotes(value)}{GenerateCodeHelper.GetTrailingChar(trailingChar)}");

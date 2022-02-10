@@ -23,13 +23,13 @@ public class ServerDomainGenerator
         }
 
         logItems.AddRange(ScaffoldSrc());
-        if (projectOptions.PathForTestGenerate != null)
+        if (projectOptions.PathForTestGenerate is not null)
         {
             logItems.AddRange(ScaffoldTest());
         }
 
-        logItems.AddRange(GenerateSrcHandlers(projectOptions, out List<SyntaxGeneratorHandler> sgHandlers));
-        if (projectOptions.PathForTestGenerate != null)
+        logItems.AddRange(GenerateSrcHandlers(projectOptions, out var sgHandlers));
+        if (projectOptions.PathForTestGenerate is not null)
         {
             logItems.AddRange(GenerateTestHandlers(projectOptions, sgHandlers));
         }
@@ -68,7 +68,7 @@ public class ServerDomainGenerator
         ArgumentNullException.ThrowIfNull(sgHandlers);
 
         var logItems = new List<LogKeyValueItem>();
-        if (domainProjectOptions.PathForTestHandlers != null)
+        if (domainProjectOptions.PathForTestHandlers is not null)
         {
             foreach (var sgHandler in sgHandlers)
             {
@@ -112,7 +112,7 @@ public class ServerDomainGenerator
         else
         {
             var projectReferences = new List<FileInfo>();
-            if (projectOptions.ApiProjectSrcCsProj != null)
+            if (projectOptions.ApiProjectSrcCsProj is not null)
             {
                 projectReferences.Add(projectOptions.ApiProjectSrcCsProj);
             }
@@ -139,7 +139,7 @@ public class ServerDomainGenerator
     {
         var logItems = new List<LogKeyValueItem>();
 
-        if (projectOptions.PathForTestGenerate == null || projectOptions.ProjectTestCsProj == null)
+        if (projectOptions.PathForTestGenerate is null || projectOptions.ProjectTestCsProj is null)
         {
             return logItems;
         }
@@ -156,7 +156,7 @@ public class ServerDomainGenerator
             }
 
             var projectReferences = new List<FileInfo>();
-            if (projectOptions.ApiProjectSrcCsProj != null)
+            if (projectOptions.ApiProjectSrcCsProj is not null)
             {
                 projectReferences.Add(projectOptions.ApiProjectSrcCsProj);
                 projectReferences.Add(projectOptions.ProjectSrcCsProj);

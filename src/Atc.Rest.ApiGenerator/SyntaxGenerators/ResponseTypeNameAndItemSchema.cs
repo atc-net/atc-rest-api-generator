@@ -2,7 +2,10 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators;
 
 public class ResponseTypeNameAndItemSchema
 {
-    public ResponseTypeNameAndItemSchema(HttpStatusCode statusCode, string fullModelName, OpenApiSchema? schema)
+    public ResponseTypeNameAndItemSchema(
+        HttpStatusCode statusCode,
+        string fullModelName,
+        OpenApiSchema? schema)
     {
         StatusCode = statusCode;
         FullModelName = fullModelName;
@@ -15,9 +18,12 @@ public class ResponseTypeNameAndItemSchema
 
     public OpenApiSchema? Schema { get; }
 
-    public bool HasModelName => !string.IsNullOrEmpty(FullModelName);
+    public bool HasModelName
+        => !string.IsNullOrEmpty(FullModelName);
 
-    public bool HasSchema => Schema != null;
+    public bool HasSchema
+        => Schema is not null;
 
-    public override string ToString() => $"{nameof(StatusCode)}: {StatusCode}, {nameof(FullModelName)}: {FullModelName}, {nameof(Schema)}: {Schema?.GetModelType()}";
+    public override string ToString()
+        => $"{nameof(StatusCode)}: {StatusCode}, {nameof(FullModelName)}: {FullModelName}, {nameof(Schema)}: {Schema?.GetModelType()}";
 }

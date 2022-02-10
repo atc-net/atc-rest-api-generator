@@ -8,7 +8,8 @@ public static class OpenApiDocumentHelper
 {
     [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "OK.")]
     [SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "OK.")]
-    public static Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> CombineAndGetApiDocument(string specificationPath)
+    public static Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> CombineAndGetApiDocument(
+        string specificationPath)
     {
         ArgumentNullException.ThrowIfNull(specificationPath);
 
@@ -19,7 +20,7 @@ public static class OpenApiDocumentHelper
                 ? HttpClientHelper.DownloadToTempFile(specificationPath)
                 : new FileInfo(specificationPath);
 
-            if (apiDocFile == null || !apiDocFile.Exists)
+            if (apiDocFile is null || !apiDocFile.Exists)
             {
                 throw new IOException("Api yaml file don't exist.");
             }
@@ -30,7 +31,7 @@ public static class OpenApiDocumentHelper
                 ? HttpClientHelper.DownloadToTempFile(specificationPath)
                 : new FileInfo(specificationPath);
 
-            if (apiDocFile == null || !apiDocFile.Exists)
+            if (apiDocFile is null || !apiDocFile.Exists)
             {
                 throw new IOException("Api json file don't exist.");
             }
@@ -70,7 +71,9 @@ public static class OpenApiDocumentHelper
         return new Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo>(openApiDocument, diagnostic, new FileInfo(apiDocFile.FullName));
     }
 
-    public static List<LogKeyValueItem> Validate(Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument, ApiOptionsValidation validationOptions)
+    public static List<LogKeyValueItem> Validate(
+        Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument,
+        ApiOptionsValidation validationOptions)
     {
         ArgumentNullException.ThrowIfNull(apiDocument);
         ArgumentNullException.ThrowIfNull(validationOptions);
@@ -101,12 +104,13 @@ public static class OpenApiDocumentHelper
         return OpenApiDocumentValidationHelper.ValidateDocument(apiDocument.Item1, validationOptions);
     }
 
-    public static List<string> GetBasePathSegmentNames(OpenApiDocument openApiDocument)
+    public static List<string> GetBasePathSegmentNames(
+        OpenApiDocument openApiDocument)
     {
         ArgumentNullException.ThrowIfNull(openApiDocument);
 
         var names = new List<string>();
-        if (openApiDocument.Paths?.Keys == null)
+        if (openApiDocument.Paths?.Keys is null)
         {
             return names.ToList();
         }
@@ -126,7 +130,8 @@ public static class OpenApiDocumentHelper
     }
 
     [SuppressMessage("Design", "CA1055:URI-like return values should not be strings", Justification = "OK.")]
-    public static string GetServerUrl(OpenApiDocument openApiDocument)
+    public static string GetServerUrl(
+        OpenApiDocument openApiDocument)
     {
         var serverUrl = openApiDocument.Servers?.FirstOrDefault()?.Url;
         if (string.IsNullOrWhiteSpace(serverUrl))
@@ -146,9 +151,9 @@ public static class OpenApiDocumentHelper
         return serverUrl;
     }
 
-    [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "OK.")]
     [SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "OK.")]
-    private static List<OpenApiDocumentContainer> GetAllApiDocuments(DirectoryInfo specificationPath)
+    private static List<OpenApiDocumentContainer> GetAllApiDocuments(
+        DirectoryInfo specificationPath)
     {
         ArgumentNullException.ThrowIfNull(specificationPath);
 
@@ -186,9 +191,9 @@ public static class OpenApiDocumentHelper
         return result;
     }
 
-    [SuppressMessage("Info Code Smell", "S1135:Track uses of \"TODO\" tags", Justification = "Allow TODO here.")]
     [SuppressMessage("Minor Code Smell", "S1481:Unused local variables should be removed", Justification = "OK for now.")]
-    private static FileInfo? CreateCombineApiDocumentFile(string specificationPath)
+    private static FileInfo? CreateCombineApiDocumentFile(
+        string specificationPath)
     {
         var openApiDocs = GetAllApiDocuments(new DirectoryInfo(specificationPath));
 

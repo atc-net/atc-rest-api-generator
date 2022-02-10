@@ -12,10 +12,7 @@ public class ClientCSharpApiProjectOptions
         bool excludeEndpointGeneration,
         ApiOptions.ApiOptions apiOptions)
     {
-        if (projectSrcGeneratePath == null)
-        {
-            throw new ArgumentNullException(nameof(projectSrcGeneratePath));
-        }
+        ArgumentNullException.ThrowIfNull(projectSrcGeneratePath);
 
         ProjectName = projectPrefixName ?? throw new ArgumentNullException(nameof(projectPrefixName));
         PathForSrcGenerate = projectSrcGeneratePath.Name.StartsWith(ProjectName, StringComparison.OrdinalIgnoreCase)

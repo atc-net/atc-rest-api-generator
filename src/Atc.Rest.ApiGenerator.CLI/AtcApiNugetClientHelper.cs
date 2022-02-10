@@ -1,9 +1,3 @@
-using System.Collections.Concurrent;
-using System.Diagnostics;
-using System.Net;
-using Atc.Helpers;
-using Microsoft.Extensions.Logging;
-
 namespace Atc.Rest.ApiGenerator.CLI;
 
 public static class AtcApiNugetClientHelper

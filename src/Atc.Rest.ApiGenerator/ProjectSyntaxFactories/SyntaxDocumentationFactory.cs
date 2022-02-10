@@ -30,7 +30,8 @@ internal static class SyntaxDocumentationFactory
         return CreateSummary("Domain Interface for RequestHandler.", apiOperation, area);
     }
 
-    public static SyntaxTriviaList CreateForInterfaceMethod(bool hasParameters)
+    public static SyntaxTriviaList CreateForInterfaceMethod(
+        bool hasParameters)
     {
         if (hasParameters)
         {
@@ -93,10 +94,13 @@ internal static class SyntaxDocumentationFactory
         return CreateSummary("Results for operation request.", apiOperation, area);
     }
 
-    public static SyntaxTriviaList CreateForResultsImplicitOperator(string className)
+    public static SyntaxTriviaList CreateForResultsImplicitOperator(
+        string className)
         => CreateSummary($"Performs an implicit conversion from {className} to ActionResult.");
 
-    public static SyntaxTriviaList CreateForResultsMethod(HttpStatusCode httpStatusCode, string? validationTypeName = null)
+    public static SyntaxTriviaList CreateForResultsMethod(
+        HttpStatusCode httpStatusCode,
+        string? validationTypeName = null)
     {
         if (string.IsNullOrEmpty(validationTypeName))
         {
@@ -116,7 +120,8 @@ internal static class SyntaxDocumentationFactory
         });
     }
 
-    public static SyntaxTriviaList CreateForEndpoints(string area)
+    public static SyntaxTriviaList CreateForEndpoints(
+        string area)
     {
         return SyntaxFactory.TriviaList(new List<SyntaxTrivia>
         {
@@ -127,7 +132,9 @@ internal static class SyntaxDocumentationFactory
         });
     }
 
-    public static SyntaxTriviaList CreateForEndpointMethods(KeyValuePair<OperationType, OpenApiOperation> apiOperation, string area)
+    public static SyntaxTriviaList CreateForEndpointMethods(
+        KeyValuePair<OperationType, OpenApiOperation> apiOperation,
+        string area)
     {
         var comments = new List<SyntaxTrivia>();
 
@@ -245,9 +252,9 @@ internal static class SyntaxDocumentationFactory
         {
             comments.Add(CreateComment(apiSchema.Title, true));
         }
-        else if (apiSchema.OneOf != null &&
+        else if (apiSchema.OneOf is not null &&
                  apiSchema.OneOf.Count == 1 &&
-                 apiSchema.OneOf.First().Reference != null)
+                 apiSchema.OneOf.First().Reference is not null)
         {
             var schema = apiSchema.OneOf.First();
             if (!string.IsNullOrEmpty(schema.Description))
@@ -327,7 +334,7 @@ internal static class SyntaxDocumentationFactory
         var comments = new List<SyntaxTrivia>();
 
         var (key, value) = apiRequestBody.Content.FirstOrDefault(x => x.Key == contentType);
-        var apiParameterDescription = key == null
+        var apiParameterDescription = key is null
             ? string.Empty
             : value.Schema.Description;
 
@@ -344,7 +351,7 @@ internal static class SyntaxDocumentationFactory
     private static IEnumerable<SyntaxTrivia> CreateExample(
         OpenApiSchema apiSchema)
     {
-        if (apiSchema.Extensions == null || apiSchema.Extensions.All(x => x.Key != "x-examples"))
+        if (apiSchema.Extensions is null || apiSchema.Extensions.All(x => x.Key != "x-examples"))
         {
             return SyntaxFactory.TriviaList();
         }
@@ -360,14 +367,14 @@ internal static class SyntaxDocumentationFactory
 
         foreach (var pair in list)
         {
-            if (!(pair.Value is OpenApiObject openApiObject))
+            if (pair.Value is not OpenApiObject openApiObject)
             {
                 continue;
             }
 
             foreach (var item in openApiObject!.Values)
             {
-                if (!(item is Dictionary<string, IOpenApiAny> dictionaries))
+                if (item is not Dictionary<string, IOpenApiAny> dictionaries)
                 {
                     continue;
                 }
@@ -429,6 +436,7 @@ internal static class SyntaxDocumentationFactory
             _ => SyntaxFactory.TriviaList()
         };
 
-    private static bool ShouldGenerateDefaultSummary(OpenApiSchema apiSchema)
+    private static bool ShouldGenerateDefaultSummary(
+        OpenApiSchema apiSchema)
         => apiSchema.Format is OpenApiFormatTypeConstants.Byte or OpenApiFormatTypeConstants.Email or OpenApiFormatTypeConstants.Uri;
 }

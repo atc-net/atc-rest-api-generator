@@ -81,12 +81,12 @@ public class SyntaxGeneratorHandler
 
     public string ToCodeAsString()
     {
-        if (Code == null)
+        if (Code is null)
         {
             GenerateCode();
         }
 
-        if (Code == null)
+        if (Code is null)
         {
             return $"Syntax generate problem for handler for apiOperation: {ApiOperation}";
         }
@@ -178,7 +178,10 @@ public class SyntaxGeneratorHandler
             .WithBody(codeBody);
     }
 
-    private MemberDeclarationSyntax CreateInvokeExecuteAsyncMethod(string parameterTypeName, string resultTypeName, bool hasParameters)
+    private MemberDeclarationSyntax CreateInvokeExecuteAsyncMethod(
+        string parameterTypeName,
+        string resultTypeName,
+        bool hasParameters)
     {
         var arguments = hasParameters
             ? new SyntaxNodeOrToken[]
@@ -230,9 +233,7 @@ public class SyntaxGeneratorHandler
 
         return SyntaxFactory.TriviaList(
             SyntaxFactory.Trivia(
-                SyntaxFactory.PragmaWarningDirectiveTrivia(
-                        SyntaxFactory.Token(keyword),
-                        true)
+                SyntaxFactory.PragmaWarningDirectiveTrivia(SyntaxFactory.Token(keyword), true)
                     .WithErrorCodes(
                         SyntaxFactory.SingletonSeparatedList<ExpressionSyntax>(
                             SyntaxFactory.IdentifierName(

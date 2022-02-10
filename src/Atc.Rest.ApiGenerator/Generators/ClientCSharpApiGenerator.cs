@@ -183,7 +183,7 @@ namespace Atc.Rest.ApiGenerator.Generators
             ////    var files = Directory.GetFiles(projectOptions.PathForContracts.FullName, "*.*", SearchOption.AllDirectories);
             ////    foreach (string file in files)
             ////    {
-            ////        if (orgLogItems.FirstOrDefault(x => x.Description == file) != null)
+            ////        if (orgLogItems.FirstOrDefault(x => x.Description == file) is not null)
             ////        {
             ////            continue;
             ////        }
@@ -198,7 +198,7 @@ namespace Atc.Rest.ApiGenerator.Generators
             ////    var files = Directory.GetFiles(projectOptions.PathForEndpoints.FullName, "*.*", SearchOption.AllDirectories);
             ////    foreach (string file in files)
             ////    {
-            ////        if (orgLogItems.FirstOrDefault(x => x.Description == file) != null)
+            ////        if (orgLogItems.FirstOrDefault(x => x.Description == file) is not null)
             ////        {
             ////            continue;
             ////        }

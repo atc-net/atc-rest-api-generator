@@ -81,12 +81,12 @@ public class SyntaxGeneratorClientEndpointResultInterface : SyntaxGeneratorClien
 
     public string ToCodeAsString()
     {
-        if (Code == null)
+        if (Code is null)
         {
             GenerateCode();
         }
 
-        if (Code == null)
+        if (Code is null)
         {
             return $"Syntax generate problem for client-endpointResult-interface for apiOperation: {ApiOperation}";
         }
@@ -105,7 +105,8 @@ public class SyntaxGeneratorClientEndpointResultInterface : SyntaxGeneratorClien
         return TextFileHelper.Save(file, ToCodeAsString());
     }
 
-    public void ToFile(FileInfo file)
+    public void ToFile(
+        FileInfo file)
     {
         ArgumentNullException.ThrowIfNull(file);
 

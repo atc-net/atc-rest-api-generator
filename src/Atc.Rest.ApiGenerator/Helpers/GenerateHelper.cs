@@ -23,11 +23,7 @@ public static class GenerateHelper
 
     public static Version GetAtcToolVersion()
     {
-        var assembly = Assembly.GetEntryAssembly();
-        if (assembly == null)
-        {
-            assembly = Assembly.GetExecutingAssembly();
-        }
+        var assembly = Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly();
 
         return assembly.GetName().Version.GreaterThan(AtcToolVersion)
             ? assembly.GetName().Version
@@ -133,7 +129,7 @@ public static class GenerateHelper
             ? new FileInfo(outputSlnPath)
             : new FileInfo(Path.Combine(outputSlnPath, $"{projectName}.sln"));
 
-        if (outputTestPath != null)
+        if (outputTestPath is not null)
         {
             var domainTestPath = new DirectoryInfo(Path.Combine(outputTestPath.FullName, $"{projectName}.Domain"));
             var hostTestPath = new DirectoryInfo(Path.Combine(outputTestPath.FullName, $"{projectName}.Api"));

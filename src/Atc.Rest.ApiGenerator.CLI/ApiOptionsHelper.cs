@@ -1,8 +1,3 @@
-using System.Runtime.Serialization;
-using System.Text.Json;
-using Atc.Rest.ApiGenerator.Models.ApiOptions;
-using Atc.Serialization;
-
 namespace Atc.Rest.ApiGenerator.CLI;
 
 public static class ApiOptionsHelper

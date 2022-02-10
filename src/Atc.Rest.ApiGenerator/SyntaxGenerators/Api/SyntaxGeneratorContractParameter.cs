@@ -39,7 +39,6 @@ public class SyntaxGeneratorContractParameter : ISyntaxOperationCodeGenerator
 
     public bool UseOwnFolder { get; set; }
 
-    [SuppressMessage("Maintainability", "CA1508:Avoid dead conditional code", Justification = "Bug in CA1508.")]
     public bool GenerateCode()
     {
         var parameterTypeName = ApiOperation.GetOperationName() + NameConstants.ContractParameters;
@@ -72,7 +71,7 @@ public class SyntaxGeneratorContractParameter : ISyntaxOperationCodeGenerator
             }
         }
 
-        if (ApiOperation.Parameters != null)
+        if (ApiOperation.Parameters is not null)
         {
             foreach (var parameter in ApiOperation.Parameters)
             {
@@ -87,7 +86,8 @@ public class SyntaxGeneratorContractParameter : ISyntaxOperationCodeGenerator
 
         var requestSchema = ApiOperation.RequestBody?.Content?.GetSchemaByFirstMediaType();
 
-        if (ApiOperation.RequestBody != null && requestSchema != null)
+        if (ApiOperation.RequestBody is not null &&
+            requestSchema is not null)
         {
             var isFormatTypeOfBinary = requestSchema.IsFormatTypeBinary();
             var isItemsOfFormatTypeBinary = requestSchema.HasItemsWithFormatTypeBinary();
@@ -172,7 +172,7 @@ public class SyntaxGeneratorContractParameter : ISyntaxOperationCodeGenerator
         }
 
         var methodDeclaration = SyntaxMethodDeclarationFactory.CreateToStringMethod(GlobalPathParameters, ApiOperation.Parameters, ApiOperation.RequestBody);
-        if (methodDeclaration != null)
+        if (methodDeclaration is not null)
         {
             methodDeclaration = methodDeclaration.WithLeadingTrivia(SyntaxDocumentationFactory.CreateForOverrideToString());
             classDeclaration = classDeclaration.AddMembers(methodDeclaration);

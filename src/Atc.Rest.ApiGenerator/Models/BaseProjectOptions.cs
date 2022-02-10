@@ -20,7 +20,7 @@ public abstract class BaseProjectOptions
             ? projectSrcGeneratePath.Parent!
             : projectSrcGeneratePath;
 
-        if (projectTestGeneratePath != null)
+        if (projectTestGeneratePath is not null)
         {
             PathForTestGenerate = projectTestGeneratePath.Name.StartsWith(ProjectName, StringComparison.OrdinalIgnoreCase)
                 ? projectTestGeneratePath.Parent!
@@ -51,7 +51,7 @@ public abstract class BaseProjectOptions
 
         PathForSrcGenerate = new DirectoryInfo(Path.Combine(PathForSrcGenerate.FullName, ProjectName));
         ProjectSrcCsProj = new FileInfo(Path.Combine(PathForSrcGenerate.FullName, $"{ProjectName}.csproj"));
-        if (PathForTestGenerate != null)
+        if (PathForTestGenerate is not null)
         {
             PathForTestGenerate = new DirectoryInfo(Path.Combine(PathForTestGenerate.FullName, $"{ProjectName}.Tests"));
             ProjectTestCsProj = new FileInfo(Path.Combine(PathForTestGenerate.FullName, $"{ProjectName}.Tests.csproj"));

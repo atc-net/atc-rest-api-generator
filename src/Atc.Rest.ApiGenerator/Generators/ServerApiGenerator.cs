@@ -251,7 +251,7 @@ public class ServerApiGenerator
             var files = Directory.GetFiles(projectOptions.PathForContracts.FullName, "*.*", SearchOption.AllDirectories);
             foreach (string file in files)
             {
-                if (orgLogItems.FirstOrDefault(x => x.Description == file) != null)
+                if (orgLogItems.FirstOrDefault(x => x.Description == file) is not null)
                 {
                     continue;
                 }
@@ -266,7 +266,7 @@ public class ServerApiGenerator
             var files = Directory.GetFiles(projectOptions.PathForEndpoints.FullName, "*.*", SearchOption.AllDirectories);
             foreach (string file in files)
             {
-                if (orgLogItems.FirstOrDefault(x => x.Description == file) != null)
+                if (orgLogItems.FirstOrDefault(x => x.Description == file) is not null)
                 {
                     continue;
                 }
@@ -321,7 +321,7 @@ public class ServerApiGenerator
     private void DeleteLegacyScaffoldBasicFilePagination()
     {
         var (key, _) = projectOptions.Document.Components.Schemas.FirstOrDefault(x => x.Key.Equals(Microsoft.OpenApi.Models.NameConstants.Pagination, StringComparison.OrdinalIgnoreCase));
-        if (key == null)
+        if (key is null)
         {
             return;
         }

@@ -9,7 +9,9 @@ namespace Atc.Rest.ApiGenerator.Helpers;
 
 public static class OpenApiDocumentValidationHelper
 {
-    public static List<LogKeyValueItem> ValidateDocument(OpenApiDocument apiDocument, ApiOptionsValidation validationOptions)
+    public static List<LogKeyValueItem> ValidateDocument(
+        OpenApiDocument apiDocument,
+        ApiOptionsValidation validationOptions)
     {
         ArgumentNullException.ThrowIfNull(apiDocument);
         ArgumentNullException.ThrowIfNull(validationOptions);
@@ -43,7 +45,8 @@ public static class OpenApiDocumentValidationHelper
         return logItems;
     }
 
-    private static bool IsServerUrlValid(string serverUrl)
+    private static bool IsServerUrlValid(
+        string serverUrl)
     {
         if (string.IsNullOrWhiteSpace(serverUrl))
         {
@@ -73,7 +76,6 @@ public static class OpenApiDocumentValidationHelper
                serverUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase);
     }
 
-    [SuppressMessage("Critical Code Smell", "S3776:Cognitive Complexity of methods should not be too high", Justification = "OK.")]
     private static List<LogKeyValueItem> ValidateSchemas(
         ApiOptionsValidation validationOptions,
         IEnumerable<OpenApiSchema> schemas)
@@ -129,18 +131,21 @@ public static class OpenApiDocumentValidationHelper
 
                             case OpenApiDataTypeConstants.Array:
                             {
-                                if (value.Items == null)
+                                if (value.Items is null)
                                 {
                                     logItems.Add(LogItemHelper.Create(LogCategoryType.Error, ValidationRuleNameConstants.Schema11, $"Not specifying a data type for array property '{key}' in type '{schema.Reference.ReferenceV3}' is not supported."));
                                 }
                                 else
                                 {
-                                    if (value.Items.Type == null)
+                                    if (value.Items.Type is null)
                                     {
                                         logItems.Add(LogItemHelper.Create(LogCategoryType.Error, ValidationRuleNameConstants.Schema09, $"Not specifying a data type for array property '{key}' in type '{schema.Reference.ReferenceV3}' is not supported."));
                                     }
 
-                                    if (value.Items.Type != null && !value.IsArrayReferenceTypeDeclared() && !value.HasItemsWithSimpleDataType() && !value.HasItemsWithFormatTypeBinary())
+                                    if (value.Items.Type is not null &&
+                                        !value.IsArrayReferenceTypeDeclared() &&
+                                        !value.HasItemsWithSimpleDataType() &&
+                                        !value.HasItemsWithFormatTypeBinary())
                                     {
                                         logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Schema05, $"Implicit object definition on property '{key}' in array type '{schema.Reference.ReferenceV3}' is not supported."));
                                     }
@@ -162,7 +167,6 @@ public static class OpenApiDocumentValidationHelper
         return logItems;
     }
 
-    [SuppressMessage("Critical Code Smell", "S3776:Cognitive Complexity of methods should not be too high", Justification = "OK.")]
     private static List<LogKeyValueItem> ValidateOperations(
         ApiOptionsValidation validationOptions,
         OpenApiPaths paths,
@@ -231,7 +235,7 @@ public static class OpenApiDocumentValidationHelper
             {
                 // Validate Response Schema
                 var responseModelSchema = operationValue.GetModelSchemaFromResponse();
-                if (responseModelSchema != null)
+                if (responseModelSchema is not null)
                 {
                     if (operationValue.IsOperationIdPluralized(operationKey))
                     {
@@ -293,7 +297,6 @@ public static class OpenApiDocumentValidationHelper
         return logItems;
     }
 
-    [SuppressMessage("Critical Code Smell", "S3776:Cognitive Complexity of methods should not be too high", Justification = "OK.")]
     private static List<LogKeyValueItem> ValidateOperationsParametersAndResponses(
         ApiOptionsValidation validationOptions,
         Dictionary<string, OpenApiPathItem>.ValueCollection paths)
@@ -323,7 +326,7 @@ public static class OpenApiDocumentValidationHelper
                 if (value.HasParametersOrRequestBody())
                 {
                     var schema = value.RequestBody?.Content.GetSchemaByFirstMediaType();
-                    if (schema != null &&
+                    if (schema is not null &&
                         string.IsNullOrEmpty(schema.GetModelName()) &&
                         !schema.IsFormatTypeBinary() &&
                         !schema.HasItemsWithFormatTypeBinary())
@@ -394,18 +397,22 @@ public static class OpenApiDocumentValidationHelper
         return logItems;
     }
 
-    private static bool IsModelOfTypeArray(OpenApiSchema schema, IDictionary<string, OpenApiSchema> modelSchemas)
+    private static bool IsModelOfTypeArray(
+        OpenApiSchema schema,
+        IDictionary<string, OpenApiSchema> modelSchemas)
     {
         var modelType = schema.GetModelType();
-        if (modelType == null && schema.Reference?.Id != null)
+        if (modelType is null &&
+            schema.Reference?.Id is not null)
         {
             var (key, value) = modelSchemas.FirstOrDefault(x => x.Key.Equals(schema.Reference.Id, StringComparison.OrdinalIgnoreCase));
-            if (key != null)
+            if (key is not null)
             {
-                return value.Type != null && value.Type.EndsWith(OpenApiDataTypeConstants.Array, StringComparison.OrdinalIgnoreCase);
+                return value.Type is not null && value.Type.EndsWith(OpenApiDataTypeConstants.Array, StringComparison.OrdinalIgnoreCase);
             }
         }
 
-        return modelType != null && modelType.EndsWith(OpenApiDataTypeConstants.Array, StringComparison.OrdinalIgnoreCase);
+        return modelType is not null &&
+               modelType.EndsWith(OpenApiDataTypeConstants.Array, StringComparison.OrdinalIgnoreCase);
     }
 }

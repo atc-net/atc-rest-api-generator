@@ -108,12 +108,12 @@ public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointContro
 
     public string ToCodeAsString()
     {
-        if (Code == null)
+        if (Code is null)
         {
             GenerateCode();
         }
 
-        if (Code == null)
+        if (Code is null)
         {
             return $"Syntax generate problem for endpoints-controller for: {FocusOnSegmentName}";
         }
@@ -216,7 +216,7 @@ public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointContro
         {
             foreach (var apiOperation in value.Operations)
             {
-                if (apiOperation.Value.Responses == null)
+                if (apiOperation.Value.Responses is null)
                 {
                     continue;
                 }

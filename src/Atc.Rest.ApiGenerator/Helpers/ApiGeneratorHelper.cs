@@ -15,7 +15,7 @@ public static class ApiGeneratorHelper
         var missingOperationSchemaMappings = new List<ApiOperationSchemaMap>();
         foreach (var map in operationSchemaMappings)
         {
-            if (sgContractModels.FirstOrDefault(x => x.ApiSchemaKey.Equals(map.SchemaKey, StringComparison.OrdinalIgnoreCase)) == null)
+            if (sgContractModels.FirstOrDefault(x => x.ApiSchemaKey.Equals(map.SchemaKey, StringComparison.OrdinalIgnoreCase)) is null)
             {
                 missingOperationSchemaMappings.Add(map);
             }

@@ -138,8 +138,8 @@ internal static class PropertyDeclarationSyntaxExtensions
         ArgumentNullException.ThrowIfNull(schema);
 
         if (schema.Type == OpenApiDataTypeConstants.String &&
-            schema.MinLength == null &&
-            schema.MaxLength != null)
+            schema.MinLength is null &&
+            schema.MaxLength is not null)
         {
             propertyDeclaration = propertyDeclaration.AddValidationAttribute(new StringLengthAttribute(schema.MaxLength.Value));
         }

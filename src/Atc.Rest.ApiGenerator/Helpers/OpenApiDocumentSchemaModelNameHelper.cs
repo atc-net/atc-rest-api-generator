@@ -7,7 +7,8 @@ public static class OpenApiDocumentSchemaModelNameHelper
         => modelName.Equals("Task", StringComparison.Ordinal) ||
            modelName.EndsWith("Task>", StringComparison.Ordinal);
 
-    public static string GetRawModelName(string modelName)
+    public static string GetRawModelName(
+        string modelName)
     {
         if (string.IsNullOrEmpty(modelName))
         {
@@ -30,7 +31,9 @@ public static class OpenApiDocumentSchemaModelNameHelper
         return s;
     }
 
-    public static string EnsureModelNameWithNamespaceIfNeeded(EndpointMethodMetadata endpointMethodMetadata, string modelName)
+    public static string EnsureModelNameWithNamespaceIfNeeded(
+        EndpointMethodMetadata endpointMethodMetadata,
+        string modelName)
     {
         ArgumentNullException.ThrowIfNull(endpointMethodMetadata);
 
@@ -100,7 +103,7 @@ public static class OpenApiDocumentSchemaModelNameHelper
         {
             foreach (var apiOperation in value.Operations)
             {
-                if (apiOperation.Value.Responses == null)
+                if (apiOperation.Value.Responses is null)
                 {
                     continue;
                 }
@@ -118,18 +121,20 @@ public static class OpenApiDocumentSchemaModelNameHelper
         return false;
     }
 
-    public static bool HasList(string typeName)
-    {
-        return !string.IsNullOrEmpty(typeName) &&
-               typeName.Contains(Microsoft.OpenApi.Models.NameConstants.List + "<", StringComparison.Ordinal);
-    }
+    public static bool HasList(
+        string typeName)
+        => !string.IsNullOrEmpty(typeName) &&
+           typeName.Contains(Microsoft.OpenApi.Models.NameConstants.List + "<", StringComparison.Ordinal);
 
-    private static bool HasNamespaceRawModelName(string namespacePart, string rawModelName)
+    private static bool HasNamespaceRawModelName(
+        string namespacePart,
+        string rawModelName)
         => namespacePart
             .Split('.', StringSplitOptions.RemoveEmptyEntries)
             .Any(s => s.Equals(rawModelName, StringComparison.Ordinal));
 
-    private static bool IsReservedTypeName(string modelName)
+    private static bool IsReservedTypeName(
+        string modelName)
     {
         if ("endpoint".Equals(modelName, StringComparison.OrdinalIgnoreCase))
         {

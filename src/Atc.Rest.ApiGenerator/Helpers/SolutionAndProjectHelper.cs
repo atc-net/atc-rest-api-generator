@@ -27,7 +27,7 @@ public static class SolutionAndProjectHelper
         sb.AppendLine();
         sb.AppendLine(2, "<PropertyGroup>");
         sb.AppendLine(4, $"<TargetFramework>{targetFramework}</TargetFramework>");
-        sb.AppendLine(4, "<LangVersion>9.0</LangVersion>"); //// TODO FIx after upgrading everything to .NET 6/C# 10
+        sb.AppendLine(4, "<LangVersion>10.0</LangVersion>");
         if (!createAsTestProject)
         {
             sb.AppendLine(4, "<IsPackable>false</IsPackable>");
@@ -60,7 +60,7 @@ public static class SolutionAndProjectHelper
             }
         }
 
-        if (frameworkReferences != null && frameworkReferences.Count > 0)
+        if (frameworkReferences is not null && frameworkReferences.Count > 0)
         {
             sb.AppendLine(2, "<ItemGroup>");
             foreach (var frameworkReference in frameworkReferences.OrderBy(x => x))
@@ -72,12 +72,12 @@ public static class SolutionAndProjectHelper
             sb.AppendLine();
         }
 
-        if (packageReferences != null && packageReferences.Count > 0)
+        if (packageReferences is not null && packageReferences.Count > 0)
         {
             sb.AppendLine(2, "<ItemGroup>");
             foreach (var (package, version, extra) in packageReferences.OrderBy(x => x.Item1))
             {
-                if (extra == null)
+                if (extra is null)
                 {
                     sb.AppendLine(4, $"<PackageReference Include=\"{package}\" Version=\"{version}\" />");
                 }
@@ -98,7 +98,7 @@ public static class SolutionAndProjectHelper
             sb.AppendLine();
         }
 
-        if (projectReferences != null && projectReferences.Count > 0)
+        if (projectReferences is not null && projectReferences.Count > 0)
         {
             sb.AppendLine(2, "<ItemGroup>");
             foreach (var projectReference in projectReferences.OrderBy(x => x.Name))
@@ -150,14 +150,16 @@ public static class SolutionAndProjectHelper
                 codeInspectionExcludeProjects.Add(idApiGenerated);
             }
 
-            if (hostTestPath != null && TryGetGuidByProject(lines, "Api.Tests.csproj", out var idHostTest))
+            if (hostTestPath is not null &&
+                TryGetGuidByProject(lines, "Api.Tests.csproj", out var idHostTest))
             {
                 var hostTestDirectory = new DirectoryInfo(hostTestPath.FullName + ".Tests");
                 var generatedDirectories = hostTestDirectory.GetDirectories("Generated", SearchOption.AllDirectories).ToList();
                 codeInspectionExcludeProjectsFolders.Add(new Tuple<Guid, DirectoryInfo, List<DirectoryInfo>>(idHostTest, hostTestDirectory, generatedDirectories));
             }
 
-            if (domainTestPath != null && TryGetGuidByProject(lines, "Domain.Tests.csproj", out var idDomainTest))
+            if (domainTestPath is not null &&
+                TryGetGuidByProject(lines, "Domain.Tests.csproj", out var idDomainTest))
             {
                 var domainTestDirectory = new DirectoryInfo(domainTestPath.FullName + ".Tests");
                 var generatedDirectories = domainTestDirectory.GetDirectories("Generated", SearchOption.AllDirectories).ToList();
@@ -168,14 +170,14 @@ public static class SolutionAndProjectHelper
         {
             codeInspectionExcludeProjects.Add(apiId);
 
-            if (hostTestPath != null)
+            if (hostTestPath is not null)
             {
                 var hostTestDirectory = new DirectoryInfo(hostTestPath.FullName + ".Tests");
                 var generatedDirectories = hostTestDirectory.GetDirectories("Generated", SearchOption.AllDirectories).ToList();
                 codeInspectionExcludeProjectsFolders.Add(new Tuple<Guid, DirectoryInfo, List<DirectoryInfo>>(hostTestId, hostTestDirectory, generatedDirectories));
             }
 
-            if (domainTestPath != null)
+            if (domainTestPath is not null)
             {
                 var domainTestDirectory = new DirectoryInfo(domainTestPath.FullName + ".Tests");
                 var generatedDirectories = domainTestDirectory.GetDirectories("Generated", SearchOption.AllDirectories).ToList();
@@ -274,9 +276,9 @@ public static class SolutionAndProjectHelper
         var sb = new StringBuilder();
         sb.AppendLine();
         sb.AppendLine("Microsoft Visual Studio Solution File, Format Version 12.00");
-        sb.AppendLine("# Visual Studio Version 16");
-        sb.AppendLine("VisualStudioVersion = 16.0.30523.141");
-        sb.AppendLine("MinimumVisualStudioVersion = 10.0.40219.1");
+        sb.AppendLine("# Visual Studio Version 17");
+        sb.AppendLine("VisualStudioVersion = 17.0.31903.59");
+        sb.AppendLine("MinimumVisualStudioVersion = 15.0.26124.0");
         sb.AppendLine($"Project(\"{{9A19103F-16F7-4668-BE54-9A1E7A4F7556}}\") = \"{projectName}.Api.Generated\", \"{apiPrefixPath}{projectName}.Api.Generated\\{projectName}.Api.Generated.csproj\", \"{{{apiId}}}\"");
         sb.AppendLine("EndProject");
         sb.AppendLine($"Project(\"{{9A19103F-16F7-4668-BE54-9A1E7A4F7556}}\") = \"{projectName}.Domain\", \"{domainPrefixPath}{projectName}.Domain\\{projectName}.Domain.csproj\", \"{{{domainId}}}\"");
@@ -284,7 +286,7 @@ public static class SolutionAndProjectHelper
         sb.AppendLine($"Project(\"{{9A19103F-16F7-4668-BE54-9A1E7A4F7556}}\") = \"{projectName}.Api\", \"{hostPrefixPath}{projectName}.Api\\{projectName}.Api.csproj\", \"{{{hostId}}}\"");
         sb.AppendLine("EndProject");
 
-        if (domainTestPath != null)
+        if (domainTestPath is not null)
         {
             var domainTestPrefixPath = GetProjectReference(slnFile, domainTestPath, projectName);
             sb.AppendLine($"Project(\"{{9A19103F-16F7-4668-BE54-9A1E7A4F7556}}\") = \"{projectName}.Domain.Tests\", \"{domainTestPrefixPath}{projectName}.Domain.Tests\\{projectName}.Domain.Tests.csproj\", \"{{{domainTestId}}}\"");
@@ -310,7 +312,7 @@ public static class SolutionAndProjectHelper
         sb.AppendLine($"\t\t{{{hostId}}}.Release|Any CPU.ActiveCfg = Release|Any CPU");
         sb.AppendLine($"\t\t{{{hostId}}}.Release|Any CPU.Build.0 = Release|Any CPU");
 
-        if (hostTestPath != null)
+        if (hostTestPath is not null)
         {
             sb.AppendLine($"\t\t{{{hostTestId}}}.Debug|Any CPU.ActiveCfg = Debug|Any CPU");
             sb.AppendLine($"\t\t{{{hostTestId}}}.Debug|Any CPU.Build.0 = Debug|Any CPU");
@@ -318,7 +320,7 @@ public static class SolutionAndProjectHelper
             sb.AppendLine($"\t\t{{{hostTestId}}}.Release|Any CPU.Build.0 = Release|Any CPU");
         }
 
-        if (domainTestPath != null)
+        if (domainTestPath is not null)
         {
             sb.AppendLine($"\t\t{{{domainTestId}}}.Debug|Any CPU.ActiveCfg = Debug|Any CPU");
             sb.AppendLine($"\t\t{{{domainTestId}}}.Debug|Any CPU.Build.0 = Debug|Any CPU");
@@ -358,7 +360,7 @@ public static class SolutionAndProjectHelper
             }
         }
 
-        foreach (string skipPath in codeInspectionExcludeProjects.Select(ReSharperFormatGuid))
+        foreach (var skipPath in codeInspectionExcludeProjects.Select(ReSharperFormatGuid))
         {
             sb.AppendLine($"\t<s:String x:Key=\"/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/={skipPath}/@EntryIndexedValue\">ExplicitlyExcluded</s:String>");
         }
@@ -432,7 +434,9 @@ public static class SolutionAndProjectHelper
         return sb.ToString();
     }
 
-    private static string GetProjectReference(FileInfo source, FileInfo destination)
+    private static string GetProjectReference(
+        FileInfo source,
+        FileInfo destination)
     {
         var sa1 = source.FullName.Split(Path.DirectorySeparatorChar);
         var sa2 = destination.FullName.Split(Path.DirectorySeparatorChar);
@@ -534,10 +538,12 @@ public static class SolutionAndProjectHelper
         element.Add(nullabilityRoot);
     }
 
-    public static bool GetBoolFromNullableString(string value)
+    public static bool GetBoolFromNullableString(
+        string value)
         => value == "enable";
 
-    public static string GetNullableStringFromBool(bool value)
+    public static string GetNullableStringFromBool(
+        bool value)
         => value
             ? "enable"
             : "disable";

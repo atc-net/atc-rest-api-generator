@@ -25,12 +25,12 @@ public class ServerHostGenerator
         }
 
         logItems.AddRange(ScaffoldSrc());
-        if (projectOptions.PathForTestGenerate != null)
+        if (projectOptions.PathForTestGenerate is not null)
         {
             logItems.AddRange(ScaffoldTest());
         }
 
-        if (projectOptions.PathForTestGenerate != null)
+        if (projectOptions.PathForTestGenerate is not null)
         {
             logItems.AddRange(GenerateTestEndpoints());
         }
@@ -70,12 +70,12 @@ public class ServerHostGenerator
         else
         {
             var projectReferences = new List<FileInfo>();
-            if (projectOptions.ApiProjectSrcCsProj != null)
+            if (projectOptions.ApiProjectSrcCsProj is not null)
             {
                 projectReferences.Add(projectOptions.ApiProjectSrcCsProj);
             }
 
-            if (projectOptions.DomainProjectSrcCsProj != null)
+            if (projectOptions.DomainProjectSrcCsProj is not null)
             {
                 projectReferences.Add(projectOptions.DomainProjectSrcCsProj);
             }
@@ -894,7 +894,7 @@ public class ServerHostGenerator
     {
         var logItems = new List<LogKeyValueItem>();
 
-        if (projectOptions.PathForTestGenerate == null || projectOptions.ProjectTestCsProj == null)
+        if (projectOptions.PathForTestGenerate is null || projectOptions.ProjectTestCsProj is null)
         {
             return logItems;
         }
@@ -911,13 +911,13 @@ public class ServerHostGenerator
             }
 
             var projectReferences = new List<FileInfo>();
-            if (projectOptions.ApiProjectSrcCsProj != null)
+            if (projectOptions.ApiProjectSrcCsProj is not null)
             {
                 projectReferences.Add(projectOptions.ProjectSrcCsProj);
                 projectReferences.Add(projectOptions.ApiProjectSrcCsProj);
             }
 
-            if (projectOptions.DomainProjectSrcCsProj != null)
+            if (projectOptions.DomainProjectSrcCsProj is not null)
             {
                 projectReferences.Add(projectOptions.DomainProjectSrcCsProj);
             }

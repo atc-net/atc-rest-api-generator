@@ -2,7 +2,12 @@ namespace Atc.Rest.ApiGenerator.Models;
 
 public sealed class ApiOperationSchemaMap
 {
-    public ApiOperationSchemaMap(string schemaKey, SchemaMapLocatedAreaType locatedArea, string path, OperationType operationType, string? parentSchemaKey)
+    public ApiOperationSchemaMap(
+        string schemaKey,
+        SchemaMapLocatedAreaType locatedArea,
+        string path,
+        OperationType operationType,
+        string? parentSchemaKey)
     {
         this.SchemaKey = schemaKey;
         this.LocatedArea = locatedArea;
@@ -28,17 +33,17 @@ public sealed class ApiOperationSchemaMap
     public override string ToString()
         => $"{nameof(SchemaKey)}: {SchemaKey}, {nameof(LocatedArea)}: {LocatedArea}, {nameof(SegmentName)}: {SegmentName}, {nameof(Path)}: {Path}, {nameof(OperationType)}: {OperationType}, {nameof(ParentSchemaKey)}: {ParentSchemaKey}";
 
-    private bool Equals(ApiOperationSchemaMap other)
-    {
-        return SchemaKey == other.SchemaKey &&
-               LocatedArea == other.LocatedArea &&
-               SegmentName == other.SegmentName &&
-               Path == other.Path &&
-               OperationType == other.OperationType &&
-               ParentSchemaKey == other.ParentSchemaKey;
-    }
+    private bool Equals(
+        ApiOperationSchemaMap other)
+        => SchemaKey == other.SchemaKey &&
+           LocatedArea == other.LocatedArea &&
+           SegmentName == other.SegmentName &&
+           Path == other.Path &&
+           OperationType == other.OperationType &&
+           ParentSchemaKey == other.ParentSchemaKey;
 
-    public override bool Equals(object? obj)
+    public override bool Equals(
+        object? obj)
         => !ReferenceEquals(null, obj) &&
            (ReferenceEquals(this, obj) || (obj.GetType() == this.GetType() && Equals((ApiOperationSchemaMap)obj)));
 

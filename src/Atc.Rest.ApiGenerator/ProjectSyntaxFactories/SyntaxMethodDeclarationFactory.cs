@@ -4,17 +4,13 @@ namespace Atc.Rest.ApiGenerator.ProjectSyntaxFactories;
 
 internal static class SyntaxMethodDeclarationFactory
 {
-    public static MethodDeclarationSyntax CreateInterfaceMethod(string parameterTypeName, string resultTypeName, bool hasParameters)
+    public static MethodDeclarationSyntax CreateInterfaceMethod(
+        string parameterTypeName,
+        string resultTypeName,
+        bool hasParameters)
     {
-        if (parameterTypeName == null)
-        {
-            throw new ArgumentNullException(nameof(parameterTypeName));
-        }
-
-        if (resultTypeName == null)
-        {
-            throw new ArgumentNullException(nameof(resultTypeName));
-        }
+        ArgumentNullException.ThrowIfNull(parameterTypeName);
+        ArgumentNullException.ThrowIfNull(resultTypeName);
 
         var arguments = hasParameters
             ? new SyntaxNodeOrToken[]
@@ -40,12 +36,10 @@ internal static class SyntaxMethodDeclarationFactory
             .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
     }
 
-    public static MemberDeclarationSyntax? CreateToStringMethod(IDictionary<string, OpenApiSchema> apiSchemaProperties)
+    public static MemberDeclarationSyntax? CreateToStringMethod(
+        IDictionary<string, OpenApiSchema> apiSchemaProperties)
     {
-        if (apiSchemaProperties == null)
-        {
-            throw new ArgumentNullException(nameof(apiSchemaProperties));
-        }
+        ArgumentNullException.ThrowIfNull(apiSchemaProperties);
 
         var content = new List<InterpolatedStringContentSyntax>();
         if (apiSchemaProperties.Count > 0)
@@ -109,7 +103,7 @@ internal static class SyntaxMethodDeclarationFactory
         OpenApiRequestBody? apiRequestBody)
     {
         var dictionary = new Dictionary<string, OpenApiSchema>();
-        if (globalPathParameters != null)
+        if (globalPathParameters is not null)
         {
             foreach (var pathParameter in globalPathParameters)
             {
@@ -117,7 +111,7 @@ internal static class SyntaxMethodDeclarationFactory
             }
         }
 
-        if (apiParameters != null)
+        if (apiParameters is not null)
         {
             foreach (var apiParameter in apiParameters)
             {
@@ -126,7 +120,7 @@ internal static class SyntaxMethodDeclarationFactory
         }
 
         var schema = apiRequestBody?.Content?.GetSchemaByFirstMediaType();
-        if (schema != null && !dictionary.ContainsKey(NameConstants.Request))
+        if (schema is not null && !dictionary.ContainsKey(NameConstants.Request))
         {
             dictionary.Add(NameConstants.Request, schema);
         }

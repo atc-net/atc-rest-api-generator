@@ -26,8 +26,7 @@ public class SyntaxGeneratorContractModels : ISyntaxGeneratorContractModels
         var list = new List<SyntaxGeneratorContractModel>();
 
         var apiOperationSchemaMaps = OperationSchemaMappings
-            .Where(x => (x.LocatedArea == SchemaMapLocatedAreaType.Response ||
-                         x.LocatedArea == SchemaMapLocatedAreaType.RequestBody) &&
+            .Where(x => x.LocatedArea is SchemaMapLocatedAreaType.Response or SchemaMapLocatedAreaType.RequestBody &&
                         x.SegmentName.Equals(FocusOnSegmentName, StringComparison.OrdinalIgnoreCase))
             .ToList();
 

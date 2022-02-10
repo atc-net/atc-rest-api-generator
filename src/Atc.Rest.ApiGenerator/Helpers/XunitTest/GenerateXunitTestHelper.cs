@@ -213,7 +213,7 @@ public static class GenerateXunitTestHelper
         foreach (var schemaProperty in schema.Properties)
         {
             var trailingCharForProperty = GenerateXunitTestPartsHelper.GetTrailingCharForProperty(asJsonBody, schemaProperty, schema.Properties);
-            var useForBadRequest = badPropertySchema != null &&
+            var useForBadRequest = badPropertySchema is not null &&
                                    schemaProperty.Key.Equals(badPropertySchema.Value.Key, StringComparison.Ordinal);
 
             var dataType = schemaProperty.Value.GetDataType();
@@ -456,7 +456,7 @@ public static class GenerateXunitTestHelper
 
         if (asJsonBody)
         {
-            var useForBadRequest = badPropertySchema != null &&
+            var useForBadRequest = badPropertySchema is not null &&
                                    schemaProperty.Key.Equals(badPropertySchema.Value.Key, StringComparison.Ordinal);
 
             if (useForBadRequest)

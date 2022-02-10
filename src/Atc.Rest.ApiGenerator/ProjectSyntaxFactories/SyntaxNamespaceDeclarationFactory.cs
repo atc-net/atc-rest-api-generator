@@ -2,7 +2,8 @@ namespace Atc.Rest.ApiGenerator.ProjectSyntaxFactories;
 
 internal static class SyntaxNamespaceDeclarationFactory
 {
-    public static NamespaceDeclarationSyntax Create(string fullNamespace)
+    public static NamespaceDeclarationSyntax Create(
+        string fullNamespace)
     {
         ArgumentNullException.ThrowIfNull(fullNamespace);
 

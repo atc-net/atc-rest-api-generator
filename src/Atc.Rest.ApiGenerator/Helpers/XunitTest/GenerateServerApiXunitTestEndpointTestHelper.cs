@@ -336,7 +336,7 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
         }
 
         var schema = endpointMethodMetadata.ContractParameter?.ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
-        if (schema == null)
+        if (schema is null)
         {
             return;
         }
@@ -458,7 +458,7 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
 
         if (testExpectedHttpStatusCode == HttpStatusCode.OK &&
             !string.IsNullOrEmpty(contractReturnTypeName.FullModelName) &&
-            contractReturnTypeName.Schema != null &&
+            contractReturnTypeName.Schema is not null &&
             !contractReturnTypeName.Schema.IsSimpleDataType() &&
             !(endpointMethodMetadata.IsContractParameterRequestBodyUsedAsMultipartOctetStreamData() || endpointMethodMetadata.IsContractParameterRequestBodyUsedAsMultipartFormData()))
         {
@@ -560,7 +560,7 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
 
         if (modelSchema.IsTypeArray())
         {
-            sb.AppendLine(12, "if (request != null)");
+            sb.AppendLine(12, "if (request is not null)");
             sb.AppendLine(12, "{");
             sb.AppendLine(16, "foreach (var item in request)");
             sb.AppendLine(16, "{");
@@ -577,7 +577,7 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
                 var propertyName = schemaProperty.Key.EnsureFirstCharacterToUpper();
                 if (schemaProperty.Value.IsFormatTypeBinary())
                 {
-                    sb.AppendLine(12, $"if (request.{propertyName} != null)");
+                    sb.AppendLine(12, $"if (request.{propertyName} is not null)");
                     sb.AppendLine(12, "{");
                     sb.AppendLine(16, $"var bytesContent = new ByteArrayContent(await request.{propertyName}.GetBytes());");
 
@@ -592,7 +592,7 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
                 }
                 else if (schemaProperty.Value.HasItemsWithFormatTypeBinary())
                 {
-                    sb.AppendLine(12, $"if (request.{propertyName} != null)");
+                    sb.AppendLine(12, $"if (request.{propertyName} is not null)");
                     sb.AppendLine(12, "{");
                     sb.AppendLine(16, $"foreach (var item in request.{propertyName})");
                     sb.AppendLine(16, "{");
@@ -604,7 +604,7 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
                 }
                 else if (schemaProperty.Value.IsTypeArray())
                 {
-                    sb.AppendLine(12, $"if (request.{propertyName} != null && request.{propertyName}.Count > 0)");
+                    sb.AppendLine(12, $"if (request.{propertyName} is not null && request.{propertyName}.Count > 0)");
                     sb.AppendLine(12, "{");
                     sb.AppendLine(16, $"foreach (var item in request.{propertyName})");
                     sb.AppendLine(16, "{");
@@ -635,7 +635,7 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
         sb.AppendLine(8, "{");
         sb.AppendLine(12, "var formDataContent = new MultipartFormDataContent();");
 
-        sb.AppendLine(12, "if (request != null)");
+        sb.AppendLine(12, "if (request is not null)");
         sb.AppendLine(12, "{");
         sb.AppendLine(16, "var bytesContent = new ByteArrayContent(await request.GetBytes());");
         sb.AppendLine(16, "formDataContent.Add(bytesContent, \"Request\", request.FileName);");
@@ -653,7 +653,7 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
         HttpStatusCode httpStatusCode)
     {
         var schema = endpointMethodMetadata.ContractParameter?.ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
-        if (schema == null)
+        if (schema is null)
         {
             return false;
         }
@@ -677,7 +677,7 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
         KeyValuePair<string, OpenApiSchema> badPropertySchema)
     {
         var schema = endpointMethodMetadata.ContractParameter?.ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
-        if (schema == null)
+        if (schema is null)
         {
             return;
         }
@@ -729,7 +729,7 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
         bool useForBadRequest)
     {
         var route = endpointMethodMetadata.Route;
-        if (endpointMethodMetadata.ContractParameter == null)
+        if (endpointMethodMetadata.ContractParameter is null)
         {
             return route;
         }
@@ -791,7 +791,7 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
         bool useForBadRequest)
     {
         var route = endpointMethodMetadata.Route;
-        if (endpointMethodMetadata.ContractParameter == null)
+        if (endpointMethodMetadata.ContractParameter is null)
         {
             return route;
         }
@@ -799,7 +799,7 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
         var routeParameters = endpointMethodMetadata.GetRouteParameters();
         var relativeRefPath = RenderRelativeRefPath(route, routeParameters, routeParameters, endpointMethodMetadata.ComponentsSchemas, useForBadRequest: false);
 
-        if (queryParameters == null || queryParameters.Count == 0)
+        if (queryParameters is null || queryParameters.Count == 0)
         {
             return relativeRefPath;
         }
@@ -828,7 +828,7 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
                 .Replace("}", string.Empty, StringComparison.Ordinal);
 
             var fromRoute = badRouteParameters.Find(x => x.Name.Equals(pn, StringComparison.OrdinalIgnoreCase));
-            if (fromRoute == null)
+            if (fromRoute is null)
             {
                 fromRoute = allRouteParameters.Find(x => x.Name.Equals(pn, StringComparison.OrdinalIgnoreCase));
                 sa[i] = PropertyValueGenerator(fromRoute, componentsSchemas, useForBadRequest: false, customValue: null);
@@ -893,7 +893,7 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
     {
         var name = parameter.Name.EnsureFirstCharacterToUpper();
         var schemaForDataType = componentsSchemas.FirstOrDefault(x => x.Key.Equals(parameter.Schema.GetDataType(), StringComparison.OrdinalIgnoreCase));
-        if (schemaForDataType.Key != null && schemaForDataType.Value.IsSchemaEnumOrPropertyEnum())
+        if (schemaForDataType.Key is not null && schemaForDataType.Value.IsSchemaEnumOrPropertyEnum())
         {
             return ValueTypeTestPropertiesHelper.CreateValueEnum(name, schemaForDataType, useForBadRequest);
         }

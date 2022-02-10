@@ -5,12 +5,12 @@ public static class NugetPackageReferenceHelper
 {
     public static List<Tuple<string, string, string?>> CreateForHostProject(bool useRestExtended)
     {
-        string atcVersion = GenerateHelper.GetAtcVersionAsString3();
+        var atcVersion = GenerateHelper.GetAtcVersionAsString3();
 
         var packageReference = new List<Tuple<string, string, string?>>
         {
-            new Tuple<string, string, string?>("Atc", atcVersion, null),
-            new Tuple<string, string, string?>("Atc.Rest", atcVersion, null),
+            new ("Atc", atcVersion, null),
+            new ("Atc.Rest", atcVersion, null),
         };
 
         if (useRestExtended)
@@ -29,12 +29,12 @@ public static class NugetPackageReferenceHelper
 
     public static List<Tuple<string, string, string?>> CreateForApiProject()
     {
-        string atcVersion = GenerateHelper.GetAtcVersionAsString3();
+        var atcVersion = GenerateHelper.GetAtcVersionAsString3();
 
         var packageReference = new List<Tuple<string, string, string?>>
         {
-            new Tuple<string, string, string?>("Atc", atcVersion, null),
-            new Tuple<string, string, string?>("Atc.Rest", atcVersion, null),
+            new ("Atc", atcVersion, null),
+            new ("Atc.Rest", atcVersion, null),
         };
 
         return packageReference;
@@ -42,12 +42,12 @@ public static class NugetPackageReferenceHelper
 
     public static List<Tuple<string, string, string?>> CreateForClientApiProject()
     {
-        string atcVersion = GenerateHelper.GetAtcVersionAsString3();
+        var atcVersion = GenerateHelper.GetAtcVersionAsString3();
 
         var packageReference = new List<Tuple<string, string, string?>>
         {
-            new Tuple<string, string, string?>("Atc", atcVersion, null),
-            new Tuple<string, string, string?>("Atc.Rest.Client", "1.0.31", null),
+            new ("Atc", atcVersion, null),
+            new ("Atc.Rest.Client", "1.0.31", null),
         };
 
         return packageReference;
@@ -57,10 +57,10 @@ public static class NugetPackageReferenceHelper
     {
         var packageReference = new List<Tuple<string, string, string?>>
         {
-            new Tuple<string, string, string?>("AutoFixture", "4.17.0", null),
-            new Tuple<string, string, string?>("AutoFixture.AutoNSubstitute", "4.17.0", null),
-            new Tuple<string, string, string?>("AutoFixture.Xunit2", "4.17.0", null),
-            new Tuple<string, string, string?>("FluentAssertions", "6.1.0", null),
+            new ("AutoFixture", "4.17.0", null),
+            new ("AutoFixture.AutoNSubstitute", "4.17.0", null),
+            new ("AutoFixture.Xunit2", "4.17.0", null),
+            new ("FluentAssertions", "6.1.0", null),
         };
 
         if (useMvc)
@@ -70,10 +70,10 @@ public static class NugetPackageReferenceHelper
 
         packageReference.AddRange(new List<Tuple<string, string, string?>>
         {
-            new Tuple<string, string, string?>("Microsoft.NET.Test.Sdk", "16.10.0", null),
-            new Tuple<string, string, string?>("NSubstitute", "4.2.2", null),
-            new Tuple<string, string, string?>("xunit", "2.4.1", null),
-            new Tuple<string, string, string?>("xunit.runner.visualstudio", "2.4.3", "<PrivateAssets>all</PrivateAssets>\n<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>"),
+            new ("Microsoft.NET.Test.Sdk", "16.10.0", null),
+            new ("NSubstitute", "4.2.2", null),
+            new ("xunit", "2.4.1", null),
+            new ("xunit.runner.visualstudio", "2.4.3", "<PrivateAssets>all</PrivateAssets>\n<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>"),
         });
 
         return packageReference;

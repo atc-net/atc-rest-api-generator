@@ -2,12 +2,14 @@ namespace Atc.Rest.ApiGenerator.Helpers;
 
 public static class LogItemHelper
 {
-    public static LogKeyValueItem Create(LogCategoryType logCategoryType, string ruleName, string description)
-    {
-        return LogItemFactory.Create(logCategoryType, ruleName, ExtractAreaFromRuleName(ruleName), description);
-    }
+    public static LogKeyValueItem Create(
+        LogCategoryType logCategoryType,
+        string ruleName,
+        string description)
+        => LogItemFactory.Create(logCategoryType, ruleName, ExtractAreaFromRuleName(ruleName), description);
 
-    private static string ExtractAreaFromRuleName(string ruleName)
+    private static string ExtractAreaFromRuleName(
+        string ruleName)
     {
         var result = "#";
         var fieldInfos = typeof(ValidationRuleNameConstants).GetFields();
@@ -15,8 +17,8 @@ public static class LogItemHelper
         foreach (var fieldInfo in fieldInfos)
         {
             var o = fieldInfo.GetValue(null);
-            string fieldValue = string.Empty;
-            if (o != null)
+            var fieldValue = string.Empty;
+            if (o is not null)
             {
                 fieldValue = o.ToString();
             }
@@ -25,7 +27,7 @@ public static class LogItemHelper
         }
 
         var tuple = list.FirstOrDefault(x => x.Item2 == ruleName);
-        if (tuple == null || string.IsNullOrEmpty(tuple.Item2))
+        if (tuple is null || string.IsNullOrEmpty(tuple.Item2))
         {
             return result;
         }

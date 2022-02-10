@@ -70,12 +70,12 @@ public class SyntaxGeneratorContractModel : ISyntaxSchemaCodeGenerator
 
     public string ToCodeAsString()
     {
-        if (Code == null)
+        if (Code is null)
         {
             GenerateCode();
         }
 
-        if (Code == null)
+        if (Code is null)
         {
             return $"Syntax generate problem for contract-model for schema: {ApiSchemaKey}";
         }
@@ -112,22 +112,19 @@ public class SyntaxGeneratorContractModel : ISyntaxSchemaCodeGenerator
         return TextFileHelper.Save(file, ToCodeAsString());
     }
 
-    public void ToFile(FileInfo file)
+    public void ToFile(
+        FileInfo file)
     {
-        if (file == null)
-        {
-            throw new ArgumentNullException(nameof(file));
-        }
+        ArgumentNullException.ThrowIfNull(file);
 
         TextFileHelper.Save(file, ToCodeAsString());
     }
 
     public override string ToString()
-    {
-        return $"{nameof(ApiSchemaKey)}: {ApiSchemaKey}, SegmentName: {FocusOnSegmentName}, IsShared: {IsSharedContract}, {nameof(IsEnum)}: {IsEnum}";
-    }
+        => $"{nameof(ApiSchemaKey)}: {ApiSchemaKey}, SegmentName: {FocusOnSegmentName}, IsShared: {IsSharedContract}, {nameof(IsEnum)}: {IsEnum}";
 
-    private NamespaceDeclarationSyntax GenerateCodeForEnum(ref CompilationUnitSyntax compilationUnit)
+    private NamespaceDeclarationSyntax GenerateCodeForEnum(
+        ref CompilationUnitSyntax compilationUnit)
     {
         IsEnum = true;
 
@@ -158,8 +155,8 @@ public class SyntaxGeneratorContractModel : ISyntaxSchemaCodeGenerator
         return @namespace;
     }
 
-    [SuppressMessage("Maintainability", "CA1508:Avoid dead conditional code", Justification = "Bug in CA1508.")]
-    private NamespaceDeclarationSyntax GenerateCodeForOtherThanEnum(ref CompilationUnitSyntax? compilationUnit)
+    private NamespaceDeclarationSyntax GenerateCodeForOtherThanEnum(
+        ref CompilationUnitSyntax? compilationUnit)
     {
         // Create a namespace
         var @namespace = IsSharedContract
@@ -174,7 +171,7 @@ public class SyntaxGeneratorContractModel : ISyntaxSchemaCodeGenerator
         var hasAnyPropertiesAsArrayWithFormatTypeBinary = ApiSchema.HasAnyPropertiesAsArrayWithFormatTypeBinary();
 
         // Create class-properties and add to class
-        if (ApiSchema.Properties != null)
+        if (ApiSchema.Properties is not null)
         {
             if (ApiSchema.IsTypeArray() || hasAnyPropertiesAsArrayWithFormatTypeBinary)
             {
@@ -191,7 +188,7 @@ public class SyntaxGeneratorContractModel : ISyntaxSchemaCodeGenerator
                     ApiSchema.Items.Title = ApiSchemaKey;
                 }
 
-                var title = key != null
+                var title = key is not null
                     ? $"{ApiSchema.Title.EnsureFirstCharacterToUpperAndSingular()}List"
                     : ApiSchema.Title.EnsureFirstCharacterToUpper();
 
@@ -219,7 +216,7 @@ public class SyntaxGeneratorContractModel : ISyntaxSchemaCodeGenerator
             }
 
             var methodDeclaration = SyntaxMethodDeclarationFactory.CreateToStringMethod(ApiSchema.Properties);
-            if (methodDeclaration != null)
+            if (methodDeclaration is not null)
             {
                 methodDeclaration = methodDeclaration.WithLeadingTrivia(SyntaxDocumentationFactory.CreateForOverrideToString());
                 classDeclaration = classDeclaration.AddMembers(methodDeclaration);

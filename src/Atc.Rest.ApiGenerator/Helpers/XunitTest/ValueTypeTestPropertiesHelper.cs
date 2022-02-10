@@ -3,11 +3,14 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest;
 
 public static class ValueTypeTestPropertiesHelper
 {
-    public static string CreateValueEnum(string name, KeyValuePair<string, OpenApiSchema> schemaForEnum, bool useForBadRequest)
+    public static string CreateValueEnum(
+        string name,
+        KeyValuePair<string, OpenApiSchema> schemaForEnum,
+        bool useForBadRequest)
     {
         var enumSchema = schemaForEnum.Value.GetEnumSchema();
         var enumValues = enumSchema.Item2.Enum.ToArray();
-        if (!(enumValues.Last() is OpenApiString openApiString))
+        if (enumValues.Last() is not OpenApiString openApiString)
         {
             throw new NotSupportedException($"PropertyValueGeneratorEnum: {name}");
         }
@@ -111,7 +114,9 @@ public static class ValueTypeTestPropertiesHelper
             : $"2020-10-12T21:22:{sec:D2}";
     }
 
-    public static string CreateValueGuid(bool useForBadRequest, int itemNumber = 0)
+    public static string CreateValueGuid(
+        bool useForBadRequest,
+        int itemNumber = 0)
     {
         var numberPart = itemNumber.ToString(GlobalizationConstants.EnglishCultureInfo).PadLeft(4, '0');
         return useForBadRequest
@@ -122,11 +127,9 @@ public static class ValueTypeTestPropertiesHelper
     [SuppressMessage("Design", "CA1055:URI-like return values should not be strings", Justification = "OK.")]
     public static string CreateValueUri(
         bool useForBadRequest)
-    {
-        return useForBadRequest
+        => useForBadRequest
             ? "http_www_dr_dk"
             : "http://www.dr.dk";
-    }
 
     public static string CreateValueEmail(
         bool useForBadRequest,
@@ -188,7 +191,8 @@ public static class ValueTypeTestPropertiesHelper
             : customValue ?? "27";
     }
 
-    private static string CreateNumberInt(OpenApiSchema schema)
+    private static string CreateNumberInt(
+        OpenApiSchema schema)
     {
         int min;
         if (schema.Minimum.HasValue)

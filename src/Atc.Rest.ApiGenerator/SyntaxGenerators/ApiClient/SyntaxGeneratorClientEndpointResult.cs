@@ -85,12 +85,12 @@ public class SyntaxGeneratorClientEndpointResult : SyntaxGeneratorClientEndpoint
 
     public string ToCodeAsString()
     {
-        if (Code == null)
+        if (Code is null)
         {
             GenerateCode();
         }
 
-        if (Code == null)
+        if (Code is null)
         {
             return $"Syntax generate problem for client-endpointResult for apiOperation: {ApiOperation}";
         }
@@ -147,7 +147,8 @@ public class SyntaxGeneratorClientEndpointResult : SyntaxGeneratorClientEndpoint
             .Select(x => CreatePropertyForIsStatusCode(x.Item1))
             .ToArray();
 
-    private MemberDeclarationSyntax CreatePropertyForIsStatusCode(HttpStatusCode statusCode)
+    private MemberDeclarationSyntax CreatePropertyForIsStatusCode(
+        HttpStatusCode statusCode)
         => SyntaxFactory.PropertyDeclaration(
                 SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.BoolKeyword)),
                 SyntaxFactory.Identifier("Is" + statusCode.ToNormalizedString()))

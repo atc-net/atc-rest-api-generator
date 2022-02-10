@@ -79,12 +79,12 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
 
     public string ToCodeAsString()
     {
-        if (Code == null)
+        if (Code is null)
         {
             GenerateCode();
         }
 
-        if (Code == null)
+        if (Code is null)
         {
             return $"Syntax generate problem for contract-result for apiOperation: {ApiOperation}";
         }
@@ -131,7 +131,7 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
 
         // Add Implicit Operator
         var implicitOperator = CreateImplicitOperator(className, ApiOperation.Responses);
-        if (implicitOperator != null)
+        if (implicitOperator is not null)
         {
             result.Add(
                 implicitOperator
@@ -207,7 +207,8 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
                         {
                             if (string.IsNullOrEmpty(modelName))
                             {
-                                if (schema != null && (schema.IsSimpleDataType() || schema.IsTypeArrayOrPagination()))
+                                if (schema is not null &&
+                                    (schema.IsSimpleDataType() || schema.IsTypeArrayOrPagination()))
                                 {
                                     if (schema.IsSimpleDataType())
                                     {
@@ -242,7 +243,8 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
                         {
                             if (string.IsNullOrEmpty(modelName))
                             {
-                                if (schema != null && (schema.IsSimpleDataType() || schema.IsTypeArrayOrPagination()))
+                                if (schema is not null &&
+                                    (schema.IsSimpleDataType() || schema.IsTypeArrayOrPagination()))
                                 {
                                     if (schema.IsSimpleDataType())
                                     {
@@ -262,7 +264,8 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
                                         methodDeclaration = CreateTypeRequestObjectResult(className, httpStatusCode.ToNormalizedString(), "UnexpectedDataType");
                                     }
                                 }
-                                else if (schema != null && schema.IsTypeArray())
+                                else if (schema is not null &&
+                                         schema.IsTypeArray())
                                 {
                                     methodDeclaration = CreateTypeRequestObjectResult(
                                         className,
@@ -355,8 +358,7 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
     private static MethodDeclarationSyntax CreateStatusCodeResult(
         string className,
         HttpStatusCode httpStatusCode)
-    {
-        return SyntaxFactory.MethodDeclaration(SyntaxFactory.IdentifierName(className), SyntaxFactory.Identifier(httpStatusCode.ToNormalizedString()))
+        => SyntaxFactory.MethodDeclaration(SyntaxFactory.IdentifierName(className), SyntaxFactory.Identifier(httpStatusCode.ToNormalizedString()))
             .WithModifiers(SyntaxTokenListFactory.PublicStaticKeyword())
             .WithExpressionBody(
                 SyntaxFactory.ArrowExpressionClause(
@@ -372,14 +374,12 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
                                                         SyntaxFactory.Argument(
                                                             SyntaxMemberAccessExpressionFactory.Create($"Status{(int)httpStatusCode}{httpStatusCode}", nameof(StatusCodes))))))))))))
             .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken));
-    }
 
     private static MethodDeclarationSyntax CreateTypeRequest(
         string className,
         HttpStatusCode httpStatusCode,
         string typeRequestName)
-    {
-        return SyntaxFactory.MethodDeclaration(
+        => SyntaxFactory.MethodDeclaration(
                 SyntaxFactory.IdentifierName(className),
                 SyntaxFactory.Identifier(httpStatusCode.ToNormalizedString()))
             .WithModifiers(SyntaxTokenListFactory.PublicStaticKeyword())
@@ -395,15 +395,13 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
                                             .WithArgumentList(
                                                 SyntaxFactory.ArgumentList())))))))
             .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
-    }
 
     private static MethodDeclarationSyntax CreateTypeRequestWithMessage(
         string className,
         HttpStatusCode httpStatusCode,
         string typeRequestName,
         string parameterName = "message")
-    {
-        return SyntaxFactory.MethodDeclaration(
+        => SyntaxFactory.MethodDeclaration(
                 SyntaxFactory.IdentifierName(className),
                 SyntaxFactory.Identifier(httpStatusCode.ToNormalizedString()))
             .WithModifiers(SyntaxTokenListFactory.PublicStaticKeyword())
@@ -423,15 +421,13 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
                                             .WithArgumentList(
                                                 SyntaxArgumentListFactory.CreateWithOneItem(parameterName))))))))
             .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
-    }
 
     private static MethodDeclarationSyntax CreateTypeRequestWithMessageAllowNull(
         string className,
         HttpStatusCode httpStatusCode,
         string typeRequestName,
         string parameterName = "message")
-    {
-        return SyntaxFactory.MethodDeclaration(
+        => SyntaxFactory.MethodDeclaration(
                 SyntaxFactory.IdentifierName(className),
                 SyntaxFactory.Identifier(httpStatusCode.ToNormalizedString()))
             .WithModifiers(SyntaxTokenListFactory.PublicStaticKeyword())
@@ -456,15 +452,13 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
                                             .WithArgumentList(
                                                 SyntaxArgumentListFactory.CreateWithOneItem(parameterName))))))))
             .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken));
-    }
 
     private static MethodDeclarationSyntax CreateTypeRequestWithObject(
         string className,
         HttpStatusCode httpStatusCode,
         string typeRequestName,
         string parameterName = "message")
-    {
-        return SyntaxFactory.MethodDeclaration(
+        => SyntaxFactory.MethodDeclaration(
                 SyntaxFactory.IdentifierName(className),
                 SyntaxFactory.Identifier(httpStatusCode.ToNormalizedString()))
             .WithModifiers(SyntaxTokenListFactory.PublicStaticKeyword())
@@ -504,14 +498,12 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
                                                                 SyntaxFactory.IdentifierName(parameterName)),
                                                         })))))))))
             .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
-    }
 
     private static MethodDeclarationSyntax CreateTypeRequestWithSpecifiedResultFactoryMethod(
         string resultFactoryMethodName,
         string className,
         HttpStatusCode httpStatusCode)
-    {
-        return SyntaxFactory.MethodDeclaration(
+        => SyntaxFactory.MethodDeclaration(
                 SyntaxFactory.IdentifierName(className),
                 SyntaxFactory.Identifier(httpStatusCode.ToNormalizedString()))
             .WithModifiers(SyntaxTokenListFactory.PublicStaticKeyword())
@@ -535,15 +527,13 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
                                                             SyntaxFactory.Argument(SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)),
                                                         })))))))))
             .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
-    }
 
     private static MethodDeclarationSyntax CreateTypeRequestWithSpecifiedResultFactoryMethodWithMessageAllowNull(
         string resultFactoryMethodName,
         string className,
         HttpStatusCode httpStatusCode,
         string parameterName = "message")
-    {
-        return SyntaxFactory.MethodDeclaration(
+        => SyntaxFactory.MethodDeclaration(
                 SyntaxFactory.IdentifierName(className),
                 SyntaxFactory.Identifier(httpStatusCode.ToNormalizedString()))
             .WithModifiers(SyntaxTokenListFactory.PublicStaticKeyword())
@@ -575,7 +565,6 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
                                                             SyntaxFactory.Argument(SyntaxFactory.IdentifierName(parameterName)),
                                                         })))))))))
             .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
-    }
 
     private static MethodDeclarationSyntax CreateTypeRequestObjectResult(
         string className,
@@ -586,7 +575,7 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
         bool asGenericPagination = false)
     {
         string? genericListTypeName = null;
-        string objectResultParameter = asGenericList
+        var objectResultParameter = asGenericList
             ? parameterName + $" ?? Enumerable.Empty<{parameterTypeName}>()"
             : parameterName;
 
@@ -621,9 +610,10 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
             .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
     }
 
-    private static MethodDeclarationSyntax CreateTypeRequestFileContentResult(string className, string methodName)
-    {
-        return SyntaxFactory.MethodDeclaration(
+    private static MethodDeclarationSyntax CreateTypeRequestFileContentResult(
+        string className,
+        string methodName)
+        => SyntaxFactory.MethodDeclaration(
                 SyntaxFactory.IdentifierName(className),
                 SyntaxFactory.Identifier(methodName))
             .WithModifiers(SyntaxTokenListFactory.PublicStaticKeyword())
@@ -668,9 +658,10 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
                                                             SyntaxFactory.Argument(SyntaxFactory.IdentifierName("fileName")),
                                                         })))))))))
             .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
-    }
 
-    private static ConversionOperatorDeclarationSyntax? CreateImplicitOperator(string className, OpenApiResponses responses)
+    private static ConversionOperatorDeclarationSyntax? CreateImplicitOperator(
+        string className,
+        OpenApiResponses responses)
     {
         var httpStatusCodes = responses.GetHttpStatusCodes();
         if (!httpStatusCodes.Contains(HttpStatusCode.OK) &&
@@ -715,7 +706,8 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
             if (string.IsNullOrEmpty(modelName))
             {
                 var schema = responses.GetSchemaForStatusCode(HttpStatusCode.OK);
-                if (schema != null && (schema.IsSimpleDataType() || schema.IsTypeArrayOrPagination()))
+                if (schema is not null &&
+                    (schema.IsSimpleDataType() || schema.IsTypeArrayOrPagination()))
                 {
                     if (schema.IsSimpleDataType())
                     {

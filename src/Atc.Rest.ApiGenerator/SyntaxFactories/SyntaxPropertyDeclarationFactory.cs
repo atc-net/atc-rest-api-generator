@@ -20,7 +20,7 @@ internal static class SyntaxPropertyDeclarationFactory
         }
 
         var propertyDeclaration = CreateAuto(dataType, propertyName);
-        if (initializer == null)
+        if (initializer is null)
         {
             return propertyDeclaration;
         }
@@ -107,7 +107,10 @@ internal static class SyntaxPropertyDeclarationFactory
         return propertyDeclaration;
     }
 
-    public static PropertyDeclarationSyntax CreateAuto(OpenApiParameter parameter, bool useNullableReferenceTypes, bool forClient)
+    public static PropertyDeclarationSyntax CreateAuto(
+        OpenApiParameter parameter,
+        bool useNullableReferenceTypes,
+        bool forClient)
     {
         ArgumentNullException.ThrowIfNull(parameter);
 
@@ -115,9 +118,8 @@ internal static class SyntaxPropertyDeclarationFactory
         {
             useNullableReferenceTypes = false;
         }
-        else if (parameter.Schema.Default != null &&
-                 (parameter.In == ParameterLocation.Query ||
-                  parameter.In == ParameterLocation.Header))
+        else if (parameter.Schema.Default is not null &&
+                 parameter.In is ParameterLocation.Query or ParameterLocation.Header)
         {
             useNullableReferenceTypes = false;
         }
@@ -154,7 +156,9 @@ internal static class SyntaxPropertyDeclarationFactory
         return propertyDeclaration;
     }
 
-    public static PropertyDeclarationSyntax CreateAuto(string dataType, string propertyName)
+    public static PropertyDeclarationSyntax CreateAuto(
+        string dataType,
+        string propertyName)
     {
         var propertyDeclaration = SyntaxFactory
             .PropertyDeclaration(SyntaxFactory.ParseTypeName(dataType), propertyName)
@@ -166,7 +170,10 @@ internal static class SyntaxPropertyDeclarationFactory
         return propertyDeclaration;
     }
 
-    public static PropertyDeclarationSyntax CreateListAuto(string dataType, string propertyName, bool initializeList = true)
+    public static PropertyDeclarationSyntax CreateListAuto(
+        string dataType,
+        string propertyName,
+        bool initializeList = true)
     {
         var propertyDeclaration = SyntaxFactory.PropertyDeclaration(
                 SyntaxFactory.GenericName(SyntaxFactory.Identifier(Microsoft.OpenApi.Models.NameConstants.List))

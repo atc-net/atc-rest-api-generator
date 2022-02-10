@@ -1,5 +1,4 @@
 using Atc.Console.Spectre;
-using Atc.Data.Models;
 
 namespace Atc.Rest.ApiGenerator.CLI.Extensions;
 

@@ -22,7 +22,7 @@ public static class GenerateAtcCodingRulesHelper
             ? new FileInfo(outputSlnPath).Directory
             : new DirectoryInfo(outputSlnPath);
 
-        if (rootPath == null)
+        if (rootPath is null)
         {
             throw new IOException("Invalid outputSlnPath");
         }
@@ -45,7 +45,7 @@ public static class GenerateAtcCodingRulesHelper
             }
 
             // -> test
-            if (outputTestPath != null && rootPath.FullName != outputTestPath.FullName)
+            if (outputTestPath is not null && rootPath.FullName != outputTestPath.FullName)
             {
                 logItems.Add(HandleFileEditorConfig(outputTestPath, "test", "test"));
                 logItems.Add(HandleFileDirectoryBuildProps(outputTestPath, "test", "test"));
@@ -55,7 +55,8 @@ public static class GenerateAtcCodingRulesHelper
         return logItems;
     }
 
-    private static bool IsFirstTime(DirectoryInfo rootPath)
+    private static bool IsFirstTime(
+        DirectoryInfo rootPath)
     {
         var file = new FileInfo(Path.Combine(rootPath.FullName, FileNameEditorConfig));
         return !file.Exists;
@@ -75,7 +76,8 @@ public static class GenerateAtcCodingRulesHelper
             sb.AppendLine("  \"projectTarget\": \"DotNet5\",");
             sb.AppendLine("  \"mappings\": {");
             sb.Append("    \"src\": { \"paths\": [ \"");
-            if (outputTestPath == null)
+
+            if (outputTestPath is null)
             {
                 sb.Append(outputSrcPath.FullName.Replace("\\", "\\\\", StringComparison.Ordinal));
                 sb.AppendLine("\" ] }");
@@ -100,7 +102,8 @@ public static class GenerateAtcCodingRulesHelper
         }
     }
 
-    private static LogKeyValueItem HandleAtcCodingRulesPowerShell(DirectoryInfo path)
+    private static LogKeyValueItem HandleAtcCodingRulesPowerShell(
+        DirectoryInfo path)
     {
         const string file = "atc-coding-rules-updater.ps1";
         var filePath = Path.Combine(path.FullName, file);

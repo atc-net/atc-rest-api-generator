@@ -85,12 +85,12 @@ public class SyntaxGeneratorClientEndpointInterface : SyntaxGeneratorClientEndpo
 
     public string ToCodeAsString()
     {
-        if (Code == null)
+        if (Code is null)
         {
             GenerateCode();
         }
 
-        if (Code == null)
+        if (Code is null)
         {
             return $"Syntax generate problem for client-endpoint-interface for apiOperation: {ApiOperation}";
         }
@@ -129,7 +129,9 @@ public class SyntaxGeneratorClientEndpointInterface : SyntaxGeneratorClientEndpo
         return result.ToArray();
     }
 
-    private MemberDeclarationSyntax CreateExecuteAsyncMethod(string parameterTypeName, bool hasParameters)
+    private MemberDeclarationSyntax CreateExecuteAsyncMethod(
+        string parameterTypeName,
+        bool hasParameters)
     {
         var arguments = hasParameters
             ? new SyntaxNodeOrToken[]

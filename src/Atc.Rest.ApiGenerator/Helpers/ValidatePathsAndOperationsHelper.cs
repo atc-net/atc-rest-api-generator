@@ -169,7 +169,8 @@ public static class ValidatePathsAndOperationsHelper
         return logItems;
     }
 
-    private static IEnumerable<string> GetParameterListFromPathKey(string pathKey)
+    private static IEnumerable<string> GetParameterListFromPathKey(
+        string pathKey)
     {
         var sa = pathKey
             .Split('{', StringSplitOptions.RemoveEmptyEntries)
@@ -181,7 +182,8 @@ public static class ValidatePathsAndOperationsHelper
             .ToList();
     }
 
-    private static List<Tuple<string, string>> GetAllOperationsParametersFromPath(IDictionary<OperationType, OpenApiOperation> apiOperations)
+    private static List<Tuple<string, string>> GetAllOperationsParametersFromPath(
+        IDictionary<OperationType, OpenApiOperation> apiOperations)
     {
         var list = new List<Tuple<string, string>>();
         foreach (var apiOperation in apiOperations.Values)

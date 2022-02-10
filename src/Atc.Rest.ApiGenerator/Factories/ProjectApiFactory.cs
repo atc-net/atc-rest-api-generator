@@ -100,7 +100,7 @@ public static class ProjectApiFactory
     {
         var list = new List<string>();
 
-        if (globalParameters != null)
+        if (globalParameters is not null)
         {
             if (globalParameters.HasFormatTypeFromSystemNamespace() ||
                 globalParameters.Any(x => x.Schema.IsTypeArray()))
@@ -114,7 +114,7 @@ public static class ProjectApiFactory
             }
         }
 
-        if (parameters != null)
+        if (parameters is not null)
         {
             if (list.All(x => x != "System") &&
                 (parameters.HasFormatTypeFromSystemNamespace() ||
@@ -144,7 +144,7 @@ public static class ProjectApiFactory
         }
 
         var contentSchema = requestBody?.Content?.GetSchemaByFirstMediaType();
-        if (contentSchema != null)
+        if (contentSchema is not null)
         {
             if (list.All(x => x != "System") &&
                 contentSchema.HasFormatTypeFromSystemNamespace())

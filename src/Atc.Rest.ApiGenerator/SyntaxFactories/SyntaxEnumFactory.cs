@@ -32,7 +32,7 @@ internal static class SyntaxEnumFactory
         var intValues = new List<int>();
         foreach (var item in apiSchemaEnums)
         {
-            if (!(item is OpenApiString openApiString))
+            if (item is not OpenApiString openApiString)
             {
                 continue;
             }
@@ -46,7 +46,7 @@ internal static class SyntaxEnumFactory
 
             var sa = openApiString.Value.Split('=', StringSplitOptions.RemoveEmptyEntries);
             var s = sa.Last().Trim();
-            if (int.TryParse(s, out int val))
+            if (int.TryParse(s, out var val))
             {
                 intValues.Add(val);
             }

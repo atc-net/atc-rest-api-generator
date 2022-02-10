@@ -35,7 +35,7 @@ namespace Atc.Rest.ApiGenerator.Models
         public Exception? Exception { get; }
 
         public override string ToString()
-            => Exception == null
+            => Exception is null
                 ? $"{nameof(DocFile)}: {DocFile}, ErrorCount: {Diagnostic?.Errors.Count}"
                 : $"{nameof(DocFile)}: {DocFile}, Exception: {Exception.Message}";
     }

@@ -50,7 +50,7 @@ public static class OpenApiOperationSchemaMapHelper
     {
         foreach (var apiParameter in apiOperation.Value.Parameters)
         {
-            if (apiParameter.Content == null)
+            if (apiParameter.Content is null)
             {
                 continue;
             }
@@ -75,7 +75,7 @@ public static class OpenApiOperationSchemaMapHelper
         KeyValuePair<string, OpenApiPathItem> apiPath,
         List<ApiOperationSchemaMap> list)
     {
-        if (apiOperation.Value.RequestBody?.Content != null)
+        if (apiOperation.Value.RequestBody?.Content is not null)
         {
             foreach (var apiMediaType in apiOperation.Value.RequestBody.Content)
             {
@@ -99,7 +99,7 @@ public static class OpenApiOperationSchemaMapHelper
     {
         foreach (var apiResponse in apiOperation.Value.Responses)
         {
-            if (apiResponse.Value?.Content == null)
+            if (apiResponse.Value?.Content is null)
             {
                 continue;
             }
@@ -127,7 +127,7 @@ public static class OpenApiOperationSchemaMapHelper
         string? parentApiSchema,
         List<ApiOperationSchemaMap> list)
     {
-        if (apiSchema == null)
+        if (apiSchema is null)
         {
             return;
         }
@@ -175,7 +175,7 @@ public static class OpenApiOperationSchemaMapHelper
                 subSchemaKey = apiSchema.AllOf[1].GetModelName();
             }
 
-            if (subSchemaKey != null)
+            if (subSchemaKey is not null)
             {
                 var subApiSchema = componentsSchemas.Single(x => x.Key.Equals(schemaKey, StringComparison.OrdinalIgnoreCase)).Value;
                 Collect(
@@ -189,7 +189,7 @@ public static class OpenApiOperationSchemaMapHelper
             }
         }
         else if (apiSchema.IsTypeArray() &&
-                 apiSchema.Items?.Reference?.Id != null)
+                 apiSchema.Items?.Reference?.Id is not null)
         {
             var subSchemaKey = apiSchema.Items.GetModelName();
             var subApiOperationSchemaMap = new ApiOperationSchemaMap(subSchemaKey, locatedArea, apiPath, apiOperationType, parentApiSchema);
@@ -235,20 +235,22 @@ public static class OpenApiOperationSchemaMapHelper
         }
     }
 
-    private static (string, OpenApiSchema) ConsolidateSchemaObjectTypes(OpenApiSchema apiSchema)
+    private static (string, OpenApiSchema) ConsolidateSchemaObjectTypes(
+        OpenApiSchema apiSchema)
     {
         var schemaKey = string.Empty;
-        if (apiSchema.Reference?.Id != null)
+        if (apiSchema.Reference?.Id is not null)
         {
             schemaKey = apiSchema.Reference.Id.EnsureFirstCharacterToUpper();
         }
         else if (apiSchema.IsTypeArray() &&
-                 apiSchema.Items?.Reference?.Id != null)
+                 apiSchema.Items?.Reference?.Id is not null)
         {
             schemaKey = apiSchema.Items.Reference.Id.EnsureFirstCharacterToUpper();
             apiSchema = apiSchema.Items;
         }
-        else if (apiSchema.OneOf.Any() && apiSchema.OneOf.First().Reference?.Id != null)
+        else if (apiSchema.OneOf.Any() &&
+                 apiSchema.OneOf.First().Reference?.Id is not null)
         {
             schemaKey = apiSchema.OneOf.First().Reference.Id.EnsureFirstCharacterToUpper();
             apiSchema = apiSchema.OneOf.First();

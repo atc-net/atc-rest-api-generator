@@ -151,7 +151,10 @@ public static class GenerateServerDomainXunitTestHelper
         sb.AppendLine(8, "}");
     }
 
-    private static SyntaxNode ReadCsFile(DomainProjectOptions domainProjectOptions, string area, SyntaxGeneratorHandler sgHandler)
+    private static SyntaxNode ReadCsFile(
+        DomainProjectOptions domainProjectOptions,
+        string area,
+        SyntaxGeneratorHandler sgHandler)
     {
         var csSrcFile = Util.GetCsFileNameForHandler(domainProjectOptions.PathForSrcHandlers!, area, sgHandler.HandlerTypeName);
         var csSrcCode = File.ReadAllText(csSrcFile);

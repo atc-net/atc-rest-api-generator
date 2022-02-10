@@ -43,7 +43,9 @@ public static class ParameterCombinationHelper
         return list;
     }
 
-    private static List<List<OpenApiParameter>> GetCombinationParameters(List<OpenApiParameter> parameters, IEnumerable<IEnumerable<string>> combinationNames)
+    private static List<List<OpenApiParameter>> GetCombinationParameters(
+        List<OpenApiParameter> parameters,
+        IEnumerable<IEnumerable<string>> combinationNames)
     {
         var list = new List<List<OpenApiParameter>>();
         foreach (var item in combinationNames)
@@ -57,7 +59,9 @@ public static class ParameterCombinationHelper
         return list;
     }
 
-    private static List<List<string>> GetFilteredCombinationNames(IEnumerable<IEnumerable<string>> combinationNames, List<string> requiredNames)
+    private static List<List<string>> GetFilteredCombinationNames(
+        IEnumerable<IEnumerable<string>> combinationNames,
+        List<string> requiredNames)
     {
         return combinationNames
             .Select(x => x.ToList())
@@ -65,13 +69,11 @@ public static class ParameterCombinationHelper
             .ToList();
     }
 
-    private static List<string> GetNames(List<OpenApiParameter> parameters)
-    {
-        return parameters.Select(x => x.Name).ToList();
-    }
+    private static List<string> GetNames(
+        List<OpenApiParameter> parameters)
+        => parameters.Select(x => x.Name).ToList();
 
-    private static List<string> GetRequiredNames(List<OpenApiParameter> parameters)
-    {
-        return parameters.Where(x => x.Required).Select(x => x.Name).ToList();
-    }
+    private static List<string> GetRequiredNames(
+        List<OpenApiParameter> parameters)
+        => parameters.Where(x => x.Required).Select(x => x.Name).ToList();
 }

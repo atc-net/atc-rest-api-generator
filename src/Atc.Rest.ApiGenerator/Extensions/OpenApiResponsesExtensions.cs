@@ -153,7 +153,7 @@ internal static class OpenApiResponsesExtensions
                     throw new NotImplementedException($"ResponseType for {(int)httpStatusCode} - {httpStatusCode} is missing.");
             }
 
-            if (typeResponseName != null)
+            if (typeResponseName is not null)
             {
                 result.Add(Tuple.Create(httpStatusCode, typeResponseName));
             }

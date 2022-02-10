@@ -59,10 +59,9 @@ public class EndpointMethodMetadata
 
     public List<ApiOperationSchemaMap> OperationSchemaMappings { get; }
 
-    public bool IsSharedModel(string modelName)
-    {
-        return OperationSchemaMappings.IsShared(modelName);
-    }
+    public bool IsSharedModel(
+        string modelName)
+        => OperationSchemaMappings.IsShared(modelName);
 
     public bool IsContractReturnTypeUsingPagination()
     {
@@ -105,13 +104,11 @@ public class EndpointMethodMetadata
     }
 
     public bool IsContractReturnTypeUsingSystemNamespace()
-    {
-        return ContractReturnTypeNames
-            .Where(x => x.Schema != null &&
+        => ContractReturnTypeNames
+            .Where(x => x.Schema is not null &&
                         x.Schema.IsObjectReferenceTypeDeclared())
-            .Any(x => x.Schema != null &&
+            .Any(x => x.Schema is not null &&
                       x.Schema.HasAnyPropertiesFormatTypeFromSystemNamespace(ComponentsSchemas));
-    }
 
     public bool IsContractReturnTypeUsingTaskName()
     {
@@ -265,7 +262,8 @@ public class EndpointMethodMetadata
                schema.HasAnySharedModelOrEnum(OperationSchemaMappings);
     }
 
-    public bool HasSharedModelOrEnumInContractReturnType(bool includeProperties = true)
+    public bool HasSharedModelOrEnumInContractReturnType(
+        bool includeProperties = true)
     {
         foreach (var item in ContractReturnTypeNames)
         {
@@ -286,7 +284,7 @@ public class EndpointMethodMetadata
     public List<OpenApiParameter> GetRouteParameters()
     {
         var list = new List<OpenApiParameter>();
-        if (ContractParameter == null)
+        if (ContractParameter is null)
         {
             return list;
         }
@@ -297,7 +295,7 @@ public class EndpointMethodMetadata
     }
 
     public List<OpenApiParameter> GetHeaderParameters()
-        => ContractParameter == null
+        => ContractParameter is null
             ? new List<OpenApiParameter>()
             : ContractParameter.ApiOperation.Parameters.GetAllFromHeader();
 
@@ -307,7 +305,7 @@ public class EndpointMethodMetadata
             .ToList();
 
     public List<OpenApiParameter> GetQueryParameters()
-        => ContractParameter == null
+        => ContractParameter is null
             ? new List<OpenApiParameter>()
             : ContractParameter.ApiOperation.Parameters.GetAllFromQuery();
 
@@ -316,7 +314,8 @@ public class EndpointMethodMetadata
             .Where(parameter => parameter.Required)
             .ToList();
 
-    public List<KeyValuePair<string, OpenApiSchema>> GetRelevantSchemasForBadRequestBodyParameters(OpenApiSchema modelSchema)
+    public List<KeyValuePair<string, OpenApiSchema>> GetRelevantSchemasForBadRequestBodyParameters(
+        OpenApiSchema modelSchema)
     {
         var relevantSchemas = new List<KeyValuePair<string, OpenApiSchema>>();
         foreach (var schemaProperty in modelSchema.Properties)
@@ -351,7 +350,8 @@ public class EndpointMethodMetadata
     public string? GetRequestBodyModelName()
         => GetRequestBodySchema()?.GetModelName();
 
-    public bool Contains(string value)
+    public bool Contains(
+        string value)
     {
         if (value.EndsWith("Tests", StringComparison.Ordinal))
         {

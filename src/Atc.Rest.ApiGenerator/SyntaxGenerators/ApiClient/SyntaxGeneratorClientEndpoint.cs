@@ -89,12 +89,12 @@ public class SyntaxGeneratorClientEndpoint : SyntaxGeneratorClientEndpointBase, 
 
     public string ToCodeAsString()
     {
-        if (Code == null)
+        if (Code is null)
         {
             GenerateCode();
         }
 
-        if (Code == null)
+        if (Code is null)
         {
             return $"Syntax generate problem for client-endpoint for apiOperation: {ApiOperation}";
         }
@@ -345,13 +345,13 @@ public class SyntaxGeneratorClientEndpoint : SyntaxGeneratorClientEndpointBase, 
                 result.AddRange(GlobalPathParameters.Select(CreateExpressionStatementForWithMethodParameterMap));
             }
 
-            if (ApiOperation.Parameters != null)
+            if (ApiOperation.Parameters is not null)
             {
                 result.AddRange(ApiOperation.Parameters.Select(CreateExpressionStatementForWithMethodParameterMap));
             }
 
             var bodySchema = ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
-            if (bodySchema != null)
+            if (bodySchema is not null)
             {
                 result.Add(CreateExpressionStatementForWithMethodBodyMap());
             }
@@ -568,7 +568,8 @@ public class SyntaxGeneratorClientEndpoint : SyntaxGeneratorClientEndpointBase, 
                                         SyntaxFactory.IdentifierName(nameof(CancellationToken).EnsureFirstCharacterToLower())),
                                 })))));
 
-    private ArgumentListSyntax CreateOneStringArg(string value)
+    private ArgumentListSyntax CreateOneStringArg(
+        string value)
         => SyntaxFactory.ArgumentList(
             SyntaxFactory.SingletonSeparatedList(
                 SyntaxFactory.Argument(

@@ -1,22 +1,17 @@
-using Atc.Console.Spectre.Factories;
-using Atc.Console.Spectre.Logging;
-using Atc.Rest.ApiGenerator.CLI.Commands;
-using Atc.Rest.ApiGenerator.CLI.Extensions;
-using Microsoft.Extensions.Configuration;
-
 namespace Atc.Rest.ApiGenerator.CLI;
 
 [ExcludeFromCodeCoverage]
 public static class Program
 {
-    public static Task<int> Main(string[] args)
+    public static Task<int> Main(
+        string[] args)
     {
         if (args.Length == default)
         {
             args = new[]
             {
                 "validate", "schema",
-                //"generate", "client", "csharp",// "-h",
+                ////"generate", "client", "csharp",// "-h",
                 "--specificationPath", @"C:\Code\LEGO\data-federation-erut\src\ERUT.Api.Spec\api.v1.yaml",
                 "--optionsPath", @"C:\Code\LEGO\data-federation-erut\src\ERUT.Api.Spec\DelegateApiGeneratorOptions.json",
             };
@@ -43,7 +38,8 @@ public static class Program
         return app.RunAsync(args);
     }
 
-    private static string[] SetHelpArgumentIfNeeded(string[] args)
+    private static string[] SetHelpArgumentIfNeeded(
+        string[] args)
     {
         if (args.Length == 0)
         {
@@ -51,7 +47,6 @@ public static class Program
         }
 
         // TODO: Add multiple validations
-
         return args;
     }
 

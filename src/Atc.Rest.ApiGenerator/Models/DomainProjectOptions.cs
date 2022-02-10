@@ -21,7 +21,7 @@ public class DomainProjectOptions : BaseProjectOptions
     {
         ApiProjectSrcPath = apiProjectSrcPath ?? throw new ArgumentNullException(nameof(apiProjectSrcPath));
         PathForSrcHandlers = new DirectoryInfo(Path.Combine(PathForSrcGenerate.FullName, NameConstants.Handlers));
-        if (PathForTestGenerate != null)
+        if (PathForTestGenerate is not null)
         {
             PathForTestHandlers = new DirectoryInfo(Path.Combine(PathForTestGenerate.FullName, NameConstants.Handlers));
         }
@@ -52,7 +52,7 @@ public class DomainProjectOptions : BaseProjectOptions
             }
         }
 
-        if (ApiProjectSrcCsProj == null || !ApiProjectSrcCsProj.Exists)
+        if (ApiProjectSrcCsProj is null || !ApiProjectSrcCsProj.Exists)
         {
             logItems.Add(LogItemHelper.Create(LogCategoryType.Error, ValidationRuleNameConstants.ProjectHostGenerated04, "Can't find API .csproj file"));
         }

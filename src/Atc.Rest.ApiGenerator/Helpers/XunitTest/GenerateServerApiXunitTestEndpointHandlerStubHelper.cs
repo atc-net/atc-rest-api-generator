@@ -51,7 +51,7 @@ public static class GenerateServerApiXunitTestEndpointHandlerStubHelper
         StringBuilder sb,
         EndpointMethodMetadata endpointMethodMetadata)
     {
-        sb.AppendLine(8, endpointMethodMetadata.ContractParameterTypeName == null
+        sb.AppendLine(8, endpointMethodMetadata.ContractParameterTypeName is null
             ? $"public Task<{endpointMethodMetadata.ContractResultTypeName}> ExecuteAsync(CancellationToken cancellationToken = default)"
             : $"public Task<{endpointMethodMetadata.ContractResultTypeName}> ExecuteAsync({endpointMethodMetadata.ContractParameterTypeName} parameters, CancellationToken cancellationToken = default)");
         sb.AppendLine(8, "{");
@@ -61,11 +61,11 @@ public static class GenerateServerApiXunitTestEndpointHandlerStubHelper
         StringBuilder sb,
         EndpointMethodMetadata endpointMethodMetadata)
     {
-        if (endpointMethodMetadata.ContractReturnTypeNames.Find(x => x.StatusCode == HttpStatusCode.OK) != null)
+        if (endpointMethodMetadata.ContractReturnTypeNames.Find(x => x.StatusCode == HttpStatusCode.OK) is not null)
         {
             AppendContentForExecuteAsynchronous(sb, endpointMethodMetadata, HttpStatusCode.OK);
         }
-        else if (endpointMethodMetadata.ContractReturnTypeNames.Find(x => x.StatusCode == HttpStatusCode.Created) != null)
+        else if (endpointMethodMetadata.ContractReturnTypeNames.Find(x => x.StatusCode == HttpStatusCode.Created) is not null)
         {
             AppendContentForExecuteAsynchronous(sb, endpointMethodMetadata, HttpStatusCode.Created);
         }
@@ -146,28 +146,28 @@ public static class GenerateServerApiXunitTestEndpointHandlerStubHelper
                     sb.AppendLine();
                 }
 
-                if (contractReturnTypeName.Schema == null ||
+                if (contractReturnTypeName.Schema is null ||
                     GenerateXunitTestPartsHelper.IsListKind(returnTypeName))
                 {
                     if (returnTypeName.StartsWith(Microsoft.OpenApi.Models.NameConstants.Pagination, StringComparison.Ordinal))
                     {
-                        if (endpointMethodMetadata.ContractParameter != null)
+                        if (endpointMethodMetadata.ContractParameter is not null)
                         {
                             var queryParameters = endpointMethodMetadata.ContractParameter.ApiOperation.Parameters.GetAllFromQuery();
                             var sPageSize = "10";
-                            if (queryParameters.Find(x => x.Name.Equals("PageSize", StringComparison.OrdinalIgnoreCase)) != null)
+                            if (queryParameters.Find(x => x.Name.Equals("PageSize", StringComparison.OrdinalIgnoreCase)) is not null)
                             {
                                 sPageSize = "parameters.PageSize";
                             }
 
                             var sQueryString = "null";
-                            if (queryParameters.Find(x => x.Name.Equals("QueryString", StringComparison.OrdinalIgnoreCase)) != null)
+                            if (queryParameters.Find(x => x.Name.Equals("QueryString", StringComparison.OrdinalIgnoreCase)) is not null)
                             {
                                 sQueryString = "parameters.QueryString";
                             }
 
                             var sContinuationToken = "null";
-                            if (queryParameters.Find(x => x.Name.Equals("ContinuationToken", StringComparison.OrdinalIgnoreCase)) != null)
+                            if (queryParameters.Find(x => x.Name.Equals("ContinuationToken", StringComparison.OrdinalIgnoreCase)) is not null)
                             {
                                 sContinuationToken = "parameters.ContinuationToken";
                             }

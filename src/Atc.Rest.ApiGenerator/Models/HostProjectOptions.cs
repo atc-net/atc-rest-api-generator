@@ -36,7 +36,6 @@ public class HostProjectOptions : BaseProjectOptions
 
     public bool UseRestExtended { get; set; }
 
-    [SuppressMessage("Critical Code Smell", "S3776:Cognitive Complexity of methods should not be too high", Justification = "OK.")]
     public List<LogKeyValueItem> SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles()
     {
         var logItems = new List<LogKeyValueItem>();
@@ -54,7 +53,7 @@ public class HostProjectOptions : BaseProjectOptions
             }
         }
 
-        if (ApiProjectSrcCsProj == null || !ApiProjectSrcCsProj.Exists)
+        if (ApiProjectSrcCsProj is null || !ApiProjectSrcCsProj.Exists)
         {
             logItems.Add(LogItemHelper.Create(LogCategoryType.Error, ValidationRuleNameConstants.ProjectHostGenerated04, "Can't find API .csproj file"));
         }
@@ -73,7 +72,7 @@ public class HostProjectOptions : BaseProjectOptions
             }
         }
 
-        if (DomainProjectSrcCsProj == null || !DomainProjectSrcCsProj.Exists)
+        if (DomainProjectSrcCsProj is null || !DomainProjectSrcCsProj.Exists)
         {
             logItems.Add(LogItemHelper.Create(LogCategoryType.Error, ValidationRuleNameConstants.ProjectHostGenerated05, "Can't find Domain .csproj file"));
         }
