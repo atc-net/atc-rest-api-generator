@@ -27,8 +27,6 @@ public class ClientCSharpApiProjectOptions
         ToolName = "ApiGenerator";
         ToolVersion = GenerateHelper.GetAtcToolVersion();
         ApiOptions = apiOptions;
-
-        ApiVersion = OpenApiDocumentHelper.GetServerUrl(openApiDocument);
         ProjectName = projectPrefixName
             .Replace(" ", ".", StringComparison.Ordinal)
             .Replace("-", ".", StringComparison.Ordinal)
@@ -63,12 +61,10 @@ public class ClientCSharpApiProjectOptions
 
     public string ProjectName { get; }
 
-    public string ApiVersion { get; }
-
     public List<string> BasePathSegmentNames { get; }
 
     public bool ExcludeEndpointGeneration { get; }
 
     public override string ToString()
-        => $"{nameof(ToolName)}: {ToolName}, {nameof(ToolVersion)}: {ToolVersion}, {nameof(ToolNameAndVersion)}: {ToolNameAndVersion}, {nameof(ApiOptions)}: {ApiOptions}, {nameof(PathForSrcGenerate)}: {PathForSrcGenerate}, {nameof(ProjectSrcCsProj)}: {ProjectSrcCsProj}, {nameof(ForClient)}: {ForClient}, {nameof(ClientFolderName)}: {ClientFolderName}, {nameof(Document)}: {Document}, {nameof(DocumentFile)}: {DocumentFile}, {nameof(ProjectName)}: {ProjectName}, {nameof(ApiVersion)}: {ApiVersion}, {nameof(BasePathSegmentNames)}: {BasePathSegmentNames}, {nameof(ExcludeEndpointGeneration)}: {ExcludeEndpointGeneration}";
+        => $"{nameof(ToolName)}: {ToolName}, {nameof(ToolVersion)}: {ToolVersion}, {nameof(ToolNameAndVersion)}: {ToolNameAndVersion}, {nameof(ApiOptions)}: {ApiOptions}, {nameof(PathForSrcGenerate)}: {PathForSrcGenerate}, {nameof(ProjectSrcCsProj)}: {ProjectSrcCsProj}, {nameof(ForClient)}: {ForClient}, {nameof(ClientFolderName)}: {ClientFolderName}, {nameof(Document)}: {Document}, {nameof(DocumentFile)}: {DocumentFile}, {nameof(ProjectName)}: {ProjectName}, {nameof(BasePathSegmentNames)}: {BasePathSegmentNames}, {nameof(ExcludeEndpointGeneration)}: {ExcludeEndpointGeneration}";
 }
