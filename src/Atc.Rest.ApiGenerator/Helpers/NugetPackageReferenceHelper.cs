@@ -16,12 +16,12 @@ public static class NugetPackageReferenceHelper
         if (useRestExtended)
         {
             packageReference.Add(new Tuple<string, string, string?>("Atc.Rest.Extended", atcVersion, null));
-            packageReference.Add(new Tuple<string, string, string?>("FluentValidation.AspNetCore", "10.3.4", null));
-            packageReference.Add(new Tuple<string, string, string?>("Microsoft.ApplicationInsights.AspNetCore", "2.18.0", null));
-            packageReference.Add(new Tuple<string, string, string?>("Microsoft.AspNetCore.Authentication.JwtBearer", "3.1.18", null));
-            packageReference.Add(new Tuple<string, string, string?>("Microsoft.AspNetCore.Mvc.Versioning", "4.1.1", null));
-            packageReference.Add(new Tuple<string, string, string?>("Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer", "4.1.1", null));
-            packageReference.Add(new Tuple<string, string, string?>("Swashbuckle.AspNetCore", "5.6.3", null));
+            packageReference.Add(new Tuple<string, string, string?>("FluentValidation.AspNetCore", "10.3.6", null));
+            packageReference.Add(new Tuple<string, string, string?>("Microsoft.ApplicationInsights.AspNetCore", "2.20.0", null));
+            packageReference.Add(new Tuple<string, string, string?>("Microsoft.AspNetCore.Authentication.JwtBearer", "6.0.2", null));
+            packageReference.Add(new Tuple<string, string, string?>("Microsoft.AspNetCore.Mvc.Versioning", "5.0.0", null));
+            packageReference.Add(new Tuple<string, string, string?>("Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer", "5.0.0", null));
+            packageReference.Add(new Tuple<string, string, string?>("Swashbuckle.AspNetCore", "6.2.3", null));
         }
 
         return packageReference;
@@ -70,8 +70,8 @@ public static class NugetPackageReferenceHelper
 
         packageReference.AddRange(new List<Tuple<string, string, string?>>
         {
-            new ("Microsoft.NET.Test.Sdk", "16.10.0", null),
-            new ("NSubstitute", "4.2.2", null),
+            new ("Microsoft.NET.Test.Sdk", "17.0.0", null),
+            new ("NSubstitute", "4.3.0", null),
             new ("xunit", "2.4.1", null),
             new ("xunit.runner.visualstudio", "2.4.3", "<PrivateAssets>all</PrivateAssets>\n<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>"),
         });

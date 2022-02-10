@@ -8,7 +8,7 @@ public static class Util
 
         var projectPath = currentDomainBaseDirectory!
             .Replace("\\Bin", string.Empty, StringComparison.OrdinalIgnoreCase)
-            .Replace("\\netcoreapp3.1", string.Empty, StringComparison.OrdinalIgnoreCase)
+            .Replace("\\net6.0", string.Empty, StringComparison.OrdinalIgnoreCase)
             .Replace("\\Debug", string.Empty, StringComparison.OrdinalIgnoreCase)
             .Replace("\\ApiGenerator", string.Empty, StringComparison.OrdinalIgnoreCase);
 

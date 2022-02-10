@@ -3,8 +3,8 @@ namespace Atc.Rest.ApiGenerator.Helpers;
 
 public static class GenerateHelper
 {
-    private static readonly Version AtcVersion = new (1, 1, 349, 0);
-    private static readonly Version AtcToolVersion = new (1, 1, 371, 0);
+    private static readonly Version AtcVersion = new (2, 0, 36, 0);
+    private static readonly Version AtcToolVersion = new (1, 1, 405, 0); // TODO: Fix version
 
     [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "OK.")]
     public static Version GetAtcVersion() => AtcVersion;

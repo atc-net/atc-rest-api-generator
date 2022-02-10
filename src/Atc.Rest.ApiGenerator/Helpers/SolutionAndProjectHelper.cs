@@ -536,7 +536,7 @@ public static class SolutionAndProjectHelper
 
         var nullabilityRoot = XElement.Parse(hasLanguageVersion
             ? @"<PropertyGroup><Nullable>enable</Nullable></PropertyGroup>"
-            : @"<PropertyGroup><Nullable>enable</Nullable><LangVersion>9.0</LangVersion></PropertyGroup>");
+            : @"<PropertyGroup><Nullable>enable</Nullable><LangVersion>10.0</LangVersion></PropertyGroup>");
 
         element.Add(nullabilityRoot);
     }

@@ -121,7 +121,7 @@ public class ServerApiGenerator
                 createAsWeb: false,
                 createAsTestProject: false,
                 projectOptions.ProjectName,
-                "netcoreapp3.1",
+                "net6.0",
                 projectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
                 new List<string> { "Microsoft.AspNetCore.App" },
                 NugetPackageReferenceHelper.CreateForApiProject(),

@@ -8,16 +8,19 @@ public static class Program
     {
         if (args.Length == default)
         {
+            //// PETSTORE
             args = new[]
             {
-                ////"validate", "schema", "-h",
-                ////"generate", "-h",
-                ////"generate", "client", "-h",
-                ////"generate", "server", "-h",
-                ////"generate", "server", "host", "-h",
-                ////"generate", "client", "csharp", "-h",
-                ////"--specificationPath", @"C:\Code\LEGO\data-federation-erut\src\ERUT.Api.Spec\api.v1.yaml",
-                ////"--optionsPath", @"C:\Code\LEGO\data-federation-erut\src\ERUT.Api.Spec\DelegateApiGeneratorOptions.json",
+                "generate",
+                "server",
+                "all",
+                "--specificationPath", "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml",
+                "--projectPrefixName", "Petstore",
+                "--outputSlnPath", @"C:\Temp\sletmig",
+                "--outputSrcPath", @"C:\Temp\sletmig\src",
+                "--outputTestPath", @"C:\Temp\sletmig\test",
+                "--optionsPath", @"C:\Code\atc-net\atc-rest-api-generator\sample\Demo.ApiDesign\ApiGeneratorOptions.json",
+                "-v",
             };
         }
 

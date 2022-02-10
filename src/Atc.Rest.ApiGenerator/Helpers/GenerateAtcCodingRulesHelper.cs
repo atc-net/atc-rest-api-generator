@@ -4,7 +4,7 @@ namespace Atc.Rest.ApiGenerator.Helpers;
 
 public static class GenerateAtcCodingRulesHelper
 {
-    private const string RawCodingRulesDistribution = "https://raw.githubusercontent.com/atc-net/atc-coding-rules/main/distribution/dotnetcore";
+    private const string RawCodingRulesDistribution = "https://raw.githubusercontent.com/atc-net/atc-coding-rules/main/distribution/dotnet6";
     public const string FileNameEditorConfig = ".editorconfig";
     public const string FileNameDirectoryBuildProps = "Directory.Build.props";
 
