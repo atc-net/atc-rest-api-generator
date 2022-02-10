@@ -132,7 +132,7 @@ public static class OpenApiDocumentHelper
     }
 
     [SuppressMessage("Design", "CA1055:URI-like return values should not be strings", Justification = "OK.")]
-    public static string GetServerUrl(
+    public static string GetServerUrlBasePath(
         OpenApiDocument openApiDocument)
     {
         var serverUrl = openApiDocument.Servers?.FirstOrDefault()?.Url;
@@ -148,6 +148,16 @@ public static class OpenApiDocumentHelper
             !serverUrl.StartsWith("/", StringComparison.Ordinal))
         {
             serverUrl = $"/{serverUrl}";
+        }
+
+        if (serverUrl.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+            serverUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+        {
+            var temp = serverUrl
+                .Replace("http://", string.Empty, StringComparison.OrdinalIgnoreCase)
+                .Replace("https://", string.Empty, StringComparison.OrdinalIgnoreCase);
+
+            return temp.Substring(temp.IndexOf('/', StringComparison.Ordinal));
         }
 
         return serverUrl;

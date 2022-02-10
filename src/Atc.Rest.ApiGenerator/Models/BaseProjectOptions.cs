@@ -34,7 +34,7 @@ public abstract class BaseProjectOptions
         ToolVersion = GenerateHelper.GetAtcToolVersion();
         ApiOptions = apiOptions;
 
-        RouteBase = OpenApiDocumentHelper.GetServerUrl(openApiDocument);
+        RouteBase = OpenApiDocumentHelper.GetServerUrlBasePath(openApiDocument);
         ProjectName = string.IsNullOrEmpty(projectSuffixName)
             ? projectPrefixName
                 .Replace(" ", ".", StringComparison.Ordinal)
