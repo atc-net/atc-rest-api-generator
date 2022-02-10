@@ -68,26 +68,26 @@ public static class GenerateHelper
 
     public static List<LogKeyValueItem> GenerateServerDomain(
         string projectPrefixName,
-        DirectoryInfo outputPath,
+        DirectoryInfo outputSourcePath,
         DirectoryInfo? outputTestPath,
         Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument,
         ApiOptions apiOptions,
         DirectoryInfo apiPath)
     {
         ArgumentNullException.ThrowIfNull(projectPrefixName);
-        ArgumentNullException.ThrowIfNull(outputPath);
+        ArgumentNullException.ThrowIfNull(outputSourcePath);
         ArgumentNullException.ThrowIfNull(apiDocument);
         ArgumentNullException.ThrowIfNull(apiOptions);
         ArgumentNullException.ThrowIfNull(apiPath);
 
-        var domainProjectOptions = new DomainProjectOptions(outputPath, outputTestPath, apiDocument.Item1, apiDocument.Item3, projectPrefixName, apiOptions, apiPath);
+        var domainProjectOptions = new DomainProjectOptions(outputSourcePath, outputTestPath, apiDocument.Item1, apiDocument.Item3, projectPrefixName, apiOptions, apiPath);
         var serverDomainGenerator = new ServerDomainGenerator(domainProjectOptions);
         return serverDomainGenerator.Generate();
     }
 
     public static List<LogKeyValueItem> GenerateServerHost(
         string projectPrefixName,
-        DirectoryInfo outputPath,
+        DirectoryInfo outputSourcePath,
         DirectoryInfo? outputTestPath,
         Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument,
         ApiOptions apiOptions,
@@ -95,13 +95,13 @@ public static class GenerateHelper
         DirectoryInfo domainPath)
     {
         ArgumentNullException.ThrowIfNull(projectPrefixName);
-        ArgumentNullException.ThrowIfNull(outputPath);
+        ArgumentNullException.ThrowIfNull(outputSourcePath);
         ArgumentNullException.ThrowIfNull(apiDocument);
         ArgumentNullException.ThrowIfNull(apiOptions);
         ArgumentNullException.ThrowIfNull(apiPath);
         ArgumentNullException.ThrowIfNull(domainPath);
 
-        var hostProjectOptions = new HostProjectOptions(outputPath, outputTestPath, apiDocument.Item1, apiDocument.Item3, projectPrefixName, apiOptions, apiPath, domainPath);
+        var hostProjectOptions = new HostProjectOptions(outputSourcePath, outputTestPath, apiDocument.Item1, apiDocument.Item3, projectPrefixName, apiOptions, apiPath, domainPath);
         var serverHostGenerator = new ServerHostGenerator(hostProjectOptions);
         return serverHostGenerator.Generate();
     }
@@ -109,21 +109,21 @@ public static class GenerateHelper
     public static List<LogKeyValueItem> GenerateServerSln(
         string projectPrefixName,
         string outputSlnPath,
-        DirectoryInfo outputSrcPath,
+        DirectoryInfo outputSourcePath,
         DirectoryInfo? outputTestPath)
     {
         ArgumentNullException.ThrowIfNull(projectPrefixName);
         ArgumentNullException.ThrowIfNull(outputSlnPath);
-        ArgumentNullException.ThrowIfNull(outputSrcPath);
+        ArgumentNullException.ThrowIfNull(outputSourcePath);
 
         var projectName = projectPrefixName
             .Replace(" ", ".", StringComparison.Ordinal)
             .Replace("-", ".", StringComparison.Ordinal)
             .Trim();
 
-        var apiPath = new DirectoryInfo(Path.Combine(outputSrcPath.FullName, $"{projectName}.Api.Generated"));
-        var domainPath = new DirectoryInfo(Path.Combine(outputSrcPath.FullName, $"{projectName}.Domain"));
-        var hostPath = new DirectoryInfo(Path.Combine(outputSrcPath.FullName, $"{projectName}.Api"));
+        var apiPath = new DirectoryInfo(Path.Combine(outputSourcePath.FullName, $"{projectName}.Api.Generated"));
+        var domainPath = new DirectoryInfo(Path.Combine(outputSourcePath.FullName, $"{projectName}.Domain"));
+        var hostPath = new DirectoryInfo(Path.Combine(outputSourcePath.FullName, $"{projectName}.Api"));
 
         var slnFile = outputSlnPath.EndsWith(".sln", StringComparison.OrdinalIgnoreCase)
             ? new FileInfo(outputSlnPath)

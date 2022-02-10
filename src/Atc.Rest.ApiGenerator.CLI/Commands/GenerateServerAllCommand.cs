@@ -24,8 +24,6 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
         var outputSlnPath = settings.OutputSlnPath;
         var outputSrcPath = new DirectoryInfo(settings.OutputSrcPath);
 
-        // TODO: Handle outputpath?!?!
-
         DirectoryInfo? outputTestPath = null;
 
         if (settings.OutputTestPath is not null &&

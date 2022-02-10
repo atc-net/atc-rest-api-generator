@@ -3,7 +3,7 @@ namespace Atc.Rest.ApiGenerator.Models;
 public class DomainProjectOptions : BaseProjectOptions
 {
     public DomainProjectOptions(
-        DirectoryInfo projectSrcGeneratePath,
+        DirectoryInfo projectSourceGeneratePath,
         DirectoryInfo? projectTestGeneratePath,
         OpenApiDocument openApiDocument,
         FileInfo openApiDocumentFile,
@@ -11,7 +11,7 @@ public class DomainProjectOptions : BaseProjectOptions
         ApiOptions.ApiOptions apiOptions,
         DirectoryInfo apiProjectSrcPath)
         : base(
-            projectSrcGeneratePath,
+            projectSourceGeneratePath,
             projectTestGeneratePath,
             openApiDocument,
             openApiDocumentFile,

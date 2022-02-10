@@ -4,7 +4,7 @@ namespace Atc.Rest.ApiGenerator.CLI.Commands.Settings;
 
 public class BaseConfigurationCommandSettings : BaseCommandSettings
 {
-    [CommandOption($"{CommandConstants.ArgumentLongConfigurationSpecificationPath} <SPECIFICATIONPATH>")]
+    [CommandOption($"{CommandConstants.ArgumentShortConfigurationSpecificationPath}|{CommandConstants.ArgumentLongConfigurationSpecificationPath} <SPECIFICATIONPATH>")]
     [Description("Path to Open API specification (directory, file or url)")]
     public string SpecificationPath { get; init; } = string.Empty;
 

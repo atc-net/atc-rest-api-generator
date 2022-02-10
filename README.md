@@ -9,6 +9,13 @@
 ```powershell
  * CLI package renamed from 'atc-api-gen' to 'atc-rest-api-generator'
  * CLI tool renamed from 'atc-api' to 'atc-rest-api-generator'
+
+
+ atc-rest-api-generator.exe validate schema
+    setting: --strictMode renamed to --validate-strictMode
+    setting: --operationIdCasingStyle renamed to --validate-operationIdCasingStyle
+    setting: --modelNameCasingStyle renamed to --validate-modelNameCasingStyle
+    setting: --modelPropertyNameCasingStyle renamed to --validate-modelPropertyNameCasingStyle
  ```
 
 ## Projects in the repository

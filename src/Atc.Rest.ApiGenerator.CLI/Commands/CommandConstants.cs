@@ -13,6 +13,7 @@ namespace Atc.Rest.ApiGenerator.CLI.Commands
         public const string ArgumentShortProjectPrefixName = "-p";
         public const string ArgumentLongProjectPrefixName = "--projectPrefixName";
 
+        public const string ArgumentShortConfigurationSpecificationPath = "-s";
         public const string ArgumentLongConfigurationSpecificationPath = "--specificationPath";
         public const string ArgumentLongConfigurationOptionsPath = "--optionsPath";
         public const string ArgumentLongConfigurationAuthorization = "--useAuthorization";

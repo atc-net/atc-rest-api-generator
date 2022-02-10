@@ -10,10 +10,14 @@ public static class Program
         {
             args = new[]
             {
-                "validate", "schema",
-                ////"generate", "client", "csharp",// "-h",
-                "--specificationPath", @"C:\Code\LEGO\data-federation-erut\src\ERUT.Api.Spec\api.v1.yaml",
-                "--optionsPath", @"C:\Code\LEGO\data-federation-erut\src\ERUT.Api.Spec\DelegateApiGeneratorOptions.json",
+                ////"validate", "schema", "-h",
+                ////"generate", "-h",
+                ////"generate", "client", "-h",
+                ////"generate", "server", "-h",
+                ////"generate", "server", "host", "-h",
+                ////"generate", "client", "csharp", "-h",
+                ////"--specificationPath", @"C:\Code\LEGO\data-federation-erut\src\ERUT.Api.Spec\api.v1.yaml",
+                ////"--optionsPath", @"C:\Code\LEGO\data-federation-erut\src\ERUT.Api.Spec\DelegateApiGeneratorOptions.json",
             };
         }
 
