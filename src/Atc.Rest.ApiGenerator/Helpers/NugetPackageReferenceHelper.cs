@@ -60,7 +60,7 @@ public static class NugetPackageReferenceHelper
             new ("AutoFixture", "4.17.0", null),
             new ("AutoFixture.AutoNSubstitute", "4.17.0", null),
             new ("AutoFixture.Xunit2", "4.17.0", null),
-            new ("FluentAssertions", "6.1.0", null),
+            new ("FluentAssertions", "6.4.0", null),
         };
 
         if (useMvc)
