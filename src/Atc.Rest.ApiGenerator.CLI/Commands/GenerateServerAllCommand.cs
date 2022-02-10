@@ -1,99 +1,113 @@
-////using System;
-////using System.Collections.Generic;
-////using System.Linq;
-////using Atc.Data.Models;
-////using Atc.Rest.ApiGenerator.CLI.Commands.Options;
-////using Atc.Rest.ApiGenerator.Helpers;
-////using McMaster.Extensions.CommandLineUtils;
+namespace Atc.Rest.ApiGenerator.CLI.Commands;
 
-////// ReSharper disable LocalizableElement
-////namespace Atc.Rest.ApiGenerator.CLI.Commands
-////{
-////    [Command("all", Description = "Creates API, domain and host projects.")]
-////    public class GenerateServerAllCommand : ServerAllCommandOptions
-////    {
-////        private const string CommandArea = "Server-API-Domain-Host";
+public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
+{
+    private readonly ILogger<GenerateServerAllCommand> logger;
 
-////        public int OnExecute(CommandLineApplication configCmd)
-////        {
-////            if (configCmd is null)
-////            {
-////                throw new ArgumentNullException(nameof(configCmd));
-////            }
+    public GenerateServerAllCommand(ILogger<GenerateServerAllCommand> logger) => this.logger = logger;
 
-////            ConsoleHelper.WriteHeader();
+    public override Task<int> ExecuteAsync(
+        CommandContext context,
+        ServerAllCommandSettings settings)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(settings);
+        return ExecuteInternalAsync(settings);
+    }
 
-////            var verboseMode = CommandLineApplicationHelper.GetVerboseMode(configCmd);
-////            var apiOptions = ApiOptionsHelper.CreateDefault(configCmd);
-////            ApiOptionsHelper.ApplyValidationOverrides(apiOptions, configCmd);
-////            ApiOptionsHelper.ApplyGeneratorOverrides(apiOptions, configCmd);
+    private async Task<int> ExecuteInternalAsync(
+        ServerAllCommandSettings settings)
+    {
+        ConsoleHelper.WriteHeader();
 
-////            var specificationPath = CommandLineApplicationHelper.GetSpecificationPath(configCmd);
-////            var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(specificationPath);
+        var projectPrefixName = settings.ProjectPrefixName;
+        var outputSlnPath = settings.OutputSlnPath;
+        var outputSrcPath = new DirectoryInfo(settings.OutputSrcPath);
 
-////            var logItems = new List<LogKeyValueItem>();
-////            logItems.AddRange(OpenApiDocumentHelper.Validate(apiDocument, apiOptions.Validation));
+        // TODO: Handle outputpath?!?!
 
-////            if (logItems.Any(x => x.LogCategory == LogCategoryType.Error))
-////            {
-////                return ConsoleHelper.WriteLogItemsAndExit(logItems, verboseMode, CommandArea);
-////            }
+        DirectoryInfo? outputTestPath = null;
 
-////            var projectPrefixName = CommandLineApplicationHelper.GetProjectPrefixName(configCmd);
-////            var outputSlnPath = CommandLineApplicationHelper.GetOutputSlnPath(configCmd);
-////            var outputSrcPath = CommandLineApplicationHelper.GetOutputSrcPath(configCmd);
-////            var outputTestPath = CommandLineApplicationHelper.GetOutputTestPath(configCmd);
-////            var useCodingRules = CommandLineApplicationHelper.GetDisableCodingRules(configCmd);
+        if (settings.OutputTestPath is not null &&
+            settings.OutputTestPath.IsSet)
+        {
+            outputTestPath = new DirectoryInfo(settings.OutputTestPath.Value);
+        }
 
-////            logItems.AddRange(GenerateHelper.GenerateServerApi(
-////                projectPrefixName,
-////                outputSrcPath,
-////                outputTestPath,
-////                apiDocument,
-////                apiOptions));
+        var apiOptions = await ApiOptionsHelper.CreateApiOptions(settings);
+        var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(settings.SpecificationPath);
 
-////            if (logItems.Any(x => x.LogCategory == LogCategoryType.Error))
-////            {
-////                return ConsoleHelper.WriteLogItemsAndExit(logItems, verboseMode, CommandArea);
-////            }
+        var logItems = new List<LogKeyValueItem>();
 
-////            logItems.AddRange(GenerateHelper.GenerateServerDomain(
-////                projectPrefixName,
-////                outputSrcPath,
-////                outputTestPath,
-////                apiDocument,
-////                apiOptions,
-////                outputSrcPath));
+        try
+        {
+            logItems.AddRange(OpenApiDocumentHelper.Validate(apiDocument, apiOptions.Validation));
 
-////            if (logItems.Any(x => x.LogCategory == LogCategoryType.Error))
-////            {
-////                return ConsoleHelper.WriteLogItemsAndExit(logItems, verboseMode, CommandArea);
-////            }
+            if (logItems.HasAnyErrorsLogIfNeeded(logger))
+            {
+                return ConsoleExitStatusCodes.Failure;
+            }
 
-////            logItems.AddRange(GenerateHelper.GenerateServerHost(
-////                projectPrefixName,
-////                outputSrcPath,
-////                outputTestPath,
-////                apiDocument,
-////                apiOptions,
-////                outputSrcPath,
-////                outputSrcPath));
+            logItems.AddRange(GenerateHelper.GenerateServerApi(
+                projectPrefixName,
+                outputSrcPath,
+                outputTestPath,
+                apiDocument,
+                apiOptions));
 
-////            logItems.AddRange(GenerateHelper.GenerateServerSln(
-////                projectPrefixName,
-////                outputSlnPath,
-////                outputSrcPath,
-////                outputTestPath));
+            if (logItems.HasAnyErrorsLogIfNeeded(logger))
+            {
+                return ConsoleExitStatusCodes.Failure;
+            }
 
-////            if (useCodingRules)
-////            {
-////                logItems.AddRange(GenerateAtcCodingRulesHelper.Generate(
-////                    outputSlnPath,
-////                    outputSrcPath,
-////                    outputTestPath));
-////            }
+            logItems.AddRange(GenerateHelper.GenerateServerDomain(
+                projectPrefixName,
+                outputSrcPath,
+                outputTestPath,
+                apiDocument,
+                apiOptions,
+                outputSrcPath));
 
-////            return ConsoleHelper.WriteLogItemsAndExit(logItems, verboseMode, CommandArea);
-////        }
-////    }
-////}
+            if (logItems.HasAnyErrorsLogIfNeeded(logger))
+            {
+                return ConsoleExitStatusCodes.Failure;
+            }
+
+            logItems.AddRange(GenerateHelper.GenerateServerHost(
+                projectPrefixName,
+                outputSrcPath,
+                outputTestPath,
+                apiDocument,
+                apiOptions,
+                outputSrcPath,
+                outputSrcPath));
+
+            logItems.AddRange(GenerateHelper.GenerateServerSln(
+                projectPrefixName,
+                outputSlnPath,
+                outputSrcPath,
+                outputTestPath));
+
+            if (!settings.DisableCodingRules)
+            {
+                logItems.AddRange(GenerateAtcCodingRulesHelper.Generate(
+                    outputSlnPath,
+                    outputSrcPath,
+                    outputTestPath));
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Generation failed.");
+            return ConsoleExitStatusCodes.Failure;
+        }
+
+        if (logItems.HasAnyErrorsLogIfNeeded(logger))
+        {
+            return ConsoleExitStatusCodes.Failure;
+        }
+
+        logger.LogInformation("Done");
+        return ConsoleExitStatusCodes.Success;
+    }
+}

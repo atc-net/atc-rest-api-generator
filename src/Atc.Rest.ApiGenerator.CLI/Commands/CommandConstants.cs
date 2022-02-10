@@ -16,6 +16,7 @@ namespace Atc.Rest.ApiGenerator.CLI.Commands
         public const string ArgumentLongConfigurationSpecificationPath = "--specificationPath";
         public const string ArgumentLongConfigurationOptionsPath = "--optionsPath";
         public const string ArgumentLongConfigurationAuthorization = "--useAuthorization";
+
         public const string ArgumentLongConfigurationValidateStrictMode = "--validate-strictMode";
         public const string ArgumentLongConfigurationValidateOperationIdCasingStyle = "--validate-operationIdCasingStyle";
         public const string ArgumentLongConfigurationValidateModelNameCasingStyle = "--validate-modelNameCasingStyle";
@@ -23,5 +24,12 @@ namespace Atc.Rest.ApiGenerator.CLI.Commands
 
         public const string ArgumentLongClientFolderName = "--clientFolderName";
         public const string ArgumentLongExcludeEndpointGeneration = "--excludeEndpointGeneration";
+
+        public const string ArgumentLongServerOutputSolutionPath = "--outputSlnPath";
+        public const string ArgumentLongServerOutputSourcePath = "--outputSrcPath";
+        public const string ArgumentLongServerOutputTestPath = "--outputTestPath";
+        public const string ArgumentLongServerOutputApiPath = "--apiPath";
+        public const string ArgumentLongServerOutputDomainPath = "--domainPath";
+        public const string ArgumentLongServerDisableCodingRules = "--disableCodingRules";
     }
 }

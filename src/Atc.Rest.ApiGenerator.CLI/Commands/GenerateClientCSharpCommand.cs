@@ -1,10 +1,8 @@
-// ReSharper disable LocalizableElement
 namespace Atc.Rest.ApiGenerator.CLI.Commands;
 
 public class GenerateClientCSharpCommand : AsyncCommand<ClientApiCommandSettings>
 {
     private readonly ILogger<GenerateClientCSharpCommand> logger;
-    ////private const string CommandArea = "Client-CSharp";
 
     public GenerateClientCSharpCommand(ILogger<GenerateClientCSharpCommand> logger) => this.logger = logger;
 

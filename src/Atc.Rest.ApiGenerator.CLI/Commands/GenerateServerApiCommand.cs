@@ -1,52 +1,66 @@
-////using System.Collections.Generic;
-////using System.Diagnostics.CodeAnalysis;
-////using System.Linq;
-////using Atc.Data.Models;
-////using Atc.Rest.ApiGenerator.CLI.Commands.Options;
-////using Atc.Rest.ApiGenerator.Helpers;
-////using McMaster.Extensions.CommandLineUtils;
+namespace Atc.Rest.ApiGenerator.CLI.Commands;
 
-////// ReSharper disable LocalizableElement
-////namespace Atc.Rest.ApiGenerator.CLI.Commands
-////{
-////    [Command("api", Description = "Create API project.")]
-////    public class GenerateServerApiCommand : ServerApiCommandOptions
-////    {
-////        private const string CommandArea = "Server-API";
+public class GenerateServerApiCommand : AsyncCommand<ServerApiCommandSettings>
+{
+    private readonly ILogger<GenerateServerApiCommand> logger;
 
-////        [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "OK.")]
-////        public int OnExecute(CommandLineApplication configCmd)
-////        {
-////            ConsoleHelper.WriteHeader();
+    public GenerateServerApiCommand(ILogger<GenerateServerApiCommand> logger) => this.logger = logger;
 
-////            var verboseMode = CommandLineApplicationHelper.GetVerboseMode(configCmd);
-////            var apiOptions = ApiOptionsHelper.CreateDefault(configCmd);
-////            ApiOptionsHelper.ApplyValidationOverrides(apiOptions, configCmd);
-////            ApiOptionsHelper.ApplyGeneratorOverrides(apiOptions, configCmd);
+    public override Task<int> ExecuteAsync(
+        CommandContext context,
+        ServerApiCommandSettings settings)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(settings);
+        return ExecuteInternalAsync(settings);
+    }
 
-////            var specificationPath = CommandLineApplicationHelper.GetSpecificationPath(configCmd);
-////            var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(specificationPath);
+    private async Task<int> ExecuteInternalAsync(
+        ServerApiCommandSettings settings)
+    {
+        ConsoleHelper.WriteHeader();
 
-////            var logItems = new List<LogKeyValueItem>();
-////            logItems.AddRange(OpenApiDocumentHelper.Validate(apiDocument, apiOptions.Validation));
+        DirectoryInfo? outputTestPath = null;
 
-////            if (logItems.Any(x => x.LogCategory == LogCategoryType.Error))
-////            {
-////                return ConsoleHelper.WriteLogItemsAndExit(logItems, verboseMode, CommandArea);
-////            }
+        if (settings.OutputTestPath is not null &&
+            settings.OutputTestPath.IsSet)
+        {
+            outputTestPath = new DirectoryInfo(settings.OutputTestPath.Value);
+        }
 
-////            var projectPrefixName = CommandLineApplicationHelper.GetProjectPrefixName(configCmd);
-////            var outputPath = CommandLineApplicationHelper.GetOutputPath(configCmd);
-////            var outputTestPath = CommandLineApplicationHelper.GetOutputTestPath(configCmd);
+        var apiOptions = await ApiOptionsHelper.CreateApiOptions(settings);
+        var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(settings.SpecificationPath);
 
-////            logItems.AddRange(GenerateHelper.GenerateServerApi(
-////                projectPrefixName,
-////                outputPath,
-////                outputTestPath,
-////                apiDocument,
-////                apiOptions));
+        var logItems = new List<LogKeyValueItem>();
 
-////            return ConsoleHelper.WriteLogItemsAndExit(logItems, verboseMode, CommandArea);
-////        }
-////    }
-////}
+        try
+        {
+            logItems.AddRange(OpenApiDocumentHelper.Validate(apiDocument, apiOptions.Validation));
+
+            if (logItems.HasAnyErrorsLogIfNeeded(logger))
+            {
+                return ConsoleExitStatusCodes.Failure;
+            }
+
+            logItems.AddRange(GenerateHelper.GenerateServerApi(
+                settings.ProjectPrefixName,
+                new DirectoryInfo(settings.OutputPath),
+                outputTestPath,
+                apiDocument,
+                apiOptions));
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Generation failed.");
+            return ConsoleExitStatusCodes.Failure;
+        }
+
+        if (logItems.HasAnyErrorsLogIfNeeded(logger))
+        {
+            return ConsoleExitStatusCodes.Failure;
+        }
+
+        logger.LogInformation("Done");
+        return ConsoleExitStatusCodes.Success;
+    }
+}

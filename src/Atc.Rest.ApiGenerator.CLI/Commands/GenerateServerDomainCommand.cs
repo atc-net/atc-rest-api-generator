@@ -1,54 +1,68 @@
-////using System.Collections.Generic;
-////using System.Diagnostics.CodeAnalysis;
-////using System.Linq;
-////using Atc.Data.Models;
-////using Atc.Rest.ApiGenerator.CLI.Commands.Options;
-////using Atc.Rest.ApiGenerator.Helpers;
-////using McMaster.Extensions.CommandLineUtils;
+namespace Atc.Rest.ApiGenerator.CLI.Commands
+{
+    public class GenerateServerDomainCommand : AsyncCommand<ServerDomainCommandSettings>
+    {
+        private readonly ILogger<GenerateServerDomainCommand> logger;
 
-////// ReSharper disable LocalizableElement
-////namespace Atc.Rest.ApiGenerator.CLI.Commands
-////{
-////    [Command("domain", Description = "Create domain project (requires API project).")]
-////    public class GenerateServerDomainCommand : ServerDomainCommandOptions
-////    {
-////        private const string CommandArea = "Server-Domain";
+        public GenerateServerDomainCommand(ILogger<GenerateServerDomainCommand> logger) => this.logger = logger;
 
-////        [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "OK.")]
-////        public int OnExecute(CommandLineApplication configCmd)
-////        {
-////            ConsoleHelper.WriteHeader();
+        public override Task<int> ExecuteAsync(
+            CommandContext context,
+            ServerDomainCommandSettings settings)
+        {
+            ArgumentNullException.ThrowIfNull(context);
+            ArgumentNullException.ThrowIfNull(settings);
+            return ExecuteInternalAsync(settings);
+        }
 
-////            var verboseMode = CommandLineApplicationHelper.GetVerboseMode(configCmd);
-////            var apiOptions = ApiOptionsHelper.CreateDefault(configCmd);
-////            ApiOptionsHelper.ApplyValidationOverrides(apiOptions, configCmd);
-////            ApiOptionsHelper.ApplyGeneratorOverrides(apiOptions, configCmd);
+        private async Task<int> ExecuteInternalAsync(
+            ServerDomainCommandSettings settings)
+        {
+            ConsoleHelper.WriteHeader();
 
-////            var specificationPath = CommandLineApplicationHelper.GetSpecificationPath(configCmd);
-////            var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(specificationPath);
+            DirectoryInfo? outputTestPath = null;
 
-////            var logItems = new List<LogKeyValueItem>();
-////            logItems.AddRange(OpenApiDocumentHelper.Validate(apiDocument, apiOptions.Validation));
+            if (settings.OutputTestPath is not null &&
+                settings.OutputTestPath.IsSet)
+            {
+                outputTestPath = new DirectoryInfo(settings.OutputTestPath.Value);
+            }
 
-////            if (logItems.Any(x => x.LogCategory == LogCategoryType.Error))
-////            {
-////                return ConsoleHelper.WriteLogItemsAndExit(logItems, verboseMode, CommandArea);
-////            }
+            var apiOptions = await ApiOptionsHelper.CreateApiOptions(settings);
+            var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(settings.SpecificationPath);
 
-////            var projectPrefixName = CommandLineApplicationHelper.GetProjectPrefixName(configCmd);
-////            var outputPath = CommandLineApplicationHelper.GetOutputPath(configCmd);
-////            var outputTestPath = CommandLineApplicationHelper.GetOutputTestPath(configCmd);
-////            var apiPath = CommandLineApplicationHelper.GetApiPath(configCmd);
+            var logItems = new List<LogKeyValueItem>();
 
-////            logItems.AddRange(GenerateHelper.GenerateServerDomain(
-////                projectPrefixName,
-////                outputPath,
-////                outputTestPath,
-////                apiDocument,
-////                apiOptions,
-////                apiPath));
+            try
+            {
+                logItems.AddRange(OpenApiDocumentHelper.Validate(apiDocument, apiOptions.Validation));
 
-////            return ConsoleHelper.WriteLogItemsAndExit(logItems, verboseMode, CommandArea);
-////        }
-////    }
-////}
+                if (logItems.HasAnyErrorsLogIfNeeded(logger))
+                {
+                    return ConsoleExitStatusCodes.Failure;
+                }
+
+                logItems.AddRange(GenerateHelper.GenerateServerDomain(
+                    settings.ProjectPrefixName,
+                    new DirectoryInfo(settings.OutputPath),
+                    outputTestPath,
+                    apiDocument,
+                    apiOptions,
+                    new DirectoryInfo(settings.ApiPath)));
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Generation failed.");
+                return ConsoleExitStatusCodes.Failure;
+            }
+
+            if (logItems.HasAnyErrorsLogIfNeeded(logger))
+            {
+                return ConsoleExitStatusCodes.Failure;
+            }
+
+            logger.LogInformation("Done");
+            return ConsoleExitStatusCodes.Success;
+        }
+    }
+}
