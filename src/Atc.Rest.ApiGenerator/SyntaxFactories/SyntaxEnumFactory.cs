@@ -58,7 +58,8 @@ internal static class SyntaxEnumFactory
             enumDeclaration = enumDeclaration.AddMembers(SyntaxFactory.EnumMemberDeclaration(line));
 
             var sa = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            if (sa.Length > 0 && sa.First().Equals("Object", StringComparison.Ordinal))
+            if (sa.Length > 0 &&
+                sa.First().Equals("Object", StringComparison.Ordinal))
             {
                 containTypeName = true;
             }

@@ -52,7 +52,8 @@ public class DomainProjectOptions : BaseProjectOptions
             }
         }
 
-        if (ApiProjectSrcCsProj is null || !ApiProjectSrcCsProj.Exists)
+        if (ApiProjectSrcCsProj is null ||
+            !ApiProjectSrcCsProj.Exists)
         {
             logItems.Add(LogItemHelper.Create(LogCategoryType.Error, ValidationRuleNameConstants.ProjectHostGenerated04, "Can't find API .csproj file"));
         }

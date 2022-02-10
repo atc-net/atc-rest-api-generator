@@ -93,7 +93,8 @@ public class ServerApiGenerator
 
         var logItems = new List<LogKeyValueItem>();
 
-        if (projectOptions.PathForSrcGenerate.Exists && projectOptions.ProjectSrcCsProj.Exists)
+        if (projectOptions.PathForSrcGenerate.Exists &&
+            projectOptions.ProjectSrcCsProj.Exists)
         {
             var element = XElement.Load(projectOptions.ProjectSrcCsProj.FullName);
             var originalNullableValue = SolutionAndProjectHelper.GetBoolFromNullableString(SolutionAndProjectHelper.GetNullableValueFromProject(element));

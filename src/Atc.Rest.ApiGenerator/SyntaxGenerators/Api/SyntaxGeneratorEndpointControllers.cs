@@ -157,7 +157,8 @@ public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointContro
                 var operationName = apiOperation.Value.GetOperationName();
 
                 string? contractParameterTypeName = null;
-                if (apiOperation.Value.HasParametersOrRequestBody() || value.HasParameters())
+                if (apiOperation.Value.HasParametersOrRequestBody() ||
+                    value.HasParameters())
                 {
                     contractParameterTypeName = operationName + NameConstants.ContractParameters;
                 }

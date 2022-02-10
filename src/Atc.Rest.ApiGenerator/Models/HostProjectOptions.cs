@@ -53,7 +53,8 @@ public class HostProjectOptions : BaseProjectOptions
             }
         }
 
-        if (ApiProjectSrcCsProj is null || !ApiProjectSrcCsProj.Exists)
+        if (ApiProjectSrcCsProj is null ||
+            !ApiProjectSrcCsProj.Exists)
         {
             logItems.Add(LogItemHelper.Create(LogCategoryType.Error, ValidationRuleNameConstants.ProjectHostGenerated04, "Can't find API .csproj file"));
         }
@@ -72,7 +73,8 @@ public class HostProjectOptions : BaseProjectOptions
             }
         }
 
-        if (DomainProjectSrcCsProj is null || !DomainProjectSrcCsProj.Exists)
+        if (DomainProjectSrcCsProj is null ||
+            !DomainProjectSrcCsProj.Exists)
         {
             logItems.Add(LogItemHelper.Create(LogCategoryType.Error, ValidationRuleNameConstants.ProjectHostGenerated05, "Can't find Domain .csproj file"));
         }

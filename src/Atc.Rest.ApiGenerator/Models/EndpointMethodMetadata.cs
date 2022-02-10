@@ -211,7 +211,8 @@ public class EndpointMethodMetadata
     public bool HasContractParameterAnyParametersOrRequestBody()
     {
         var apiOperationParameters = ContractParameter?.ApiOperation.Parameters;
-        if (apiOperationParameters is not null && apiOperationParameters.Any())
+        if (apiOperationParameters is not null &&
+            apiOperationParameters.Any())
         {
             return true;
         }

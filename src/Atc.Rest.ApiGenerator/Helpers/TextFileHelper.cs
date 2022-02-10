@@ -21,7 +21,8 @@ public static class TextFileHelper
         ArgumentNullException.ThrowIfNull(fileInfo);
         ArgumentNullException.ThrowIfNull(text);
 
-        if (fileInfo.Directory is not null && !fileInfo.Directory.Exists)
+        if (fileInfo.Directory is not null &&
+            !fileInfo.Directory.Exists)
         {
             Directory.CreateDirectory(fileInfo.Directory.FullName);
         }

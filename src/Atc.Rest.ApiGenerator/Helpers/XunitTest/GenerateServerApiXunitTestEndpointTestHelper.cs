@@ -417,7 +417,8 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
             else
             {
                 var isModelCreated = AppendNewRequestModel(12, sb, endpointMethodMetadata, contractReturnTypeName.StatusCode);
-                if (!isModelCreated && endpointMethodMetadata.HttpOperation.IsRequestBodySupported())
+                if (!isModelCreated &&
+                    endpointMethodMetadata.HttpOperation.IsRequestBodySupported())
                 {
                     sb.AppendLine(12, "var data = \"{ }\";");
                 }
@@ -799,7 +800,8 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
         var routeParameters = endpointMethodMetadata.GetRouteParameters();
         var relativeRefPath = RenderRelativeRefPath(route, routeParameters, routeParameters, endpointMethodMetadata.ComponentsSchemas, useForBadRequest: false);
 
-        if (queryParameters is null || queryParameters.Count == 0)
+        if (queryParameters is null ||
+            queryParameters.Count == 0)
         {
             return relativeRefPath;
         }
@@ -893,7 +895,8 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
     {
         var name = parameter.Name.EnsureFirstCharacterToUpper();
         var schemaForDataType = componentsSchemas.FirstOrDefault(x => x.Key.Equals(parameter.Schema.GetDataType(), StringComparison.OrdinalIgnoreCase));
-        if (schemaForDataType.Key is not null && schemaForDataType.Value.IsSchemaEnumOrPropertyEnum())
+        if (schemaForDataType.Key is not null &&
+            schemaForDataType.Value.IsSchemaEnumOrPropertyEnum())
         {
             return ValueTypeTestPropertiesHelper.CreateValueEnum(name, schemaForDataType, useForBadRequest);
         }

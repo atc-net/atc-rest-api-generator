@@ -120,7 +120,8 @@ internal static class SyntaxMethodDeclarationFactory
         }
 
         var schema = apiRequestBody?.Content?.GetSchemaByFirstMediaType();
-        if (schema is not null && !dictionary.ContainsKey(NameConstants.Request))
+        if (schema is not null &&
+            !dictionary.ContainsKey(NameConstants.Request))
         {
             dictionary.Add(NameConstants.Request, schema);
         }

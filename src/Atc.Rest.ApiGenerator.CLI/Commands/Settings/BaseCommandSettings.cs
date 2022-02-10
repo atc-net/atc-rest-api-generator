@@ -7,6 +7,8 @@ public class BaseCommandSettings : CommandSettings
     public bool Verbose { get; init; }
 
     [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "OK.")]
-    public bool IsOptionValueTrue(bool? value)
-        => value is not null && value.Value;
+    public bool IsOptionValueTrue(
+        bool? value)
+        => value is not null &&
+           value.Value;
 }

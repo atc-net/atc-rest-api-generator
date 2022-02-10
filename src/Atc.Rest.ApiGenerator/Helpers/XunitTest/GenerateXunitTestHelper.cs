@@ -324,7 +324,8 @@ public static class GenerateXunitTestHelper
         }
 
         var schemaPropertyValue = schemaProperty.Value;
-        if (schemaProperty.Value.Properties.Count == 0 && schemaProperty.Value.OneOf.Count > 0)
+        if (schemaProperty.Value.Properties.Count == 0 &&
+            schemaProperty.Value.OneOf.Count > 0)
         {
             schemaPropertyValue = schemaProperty.Value.OneOf.First();
         }

@@ -181,7 +181,8 @@ internal static class SyntaxDocumentationFactory
         string value,
         bool ensureEndingDot = false)
     {
-        if (ensureEndingDot && !value.EndsWith(".", StringComparison.Ordinal))
+        if (ensureEndingDot &&
+            !value.EndsWith(".", StringComparison.Ordinal))
         {
             value += ".";
         }
@@ -267,7 +268,8 @@ internal static class SyntaxDocumentationFactory
             }
         }
 
-        if (ShouldGenerateDefaultSummary(apiSchema) && comments.Count == 1)
+        if (ShouldGenerateDefaultSummary(apiSchema) &&
+            comments.Count == 1)
         {
             comments.Add(CreateComment("Undefined description."));
         }
@@ -351,7 +353,8 @@ internal static class SyntaxDocumentationFactory
     private static IEnumerable<SyntaxTrivia> CreateExample(
         OpenApiSchema apiSchema)
     {
-        if (apiSchema.Extensions is null || apiSchema.Extensions.All(x => x.Key != "x-examples"))
+        if (apiSchema.Extensions is null ||
+            apiSchema.Extensions.All(x => x.Key != "x-examples"))
         {
             return SyntaxFactory.TriviaList();
         }

@@ -37,7 +37,8 @@ public static class OpenApiDocumentValidationHelper
 
         var server = servers.FirstOrDefault();
 
-        if (server is not null && !IsServerUrlValid(server.Url))
+        if (server is not null &&
+            !IsServerUrlValid(server.Url))
         {
             logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Server01, "Invalid server url."));
         }
@@ -312,12 +313,14 @@ public static class OpenApiDocumentValidationHelper
             {
                 var httpStatusCodes = value.Responses.GetHttpStatusCodes();
                 if (httpStatusCodes.Contains(HttpStatusCode.BadRequest) &&
-                    !value.HasParametersOrRequestBody() && !path.HasParameters())
+                    !value.HasParametersOrRequestBody() &&
+                    !path.HasParameters())
                 {
                     logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation10, $"Contains BadRequest response type for operation '{value.OperationId}', but has no parameters."));
                 }
 
-                if (httpStatusCodes.Contains(HttpStatusCode.OK) && httpStatusCodes.Contains(HttpStatusCode.Created))
+                if (httpStatusCodes.Contains(HttpStatusCode.OK) &&
+                    httpStatusCodes.Contains(HttpStatusCode.Created))
                 {
                     // We do not support both 200 and 201, since our ActionResult - implicit operators only supports 1 type.
                     logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation18, $"The operation '{value.OperationId}' contains both 200 and 201, which is not supported."));
@@ -408,7 +411,8 @@ public static class OpenApiDocumentValidationHelper
             var (key, value) = modelSchemas.FirstOrDefault(x => x.Key.Equals(schema.Reference.Id, StringComparison.OrdinalIgnoreCase));
             if (key is not null)
             {
-                return value.Type is not null && value.Type.EndsWith(OpenApiDataTypeConstants.Array, StringComparison.OrdinalIgnoreCase);
+                return value.Type is not null &&
+                       value.Type.EndsWith(OpenApiDataTypeConstants.Array, StringComparison.OrdinalIgnoreCase);
             }
         }
 

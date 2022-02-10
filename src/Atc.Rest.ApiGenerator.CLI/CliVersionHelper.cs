@@ -28,6 +28,7 @@ public static class CliVersionHelper
         }
 
         var latestVersion = GetLatestVersion();
-        return latestVersion is null || !latestVersion.GreaterThan(currentVersion);
+        return latestVersion is null ||
+               !latestVersion.GreaterThan(currentVersion);
     }
 }

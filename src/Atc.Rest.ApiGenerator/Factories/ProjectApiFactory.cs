@@ -163,7 +163,8 @@ public static class ProjectApiFactory
                 list.Add("System.ComponentModel.DataAnnotations");
             }
 
-            if (contentSchema.IsFormatTypeBinary() || contentSchema.HasItemsWithFormatTypeBinary())
+            if (contentSchema.IsFormatTypeBinary() ||
+                contentSchema.HasItemsWithFormatTypeBinary())
             {
                 list.Add("Microsoft.AspNetCore.Http");
             }
@@ -223,6 +224,8 @@ public static class ProjectApiFactory
         return list.ToArray();
     }
 
-    private static bool ShouldUseDataAnnotationsNamespace(IList<OpenApiParameter> parameters)
-        => parameters.Any(x => x.Required) || parameters.HasFormatTypeFromDataAnnotationsNamespace();
+    private static bool ShouldUseDataAnnotationsNamespace(
+        IList<OpenApiParameter> parameters)
+        => parameters.Any(x => x.Required) ||
+           parameters.HasFormatTypeFromDataAnnotationsNamespace();
 }

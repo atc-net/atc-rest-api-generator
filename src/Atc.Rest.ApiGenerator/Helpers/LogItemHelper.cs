@@ -27,7 +27,8 @@ public static class LogItemHelper
         }
 
         var tuple = list.FirstOrDefault(x => x.Item2 == ruleName);
-        if (tuple is null || string.IsNullOrEmpty(tuple.Item2))
+        if (tuple is null ||
+            string.IsNullOrEmpty(tuple.Item2))
         {
             return result;
         }

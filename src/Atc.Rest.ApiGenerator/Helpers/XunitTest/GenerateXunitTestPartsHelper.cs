@@ -18,7 +18,8 @@ public static class GenerateXunitTestPartsHelper
         var propertyName = schemaProperty.Key.EnsureFirstCharacterToUpper();
 
         var isHandled = false;
-        if (isRequired && OpenApiDataTypeConstants.Array.Equals(dataType, StringComparison.OrdinalIgnoreCase))
+        if (isRequired &&
+            OpenApiDataTypeConstants.Array.Equals(dataType, StringComparison.OrdinalIgnoreCase))
         {
             var itemsDataType = schemaProperty.Value.Items.GetDataType();
 
@@ -391,7 +392,8 @@ public static class GenerateXunitTestPartsHelper
         IDictionary<string, OpenApiSchema> componentsSchemas)
     {
         var schemaForDataType = componentsSchemas.FirstOrDefault(x => x.Key.Equals(schema.Value.GetDataType(), StringComparison.OrdinalIgnoreCase));
-        return schemaForDataType.Key is not null && schemaForDataType.Value.IsSchemaEnumOrPropertyEnum()
+        return schemaForDataType.Key is not null &&
+               schemaForDataType.Value.IsSchemaEnumOrPropertyEnum()
             ? schemaForDataType.Key
             : null;
     }
@@ -457,7 +459,8 @@ public static class GenerateXunitTestPartsHelper
         var name = schema.Key.EnsureFirstCharacterToUpper();
         var schemaForDataType = componentsSchemas.FirstOrDefault(x => x.Key.Equals(schema.Value.GetDataType(), StringComparison.OrdinalIgnoreCase));
 
-        if (schemaForDataType.Key is null && schema.Value.IsTypeArray())
+        if (schemaForDataType.Key is null &&
+            schema.Value.IsTypeArray())
         {
             var modelName = schema.Value.GetModelName();
             if (!string.IsNullOrEmpty(modelName))

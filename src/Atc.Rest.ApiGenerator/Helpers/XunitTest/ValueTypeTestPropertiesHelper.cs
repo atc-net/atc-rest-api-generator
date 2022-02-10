@@ -33,7 +33,8 @@ public static class ValueTypeTestPropertiesHelper
             return "@";
         }
 
-        if (name.Equals("Id", StringComparison.OrdinalIgnoreCase) || name.EndsWith("Id", StringComparison.Ordinal))
+        if (name.Equals("Id", StringComparison.OrdinalIgnoreCase) ||
+            name.EndsWith("Id", StringComparison.Ordinal))
         {
             return "27";
         }
@@ -73,18 +74,21 @@ public static class ValueTypeTestPropertiesHelper
             }
         }
 
-        if (useForBadRequest && parameterLocation == ParameterLocation.Query)
+        if (useForBadRequest &&
+            parameterLocation == ParameterLocation.Query)
         {
             return string.Empty;
         }
 
-        if (name.Equals("Id", StringComparison.OrdinalIgnoreCase) || name.EndsWith("Id", StringComparison.Ordinal))
+        if (name.Equals("Id", StringComparison.OrdinalIgnoreCase) ||
+            name.EndsWith("Id", StringComparison.Ordinal))
         {
             return CreateValueStringId(useForBadRequest, itemNumber, customValue);
         }
 
         var val = CreateValueStringDefault(useForBadRequest, itemNumber, customValue);
-        if (!useForBadRequest && schema.IsRuleValidationString())
+        if (!useForBadRequest &&
+            schema.IsRuleValidationString())
         {
             var min = schema.MinLength ?? 0;
             if (val.Length < min)

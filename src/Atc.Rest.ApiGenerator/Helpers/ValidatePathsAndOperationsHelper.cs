@@ -153,8 +153,9 @@ public static class ValidatePathsAndOperationsHelper
 
         foreach (var (key, value) in path.Value.Operations)
         {
-            if (key != OperationType.Get || (path.Value.Parameters.All(x => x.In != ParameterLocation.Path) &&
-                                             value.Parameters.All(x => x.In != ParameterLocation.Path)))
+            if (key != OperationType.Get ||
+                (path.Value.Parameters.All(x => x.In != ParameterLocation.Path) &&
+                 value.Parameters.All(x => x.In != ParameterLocation.Path)))
             {
                 continue;
             }

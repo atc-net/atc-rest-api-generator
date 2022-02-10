@@ -65,7 +65,8 @@ public static class OpenApiDocumentSchemaModelNameHelper
                 : $"{projectName}.{NameConstants.Contracts}.{segmentName}.{modelName}";
         }
 
-        if (!modelName.Contains('.', StringComparison.Ordinal) && IsReservedTypeName(modelName))
+        if (!modelName.Contains('.', StringComparison.Ordinal) &&
+            IsReservedTypeName(modelName))
         {
             if (isShared)
             {

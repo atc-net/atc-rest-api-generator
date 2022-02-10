@@ -173,7 +173,8 @@ public class SyntaxGeneratorContractModel : ISyntaxSchemaCodeGenerator
         // Create class-properties and add to class
         if (ApiSchema.Properties is not null)
         {
-            if (ApiSchema.IsTypeArray() || hasAnyPropertiesAsArrayWithFormatTypeBinary)
+            if (ApiSchema.IsTypeArray() ||
+                hasAnyPropertiesAsArrayWithFormatTypeBinary)
             {
                 var (key, _) = ApiProjectOptions.Document.Components.Schemas.FirstOrDefault(x =>
                     x.Key.Equals(ApiSchema.Title, StringComparison.OrdinalIgnoreCase));
@@ -183,7 +184,8 @@ public class SyntaxGeneratorContractModel : ISyntaxSchemaCodeGenerator
                     key = ApiSchemaKey;
                 }
 
-                if (ApiSchema.Items is not null && string.IsNullOrEmpty(ApiSchema.Items.Title))
+                if (ApiSchema.Items is not null &&
+                    string.IsNullOrEmpty(ApiSchema.Items.Title))
                 {
                     ApiSchema.Items.Title = ApiSchemaKey;
                 }

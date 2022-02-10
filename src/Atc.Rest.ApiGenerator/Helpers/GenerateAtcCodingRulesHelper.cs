@@ -45,7 +45,8 @@ public static class GenerateAtcCodingRulesHelper
             }
 
             // -> test
-            if (outputTestPath is not null && rootPath.FullName != outputTestPath.FullName)
+            if (outputTestPath is not null &&
+                rootPath.FullName != outputTestPath.FullName)
             {
                 logItems.Add(HandleFileEditorConfig(outputTestPath, "test", "test"));
                 logItems.Add(HandleFileDirectoryBuildProps(outputTestPath, "test", "test"));

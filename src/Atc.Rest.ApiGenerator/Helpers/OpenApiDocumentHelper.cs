@@ -20,7 +20,8 @@ public static class OpenApiDocumentHelper
                 ? HttpClientHelper.DownloadToTempFile(specificationPath)
                 : new FileInfo(specificationPath);
 
-            if (apiDocFile is null || !apiDocFile.Exists)
+            if (apiDocFile is null ||
+                !apiDocFile.Exists)
             {
                 throw new IOException("Api yaml file don't exist.");
             }
@@ -31,7 +32,8 @@ public static class OpenApiDocumentHelper
                 ? HttpClientHelper.DownloadToTempFile(specificationPath)
                 : new FileInfo(specificationPath);
 
-            if (apiDocFile is null || !apiDocFile.Exists)
+            if (apiDocFile is null ||
+                !apiDocFile.Exists)
             {
                 throw new IOException("Api json file don't exist.");
             }

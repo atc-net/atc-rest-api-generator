@@ -155,7 +155,8 @@ internal static class PropertyDeclarationSyntaxExtensions
                 propertyDeclaration = propertyDeclaration.AddValidationAttribute(new MaxLengthAttribute(schema.MaxLength.Value));
             }
 
-            if (schema.Minimum == null && schema.Maximum == null)
+            if (schema.Minimum == null &&
+                schema.Maximum == null)
             {
                 return propertyDeclaration;
             }

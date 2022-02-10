@@ -186,7 +186,8 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
             var schema = ApiOperation.Responses.GetSchemaForStatusCode(httpStatusCode);
 
             var useProblemDetails = ApiOperation.Responses.IsSchemaTypeProblemDetailsForStatusCode(httpStatusCode);
-            if (!useProblemDetails && ApiProjectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody)
+            if (!useProblemDetails &&
+                ApiProjectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody)
             {
                 useProblemDetails = true;
             }
@@ -208,17 +209,20 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
                             if (string.IsNullOrEmpty(modelName))
                             {
                                 if (schema is not null &&
-                                    (schema.IsSimpleDataType() || schema.IsTypeArrayOrPagination()))
+                                    (schema.IsSimpleDataType() ||
+                                     schema.IsTypeArrayOrPagination()))
                                 {
                                     if (schema.IsSimpleDataType())
                                     {
                                         methodDeclaration = CreateTypeRequestObjectResult(className, httpStatusCode.ToNormalizedString(), schema.GetDataType(), "response", isList, isPagination);
                                     }
-                                    else if (schema.IsTypeArray() && schema.HasItemsWithSimpleDataType())
+                                    else if (schema.IsTypeArray() &&
+                                             schema.HasItemsWithSimpleDataType())
                                     {
                                         methodDeclaration = CreateTypeRequestObjectResult(className, httpStatusCode.ToNormalizedString(), schema.GetSimpleDataTypeFromArray(), "response", isList, isPagination);
                                     }
-                                    else if (schema.IsTypePagination() && schema.HasPaginationItemsWithSimpleDataType())
+                                    else if (schema.IsTypePagination() &&
+                                             schema.HasPaginationItemsWithSimpleDataType())
                                     {
                                         methodDeclaration = CreateTypeRequestObjectResult(className, httpStatusCode.ToNormalizedString(), schema.GetSimpleDataTypeFromPagination(), "response", isList, isPagination);
                                     }
@@ -244,17 +248,20 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
                             if (string.IsNullOrEmpty(modelName))
                             {
                                 if (schema is not null &&
-                                    (schema.IsSimpleDataType() || schema.IsTypeArrayOrPagination()))
+                                    (schema.IsSimpleDataType() ||
+                                     schema.IsTypeArrayOrPagination()))
                                 {
                                     if (schema.IsSimpleDataType())
                                     {
                                         methodDeclaration = CreateTypeRequestObjectResult(className, httpStatusCode.ToNormalizedString(), schema.GetDataType(), "response", isList, isPagination);
                                     }
-                                    else if (schema.IsTypeArray() && schema.HasItemsWithSimpleDataType())
+                                    else if (schema.IsTypeArray() &&
+                                             schema.HasItemsWithSimpleDataType())
                                     {
                                         methodDeclaration = CreateTypeRequestObjectResult(className, httpStatusCode.ToNormalizedString(), schema.GetSimpleDataTypeFromArray(), "response", isList, isPagination);
                                     }
-                                    else if (schema.IsTypePagination() && schema.HasPaginationItemsWithSimpleDataType())
+                                    else if (schema.IsTypePagination() &&
+                                             schema.HasPaginationItemsWithSimpleDataType())
                                     {
                                         methodDeclaration = CreateTypeRequestObjectResult(className, httpStatusCode.ToNormalizedString(), schema.GetSimpleDataTypeFromPagination(), "response", isList, isPagination);
                                     }
@@ -687,7 +694,8 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
         }
 
         var modelName = responses.GetModelNameForStatusCode(httpStatusCode);
-        if (string.IsNullOrEmpty(modelName) && httpStatusCode == HttpStatusCode.Created)
+        if (string.IsNullOrEmpty(modelName) &&
+            httpStatusCode == HttpStatusCode.Created)
         {
             return null;
         }
@@ -707,19 +715,22 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
             {
                 var schema = responses.GetSchemaForStatusCode(HttpStatusCode.OK);
                 if (schema is not null &&
-                    (schema.IsSimpleDataType() || schema.IsTypeArrayOrPagination()))
+                    (schema.IsSimpleDataType() ||
+                     schema.IsTypeArrayOrPagination()))
                 {
                     if (schema.IsSimpleDataType())
                     {
                         return CreateImplicitOperator(className, schema.GetDataType(), httpStatusCode, isList, isPagination);
                     }
 
-                    if (schema.IsTypeArray() && schema.HasItemsWithSimpleDataType())
+                    if (schema.IsTypeArray() &&
+                        schema.HasItemsWithSimpleDataType())
                     {
                         return CreateImplicitOperator(className, schema.GetSimpleDataTypeFromArray(), httpStatusCode, isList, isPagination);
                     }
 
-                    if (schema.IsTypePagination() && schema.HasPaginationItemsWithSimpleDataType())
+                    if (schema.IsTypePagination() &&
+                        schema.HasPaginationItemsWithSimpleDataType())
                     {
                         return CreateImplicitOperator(className, schema.GetSimpleDataTypeFromPagination(), httpStatusCode, isList, isPagination);
                     }

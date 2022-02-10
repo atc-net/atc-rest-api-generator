@@ -65,7 +65,8 @@ internal static class OpenApiResponsesExtensions
             modelName = OpenApiDocumentSchemaModelNameHelper.EnsureModelNameWithNamespaceIfNeeded(projectName, contractArea, modelName, isShared, isClient);
 
             var useProblemDetails = responses.IsSchemaTypeProblemDetailsForStatusCode(httpStatusCode);
-            if (!useProblemDetails && useProblemDetailsAsDefaultResponseBody)
+            if (!useProblemDetails &&
+                useProblemDetailsAsDefaultResponseBody)
             {
                 useProblemDetails = true;
             }
@@ -163,7 +164,8 @@ internal static class OpenApiResponsesExtensions
             }
         }
 
-        if (includeIfNotDefinedValidation && result.All(x => x.Item1 != HttpStatusCode.BadRequest))
+        if (includeIfNotDefinedValidation &&
+            result.All(x => x.Item1 != HttpStatusCode.BadRequest))
         {
             result.Add(useProblemDetailsAsDefaultResponseBody
                 ? Tuple.Create(HttpStatusCode.BadRequest, "ValidationProblemDetails")
@@ -187,7 +189,8 @@ internal static class OpenApiResponsesExtensions
             }
         }
 
-        if (includeIfNotDefinedInternalServerError && result.All(x => x.Item1 != HttpStatusCode.InternalServerError))
+        if (includeIfNotDefinedInternalServerError &&
+            result.All(x => x.Item1 != HttpStatusCode.InternalServerError))
         {
             result.Add(useProblemDetailsAsDefaultResponseBody
                 ? Tuple.Create(HttpStatusCode.InternalServerError, "ProblemDetails")

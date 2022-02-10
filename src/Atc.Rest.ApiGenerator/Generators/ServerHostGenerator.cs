@@ -47,7 +47,8 @@ public class ServerHostGenerator
 
         var logItems = new List<LogKeyValueItem>();
 
-        if (projectOptions.PathForSrcGenerate.Exists && projectOptions.ProjectSrcCsProj.Exists)
+        if (projectOptions.PathForSrcGenerate.Exists &&
+            projectOptions.ProjectSrcCsProj.Exists)
         {
             var element = XElement.Load(projectOptions.ProjectSrcCsProj.FullName);
             var originalNullableValue = SolutionAndProjectHelper.GetBoolFromNullableString(SolutionAndProjectHelper.GetNullableValueFromProject(element));
@@ -894,12 +895,14 @@ public class ServerHostGenerator
     {
         var logItems = new List<LogKeyValueItem>();
 
-        if (projectOptions.PathForTestGenerate is null || projectOptions.ProjectTestCsProj is null)
+        if (projectOptions.PathForTestGenerate is null ||
+            projectOptions.ProjectTestCsProj is null)
         {
             return logItems;
         }
 
-        if (projectOptions.PathForTestGenerate.Exists && projectOptions.ProjectTestCsProj.Exists)
+        if (projectOptions.PathForTestGenerate.Exists &&
+            projectOptions.ProjectTestCsProj.Exists)
         {
             // Update
         }

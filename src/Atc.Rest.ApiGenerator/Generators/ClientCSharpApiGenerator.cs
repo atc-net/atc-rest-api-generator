@@ -54,7 +54,8 @@ namespace Atc.Rest.ApiGenerator.Generators
 
             var logItems = new List<LogKeyValueItem>();
 
-            if (projectOptions.PathForSrcGenerate.Exists && projectOptions.ProjectSrcCsProj.Exists)
+            if (projectOptions.PathForSrcGenerate.Exists &&
+                projectOptions.ProjectSrcCsProj.Exists)
             {
                 logItems.Add(LogItemFactory.CreateDebug("FileSkip", "#", "No updates for csproj"));
             }

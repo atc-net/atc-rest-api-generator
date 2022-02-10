@@ -28,7 +28,8 @@ public class SyntaxGeneratorContractParameters : ISyntaxGeneratorContractParamet
 
             foreach (var apiOperation in urlPath.Value.Operations)
             {
-                if (!apiOperation.Value.HasParametersOrRequestBody() && !urlPath.Value.HasParameters())
+                if (!apiOperation.Value.HasParametersOrRequestBody() &&
+                    !urlPath.Value.HasParameters())
                 {
                     continue;
                 }

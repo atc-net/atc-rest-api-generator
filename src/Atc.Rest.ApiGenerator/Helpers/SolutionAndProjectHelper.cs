@@ -60,7 +60,8 @@ public static class SolutionAndProjectHelper
             }
         }
 
-        if (frameworkReferences is not null && frameworkReferences.Count > 0)
+        if (frameworkReferences is not null &&
+            frameworkReferences.Count > 0)
         {
             sb.AppendLine(2, "<ItemGroup>");
             foreach (var frameworkReference in frameworkReferences.OrderBy(x => x))
@@ -72,7 +73,8 @@ public static class SolutionAndProjectHelper
             sb.AppendLine();
         }
 
-        if (packageReferences is not null && packageReferences.Count > 0)
+        if (packageReferences is not null &&
+            packageReferences.Count > 0)
         {
             sb.AppendLine(2, "<ItemGroup>");
             foreach (var (package, version, extra) in packageReferences.OrderBy(x => x.Item1))
@@ -98,7 +100,8 @@ public static class SolutionAndProjectHelper
             sb.AppendLine();
         }
 
-        if (projectReferences is not null && projectReferences.Count > 0)
+        if (projectReferences is not null &&
+            projectReferences.Count > 0)
         {
             sb.AppendLine(2, "<ItemGroup>");
             foreach (var projectReference in projectReferences.OrderBy(x => x.Name))
