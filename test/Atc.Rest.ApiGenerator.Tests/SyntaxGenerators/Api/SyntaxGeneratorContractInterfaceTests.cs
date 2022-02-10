@@ -1,48 +1,35 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Atc.Rest.ApiGenerator.Models;
-using Atc.Rest.ApiGenerator.SyntaxGenerators;
-using Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
-using Atc.Rest.ApiGenerator.Tests.XUnitTestTypes.CodeGenerator;
-using Microsoft.OpenApi.Models;
-using VerifyXunit;
-using Xunit;
+namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api;
 
-namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
+[UsesVerify]
+public class SyntaxGeneratorContractInterfaceTests : SyntaxCodeGeneratorTestBase
 {
-    [UsesVerify]
-    public class SyntaxGeneratorContractInterfaceTests : SyntaxCodeGeneratorTestBase
+    public static IEnumerable<object[]> TestInput { get; } = AllTestInput
+        .Where(x => x.TestDirectory.Contains("ContractInterface", StringComparison.Ordinal))
+        .Select(x => new object[] { x });
+
+    protected override ISyntaxCodeGenerator CreateGenerator(
+        ApiProjectOptions apiProject)
     {
-        public static IEnumerable<object[]> TestInput { get; } = AllTestInput
-            .Where(x => x.TestDirectory.Contains("ContractInterface", StringComparison.Ordinal))
-            .Select(x => new object[] { x });
+        // Verify spec file supported for unit test
+        Assert.Single(apiProject.Document.Paths);
+        var urlPath = apiProject.Document.Paths.First();
+        Assert.False(urlPath.IsPathStartingSegmentName(FocusOnSegment));
+        Assert.Single(urlPath.Value.Operations);
+        var (operationType, openApiOperation) = urlPath.Value.Operations.First();
 
-        protected override ISyntaxCodeGenerator CreateGenerator(ApiProjectOptions apiProject)
-        {
-            // Verify spec file supported for unit test
-            Assert.Single(apiProject.Document.Paths);
-            var urlPath = apiProject.Document.Paths.First();
-            Assert.False(urlPath.IsPathStartingSegmentName(FocusOnSegment));
-            Assert.Single(urlPath.Value.Operations);
-            var (operationType, openApiOperation) = urlPath.Value.Operations.First();
-
-            // Construct SUT
-            return new SyntaxGeneratorContractInterface(
-                        apiProject,
-                        urlPath.Value.Parameters,
-                        operationType,
-                        openApiOperation,
-                        FocusOnSegment,
-                        urlPath.Value.HasParameters() || openApiOperation.HasParametersOrRequestBody());
-        }
-
-        [Theory(DisplayName = "Api Contract Interface")]
-        [MemberData(nameof(TestInput))]
-        public Task ExecuteGeneratorTest(GeneratorTestInput input)
-        {
-            return VerifyGeneratedOutput(input);
-        }
+        // Construct SUT
+        return new SyntaxGeneratorContractInterface(
+            apiProject,
+            urlPath.Value.Parameters,
+            operationType,
+            openApiOperation,
+            FocusOnSegment,
+            urlPath.Value.HasParameters() || openApiOperation.HasParametersOrRequestBody());
     }
+
+    [Theory(DisplayName = "Api Contract Interface")]
+    [MemberData(nameof(TestInput))]
+    public Task ExecuteGeneratorTest(
+        GeneratorTestInput input)
+        => VerifyGeneratedOutput(input);
 }

@@ -1,5 +1,3 @@
-using Atc.Rest.ApiGenerator.Factories;
-
 namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient;
 
 public class SyntaxGeneratorClientEndpointInterface : SyntaxGeneratorClientEndpointBase, ISyntaxCodeGenerator

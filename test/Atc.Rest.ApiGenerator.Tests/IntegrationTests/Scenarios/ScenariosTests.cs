@@ -1,124 +1,112 @@
-using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Atc.DotNet;
-using Atc.Helpers;
-using Microsoft.Extensions.Logging.Abstractions;
-using VerifyTests;
-using VerifyXunit;
-using Xunit;
+namespace Atc.Rest.ApiGenerator.Tests.IntegrationTests.Scenarios;
 
-namespace Atc.Rest.ApiGenerator.Tests.IntegrationTests.Scenarios
+[UsesVerify]
+public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
 {
-    [UsesVerify]
-    public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
+    private static readonly string WorkingDirectory = Path.Combine(Path.GetTempPath(), "atc-rest-api-generator-integration-test");
+
+    [Fact]
+    public async Task ValidateAndBuildScenarios()
     {
-        private static readonly string WorkingDirectory = Path.Combine(Path.GetTempPath(), "atc-rest-api-generator-integration-test");
+        var cliExeFile = GetExecutableFileForCli(typeof(CLI.Program), "test");
 
-        [Fact]
-        public async Task ValidateAndBuildScenarios()
+        foreach (var scenario in CollectScenarios())
         {
-            var cliExeFile = GetExecutableFileForCli(typeof(CLI.Program), "test");
+            //----------------------------------------------------------------------------------------
+            // Step 1:
+            // Find and validate the yaml specification.
+            //----------------------------------------------------------------------------------------
+            var specificationPath = GetYamlSpecificationPath(scenario.FullName);
 
-            foreach (var scenario in CollectScenarios())
+            var cliExecutionResult = await ProcessHelper.Execute(
+                cliExeFile,
+                $"validate schema --specificationPath {specificationPath}");
+
+            var cliOutputLines = cliExecutionResult.output.Split(
+                Environment.NewLine,
+                StringSplitOptions.RemoveEmptyEntries);
+
+            Assert.True(cliExecutionResult.isSuccessful);
+            Assert.Equal("Schema is OK.", cliOutputLines[^1]);
+
+            //----------------------------------------------------------------------------------------
+            // Step 2:
+            // Invoke the generator with yaml spec, project name and output path arguments.
+            //----------------------------------------------------------------------------------------
+            var outputPath = Path.Combine(WorkingDirectory, scenario.Name);
+
+            cliExecutionResult = await ProcessHelper.Execute(
+                cliExeFile,
+                "generate server all " +
+                $"--specificationPath {specificationPath} " +
+                $"--projectPrefixName {scenario.Name} " +
+                $"--outputSlnPath {outputPath} " +
+                $"--outputSrcPath {Path.Combine(outputPath, "src")} " +
+                $"--outputTestPath {Path.Combine(outputPath, "test")} " +
+                "--disableCodingRules " +
+                "-v");
+
+            Assert.True(cliExecutionResult.isSuccessful);
+
+            //----------------------------------------------------------------------------------------
+            // Step 3:
+            // Iterate files in this scenario's Verify folder and compare them to the generated output.
+            //----------------------------------------------------------------------------------------
+            var verifyPath = Path.Combine(scenario.FullName, "Verify");
+            var verifyCsFiles = Directory
+                .GetFiles(verifyPath, "*.verified.cs", SearchOption.AllDirectories)
+                .Select(x => new FileInfo(x))
+                .ToArray();
+
+            foreach (var verifyFile in verifyCsFiles)
             {
-                //----------------------------------------------------------------------------------------
-                // Step 1:
-                // Find and validate the yaml specification.
-                //----------------------------------------------------------------------------------------
-                var specificationPath = GetYamlSpecificationPath(scenario.FullName);
+                var generatedFile = verifyFile
+                    .FullName
+                    .Replace(".verified", string.Empty, StringComparison.Ordinal)
+                    .Replace(verifyPath, outputPath, StringComparison.Ordinal);
 
-                var cliExecutionResult = await ProcessHelper.Execute(
-                    cliExeFile,
-                    $"validate schema --specificationPath {specificationPath}");
+                Assert.True(File.Exists(generatedFile));
 
-                var cliOutputLines = cliExecutionResult.output.Split(
-                    Environment.NewLine,
-                    StringSplitOptions.RemoveEmptyEntries);
+                var fileExtension = Path.GetExtension(generatedFile)[1..];
+                var settings = new VerifySettings();
+                settings.UseDirectory(verifyFile.Directory!.FullName);
+                settings.UseFileName(verifyFile.Name.Replace($".verified.{fileExtension}", string.Empty, StringComparison.Ordinal));
+                settings.UseExtension(fileExtension);
 
-                Assert.True(cliExecutionResult.isSuccessful);
-                Assert.Equal("Schema is OK.", cliOutputLines[^1]);
+                var generatedFileContent = ReadGeneratedFile(generatedFile);
 
-                //----------------------------------------------------------------------------------------
-                // Step 2:
-                // Invoke the generator with yaml spec, project name and output path arguments.
-                //----------------------------------------------------------------------------------------
-                var outputPath = Path.Combine(WorkingDirectory, scenario.Name);
-
-                cliExecutionResult = await ProcessHelper.Execute(
-                    cliExeFile,
-                    "generate server all " +
-                    $"--specificationPath {specificationPath} " +
-                    $"--projectPrefixName {scenario.Name} " +
-                    $"--outputSlnPath {outputPath} " +
-                    $"--outputSrcPath {Path.Combine(outputPath, "src")} " +
-                    $"--outputTestPath {Path.Combine(outputPath, "test")} " +
-                    "--disableCodingRules " +
-                    "-v");
-
-                Assert.True(cliExecutionResult.isSuccessful);
-
-                //----------------------------------------------------------------------------------------
-                // Step 3:
-                // Iterate files in this scenario's Verify folder and compare them to the generated output.
-                //----------------------------------------------------------------------------------------
-                var verifyPath = Path.Combine(scenario.FullName, "Verify");
-                var verifyCsFiles = Directory
-                    .GetFiles(verifyPath, "*.verified.cs", SearchOption.AllDirectories)
-                    .Select(x => new FileInfo(x))
-                    .ToArray();
-
-                foreach (var verifyFile in verifyCsFiles)
-                {
-                    var generatedFile = verifyFile
-                        .FullName
-                        .Replace(".verified", string.Empty, StringComparison.Ordinal)
-                        .Replace(verifyPath, outputPath, StringComparison.Ordinal);
-
-                    Assert.True(File.Exists(generatedFile));
-
-                    var fileExtension = Path.GetExtension(generatedFile)[1..];
-                    var settings = new VerifySettings();
-                    settings.UseDirectory(verifyFile.Directory!.FullName);
-                    settings.UseFileName(verifyFile.Name.Replace($".verified.{fileExtension}", string.Empty, StringComparison.Ordinal));
-                    settings.UseExtension(fileExtension);
-
-                    var generatedFileContent = ReadGeneratedFile(generatedFile);
-
-                    await Verifier.Verify(generatedFileContent, settings);
-                }
-
-                //----------------------------------------------------------------------------------------
-                // Step 4:
-                // Check that all *.cs is verified.
-                //----------------------------------------------------------------------------------------
-                var outputCsFiles = Directory.GetFiles(outputPath, "*.cs", SearchOption.AllDirectories);
-                Assert.Equal(outputCsFiles.Length, verifyCsFiles.Length);
-
-                //----------------------------------------------------------------------------------------
-                // Step 5:
-                // Build the generated project and assert no errors.
-                //----------------------------------------------------------------------------------------
-                var buildErrors = await DotnetBuildHelper.BuildAndCollectErrors(
-                    NullLogger.Instance,
-                    new DirectoryInfo(outputPath),
-                    1);
-
-                Assert.True(buildErrors.Count == 0, $"BuildErrors: {string.Join(" # ", buildErrors)}");
-            }
-        }
-
-        public Task DisposeAsync()
-        {
-            if (Directory.Exists(WorkingDirectory))
-            {
-                Directory.Delete(WorkingDirectory, recursive: true);
+                await Verifier.Verify(generatedFileContent, settings);
             }
 
-            return Task.CompletedTask;
-        }
+            //----------------------------------------------------------------------------------------
+            // Step 4:
+            // Check that all *.cs is verified.
+            //----------------------------------------------------------------------------------------
+            var outputCsFiles = Directory.GetFiles(outputPath, "*.cs", SearchOption.AllDirectories);
+            Assert.Equal(outputCsFiles.Length, verifyCsFiles.Length);
 
-        public Task InitializeAsync() => Task.CompletedTask;
+            //----------------------------------------------------------------------------------------
+            // Step 5:
+            // Build the generated project and assert no errors.
+            //----------------------------------------------------------------------------------------
+            var buildErrors = await DotnetBuildHelper.BuildAndCollectErrors(
+                NullLogger.Instance,
+                new DirectoryInfo(outputPath),
+                1);
+
+            Assert.True(buildErrors.Count == 0, $"BuildErrors: {string.Join(" # ", buildErrors)}");
+        }
     }
+
+    public Task DisposeAsync()
+    {
+        if (Directory.Exists(WorkingDirectory))
+        {
+            Directory.Delete(WorkingDirectory, recursive: true);
+        }
+
+        return Task.CompletedTask;
+    }
+
+    public Task InitializeAsync() => Task.CompletedTask;
 }

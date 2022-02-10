@@ -8,11 +8,13 @@ global using System.Reflection;
 global using System.Runtime.Serialization;
 global using System.Text.Json;
 
+global using Atc.Console.Spectre;
 global using Atc.Console.Spectre.Factories;
 global using Atc.Console.Spectre.Logging;
 global using Atc.Data.Models;
 global using Atc.Helpers;
 global using Atc.Rest.ApiGenerator.CLI.Commands;
+global using Atc.Rest.ApiGenerator.CLI.Commands.DescriptionAttributes;
 global using Atc.Rest.ApiGenerator.CLI.Commands.Settings;
 global using Atc.Rest.ApiGenerator.CLI.Extensions;
 global using Atc.Rest.ApiGenerator.Helpers;

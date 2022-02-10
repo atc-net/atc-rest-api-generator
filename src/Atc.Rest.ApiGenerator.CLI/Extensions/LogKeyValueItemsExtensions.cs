@@ -1,5 +1,3 @@
-using Atc.Console.Spectre;
-
 namespace Atc.Rest.ApiGenerator.CLI.Extensions;
 
 public static class LogKeyValueItemsExtensions

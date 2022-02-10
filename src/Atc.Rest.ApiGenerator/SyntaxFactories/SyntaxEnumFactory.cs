@@ -1,5 +1,3 @@
-using Atc.CodeAnalysis.CSharp.Factories;
-
 // ReSharper disable InvertIf
 namespace Atc.Rest.ApiGenerator.SyntaxFactories;
 
@@ -66,13 +64,13 @@ internal static class SyntaxEnumFactory
         }
 
         enumDeclaration = enumDeclaration
-            .AddSuppressMessageAttribute(SuppressMessageAttributeFactory.CreateStyleCopSuppression(1413, justification: null));
+            .AddSuppressMessageAttribute(CodeAnalysis.CSharp.Factories.SuppressMessageAttributeFactory.CreateStyleCopSuppression(1413, justification: null));
 
         // Add SuppressMessageAttribute
         if (containTypeName)
         {
             enumDeclaration = enumDeclaration
-                .AddSuppressMessageAttribute(SuppressMessageAttributeFactory.CreateCodeAnalysisSuppression(1720, justification: null));
+                .AddSuppressMessageAttribute(CodeAnalysis.CSharp.Factories.SuppressMessageAttributeFactory.CreateCodeAnalysisSuppression(1720, justification: null));
         }
 
         // Add FlagAttribute

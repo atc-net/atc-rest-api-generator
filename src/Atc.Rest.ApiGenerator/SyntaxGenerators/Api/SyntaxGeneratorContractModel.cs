@@ -1,6 +1,3 @@
-using Atc.Rest.ApiGenerator.Factories;
-using Atc.Rest.ApiGenerator.SyntaxFactories;
-
 // ReSharper disable LoopCanBeConvertedToQuery
 // ReSharper disable ConvertIfStatementToConditionalTernaryExpression
 // ReSharper disable UseDeconstruction

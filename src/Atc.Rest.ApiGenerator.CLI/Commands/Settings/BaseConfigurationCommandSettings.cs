@@ -1,4 +1,3 @@
-using Atc.Rest.ApiGenerator.CLI.Commands.DescriptionAttributes;
 using Spectre.Console;
 
 namespace Atc.Rest.ApiGenerator.CLI.Commands.Settings;

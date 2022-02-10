@@ -1,5 +1,3 @@
-using Atc.Rest.ApiGenerator.Factories;
-
 // ReSharper disable ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
 // ReSharper disable LoopCanBeConvertedToQuery
 // ReSharper disable ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator

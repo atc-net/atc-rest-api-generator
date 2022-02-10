@@ -1,5 +1,3 @@
-using Atc.Rest.ApiGenerator.Factories;
-
 // ReSharper disable UseObjectOrCollectionInitializer
 // ReSharper disable InvertIf
 namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient;

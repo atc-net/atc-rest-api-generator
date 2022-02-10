@@ -1,124 +1,109 @@
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using Atc.Rest.ApiGenerator.Factories;
-using Atc.Rest.ApiGenerator.Generators;
-using Atc.Rest.ApiGenerator.Helpers;
-using Atc.Rest.ApiGenerator.Helpers.XunitTest;
-using Atc.Rest.ApiGenerator.Models;
-using Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
-using Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient;
-using Atc.Rest.ApiGenerator.SyntaxGenerators.Domain;
-using Atc.XUnit;
-using Xunit;
-using Xunit.Abstractions;
+namespace Atc.Rest.ApiGenerator.Tests;
 
-namespace Atc.Rest.ApiGenerator.Tests
+public class CodeComplianceTests
 {
-    public class CodeComplianceTests
+    // ReSharper disable once NotAccessedField.Local
+    private readonly ITestOutputHelper testOutputHelper;
+    private readonly Assembly sourceAssembly = typeof(AtcRestApiGeneratorAssemblyTypeInitializer).Assembly;
+    private readonly Assembly testAssembly = typeof(CodeComplianceTests).Assembly;
+
+    private readonly List<Type> excludeTypes = new ()
     {
-        // ReSharper disable once NotAccessedField.Local
-        private readonly ITestOutputHelper testOutputHelper;
-        private readonly Assembly sourceAssembly = typeof(AtcRestApiGeneratorAssemblyTypeInitializer).Assembly;
-        private readonly Assembly testAssembly = typeof(CodeComplianceTests).Assembly;
+        // TODO: Add UnitTest and remove from this list!!
+        typeof(EndpointMethodMetadata),
+        typeof(DomainProjectOptions),
+        typeof(HostProjectOptions),
+        typeof(GenerateHelper),
+        typeof(GenerateAtcCodingRulesHelper),
+        typeof(ValueTypeTestPropertiesHelper),
+        typeof(SolutionAndProjectHelper),
+        typeof(ClientCSharpApiGenerator),
+        typeof(ServerApiGenerator),
+        typeof(ServerDomainGenerator),
+        typeof(ServerHostGenerator),
+        typeof(ApiGeneratorHelper),
+        typeof(NugetPackageReferenceHelper),
+        typeof(TextFileHelper),
+        typeof(HttpClientHelper),
+        typeof(OpenApiDocumentHelper),
+        typeof(OpenApiDocumentValidationHelper),
+        typeof(OpenApiOperationSchemaMapHelper),
+        typeof(SyntaxGeneratorContractInterface),
+        typeof(SyntaxGeneratorContractInterfaces),
+        typeof(SyntaxGeneratorContractModel),
+        typeof(SyntaxGeneratorContractModels),
+        typeof(SyntaxGeneratorContractParameter),
+        typeof(SyntaxGeneratorContractParameters),
+        typeof(SyntaxGeneratorContractResult),
+        typeof(SyntaxGeneratorContractResults),
+        typeof(SyntaxGeneratorClientEndpoint),
+        typeof(SyntaxGeneratorClientEndpoints),
+        typeof(SyntaxGeneratorEndpointControllers),
+        typeof(SyntaxGeneratorClientEndpointInterface),
+        typeof(SyntaxGeneratorClientEndpointInterfaces),
+        typeof(SyntaxGeneratorClientEndpointResult),
+        typeof(SyntaxGeneratorClientEndpointResults),
+        typeof(SyntaxGeneratorClientEndpointResultInterface),
+        typeof(SyntaxGeneratorClientEndpointResultInterfaces),
+        typeof(SyntaxGeneratorHandler),
+        typeof(SyntaxGeneratorHandlers),
+        typeof(ValidatePathsAndOperationsHelper),
+        typeof(Util),
+        typeof(GenerateXunitTestHelper),
+        typeof(GenerateServerApiXunitTestEndpointHandlerStubHelper),
+        typeof(GenerateServerApiXunitTestEndpointTestHelper),
+        typeof(GenerateXunitTestPartsHelper),
+        typeof(GenerateServerDomainXunitTestHelper),
+        typeof(ParameterCombinationHelper),
+        typeof(OpenApiDocumentSchemaModelNameHelper),
+        typeof(ProjectApiFactory),
+        typeof(ProjectApiClientFactory),
+        typeof(ProjectHostFactory),
+        typeof(ProjectDomainFactory),
+        typeof(SyntaxGeneratorSwaggerDocOptions),
+    };
 
-        private readonly List<Type> excludeTypes = new List<Type>
-        {
-            // TODO: Add UnitTest and remove from this list!!
-            typeof(EndpointMethodMetadata),
-            typeof(DomainProjectOptions),
-            typeof(HostProjectOptions),
-            typeof(GenerateHelper),
-            typeof(GenerateAtcCodingRulesHelper),
-            typeof(ValueTypeTestPropertiesHelper),
-            typeof(SolutionAndProjectHelper),
-            typeof(ClientCSharpApiGenerator),
-            typeof(ServerApiGenerator),
-            typeof(ServerDomainGenerator),
-            typeof(ServerHostGenerator),
-            typeof(ApiGeneratorHelper),
-            typeof(NugetPackageReferenceHelper),
-            typeof(TextFileHelper),
-            typeof(HttpClientHelper),
-            typeof(OpenApiDocumentHelper),
-            typeof(OpenApiDocumentValidationHelper),
-            typeof(OpenApiOperationSchemaMapHelper),
-            typeof(SyntaxGeneratorContractInterface),
-            typeof(SyntaxGeneratorContractInterfaces),
-            typeof(SyntaxGeneratorContractModel),
-            typeof(SyntaxGeneratorContractModels),
-            typeof(SyntaxGeneratorContractParameter),
-            typeof(SyntaxGeneratorContractParameters),
-            typeof(SyntaxGeneratorContractResult),
-            typeof(SyntaxGeneratorContractResults),
-            typeof(SyntaxGeneratorClientEndpoint),
-            typeof(SyntaxGeneratorClientEndpoints),
-            typeof(SyntaxGeneratorEndpointControllers),
-            typeof(SyntaxGeneratorClientEndpointInterface),
-            typeof(SyntaxGeneratorClientEndpointInterfaces),
-            typeof(SyntaxGeneratorClientEndpointResult),
-            typeof(SyntaxGeneratorClientEndpointResults),
-            typeof(SyntaxGeneratorClientEndpointResultInterface),
-            typeof(SyntaxGeneratorClientEndpointResultInterfaces),
-            typeof(SyntaxGeneratorHandler),
-            typeof(SyntaxGeneratorHandlers),
-            typeof(ValidatePathsAndOperationsHelper),
-            typeof(Util),
-            typeof(GenerateXunitTestHelper),
-            typeof(GenerateServerApiXunitTestEndpointHandlerStubHelper),
-            typeof(GenerateServerApiXunitTestEndpointTestHelper),
-            typeof(GenerateXunitTestPartsHelper),
-            typeof(GenerateServerDomainXunitTestHelper),
-            typeof(ParameterCombinationHelper),
-            typeof(OpenApiDocumentSchemaModelNameHelper),
-            typeof(ProjectApiFactory),
-            typeof(ProjectApiClientFactory),
-            typeof(ProjectHostFactory),
-            typeof(ProjectDomainFactory),
-            typeof(SyntaxGeneratorSwaggerDocOptions),
-        };
+    public CodeComplianceTests(
+        ITestOutputHelper testOutputHelper)
+    {
+        this.testOutputHelper = testOutputHelper;
+    }
 
-        public CodeComplianceTests(ITestOutputHelper testOutputHelper)
-        {
-            this.testOutputHelper = testOutputHelper;
-        }
+    [Fact]
+    public void AssertExportedMethodsWithMissingTests_AbstractSyntaxTree()
+    {
+        // Act & Assert
+        CodeComplianceTestHelper.AssertExportedMethodsWithMissingTests(
+            DecompilerType.AbstractSyntaxTree,
+            sourceAssembly,
+            testAssembly,
+            excludeTypes);
+    }
 
-        [Fact]
-        public void AssertExportedMethodsWithMissingTests_AbstractSyntaxTree()
-        {
-            // Act & Assert
-            CodeComplianceTestHelper.AssertExportedMethodsWithMissingTests(
-                DecompilerType.AbstractSyntaxTree,
-                sourceAssembly,
-                testAssembly,
-                excludeTypes);
-        }
+    [Fact]
+    public void AssertExportedMethodsWithMissingTests_MonoReflection()
+    {
+        // Act & Assert
+        CodeComplianceTestHelper.AssertExportedMethodsWithMissingTests(
+            DecompilerType.MonoReflection,
+            sourceAssembly,
+            testAssembly,
+            excludeTypes);
+    }
 
-        [Fact]
-        public void AssertExportedMethodsWithMissingTests_MonoReflection()
-        {
-            // Act & Assert
-            CodeComplianceTestHelper.AssertExportedMethodsWithMissingTests(
-                DecompilerType.MonoReflection,
-                sourceAssembly,
-                testAssembly,
-                excludeTypes);
-        }
+    [Fact]
+    public void AssertExportedTypesWithMissingComments()
+    {
+        // Act & Assert
+        CodeComplianceDocumentationHelper.AssertExportedTypesWithMissingComments(
+            sourceAssembly);
+    }
 
-        [Fact]
-        public void AssertExportedTypesWithMissingComments()
-        {
-            // Act & Assert
-            CodeComplianceDocumentationHelper.AssertExportedTypesWithMissingComments(
-                sourceAssembly);
-        }
-
-        [Fact]
-        public void AssertExportedTypesWithWrongNaming()
-        {
-            // Act & Assert
-            CodeComplianceHelper.AssertExportedTypesWithWrongDefinitions(
-                sourceAssembly);
-        }
+    [Fact]
+    public void AssertExportedTypesWithWrongNaming()
+    {
+        // Act & Assert
+        CodeComplianceHelper.AssertExportedTypesWithWrongDefinitions(
+            sourceAssembly);
     }
 }

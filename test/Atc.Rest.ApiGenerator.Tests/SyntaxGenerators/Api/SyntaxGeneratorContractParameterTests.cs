@@ -1,15 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Atc.Rest.ApiGenerator.Models;
-using Atc.Rest.ApiGenerator.SyntaxGenerators;
-using Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
-using Atc.Rest.ApiGenerator.Tests.XUnitTestTypes.CodeGenerator;
-using Microsoft.OpenApi.Models;
-using VerifyXunit;
-using Xunit;
-
 namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
 {
     [UsesVerify]
@@ -19,7 +7,8 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
             .Where(x => x.TestDirectory.Contains("ContractParameter", StringComparison.Ordinal))
             .Select(x => new object[] { x });
 
-        protected override ISyntaxCodeGenerator CreateGenerator(ApiProjectOptions apiProject)
+        protected override ISyntaxCodeGenerator CreateGenerator(
+            ApiProjectOptions apiProject)
         {
             // Verify spec file supported for unit test
             Assert.Single(apiProject.Document.Paths);
@@ -39,9 +28,8 @@ namespace Atc.Rest.ApiGenerator.Tests.SyntaxGenerators.Api
 
         [Theory(DisplayName = "Api Contract Parameter")]
         [MemberData(nameof(TestInput))]
-        public Task ExecuteGeneratorTest(GeneratorTestInput input)
-        {
-            return VerifyGeneratedOutput(input);
-        }
+        public Task ExecuteGeneratorTest(
+            GeneratorTestInput input)
+            => VerifyGeneratedOutput(input);
     }
 }

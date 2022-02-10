@@ -1,5 +1,3 @@
-using Atc.Rest.ApiGenerator.Factories;
-
 // ReSharper disable UnusedMember.Local
 // ReSharper disable InvertIf
 // ReSharper disable UseObjectOrCollectionInitializer
