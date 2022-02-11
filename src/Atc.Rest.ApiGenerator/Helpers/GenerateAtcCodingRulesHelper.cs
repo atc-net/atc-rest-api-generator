@@ -74,7 +74,7 @@ public static class GenerateAtcCodingRulesHelper
         {
             var sb = new StringBuilder();
             sb.AppendLine("{");
-            sb.AppendLine("  \"projectTarget\": \"DotNet5\",");
+            sb.AppendLine("  \"projectTarget\": \"DotNet6\",");
             sb.AppendLine("  \"mappings\": {");
             sb.Append("    \"src\": { \"paths\": [ \"");
 
@@ -117,10 +117,10 @@ public static class GenerateAtcCodingRulesHelper
             sb.AppendLine();
             sb.AppendLine("$currentPath = Get-Location");
             sb.AppendLine();
-            sb.AppendLine("atc-coding-rules-updater `");
-            sb.AppendLine("-r $currentPath `");
-            sb.AppendLine("--optionsPath $currentPath'\\atc-coding-rules-updater.json' `");
-            sb.AppendLine("-v true");
+            sb.AppendLine("atc-coding-rules-updater run `");
+            sb.AppendLine("  -p $currentPath `");
+            sb.AppendLine("  --optionsPath $currentPath'\\atc-coding-rules-updater.json' `");
+            sb.AppendLine("  -v true");
             File.WriteAllText(file, sb.ToString());
             File.WriteAllText(filePath, sb.ToString());
             return LogItemFactory.CreateDebug("FileCreate", $"{file} created");
