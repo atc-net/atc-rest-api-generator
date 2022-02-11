@@ -41,7 +41,7 @@ public class ValidateSchemaCommand : AsyncCommand<BaseConfigurationCommandSettin
             return ConsoleExitStatusCodes.Failure;
         }
 
-        logger.LogInformation("Done");
+        logger.LogInformation("Schema validated successfully.");
         return ConsoleExitStatusCodes.Success;
     }
 }
