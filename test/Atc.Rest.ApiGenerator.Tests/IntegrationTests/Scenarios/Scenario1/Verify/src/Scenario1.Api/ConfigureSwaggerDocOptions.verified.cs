@@ -31,7 +31,7 @@ namespace Scenario1.Api
                     {
                         Version = "1.0",
                         Title = "Demo Api",
-                        Description = "Demo Api - SingleFileVersion",
+                        Description = @"Demo Api - SingleFileVersion",
                         Contact = new OpenApiContact
                         {
                             Name = "atc-net A/S",

@@ -63,7 +63,7 @@ public class SyntaxGeneratorSwaggerDocOptions
 
         if (!string.IsNullOrWhiteSpace(document.Info?.Description))
         {
-            sb.AppendLine(24, $"Description = \"{document.Info.Description}\",");
+            sb.AppendLine(24, $"Description = @\"{document.Info.Description}\",");
         }
 
         if (!string.IsNullOrWhiteSpace(document.Info?.Contact?.Name) ||
