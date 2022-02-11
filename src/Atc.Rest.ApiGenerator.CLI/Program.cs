@@ -6,24 +6,6 @@ public static class Program
     public static Task<int> Main(
         string[] args)
     {
-        if (args.Length == default)
-        {
-            //// PETSTORE
-            args = new[]
-            {
-                "generate",
-                "server",
-                "all",
-                "--specificationPath", "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml",
-                "--projectPrefixName", "Petstore",
-                "--outputSlnPath", @"C:\Temp\sletmig",
-                "--outputSrcPath", @"C:\Temp\sletmig\src",
-                "--outputTestPath", @"C:\Temp\sletmig\test",
-                "--optionsPath", @"C:\Code\atc-net\atc-rest-api-generator\sample\Demo.ApiDesign\ApiGeneratorOptions.json",
-                "-v",
-            };
-        }
-
         ArgumentNullException.ThrowIfNull(args);
 
         args = SetHelpArgumentIfNeeded(args);
