@@ -166,10 +166,6 @@
 >```csharp
 >ApiOptions
 >```
-#### ApiVersion
->```csharp
->ApiVersion
->```
 #### BasePathSegmentNames
 >```csharp
 >BasePathSegmentNames

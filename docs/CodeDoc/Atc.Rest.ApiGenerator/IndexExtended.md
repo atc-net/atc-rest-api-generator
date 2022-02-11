@@ -127,9 +127,9 @@
   -  Static Methods
      - GenerateServerApi(string projectPrefixName, DirectoryInfo outputPath, DirectoryInfo outputTestPath, Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, ApiOptions apiOptions)
      - GenerateServerCSharpClient(string projectPrefixName, string clientFolder, DirectoryInfo outputPath, Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, bool excludeEndpointGeneration, ApiOptions apiOptions)
-     - GenerateServerDomain(string projectPrefixName, DirectoryInfo outputPath, DirectoryInfo outputTestPath, Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, ApiOptions apiOptions, DirectoryInfo apiPath)
-     - GenerateServerHost(string projectPrefixName, DirectoryInfo outputPath, DirectoryInfo outputTestPath, Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, ApiOptions apiOptions, DirectoryInfo apiPath, DirectoryInfo domainPath)
-     - GenerateServerSln(string projectPrefixName, string outputSlnPath, DirectoryInfo outputSrcPath, DirectoryInfo outputTestPath)
+     - GenerateServerDomain(string projectPrefixName, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath, Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, ApiOptions apiOptions, DirectoryInfo apiPath)
+     - GenerateServerHost(string projectPrefixName, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath, Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, ApiOptions apiOptions, DirectoryInfo apiPath, DirectoryInfo domainPath)
+     - GenerateServerSln(string projectPrefixName, string outputSlnPath, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath)
      - GetAtcToolVersion()
      - GetAtcToolVersionAsString3()
      - GetAtcToolVersionAsString4()
@@ -153,7 +153,7 @@
   -  Static Methods
      - CombineAndGetApiDocument(string specificationPath)
      - GetBasePathSegmentNames(OpenApiDocument openApiDocument)
-     - GetServerUrl(OpenApiDocument openApiDocument)
+     - GetServerUrlBasePath(OpenApiDocument openApiDocument)
      - Validate(Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, ApiOptionsValidation validationOptions)
 - [OpenApiDocumentSchemaModelNameHelper](Atc.Rest.ApiGenerator.Helpers.md#openapidocumentschemamodelnamehelper)
   -  Static Methods
@@ -163,7 +163,7 @@
      - EnsureTaskNameWithNamespaceIfNeeded(ResponseTypeNameAndItemSchema contractReturnTypeNameAndSchema)
      - GetRawModelName(string modelName)
      - HasList(string typeName)
-     - HasSharedResponseContract(OpenApiDocument document, List&lt;ApiOperationSchemaMap&gt; operationSchemaMappings, string focusOnSegmentName)
+     - HasSharedResponseContract(OpenApiDocument apiDocument, List&lt;ApiOperationSchemaMap&gt; operationSchemaMappings, string focusOnSegmentName)
 - [OpenApiDocumentValidationHelper](Atc.Rest.ApiGenerator.Helpers.md#openapidocumentvalidationhelper)
   -  Static Methods
      - ValidateDocument(OpenApiDocument apiDocument, ApiOptionsValidation validationOptions)
@@ -177,7 +177,7 @@
      - GetNullableStringFromBool(bool value)
      - GetNullableValueFromProject(XElement element)
      - ScaffoldProjFile(FileInfo projectCsProjFile, bool createAsWeb, bool createAsTestProject, string projectName, string targetFramework, bool useNullableReferenceTypes, List&lt;string&gt; frameworkReferences, List&lt;Tuple&lt;string, string, string&gt;&gt; packageReferences, List&lt;FileInfo&gt; projectReferences, bool includeApiSpecification)
-     - ScaffoldSlnFile(FileInfo slnFile, string projectName, DirectoryInfo apiPath, DirectoryInfo domainPath, DirectoryInfo hostPath, DirectoryInfo apiTestPath = null, DirectoryInfo domainTestPath = null, DirectoryInfo hostTestPath = null)
+     - ScaffoldSlnFile(FileInfo slnFile, string projectName, DirectoryInfo apiPath, DirectoryInfo domainPath, DirectoryInfo hostPath, DirectoryInfo domainTestPath = null, DirectoryInfo hostTestPath = null)
      - SetNullableValueForProject(XElement element, string newNullableValue)
 - [TextFileHelper](Atc.Rest.ApiGenerator.Helpers.md#textfilehelper)
   -  Static Methods
@@ -290,7 +290,6 @@
 - [ClientCSharpApiProjectOptions](Atc.Rest.ApiGenerator.Models.md#clientcsharpapiprojectoptions)
   -  Properties
      - ApiOptions
-     - ApiVersion
      - BasePathSegmentNames
      - ClientFolderName
      - Document

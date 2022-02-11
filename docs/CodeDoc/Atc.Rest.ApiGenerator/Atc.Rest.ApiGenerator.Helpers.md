@@ -65,15 +65,15 @@
 >```
 #### GenerateServerDomain
 >```csharp
->List<LogKeyValueItem> GenerateServerDomain(string projectPrefixName, DirectoryInfo outputPath, DirectoryInfo outputTestPath, Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument, ApiOptions apiOptions, DirectoryInfo apiPath)
+>List<LogKeyValueItem> GenerateServerDomain(string projectPrefixName, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath, Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument, ApiOptions apiOptions, DirectoryInfo apiPath)
 >```
 #### GenerateServerHost
 >```csharp
->List<LogKeyValueItem> GenerateServerHost(string projectPrefixName, DirectoryInfo outputPath, DirectoryInfo outputTestPath, Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument, ApiOptions apiOptions, DirectoryInfo apiPath, DirectoryInfo domainPath)
+>List<LogKeyValueItem> GenerateServerHost(string projectPrefixName, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath, Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument, ApiOptions apiOptions, DirectoryInfo apiPath, DirectoryInfo domainPath)
 >```
 #### GenerateServerSln
 >```csharp
->List<LogKeyValueItem> GenerateServerSln(string projectPrefixName, string outputSlnPath, DirectoryInfo outputSrcPath, DirectoryInfo outputTestPath)
+>List<LogKeyValueItem> GenerateServerSln(string projectPrefixName, string outputSlnPath, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath)
 >```
 #### GetAtcToolVersion
 >```csharp
@@ -179,9 +179,9 @@
 >```csharp
 >List<string> GetBasePathSegmentNames(OpenApiDocument openApiDocument)
 >```
-#### GetServerUrl
+#### GetServerUrlBasePath
 >```csharp
->string GetServerUrl(OpenApiDocument openApiDocument)
+>string GetServerUrlBasePath(OpenApiDocument openApiDocument)
 >```
 #### Validate
 >```csharp
@@ -224,7 +224,7 @@
 >```
 #### HasSharedResponseContract
 >```csharp
->bool HasSharedResponseContract(OpenApiDocument document, List<ApiOperationSchemaMap> operationSchemaMappings, string focusOnSegmentName)
+>bool HasSharedResponseContract(OpenApiDocument apiDocument, List<ApiOperationSchemaMap> operationSchemaMappings, string focusOnSegmentName)
 >```
 
 <br />
@@ -289,7 +289,7 @@
 >```
 #### ScaffoldSlnFile
 >```csharp
->List<LogKeyValueItem> ScaffoldSlnFile(FileInfo slnFile, string projectName, DirectoryInfo apiPath, DirectoryInfo domainPath, DirectoryInfo hostPath, DirectoryInfo apiTestPath = null, DirectoryInfo domainTestPath = null, DirectoryInfo hostTestPath = null)
+>List<LogKeyValueItem> ScaffoldSlnFile(FileInfo slnFile, string projectName, DirectoryInfo apiPath, DirectoryInfo domainPath, DirectoryInfo hostPath, DirectoryInfo domainTestPath = null, DirectoryInfo hostTestPath = null)
 >```
 #### SetNullableValueForProject
 >```csharp
