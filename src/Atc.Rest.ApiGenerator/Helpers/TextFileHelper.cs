@@ -47,7 +47,7 @@ public static class TextFileHelper
                 fileInfo.Extension.Equals(".sln", StringComparison.OrdinalIgnoreCase))
             {
                 // If the content is the same - Note this don't take care of GIT-CRLF handling process.
-                string orgText = File.ReadAllText(fileInfo.FullName, Encoding.UTF8);
+                var orgText = File.ReadAllText(fileInfo.FullName, Encoding.UTF8);
                 if (orgText == text)
                 {
                     return LogItemFactory.CreateDebug("FileSkip", "#", fileInfo.FullName);
