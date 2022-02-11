@@ -7,7 +7,7 @@ SET projectsRootDirectory=%rootDirectory%\sample\Code
 SET slnDirectory=%projectsRootDirectory%
 SET srcDirectory=%projectsRootDirectory%\src
 SET testDirectory=%projectsRootDirectory%\test
-SET generatorFile=%rootDirectory%src\Atc.Rest.ApiGenerator.CLI\bin\Debug\netcoreapp3.1\atc-api.exe
+SET generatorFile=%rootDirectory%src\Atc.Rest.ApiGenerator.CLI\bin\Debug\net6.0\atc-rest-api-generator.exe
 
 SET projectName=PetStore
 SET specUrl=https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml
