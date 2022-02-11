@@ -1097,7 +1097,7 @@ public class ServerHostGenerator
 
         var stringBuilder = new StringBuilder();
         GenerateCodeHelper.AppendGeneratedCodeWarningComment(stringBuilder, projectOptions.ToolNameAndVersion);
-        stringBuilder.AppendLine(syntaxGenerator.GenerateCode());
+        stringBuilder.Append(syntaxGenerator.GenerateCode());
         return TextFileHelper.Save(file, stringBuilder.ToString());
     }
 
