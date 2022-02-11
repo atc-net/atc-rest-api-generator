@@ -35,6 +35,8 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
         var apiOptions = await ApiOptionsHelper.CreateApiOptions(settings);
         var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(settings.SpecificationPath);
 
+        var usingCodingRules = settings.DisableCodingRules; // TODO: Detect
+
         try
         {
             var logItems = new List<LogKeyValueItem>();
@@ -52,7 +54,8 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
                 outputSrcPath,
                 outputTestPath,
                 apiDocument,
-                apiOptions));
+                apiOptions,
+                usingCodingRules));
 
             if (logItems.HasAnyErrors())
             {
@@ -67,6 +70,7 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
                 outputTestPath,
                 apiDocument,
                 apiOptions,
+                usingCodingRules,
                 outputSrcPath));
 
             if (logItems.HasAnyErrors())
@@ -82,6 +86,7 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
                 outputTestPath,
                 apiDocument,
                 apiOptions,
+                usingCodingRules,
                 outputSrcPath,
                 outputSrcPath));
 

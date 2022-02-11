@@ -25,7 +25,7 @@ public static class GenerateHelper
     {
         var assembly = Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly();
 
-        return assembly.GetName().Version.GreaterThan(AtcToolVersion)
+        return assembly.GetName().Version!.GreaterThan(AtcToolVersion)
             ? assembly.GetName().Version
             : AtcToolVersion;
     }
@@ -47,7 +47,8 @@ public static class GenerateHelper
         DirectoryInfo outputPath,
         DirectoryInfo? outputTestPath,
         Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument,
-        ApiOptions apiOptions)
+        ApiOptions apiOptions,
+        bool useCodingRules)
     {
         ArgumentNullException.ThrowIfNull(projectPrefixName);
         ArgumentNullException.ThrowIfNull(outputPath);
@@ -61,7 +62,8 @@ public static class GenerateHelper
             apiDocument.Item3,
             projectPrefixName,
             "Api.Generated",
-            apiOptions);
+            apiOptions,
+            useCodingRules);
         var serverApiGenerator = new ServerApiGenerator(projectOptions);
         return serverApiGenerator.Generate();
     }
@@ -72,6 +74,7 @@ public static class GenerateHelper
         DirectoryInfo? outputTestPath,
         Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument,
         ApiOptions apiOptions,
+        bool useCodingRules,
         DirectoryInfo apiPath)
     {
         ArgumentNullException.ThrowIfNull(projectPrefixName);
@@ -80,7 +83,15 @@ public static class GenerateHelper
         ArgumentNullException.ThrowIfNull(apiOptions);
         ArgumentNullException.ThrowIfNull(apiPath);
 
-        var domainProjectOptions = new DomainProjectOptions(outputSourcePath, outputTestPath, apiDocument.Item1, apiDocument.Item3, projectPrefixName, apiOptions, apiPath);
+        var domainProjectOptions = new DomainProjectOptions(
+            outputSourcePath,
+            outputTestPath,
+            apiDocument.Item1,
+            apiDocument.Item3,
+            projectPrefixName,
+            apiOptions,
+            useCodingRules,
+            apiPath);
         var serverDomainGenerator = new ServerDomainGenerator(domainProjectOptions);
         return serverDomainGenerator.Generate();
     }
@@ -91,6 +102,7 @@ public static class GenerateHelper
         DirectoryInfo? outputTestPath,
         Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument,
         ApiOptions apiOptions,
+        bool usingCodingRules,
         DirectoryInfo apiPath,
         DirectoryInfo domainPath)
     {
@@ -101,7 +113,16 @@ public static class GenerateHelper
         ArgumentNullException.ThrowIfNull(apiPath);
         ArgumentNullException.ThrowIfNull(domainPath);
 
-        var hostProjectOptions = new HostProjectOptions(outputSourcePath, outputTestPath, apiDocument.Item1, apiDocument.Item3, projectPrefixName, apiOptions, apiPath, domainPath);
+        var hostProjectOptions = new HostProjectOptions(
+            outputSourcePath,
+            outputTestPath,
+            apiDocument.Item1,
+            apiDocument.Item3,
+            projectPrefixName,
+            apiOptions,
+            usingCodingRules,
+            apiPath,
+            domainPath);
         var serverHostGenerator = new ServerHostGenerator(hostProjectOptions);
         return serverHostGenerator.Generate();
     }
@@ -158,7 +179,8 @@ public static class GenerateHelper
         DirectoryInfo outputPath,
         Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument,
         bool excludeEndpointGeneration,
-        ApiOptions apiOptions)
+        ApiOptions apiOptions,
+        bool useCodingRules)
     {
         ArgumentNullException.ThrowIfNull(projectPrefixName);
         ArgumentNullException.ThrowIfNull(outputPath);
@@ -173,7 +195,8 @@ public static class GenerateHelper
             projectPrefixName,
             "ApiClient.Generated",
             excludeEndpointGeneration,
-            apiOptions);
+            apiOptions,
+            useCodingRules);
         var clientCSharpApiGenerator = new ClientCSharpApiGenerator(clientCSharpApiProjectOptions);
         return clientCSharpApiGenerator.Generate();
     }

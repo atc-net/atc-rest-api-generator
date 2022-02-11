@@ -31,6 +31,8 @@ public class GenerateServerApiCommand : AsyncCommand<ServerApiCommandSettings>
         var apiOptions = await ApiOptionsHelper.CreateApiOptions(settings);
         var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(settings.SpecificationPath);
 
+        var usingCodingRules = settings.DisableCodingRules; // TODO: Detect
+
         try
         {
             var logItems = new List<LogKeyValueItem>();
@@ -48,7 +50,8 @@ public class GenerateServerApiCommand : AsyncCommand<ServerApiCommandSettings>
                 new DirectoryInfo(settings.OutputPath),
                 outputTestPath,
                 apiDocument,
-                apiOptions));
+                apiOptions,
+                usingCodingRules));
 
             if (logItems.HasAnyErrors())
             {

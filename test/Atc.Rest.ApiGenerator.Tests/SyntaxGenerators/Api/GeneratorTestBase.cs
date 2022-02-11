@@ -39,7 +39,8 @@ public abstract class GeneratorTestBase
             new FileInfo("resources/dummySpec.yaml"),
             ProjectPrefix,
             ProjectSuffix,
-            options);
+            options,
+            usingCodingRules: false);
     }
 
     private OpenApiDocument GenerateApiDocument(

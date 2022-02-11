@@ -13,8 +13,4 @@ public class ServerAllCommandSettings : BaseGenerateCommandSettings
     [CommandOption($"{CommandConstants.ArgumentLongServerOutputTestPath} [OUTPUTTESTPATH]")]
     [Description("Path to generated test projects (directory)")]
     public FlagValue<string>? OutputTestPath { get; init; }
-
-    [CommandOption($"{CommandConstants.ArgumentLongServerDisableCodingRules}")]
-    [Description("Disable ATC-Coding-Rules")]
-    public bool DisableCodingRules { get; init; }
 }

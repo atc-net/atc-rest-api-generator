@@ -9,6 +9,7 @@ public class DomainProjectOptions : BaseProjectOptions
         FileInfo openApiDocumentFile,
         string projectPrefixName,
         ApiOptions.ApiOptions apiOptions,
+        bool useCodingRules,
         DirectoryInfo apiProjectSrcPath)
         : base(
             projectSourceGeneratePath,
@@ -17,7 +18,8 @@ public class DomainProjectOptions : BaseProjectOptions
             openApiDocumentFile,
             projectPrefixName,
             "Domain",
-            apiOptions)
+            apiOptions,
+            useCodingRules)
     {
         ApiProjectSrcPath = apiProjectSrcPath ?? throw new ArgumentNullException(nameof(apiProjectSrcPath));
         PathForSrcHandlers = new DirectoryInfo(Path.Combine(PathForSrcGenerate.FullName, NameConstants.Handlers));

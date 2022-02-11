@@ -20,6 +20,7 @@ namespace Atc.Rest.ApiGenerator.Generators
                 projectOptions.ProjectName,
                 projectSuffixName: null,
                 projectOptions.ApiOptions,
+                projectOptions.UsingCodingRules,
                 projectOptions.ForClient,
                 projectOptions.ClientFolderName);
 
@@ -67,11 +68,11 @@ namespace Atc.Rest.ApiGenerator.Generators
                     createAsTestProject: false,
                     projectName: projectOptions.ProjectName,
                     "netstandard2.1",
-                    useNullableReferenceTypes: projectOptions.UseNullableReferenceTypes,
                     frameworkReferences: null,
                     packageReferences: NugetPackageReferenceHelper.CreateForClientApiProject(),
                     projectReferences: null,
-                    includeApiSpecification: false));
+                    includeApiSpecification: false,
+                    usingCodingRules: projectOptions.UsingCodingRules));
             }
 
             return logItems;

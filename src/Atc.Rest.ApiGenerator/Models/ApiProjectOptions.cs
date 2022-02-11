@@ -10,6 +10,7 @@ public class ApiProjectOptions : BaseProjectOptions
         string projectPrefixName,
         string projectSuffixName,
         ApiOptions.ApiOptions apiOptions,
+        bool usingCodingRules,
         bool forClient = false,
         string? clientFolderName = null)
         : base(
@@ -20,6 +21,7 @@ public class ApiProjectOptions : BaseProjectOptions
             projectPrefixName,
             projectSuffixName,
             apiOptions,
+            usingCodingRules,
             forClient,
             clientFolderName)
     {

@@ -122,11 +122,11 @@ public class ServerApiGenerator
                 createAsTestProject: false,
                 projectOptions.ProjectName,
                 "net6.0",
-                projectOptions.UseNullableReferenceTypes,
                 new List<string> { "Microsoft.AspNetCore.App" },
                 NugetPackageReferenceHelper.CreateForApiProject(),
                 projectReferences: null,
-                includeApiSpecification: true));
+                includeApiSpecification: true,
+                usingCodingRules: projectOptions.UsingCodingRules));
         }
 
         ScaffoldBasicFileApiGenerated();

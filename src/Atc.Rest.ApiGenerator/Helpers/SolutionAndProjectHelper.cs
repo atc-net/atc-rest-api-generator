@@ -12,11 +12,11 @@ public static class SolutionAndProjectHelper
         bool createAsTestProject,
         string projectName,
         string targetFramework,
-        bool useNullableReferenceTypes,
         List<string>? frameworkReferences,
         List<Tuple<string, string, string?>>? packageReferences,
         List<FileInfo>? projectReferences,
-        bool includeApiSpecification)
+        bool includeApiSpecification,
+        bool usingCodingRules)
     {
         ArgumentNullException.ThrowIfNull(projectCsProjFile);
 
@@ -27,7 +27,13 @@ public static class SolutionAndProjectHelper
         sb.AppendLine();
         sb.AppendLine(2, "<PropertyGroup>");
         sb.AppendLine(4, $"<TargetFramework>{targetFramework}</TargetFramework>");
-        sb.AppendLine(4, "<LangVersion>10.0</LangVersion>");
+
+        if (!usingCodingRules)
+        {
+            sb.AppendLine(4, "<LangVersion>10.0</LangVersion>");
+            sb.AppendLine(4, "<Nullable>enable</Nullable>");
+        }
+
         if (!createAsTestProject)
         {
             sb.AppendLine(4, "<IsPackable>false</IsPackable>");
@@ -41,8 +47,13 @@ public static class SolutionAndProjectHelper
             sb.AppendLine(2, "<PropertyGroup>");
             sb.AppendLine(4, "<GenerateDocumentationFile>true</GenerateDocumentationFile>");
             sb.AppendLine(2, "</PropertyGroup>");
-            sb.AppendLine();
-            sb.AppendLine(2, "<!-- PropertyGroup: Compile settings with LangVersion & TargetFramework is inherit from root/Directory.Build.props -->");
+
+            if (usingCodingRules)
+            {
+                sb.AppendLine();
+                sb.AppendLine(2, "<!-- PropertyGroup: Compile settings with some properties like LangVersion is inherit from root/Directory.Build.props -->");
+            }
+
             sb.AppendLine();
             sb.AppendLine(2, "<PropertyGroup>");
             sb.AppendLine(4, $"<DocumentationFile>bin{Path.DirectorySeparatorChar}Debug{Path.DirectorySeparatorChar}{targetFramework}{Path.DirectorySeparatorChar}{projectName}.xml</DocumentationFile>");

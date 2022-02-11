@@ -120,15 +120,15 @@ public class ServerDomainGenerator
 
             logItems.Add(SolutionAndProjectHelper.ScaffoldProjFile(
                 projectOptions.ProjectSrcCsProj,
-                false,
-                false,
+                createAsWeb: false,
+                createAsTestProject: false,
                 projectOptions.ProjectName,
                 "net6.0",
-                projectOptions.UseNullableReferenceTypes,
                 new List<string> { "Microsoft.AspNetCore.App" },
-                null,
+                packageReferences: null,
                 projectReferences,
-                false));
+                includeApiSpecification: false,
+                usingCodingRules: projectOptions.UsingCodingRules));
         }
 
         ScaffoldBasicFileDomainRegistration();
@@ -167,15 +167,15 @@ public class ServerDomainGenerator
 
             logItems.Add(SolutionAndProjectHelper.ScaffoldProjFile(
                 projectOptions.ProjectTestCsProj,
-                false,
-                true,
+                createAsWeb: false,
+                createAsTestProject: true,
                 $"{projectOptions.ProjectName}.Tests",
                 "net6.0",
-                projectOptions.UseNullableReferenceTypes,
-                null,
+                frameworkReferences: null,
                 NugetPackageReferenceHelper.CreateForTestProject(false),
                 projectReferences,
-                true));
+                includeApiSpecification: true,
+                usingCodingRules: projectOptions.UsingCodingRules));
         }
 
         return logItems;

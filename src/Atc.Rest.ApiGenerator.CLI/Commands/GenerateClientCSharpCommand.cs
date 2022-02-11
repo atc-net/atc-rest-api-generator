@@ -23,6 +23,8 @@ public class GenerateClientCSharpCommand : AsyncCommand<ClientApiCommandSettings
         var apiOptions = await ApiOptionsHelper.CreateApiOptions(settings);
         var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(settings.SpecificationPath);
 
+        var usingCodingRules = settings.DisableCodingRules; // TODO: Detect
+
         try
         {
             var logItems = new List<LogKeyValueItem>();
@@ -40,7 +42,8 @@ public class GenerateClientCSharpCommand : AsyncCommand<ClientApiCommandSettings
                 new DirectoryInfo(settings.OutputPath),
                 apiDocument,
                 settings.ExcludeEndpointGeneration,
-                apiOptions));
+                apiOptions,
+                usingCodingRules));
 
             if (logItems.HasAnyErrors())
             {

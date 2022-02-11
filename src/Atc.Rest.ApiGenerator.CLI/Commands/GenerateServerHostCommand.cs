@@ -31,6 +31,8 @@ public class GenerateServerHostCommand : AsyncCommand<ServerHostCommandSettings>
         var apiOptions = await ApiOptionsHelper.CreateApiOptions(settings);
         var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(settings.SpecificationPath);
 
+        var usingCodingRules = settings.DisableCodingRules; // TODO: Detect
+
         try
         {
             var logItems = new List<LogKeyValueItem>();
@@ -49,6 +51,7 @@ public class GenerateServerHostCommand : AsyncCommand<ServerHostCommandSettings>
                 outputTestPath,
                 apiDocument,
                 apiOptions,
+                usingCodingRules,
                 new DirectoryInfo(settings.ApiPath),
                 new DirectoryInfo(settings.DomainPath)));
 

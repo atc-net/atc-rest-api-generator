@@ -10,7 +10,8 @@ public class ClientCSharpApiProjectOptions
         string projectPrefixName,
         string projectSuffixName,
         bool excludeEndpointGeneration,
-        ApiOptions.ApiOptions apiOptions)
+        ApiOptions.ApiOptions apiOptions,
+        bool usingCodingRules)
     {
         ArgumentNullException.ThrowIfNull(projectSrcGeneratePath);
 
@@ -36,8 +37,11 @@ public class ClientCSharpApiProjectOptions
 
         BasePathSegmentNames = OpenApiDocumentHelper.GetBasePathSegmentNames(openApiDocument);
 
+        UsingCodingRules = usingCodingRules;
         ExcludeEndpointGeneration = excludeEndpointGeneration;
     }
+
+    public bool UsingCodingRules { get; }
 
     public bool UseNullableReferenceTypes { get; } = true;
 

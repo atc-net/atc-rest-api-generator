@@ -10,6 +10,7 @@ public class HostProjectOptions : BaseProjectOptions
         FileInfo openApiDocumentFile,
         string projectPrefixName,
         ApiOptions.ApiOptions apiOptions,
+        bool usingCodingRules,
         DirectoryInfo apiProjectSrcPath,
         DirectoryInfo domainProjectSrcPath)
         : base(
@@ -19,7 +20,8 @@ public class HostProjectOptions : BaseProjectOptions
             openApiDocumentFile,
             projectPrefixName,
             "Api",
-            apiOptions)
+            apiOptions,
+            usingCodingRules)
     {
         ApiProjectSrcPath = apiProjectSrcPath ?? throw new ArgumentNullException(nameof(projectSrcGeneratePath));
         DomainProjectSrcPath = domainProjectSrcPath ?? throw new ArgumentNullException(nameof(domainProjectSrcPath));

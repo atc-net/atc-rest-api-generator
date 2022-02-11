@@ -85,11 +85,11 @@ public class ServerHostGenerator
                 createAsTestProject: false,
                 projectOptions.ProjectName,
                 "net6.0",
-                projectOptions.UseNullableReferenceTypes,
                 frameworkReferences: null,
                 NugetPackageReferenceHelper.CreateForHostProject(projectOptions.UseRestExtended),
                 projectReferences,
-                includeApiSpecification: false));
+                includeApiSpecification: false,
+                usingCodingRules: projectOptions.UsingCodingRules));
 
             logItems.Add(ScaffoldPropertiesLaunchSettingsFile(
                 projectOptions.PathForSrcGenerate,
@@ -925,15 +925,15 @@ public class ServerHostGenerator
 
             logItems.Add(SolutionAndProjectHelper.ScaffoldProjFile(
                 projectOptions.ProjectTestCsProj,
-                false,
-                true,
+                createAsWeb: false,
+                createAsTestProject: true,
                 $"{projectOptions.ProjectName}.Tests",
                 "net6.0",
-                projectOptions.UseNullableReferenceTypes,
-                null,
+                frameworkReferences: null,
                 NugetPackageReferenceHelper.CreateForTestProject(true),
                 projectReferences,
-                true));
+                includeApiSpecification: true,
+                usingCodingRules: projectOptions.UsingCodingRules));
         }
 
         logItems.Add(GenerateTestWebApiStartupFactory());
@@ -951,7 +951,8 @@ public class ServerHostGenerator
             projectOptions.DocumentFile,
             projectOptions.ProjectName.Replace(".Api", string.Empty, StringComparison.Ordinal),
             "Api.Generated",
-            projectOptions.ApiOptions);
+            projectOptions.ApiOptions,
+            projectOptions.UsingCodingRules);
 
         var operationSchemaMappings = OpenApiOperationSchemaMapHelper.CollectMappings(projectOptions.Document);
         var sgEndpointControllers = new List<SyntaxGeneratorEndpointControllers>();

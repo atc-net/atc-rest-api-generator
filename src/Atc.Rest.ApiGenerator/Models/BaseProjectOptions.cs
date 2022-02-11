@@ -10,6 +10,7 @@ public abstract class BaseProjectOptions
         string projectPrefixName,
         string? projectSuffixName,
         ApiOptions.ApiOptions apiOptions,
+        bool usingCodingRules,
         bool forClient = false,
         string? clientFolderName = null)
     {
@@ -57,11 +58,14 @@ public abstract class BaseProjectOptions
             ProjectTestCsProj = new FileInfo(Path.Combine(PathForTestGenerate.FullName, $"{ProjectName}.Tests.csproj"));
         }
 
+        this.UsingCodingRules = usingCodingRules;
         this.IsForClient = forClient;
         this.ClientFolderName = clientFolderName;
 
         BasePathSegmentNames = OpenApiDocumentHelper.GetBasePathSegmentNames(openApiDocument);
     }
+
+    public bool UsingCodingRules { get; }
 
     public bool UseNullableReferenceTypes { get; } = true;
 

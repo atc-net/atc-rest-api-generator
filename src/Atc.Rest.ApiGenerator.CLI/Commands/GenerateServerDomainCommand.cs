@@ -31,6 +31,8 @@ namespace Atc.Rest.ApiGenerator.CLI.Commands
             var apiOptions = await ApiOptionsHelper.CreateApiOptions(settings);
             var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(settings.SpecificationPath);
 
+            var usingCodingRules = settings.DisableCodingRules; // TODO: Detect
+
             try
             {
                 var logItems = new List<LogKeyValueItem>();
@@ -49,6 +51,7 @@ namespace Atc.Rest.ApiGenerator.CLI.Commands
                     outputTestPath,
                     apiDocument,
                     apiOptions,
+                    usingCodingRules,
                     new DirectoryInfo(settings.ApiPath)));
 
                 if (logItems.HasAnyErrors())
