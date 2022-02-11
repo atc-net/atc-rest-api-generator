@@ -33,9 +33,6 @@ public static class ApiOptionsHelper
         ApiOptions apiOptions,
         BaseConfigurationCommandSettings settings)
     {
-        ArgumentNullException.ThrowIfNull(apiOptions);
-        ArgumentNullException.ThrowIfNull(settings);
-
         if (settings.StrictMode)
         {
             apiOptions.Validation.StrictMode = settings.StrictMode;
@@ -61,12 +58,6 @@ public static class ApiOptionsHelper
         ApiOptions apiOptions,
         BaseConfigurationCommandSettings settings)
     {
-        ArgumentNullException.ThrowIfNull(apiOptions);
-        ArgumentNullException.ThrowIfNull(settings);
-
-        // TODO: Kill this setting
-        apiOptions.Generator.UseNullableReferenceTypes = true;
-
         if (settings.UseAuthorization)
         {
             apiOptions.Generator.UseAuthorization = settings.UseAuthorization;

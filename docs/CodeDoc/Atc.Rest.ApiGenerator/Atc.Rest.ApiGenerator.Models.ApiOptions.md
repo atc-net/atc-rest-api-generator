@@ -46,10 +46,6 @@
 >```csharp
 >UseAuthorization
 >```
-#### UseNullableReferenceTypes
->```csharp
->UseNullableReferenceTypes
->```
 #### UseRestExtended
 >```csharp
 >UseRestExtended

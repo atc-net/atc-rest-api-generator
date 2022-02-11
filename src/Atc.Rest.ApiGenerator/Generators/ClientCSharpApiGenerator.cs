@@ -67,7 +67,7 @@ namespace Atc.Rest.ApiGenerator.Generators
                     createAsTestProject: false,
                     projectName: projectOptions.ProjectName,
                     "netstandard2.1",
-                    useNullableReferenceTypes: projectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
+                    useNullableReferenceTypes: projectOptions.UseNullableReferenceTypes,
                     frameworkReferences: null,
                     packageReferences: NugetPackageReferenceHelper.CreateForClientApiProject(),
                     projectReferences: null,

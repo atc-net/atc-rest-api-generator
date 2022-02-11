@@ -177,7 +177,7 @@ public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointContro
                 var responseTypeNamesAndItemSchema = GetResponseTypeNamesAndItemSchema(responseTypes);
 
                 var endpointMethodMetadata = new EndpointMethodMetadata(
-                    ApiProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
+                    ApiProjectOptions.UseNullableReferenceTypes,
                     ApiProjectOptions.ProjectName,
                     FocusOnSegmentName,
                     $"{ApiProjectOptions.RouteBase}{routePart}",

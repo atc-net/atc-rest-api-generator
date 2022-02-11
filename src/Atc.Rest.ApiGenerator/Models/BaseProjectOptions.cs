@@ -63,6 +63,8 @@ public abstract class BaseProjectOptions
         BasePathSegmentNames = OpenApiDocumentHelper.GetBasePathSegmentNames(openApiDocument);
     }
 
+    public bool UseNullableReferenceTypes { get; } = true;
+
     public string ToolName { get; }
 
     public Version ToolVersion { get; }

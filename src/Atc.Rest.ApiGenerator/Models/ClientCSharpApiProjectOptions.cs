@@ -39,6 +39,8 @@ public class ClientCSharpApiProjectOptions
         ExcludeEndpointGeneration = excludeEndpointGeneration;
     }
 
+    public bool UseNullableReferenceTypes { get; } = true;
+
     public string ToolName { get; }
 
     public Version ToolVersion { get; }

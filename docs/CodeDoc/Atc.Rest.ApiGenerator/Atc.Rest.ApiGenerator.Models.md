@@ -151,6 +151,10 @@
 >```csharp
 >ToolVersion
 >```
+#### UseNullableReferenceTypes
+>```csharp
+>UseNullableReferenceTypes
+>```
 
 <br />
 
@@ -213,6 +217,10 @@
 #### ToolVersion
 >```csharp
 >ToolVersion
+>```
+#### UseNullableReferenceTypes
+>```csharp
+>UseNullableReferenceTypes
 >```
 ### Methods
 

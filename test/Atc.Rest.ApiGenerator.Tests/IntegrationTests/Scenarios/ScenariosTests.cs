@@ -75,7 +75,7 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
 
                 var generatedFileContent = ReadGeneratedFile(generatedFile);
 
-                await Verifier.Verify(generatedFileContent, settings);
+                await Verify(generatedFileContent, settings);
             }
 
             //----------------------------------------------------------------------------------------

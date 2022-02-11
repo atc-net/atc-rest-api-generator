@@ -61,7 +61,7 @@ public class SyntaxGeneratorContractParameter : ISyntaxOperationCodeGenerator
             {
                 var propertyDeclaration = SyntaxPropertyDeclarationFactory.CreateAuto(
                         parameter,
-                        ApiProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
+                        ApiProjectOptions.UseNullableReferenceTypes,
                         ApiProjectOptions.IsForClient)
                     .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForParameter(parameter));
                 classDeclaration = classDeclaration.AddMembers(propertyDeclaration);
@@ -74,7 +74,7 @@ public class SyntaxGeneratorContractParameter : ISyntaxOperationCodeGenerator
             {
                 var propertyDeclaration = SyntaxPropertyDeclarationFactory.CreateAuto(
                         parameter,
-                        ApiProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
+                        ApiProjectOptions.UseNullableReferenceTypes,
                         ApiProjectOptions.IsForClient)
                     .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForParameter(parameter));
                 classDeclaration = classDeclaration.AddMembers(propertyDeclaration);
@@ -139,7 +139,7 @@ public class SyntaxGeneratorContractParameter : ISyntaxOperationCodeGenerator
                             isRequired: true,
                             requestBodyType,
                             NameConstants.Request,
-                            ApiProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
+                            ApiProjectOptions.UseNullableReferenceTypes,
                             initializer: null)
                         .AddValidationAttribute(new RequiredAttribute())
                         .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForParameter(ApiOperation.RequestBody));
@@ -152,7 +152,7 @@ public class SyntaxGeneratorContractParameter : ISyntaxOperationCodeGenerator
                         isRequired: true,
                         requestBodyType,
                         NameConstants.Request,
-                        ApiProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
+                        ApiProjectOptions.UseNullableReferenceTypes,
                         initializer: null);
 
                     propertyDeclaration = requestSchema.HasAnyPropertiesWithFormatTypeBinary() || requestSchema.HasAnyPropertiesAsArrayWithFormatTypeBinary()

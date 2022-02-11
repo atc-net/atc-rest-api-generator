@@ -208,7 +208,7 @@ public class SyntaxGeneratorContractModel : ISyntaxSchemaCodeGenerator
                     var propertyDeclaration = SyntaxPropertyDeclarationFactory.CreateAuto(
                             property,
                             ApiSchema.Required,
-                            ApiProjectOptions.ApiOptions.Generator.UseNullableReferenceTypes)
+                            ApiProjectOptions.UseNullableReferenceTypes)
                         .WithLeadingTrivia(SyntaxDocumentationFactory.Create(property.Value));
                     classDeclaration = classDeclaration.AddMembers(propertyDeclaration);
                 }

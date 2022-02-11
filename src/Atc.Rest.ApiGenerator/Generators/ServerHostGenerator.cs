@@ -52,9 +52,9 @@ public class ServerHostGenerator
             var originalNullableValue = SolutionAndProjectHelper.GetBoolFromNullableString(SolutionAndProjectHelper.GetNullableValueFromProject(element));
 
             var hasUpdates = false;
-            if (projectOptions.ApiOptions.Generator.UseNullableReferenceTypes != originalNullableValue)
+            if (projectOptions.UseNullableReferenceTypes != originalNullableValue)
             {
-                var newNullableValue = SolutionAndProjectHelper.GetNullableStringFromBool(projectOptions.ApiOptions.Generator.UseNullableReferenceTypes);
+                var newNullableValue = SolutionAndProjectHelper.GetNullableStringFromBool(projectOptions.UseNullableReferenceTypes);
                 SolutionAndProjectHelper.SetNullableValueForProject(element, newNullableValue);
                 element.Save(projectOptions.ProjectSrcCsProj.FullName);
                 logItems.Add(LogItemFactory.CreateDebug("FileUpdate", "#", $"Update host csproj - Nullable value={newNullableValue}"));
@@ -85,7 +85,7 @@ public class ServerHostGenerator
                 createAsTestProject: false,
                 projectOptions.ProjectName,
                 "net6.0",
-                projectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
+                projectOptions.UseNullableReferenceTypes,
                 frameworkReferences: null,
                 NugetPackageReferenceHelper.CreateForHostProject(projectOptions.UseRestExtended),
                 projectReferences,
@@ -929,7 +929,7 @@ public class ServerHostGenerator
                 true,
                 $"{projectOptions.ProjectName}.Tests",
                 "net6.0",
-                projectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
+                projectOptions.UseNullableReferenceTypes,
                 null,
                 NugetPackageReferenceHelper.CreateForTestProject(true),
                 projectReferences,

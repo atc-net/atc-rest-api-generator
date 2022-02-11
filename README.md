@@ -14,6 +14,8 @@
     setting --operationIdCasingStyle renamed to --validate-operationIdCasingStyle
     setting --modelNameCasingStyle renamed to --validate-modelNameCasingStyle
     setting --modelPropertyNameCasingStyle renamed to --validate-modelPropertyNameCasingStyle
+ * Api-Options file
+    Generator->UseNullableReferenceTypes has been removed (default in c# 10)
  ```
 
 ## Projects in the repository

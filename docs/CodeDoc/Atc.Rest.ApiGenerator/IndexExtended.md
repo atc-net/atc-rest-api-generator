@@ -287,6 +287,7 @@
      - ToolName
      - ToolNameAndVersion
      - ToolVersion
+     - UseNullableReferenceTypes
 - [ClientCSharpApiProjectOptions](Atc.Rest.ApiGenerator.Models.md#clientcsharpapiprojectoptions)
   -  Properties
      - ApiOptions
@@ -302,6 +303,7 @@
      - ToolName
      - ToolNameAndVersion
      - ToolVersion
+     - UseNullableReferenceTypes
   -  Methods
      - ToString()
 - [DomainProjectOptions](Atc.Rest.ApiGenerator.Models.md#domainprojectoptions)
@@ -381,7 +383,6 @@
      - Request
      - Response
      - UseAuthorization
-     - UseNullableReferenceTypes
      - UseRestExtended
 - [ApiOptionsGeneratorRequest](Atc.Rest.ApiGenerator.Models.ApiOptions.md#apioptionsgeneratorrequest)
 - [ApiOptionsGeneratorResponse](Atc.Rest.ApiGenerator.Models.ApiOptions.md#apioptionsgeneratorresponse)

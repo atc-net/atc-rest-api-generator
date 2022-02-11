@@ -100,9 +100,9 @@ public class ServerApiGenerator
             var originalNullableValue = SolutionAndProjectHelper.GetBoolFromNullableString(SolutionAndProjectHelper.GetNullableValueFromProject(element));
 
             var hasUpdates = false;
-            if (projectOptions.ApiOptions.Generator.UseNullableReferenceTypes != originalNullableValue)
+            if (projectOptions.UseNullableReferenceTypes != originalNullableValue)
             {
-                var newNullableValue = SolutionAndProjectHelper.GetNullableStringFromBool(projectOptions.ApiOptions.Generator.UseNullableReferenceTypes);
+                var newNullableValue = SolutionAndProjectHelper.GetNullableStringFromBool(projectOptions.UseNullableReferenceTypes);
                 SolutionAndProjectHelper.SetNullableValueForProject(element, newNullableValue);
                 element.Save(projectOptions.ProjectSrcCsProj.FullName);
                 logItems.Add(LogItemFactory.CreateDebug("FileUpdate", "#", $"Update API csproj - Nullable value={newNullableValue}"));
@@ -122,7 +122,7 @@ public class ServerApiGenerator
                 createAsTestProject: false,
                 projectOptions.ProjectName,
                 "net6.0",
-                projectOptions.ApiOptions.Generator.UseNullableReferenceTypes,
+                projectOptions.UseNullableReferenceTypes,
                 new List<string> { "Microsoft.AspNetCore.App" },
                 NugetPackageReferenceHelper.CreateForApiProject(),
                 projectReferences: null,
