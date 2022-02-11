@@ -18,8 +18,4 @@
     <PackageReference Include="Atc.Rest" Version="2.0.41" />
     <PackageReference Include="Atc.Rest.Extended" Version="2.0.41" />
   </ItemGroup>
-  <PropertyGroup>
-    <Nullable>enable</Nullable>
-    <LangVersion>10.0</LangVersion>
-  </PropertyGroup>
 </Project>

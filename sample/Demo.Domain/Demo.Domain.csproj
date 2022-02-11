@@ -12,8 +12,4 @@
   <ItemGroup>
     <ProjectReference Include="..\Demo.Api.Generated\Demo.Api.Generated.csproj" />
   </ItemGroup>
-  <PropertyGroup>
-    <Nullable>enable</Nullable>
-    <LangVersion>10.0</LangVersion>
-  </PropertyGroup>
 </Project>
