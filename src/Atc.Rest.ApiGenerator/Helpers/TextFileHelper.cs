@@ -47,7 +47,7 @@ public static class TextFileHelper
                 fileInfo.Extension.Equals(".sln", StringComparison.OrdinalIgnoreCase))
             {
                 // If the content is the same - Note this don't take care of GIT-CRLF handling process.
-                var orgText = File.ReadAllText(fileInfo.FullName, Encoding.UTF8);
+                var orgText = FileHelper.ReadAllText(fileInfo);
                 if (orgText == text)
                 {
                     return LogItemFactory.CreateDebug("FileSkip", "#", fileInfo.FullName);
@@ -59,11 +59,11 @@ public static class TextFileHelper
                 }
             }
 
-            File.WriteAllText(fileInfo.FullName, text, Encoding.UTF8);
+            FileHelper.WriteAllText(fileInfo, text);
             return LogItemFactory.CreateDebug("FileUpdate", "#", fileInfo.FullName);
         }
 
-        File.WriteAllText(fileInfo.FullName, text, Encoding.UTF8);
+        FileHelper.WriteAllText(fileInfo, text);
         return LogItemFactory.CreateDebug("FileCreate", "#", fileInfo.FullName);
     }
 

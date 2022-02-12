@@ -9,12 +9,13 @@ global using System.Runtime.Serialization;
 global using System.Text.Json;
 
 global using Atc.Console.Spectre;
+global using Atc.Console.Spectre.CommandSettings;
 global using Atc.Console.Spectre.Factories;
+global using Atc.Console.Spectre.Helpers;
 global using Atc.Console.Spectre.Logging;
 global using Atc.Data.Models;
 global using Atc.Helpers;
 global using Atc.Rest.ApiGenerator.CLI.Commands;
-global using Atc.Rest.ApiGenerator.CLI.Commands.DescriptionAttributes;
 global using Atc.Rest.ApiGenerator.CLI.Commands.Settings;
 global using Atc.Rest.ApiGenerator.CLI.Extensions;
 global using Atc.Rest.ApiGenerator.Helpers;
@@ -24,4 +25,5 @@ global using Atc.Serialization;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.Logging;
 
+global using Spectre.Console;
 global using Spectre.Console.Cli;

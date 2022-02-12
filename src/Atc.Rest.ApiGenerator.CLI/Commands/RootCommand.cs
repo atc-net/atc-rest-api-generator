@@ -26,7 +26,7 @@ public class RootCommand : AsyncCommand<RootCommandSettings>
     [SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "OK.")]
     private static void HandleVersionOption()
     {
-        System.Console.WriteLine(CliVersionHelper.GetCurrentVersion().ToString());
+        System.Console.WriteLine(CliHelper.GetCurrentVersion().ToString());
         if (CliVersionHelper.IsLatestVersion())
         {
             return;

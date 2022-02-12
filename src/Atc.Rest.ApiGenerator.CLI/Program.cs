@@ -17,7 +17,7 @@ public static class Program
         var consoleLoggerConfiguration = new ConsoleLoggerConfiguration();
         configuration.GetRequiredSection("ConsoleLogger").Bind(consoleLoggerConfiguration);
 
-        SetMinimumLogLevelIfNeeded(args, consoleLoggerConfiguration);
+        ProgramCsHelper.SetMinimumLogLevelIfNeeded(args, consoleLoggerConfiguration);
 
         var serviceCollection = ServiceCollectionFactory.Create(consoleLoggerConfiguration);
 
@@ -32,21 +32,10 @@ public static class Program
     {
         if (args.Length == 0)
         {
-            return new[] { CommandConstants.ArgumentShortHelp, };
+            return new[] { CommandConstants.ArgumentShortHelp };
         }
 
         // TODO: Add multiple validations
         return args;
-    }
-
-    private static void SetMinimumLogLevelIfNeeded(
-        string[] args,
-        ConsoleLoggerConfiguration consoleLoggerConfiguration)
-    {
-        if (args.Any(x => x.Equals(CommandConstants.ArgumentShortVerbose, StringComparison.OrdinalIgnoreCase)) ||
-            args.Any(x => x.Equals(CommandConstants.ArgumentLongVerbose, StringComparison.OrdinalIgnoreCase)))
-        {
-            consoleLoggerConfiguration.MinimumLogLevel = LogLevel.Trace;
-        }
     }
 }

@@ -17,7 +17,7 @@ public static class ApiOptionsHelper
             throw new FileNotFoundException("Could not find options file.", settings.OptionsPath.Value);
         }
 
-        var options = await DeserializeFile(fileInfo);
+        var options = await FileHelper<ApiOptions>.ReadJsonFileAndDeserializeAsync(fileInfo);
         if (options is null)
         {
             throw new SerializationException($"Could not read options file '{settings.OptionsPath.Value}'.");
@@ -62,14 +62,5 @@ public static class ApiOptionsHelper
         {
             apiOptions.Generator.UseAuthorization = settings.UseAuthorization;
         }
-    }
-
-    private static async Task<ApiOptions?> DeserializeFile(
-        FileInfo fileInfo)
-    {
-        var serializeOptions = JsonSerializerOptionsFactory.Create();
-        using var stream = new StreamReader(fileInfo.FullName);
-        var json = await stream.ReadToEndAsync();
-        return JsonSerializer.Deserialize<ApiOptions>(json, serializeOptions);
     }
 }

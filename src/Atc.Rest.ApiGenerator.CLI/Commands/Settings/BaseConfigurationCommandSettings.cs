@@ -1,34 +1,32 @@
-using Spectre.Console;
-
 namespace Atc.Rest.ApiGenerator.CLI.Commands.Settings;
 
 public class BaseConfigurationCommandSettings : BaseCommandSettings
 {
-    [CommandOption($"{CommandConstants.ArgumentShortConfigurationSpecificationPath}|{CommandConstants.ArgumentLongConfigurationSpecificationPath} <SPECIFICATIONPATH>")]
+    [CommandOption($"{ArgumentCommandConstants.ShortConfigurationSpecificationPath}|{ArgumentCommandConstants.LongConfigurationSpecificationPath} <SPECIFICATIONPATH>")]
     [Description("Path to Open API specification (directory, file or url)")]
     public string SpecificationPath { get; init; } = string.Empty;
 
-    [CommandOption($"{CommandConstants.ArgumentLongConfigurationOptionsPath} [OPTIONSPATH]")]
+    [CommandOption($"{ArgumentCommandConstants.LongConfigurationOptionsPath} [OPTIONSPATH]")]
     [Description("Path to options json-file")]
     public FlagValue<string>? OptionsPath { get; init; }
 
-    [CommandOption($"{CommandConstants.ArgumentLongConfigurationValidateStrictMode}")]
+    [CommandOption($"{ArgumentCommandConstants.LongConfigurationValidateStrictMode}")]
     [Description("Use strictmode")]
     public bool StrictMode { get; init; }
 
-    [CommandOption($"{CommandConstants.ArgumentLongConfigurationValidateOperationIdCasingStyle} [OPERATIONIDCASINGSTYLE]")]
+    [CommandOption($"{ArgumentCommandConstants.LongConfigurationValidateOperationIdCasingStyle} [OPERATIONIDCASINGSTYLE]")]
     [CasingStyleDescription(Default = CasingStyle.CamelCase, Prefix = "Set casingStyle for operationId")]
     public FlagValue<CasingStyle> OperationIdCasingStyle { get; init; } = new ();
 
-    [CommandOption($"{CommandConstants.ArgumentLongConfigurationValidateModelNameCasingStyle} [MODELNAMECASINGSTYLE]")]
+    [CommandOption($"{ArgumentCommandConstants.LongConfigurationValidateModelNameCasingStyle} [MODELNAMECASINGSTYLE]")]
     [CasingStyleDescription(Default = CasingStyle.PascalCase, Prefix = "Set casingStyle for model name")]
     public FlagValue<CasingStyle> ModelNameCasingStyle { get; init; } = new ();
 
-    [CommandOption($"{CommandConstants.ArgumentLongConfigurationValidateModelPropertyNameCasingStyle} [MODELPROPERTYNAMECASINGSTYLE]")]
+    [CommandOption($"{ArgumentCommandConstants.LongConfigurationValidateModelPropertyNameCasingStyle} [MODELPROPERTYNAMECASINGSTYLE]")]
     [CasingStyleDescription(Default = CasingStyle.CamelCase, Prefix = "Set casingStyle for model property name")]
     public FlagValue<CasingStyle> ModelPropertyNameCasingStyle { get; init; } = new ();
 
-    [CommandOption($"{CommandConstants.ArgumentLongConfigurationAuthorization}")]
+    [CommandOption($"{ArgumentCommandConstants.LongConfigurationAuthorization}")]
     [Description("Use authorization")]
     public bool UseAuthorization { get; init; }
 
