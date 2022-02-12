@@ -14,8 +14,8 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Atc" Version="2.0.41" />
-    <PackageReference Include="Atc.Rest" Version="2.0.41" />
-    <PackageReference Include="Atc.Rest.Extended" Version="2.0.41" />
+    <PackageReference Include="Atc" Version="2.0.52" />
+    <PackageReference Include="Atc.Rest" Version="2.0.52" />
+    <PackageReference Include="Atc.Rest.Extended" Version="2.0.52" />
   </ItemGroup>
 </Project>
