@@ -1,3 +1,5 @@
+using Atc.Console.Spectre;
+
 // ReSharper disable ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
 // ReSharper disable SuggestBaseTypeForParameter
 // ReSharper disable ReturnTypeCanBeEnumerable.Local
@@ -5,45 +7,44 @@ namespace Atc.Rest.ApiGenerator.Generators;
 
 public class ServerHostGenerator
 {
+    private readonly ILogger logger;
     private readonly HostProjectOptions projectOptions;
 
-    public ServerHostGenerator(HostProjectOptions projectOptions)
+    public ServerHostGenerator(
+        ILogger logger,
+        HostProjectOptions projectOptions)
     {
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
     }
 
-    public List<LogKeyValueItem> Generate()
+    public bool Generate()
     {
-        var logItems = new List<LogKeyValueItem>();
+        logger.LogInformation($"{AppEmojisConstants.AreaGenerateCode} Working on server host generation");
 
-        logItems.AddRange(projectOptions.SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles());
-        if (logItems.Any(x => x.LogCategory == LogCategoryType.Error))
+        if (!projectOptions.SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles(logger))
         {
-            return logItems;
+            return false;
         }
 
-        logItems.AddRange(ScaffoldSrc());
-        if (projectOptions.PathForTestGenerate is not null)
-        {
-            logItems.AddRange(ScaffoldTest());
-        }
+        ScaffoldSrc();
 
         if (projectOptions.PathForTestGenerate is not null)
         {
-            logItems.AddRange(GenerateTestEndpoints());
+            logger.LogInformation($"{AppEmojisConstants.AreaGenerateTest} Working on server host unit-test generation");
+            ScaffoldTest();
+            GenerateTestEndpoints();
         }
 
-        return logItems;
+        return true;
     }
 
-    private List<LogKeyValueItem> ScaffoldSrc()
+    private void ScaffoldSrc()
     {
         if (!Directory.Exists(projectOptions.PathForSrcGenerate.FullName))
         {
             Directory.CreateDirectory(projectOptions.PathForSrcGenerate.FullName);
         }
-
-        var logItems = new List<LogKeyValueItem>();
 
         if (projectOptions.PathForSrcGenerate.Exists &&
             projectOptions.ProjectSrcCsProj.Exists)
@@ -57,13 +58,13 @@ public class ServerHostGenerator
                 var newNullableValue = SolutionAndProjectHelper.GetNullableStringFromBool(projectOptions.UseNullableReferenceTypes);
                 SolutionAndProjectHelper.SetNullableValueForProject(element, newNullableValue);
                 element.Save(projectOptions.ProjectSrcCsProj.FullName);
-                logItems.Add(LogItemFactory.CreateDebug("FileUpdate", "#", $"Update host csproj - Nullable value={newNullableValue}"));
+                logger.LogDebug($"{EmojisConstants.FileUpdated}   Update host csproj - Nullable value={newNullableValue}");
                 hasUpdates = true;
             }
 
             if (!hasUpdates)
             {
-                logItems.Add(LogItemFactory.CreateDebug("FileSkip", "#", "No updates for host csproj"));
+                logger.LogDebug($"{EmojisConstants.FileNotUpdated}   No updates for host csproj");
             }
         }
         else
@@ -79,7 +80,8 @@ public class ServerHostGenerator
                 projectReferences.Add(projectOptions.DomainProjectSrcCsProj);
             }
 
-            logItems.Add(SolutionAndProjectHelper.ScaffoldProjFile(
+            SolutionAndProjectHelper.ScaffoldProjFile(
+                logger,
                 projectOptions.ProjectSrcCsProj,
                 createAsWeb: true,
                 createAsTestProject: false,
@@ -89,25 +91,23 @@ public class ServerHostGenerator
                 NugetPackageReferenceHelper.CreateForHostProject(projectOptions.UseRestExtended),
                 projectReferences,
                 includeApiSpecification: false,
-                usingCodingRules: projectOptions.UsingCodingRules));
+                usingCodingRules: projectOptions.UsingCodingRules);
 
-            logItems.Add(ScaffoldPropertiesLaunchSettingsFile(
+            ScaffoldPropertiesLaunchSettingsFile(
                 projectOptions.PathForSrcGenerate,
-                projectOptions.UseRestExtended));
-            logItems.Add(ScaffoldProgramFile());
-            logItems.Add(ScaffoldStartupFile());
-            logItems.Add(ScaffoldWebConfig());
+                projectOptions.UseRestExtended);
+            ScaffoldProgramFile();
+            ScaffoldStartupFile();
+            ScaffoldWebConfig();
         }
 
         if (projectOptions.UseRestExtended)
         {
-            logItems.Add(ScaffoldConfigureSwaggerDocOptions());
+            ScaffoldConfigureSwaggerDocOptions();
         }
-
-        return logItems;
     }
 
-    private static LogKeyValueItem ScaffoldPropertiesLaunchSettingsFile(
+    private void ScaffoldPropertiesLaunchSettingsFile(
         DirectoryInfo pathForSrcGenerate,
         bool useExtended)
     {
@@ -124,9 +124,15 @@ public class ServerHostGenerator
         var json = resourceStream!.ToStringData();
 
         var file = new FileInfo(Path.Combine(propertiesPath.FullName, "launchSettings.json"));
-        return File.Exists(file.FullName)
-            ? LogItemFactory.CreateDebug("FileSkip", "#", file.FullName)
-            : TextFileHelper.Save(file, json);
+
+        if (file.Exists)
+        {
+            logger.LogDebug($"{EmojisConstants.FileNotUpdated}   {file.FullName}'");
+        }
+        else
+        {
+            TextFileHelper.Save(logger, file, json);
+        }
     }
 
     private static MemberDeclarationSyntax CreateProgramMain()
@@ -889,14 +895,12 @@ public class ServerHostGenerator
                                     })))))
             .WithSemicolonToken(SyntaxTokenFactory.Semicolon());
 
-    private List<LogKeyValueItem> ScaffoldTest()
+    private void ScaffoldTest()
     {
-        var logItems = new List<LogKeyValueItem>();
-
         if (projectOptions.PathForTestGenerate is null ||
             projectOptions.ProjectTestCsProj is null)
         {
-            return logItems;
+            return;
         }
 
         if (projectOptions.PathForTestGenerate.Exists &&
@@ -923,7 +927,8 @@ public class ServerHostGenerator
                 projectReferences.Add(projectOptions.DomainProjectSrcCsProj);
             }
 
-            logItems.Add(SolutionAndProjectHelper.ScaffoldProjFile(
+            SolutionAndProjectHelper.ScaffoldProjFile(
+                logger,
                 projectOptions.ProjectTestCsProj,
                 createAsWeb: false,
                 createAsTestProject: true,
@@ -933,16 +938,14 @@ public class ServerHostGenerator
                 NugetPackageReferenceHelper.CreateForTestProject(true),
                 projectReferences,
                 includeApiSpecification: true,
-                usingCodingRules: projectOptions.UsingCodingRules));
+                usingCodingRules: projectOptions.UsingCodingRules);
         }
 
-        logItems.Add(GenerateTestWebApiStartupFactory());
-        logItems.Add(GenerateTestWebApiControllerBaseTest());
-
-        return logItems;
+        GenerateTestWebApiStartupFactory();
+        GenerateTestWebApiControllerBaseTest();
     }
 
-    private List<LogKeyValueItem> GenerateTestEndpoints()
+    private void GenerateTestEndpoints()
     {
         var apiProjectOptions = new ApiProjectOptions(
             projectOptions.ApiProjectSrcPath,
@@ -958,26 +961,23 @@ public class ServerHostGenerator
         var sgEndpointControllers = new List<SyntaxGeneratorEndpointControllers>();
         foreach (var segmentName in projectOptions.BasePathSegmentNames)
         {
-            var generator = new SyntaxGeneratorEndpointControllers(apiProjectOptions, operationSchemaMappings, segmentName);
+            var generator = new SyntaxGeneratorEndpointControllers(logger, apiProjectOptions, operationSchemaMappings, segmentName);
             generator.GenerateCode();
             sgEndpointControllers.Add(generator);
         }
 
-        var logItems = new List<LogKeyValueItem>();
         foreach (var sgEndpointController in sgEndpointControllers)
         {
             var metadataForMethods = sgEndpointController.GetMetadataForMethods();
             foreach (var endpointMethodMetadata in metadataForMethods)
             {
-                logItems.Add(GenerateServerApiXunitTestEndpointHandlerStubHelper.Generate(projectOptions, endpointMethodMetadata));
-                logItems.Add(GenerateServerApiXunitTestEndpointTestHelper.Generate(projectOptions, endpointMethodMetadata));
+                GenerateServerApiXunitTestEndpointHandlerStubHelper.Generate(logger, projectOptions, endpointMethodMetadata);
+                GenerateServerApiXunitTestEndpointTestHelper.Generate(logger, projectOptions, endpointMethodMetadata);
             }
         }
-
-        return logItems;
     }
 
-    private LogKeyValueItem ScaffoldProgramFile()
+    private void ScaffoldProgramFile()
     {
         // Create compilationUnit
         var compilationUnit = SyntaxFactory.CompilationUnit();
@@ -1011,12 +1011,17 @@ public class ServerHostGenerator
             .EnsureEnvironmentNewLines();
 
         var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "Program.cs"));
-        return File.Exists(file.FullName)
-            ? LogItemFactory.CreateDebug("FileSkip", "#", file.FullName)
-            : TextFileHelper.Save(file, codeAsString);
+        if (file.Exists)
+        {
+            logger.LogDebug($"{EmojisConstants.FileNotUpdated}   {file.FullName}'");
+        }
+        else
+        {
+            TextFileHelper.Save(logger, file, codeAsString);
+        }
     }
 
-    private LogKeyValueItem ScaffoldStartupFile()
+    private void ScaffoldStartupFile()
     {
         // Create compilationUnit
         var compilationUnit = SyntaxFactory.CompilationUnit();
@@ -1061,12 +1066,18 @@ public class ServerHostGenerator
             .FormatPublicPrivateLines();
 
         var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "Startup.cs"));
-        return File.Exists(file.FullName)
-            ? LogItemFactory.CreateDebug("FileSkip", "#", file.FullName)
-            : TextFileHelper.Save(file, codeAsString);
+
+        if (file.Exists)
+        {
+            logger.LogDebug($"{EmojisConstants.FileNotUpdated}   {file.FullName}'");
+        }
+        else
+        {
+            TextFileHelper.Save(logger, file, codeAsString);
+        }
     }
 
-    private LogKeyValueItem ScaffoldWebConfig()
+    private void ScaffoldWebConfig()
     {
         var sb = new StringBuilder();
         sb.AppendLine("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
@@ -1081,13 +1092,18 @@ public class ServerHostGenerator
         sb.AppendLine("</configuration>");
 
         var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "web.config"));
-        return File.Exists(file.FullName)
-            ? LogItemFactory.CreateDebug("FileSkip", "#", file.FullName)
-            : TextFileHelper.Save(file, sb.ToString());
+        if (file.Exists)
+        {
+            logger.LogDebug($"{EmojisConstants.FileNotUpdated}   {file.FullName}'");
+        }
+        else
+        {
+            TextFileHelper.Save(logger, file, sb.ToString());
+        }
     }
 
     // TODO: FIX THIS - Use CompilationUnit
-    private LogKeyValueItem ScaffoldConfigureSwaggerDocOptions()
+    private void ScaffoldConfigureSwaggerDocOptions()
     {
         var fullNamespace = string.IsNullOrEmpty(projectOptions.ClientFolderName)
             ? $"{projectOptions.ProjectName}"
@@ -1099,10 +1115,10 @@ public class ServerHostGenerator
         var stringBuilder = new StringBuilder();
         GenerateCodeHelper.AppendGeneratedCodeWarningComment(stringBuilder, projectOptions.ToolNameAndVersion);
         stringBuilder.Append(syntaxGenerator.GenerateCode());
-        return TextFileHelper.Save(file, stringBuilder.ToString());
+        TextFileHelper.Save(logger, file, stringBuilder.ToString());
     }
 
-    private LogKeyValueItem GenerateTestWebApiStartupFactory()
+    private void GenerateTestWebApiStartupFactory()
     {
         // Create compilationUnit
         var compilationUnit = SyntaxFactory.CompilationUnit();
@@ -1156,10 +1172,10 @@ public class ServerHostGenerator
             .EnsureNewlineAfterMethod("partial void ModifyConfiguration(IConfigurationBuilder config);");
 
         var file = new FileInfo(Path.Combine(projectOptions.PathForTestGenerate!.FullName, "WebApiStartupFactory.cs"));
-        return TextFileHelper.Save(file, codeAsString);
+        TextFileHelper.Save(logger, file, codeAsString);
     }
 
-    private LogKeyValueItem GenerateTestWebApiControllerBaseTest()
+    private void GenerateTestWebApiControllerBaseTest()
     {
         // Create compilationUnit
         var compilationUnit = SyntaxFactory.CompilationUnit();
@@ -1217,6 +1233,6 @@ public class ServerHostGenerator
             .EnsureEnvironmentNewLines();
 
         var file = new FileInfo(Path.Combine(projectOptions.PathForTestGenerate!.FullName, "WebApiControllerBaseTest.cs"));
-        return TextFileHelper.Save(file, codeAsString);
+        TextFileHelper.Save(logger, file, codeAsString);
     }
 }

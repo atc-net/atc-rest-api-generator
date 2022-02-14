@@ -3,13 +3,17 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
 
 public class SyntaxGeneratorContractParameter : ISyntaxOperationCodeGenerator
 {
+    private readonly ILogger logger;
+
     public SyntaxGeneratorContractParameter(
+        ILogger logger,
         ApiProjectOptions apiProjectOptions,
         IList<OpenApiParameter> globalPathParameters,
         OperationType apiOperationType,
         OpenApiOperation apiOperation,
         string focusOnSegmentName)
     {
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.ApiProjectOptions = apiProjectOptions ?? throw new ArgumentNullException(nameof(apiProjectOptions));
         this.GlobalPathParameters = globalPathParameters ?? throw new ArgumentNullException(nameof(globalPathParameters));
         this.ApiOperationType = apiOperationType;
@@ -215,7 +219,7 @@ public class SyntaxGeneratorContractParameter : ISyntaxOperationCodeGenerator
             .FormatDoubleLines();
     }
 
-    public LogKeyValueItem ToFile()
+    public void ToFile()
     {
         var area = FocusOnSegmentName.EnsureFirstCharacterToUpper();
         var parameterName = ApiOperation.GetOperationName() + NameConstants.ContractParameters;
@@ -226,7 +230,7 @@ public class SyntaxGeneratorContractParameter : ISyntaxOperationCodeGenerator
                 ? Util.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, NameConstants.ContractParameters, parameterName)
                 : Util.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, parameterName);
 
-        return TextFileHelper.Save(file, ToCodeAsString());
+        TextFileHelper.Save(logger, file, ToCodeAsString());
     }
 
     public void ToFile(
@@ -234,7 +238,7 @@ public class SyntaxGeneratorContractParameter : ISyntaxOperationCodeGenerator
     {
         ArgumentNullException.ThrowIfNull(file);
 
-        TextFileHelper.Save(file, ToCodeAsString());
+        TextFileHelper.Save(logger, file, ToCodeAsString());
     }
 
     public override string ToString()

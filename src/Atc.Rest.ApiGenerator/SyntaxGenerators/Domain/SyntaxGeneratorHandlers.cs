@@ -4,10 +4,14 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Domain;
 
 public class SyntaxGeneratorHandlers : ISyntaxGeneratorHandlers
 {
+    private readonly ILogger logger;
+
     public SyntaxGeneratorHandlers(
+        ILogger logger,
         DomainProjectOptions domainProjectOptions,
         string focusOnSegmentName)
     {
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.DomainProjectOptions = domainProjectOptions ?? throw new ArgumentNullException(nameof(domainProjectOptions));
         this.FocusOnSegmentName = focusOnSegmentName ?? throw new ArgumentNullException(nameof(focusOnSegmentName));
     }
@@ -29,6 +33,7 @@ public class SyntaxGeneratorHandlers : ISyntaxGeneratorHandlers
             list.AddRange(
                 urlPath.Value.Operations
                     .Select(x => new SyntaxGeneratorHandler(
+                        logger,
                         DomainProjectOptions,
                         x.Key,
                         x.Value,

@@ -6,11 +6,15 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
 
 public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointControllers
 {
+    private readonly ILogger logger;
+
     public SyntaxGeneratorEndpointControllers(
+        ILogger logger,
         ApiProjectOptions apiProjectOptions,
         List<ApiOperationSchemaMap> operationSchemaMappings,
         string focusOnSegmentName)
     {
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.ApiProjectOptions = apiProjectOptions ?? throw new ArgumentNullException(nameof(apiProjectOptions));
         this.OperationSchemaMappings = operationSchemaMappings ?? throw new ArgumentNullException(nameof(operationSchemaMappings));
         this.FocusOnSegmentName = focusOnSegmentName ?? throw new ArgumentNullException(nameof(focusOnSegmentName));
@@ -122,11 +126,11 @@ public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointContro
             .EnsureEnvironmentNewLines();
     }
 
-    public LogKeyValueItem ToFile()
+    public void ToFile()
     {
         var controllerName = FocusOnSegmentName.EnsureFirstCharacterToUpper() + "Controller";
         var file = Util.GetCsFileNameForEndpoints(ApiProjectOptions.PathForEndpoints, controllerName);
-        return TextFileHelper.Save(file, ToCodeAsString());
+        TextFileHelper.Save(logger, file, ToCodeAsString());
     }
 
     public void ToFile(
@@ -134,7 +138,7 @@ public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointContro
     {
         ArgumentNullException.ThrowIfNull(file);
 
-        TextFileHelper.Save(file, ToCodeAsString());
+        TextFileHelper.Save(logger, file, ToCodeAsString());
     }
 
     public List<EndpointMethodMetadata> GetMetadataForMethods()
@@ -142,7 +146,7 @@ public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointContro
         var list = new List<EndpointMethodMetadata>();
         foreach (var (key, value) in ApiProjectOptions.Document.GetPathsByBasePathSegmentName(FocusOnSegmentName))
         {
-            var generatorParameters = new SyntaxGeneratorContractParameters(ApiProjectOptions, FocusOnSegmentName);
+            var generatorParameters = new SyntaxGeneratorContractParameters(logger, ApiProjectOptions, FocusOnSegmentName);
             var generatedParameters = generatorParameters.GenerateSyntaxTrees();
             var hasGlobalParameters = value.HasParameters();
 

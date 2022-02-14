@@ -18,7 +18,7 @@ public class SyntaxGeneratorContractModelsTests : SyntaxGeneratorContractModelsT
             .Select(schema => new ApiOperationSchemaMap(schema.Key, SchemaMapLocatedAreaType.Response, FocusOnSegment, OperationType.Get, parentSchemaKey: null))
             .ToList();
 
-        return new SyntaxGeneratorContractModels(apiProject, apiOperationSchemaMaps, FocusOnSegment);
+        return new SyntaxGeneratorContractModels(NullLogger.Instance, apiProject, apiOperationSchemaMaps, FocusOnSegment);
     }
 
     [Theory(DisplayName = "Api Contract Model")]

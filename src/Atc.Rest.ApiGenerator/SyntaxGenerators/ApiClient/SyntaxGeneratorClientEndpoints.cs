@@ -4,11 +4,15 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient;
 
 public class SyntaxGeneratorClientEndpoints : ISyntaxGeneratorClientEndpoints
 {
+    private readonly ILogger logger;
+
     public SyntaxGeneratorClientEndpoints(
+        ILogger logger,
         ApiProjectOptions apiProjectOptions,
         List<ApiOperationSchemaMap> operationSchemaMappings,
         string focusOnSegmentName)
     {
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.ApiProjectOptions = apiProjectOptions ?? throw new ArgumentNullException(nameof(apiProjectOptions));
         this.OperationSchemaMappings = operationSchemaMappings ?? throw new ArgumentNullException(nameof(operationSchemaMappings));
         this.FocusOnSegmentName = focusOnSegmentName ?? throw new ArgumentNullException(nameof(focusOnSegmentName));
@@ -33,6 +37,7 @@ public class SyntaxGeneratorClientEndpoints : ISyntaxGeneratorClientEndpoints
             list.AddRange(
                 urlPath.Value.Operations
                     .Select(x => new SyntaxGeneratorClientEndpoint(
+                        logger,
                         ApiProjectOptions,
                         OperationSchemaMappings,
                         urlPath.Value.Parameters,

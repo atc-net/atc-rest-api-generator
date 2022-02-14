@@ -1,3 +1,5 @@
+using Atc.Console.Spectre;
+
 // ReSharper disable SuggestBaseTypeForParameter
 // ReSharper disable InvertIf
 namespace Atc.Rest.ApiGenerator.Helpers;
@@ -8,15 +10,15 @@ public static class GenerateAtcCodingRulesHelper
     public const string FileNameEditorConfig = ".editorconfig";
     public const string FileNameDirectoryBuildProps = "Directory.Build.props";
 
-    public static IEnumerable<LogKeyValueItem> Generate(
+    public static bool Generate(
+        ILogger logger,
         string outputSlnPath,
         DirectoryInfo outputSrcPath,
         DirectoryInfo? outputTestPath)
     {
+        ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(outputSlnPath);
         ArgumentNullException.ThrowIfNull(outputSrcPath);
-
-        var logItems = new List<LogKeyValueItem>();
 
         var rootPath = outputSlnPath.EndsWith(".sln", StringComparison.OrdinalIgnoreCase)
             ? new FileInfo(outputSlnPath).Directory
@@ -29,31 +31,12 @@ public static class GenerateAtcCodingRulesHelper
 
         if (IsFirstTime(rootPath))
         {
-            // atc-coding-rules
-            logItems.Add(HandleAtcCodingRulesJson(rootPath, outputSrcPath, outputTestPath));
-            logItems.Add(HandleAtcCodingRulesPowerShell(rootPath));
-
-            // -> root
-            logItems.Add(HandleFileEditorConfig(rootPath, "root", string.Empty));
-            logItems.Add(HandleFileDirectoryBuildProps(rootPath, "root", string.Empty));
-
-            // -> src
-            if (rootPath.FullName != outputSrcPath.FullName)
-            {
-                logItems.Add(HandleFileEditorConfig(outputSrcPath, "src", "src"));
-                logItems.Add(HandleFileDirectoryBuildProps(outputSrcPath, "src", "src"));
-            }
-
-            // -> test
-            if (outputTestPath is not null &&
-                rootPath.FullName != outputTestPath.FullName)
-            {
-                logItems.Add(HandleFileEditorConfig(outputTestPath, "test", "test"));
-                logItems.Add(HandleFileDirectoryBuildProps(outputTestPath, "test", "test"));
-            }
+            HandleCodingRulesFiles(logger, outputSrcPath, outputTestPath, rootPath);
+            HandleEditorConfigFiles(logger, outputSrcPath, outputTestPath, rootPath);
+            HandleDirectoryBuildPropsFiles(logger, outputSrcPath, outputTestPath, rootPath);
         }
 
-        return logItems;
+        return true;
     }
 
     private static bool IsFirstTime(
@@ -63,10 +46,65 @@ public static class GenerateAtcCodingRulesHelper
         return !file.Exists;
     }
 
-    private static LogKeyValueItem HandleAtcCodingRulesJson(
-        DirectoryInfo path,
+    private static void HandleCodingRulesFiles(
+        ILogger logger,
         DirectoryInfo outputSrcPath,
-        DirectoryInfo? outputTestPath)
+        DirectoryInfo? outputTestPath,
+        DirectoryInfo rootPath)
+    {
+        logger.LogInformation($"{AppEmojisConstants.AreaCodingRules} Working on Coding Rules files");
+        HandleAtcCodingRulesJson(logger, rootPath, outputSrcPath, outputTestPath);
+        HandleAtcCodingRulesPowerShell(logger, rootPath);
+    }
+
+    private static void HandleEditorConfigFiles(
+        ILogger logger,
+        DirectoryInfo outputSrcPath,
+        DirectoryInfo? outputTestPath,
+        DirectoryInfo rootPath)
+    {
+        logger.LogInformation($"{AppEmojisConstants.AreaEditorConfig} Working on EditorConfig files");
+        HandleFileEditorConfig(logger, rootPath, "root", string.Empty);
+
+        if (rootPath.FullName != outputSrcPath.FullName)
+        {
+            HandleFileEditorConfig(logger, outputSrcPath, "src", "src");
+        }
+
+        if (outputTestPath is not null &&
+            rootPath.FullName != outputTestPath.FullName)
+        {
+            HandleFileEditorConfig(logger, outputTestPath, "test", "test");
+        }
+    }
+
+    private static void HandleDirectoryBuildPropsFiles(
+        ILogger logger,
+        DirectoryInfo outputSrcPath,
+        DirectoryInfo? outputTestPath,
+        DirectoryInfo rootPath)
+    {
+        logger.LogInformation($"{AppEmojisConstants.AreaDirectoryBuildProps} Working on Directory.Build.props files");
+
+        HandleFileDirectoryBuildProps(logger, rootPath, "root", string.Empty);
+
+        if (rootPath.FullName != outputSrcPath.FullName)
+        {
+            HandleFileDirectoryBuildProps(logger, outputSrcPath, "src", "src");
+        }
+
+        if (outputTestPath is not null &&
+            rootPath.FullName != outputTestPath.FullName)
+        {
+            HandleFileDirectoryBuildProps(logger, outputTestPath, "test", "test");
+        }
+    }
+
+    private static void HandleAtcCodingRulesJson(
+    ILogger logger,
+    DirectoryInfo path,
+    DirectoryInfo outputSrcPath,
+    DirectoryInfo? outputTestPath)
     {
         const string file = "atc-coding-rules-updater.json";
         var filePath = Path.Combine(path.FullName, file);
@@ -95,15 +133,16 @@ public static class GenerateAtcCodingRulesHelper
             sb.AppendLine("  }");
             sb.AppendLine("}");
             File.WriteAllText(filePath, sb.ToString());
-            return LogItemFactory.CreateDebug("FileCreate", $"{file} created");
+            logger.LogDebug($"{EmojisConstants.FileCreated}   {file} created");
         }
         catch (Exception ex)
         {
-            return LogItemFactory.CreateError("FileSkip", $"atc-coding-rules-updater.json - {ex.Message}");
+            logger.LogError($"{EmojisConstants.Error}   {file} skipped - {ex.Message}");
         }
     }
 
-    private static LogKeyValueItem HandleAtcCodingRulesPowerShell(
+    private static void HandleAtcCodingRulesPowerShell(
+        ILogger logger,
         DirectoryInfo path)
     {
         const string file = "atc-coding-rules-updater.ps1";
@@ -123,15 +162,16 @@ public static class GenerateAtcCodingRulesHelper
             sb.AppendLine("  -v true");
             File.WriteAllText(file, sb.ToString());
             File.WriteAllText(filePath, sb.ToString());
-            return LogItemFactory.CreateDebug("FileCreate", $"{file} created");
+            logger.LogDebug($"{EmojisConstants.FileCreated}   {file} created");
         }
         catch (Exception ex)
         {
-            return LogItemFactory.CreateError("FileSkip", $"atc-coding-rules-updater.json - {ex.Message}");
+            logger.LogError($"{EmojisConstants.Error}   {file} skipped - {ex.Message}");
         }
     }
 
-    private static LogKeyValueItem HandleFileEditorConfig(
+    private static void HandleFileEditorConfig(
+        ILogger logger,
         DirectoryInfo path,
         string area,
         string urlPart)
@@ -156,15 +196,16 @@ public static class GenerateAtcCodingRulesHelper
             var rawEditorConfig = HttpClientHelper.GetRawFile(rawGitUrl);
             rawEditorConfig += $"{Environment.NewLine}dotnet_diagnostic.IDE0058.severity = none           # Have to override this for now - to get smoke-test to run";
             File.WriteAllText(file.FullName, rawEditorConfig);
-            return LogItemFactory.CreateDebug("FileCreate", $"{area} - {descriptionPart} created");
+            logger.LogDebug($"{EmojisConstants.FileCreated}   {area}: {descriptionPart} created");
         }
         catch (Exception ex)
         {
-            return LogItemFactory.CreateError("FileSkip", $"{area} - {descriptionPart} skipped - {ex.Message}");
+            logger.LogError($"{EmojisConstants.Error}   {area}: {descriptionPart} skipped - {ex.Message}");
         }
     }
 
-    private static LogKeyValueItem HandleFileDirectoryBuildProps(
+    private static void HandleFileDirectoryBuildProps(
+        ILogger logger,
         DirectoryInfo path,
         string area,
         string urlPart)
@@ -188,11 +229,11 @@ public static class GenerateAtcCodingRulesHelper
 
             var rawDirectoryBuildProps = HttpClientHelper.GetRawFile(rawGitUrl);
             File.WriteAllText(file.FullName, rawDirectoryBuildProps);
-            return LogItemFactory.CreateDebug("FileCreate", $"{area} - {descriptionPart} created");
+            logger.LogDebug($"{EmojisConstants.FileCreated}   {area}: {descriptionPart} created");
         }
         catch (Exception ex)
         {
-            return LogItemFactory.CreateError("FileSkip", $"{area} - {descriptionPart} skipped - {ex.Message}");
+            logger.LogError($"{EmojisConstants.Error}   {area}: {descriptionPart} skipped - {ex.Message}");
         }
     }
 }

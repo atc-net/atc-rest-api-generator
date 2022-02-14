@@ -4,10 +4,12 @@ namespace Atc.Rest.ApiGenerator.Helpers;
 public static class ApiGeneratorHelper
 {
     public static void CollectMissingContractModelFromOperationSchemaMappings(
+        ILogger logger,
         ApiProjectOptions projectOptions,
         List<ApiOperationSchemaMap> operationSchemaMappings,
         List<SyntaxGeneratorContractModel> sgContractModels)
     {
+        ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(projectOptions);
         ArgumentNullException.ThrowIfNull(operationSchemaMappings);
         ArgumentNullException.ThrowIfNull(sgContractModels);
@@ -29,6 +31,7 @@ public static class ApiGeneratorHelper
             }
 
             var generatorModel = new SyntaxGeneratorContractModel(
+                logger,
                 projectOptions,
                 map.SchemaKey,
                 projectOptions.Document.Components.Schemas.First(x => x.Key.Equals(map.SchemaKey, StringComparison.OrdinalIgnoreCase)).Value,

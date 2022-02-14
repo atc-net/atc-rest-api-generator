@@ -5,12 +5,16 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
 
 public class SyntaxGeneratorContractModel : ISyntaxSchemaCodeGenerator
 {
+    private readonly ILogger logger;
+
     public SyntaxGeneratorContractModel(
+        ILogger logger,
         ApiProjectOptions apiProjectOptions,
         string apiSchemaKey,
         OpenApiSchema apiSchema,
         string focusOnSegmentName)
     {
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.ApiProjectOptions = apiProjectOptions ?? throw new ArgumentNullException(nameof(apiProjectOptions));
         this.ApiSchemaKey = apiSchemaKey ?? throw new ArgumentNullException(nameof(apiSchemaKey));
         this.ApiSchema = apiSchema ?? throw new ArgumentNullException(nameof(apiSchema));
@@ -86,7 +90,7 @@ public class SyntaxGeneratorContractModel : ISyntaxSchemaCodeGenerator
             .FormatDoubleLines();
     }
 
-    public LogKeyValueItem ToFile()
+    public void ToFile()
     {
         var area = FocusOnSegmentName.EnsureFirstCharacterToUpper();
         var modelName = ApiSchemaKey.EnsureFirstCharacterToUpper();
@@ -95,7 +99,7 @@ public class SyntaxGeneratorContractModel : ISyntaxSchemaCodeGenerator
             modelName.EndsWith(NameConstants.Request, StringComparison.Ordinal))
         {
             var clientFile = Util.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, NameConstants.ClientRequestParameters, modelName);
-            return TextFileHelper.Save(clientFile, ToCodeAsString());
+            TextFileHelper.Save(logger, clientFile, ToCodeAsString());
         }
 
         var file = IsEnum
@@ -106,7 +110,7 @@ public class SyntaxGeneratorContractModel : ISyntaxSchemaCodeGenerator
                     ? Util.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, NameConstants.ContractModels, modelName)
                     : Util.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, modelName);
 
-        return TextFileHelper.Save(file, ToCodeAsString());
+        TextFileHelper.Save(logger, file, ToCodeAsString());
     }
 
     public void ToFile(
@@ -114,7 +118,7 @@ public class SyntaxGeneratorContractModel : ISyntaxSchemaCodeGenerator
     {
         ArgumentNullException.ThrowIfNull(file);
 
-        TextFileHelper.Save(file, ToCodeAsString());
+        TextFileHelper.Save(logger, file, ToCodeAsString());
     }
 
     public override string ToString()

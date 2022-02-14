@@ -7,12 +7,16 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
 
 public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
 {
+    private readonly ILogger logger;
+
     public SyntaxGeneratorContractResult(
+        ILogger logger,
         ApiProjectOptions apiProjectOptions,
         OperationType apiOperationType,
         OpenApiOperation apiOperation,
         string focusOnSegmentName)
     {
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.ApiProjectOptions = apiProjectOptions ?? throw new ArgumentNullException(nameof(apiProjectOptions));
         this.ApiOperationType = apiOperationType;
         this.ApiOperation = apiOperation ?? throw new ArgumentNullException(nameof(apiOperation));
@@ -97,12 +101,12 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
             .FormatConstructorWithInheritResult();
     }
 
-    public LogKeyValueItem ToFile()
+    public void ToFile()
     {
         var area = FocusOnSegmentName.EnsureFirstCharacterToUpper();
         var resultName = ApiOperation.GetOperationName() + NameConstants.ContractResult;
         var file = Util.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, NameConstants.ContractResults, resultName);
-        return TextFileHelper.Save(file, ToCodeAsString());
+        TextFileHelper.Save(logger, file, ToCodeAsString());
     }
 
     public void ToFile(
@@ -110,7 +114,7 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
     {
         ArgumentNullException.ThrowIfNull(file);
 
-        TextFileHelper.Save(file, ToCodeAsString());
+        TextFileHelper.Save(logger, file, ToCodeAsString());
     }
 
     public override string ToString()

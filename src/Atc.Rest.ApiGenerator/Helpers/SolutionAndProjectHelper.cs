@@ -6,7 +6,8 @@ public static class SolutionAndProjectHelper
 {
     [SuppressMessage("Major Code Smell", "S107:Methods should not have too many parameters", Justification = "OK.")]
     [SuppressMessage("Critical Code Smell", "S3776:Cognitive Complexity of methods should not be too high", Justification = "OK.")]
-    public static LogKeyValueItem ScaffoldProjFile(
+    public static void ScaffoldProjFile(
+        ILogger logger,
         FileInfo projectCsProjFile,
         bool createAsWeb,
         bool createAsTestProject,
@@ -18,6 +19,7 @@ public static class SolutionAndProjectHelper
         bool includeApiSpecification,
         bool usingCodingRules)
     {
+        ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(projectCsProjFile);
 
         var sb = new StringBuilder();
@@ -126,10 +128,11 @@ public static class SolutionAndProjectHelper
         }
 
         sb.AppendLine("</Project>");
-        return TextFileHelper.Save(projectCsProjFile, sb.ToString());
+        TextFileHelper.Save(logger, projectCsProjFile, sb.ToString());
     }
 
-    public static List<LogKeyValueItem> ScaffoldSlnFile(
+    public static void ScaffoldSlnFile(
+        ILogger logger,
         FileInfo slnFile,
         string projectName,
         DirectoryInfo apiPath,
@@ -138,6 +141,7 @@ public static class SolutionAndProjectHelper
         DirectoryInfo? domainTestPath = null,
         DirectoryInfo? hostTestPath = null)
     {
+        ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(slnFile);
         ArgumentNullException.ThrowIfNull(apiPath);
         ArgumentNullException.ThrowIfNull(domainPath);
@@ -230,13 +234,8 @@ public static class SolutionAndProjectHelper
             }
         }
 
-        var logItems = new List<LogKeyValueItem>
-        {
-            TextFileHelper.Save(slnFile, slnFileContent, false),
-            TextFileHelper.Save(slnDotSettingsFile, slnDotSettingsFileContent, slnDotSettingsFileOverrideIfExist),
-        };
-
-        return logItems;
+        TextFileHelper.Save(logger, slnFile, slnFileContent, false);
+        TextFileHelper.Save(logger, slnDotSettingsFile, slnDotSettingsFileContent, slnDotSettingsFileOverrideIfExist);
     }
 
     private static bool TryGetGuidByProject(

@@ -73,16 +73,20 @@ public static class OpenApiDocumentHelper
         return new Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo>(openApiDocument, diagnostic, new FileInfo(apiDocFile.FullName));
     }
 
-    public static List<LogKeyValueItem> Validate(
+    public static bool Validate(
+        ILogger logger,
         Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument,
         ApiOptionsValidation validationOptions)
     {
+        ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(apiDocument);
         ArgumentNullException.ThrowIfNull(validationOptions);
 
+        logger.LogInformation($"{AppEmojisConstants.AreaValidation} Working on validation");
+
         if (apiDocument.Item2.Errors.Count > 0)
         {
-            return apiDocument.Item2.Errors
+            var validationErrors = apiDocument.Item2.Errors
                 .Where(e => !e.Message.EndsWith(
                     "#/components/schemas",
                     StringComparison.Ordinal))
@@ -93,17 +97,18 @@ public static class OpenApiDocumentHelper
                         ? $"{e.Message}"
                         : $"{e.Message} <#> {e.Pointer}"))
                 .ToList();
+
+            logger.LogKeyValueItems(validationErrors);
+            return false;
         }
 
         if (apiDocument.Item2.SpecificationVersion == OpenApiSpecVersion.OpenApi2_0)
         {
-            return new List<LogKeyValueItem>
-            {
-                LogItemHelper.Create(LogCategoryType.Error, "#", "OpenApi 2.x is not supported."),
-            };
+            logger.LogError("OpenApi 2.x is not supported.");
+            return false;
         }
 
-        return OpenApiDocumentValidationHelper.ValidateDocument(apiDocument.Item1, validationOptions);
+        return OpenApiDocumentValidationHelper.ValidateDocument(logger, apiDocument.Item1, validationOptions);
     }
 
     public static List<string> GetBasePathSegmentNames(

@@ -1,3 +1,5 @@
+using Atc.Console.Spectre;
+
 namespace Atc.Rest.ApiGenerator.Models;
 
 public class DomainProjectOptions : BaseProjectOptions
@@ -37,9 +39,9 @@ public class DomainProjectOptions : BaseProjectOptions
 
     public DirectoryInfo? PathForTestHandlers { get; }
 
-    public List<LogKeyValueItem> SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles()
+    public bool SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles(
+        ILogger logger)
     {
-        var logItems = new List<LogKeyValueItem>();
         if (ApiProjectSrcPath.Exists)
         {
             var files = Directory.GetFiles(ApiProjectSrcPath.FullName, "ApiRegistration.cs", SearchOption.AllDirectories);
@@ -57,9 +59,10 @@ public class DomainProjectOptions : BaseProjectOptions
         if (ApiProjectSrcCsProj is null ||
             !ApiProjectSrcCsProj.Exists)
         {
-            logItems.Add(LogItemHelper.Create(LogCategoryType.Error, ValidationRuleNameConstants.ProjectHostGenerated04, "Can't find API .csproj file"));
+            logger.LogError($"{EmojisConstants.Error} {ValidationRuleNameConstants.ProjectHostGenerated04} - Can't find API .csproj file");
+            return false;
         }
 
-        return logItems;
+        return true;
     }
 }

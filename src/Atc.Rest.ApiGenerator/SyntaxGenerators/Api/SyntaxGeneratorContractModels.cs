@@ -5,13 +5,17 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
 
 public class SyntaxGeneratorContractModels : ISyntaxGeneratorContractModels
 {
+    private readonly ILogger logger;
+
     public SyntaxGeneratorContractModels(
+        ILogger logger,
         ApiProjectOptions apiProjectOptions,
         List<ApiOperationSchemaMap> operationSchemaMappings,
         string focusOnSegmentName)
     {
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.ApiProjectOptions = apiProjectOptions ?? throw new ArgumentNullException(nameof(apiProjectOptions));
-        this.OperationSchemaMappings = operationSchemaMappings ?? throw new ArgumentNullException(nameof(apiProjectOptions));
+        this.OperationSchemaMappings = operationSchemaMappings ?? throw new ArgumentNullException(nameof(operationSchemaMappings));
         this.FocusOnSegmentName = focusOnSegmentName ?? throw new ArgumentNullException(nameof(focusOnSegmentName));
     }
 
@@ -41,7 +45,7 @@ public class SyntaxGeneratorContractModels : ISyntaxGeneratorContractModels
             var apiSchema = ApiProjectOptions.Document.Components.Schemas.First(x => x.Key.Equals(schemaKey, StringComparison.OrdinalIgnoreCase));
             if (apiSchema.Value.IsSchemaEnumOrPropertyEnum())
             {
-                var syntaxGeneratorContractModel = new SyntaxGeneratorContractModel(ApiProjectOptions, apiSchema.Key, apiSchema.Value, FocusOnSegmentName);
+                var syntaxGeneratorContractModel = new SyntaxGeneratorContractModel(logger, ApiProjectOptions, apiSchema.Key, apiSchema.Value, FocusOnSegmentName);
                 syntaxGeneratorContractModel.GenerateCode();
                 list.Add(syntaxGeneratorContractModel);
             }
@@ -50,13 +54,13 @@ public class SyntaxGeneratorContractModels : ISyntaxGeneratorContractModels
                 var isShared = OperationSchemaMappings.IsShared(schemaKey);
                 if (isShared)
                 {
-                    var syntaxGeneratorContractModel = new SyntaxGeneratorContractModel(ApiProjectOptions, apiSchema.Key, apiSchema.Value, "#");
+                    var syntaxGeneratorContractModel = new SyntaxGeneratorContractModel(logger, ApiProjectOptions, apiSchema.Key, apiSchema.Value, "#");
                     syntaxGeneratorContractModel.GenerateCode();
                     list.Add(syntaxGeneratorContractModel);
                 }
                 else
                 {
-                    var syntaxGeneratorContractModel = new SyntaxGeneratorContractModel(ApiProjectOptions, apiSchema.Key, apiSchema.Value, FocusOnSegmentName);
+                    var syntaxGeneratorContractModel = new SyntaxGeneratorContractModel(logger, ApiProjectOptions, apiSchema.Key, apiSchema.Value, FocusOnSegmentName);
                     syntaxGeneratorContractModel.GenerateCode();
                     list.Add(syntaxGeneratorContractModel);
                 }

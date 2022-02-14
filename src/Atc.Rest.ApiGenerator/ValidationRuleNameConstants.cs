@@ -58,6 +58,6 @@ public static class ValidationRuleNameConstants
     public const string ProjectHostGenerated01 = "CR0901";
     public const string ProjectHostGenerated02 = "CR0902";
     public const string ProjectHostGenerated03 = "CR0903";
-    public const string ProjectHostGenerated04 = "CR0903";
-    public const string ProjectHostGenerated05 = "CR0903";
+    public const string ProjectHostGenerated04 = "CR0904";
+    public const string ProjectHostGenerated05 = "CR0905";
 }

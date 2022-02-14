@@ -4,10 +4,14 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
 
 public class SyntaxGeneratorContractParameters : ISyntaxGeneratorContractParameters
 {
+    private readonly ILogger logger;
+
     public SyntaxGeneratorContractParameters(
+        ILogger logger,
         ApiProjectOptions apiProjectOptions,
         string focusOnSegmentName)
     {
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.ApiProjectOptions = apiProjectOptions ?? throw new ArgumentNullException(nameof(apiProjectOptions));
         this.FocusOnSegmentName = focusOnSegmentName ?? throw new ArgumentNullException(nameof(focusOnSegmentName));
     }
@@ -35,6 +39,7 @@ public class SyntaxGeneratorContractParameters : ISyntaxGeneratorContractParamet
                 }
 
                 var generator = new SyntaxGeneratorContractParameter(
+                    logger,
                     ApiProjectOptions,
                     urlPath.Value.Parameters,
                     apiOperation.Key,

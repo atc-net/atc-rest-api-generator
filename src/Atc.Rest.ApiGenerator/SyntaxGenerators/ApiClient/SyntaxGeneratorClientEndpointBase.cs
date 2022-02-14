@@ -3,6 +3,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient;
 public abstract class SyntaxGeneratorClientEndpointBase
 {
     protected SyntaxGeneratorClientEndpointBase(
+        ILogger logger,
         ApiProjectOptions apiProjectOptions,
         List<ApiOperationSchemaMap> operationSchemaMappings,
         IList<OpenApiParameter> globalPathParameters,
@@ -12,6 +13,7 @@ public abstract class SyntaxGeneratorClientEndpointBase
         string urlPath,
         bool hasParametersOrRequestBody)
     {
+        this.Logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.ApiProjectOptions = apiProjectOptions ?? throw new ArgumentNullException(nameof(apiProjectOptions));
         this.OperationSchemaMappings = operationSchemaMappings ?? throw new ArgumentNullException(nameof(operationSchemaMappings));
         this.GlobalPathParameters = globalPathParameters ?? throw new ArgumentNullException(nameof(globalPathParameters));
@@ -36,6 +38,8 @@ public abstract class SyntaxGeneratorClientEndpointBase
             .FirstOrDefault(x => x.Item1 == HttpStatusCode.OK)?.Item2 ?? ResponseTypes
             .FirstOrDefault(x => x.Item1 == HttpStatusCode.Created)?.Item2 ?? "string";
     }
+
+    public ILogger Logger { get; }
 
     public ApiProjectOptions ApiProjectOptions { get; }
 

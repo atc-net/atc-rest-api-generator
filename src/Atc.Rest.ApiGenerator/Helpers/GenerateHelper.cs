@@ -42,7 +42,8 @@ public static class GenerateHelper
         return $"{atcToolVersion.Major}.{atcToolVersion.Minor}.{atcToolVersion.Build}.{atcToolVersion.Revision}";
     }
 
-    public static List<LogKeyValueItem> GenerateServerApi(
+    public static bool GenerateServerApi(
+        ILogger logger,
         string projectPrefixName,
         DirectoryInfo outputPath,
         DirectoryInfo? outputTestPath,
@@ -50,6 +51,7 @@ public static class GenerateHelper
         ApiOptions apiOptions,
         bool useCodingRules)
     {
+        ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(projectPrefixName);
         ArgumentNullException.ThrowIfNull(outputPath);
         ArgumentNullException.ThrowIfNull(apiDocument);
@@ -64,11 +66,12 @@ public static class GenerateHelper
             "Api.Generated",
             apiOptions,
             useCodingRules);
-        var serverApiGenerator = new ServerApiGenerator(projectOptions);
+        var serverApiGenerator = new ServerApiGenerator(logger, projectOptions);
         return serverApiGenerator.Generate();
     }
 
-    public static List<LogKeyValueItem> GenerateServerDomain(
+    public static bool GenerateServerDomain(
+        ILogger logger,
         string projectPrefixName,
         DirectoryInfo outputSourcePath,
         DirectoryInfo? outputTestPath,
@@ -77,6 +80,7 @@ public static class GenerateHelper
         bool useCodingRules,
         DirectoryInfo apiPath)
     {
+        ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(projectPrefixName);
         ArgumentNullException.ThrowIfNull(outputSourcePath);
         ArgumentNullException.ThrowIfNull(apiDocument);
@@ -92,11 +96,12 @@ public static class GenerateHelper
             apiOptions,
             useCodingRules,
             apiPath);
-        var serverDomainGenerator = new ServerDomainGenerator(domainProjectOptions);
+        var serverDomainGenerator = new ServerDomainGenerator(logger, domainProjectOptions);
         return serverDomainGenerator.Generate();
     }
 
-    public static List<LogKeyValueItem> GenerateServerHost(
+    public static bool GenerateServerHost(
+        ILogger logger,
         string projectPrefixName,
         DirectoryInfo outputSourcePath,
         DirectoryInfo? outputTestPath,
@@ -106,6 +111,7 @@ public static class GenerateHelper
         DirectoryInfo apiPath,
         DirectoryInfo domainPath)
     {
+        ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(projectPrefixName);
         ArgumentNullException.ThrowIfNull(outputSourcePath);
         ArgumentNullException.ThrowIfNull(apiDocument);
@@ -123,16 +129,18 @@ public static class GenerateHelper
             usingCodingRules,
             apiPath,
             domainPath);
-        var serverHostGenerator = new ServerHostGenerator(hostProjectOptions);
+        var serverHostGenerator = new ServerHostGenerator(logger, hostProjectOptions);
         return serverHostGenerator.Generate();
     }
 
-    public static List<LogKeyValueItem> GenerateServerSln(
+    public static bool GenerateServerSln(
+        ILogger logger,
         string projectPrefixName,
         string outputSlnPath,
         DirectoryInfo outputSourcePath,
         DirectoryInfo? outputTestPath)
     {
+        ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(projectPrefixName);
         ArgumentNullException.ThrowIfNull(outputSlnPath);
         ArgumentNullException.ThrowIfNull(outputSourcePath);
@@ -155,7 +163,8 @@ public static class GenerateHelper
             var domainTestPath = new DirectoryInfo(Path.Combine(outputTestPath.FullName, $"{projectName}.Domain"));
             var hostTestPath = new DirectoryInfo(Path.Combine(outputTestPath.FullName, $"{projectName}.Api"));
 
-            return SolutionAndProjectHelper.ScaffoldSlnFile(
+            SolutionAndProjectHelper.ScaffoldSlnFile(
+                logger,
                 slnFile,
                 projectName,
                 apiPath,
@@ -163,17 +172,23 @@ public static class GenerateHelper
                 hostPath,
                 domainTestPath,
                 hostTestPath);
+
+            return true;
         }
 
-        return SolutionAndProjectHelper.ScaffoldSlnFile(
+        SolutionAndProjectHelper.ScaffoldSlnFile(
+            logger,
             slnFile,
             projectName,
             apiPath,
             domainPath,
             hostPath);
+
+        return true;
     }
 
-    public static List<LogKeyValueItem> GenerateServerCSharpClient(
+    public static bool GenerateServerCSharpClient(
+        ILogger logger,
         string projectPrefixName,
         string? clientFolder,
         DirectoryInfo outputPath,
@@ -182,6 +197,7 @@ public static class GenerateHelper
         ApiOptions apiOptions,
         bool useCodingRules)
     {
+        ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(projectPrefixName);
         ArgumentNullException.ThrowIfNull(outputPath);
         ArgumentNullException.ThrowIfNull(apiDocument);
@@ -197,7 +213,7 @@ public static class GenerateHelper
             excludeEndpointGeneration,
             apiOptions,
             useCodingRules);
-        var clientCSharpApiGenerator = new ClientCSharpApiGenerator(clientCSharpApiProjectOptions);
+        var clientCSharpApiGenerator = new ClientCSharpApiGenerator(logger, clientCSharpApiProjectOptions);
         return clientCSharpApiGenerator.Generate();
     }
 }

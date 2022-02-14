@@ -10,7 +10,7 @@ public interface ISyntaxCodeGenerator
 
     string ToCodeAsString();
 
-    LogKeyValueItem ToFile();
+    void ToFile();
 
     void ToFile(FileInfo file);
 }

@@ -19,6 +19,7 @@ public class SyntaxGeneratorContractResultTests : SyntaxCodeGeneratorTestBase
 
         // Construct SUT
         return new SyntaxGeneratorContractResult(
+            NullLogger.Instance,
             apiProject,
             urlOperation.Key,
             urlOperation.Value,

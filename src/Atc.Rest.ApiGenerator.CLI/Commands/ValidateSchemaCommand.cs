@@ -25,15 +25,13 @@ public class ValidateSchemaCommand : AsyncCommand<BaseConfigurationCommandSettin
 
         try
         {
-            var logItems = new List<LogKeyValueItem>();
-            logItems.AddRange(OpenApiDocumentHelper.Validate(apiDocument, apiOptions.Validation));
-            if (logItems.HasAnyErrors())
+            if (!OpenApiDocumentHelper.Validate(
+                    logger,
+                    apiDocument,
+                    apiOptions.Validation))
             {
-                logItems.LogAndClear(logger);
                 return ConsoleExitStatusCodes.Failure;
             }
-
-            logItems.LogAndClear(logger);
         }
         catch (Exception ex)
         {

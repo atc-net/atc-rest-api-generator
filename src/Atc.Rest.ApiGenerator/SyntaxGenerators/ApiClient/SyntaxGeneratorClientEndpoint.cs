@@ -5,6 +5,7 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient;
 public class SyntaxGeneratorClientEndpoint : SyntaxGeneratorClientEndpointBase, ISyntaxCodeGenerator
 {
     public SyntaxGeneratorClientEndpoint(
+        ILogger logger,
         ApiProjectOptions apiProjectOptions,
         List<ApiOperationSchemaMap> operationSchemaMappings,
         IList<OpenApiParameter> globalPathParameters,
@@ -14,6 +15,7 @@ public class SyntaxGeneratorClientEndpoint : SyntaxGeneratorClientEndpointBase, 
         string urlPath,
         bool hasParametersOrRequestBody)
         : base(
+            logger,
             apiProjectOptions,
             operationSchemaMappings,
             globalPathParameters,
@@ -105,12 +107,12 @@ public class SyntaxGeneratorClientEndpoint : SyntaxGeneratorClientEndpointBase, 
             .FormatClientEndpointNewLineSpaceAfter12();
     }
 
-    public LogKeyValueItem ToFile()
+    public void ToFile()
     {
         var area = FocusOnSegmentName.EnsureFirstCharacterToUpper();
         var endpointName = ApiOperation.GetOperationName() + NameConstants.Endpoint;
         var file = Util.GetCsFileNameForContract(ApiProjectOptions.PathForEndpoints, area, endpointName);
-        return TextFileHelper.Save(file, ToCodeAsString());
+        TextFileHelper.Save(Logger, file, ToCodeAsString());
     }
 
     public void ToFile(
@@ -118,7 +120,7 @@ public class SyntaxGeneratorClientEndpoint : SyntaxGeneratorClientEndpointBase, 
     {
         ArgumentNullException.ThrowIfNull(file);
 
-        TextFileHelper.Save(file, ToCodeAsString());
+        TextFileHelper.Save(Logger, file, ToCodeAsString());
     }
 
     public override string ToString()

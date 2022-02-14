@@ -2,13 +2,17 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Domain;
 
 public class SyntaxGeneratorHandler
 {
+    private readonly ILogger logger;
+
     public SyntaxGeneratorHandler(
+        ILogger logger,
         DomainProjectOptions domainProjectOptions,
         OperationType apiOperationType,
         OpenApiOperation apiOperation,
         string focusOnSegmentName,
         bool hasParametersOrRequestBody)
     {
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.DomainProjectOptions = domainProjectOptions ?? throw new ArgumentNullException(nameof(domainProjectOptions));
         this.ApiOperationType = apiOperationType;
         this.ApiOperation = apiOperation ?? throw new ArgumentNullException(nameof(apiOperation));
@@ -96,11 +100,11 @@ public class SyntaxGeneratorHandler
             .FormatCs1998();
     }
 
-    public LogKeyValueItem ToFile()
+    public void ToFile()
     {
         var area = FocusOnSegmentName.EnsureFirstCharacterToUpper();
         var file = Util.GetCsFileNameForHandler(DomainProjectOptions.PathForSrcHandlers!, area, HandlerTypeName);
-        return TextFileHelper.Save(file, ToCodeAsString(), false);
+        TextFileHelper.Save(logger, file, ToCodeAsString(), false);
     }
 
     public void ToFile(
@@ -108,7 +112,7 @@ public class SyntaxGeneratorHandler
     {
         ArgumentNullException.ThrowIfNull(file);
 
-        TextFileHelper.Save(file, ToCodeAsString());
+        TextFileHelper.Save(logger, file, ToCodeAsString());
     }
 
     public override string ToString()

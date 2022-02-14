@@ -1,3 +1,5 @@
+using Atc.Console.Spectre;
+
 // ReSharper disable InvertIf
 // ReSharper disable SuggestBaseTypeForParameter
 // ReSharper disable ReturnTypeCanBeEnumerable.Local
@@ -5,89 +7,82 @@ namespace Atc.Rest.ApiGenerator.Generators;
 
 public class ServerDomainGenerator
 {
+    private readonly ILogger logger;
     private readonly DomainProjectOptions projectOptions;
 
-    public ServerDomainGenerator(DomainProjectOptions projectOptions)
+    public ServerDomainGenerator(
+        ILogger logger,
+        DomainProjectOptions projectOptions)
     {
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
     }
 
-    public List<LogKeyValueItem> Generate()
+    public bool Generate()
     {
-        var logItems = new List<LogKeyValueItem>();
+        logger.LogInformation($"{AppEmojisConstants.AreaGenerateCode} Working on server domain generation");
 
-        logItems.AddRange(projectOptions.SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles());
-        if (logItems.Any(x => x.LogCategory == LogCategoryType.Error))
+        if (!projectOptions.SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles(logger))
         {
-            return logItems;
+            return false;
         }
 
-        logItems.AddRange(ScaffoldSrc());
+        ScaffoldSrc();
+        GenerateSrcHandlers(projectOptions, out var sgHandlers);
+
         if (projectOptions.PathForTestGenerate is not null)
         {
-            logItems.AddRange(ScaffoldTest());
+            logger.LogInformation($"{AppEmojisConstants.AreaGenerateTest} Working on server domain unit-test generation");
+            ScaffoldTest();
+            GenerateTestHandlers(projectOptions, sgHandlers);
         }
 
-        logItems.AddRange(GenerateSrcHandlers(projectOptions, out var sgHandlers));
-        if (projectOptions.PathForTestGenerate is not null)
-        {
-            logItems.AddRange(GenerateTestHandlers(projectOptions, sgHandlers));
-        }
-
-        return logItems;
+        return true;
     }
 
-    private static List<LogKeyValueItem> GenerateSrcHandlers(
+    private void GenerateSrcHandlers(
         DomainProjectOptions domainProjectOptions,
         out List<SyntaxGeneratorHandler> sgHandlers)
     {
         ArgumentNullException.ThrowIfNull(domainProjectOptions);
 
-        var logItems = new List<LogKeyValueItem>();
         sgHandlers = new List<SyntaxGeneratorHandler>();
         foreach (var basePathSegmentName in domainProjectOptions.BasePathSegmentNames)
         {
-            var generatorHandlers = new SyntaxGeneratorHandlers(domainProjectOptions, basePathSegmentName);
+            var generatorHandlers = new SyntaxGeneratorHandlers(logger, domainProjectOptions, basePathSegmentName);
             var generatedHandlers = generatorHandlers.GenerateSyntaxTrees();
             sgHandlers.AddRange(generatedHandlers);
         }
 
         foreach (var sg in sgHandlers)
         {
-            logItems.Add(sg.ToFile());
+            sg.ToFile();
         }
-
-        return logItems;
     }
 
-    private static List<LogKeyValueItem> GenerateTestHandlers(
+    private void GenerateTestHandlers(
         DomainProjectOptions domainProjectOptions,
         List<SyntaxGeneratorHandler> sgHandlers)
     {
         ArgumentNullException.ThrowIfNull(domainProjectOptions);
         ArgumentNullException.ThrowIfNull(sgHandlers);
 
-        var logItems = new List<LogKeyValueItem>();
         if (domainProjectOptions.PathForTestHandlers is not null)
         {
             foreach (var sgHandler in sgHandlers)
             {
-                logItems.Add(GenerateServerDomainXunitTestHelper.GenerateGeneratedTests(domainProjectOptions, sgHandler));
-                logItems.Add(GenerateServerDomainXunitTestHelper.GenerateCustomTests(domainProjectOptions, sgHandler));
+                GenerateServerDomainXunitTestHelper.GenerateGeneratedTests(logger, domainProjectOptions, sgHandler);
+                GenerateServerDomainXunitTestHelper.GenerateCustomTests(logger, domainProjectOptions, sgHandler);
             }
         }
-
-        return logItems;
     }
 
-    private List<LogKeyValueItem> ScaffoldSrc()
+    private void ScaffoldSrc()
     {
         if (!Directory.Exists(projectOptions.PathForSrcGenerate.FullName))
         {
             Directory.CreateDirectory(projectOptions.PathForSrcGenerate.FullName);
         }
-
-        var logItems = new List<LogKeyValueItem>();
 
         if (projectOptions.PathForSrcGenerate.Exists &&
             projectOptions.ProjectSrcCsProj.Exists)
@@ -95,19 +90,19 @@ public class ServerDomainGenerator
             var element = XElement.Load(projectOptions.ProjectSrcCsProj.FullName);
             var originalNullableValue = SolutionAndProjectHelper.GetBoolFromNullableString(SolutionAndProjectHelper.GetNullableValueFromProject(element));
 
-            bool hasUpdates = false;
+            var hasUpdates = false;
             if (projectOptions.UseNullableReferenceTypes != originalNullableValue)
             {
                 var newNullableValue = SolutionAndProjectHelper.GetNullableStringFromBool(projectOptions.UseNullableReferenceTypes);
                 SolutionAndProjectHelper.SetNullableValueForProject(element, newNullableValue);
                 element.Save(projectOptions.ProjectSrcCsProj.FullName);
-                logItems.Add(LogItemFactory.CreateDebug("FileUpdate", "#", $"Update domain csproj - Nullable value={newNullableValue}"));
+                logger.LogDebug($"{EmojisConstants.FileUpdated}   Update domain csproj - Nullable value={newNullableValue}");
                 hasUpdates = true;
             }
 
             if (!hasUpdates)
             {
-                logItems.Add(LogItemFactory.CreateDebug("FileSkip", "#", "No updates for domain csproj"));
+                logger.LogDebug($"{EmojisConstants.FileNotUpdated}   No updates for domain csproj");
             }
         }
         else
@@ -118,7 +113,8 @@ public class ServerDomainGenerator
                 projectReferences.Add(projectOptions.ApiProjectSrcCsProj);
             }
 
-            logItems.Add(SolutionAndProjectHelper.ScaffoldProjFile(
+            SolutionAndProjectHelper.ScaffoldProjFile(
+                logger,
                 projectOptions.ProjectSrcCsProj,
                 createAsWeb: false,
                 createAsTestProject: false,
@@ -128,22 +124,18 @@ public class ServerDomainGenerator
                 packageReferences: null,
                 projectReferences,
                 includeApiSpecification: false,
-                usingCodingRules: projectOptions.UsingCodingRules));
+                usingCodingRules: projectOptions.UsingCodingRules);
         }
 
         ScaffoldBasicFileDomainRegistration();
-
-        return logItems;
     }
 
-    private List<LogKeyValueItem> ScaffoldTest()
+    private void ScaffoldTest()
     {
-        var logItems = new List<LogKeyValueItem>();
-
         if (projectOptions.PathForTestGenerate is null ||
             projectOptions.ProjectTestCsProj is null)
         {
-            return logItems;
+            return;
         }
 
         if (projectOptions.PathForTestGenerate.Exists &&
@@ -165,7 +157,8 @@ public class ServerDomainGenerator
                 projectReferences.Add(projectOptions.ProjectSrcCsProj);
             }
 
-            logItems.Add(SolutionAndProjectHelper.ScaffoldProjFile(
+            SolutionAndProjectHelper.ScaffoldProjFile(
+                logger,
                 projectOptions.ProjectTestCsProj,
                 createAsWeb: false,
                 createAsTestProject: true,
@@ -175,10 +168,8 @@ public class ServerDomainGenerator
                 NugetPackageReferenceHelper.CreateForTestProject(false),
                 projectReferences,
                 includeApiSpecification: true,
-                usingCodingRules: projectOptions.UsingCodingRules));
+                usingCodingRules: projectOptions.UsingCodingRules);
         }
-
-        return logItems;
     }
 
     private void ScaffoldBasicFileDomainRegistration()
@@ -208,6 +199,6 @@ public class ServerDomainGenerator
             .EnsureEnvironmentNewLines();
 
         var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "DomainRegistration.cs"));
-        TextFileHelper.Save(file, codeAsString);
+        TextFileHelper.Save(logger, file, codeAsString);
     }
 }

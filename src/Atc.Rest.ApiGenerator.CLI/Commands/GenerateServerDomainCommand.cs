@@ -1,75 +1,68 @@
-namespace Atc.Rest.ApiGenerator.CLI.Commands
+namespace Atc.Rest.ApiGenerator.CLI.Commands;
+
+public class GenerateServerDomainCommand : AsyncCommand<ServerDomainCommandSettings>
 {
-    public class GenerateServerDomainCommand : AsyncCommand<ServerDomainCommandSettings>
+    private readonly ILogger<GenerateServerDomainCommand> logger;
+
+    public GenerateServerDomainCommand(ILogger<GenerateServerDomainCommand> logger) => this.logger = logger;
+
+    public override Task<int> ExecuteAsync(
+        CommandContext context,
+        ServerDomainCommandSettings settings)
     {
-        private readonly ILogger<GenerateServerDomainCommand> logger;
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(settings);
+        return ExecuteInternalAsync(settings);
+    }
 
-        public GenerateServerDomainCommand(ILogger<GenerateServerDomainCommand> logger) => this.logger = logger;
+    private async Task<int> ExecuteInternalAsync(
+        ServerDomainCommandSettings settings)
+    {
+        ConsoleHelper.WriteHeader();
 
-        public override Task<int> ExecuteAsync(
-            CommandContext context,
-            ServerDomainCommandSettings settings)
+        DirectoryInfo? outputTestPath = null;
+
+        if (settings.OutputTestPath is not null &&
+            settings.OutputTestPath.IsSet)
         {
-            ArgumentNullException.ThrowIfNull(context);
-            ArgumentNullException.ThrowIfNull(settings);
-            return ExecuteInternalAsync(settings);
+            outputTestPath = new DirectoryInfo(settings.OutputTestPath.Value);
         }
 
-        private async Task<int> ExecuteInternalAsync(
-            ServerDomainCommandSettings settings)
+        var apiOptions = await ApiOptionsHelper.CreateApiOptions(settings);
+        var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(settings.SpecificationPath);
+
+        var usingCodingRules = settings.DisableCodingRules; // TODO: Detect
+
+        try
         {
-            ConsoleHelper.WriteHeader();
-
-            DirectoryInfo? outputTestPath = null;
-
-            if (settings.OutputTestPath is not null &&
-                settings.OutputTestPath.IsSet)
+            if (!OpenApiDocumentHelper.Validate(
+                    logger,
+                    apiDocument,
+                    apiOptions.Validation))
             {
-                outputTestPath = new DirectoryInfo(settings.OutputTestPath.Value);
+                return ConsoleExitStatusCodes.Failure;
             }
 
-            var apiOptions = await ApiOptionsHelper.CreateApiOptions(settings);
-            var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(settings.SpecificationPath);
-
-            var usingCodingRules = settings.DisableCodingRules; // TODO: Detect
-
-            try
-            {
-                var logItems = new List<LogKeyValueItem>();
-                logItems.AddRange(OpenApiDocumentHelper.Validate(apiDocument, apiOptions.Validation));
-
-                if (logItems.HasAnyErrors())
-                {
-                    logItems.LogAndClear(logger);
-                    return ConsoleExitStatusCodes.Failure;
-                }
-
-                logItems.LogAndClear(logger);
-                logItems.AddRange(GenerateHelper.GenerateServerDomain(
+            if (!GenerateHelper.GenerateServerDomain(
+                    logger,
                     settings.ProjectPrefixName,
                     new DirectoryInfo(settings.OutputPath),
                     outputTestPath,
                     apiDocument,
                     apiOptions,
                     usingCodingRules,
-                    new DirectoryInfo(settings.ApiPath)));
-
-                if (logItems.HasAnyErrors())
-                {
-                    logItems.LogAndClear(logger);
-                    return ConsoleExitStatusCodes.Failure;
-                }
-
-                logItems.LogAndClear(logger);
-            }
-            catch (Exception ex)
+                    new DirectoryInfo(settings.ApiPath)))
             {
-                logger.LogError(ex, "Generation failed.");
                 return ConsoleExitStatusCodes.Failure;
             }
-
-            logger.LogInformation("Done");
-            return ConsoleExitStatusCodes.Success;
         }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, $"{EmojisConstants.Error} Generation failed.");
+            return ConsoleExitStatusCodes.Failure;
+        }
+
+        logger.LogInformation($"{EmojisConstants.Success} Done");
+        return ConsoleExitStatusCodes.Success;
     }
 }

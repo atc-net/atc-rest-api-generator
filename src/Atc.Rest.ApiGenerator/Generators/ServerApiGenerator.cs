@@ -1,3 +1,5 @@
+using Atc.Console.Spectre;
+
 // ReSharper disable ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
 // ReSharper disable SuggestBaseTypeForParameter
 // ReSharper disable ReplaceSubstringWithRangeIndexer
@@ -7,46 +9,53 @@ namespace Atc.Rest.ApiGenerator.Generators;
 
 public class ServerApiGenerator
 {
+    private readonly ILogger logger;
     private readonly ApiProjectOptions projectOptions;
 
-    public ServerApiGenerator(ApiProjectOptions projectOptions)
+    public ServerApiGenerator(
+        ILogger logger,
+        ApiProjectOptions projectOptions)
     {
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
     }
 
-    public List<LogKeyValueItem> Generate()
+    public bool Generate()
     {
-        var logItems = new List<LogKeyValueItem>();
+        logger.LogInformation($"{AppEmojisConstants.AreaGenerateCode} Working on server api generation");
 
-        logItems.Add(ValidateVersioning());
-        if (logItems.Any(x => x.LogCategory == LogCategoryType.Error))
+        var isVersionValid = ValidateVersioning();
+        if (!isVersionValid)
         {
-            return logItems;
+            return false;
         }
 
-        logItems.AddRange(ScaffoldSrc());
+        ScaffoldSrc();
 
         CopyApiSpecification();
 
         var operationSchemaMappings = OpenApiOperationSchemaMapHelper.CollectMappings(projectOptions.Document);
 
-        logItems.AddRange(GenerateContracts(operationSchemaMappings));
-        logItems.AddRange(GenerateEndpoints(operationSchemaMappings));
-        logItems.AddRange(PerformCleanup(logItems));
-        return logItems;
+        GenerateContracts(operationSchemaMappings);
+        GenerateEndpoints(operationSchemaMappings);
+        PerformCleanup();
+
+        return true;
     }
 
-    private LogKeyValueItem ValidateVersioning()
+    private bool ValidateVersioning()
     {
         if (!Directory.Exists(projectOptions.PathForSrcGenerate.FullName))
         {
-            return LogItemHelper.Create(LogCategoryType.Information, ValidationRuleNameConstants.ProjectApiGenerated01, "Old project don't exist.");
+            logger.LogInformation($"     {ValidationRuleNameConstants.ProjectApiGenerated01} - Old project does not exist");
+            return true;
         }
 
         var apiGeneratedFile = Path.Combine(projectOptions.PathForSrcGenerate.FullName, "ApiRegistration.cs");
         if (!File.Exists(apiGeneratedFile))
         {
-            return LogItemHelper.Create(LogCategoryType.Information, ValidationRuleNameConstants.ProjectApiGenerated02, "Old ApiRegistration.cs in project don't exist.");
+            logger.LogInformation($"     {ValidationRuleNameConstants.ProjectApiGenerated02} - Old ApiRegistration.cs in project does not exist.");
+            return true;
         }
 
         var lines = File.ReadLines(apiGeneratedFile).ToList();
@@ -56,13 +65,13 @@ public class ServerApiGenerator
 
         foreach (var line in lines)
         {
-            var indexOfToolName = line.IndexOf(toolName!, StringComparison.Ordinal);
+            var indexOfToolName = line.IndexOf(toolName, StringComparison.Ordinal);
             if (indexOfToolName == -1)
             {
                 continue;
             }
 
-            var oldVersion = line.Substring(indexOfToolName + toolName!.Length);
+            var oldVersion = line.Substring(indexOfToolName + toolName.Length);
             if (oldVersion.EndsWith('.'))
             {
                 oldVersion = oldVersion.Substring(0, oldVersion.Length - 1);
@@ -70,28 +79,30 @@ public class ServerApiGenerator
 
             if (!Version.TryParse(oldVersion, out var oldVersionResult))
             {
-                return LogItemHelper.Create(LogCategoryType.Error, ValidationRuleNameConstants.ProjectApiGenerated03, "Existing project version is invalid.");
+                logger.LogError($"     {ValidationRuleNameConstants.ProjectApiGenerated03} - Existing project version is invalid.");
+                return false;
             }
 
             if (newVersion >= oldVersionResult)
             {
-                return LogItemHelper.Create(LogCategoryType.Information, ValidationRuleNameConstants.ProjectApiGenerated04, "The generate project version is the same or newer.");
+                logger.LogInformation($"     {ValidationRuleNameConstants.ProjectApiGenerated04} - The generate project version is the same or newer.");
+                return true;
             }
 
-            return LogItemHelper.Create(LogCategoryType.Error, ValidationRuleNameConstants.ProjectApiGenerated05, "Existing project version is never than this tool version.");
+            logger.LogError($"     {ValidationRuleNameConstants.ProjectApiGenerated05} - Existing project version is never than this tool version.");
+            return false;
         }
 
-        return LogItemHelper.Create(LogCategoryType.Error, ValidationRuleNameConstants.ProjectApiGenerated06, "Existing project did not contain a version.");
+        logger.LogError($"     {ValidationRuleNameConstants.ProjectApiGenerated06} - Existing project did not contain a version.");
+        return false;
     }
 
-    private List<LogKeyValueItem> ScaffoldSrc()
+    private void ScaffoldSrc()
     {
         if (!Directory.Exists(projectOptions.PathForSrcGenerate.FullName))
         {
             Directory.CreateDirectory(projectOptions.PathForSrcGenerate.FullName);
         }
-
-        var logItems = new List<LogKeyValueItem>();
 
         if (projectOptions.PathForSrcGenerate.Exists &&
             projectOptions.ProjectSrcCsProj.Exists)
@@ -105,18 +116,19 @@ public class ServerApiGenerator
                 var newNullableValue = SolutionAndProjectHelper.GetNullableStringFromBool(projectOptions.UseNullableReferenceTypes);
                 SolutionAndProjectHelper.SetNullableValueForProject(element, newNullableValue);
                 element.Save(projectOptions.ProjectSrcCsProj.FullName);
-                logItems.Add(LogItemFactory.CreateDebug("FileUpdate", "#", $"Update API csproj - Nullable value={newNullableValue}"));
+                logger.LogDebug($"{EmojisConstants.FileUpdated}   Update API csproj - Nullable value={newNullableValue}");
                 hasUpdates = true;
             }
 
             if (!hasUpdates)
             {
-                logItems.Add(LogItemFactory.CreateDebug("FileSkip", "#", "No updates for API csproj"));
+                logger.LogDebug($"{EmojisConstants.FileNotUpdated}   No updates for API csproj");
             }
         }
         else
         {
-            logItems.Add(SolutionAndProjectHelper.ScaffoldProjFile(
+            SolutionAndProjectHelper.ScaffoldProjFile(
+                logger,
                 projectOptions.ProjectSrcCsProj,
                 createAsWeb: false,
                 createAsTestProject: false,
@@ -126,14 +138,12 @@ public class ServerApiGenerator
                 NugetPackageReferenceHelper.CreateForApiProject(),
                 projectReferences: null,
                 includeApiSpecification: true,
-                usingCodingRules: projectOptions.UsingCodingRules));
+                usingCodingRules: projectOptions.UsingCodingRules);
         }
 
         ScaffoldBasicFileApiGenerated();
         DeleteLegacyScaffoldBasicFileResultFactory();
         DeleteLegacyScaffoldBasicFilePagination();
-
-        return logItems;
     }
 
     private void CopyApiSpecification()
@@ -161,7 +171,7 @@ public class ServerApiGenerator
         }
     }
 
-    private List<LogKeyValueItem> GenerateContracts(
+    private void GenerateContracts(
         List<ApiOperationSchemaMap> operationSchemaMappings)
     {
         ArgumentNullException.ThrowIfNull(operationSchemaMappings);
@@ -172,53 +182,51 @@ public class ServerApiGenerator
         var sgContractInterfaces = new List<SyntaxGeneratorContractInterface>();
         foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
         {
-            var generatorModels = new SyntaxGeneratorContractModels(projectOptions, operationSchemaMappings, basePathSegmentName);
+            var generatorModels = new SyntaxGeneratorContractModels(logger, projectOptions, operationSchemaMappings, basePathSegmentName);
             var generatedModels = generatorModels.GenerateSyntaxTrees();
             sgContractModels.AddRange(generatedModels);
 
-            var generatorParameters = new SyntaxGeneratorContractParameters(projectOptions, basePathSegmentName);
+            var generatorParameters = new SyntaxGeneratorContractParameters(logger, projectOptions, basePathSegmentName);
             var generatedParameters = generatorParameters.GenerateSyntaxTrees();
             sgContractParameters.AddRange(generatedParameters);
 
-            var generatorResults = new SyntaxGeneratorContractResults(projectOptions, basePathSegmentName);
+            var generatorResults = new SyntaxGeneratorContractResults(logger, projectOptions, basePathSegmentName);
             var generatedResults = generatorResults.GenerateSyntaxTrees();
             sgContractResults.AddRange(generatedResults);
 
-            var generatorInterfaces = new SyntaxGeneratorContractInterfaces(projectOptions, basePathSegmentName);
+            var generatorInterfaces = new SyntaxGeneratorContractInterfaces(logger, projectOptions, basePathSegmentName);
             var generatedInterfaces = generatorInterfaces.GenerateSyntaxTrees();
             sgContractInterfaces.AddRange(generatedInterfaces);
         }
 
         ApiGeneratorHelper.CollectMissingContractModelFromOperationSchemaMappings(
+            logger,
             projectOptions,
             operationSchemaMappings,
             sgContractModels);
 
-        var logItems = new List<LogKeyValueItem>();
         foreach (var sg in sgContractModels)
         {
-            logItems.Add(sg.ToFile());
+            sg.ToFile();
         }
 
         foreach (var sg in sgContractParameters)
         {
-            logItems.Add(sg.ToFile());
+            sg.ToFile();
         }
 
         foreach (var sg in sgContractResults)
         {
-            logItems.Add(sg.ToFile());
+            sg.ToFile();
         }
 
         foreach (var sg in sgContractInterfaces)
         {
-            logItems.Add(sg.ToFile());
+            sg.ToFile();
         }
-
-        return logItems;
     }
 
-    private List<LogKeyValueItem> GenerateEndpoints(
+    private void GenerateEndpoints(
         List<ApiOperationSchemaMap> operationSchemaMappings)
     {
         ArgumentNullException.ThrowIfNull(operationSchemaMappings);
@@ -226,58 +234,20 @@ public class ServerApiGenerator
         var sgEndpoints = new List<SyntaxGeneratorEndpointControllers>();
         foreach (var segmentName in projectOptions.BasePathSegmentNames)
         {
-            var generator = new SyntaxGeneratorEndpointControllers(projectOptions, operationSchemaMappings, segmentName);
+            var generator = new SyntaxGeneratorEndpointControllers(logger, projectOptions, operationSchemaMappings, segmentName);
             generator.GenerateCode();
             sgEndpoints.Add(generator);
         }
 
-        var logItems = new List<LogKeyValueItem>();
         foreach (var sg in sgEndpoints)
         {
-            logItems.Add(sg.ToFile());
+            sg.ToFile();
         }
-
-        return logItems;
     }
 
-    private List<LogKeyValueItem> PerformCleanup(
-        List<LogKeyValueItem> orgLogItems)
+    private void PerformCleanup()
     {
-        ArgumentNullException.ThrowIfNull(orgLogItems);
-
-        var logItems = new List<LogKeyValueItem>();
-
-        if (Directory.Exists(projectOptions.PathForContracts.FullName))
-        {
-            var files = Directory.GetFiles(projectOptions.PathForContracts.FullName, "*.*", SearchOption.AllDirectories);
-            foreach (string file in files)
-            {
-                if (orgLogItems.FirstOrDefault(x => x.Description == file) is not null)
-                {
-                    continue;
-                }
-
-                File.Delete(file);
-                logItems.Add(LogItemFactory.CreateDebug("FileDelete", "#", file));
-            }
-        }
-
-        if (Directory.Exists(projectOptions.PathForEndpoints.FullName))
-        {
-            var files = Directory.GetFiles(projectOptions.PathForEndpoints.FullName, "*.*", SearchOption.AllDirectories);
-            foreach (string file in files)
-            {
-                if (orgLogItems.FirstOrDefault(x => x.Description == file) is not null)
-                {
-                    continue;
-                }
-
-                File.Delete(file);
-                logItems.Add(LogItemFactory.CreateDebug("FileDelete", "#", file));
-            }
-        }
-
-        return logItems;
+        // TODO: Implement
     }
 
     private void ScaffoldBasicFileApiGenerated()
@@ -307,7 +277,7 @@ public class ServerApiGenerator
             .EnsureEnvironmentNewLines();
 
         var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "ApiRegistration.cs"));
-        TextFileHelper.Save(file, codeAsString);
+        TextFileHelper.Save(logger, file, codeAsString);
     }
 
     private void DeleteLegacyScaffoldBasicFileResultFactory()

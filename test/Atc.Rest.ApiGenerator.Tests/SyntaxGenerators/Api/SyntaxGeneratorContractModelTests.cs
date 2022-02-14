@@ -15,7 +15,7 @@ public class SyntaxGeneratorContractModelTests : SyntaxCodeGeneratorTestBase
         var schema = apiProject.Document.Components.Schemas.First();
 
         // Construct SUT
-        return new SyntaxGeneratorContractModel(apiProject, schema.Key, schema.Value, FocusOnSegment);
+        return new SyntaxGeneratorContractModel(NullLogger.Instance, apiProject, schema.Key, schema.Value, FocusOnSegment);
     }
 
     [Theory(DisplayName = "Api Contract Model")]

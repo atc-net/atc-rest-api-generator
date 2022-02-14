@@ -9,10 +9,12 @@ namespace Atc.Rest.ApiGenerator.Helpers;
 
 public static class OpenApiDocumentValidationHelper
 {
-    public static List<LogKeyValueItem> ValidateDocument(
+    public static bool ValidateDocument(
+        ILogger logger,
         OpenApiDocument apiDocument,
         ApiOptionsValidation validationOptions)
     {
+        ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(apiDocument);
         ArgumentNullException.ThrowIfNull(validationOptions);
 
@@ -23,7 +25,8 @@ public static class OpenApiDocumentValidationHelper
         logItems.AddRange(ValidatePathsAndOperations(validationOptions, apiDocument.Paths));
         logItems.AddRange(ValidateOperationsParametersAndResponses(validationOptions, apiDocument.Paths.Values));
 
-        return logItems;
+        logger.LogKeyValueItems(logItems);
+        return logItems.All(x => x.LogCategory != LogCategoryType.Error);
     }
 
     private static List<LogKeyValueItem> ValidateServers(

@@ -4,10 +4,14 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
 
 public class SyntaxGeneratorContractResults : ISyntaxGeneratorContractResults
 {
+    private readonly ILogger logger;
+
     public SyntaxGeneratorContractResults(
+        ILogger logger,
         ApiProjectOptions apiProjectOptions,
         string focusOnSegmentName)
     {
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.ApiProjectOptions = apiProjectOptions ?? throw new ArgumentNullException(nameof(apiProjectOptions));
         this.FocusOnSegmentName = focusOnSegmentName ?? throw new ArgumentNullException(nameof(focusOnSegmentName));
     }
@@ -28,7 +32,7 @@ public class SyntaxGeneratorContractResults : ISyntaxGeneratorContractResults
 
             list.AddRange(
                 urlPath.Value.Operations
-                    .Select(x => new SyntaxGeneratorContractResult(ApiProjectOptions, x.Key, x.Value, FocusOnSegmentName))
+                    .Select(x => new SyntaxGeneratorContractResult(logger, ApiProjectOptions, x.Key, x.Value, FocusOnSegmentName))
                     .Where(item => item.GenerateCode()));
         }
 

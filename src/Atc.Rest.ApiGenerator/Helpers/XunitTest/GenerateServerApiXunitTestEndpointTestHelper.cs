@@ -6,10 +6,12 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest;
 
 public static class GenerateServerApiXunitTestEndpointTestHelper
 {
-    public static LogKeyValueItem Generate(
+    public static void Generate(
+        ILogger logger,
         HostProjectOptions hostProjectOptions,
         EndpointMethodMetadata endpointMethodMetadata)
     {
+        ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(hostProjectOptions);
         ArgumentNullException.ThrowIfNull(endpointMethodMetadata);
 
@@ -31,7 +33,7 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
         }
 
         AppendNamespaceAndClassEnd(sb);
-        return SaveFile(sb, hostProjectOptions, endpointMethodMetadata);
+        SaveFile(logger, sb, hostProjectOptions, endpointMethodMetadata);
     }
 
     private static void AppendUsingStatements(
@@ -97,7 +99,8 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
         sb.AppendLine("}");
     }
 
-    private static LogKeyValueItem SaveFile(
+    private static void SaveFile(
+        ILogger logger,
         StringBuilder sb,
         HostProjectOptions hostProjectOptions,
         EndpointMethodMetadata endpointMethodMetadata)
@@ -107,7 +110,7 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
         var pathC = Path.Combine(pathB, "Generated");
         var fileName = $"{endpointMethodMetadata.MethodName}Tests.cs";
         var file = new FileInfo(Path.Combine(pathC, fileName));
-        return TextFileHelper.Save(file, sb.ToString());
+        TextFileHelper.Save(logger, file, sb.ToString());
     }
 
     private static List<string> GetUsingStatements(

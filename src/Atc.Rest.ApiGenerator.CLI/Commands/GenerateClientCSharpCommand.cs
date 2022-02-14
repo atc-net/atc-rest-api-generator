@@ -27,39 +27,34 @@ public class GenerateClientCSharpCommand : AsyncCommand<ClientApiCommandSettings
 
         try
         {
-            var logItems = new List<LogKeyValueItem>();
-            logItems.AddRange(OpenApiDocumentHelper.Validate(apiDocument, apiOptions.Validation));
-            if (logItems.HasAnyErrors())
+            if (!OpenApiDocumentHelper.Validate(
+                    logger,
+                    apiDocument,
+                    apiOptions.Validation))
             {
-                logItems.LogAndClear(logger);
                 return ConsoleExitStatusCodes.Failure;
             }
 
-            logItems.LogAndClear(logger);
-            logItems.AddRange(GenerateHelper.GenerateServerCSharpClient(
-                settings.ProjectPrefixName,
-                settings.ClientFolderName,
-                new DirectoryInfo(settings.OutputPath),
-                apiDocument,
-                settings.ExcludeEndpointGeneration,
-                apiOptions,
-                usingCodingRules));
-
-            if (logItems.HasAnyErrors())
+            if (!GenerateHelper.GenerateServerCSharpClient(
+                    logger,
+                    settings.ProjectPrefixName,
+                    settings.ClientFolderName,
+                    new DirectoryInfo(settings.OutputPath),
+                    apiDocument,
+                    settings.ExcludeEndpointGeneration,
+                    apiOptions,
+                    usingCodingRules))
             {
-                logItems.LogAndClear(logger);
                 return ConsoleExitStatusCodes.Failure;
             }
-
-            logItems.LogAndClear(logger);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Generation failed.");
+            logger.LogError(ex, $"{EmojisConstants.Error} Generation failed.");
             return ConsoleExitStatusCodes.Failure;
         }
 
-        logger.LogInformation("Done");
+        logger.LogInformation($"{EmojisConstants.Success} Done");
         return ConsoleExitStatusCodes.Success;
     }
 }

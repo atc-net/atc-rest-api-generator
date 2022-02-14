@@ -35,39 +35,33 @@ public class GenerateServerApiCommand : AsyncCommand<ServerApiCommandSettings>
 
         try
         {
-            var logItems = new List<LogKeyValueItem>();
-            logItems.AddRange(OpenApiDocumentHelper.Validate(apiDocument, apiOptions.Validation));
-
-            if (logItems.HasAnyErrors())
+            if (!OpenApiDocumentHelper.Validate(
+                    logger,
+                    apiDocument,
+                    apiOptions.Validation))
             {
-                logItems.LogAndClear(logger);
                 return ConsoleExitStatusCodes.Failure;
             }
 
-            logItems.LogAndClear(logger);
-            logItems.AddRange(GenerateHelper.GenerateServerApi(
-                settings.ProjectPrefixName,
-                new DirectoryInfo(settings.OutputPath),
-                outputTestPath,
-                apiDocument,
-                apiOptions,
-                usingCodingRules));
-
-            if (logItems.HasAnyErrors())
+            if (!GenerateHelper.GenerateServerApi(
+                    logger,
+                    settings.ProjectPrefixName,
+                    new DirectoryInfo(settings.OutputPath),
+                    outputTestPath,
+                    apiDocument,
+                    apiOptions,
+                    usingCodingRules))
             {
-                logItems.LogAndClear(logger);
                 return ConsoleExitStatusCodes.Failure;
             }
-
-            logItems.LogAndClear(logger);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Generation failed.");
+            logger.LogError(ex, $"{EmojisConstants.Error} Generation failed.");
             return ConsoleExitStatusCodes.Failure;
         }
 
-        logger.LogInformation("Done");
+        logger.LogInformation($"{EmojisConstants.Success} Done");
         return ConsoleExitStatusCodes.Success;
     }
 }

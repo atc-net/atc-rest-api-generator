@@ -1,8 +1,7 @@
-namespace Atc.Rest.ApiGenerator.CLI
+namespace Atc.Rest.ApiGenerator.CLI;
+
+public static class ConsoleHelper
 {
-    public static class ConsoleHelper
-    {
-        public static void WriteHeader()
-            => Console.Spectre.Helpers.ConsoleHelper.WriteHeader("API Generator");
-    }
+    public static void WriteHeader()
+        => Console.Spectre.Helpers.ConsoleHelper.WriteHeader("API Generator");
 }

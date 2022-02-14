@@ -1,3 +1,5 @@
+using Atc.Console.Spectre;
+
 namespace Atc.Rest.ApiGenerator.Models;
 
 public class HostProjectOptions : BaseProjectOptions
@@ -23,7 +25,7 @@ public class HostProjectOptions : BaseProjectOptions
             apiOptions,
             usingCodingRules)
     {
-        ApiProjectSrcPath = apiProjectSrcPath ?? throw new ArgumentNullException(nameof(projectSrcGeneratePath));
+        ApiProjectSrcPath = apiProjectSrcPath ?? throw new ArgumentNullException(nameof(apiProjectSrcPath));
         DomainProjectSrcPath = domainProjectSrcPath ?? throw new ArgumentNullException(nameof(domainProjectSrcPath));
         UseRestExtended = apiOptions.Generator.UseRestExtended;
     }
@@ -38,9 +40,9 @@ public class HostProjectOptions : BaseProjectOptions
 
     public bool UseRestExtended { get; set; }
 
-    public List<LogKeyValueItem> SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles()
+    public bool SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles(
+        ILogger logger)
     {
-        var logItems = new List<LogKeyValueItem>();
         if (ApiProjectSrcPath.Exists)
         {
             var files = Directory.GetFiles(ApiProjectSrcPath.FullName, "ApiRegistration.cs", SearchOption.AllDirectories);
@@ -58,7 +60,8 @@ public class HostProjectOptions : BaseProjectOptions
         if (ApiProjectSrcCsProj is null ||
             !ApiProjectSrcCsProj.Exists)
         {
-            logItems.Add(LogItemHelper.Create(LogCategoryType.Error, ValidationRuleNameConstants.ProjectHostGenerated04, "Can't find API .csproj file"));
+            logger.LogError($"{EmojisConstants.Error} {ValidationRuleNameConstants.ProjectHostGenerated04} - Can't find API .csproj file");
+            return false;
         }
 
         if (DomainProjectSrcPath.Exists)
@@ -78,9 +81,10 @@ public class HostProjectOptions : BaseProjectOptions
         if (DomainProjectSrcCsProj is null ||
             !DomainProjectSrcCsProj.Exists)
         {
-            logItems.Add(LogItemHelper.Create(LogCategoryType.Error, ValidationRuleNameConstants.ProjectHostGenerated05, "Can't find Domain .csproj file"));
+            logger.LogError($"{EmojisConstants.Error} {ValidationRuleNameConstants.ProjectHostGenerated05} - Can't find Domain .csproj file");
+            return false;
         }
 
-        return logItems;
+        return true;
     }
 }

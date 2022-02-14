@@ -1,216 +1,163 @@
+using Atc.Console.Spectre;
+
 // ReSharper disable ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
 // ReSharper disable ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
-namespace Atc.Rest.ApiGenerator.Generators
+namespace Atc.Rest.ApiGenerator.Generators;
+
+public class ClientCSharpApiGenerator
 {
-    public class ClientCSharpApiGenerator
+    private readonly ILogger logger;
+    private readonly ClientCSharpApiProjectOptions projectOptions;
+    private readonly ApiProjectOptions apiProjectOptions;
+
+    public ClientCSharpApiGenerator(
+        ILogger logger,
+        ClientCSharpApiProjectOptions projectOptions)
     {
-        private readonly ClientCSharpApiProjectOptions projectOptions;
-        private readonly ApiProjectOptions apiProjectOptions;
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
 
-        public ClientCSharpApiGenerator(
-            ClientCSharpApiProjectOptions projectOptions)
+        this.apiProjectOptions = new ApiProjectOptions(
+            projectOptions.PathForSrcGenerate,
+            projectTestGeneratePath: null,
+            projectOptions.Document,
+            projectOptions.DocumentFile,
+            projectOptions.ProjectName,
+            projectSuffixName: null,
+            projectOptions.ApiOptions,
+            projectOptions.UsingCodingRules,
+            projectOptions.ForClient,
+            projectOptions.ClientFolderName);
+
+        this.ExcludeEndpointGeneration = projectOptions.ExcludeEndpointGeneration;
+    }
+
+    public bool ExcludeEndpointGeneration { get; }
+
+    public bool Generate()
+    {
+        ScaffoldSrc();
+
+        var operationSchemaMappings = OpenApiOperationSchemaMapHelper.CollectMappings(projectOptions.Document);
+        GenerateContracts(operationSchemaMappings);
+        if (!this.ExcludeEndpointGeneration)
         {
-            this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
-
-            this.apiProjectOptions = new ApiProjectOptions(
-                projectOptions.PathForSrcGenerate,
-                projectTestGeneratePath: null,
-                projectOptions.Document,
-                projectOptions.DocumentFile,
-                projectOptions.ProjectName,
-                projectSuffixName: null,
-                projectOptions.ApiOptions,
-                projectOptions.UsingCodingRules,
-                projectOptions.ForClient,
-                projectOptions.ClientFolderName);
-
-            this.ExcludeEndpointGeneration = projectOptions.ExcludeEndpointGeneration;
+            GenerateEndpoints(operationSchemaMappings);
         }
 
-        public bool ExcludeEndpointGeneration { get; }
+        PerformCleanup();
+        return true;
+    }
 
-        public List<LogKeyValueItem> Generate()
+    private void ScaffoldSrc()
+    {
+        if (!Directory.Exists(projectOptions.PathForSrcGenerate.FullName))
         {
-            var logItems = new List<LogKeyValueItem>();
-
-            logItems.AddRange(ScaffoldSrc());
-
-            var operationSchemaMappings = OpenApiOperationSchemaMapHelper.CollectMappings(projectOptions.Document);
-            logItems.AddRange(GenerateContracts(operationSchemaMappings));
-            if (!this.ExcludeEndpointGeneration)
-            {
-                logItems.AddRange(GenerateEndpoints(operationSchemaMappings));
-            }
-
-            logItems.AddRange(PerformCleanup(logItems));
-            return logItems;
+            Directory.CreateDirectory(projectOptions.PathForSrcGenerate.FullName);
         }
 
-        private List<LogKeyValueItem> ScaffoldSrc()
+        if (projectOptions.PathForSrcGenerate.Exists &&
+            projectOptions.ProjectSrcCsProj.Exists)
         {
-            if (!Directory.Exists(projectOptions.PathForSrcGenerate.FullName))
-            {
-                Directory.CreateDirectory(projectOptions.PathForSrcGenerate.FullName);
-            }
+            logger.LogDebug($"{EmojisConstants.FileNotUpdated}   No updates for csproj");
+        }
+        else
+        {
+            SolutionAndProjectHelper.ScaffoldProjFile(
+                logger,
+                projectOptions.ProjectSrcCsProj,
+                createAsWeb: false,
+                createAsTestProject: false,
+                projectName: projectOptions.ProjectName,
+                "netstandard2.1",
+                frameworkReferences: null,
+                packageReferences: NugetPackageReferenceHelper.CreateForClientApiProject(),
+                projectReferences: null,
+                includeApiSpecification: false,
+                usingCodingRules: projectOptions.UsingCodingRules);
+        }
+    }
 
-            var logItems = new List<LogKeyValueItem>();
+    private void GenerateContracts(
+        List<ApiOperationSchemaMap> operationSchemaMappings)
+    {
+        ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 
-            if (projectOptions.PathForSrcGenerate.Exists &&
-                projectOptions.ProjectSrcCsProj.Exists)
-            {
-                logItems.Add(LogItemFactory.CreateDebug("FileSkip", "#", "No updates for csproj"));
-            }
-            else
-            {
-                logItems.Add(SolutionAndProjectHelper.ScaffoldProjFile(
-                    projectOptions.ProjectSrcCsProj,
-                    createAsWeb: false,
-                    createAsTestProject: false,
-                    projectName: projectOptions.ProjectName,
-                    "netstandard2.1",
-                    frameworkReferences: null,
-                    packageReferences: NugetPackageReferenceHelper.CreateForClientApiProject(),
-                    projectReferences: null,
-                    includeApiSpecification: false,
-                    usingCodingRules: projectOptions.UsingCodingRules));
-            }
+        var sgContractModels = new List<SyntaxGeneratorContractModel>();
+        var sgContractParameters = new List<SyntaxGeneratorContractParameter>();
+        foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
+        {
+            var generatorModels = new SyntaxGeneratorContractModels(logger, apiProjectOptions, operationSchemaMappings, basePathSegmentName);
+            var generatedModels = generatorModels.GenerateSyntaxTrees();
+            sgContractModels.AddRange(generatedModels);
 
-            return logItems;
+            var generatorParameters = new SyntaxGeneratorContractParameters(logger, apiProjectOptions, basePathSegmentName);
+            var generatedParameters = generatorParameters.GenerateSyntaxTrees();
+            sgContractParameters.AddRange(generatedParameters);
         }
 
-        private List<LogKeyValueItem> GenerateContracts(
-            List<ApiOperationSchemaMap> operationSchemaMappings)
+        ApiGeneratorHelper.CollectMissingContractModelFromOperationSchemaMappings(
+            logger,
+            apiProjectOptions,
+            operationSchemaMappings,
+            sgContractModels);
+
+        foreach (var sg in sgContractModels)
         {
-            ArgumentNullException.ThrowIfNull(operationSchemaMappings);
-
-            var sgContractModels = new List<SyntaxGeneratorContractModel>();
-            var sgContractParameters = new List<SyntaxGeneratorContractParameter>();
-            foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
-            {
-                var generatorModels = new SyntaxGeneratorContractModels(apiProjectOptions, operationSchemaMappings, basePathSegmentName);
-                var generatedModels = generatorModels.GenerateSyntaxTrees();
-                sgContractModels.AddRange(generatedModels);
-
-                var generatorParameters = new SyntaxGeneratorContractParameters(apiProjectOptions, basePathSegmentName);
-                var generatedParameters = generatorParameters.GenerateSyntaxTrees();
-                sgContractParameters.AddRange(generatedParameters);
-            }
-
-            ApiGeneratorHelper.CollectMissingContractModelFromOperationSchemaMappings(
-                apiProjectOptions,
-                operationSchemaMappings,
-                sgContractModels);
-
-            var logItems = new List<LogKeyValueItem>();
-            foreach (var sg in sgContractModels)
-            {
-                sg.IsForClient = true;
-                sg.UseOwnFolder = false;
-                logItems.Add(sg.ToFile());
-            }
-
-            foreach (var sg in sgContractParameters)
-            {
-                sg.IsForClient = true;
-                sg.UseOwnFolder = false;
-                logItems.Add(sg.ToFile());
-            }
-
-            return logItems;
+            sg.IsForClient = true;
+            sg.UseOwnFolder = false;
+            sg.ToFile();
         }
 
-        private List<LogKeyValueItem> GenerateEndpoints(
-            List<ApiOperationSchemaMap> operationSchemaMappings)
+        foreach (var sg in sgContractParameters)
         {
-            ArgumentNullException.ThrowIfNull(operationSchemaMappings);
+            sg.IsForClient = true;
+            sg.UseOwnFolder = false;
+            sg.ToFile();
+        }
+    }
 
-            var sgEndpointResults = new List<SyntaxGeneratorClientEndpointResult>();
-            var sgEndpointInterfaces = new List<SyntaxGeneratorClientEndpointInterface>();
-            var sgEndpoints = new List<SyntaxGeneratorClientEndpoint>();
-            foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
-            {
-                var generatorEndpointResults = new SyntaxGeneratorClientEndpointResults(apiProjectOptions, operationSchemaMappings, basePathSegmentName);
-                var generatedEndpointResults = generatorEndpointResults.GenerateSyntaxTrees();
-                sgEndpointResults.AddRange(generatedEndpointResults);
+    private void GenerateEndpoints(
+        List<ApiOperationSchemaMap> operationSchemaMappings)
+    {
+        ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 
-                var generatorEndpointInterfaces = new SyntaxGeneratorClientEndpointInterfaces(apiProjectOptions, operationSchemaMappings, basePathSegmentName);
-                var generatedEndpointInterfaces = generatorEndpointInterfaces.GenerateSyntaxTrees();
-                sgEndpointInterfaces.AddRange(generatedEndpointInterfaces);
+        var sgEndpointResults = new List<SyntaxGeneratorClientEndpointResult>();
+        var sgEndpointInterfaces = new List<SyntaxGeneratorClientEndpointInterface>();
+        var sgEndpoints = new List<SyntaxGeneratorClientEndpoint>();
+        foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
+        {
+            var generatorEndpointResults = new SyntaxGeneratorClientEndpointResults(logger, apiProjectOptions, operationSchemaMappings, basePathSegmentName);
+            var generatedEndpointResults = generatorEndpointResults.GenerateSyntaxTrees();
+            sgEndpointResults.AddRange(generatedEndpointResults);
 
-                var generatorEndpoints = new SyntaxGeneratorClientEndpoints(apiProjectOptions, operationSchemaMappings, basePathSegmentName);
-                var generatedEndpoints = generatorEndpoints.GenerateSyntaxTrees();
-                sgEndpoints.AddRange(generatedEndpoints);
-            }
+            var generatorEndpointInterfaces = new SyntaxGeneratorClientEndpointInterfaces(logger, apiProjectOptions, operationSchemaMappings, basePathSegmentName);
+            var generatedEndpointInterfaces = generatorEndpointInterfaces.GenerateSyntaxTrees();
+            sgEndpointInterfaces.AddRange(generatedEndpointInterfaces);
 
-            var logItems = new List<LogKeyValueItem>();
-
-            foreach (var sg in sgEndpointResults)
-            {
-                logItems.Add(sg.ToFile());
-            }
-
-            foreach (var sg in sgEndpointInterfaces)
-            {
-                logItems.Add(sg.ToFile());
-            }
-
-            foreach (var sg in sgEndpoints)
-            {
-                logItems.Add(sg.ToFile());
-            }
-
-            return logItems;
+            var generatorEndpoints = new SyntaxGeneratorClientEndpoints(logger, apiProjectOptions, operationSchemaMappings, basePathSegmentName);
+            var generatedEndpoints = generatorEndpoints.GenerateSyntaxTrees();
+            sgEndpoints.AddRange(generatedEndpoints);
         }
 
-        private List<LogKeyValueItem> PerformCleanup(
-            List<LogKeyValueItem> orgLogItems)
+        foreach (var sg in sgEndpointResults)
         {
-            ArgumentNullException.ThrowIfNull(orgLogItems);
-
-            var logItems = new List<LogKeyValueItem>();
-
-            // TODO: Fix Cleanup
-            ////var apiProjectOptions = new ApiProjectOptions(
-            ////    projectOptions.PathForSrcGenerate,
-            ////    projectTestGeneratePath: null,
-            ////    projectOptions.Document,
-            ////    projectOptions.DocumentFile,
-            ////    projectOptions.ProjectName,
-            ////    projectSuffixName: null,
-            ////    projectOptions.ApiOptions,
-            ////    projectOptions.ClientFolderName);
-
-            ////if (Directory.Exists(projectOptions.PathForContracts.FullName))
-            ////{
-            ////    var files = Directory.GetFiles(projectOptions.PathForContracts.FullName, "*.*", SearchOption.AllDirectories);
-            ////    foreach (string file in files)
-            ////    {
-            ////        if (orgLogItems.FirstOrDefault(x => x.Description == file) is not null)
-            ////        {
-            ////            continue;
-            ////        }
-
-            ////        File.Delete(file);
-            ////        logItems.Add(LogItemFactory.CreateDebug("FileDelete", "#", file));
-            ////    }
-            ////}
-
-            ////if (Directory.Exists(projectOptions.PathForEndpoints.FullName))
-            ////{
-            ////    var files = Directory.GetFiles(projectOptions.PathForEndpoints.FullName, "*.*", SearchOption.AllDirectories);
-            ////    foreach (string file in files)
-            ////    {
-            ////        if (orgLogItems.FirstOrDefault(x => x.Description == file) is not null)
-            ////        {
-            ////            continue;
-            ////        }
-
-            ////        File.Delete(file);
-            ////        logItems.Add(LogItemFactory.CreateDebug("FileDelete", "#", file));
-            ////    }
-            ////}
-
-            return logItems;
+            sg.ToFile();
         }
+
+        foreach (var sg in sgEndpointInterfaces)
+        {
+            sg.ToFile();
+        }
+
+        foreach (var sg in sgEndpoints)
+        {
+            sg.ToFile();
+        }
+    }
+
+    private void PerformCleanup()
+    {
+        // TODO: Implement
     }
 }

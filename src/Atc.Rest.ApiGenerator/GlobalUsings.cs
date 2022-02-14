@@ -40,6 +40,7 @@ global using Microsoft.CodeAnalysis;
 global using Microsoft.CodeAnalysis.CSharp;
 global using Microsoft.CodeAnalysis.CSharp.Syntax;
 global using Microsoft.Extensions.Hosting;
+global using Microsoft.Extensions.Logging;
 global using Microsoft.OpenApi;
 global using Microsoft.OpenApi.Any;
 global using Microsoft.OpenApi.Models;

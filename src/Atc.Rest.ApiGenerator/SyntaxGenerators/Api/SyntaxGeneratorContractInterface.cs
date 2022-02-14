@@ -2,7 +2,10 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
 
 public class SyntaxGeneratorContractInterface : ISyntaxOperationCodeGenerator
 {
+    private readonly ILogger logger;
+
     public SyntaxGeneratorContractInterface(
+        ILogger logger,
         ApiProjectOptions apiProjectOptions,
         IList<OpenApiParameter> globalPathParameters,
         OperationType apiOperationType,
@@ -10,6 +13,7 @@ public class SyntaxGeneratorContractInterface : ISyntaxOperationCodeGenerator
         string focusOnSegmentName,
         bool hasParametersOrRequestBody)
     {
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.ApiProjectOptions = apiProjectOptions ?? throw new ArgumentNullException(nameof(apiProjectOptions));
         this.GlobalPathParameters = globalPathParameters ?? throw new ArgumentNullException(nameof(globalPathParameters));
         this.ApiOperationType = apiOperationType;
@@ -91,12 +95,12 @@ public class SyntaxGeneratorContractInterface : ISyntaxOperationCodeGenerator
             .EnsureEnvironmentNewLines();
     }
 
-    public LogKeyValueItem ToFile()
+    public void ToFile()
     {
         var area = FocusOnSegmentName.EnsureFirstCharacterToUpper();
         var interfaceName = "I" + ApiOperation.GetOperationName() + NameConstants.ContractHandler;
         var file = Util.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, NameConstants.ContractInterfaces, interfaceName);
-        return TextFileHelper.Save(file, ToCodeAsString());
+        TextFileHelper.Save(logger, file, ToCodeAsString());
     }
 
     public void ToFile(
@@ -104,7 +108,7 @@ public class SyntaxGeneratorContractInterface : ISyntaxOperationCodeGenerator
     {
         ArgumentNullException.ThrowIfNull(file);
 
-        TextFileHelper.Save(file, ToCodeAsString());
+        TextFileHelper.Save(logger, file, ToCodeAsString());
     }
 
     public override string ToString()

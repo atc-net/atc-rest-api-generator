@@ -2,10 +2,12 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest;
 
 public static class GenerateServerDomainXunitTestHelper
 {
-    public static LogKeyValueItem GenerateGeneratedTests(
+    public static void GenerateGeneratedTests(
+        ILogger logger,
         DomainProjectOptions domainProjectOptions,
         SyntaxGeneratorHandler sgHandler)
     {
+        ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(domainProjectOptions);
         ArgumentNullException.ThrowIfNull(sgHandler);
 
@@ -46,13 +48,15 @@ public static class GenerateServerDomainXunitTestHelper
 
         var pathGenerated = Path.Combine(Path.Combine(domainProjectOptions.PathForTestHandlers!.FullName, area), "Generated");
         var fileGenerated = new FileInfo(Path.Combine(pathGenerated, $"{sgHandler.HandlerTypeName}GeneratedTests.cs"));
-        return TextFileHelper.Save(fileGenerated, sb.ToString());
+        TextFileHelper.Save(logger, fileGenerated, sb.ToString());
     }
 
-    public static LogKeyValueItem GenerateCustomTests(
+    public static void GenerateCustomTests(
+        ILogger logger,
         DomainProjectOptions domainProjectOptions,
         SyntaxGeneratorHandler sgHandler)
     {
+        ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(domainProjectOptions);
         ArgumentNullException.ThrowIfNull(sgHandler);
 
@@ -80,7 +84,7 @@ public static class GenerateServerDomainXunitTestHelper
 
         var pathCustom = Path.Combine(domainProjectOptions.PathForTestHandlers!.FullName, area);
         var fileCustom = new FileInfo(Path.Combine(pathCustom, $"{sgHandler.HandlerTypeName}Tests.cs"));
-        return TextFileHelper.Save(fileCustom, sb.ToString(), false);
+        TextFileHelper.Save(logger, fileCustom, sb.ToString(), false);
     }
 
     private static void AppendInstantiateConstructor(

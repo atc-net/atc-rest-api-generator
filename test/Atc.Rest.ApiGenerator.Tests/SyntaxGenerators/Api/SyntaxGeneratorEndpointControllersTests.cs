@@ -16,7 +16,7 @@ public class SyntaxGeneratorEndpointControllersTests : SyntaxCodeGeneratorTestBa
         var operationSchemaMappings = OpenApiOperationSchemaMapHelper.CollectMappings(apiProject.Document);
 
         // Construct SUT
-        return new SyntaxGeneratorEndpointControllers(apiProject, operationSchemaMappings, segmentName);
+        return new SyntaxGeneratorEndpointControllers(NullLogger.Instance, apiProject, operationSchemaMappings, segmentName);
     }
 
     [Theory(DisplayName = "Api Contract Controllers")]
