@@ -521,7 +521,6 @@ dotnet_diagnostic.CA1056.severity = suggestion		# URI properties should not be s
 dotnet_diagnostic.MA0011.severity = none			# 40 occurrences - Category: 'Usage' - IFormatProvider is missing - https://github.com/meziantou/Meziantou.Analyzer/blob/main/docs/Rules/MA0011.md
 dotnet_diagnostic.MA0016.severity = none			# 48 occurrences - Category: 'Design' - Prefer return collection abstraction instead of implementation - https://github.com/meziantou/Meziantou.Analyzer/blob/main/docs/Rules/MA0016.md
 dotnet_diagnostic.MA0051.severity = none			# 32 occurrences - Category: 'Design' - Method is too long - https://github.com/meziantou/Meziantou.Analyzer/blob/main/docs/Rules/MA0051.md
-dotnet_diagnostic.MA0065.severity = none			# 1 occurrence - Category: 'Performance' - Default ValueType.Equals or HashCode is used for struct's equality - https://github.com/meziantou/Meziantou.Analyzer/blob/main/docs/Rules/MA0065.md
 
 # Microsoft.CodeAnalysis.NetAnalyzers
 dotnet_diagnostic.CA1002.severity = none			# 61 occurrences - Do not expose generic lists - https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1002

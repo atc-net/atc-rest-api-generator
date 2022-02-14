@@ -350,6 +350,7 @@ internal static class SyntaxDocumentationFactory
         return SyntaxFactory.TriviaList(comments);
     }
 
+    [SuppressMessage("Performance", "MA0065:Default ValueType.Equals or HashCode is used for struct's equality", Justification = "OK.")]
     private static IEnumerable<SyntaxTrivia> CreateExample(
         OpenApiSchema apiSchema)
     {
