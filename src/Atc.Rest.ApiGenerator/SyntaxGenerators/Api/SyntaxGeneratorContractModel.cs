@@ -100,6 +100,7 @@ public class SyntaxGeneratorContractModel : ISyntaxSchemaCodeGenerator
         {
             var clientFile = Util.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, NameConstants.ClientRequestParameters, modelName);
             TextFileHelper.Save(logger, clientFile, ToCodeAsString());
+            return;
         }
 
         var file = IsEnum
