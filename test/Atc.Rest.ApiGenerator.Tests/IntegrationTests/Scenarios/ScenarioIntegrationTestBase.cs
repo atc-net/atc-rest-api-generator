@@ -12,6 +12,7 @@ public class ScenarioIntegrationTestBase : IntegrationTestCliBase
         return Directory.EnumerateDirectories(scenariosPath).Select(x => new DirectoryInfo(x));
     }
 
+    [SuppressMessage("Security", "MA0009:Add regex evaluation timeout", Justification = "OK. - test class")]
     public async Task<string> ReadGeneratedFile(string filePath)
     {
         var content = await File.ReadAllTextAsync(filePath);

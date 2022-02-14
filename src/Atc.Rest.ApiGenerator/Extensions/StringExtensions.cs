@@ -1,6 +1,7 @@
 // ReSharper disable once CheckNamespace
 namespace System;
 
+[SuppressMessage("Security", "MA0009:Add regex evaluation timeout", Justification = "OK. - internal class")]
 internal static class StringExtensions
 {
     private const string AutoPropGetSetResultPattern = " { get; set; }";
