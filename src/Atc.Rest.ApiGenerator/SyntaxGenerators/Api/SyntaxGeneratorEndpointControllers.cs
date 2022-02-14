@@ -129,7 +129,7 @@ public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointContro
     public void ToFile()
     {
         var controllerName = FocusOnSegmentName.EnsureFirstCharacterToUpper() + "Controller";
-        var file = Util.GetCsFileNameForEndpoints(ApiProjectOptions.PathForEndpoints, controllerName);
+        var file = DirectoryInfoHelper.GetCsFileNameForEndpoints(ApiProjectOptions.PathForEndpoints, controllerName);
         ToFile(new FileInfo(file));
     }
 

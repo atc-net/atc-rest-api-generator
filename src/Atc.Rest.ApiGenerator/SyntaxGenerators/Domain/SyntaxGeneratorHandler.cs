@@ -103,7 +103,7 @@ public class SyntaxGeneratorHandler
     public void ToFile()
     {
         var area = FocusOnSegmentName.EnsureFirstCharacterToUpper();
-        var file = Util.GetCsFileNameForHandler(DomainProjectOptions.PathForSrcHandlers!, area, HandlerTypeName);
+        var file = DirectoryInfoHelper.GetCsFileNameForHandler(DomainProjectOptions.PathForSrcHandlers!, area, HandlerTypeName);
         ToFile(new FileInfo(file));
     }
 

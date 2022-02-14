@@ -1,6 +1,6 @@
-namespace Atc.Rest.ApiGenerator;
+namespace Atc.Rest.ApiGenerator.Helpers;
 
-public static class Util
+public static class DirectoryInfoHelper
 {
     public static DirectoryInfo GetProjectPath()
     {

@@ -105,7 +105,7 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
     {
         var area = FocusOnSegmentName.EnsureFirstCharacterToUpper();
         var resultName = ApiOperation.GetOperationName() + NameConstants.ContractResult;
-        var file = Util.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, NameConstants.ContractResults, resultName);
+        var file = DirectoryInfoHelper.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, NameConstants.ContractResults, resultName);
         ToFile(new FileInfo(file));
     }
 

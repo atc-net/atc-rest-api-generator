@@ -104,7 +104,7 @@ public class SyntaxGeneratorClientEndpointInterface : SyntaxGeneratorClientEndpo
     public void ToFile()
     {
         var area = FocusOnSegmentName.EnsureFirstCharacterToUpper();
-        var file = Util.GetCsFileNameForContract(ApiProjectOptions.PathForEndpoints, area, NameConstants.EndpointInterfaces, InterfaceTypeName);
+        var file = DirectoryInfoHelper.GetCsFileNameForContract(ApiProjectOptions.PathForEndpoints, area, NameConstants.EndpointInterfaces, InterfaceTypeName);
         ToFile(new FileInfo(file));
     }
 

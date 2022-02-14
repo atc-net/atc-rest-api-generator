@@ -98,18 +98,18 @@ public class SyntaxGeneratorContractModel : ISyntaxSchemaCodeGenerator
         if (IsForClient &&
             modelName.EndsWith(NameConstants.Request, StringComparison.Ordinal))
         {
-            var clientFile = Util.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, NameConstants.ClientRequestParameters, modelName);
+            var clientFile = DirectoryInfoHelper.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, NameConstants.ClientRequestParameters, modelName);
             ToFile(new FileInfo(clientFile));
             return;
         }
 
         var file = IsEnum
-            ? Util.GetCsFileNameForContractEnumTypes(ApiProjectOptions.PathForContracts, modelName)
+            ? DirectoryInfoHelper.GetCsFileNameForContractEnumTypes(ApiProjectOptions.PathForContracts, modelName)
             : IsSharedContract
-                ? Util.GetCsFileNameForContractShared(ApiProjectOptions.PathForContractsShared, modelName)
+                ? DirectoryInfoHelper.GetCsFileNameForContractShared(ApiProjectOptions.PathForContractsShared, modelName)
                 : UseOwnFolder
-                    ? Util.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, NameConstants.ContractModels, modelName)
-                    : Util.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, modelName);
+                    ? DirectoryInfoHelper.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, NameConstants.ContractModels, modelName)
+                    : DirectoryInfoHelper.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, modelName);
 
         ToFile(new FileInfo(file));
     }

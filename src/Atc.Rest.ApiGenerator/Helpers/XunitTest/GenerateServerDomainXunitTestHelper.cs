@@ -164,7 +164,7 @@ public static class GenerateServerDomainXunitTestHelper
         string area,
         SyntaxGeneratorHandler sgHandler)
     {
-        var csSrcFile = Util.GetCsFileNameForHandler(domainProjectOptions.PathForSrcHandlers!, area, sgHandler.HandlerTypeName);
+        var csSrcFile = DirectoryInfoHelper.GetCsFileNameForHandler(domainProjectOptions.PathForSrcHandlers!, area, sgHandler.HandlerTypeName);
         var csSrcCode = File.ReadAllText(csSrcFile);
         var tree = CSharpSyntaxTree.ParseText(csSrcCode);
         return tree.GetRoot();

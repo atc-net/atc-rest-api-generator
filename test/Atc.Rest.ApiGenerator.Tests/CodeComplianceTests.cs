@@ -48,7 +48,7 @@ public class CodeComplianceTests
         typeof(SyntaxGeneratorHandler),
         typeof(SyntaxGeneratorHandlers),
         typeof(ValidatePathsAndOperationsHelper),
-        typeof(Util),
+        typeof(DirectoryInfoHelper),
         typeof(GenerateXunitTestHelper),
         typeof(GenerateServerApiXunitTestEndpointHandlerStubHelper),
         typeof(GenerateServerApiXunitTestEndpointTestHelper),

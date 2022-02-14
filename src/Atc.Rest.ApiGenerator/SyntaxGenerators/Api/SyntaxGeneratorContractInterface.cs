@@ -99,7 +99,7 @@ public class SyntaxGeneratorContractInterface : ISyntaxOperationCodeGenerator
     {
         var area = FocusOnSegmentName.EnsureFirstCharacterToUpper();
         var interfaceName = "I" + ApiOperation.GetOperationName() + NameConstants.ContractHandler;
-        var file = Util.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, NameConstants.ContractInterfaces, interfaceName);
+        var file = DirectoryInfoHelper.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, NameConstants.ContractInterfaces, interfaceName);
         ToFile(new FileInfo(file));
     }
 
