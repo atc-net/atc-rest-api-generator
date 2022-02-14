@@ -110,7 +110,9 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
         var pathC = Path.Combine(pathB, "Generated");
         var fileName = $"{endpointMethodMetadata.MethodName}Tests.cs";
         var file = new FileInfo(Path.Combine(pathC, fileName));
-        TextFileHelper.Save(logger, file, sb.ToString());
+
+        var fileDisplayLocation = file.FullName.Replace(hostProjectOptions.PathForTestGenerate.FullName, "test: ", StringComparison.Ordinal);
+        TextFileHelper.Save(logger, file, fileDisplayLocation, sb.ToString());
     }
 
     private static List<string> GetUsingStatements(

@@ -83,7 +83,17 @@ public abstract class BaseProjectOptions
 
     public FileInfo ProjectSrcCsProj { get; }
 
+    public string ProjectSrcCsProjDisplayLocation
+        => ProjectSrcCsProj.FullName.Replace(PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
+
     public FileInfo? ProjectTestCsProj { get; }
+
+    public string ProjectTestCsProjDisplayLocation
+        => ProjectTestCsProj is null || PathForTestGenerate is null
+            ? ProjectTestCsProj is null
+                ? string.Empty
+                : ProjectTestCsProj.FullName
+            : ProjectTestCsProj.FullName.Replace(PathForTestGenerate.FullName, "test: ", StringComparison.Ordinal);
 
     public OpenApiDocument Document { get; }
 

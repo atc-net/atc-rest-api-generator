@@ -100,7 +100,7 @@ public class SyntaxGeneratorContractInterface : ISyntaxOperationCodeGenerator
         var area = FocusOnSegmentName.EnsureFirstCharacterToUpper();
         var interfaceName = "I" + ApiOperation.GetOperationName() + NameConstants.ContractHandler;
         var file = Util.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, NameConstants.ContractInterfaces, interfaceName);
-        TextFileHelper.Save(logger, file, ToCodeAsString());
+        ToFile(new FileInfo(file));
     }
 
     public void ToFile(
@@ -108,7 +108,8 @@ public class SyntaxGeneratorContractInterface : ISyntaxOperationCodeGenerator
     {
         ArgumentNullException.ThrowIfNull(file);
 
-        TextFileHelper.Save(logger, file, ToCodeAsString());
+        var fileDisplayLocation = file.FullName.Replace(ApiProjectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
+        TextFileHelper.Save(logger, file.FullName, fileDisplayLocation, ToCodeAsString());
     }
 
     public override string ToString()

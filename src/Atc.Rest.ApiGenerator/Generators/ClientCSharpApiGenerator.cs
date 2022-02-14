@@ -66,6 +66,7 @@ public class ClientCSharpApiGenerator
             SolutionAndProjectHelper.ScaffoldProjFile(
                 logger,
                 projectOptions.ProjectSrcCsProj,
+                projectOptions.ProjectSrcCsProjDisplayLocation,
                 createAsWeb: false,
                 createAsTestProject: false,
                 projectName: projectOptions.ProjectName,

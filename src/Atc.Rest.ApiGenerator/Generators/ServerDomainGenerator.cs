@@ -20,7 +20,7 @@ public class ServerDomainGenerator
 
     public bool Generate()
     {
-        logger.LogInformation($"{AppEmojisConstants.AreaGenerateCode} Working on server domain generation");
+        logger.LogInformation($"{AppEmojisConstants.AreaGenerateCode} Working on server domain generation ({projectOptions.ProjectName})");
 
         if (!projectOptions.SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles(logger))
         {
@@ -32,7 +32,7 @@ public class ServerDomainGenerator
 
         if (projectOptions.PathForTestGenerate is not null)
         {
-            logger.LogInformation($"{AppEmojisConstants.AreaGenerateTest} Working on server domain unit-test generation");
+            logger.LogInformation($"{AppEmojisConstants.AreaGenerateTest} Working on server domain unit-test generation ({projectOptions.ProjectName}.Tests)");
             ScaffoldTest();
             GenerateTestHandlers(projectOptions, sgHandlers);
         }
@@ -116,6 +116,7 @@ public class ServerDomainGenerator
             SolutionAndProjectHelper.ScaffoldProjFile(
                 logger,
                 projectOptions.ProjectSrcCsProj,
+                projectOptions.ProjectSrcCsProjDisplayLocation,
                 createAsWeb: false,
                 createAsTestProject: false,
                 projectOptions.ProjectName,
@@ -160,6 +161,7 @@ public class ServerDomainGenerator
             SolutionAndProjectHelper.ScaffoldProjFile(
                 logger,
                 projectOptions.ProjectTestCsProj,
+                projectOptions.ProjectTestCsProjDisplayLocation,
                 createAsWeb: false,
                 createAsTestProject: true,
                 $"{projectOptions.ProjectName}.Tests",
@@ -199,6 +201,7 @@ public class ServerDomainGenerator
             .EnsureEnvironmentNewLines();
 
         var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "DomainRegistration.cs"));
-        TextFileHelper.Save(logger, file, codeAsString);
+        var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
+        TextFileHelper.Save(logger, file, fileDisplayLocation, codeAsString);
     }
 }

@@ -9,6 +9,7 @@ public static class SolutionAndProjectHelper
     public static void ScaffoldProjFile(
         ILogger logger,
         FileInfo projectCsProjFile,
+        string fileDisplayLocation,
         bool createAsWeb,
         bool createAsTestProject,
         string projectName,
@@ -128,7 +129,7 @@ public static class SolutionAndProjectHelper
         }
 
         sb.AppendLine("</Project>");
-        TextFileHelper.Save(logger, projectCsProjFile, sb.ToString());
+        TextFileHelper.Save(logger, projectCsProjFile, fileDisplayLocation, sb.ToString());
     }
 
     public static void ScaffoldSlnFile(
@@ -234,8 +235,8 @@ public static class SolutionAndProjectHelper
             }
         }
 
-        TextFileHelper.Save(logger, slnFile, slnFileContent, false);
-        TextFileHelper.Save(logger, slnDotSettingsFile, slnDotSettingsFileContent, slnDotSettingsFileOverrideIfExist);
+        TextFileHelper.Save(logger, slnFile, $"root: {slnFile.Name}", slnFileContent, overrideIfExist: false);
+        TextFileHelper.Save(logger, slnDotSettingsFile, $"root: {slnDotSettingsFile.Name}", slnDotSettingsFileContent, slnDotSettingsFileOverrideIfExist);
     }
 
     private static bool TryGetGuidByProject(

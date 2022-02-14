@@ -230,7 +230,7 @@ public class SyntaxGeneratorContractParameter : ISyntaxOperationCodeGenerator
                 ? Util.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, NameConstants.ContractParameters, parameterName)
                 : Util.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, parameterName);
 
-        TextFileHelper.Save(logger, file, ToCodeAsString());
+        ToFile(new FileInfo(file));
     }
 
     public void ToFile(
@@ -238,7 +238,8 @@ public class SyntaxGeneratorContractParameter : ISyntaxOperationCodeGenerator
     {
         ArgumentNullException.ThrowIfNull(file);
 
-        TextFileHelper.Save(logger, file, ToCodeAsString());
+        var fileDisplayLocation = file.FullName.Replace(ApiProjectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
+        TextFileHelper.Save(logger, file.FullName, fileDisplayLocation, ToCodeAsString());
     }
 
     public override string ToString()

@@ -7,24 +7,28 @@ public static class TextFileHelper
     public static bool Save(
         ILogger logger,
         string file,
+        string fileDisplayLocation,
         string text,
         bool overrideIfExist = true)
     {
         ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(file);
+        ArgumentNullException.ThrowIfNull(fileDisplayLocation);
         ArgumentNullException.ThrowIfNull(text);
 
-        return Save(logger, new FileInfo(file), text, overrideIfExist);
+        return Save(logger, new FileInfo(file), fileDisplayLocation, text, overrideIfExist);
     }
 
     public static bool Save(
         ILogger logger,
         FileInfo fileInfo,
+        string fileDisplayLocation,
         string text,
         bool overrideIfExist = true)
     {
         ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(fileInfo);
+        ArgumentNullException.ThrowIfNull(fileDisplayLocation);
         ArgumentNullException.ThrowIfNull(text);
 
         if (fileInfo.Directory is not null &&
@@ -41,11 +45,13 @@ public static class TextFileHelper
             text = text.Remove(index);
         }
 
+        fileDisplayLocation = ReformatFileDisplayLocationIfNeeded(fileInfo, fileDisplayLocation);
+
         if (File.Exists(fileInfo.FullName))
         {
             if (!overrideIfExist)
             {
-                logger.LogDebug($"{EmojisConstants.FileNotUpdated}   {fileInfo.FullName}");
+                logger.LogDebug($"{EmojisConstants.FileNotUpdated}   {fileDisplayLocation} nothing to update");
                 return false;
             }
 
@@ -57,25 +63,50 @@ public static class TextFileHelper
                 var orgText = FileHelper.ReadAllText(fileInfo);
                 if (orgText == text)
                 {
-                    logger.LogDebug($"{EmojisConstants.FileNotUpdated}   {fileInfo.FullName}");
+                    logger.LogDebug($"{EmojisConstants.FileNotUpdated}   {fileDisplayLocation} nothing to update");
                     return false;
                 }
 
-                if (RemoveApiGeneratorVersionLine(orgText, true) == RemoveApiGeneratorVersionLine(text, true))
+                if (RemoveApiGeneratorVersionLine(orgText, removeNewLines: true) == RemoveApiGeneratorVersionLine(text, removeNewLines: true))
                 {
-                    logger.LogDebug($"{EmojisConstants.FileNotUpdated}   {fileInfo.FullName}");
+                    logger.LogDebug($"{EmojisConstants.FileNotUpdated}   {fileDisplayLocation} nothing to update");
                     return false;
                 }
             }
 
             FileHelper.WriteAllText(fileInfo, text);
-            logger.LogDebug($"{EmojisConstants.FileUpdated}   {fileInfo.FullName}");
+            logger.LogDebug($"{EmojisConstants.FileUpdated}   {fileDisplayLocation} updated");
             return true;
         }
 
         FileHelper.WriteAllText(fileInfo, text);
-        logger.LogDebug($"{EmojisConstants.FileCreated}   {fileInfo.FullName}");
+        logger.LogDebug($"{EmojisConstants.FileCreated}   {fileDisplayLocation} created");
         return true;
+    }
+
+    private static string ReformatFileDisplayLocationIfNeeded(
+        FileSystemInfo fileInfo,
+        string fileDisplayLocation)
+    {
+        if (string.IsNullOrEmpty(fileDisplayLocation))
+        {
+            fileDisplayLocation = fileInfo.FullName;
+        }
+
+        if (fileDisplayLocation.StartsWith("src: \\", StringComparison.Ordinal))
+        {
+            fileDisplayLocation = fileDisplayLocation.Replace("src: \\", "src:  ", StringComparison.Ordinal);
+        }
+        else if (fileDisplayLocation.StartsWith("test: \\", StringComparison.Ordinal))
+        {
+            fileDisplayLocation = fileDisplayLocation.Replace("test: \\", "test: ", StringComparison.Ordinal);
+        }
+        else if (fileDisplayLocation.StartsWith("root: \\", StringComparison.Ordinal))
+        {
+            fileDisplayLocation = fileDisplayLocation.Replace("root: \\", "root: ", StringComparison.Ordinal);
+        }
+
+        return fileDisplayLocation;
     }
 
     private static string RemoveApiGeneratorVersionLine(

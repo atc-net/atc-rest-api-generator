@@ -48,7 +48,9 @@ public static class GenerateServerDomainXunitTestHelper
 
         var pathGenerated = Path.Combine(Path.Combine(domainProjectOptions.PathForTestHandlers!.FullName, area), "Generated");
         var fileGenerated = new FileInfo(Path.Combine(pathGenerated, $"{sgHandler.HandlerTypeName}GeneratedTests.cs"));
-        TextFileHelper.Save(logger, fileGenerated, sb.ToString());
+
+        var fileDisplayLocation = fileGenerated.FullName.Replace(domainProjectOptions.PathForTestGenerate!.FullName, "test: ", StringComparison.Ordinal);
+        TextFileHelper.Save(logger, fileGenerated, fileDisplayLocation, sb.ToString());
     }
 
     public static void GenerateCustomTests(
@@ -84,7 +86,9 @@ public static class GenerateServerDomainXunitTestHelper
 
         var pathCustom = Path.Combine(domainProjectOptions.PathForTestHandlers!.FullName, area);
         var fileCustom = new FileInfo(Path.Combine(pathCustom, $"{sgHandler.HandlerTypeName}Tests.cs"));
-        TextFileHelper.Save(logger, fileCustom, sb.ToString(), false);
+
+        var fileDisplayLocation = fileCustom.FullName.Replace(domainProjectOptions.PathForTestGenerate!.FullName, "test: ", StringComparison.Ordinal);
+        TextFileHelper.Save(logger, fileCustom, fileDisplayLocation, sb.ToString(), overrideIfExist: false);
     }
 
     private static void AppendInstantiateConstructor(

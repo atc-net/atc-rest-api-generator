@@ -22,7 +22,7 @@ public class ServerApiGenerator
 
     public bool Generate()
     {
-        logger.LogInformation($"{AppEmojisConstants.AreaGenerateCode} Working on server api generation");
+        logger.LogInformation($"{AppEmojisConstants.AreaGenerateCode} Working on server api generation ({projectOptions.ProjectName})");
 
         var isVersionValid = ValidateVersioning();
         if (!isVersionValid)
@@ -130,6 +130,7 @@ public class ServerApiGenerator
             SolutionAndProjectHelper.ScaffoldProjFile(
                 logger,
                 projectOptions.ProjectSrcCsProj,
+                projectOptions.ProjectSrcCsProjDisplayLocation,
                 createAsWeb: false,
                 createAsTestProject: false,
                 projectOptions.ProjectName,
@@ -277,7 +278,8 @@ public class ServerApiGenerator
             .EnsureEnvironmentNewLines();
 
         var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "ApiRegistration.cs"));
-        TextFileHelper.Save(logger, file, codeAsString);
+        var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
+        TextFileHelper.Save(logger, file, fileDisplayLocation, codeAsString);
     }
 
     private void DeleteLegacyScaffoldBasicFileResultFactory()

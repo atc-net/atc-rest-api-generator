@@ -20,7 +20,7 @@ public class ServerHostGenerator
 
     public bool Generate()
     {
-        logger.LogInformation($"{AppEmojisConstants.AreaGenerateCode} Working on server host generation");
+        logger.LogInformation($"{AppEmojisConstants.AreaGenerateCode} Working on server host generation ({projectOptions.ProjectName})");
 
         if (!projectOptions.SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles(logger))
         {
@@ -31,7 +31,7 @@ public class ServerHostGenerator
 
         if (projectOptions.PathForTestGenerate is not null)
         {
-            logger.LogInformation($"{AppEmojisConstants.AreaGenerateTest} Working on server host unit-test generation");
+            logger.LogInformation($"{AppEmojisConstants.AreaGenerateTest} Working on server host unit-test generation ({projectOptions.ProjectName}.Tests)");
             ScaffoldTest();
             GenerateTestEndpoints();
         }
@@ -83,6 +83,7 @@ public class ServerHostGenerator
             SolutionAndProjectHelper.ScaffoldProjFile(
                 logger,
                 projectOptions.ProjectSrcCsProj,
+                projectOptions.ProjectSrcCsProjDisplayLocation,
                 createAsWeb: true,
                 createAsTestProject: false,
                 projectOptions.ProjectName,
@@ -127,11 +128,12 @@ public class ServerHostGenerator
 
         if (file.Exists)
         {
-            logger.LogDebug($"{EmojisConstants.FileNotUpdated}   {file.FullName}'");
+            logger.LogDebug($"{EmojisConstants.FileNotUpdated}   {file.FullName} nothing to update");
         }
         else
         {
-            TextFileHelper.Save(logger, file, json);
+            var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
+            TextFileHelper.Save(logger, file, fileDisplayLocation, json);
         }
     }
 
@@ -930,6 +932,7 @@ public class ServerHostGenerator
             SolutionAndProjectHelper.ScaffoldProjFile(
                 logger,
                 projectOptions.ProjectTestCsProj,
+                projectOptions.ProjectTestCsProjDisplayLocation,
                 createAsWeb: false,
                 createAsTestProject: true,
                 $"{projectOptions.ProjectName}.Tests",
@@ -1013,11 +1016,12 @@ public class ServerHostGenerator
         var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "Program.cs"));
         if (file.Exists)
         {
-            logger.LogDebug($"{EmojisConstants.FileNotUpdated}   {file.FullName}'");
+            logger.LogDebug($"{EmojisConstants.FileNotUpdated}   {file.FullName} nothing to update");
         }
         else
         {
-            TextFileHelper.Save(logger, file, codeAsString);
+            var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
+            TextFileHelper.Save(logger, file, fileDisplayLocation, codeAsString);
         }
     }
 
@@ -1069,11 +1073,12 @@ public class ServerHostGenerator
 
         if (file.Exists)
         {
-            logger.LogDebug($"{EmojisConstants.FileNotUpdated}   {file.FullName}'");
+            logger.LogDebug($"{EmojisConstants.FileNotUpdated}   {file.FullName} nothing to update");
         }
         else
         {
-            TextFileHelper.Save(logger, file, codeAsString);
+            var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
+            TextFileHelper.Save(logger, file, fileDisplayLocation, codeAsString);
         }
     }
 
@@ -1094,11 +1099,12 @@ public class ServerHostGenerator
         var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "web.config"));
         if (file.Exists)
         {
-            logger.LogDebug($"{EmojisConstants.FileNotUpdated}   {file.FullName}'");
+            logger.LogDebug($"{EmojisConstants.FileNotUpdated}   {file.FullName} nothing to update");
         }
         else
         {
-            TextFileHelper.Save(logger, file, sb.ToString());
+            var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
+            TextFileHelper.Save(logger, file, fileDisplayLocation, sb.ToString());
         }
     }
 
@@ -1112,10 +1118,11 @@ public class ServerHostGenerator
         var syntaxGenerator = new SyntaxGeneratorSwaggerDocOptions(fullNamespace, projectOptions.Document);
         var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "ConfigureSwaggerDocOptions.cs"));
 
-        var stringBuilder = new StringBuilder();
-        GenerateCodeHelper.AppendGeneratedCodeWarningComment(stringBuilder, projectOptions.ToolNameAndVersion);
-        stringBuilder.Append(syntaxGenerator.GenerateCode());
-        TextFileHelper.Save(logger, file, stringBuilder.ToString());
+        var sb = new StringBuilder();
+        GenerateCodeHelper.AppendGeneratedCodeWarningComment(sb, projectOptions.ToolNameAndVersion);
+        sb.Append(syntaxGenerator.GenerateCode());
+        var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
+        TextFileHelper.Save(logger, file, fileDisplayLocation, sb.ToString());
     }
 
     private void GenerateTestWebApiStartupFactory()
@@ -1172,7 +1179,8 @@ public class ServerHostGenerator
             .EnsureNewlineAfterMethod("partial void ModifyConfiguration(IConfigurationBuilder config);");
 
         var file = new FileInfo(Path.Combine(projectOptions.PathForTestGenerate!.FullName, "WebApiStartupFactory.cs"));
-        TextFileHelper.Save(logger, file, codeAsString);
+        var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForTestGenerate.FullName, "test: ", StringComparison.Ordinal);
+        TextFileHelper.Save(logger, file, fileDisplayLocation, codeAsString);
     }
 
     private void GenerateTestWebApiControllerBaseTest()
@@ -1233,6 +1241,7 @@ public class ServerHostGenerator
             .EnsureEnvironmentNewLines();
 
         var file = new FileInfo(Path.Combine(projectOptions.PathForTestGenerate!.FullName, "WebApiControllerBaseTest.cs"));
-        TextFileHelper.Save(logger, file, codeAsString);
+        var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForTestGenerate.FullName, "test: ", StringComparison.Ordinal);
+        TextFileHelper.Save(logger, file, fileDisplayLocation, codeAsString);
     }
 }

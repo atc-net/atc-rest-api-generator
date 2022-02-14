@@ -104,7 +104,7 @@ public class SyntaxGeneratorHandler
     {
         var area = FocusOnSegmentName.EnsureFirstCharacterToUpper();
         var file = Util.GetCsFileNameForHandler(DomainProjectOptions.PathForSrcHandlers!, area, HandlerTypeName);
-        TextFileHelper.Save(logger, file, ToCodeAsString(), false);
+        ToFile(new FileInfo(file));
     }
 
     public void ToFile(
@@ -112,7 +112,9 @@ public class SyntaxGeneratorHandler
     {
         ArgumentNullException.ThrowIfNull(file);
 
-        TextFileHelper.Save(logger, file, ToCodeAsString());
+        var fileDisplayLocation = file.FullName.Replace(DomainProjectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
+        TextFileHelper.Save(logger, file.FullName, fileDisplayLocation, ToCodeAsString());
+
     }
 
     public override string ToString()

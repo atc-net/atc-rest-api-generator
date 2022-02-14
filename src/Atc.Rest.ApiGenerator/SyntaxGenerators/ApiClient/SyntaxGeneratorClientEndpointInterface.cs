@@ -105,7 +105,7 @@ public class SyntaxGeneratorClientEndpointInterface : SyntaxGeneratorClientEndpo
     {
         var area = FocusOnSegmentName.EnsureFirstCharacterToUpper();
         var file = Util.GetCsFileNameForContract(ApiProjectOptions.PathForEndpoints, area, NameConstants.EndpointInterfaces, InterfaceTypeName);
-        TextFileHelper.Save(Logger, file, ToCodeAsString());
+        ToFile(new FileInfo(file));
     }
 
     public void ToFile(
@@ -113,7 +113,9 @@ public class SyntaxGeneratorClientEndpointInterface : SyntaxGeneratorClientEndpo
     {
         ArgumentNullException.ThrowIfNull(file);
 
-        TextFileHelper.Save(Logger, file, ToCodeAsString());
+        var fileDisplayLocation = file.FullName.Replace(ApiProjectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
+        TextFileHelper.Save(Logger, file.FullName, fileDisplayLocation, ToCodeAsString());
+
     }
 
     public override string ToString()

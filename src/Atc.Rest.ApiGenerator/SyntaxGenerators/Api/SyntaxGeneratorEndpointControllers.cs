@@ -130,7 +130,7 @@ public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointContro
     {
         var controllerName = FocusOnSegmentName.EnsureFirstCharacterToUpper() + "Controller";
         var file = Util.GetCsFileNameForEndpoints(ApiProjectOptions.PathForEndpoints, controllerName);
-        TextFileHelper.Save(logger, file, ToCodeAsString());
+        ToFile(new FileInfo(file));
     }
 
     public void ToFile(
@@ -138,7 +138,8 @@ public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointContro
     {
         ArgumentNullException.ThrowIfNull(file);
 
-        TextFileHelper.Save(logger, file, ToCodeAsString());
+        var fileDisplayLocation = file.FullName.Replace(ApiProjectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
+        TextFileHelper.Save(logger, file.FullName, fileDisplayLocation, ToCodeAsString());
     }
 
     public List<EndpointMethodMetadata> GetMetadataForMethods()

@@ -220,7 +220,9 @@ public static class GenerateServerApiXunitTestEndpointHandlerStubHelper
         var pathC = Path.Combine(pathB, "Generated");
         var fileName = $"{endpointMethodMetadata.ContractInterfaceHandlerTypeName.Substring(1)}Stub.cs";
         var file = new FileInfo(Path.Combine(pathC, fileName));
-        TextFileHelper.Save(logger, file, sb.ToString());
+
+        var fileDisplayLocation = file.FullName.Replace(hostProjectOptions.PathForTestGenerate.FullName, "test: ", StringComparison.Ordinal);
+        TextFileHelper.Save(logger, file, fileDisplayLocation, sb.ToString());
     }
 
     private static List<string> GetUsingStatements(

@@ -99,7 +99,7 @@ public class SyntaxGeneratorContractModel : ISyntaxSchemaCodeGenerator
             modelName.EndsWith(NameConstants.Request, StringComparison.Ordinal))
         {
             var clientFile = Util.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, NameConstants.ClientRequestParameters, modelName);
-            TextFileHelper.Save(logger, clientFile, ToCodeAsString());
+            ToFile(new FileInfo(clientFile));
             return;
         }
 
@@ -111,7 +111,7 @@ public class SyntaxGeneratorContractModel : ISyntaxSchemaCodeGenerator
                     ? Util.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, NameConstants.ContractModels, modelName)
                     : Util.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, modelName);
 
-        TextFileHelper.Save(logger, file, ToCodeAsString());
+        ToFile(new FileInfo(file));
     }
 
     public void ToFile(
@@ -119,7 +119,8 @@ public class SyntaxGeneratorContractModel : ISyntaxSchemaCodeGenerator
     {
         ArgumentNullException.ThrowIfNull(file);
 
-        TextFileHelper.Save(logger, file, ToCodeAsString());
+        var fileDisplayLocation = file.FullName.Replace(ApiProjectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
+        TextFileHelper.Save(logger, file.FullName, fileDisplayLocation, ToCodeAsString());
     }
 
     public override string ToString()

@@ -57,6 +57,9 @@ public class ClientCSharpApiProjectOptions
 
     public FileInfo ProjectSrcCsProj { get; }
 
+    public string ProjectSrcCsProjDisplayLocation
+        => ProjectSrcCsProj.FullName.Replace(PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
+
     public bool ForClient { get; }
 
     public string? ClientFolderName { get; }
