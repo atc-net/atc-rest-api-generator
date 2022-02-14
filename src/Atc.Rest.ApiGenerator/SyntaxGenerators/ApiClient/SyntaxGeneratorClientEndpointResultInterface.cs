@@ -122,7 +122,7 @@ public class SyntaxGeneratorClientEndpointResultInterface : SyntaxGeneratorClien
             .Select(x => CreatePropertyForIsStatusCode(x.Item1))
             .ToArray();
 
-    private MemberDeclarationSyntax CreatePropertyForIsStatusCode(
+    private static MemberDeclarationSyntax CreatePropertyForIsStatusCode(
         HttpStatusCode statusCode)
         => SyntaxFactory.PropertyDeclaration(
                 SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.BoolKeyword)),
@@ -152,7 +152,7 @@ public class SyntaxGeneratorClientEndpointResultInterface : SyntaxGeneratorClien
             .ToArray();
     }
 
-    private MemberDeclarationSyntax CreatePropertyForStatusCodeContent(
+    private static MemberDeclarationSyntax CreatePropertyForStatusCodeContent(
         HttpStatusCode statusCode,
         string resultTypeName)
         => SyntaxFactory.PropertyDeclaration(

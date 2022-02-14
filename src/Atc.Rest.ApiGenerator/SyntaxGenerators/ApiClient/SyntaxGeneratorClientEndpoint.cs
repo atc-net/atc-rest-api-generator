@@ -569,7 +569,7 @@ public class SyntaxGeneratorClientEndpoint : SyntaxGeneratorClientEndpointBase, 
                                         SyntaxFactory.IdentifierName(nameof(CancellationToken).EnsureFirstCharacterToLower())),
                                 })))));
 
-    private ArgumentListSyntax CreateOneStringArg(
+    private static ArgumentListSyntax CreateOneStringArg(
         string value)
         => SyntaxFactory.ArgumentList(
             SyntaxFactory.SingletonSeparatedList(

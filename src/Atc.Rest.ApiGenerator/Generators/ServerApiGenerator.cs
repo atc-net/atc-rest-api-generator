@@ -246,7 +246,7 @@ public class ServerApiGenerator
         }
     }
 
-    private void PerformCleanup()
+    private static void PerformCleanup()
     {
         // TODO: Implement
     }

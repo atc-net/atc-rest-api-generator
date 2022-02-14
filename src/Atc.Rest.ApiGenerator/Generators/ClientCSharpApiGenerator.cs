@@ -157,7 +157,7 @@ public class ClientCSharpApiGenerator
         }
     }
 
-    private void PerformCleanup()
+    private static void PerformCleanup()
     {
         // TODO: Implement
     }

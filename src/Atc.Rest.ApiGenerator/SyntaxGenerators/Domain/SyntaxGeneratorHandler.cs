@@ -218,14 +218,14 @@ public class SyntaxGeneratorHandler
                             SyntaxFactory.TriviaList())));
     }
 
-    private SyntaxTriviaList CreatePragmaWarningCodeStyle1998(
+    private static SyntaxTriviaList CreatePragmaWarningCodeStyle1998(
         bool disable)
         => CreatePragmaWarningCodeStyle(
             disable,
             1998,
             "// Async method lacks 'await' operators and will run synchronously");
 
-    private SyntaxTriviaList CreatePragmaWarningCodeStyle(
+    private static SyntaxTriviaList CreatePragmaWarningCodeStyle(
         bool disable,
         int checkId,
         string comment)

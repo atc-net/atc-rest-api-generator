@@ -13,7 +13,7 @@ public abstract class GeneratorTestBase
         VerifySettings verifySettings)
         => Verify(generatedCode, verifySettings);
 
-    protected VerifySettings CreateVerifySettings(
+    protected static VerifySettings CreateVerifySettings(
         GeneratorTestInput yamlFile,
         ApiProjectOptions apiOptions)
     {
@@ -27,7 +27,7 @@ public abstract class GeneratorTestBase
         return settings;
     }
 
-    protected async Task<ApiProjectOptions> CreateApiProjectAsync(
+    protected static async Task<ApiProjectOptions> CreateApiProjectAsync(
         GeneratorTestInput testInput)
     {
         ArgumentNullException.ThrowIfNull(testInput);
@@ -47,7 +47,7 @@ public abstract class GeneratorTestBase
             usingCodingRules: false);
     }
 
-    private OpenApiDocument GenerateApiDocument(
+    public static OpenApiDocument GenerateApiDocument(
         string spec)
     {
         var memoryStream = new MemoryStream();

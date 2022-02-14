@@ -527,7 +527,6 @@ dotnet_diagnostic.CA1002.severity = none			# 61 occurrences - Do not expose gene
 dotnet_diagnostic.CA1031.severity = none			# 5 occurrences - Do not catch general exception types - https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1031
 
 dotnet_diagnostic.CA1305.severity = none			# 39 occurrences - Specify IFormatProvider - https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1305
-dotnet_diagnostic.CA1822.severity = none			# 6 occurrences - Mark members as static - https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1822
 
 # Microsoft.CompilerErrors.Undocumented
 dotnet_diagnostic.CS8618.severity = none			# 5 occurrences - Non-nullable field is uninitialized. Consider declaring as nullable.

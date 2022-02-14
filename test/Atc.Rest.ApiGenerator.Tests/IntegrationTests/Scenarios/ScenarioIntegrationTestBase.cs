@@ -2,7 +2,7 @@ namespace Atc.Rest.ApiGenerator.Tests.IntegrationTests.Scenarios;
 
 public class ScenarioIntegrationTestBase : IntegrationTestCliBase
 {
-    public IEnumerable<DirectoryInfo> CollectScenarios()
+    public static IEnumerable<DirectoryInfo> CollectScenarios()
     {
         var testAssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
         var baseDir = AppDomain.CurrentDomain.BaseDirectory;
@@ -13,13 +13,13 @@ public class ScenarioIntegrationTestBase : IntegrationTestCliBase
     }
 
     [SuppressMessage("Security", "MA0009:Add regex evaluation timeout", Justification = "OK. - test class")]
-    public async Task<string> ReadGeneratedFile(string filePath)
+    public static async Task<string> ReadGeneratedFile(string filePath)
     {
         var content = await File.ReadAllTextAsync(filePath);
         return Regex.Replace(content, @"(ApiGenerator.*?)(\d+\.\d+\.\d+\.\d+)", m => $"{m.Groups[1]}x.x.x.x");
     }
 
-    public string GetYamlSpecificationPath(string scenarioPath)
+    public static string GetYamlSpecificationPath(string scenarioPath)
     {
         var files = Directory.GetFiles(scenarioPath, "*.yaml");
         return files.Length switch
