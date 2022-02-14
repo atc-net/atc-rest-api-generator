@@ -36,7 +36,7 @@ public class SyntaxGeneratorContractModels : ISyntaxGeneratorContractModels
 
         var schemaKeys = apiOperationSchemaMaps
             .Select(x => x.SchemaKey)
-            .Distinct()
+            .Distinct(StringComparer.Ordinal)
             .OrderBy(x => x)
             .ToList();
 

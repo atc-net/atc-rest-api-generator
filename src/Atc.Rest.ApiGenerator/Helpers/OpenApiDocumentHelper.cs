@@ -125,7 +125,7 @@ public static class OpenApiDocumentHelper
         foreach (var name in openApiDocument.Paths.Keys
                      .Select(x => x.Split('/', StringSplitOptions.RemoveEmptyEntries))
                      .Where(sa => sa.Length != 0)
-                     .Select(sa => sa[0].ToLower(CultureInfo.CurrentCulture)).Where(name => !names.Contains(name)))
+                     .Select(sa => sa[0].ToLower(CultureInfo.CurrentCulture)).Where(name => !names.Contains(name, StringComparer.Ordinal)))
         {
             names.Add(name);
         }

@@ -73,7 +73,7 @@ public static class ProjectApiFactory
         list.Add("System.CodeDom.Compiler");
 
         if (apiSchema.IsTypeArray() ||
-            schemasToCheck.HasDataTypeFromSystemCollectionGenericNamespace(new Dictionary<string, OpenApiSchema>()))
+            schemasToCheck.HasDataTypeFromSystemCollectionGenericNamespace(new Dictionary<string, OpenApiSchema>(StringComparer.Ordinal)))
         {
             list.Add("System.Collections.Generic");
         }
@@ -124,7 +124,7 @@ public static class ProjectApiFactory
             }
 
             if (list.All(x => x != "System.Collections.Generic") &&
-                parameters.Any(x => x.Schema.IsTypeArray() || x.Schema.HasDataTypeFromSystemCollectionGenericNamespace(new Dictionary<string, OpenApiSchema>())))
+                parameters.Any(x => x.Schema.IsTypeArray() || x.Schema.HasDataTypeFromSystemCollectionGenericNamespace(new Dictionary<string, OpenApiSchema>(StringComparer.Ordinal))))
             {
                 list.Add("System.Collections.Generic");
             }
@@ -153,7 +153,7 @@ public static class ProjectApiFactory
             }
 
             if (list.All(x => x != "System.Collections.Generic") &&
-                (contentSchema.IsTypeArray() || contentSchema.HasDataTypeFromSystemCollectionGenericNamespace(new Dictionary<string, OpenApiSchema>())))
+                (contentSchema.IsTypeArray() || contentSchema.HasDataTypeFromSystemCollectionGenericNamespace(new Dictionary<string, OpenApiSchema>(StringComparer.Ordinal))))
             {
                 list.Add("System.Collections.Generic");
             }

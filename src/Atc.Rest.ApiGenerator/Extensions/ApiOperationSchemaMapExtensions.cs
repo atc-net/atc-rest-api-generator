@@ -11,7 +11,7 @@ internal static class ApiOperationSchemaMapExtensions
         var segmentNames = new List<string>();
         foreach (var s in maps
                      .Select(map => map.SegmentName)
-                     .Where(s => !segmentNames.Contains(s)))
+                     .Where(s => !segmentNames.Contains(s, StringComparer.Ordinal)))
         {
             segmentNames.Add(s);
         }

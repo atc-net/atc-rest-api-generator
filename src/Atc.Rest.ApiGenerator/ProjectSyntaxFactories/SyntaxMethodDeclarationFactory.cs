@@ -102,7 +102,7 @@ internal static class SyntaxMethodDeclarationFactory
         IList<OpenApiParameter>? apiParameters,
         OpenApiRequestBody? apiRequestBody)
     {
-        var dictionary = new Dictionary<string, OpenApiSchema>();
+        var dictionary = new Dictionary<string, OpenApiSchema>(StringComparer.Ordinal);
         if (globalPathParameters is not null)
         {
             foreach (var pathParameter in globalPathParameters)

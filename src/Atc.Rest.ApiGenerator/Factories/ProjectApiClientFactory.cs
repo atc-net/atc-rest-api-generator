@@ -36,7 +36,7 @@ public static class ProjectApiClientFactory
             ? $"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}"
             : $"{apiProjectOptions.ProjectName}.{apiProjectOptions.ClientFolderName}.{NameConstants.Contracts}";
 
-        if (!list.Contains(s))
+        if (!list.Contains(s, StringComparer.Ordinal))
         {
             list.Add(s);
         }
@@ -88,7 +88,7 @@ public static class ProjectApiClientFactory
             ? $"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}"
             : $"{apiProjectOptions.ProjectName}.{apiProjectOptions.ClientFolderName}.{NameConstants.Contracts}";
 
-        if (!list.Contains(s))
+        if (!list.Contains(s, StringComparer.Ordinal))
         {
             list.Add(s);
         }
@@ -130,7 +130,7 @@ public static class ProjectApiClientFactory
             ? $"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}"
             : $"{apiProjectOptions.ProjectName}.{apiProjectOptions.ClientFolderName}.{NameConstants.Contracts}";
 
-        if (!list.Contains(s))
+        if (!list.Contains(s, StringComparer.Ordinal))
         {
             list.Add(s);
         }
@@ -174,7 +174,7 @@ public static class ProjectApiClientFactory
             ? $"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}"
             : $"{apiProjectOptions.ProjectName}.{apiProjectOptions.ClientFolderName}.{NameConstants.Contracts}";
 
-        if (!list.Contains(s))
+        if (!list.Contains(s, StringComparer.Ordinal))
         {
             list.Add(s);
         }

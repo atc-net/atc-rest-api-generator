@@ -61,7 +61,7 @@ public static class ValidatePathsAndOperationsHelper
         var allOperationsParametersFromPath = GetAllOperationsParametersFromPath(path.Value.Operations);
         var distinctOperations = allOperationsParametersFromPath
             .Select(x => x.Item1)
-            .Distinct()
+            .Distinct(StringComparer.Ordinal)
             .ToList();
 
         foreach (var parameterName in parameterNamesToCheckAgainst)
