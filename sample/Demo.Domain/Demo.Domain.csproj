@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -12,4 +12,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Demo.Api.Generated\Demo.Api.Generated.csproj" />
   </ItemGroup>
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <LangVersion>10.0</LangVersion>
+  </PropertyGroup>
 </Project>

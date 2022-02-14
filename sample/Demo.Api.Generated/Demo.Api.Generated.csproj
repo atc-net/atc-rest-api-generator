@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -18,4 +18,8 @@
     <PackageReference Include="Atc.Rest" Version="2.0.55" />
     <PackageReference Include="Atc.Rest.Extended" Version="2.0.55" />
   </ItemGroup>
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <LangVersion>10.0</LangVersion>
+  </PropertyGroup>
 </Project>
