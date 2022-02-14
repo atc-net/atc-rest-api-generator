@@ -115,7 +115,6 @@ public class SyntaxGeneratorClientEndpointInterface : SyntaxGeneratorClientEndpo
 
         var fileDisplayLocation = file.FullName.Replace(ApiProjectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
         TextFileHelper.Save(Logger, file.FullName, fileDisplayLocation, ToCodeAsString());
-
     }
 
     public override string ToString()

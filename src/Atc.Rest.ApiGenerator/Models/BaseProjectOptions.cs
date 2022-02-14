@@ -9,7 +9,7 @@ public abstract class BaseProjectOptions
         FileInfo openApiDocumentFile,
         string projectPrefixName,
         string? projectSuffixName,
-        ApiOptions.ApiOptions apiOptions,
+        ApiOptions apiOptions,
         bool usingCodingRules,
         bool forClient = false,
         string? clientFolderName = null)
@@ -75,7 +75,7 @@ public abstract class BaseProjectOptions
 
     public string ToolNameAndVersion => $"{ToolName} {ToolVersion}";
 
-    public ApiOptions.ApiOptions ApiOptions { get; }
+    public ApiOptions ApiOptions { get; }
 
     public DirectoryInfo PathForSrcGenerate { get; }
 

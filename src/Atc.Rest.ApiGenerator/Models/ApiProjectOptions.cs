@@ -9,7 +9,7 @@ public class ApiProjectOptions : BaseProjectOptions
         FileInfo openApiDocumentFile,
         string projectPrefixName,
         string projectSuffixName,
-        ApiOptions.ApiOptions apiOptions,
+        ApiOptions apiOptions,
         bool usingCodingRules,
         bool forClient = false,
         string? clientFolderName = null)

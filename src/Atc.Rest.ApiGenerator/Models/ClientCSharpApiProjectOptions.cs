@@ -10,7 +10,7 @@ public class ClientCSharpApiProjectOptions
         string projectPrefixName,
         string projectSuffixName,
         bool excludeEndpointGeneration,
-        ApiOptions.ApiOptions apiOptions,
+        ApiOptions apiOptions,
         bool usingCodingRules)
     {
         ArgumentNullException.ThrowIfNull(projectSrcGeneratePath);
@@ -51,7 +51,7 @@ public class ClientCSharpApiProjectOptions
 
     public string ToolNameAndVersion => $"{ToolName} {ToolVersion}";
 
-    public ApiOptions.ApiOptions ApiOptions { get; }
+    public ApiOptions ApiOptions { get; }
 
     public DirectoryInfo PathForSrcGenerate { get; }
 

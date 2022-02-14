@@ -10,7 +10,7 @@ public class DomainProjectOptions : BaseProjectOptions
         OpenApiDocument openApiDocument,
         FileInfo openApiDocumentFile,
         string projectPrefixName,
-        ApiOptions.ApiOptions apiOptions,
+        ApiOptions apiOptions,
         bool useCodingRules,
         DirectoryInfo apiProjectSrcPath)
         : base(

@@ -1,6 +1,6 @@
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedAutoPropertyAccessor.Global
-namespace Atc.Rest.ApiGenerator.Models.ApiOptions;
+namespace Atc.Rest.ApiGenerator.Models.OptionsFile;
 
 public class ApiOptionsGeneratorResponse
 {

@@ -11,7 +11,7 @@ public class HostProjectOptions : BaseProjectOptions
         OpenApiDocument openApiDocument,
         FileInfo openApiDocumentFile,
         string projectPrefixName,
-        ApiOptions.ApiOptions apiOptions,
+        ApiOptions apiOptions,
         bool usingCodingRules,
         DirectoryInfo apiProjectSrcPath,
         DirectoryInfo domainProjectSrcPath)

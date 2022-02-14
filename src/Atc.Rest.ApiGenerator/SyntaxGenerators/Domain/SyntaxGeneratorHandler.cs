@@ -114,7 +114,6 @@ public class SyntaxGeneratorHandler
 
         var fileDisplayLocation = file.FullName.Replace(DomainProjectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
         TextFileHelper.Save(logger, file.FullName, fileDisplayLocation, ToCodeAsString());
-
     }
 
     public override string ToString()
