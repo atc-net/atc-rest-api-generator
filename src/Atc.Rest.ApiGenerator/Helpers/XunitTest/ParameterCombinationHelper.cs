@@ -53,7 +53,8 @@ public static class ParameterCombinationHelper
             var localParameters = item
                 .Select(name => parameters.Find(x => x.Name.Equals(name, StringComparison.Ordinal)))
                 .ToList();
-            list.Add(localParameters);
+
+            list.Add(localParameters!);
         }
 
         return list;

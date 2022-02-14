@@ -836,7 +836,10 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
             if (fromRoute is null)
             {
                 fromRoute = allRouteParameters.Find(x => x.Name.Equals(pn, StringComparison.OrdinalIgnoreCase));
-                sa[i] = PropertyValueGenerator(fromRoute, componentsSchemas, useForBadRequest: false, customValue: null);
+                if (fromRoute is not null)
+                {
+                    sa[i] = PropertyValueGenerator(fromRoute, componentsSchemas, useForBadRequest: false, customValue: null);
+                }
             }
             else
             {

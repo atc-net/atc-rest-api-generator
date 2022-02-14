@@ -145,8 +145,9 @@ public static class OpenApiDocumentSchemaModelNameHelper
         var exportedTypes = new List<Type>();
         var assemblies = AppDomain.CurrentDomain
             .GetAssemblies()
-            .Where(x => x.FullName.StartsWith("System", StringComparison.Ordinal) ||
-                        x.FullName.StartsWith("Microsoft", StringComparison.Ordinal));
+            .Where(x => x.FullName is not null &&
+                        (x.FullName.StartsWith("System", StringComparison.Ordinal) ||
+                        x.FullName.StartsWith("Microsoft", StringComparison.Ordinal)));
 
         foreach (var assembly in assemblies)
         {

@@ -23,7 +23,7 @@ public static class LogItemHelper
                 fieldValue = o.ToString();
             }
 
-            list.Add(new Tuple<string, string>(fieldInfo.Name, fieldValue));
+            list.Add(new Tuple<string, string>(fieldInfo.Name, fieldValue!));
         }
 
         var tuple = list.FirstOrDefault(x => x.Item2 == ruleName);

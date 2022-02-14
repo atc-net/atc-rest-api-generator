@@ -340,7 +340,7 @@ public class ServerHostGenerator
                         SyntaxFactory.Argument(SyntaxFactory.IdentifierName("Configuration")),
                     }));
 
-            bodyBlock= SyntaxFactory.Block(
+            bodyBlock = SyntaxFactory.Block(
                 SyntaxFactory.ExpressionStatement(
                     SyntaxFactory.InvocationExpression(
                         SyntaxFactory.MemberAccessExpression(

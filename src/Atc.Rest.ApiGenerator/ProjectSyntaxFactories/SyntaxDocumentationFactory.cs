@@ -107,7 +107,7 @@ internal static class SyntaxDocumentationFactory
             return SyntaxFactory.TriviaList(new List<SyntaxTrivia>
             {
                 CreateComment("<summary>"),
-                CreateComment($"{(int) httpStatusCode} - {httpStatusCode.ToNormalizedString()} response."),
+                CreateComment($"{(int)httpStatusCode} - {httpStatusCode.ToNormalizedString()} response."),
                 CreateComment("</summary>"),
             });
         }
