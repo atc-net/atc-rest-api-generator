@@ -6,6 +6,7 @@
 
 ## [Atc.Rest.ApiGenerator](Atc.Rest.ApiGenerator.md)
 
+- [AppEmojisConstants](Atc.Rest.ApiGenerator.md#appemojisconstants)
 - [AtcRestApiGeneratorAssemblyTypeInitializer](Atc.Rest.ApiGenerator.md#atcrestapigeneratorassemblytypeinitializer)
 - [Util](Atc.Rest.ApiGenerator.md#util)
 - [ValidationRuleNameConstants](Atc.Rest.ApiGenerator.md#validationrulenameconstants)

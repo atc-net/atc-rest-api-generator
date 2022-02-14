@@ -17,7 +17,7 @@
 
 #### CollectMissingContractModelFromOperationSchemaMappings
 >```csharp
->void CollectMissingContractModelFromOperationSchemaMappings(ApiProjectOptions projectOptions, List<ApiOperationSchemaMap> operationSchemaMappings, List<SyntaxGeneratorContractModel> sgContractModels)
+>void CollectMissingContractModelFromOperationSchemaMappings(ILogger logger, ApiProjectOptions projectOptions, List<ApiOperationSchemaMap> operationSchemaMappings, List<SyntaxGeneratorContractModel> sgContractModels)
 >```
 
 <br />
@@ -42,7 +42,7 @@
 
 #### Generate
 >```csharp
->IEnumerable<LogKeyValueItem> Generate(string outputSlnPath, DirectoryInfo outputSrcPath, DirectoryInfo outputTestPath)
+>bool Generate(ILogger logger, string outputSlnPath, DirectoryInfo outputSrcPath, DirectoryInfo outputTestPath)
 >```
 
 <br />
@@ -57,23 +57,23 @@
 
 #### GenerateServerApi
 >```csharp
->List<LogKeyValueItem> GenerateServerApi(string projectPrefixName, DirectoryInfo outputPath, DirectoryInfo outputTestPath, Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument, ApiOptions apiOptions)
+>bool GenerateServerApi(ILogger logger, string projectPrefixName, DirectoryInfo outputPath, DirectoryInfo outputTestPath, Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument, ApiOptions apiOptions, bool useCodingRules)
 >```
 #### GenerateServerCSharpClient
 >```csharp
->List<LogKeyValueItem> GenerateServerCSharpClient(string projectPrefixName, string clientFolder, DirectoryInfo outputPath, Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument, bool excludeEndpointGeneration, ApiOptions apiOptions)
+>bool GenerateServerCSharpClient(ILogger logger, string projectPrefixName, string clientFolder, DirectoryInfo outputPath, Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument, bool excludeEndpointGeneration, ApiOptions apiOptions, bool useCodingRules)
 >```
 #### GenerateServerDomain
 >```csharp
->List<LogKeyValueItem> GenerateServerDomain(string projectPrefixName, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath, Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument, ApiOptions apiOptions, DirectoryInfo apiPath)
+>bool GenerateServerDomain(ILogger logger, string projectPrefixName, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath, Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument, ApiOptions apiOptions, bool useCodingRules, DirectoryInfo apiPath)
 >```
 #### GenerateServerHost
 >```csharp
->List<LogKeyValueItem> GenerateServerHost(string projectPrefixName, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath, Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument, ApiOptions apiOptions, DirectoryInfo apiPath, DirectoryInfo domainPath)
+>bool GenerateServerHost(ILogger logger, string projectPrefixName, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath, Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument, ApiOptions apiOptions, bool usingCodingRules, DirectoryInfo apiPath, DirectoryInfo domainPath)
 >```
 #### GenerateServerSln
 >```csharp
->List<LogKeyValueItem> GenerateServerSln(string projectPrefixName, string outputSlnPath, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath)
+>bool GenerateServerSln(ILogger logger, string projectPrefixName, string outputSlnPath, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath)
 >```
 #### GetAtcToolVersion
 >```csharp
@@ -185,7 +185,7 @@
 >```
 #### Validate
 >```csharp
->List<LogKeyValueItem> Validate(Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument, ApiOptionsValidation validationOptions)
+>bool Validate(ILogger logger, Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument, ApiOptionsValidation validationOptions)
 >```
 
 <br />
@@ -239,7 +239,7 @@
 
 #### ValidateDocument
 >```csharp
->List<LogKeyValueItem> ValidateDocument(OpenApiDocument apiDocument, ApiOptionsValidation validationOptions)
+>bool ValidateDocument(ILogger logger, OpenApiDocument apiDocument, ApiOptionsValidation validationOptions)
 >```
 
 <br />
@@ -285,11 +285,11 @@
 >```
 #### ScaffoldProjFile
 >```csharp
->LogKeyValueItem ScaffoldProjFile(FileInfo projectCsProjFile, bool createAsWeb, bool createAsTestProject, string projectName, string targetFramework, bool useNullableReferenceTypes, List<string> frameworkReferences, List<Tuple<string, string, string>> packageReferences, List<FileInfo> projectReferences, bool includeApiSpecification)
+>void ScaffoldProjFile(ILogger logger, FileInfo projectCsProjFile, bool createAsWeb, bool createAsTestProject, string projectName, string targetFramework, List<string> frameworkReferences, List<Tuple<string, string, string>> packageReferences, List<FileInfo> projectReferences, bool includeApiSpecification, bool usingCodingRules)
 >```
 #### ScaffoldSlnFile
 >```csharp
->List<LogKeyValueItem> ScaffoldSlnFile(FileInfo slnFile, string projectName, DirectoryInfo apiPath, DirectoryInfo domainPath, DirectoryInfo hostPath, DirectoryInfo domainTestPath = null, DirectoryInfo hostTestPath = null)
+>void ScaffoldSlnFile(ILogger logger, FileInfo slnFile, string projectName, DirectoryInfo apiPath, DirectoryInfo domainPath, DirectoryInfo hostPath, DirectoryInfo domainTestPath = null, DirectoryInfo hostTestPath = null)
 >```
 #### SetNullableValueForProject
 >```csharp
@@ -308,11 +308,11 @@
 
 #### Save
 >```csharp
->LogKeyValueItem Save(string file, string text, bool overrideIfExist = True)
+>bool Save(ILogger logger, string file, string text, bool overrideIfExist = True)
 >```
 #### Save
 >```csharp
->LogKeyValueItem Save(FileInfo fileInfo, string text, bool overrideIfExist = True)
+>bool Save(ILogger logger, FileInfo fileInfo, string text, bool overrideIfExist = True)
 >```
 
 <br />

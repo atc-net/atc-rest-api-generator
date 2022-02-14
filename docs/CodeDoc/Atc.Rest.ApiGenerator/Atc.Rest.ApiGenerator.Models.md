@@ -155,6 +155,10 @@
 >```csharp
 >UseNullableReferenceTypes
 >```
+#### UsingCodingRules
+>```csharp
+>UsingCodingRules
+>```
 
 <br />
 
@@ -222,6 +226,10 @@
 >```csharp
 >UseNullableReferenceTypes
 >```
+#### UsingCodingRules
+>```csharp
+>UsingCodingRules
+>```
 ### Methods
 
 #### ToString
@@ -259,7 +267,7 @@
 
 #### SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles
 >```csharp
->List<LogKeyValueItem> SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles()
+>bool SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles(ILogger logger)
 >```
 
 <br />
@@ -485,7 +493,7 @@
 
 #### SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles
 >```csharp
->List<LogKeyValueItem> SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles()
+>bool SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles(ILogger logger)
 >```
 
 <br />

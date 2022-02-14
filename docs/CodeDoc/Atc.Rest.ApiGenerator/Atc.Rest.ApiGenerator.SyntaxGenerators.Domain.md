@@ -92,7 +92,7 @@
 >```
 #### ToFile
 >```csharp
->LogKeyValueItem ToFile()
+>void ToFile()
 >```
 #### ToFile
 >```csharp
