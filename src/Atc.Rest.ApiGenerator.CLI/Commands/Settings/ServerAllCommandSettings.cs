@@ -13,4 +13,22 @@ public class ServerAllCommandSettings : BaseGenerateCommandSettings
     [CommandOption($"{ArgumentCommandConstants.LongServerOutputTestPath} [OUTPUTTESTPATH]")]
     [Description("Path to generated test projects (directory)")]
     public FlagValue<string>? OutputTestPath { get; init; }
+
+    public override ValidationResult Validate()
+    {
+        var validationResult = base.Validate();
+        if (!validationResult.Successful)
+        {
+            return validationResult;
+        }
+
+        if (string.IsNullOrEmpty(OutputSlnPath))
+        {
+            return ValidationResult.Error($"{nameof(OutputSlnPath)} is missing.");
+        }
+
+        return string.IsNullOrEmpty(OutputSrcPath)
+            ? ValidationResult.Error($"{nameof(OutputSrcPath)} is missing.")
+            : ValidationResult.Success();
+    }
 }

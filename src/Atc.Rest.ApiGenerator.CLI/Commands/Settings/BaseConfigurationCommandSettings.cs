@@ -39,7 +39,7 @@ public class BaseConfigurationCommandSettings : BaseCommandSettings
         }
 
         return string.IsNullOrEmpty(SpecificationPath)
-            ? ValidationResult.Error("SpecificationPath is missing.")
+            ? ValidationResult.Error($"{nameof(SpecificationPath)} is missing.")
             : ValidationResult.Success();
     }
 }

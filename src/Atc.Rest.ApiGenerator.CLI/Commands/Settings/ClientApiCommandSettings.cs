@@ -13,4 +13,22 @@ public class ClientApiCommandSettings : BaseGenerateCommandSettings
     [CommandOption(ArgumentCommandConstants.LongExcludeEndpointGeneration)]
     [Description("Exclude endpoint generation")]
     public bool ExcludeEndpointGeneration { get; init; }
+
+    public override ValidationResult Validate()
+    {
+        var validationResult = base.Validate();
+        if (!validationResult.Successful)
+        {
+            return validationResult;
+        }
+
+        if (string.IsNullOrEmpty(OutputPath))
+        {
+            return ValidationResult.Error($"{nameof(OutputPath)} is missing.");
+        }
+
+        return string.IsNullOrEmpty(ClientFolderName)
+            ? ValidationResult.Error($"{nameof(ClientFolderName)} is missing.")
+            : ValidationResult.Success();
+    }
 }
