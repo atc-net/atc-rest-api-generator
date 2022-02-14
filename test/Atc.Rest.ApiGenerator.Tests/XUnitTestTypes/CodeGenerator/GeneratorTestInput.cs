@@ -44,6 +44,8 @@ public class GeneratorTestInput : IXunitSerializable
     public void Deserialize(
         IXunitSerializationInfo info)
     {
+        ArgumentNullException.ThrowIfNull(info);
+
         yamlSpec = new FileInfo(info.GetValue<string>(nameof(yamlSpec)));
 
         if (info.GetValue<string>(nameof(generatorConfig)) is { } generatorConfigFileName)
@@ -55,6 +57,8 @@ public class GeneratorTestInput : IXunitSerializable
     public void Serialize(
         IXunitSerializationInfo info)
     {
+        ArgumentNullException.ThrowIfNull(info);
+
         info.AddValue(nameof(yamlSpec), yamlSpec!.FullName);
 
         if (generatorConfig is not null)

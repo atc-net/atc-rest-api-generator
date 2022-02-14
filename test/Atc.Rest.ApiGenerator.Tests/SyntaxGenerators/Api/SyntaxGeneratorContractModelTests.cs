@@ -10,6 +10,8 @@ public class SyntaxGeneratorContractModelTests : SyntaxCodeGeneratorTestBase
     protected override ISyntaxCodeGenerator CreateGenerator(
         ApiProjectOptions apiProject)
     {
+        ArgumentNullException.ThrowIfNull(apiProject);
+
         // Verify spec file supported for unit test
         Assert.Single(apiProject.Document.Components.Schemas);
         var schema = apiProject.Document.Components.Schemas.First();

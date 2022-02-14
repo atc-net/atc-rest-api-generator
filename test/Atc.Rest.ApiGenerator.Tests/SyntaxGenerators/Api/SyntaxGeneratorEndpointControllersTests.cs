@@ -10,6 +10,8 @@ public class SyntaxGeneratorEndpointControllersTests : SyntaxCodeGeneratorTestBa
     protected override ISyntaxCodeGenerator CreateGenerator(
         ApiProjectOptions apiProject)
     {
+        ArgumentNullException.ThrowIfNull(apiProject);
+
         // Verify spec file supported for unit test
         Assert.Single(apiProject.BasePathSegmentNames);
         var segmentName = apiProject.BasePathSegmentNames.First();

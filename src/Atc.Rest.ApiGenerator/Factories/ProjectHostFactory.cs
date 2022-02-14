@@ -18,6 +18,8 @@ public static class ProjectHostFactory
         string projectName,
         bool useExtended)
     {
+        ArgumentNullException.ThrowIfNull(projectName);
+
         var name = projectName.Replace(".Api", string.Empty, StringComparison.Ordinal);
 
         var list = new List<string>
@@ -59,6 +61,8 @@ public static class ProjectHostFactory
     public static string[] CreateUsingListForWebApiStartupFactory(
         string projectName)
     {
+        ArgumentNullException.ThrowIfNull(projectName);
+
         var name = projectName.Replace(".Api", string.Empty, StringComparison.Ordinal);
 
         var list = new List<string>

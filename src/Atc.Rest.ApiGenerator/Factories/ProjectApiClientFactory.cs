@@ -8,6 +8,8 @@ public static class ProjectApiClientFactory
         bool hasList,
         bool hasSharedModel)
     {
+        ArgumentNullException.ThrowIfNull(apiProjectOptions);
+
         var list = new List<string>
         {
             "System.CodeDom.Compiler",
@@ -51,6 +53,8 @@ public static class ProjectApiClientFactory
         bool hasList,
         bool hasSharedModel)
     {
+        ArgumentNullException.ThrowIfNull(apiProjectOptions);
+
         var list = new List<string>
         {
             "System.CodeDom.Compiler",
@@ -102,6 +106,8 @@ public static class ProjectApiClientFactory
         bool hasList,
         bool hasSharedModel)
     {
+        ArgumentNullException.ThrowIfNull(apiProjectOptions);
+
         var list = new List<string>
         {
             "System.CodeDom.Compiler",
@@ -144,6 +150,8 @@ public static class ProjectApiClientFactory
         bool hasList,
         bool hasSharedModel)
     {
+        ArgumentNullException.ThrowIfNull(apiProjectOptions);
+
         var list = new List<string>
         {
             "System",

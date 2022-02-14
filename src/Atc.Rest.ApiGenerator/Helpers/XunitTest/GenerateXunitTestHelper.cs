@@ -56,6 +56,8 @@ public static class GenerateXunitTestHelper
         int depthHierarchy = 0,
         int maxDepthHierarchy = 2)
     {
+        ArgumentNullException.ThrowIfNull(endpointMethodMetadata);
+
         var trailingChar = TrailingCharType.SemiColon;
         if (asJsonBody)
         {
@@ -193,6 +195,9 @@ public static class GenerateXunitTestHelper
         bool asJsonBody,
         string? parentModelNameToJsonBody = null)
     {
+        ArgumentNullException.ThrowIfNull(sb);
+        ArgumentNullException.ThrowIfNull(schema);
+
         var countString = 1;
         var renderModelName = OpenApiDocumentSchemaModelNameHelper.EnsureModelNameWithNamespaceIfNeeded(endpointMethodMetadata, modelName);
         var jsonSpaces = string.Empty.PadLeft(depthHierarchy * 2);
@@ -360,6 +365,8 @@ public static class GenerateXunitTestHelper
         KeyValuePair<string, OpenApiSchema>? badPropertySchema,
         bool asJsonBody)
     {
+        ArgumentNullException.ThrowIfNull(sb);
+
         var modelName = schemaProperty.Value.GetModelName();
         var renderModelName = OpenApiDocumentSchemaModelNameHelper.EnsureModelNameWithNamespaceIfNeeded(endpointMethodMetadata, modelName);
 

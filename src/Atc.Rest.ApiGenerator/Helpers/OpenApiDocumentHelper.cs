@@ -140,6 +140,8 @@ public static class OpenApiDocumentHelper
     public static string GetServerUrlBasePath(
         OpenApiDocument openApiDocument)
     {
+        ArgumentNullException.ThrowIfNull(openApiDocument);
+
         var serverUrl = openApiDocument.Servers?.FirstOrDefault()?.Url;
         if (string.IsNullOrWhiteSpace(serverUrl))
         {

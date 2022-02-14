@@ -4,8 +4,12 @@ namespace Atc.Rest.ApiGenerator.Helpers;
 public static class OpenApiDocumentSchemaModelNameHelper
 {
     public static bool ContainsModelNameTask(string modelName)
-        => modelName.Equals("Task", StringComparison.Ordinal) ||
-           modelName.EndsWith("Task>", StringComparison.Ordinal);
+    {
+        ArgumentNullException.ThrowIfNull(modelName);
+
+        return modelName.Equals("Task", StringComparison.Ordinal) ||
+               modelName.EndsWith("Task>", StringComparison.Ordinal);
+    }
 
     public static string GetRawModelName(
         string modelName)
@@ -85,11 +89,15 @@ public static class OpenApiDocumentSchemaModelNameHelper
     }
 
     public static string EnsureTaskNameWithNamespaceIfNeeded(ResponseTypeNameAndItemSchema contractReturnTypeNameAndSchema)
-        => ContainsModelNameTask(contractReturnTypeNameAndSchema.FullModelName) ||
-           (contractReturnTypeNameAndSchema.HasSchema &&
-            contractReturnTypeNameAndSchema.Schema!.HasModelNameOrAnyPropertiesWithModelName("Task"))
+    {
+        ArgumentNullException.ThrowIfNull(contractReturnTypeNameAndSchema);
+
+        return ContainsModelNameTask(contractReturnTypeNameAndSchema.FullModelName) ||
+               (contractReturnTypeNameAndSchema.HasSchema &&
+                contractReturnTypeNameAndSchema.Schema!.HasModelNameOrAnyPropertiesWithModelName("Task"))
             ? "System.Threading.Tasks.Task"
             : "Task";
+    }
 
     public static bool HasSharedResponseContract(
         OpenApiDocument apiDocument,

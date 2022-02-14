@@ -15,6 +15,9 @@ public static class GenerateXunitTestPartsHelper
         int depthHierarchy,
         TrailingCharType trailingChar)
     {
+        ArgumentNullException.ThrowIfNull(endpointMethodMetadata);
+        ArgumentNullException.ThrowIfNull(propertyValueGenerated);
+
         var propertyName = schemaProperty.Key.EnsureFirstCharacterToUpper();
 
         var isHandled = false;
@@ -345,6 +348,8 @@ public static class GenerateXunitTestPartsHelper
         int indentSpaces,
         StringBuilder sb)
     {
+        ArgumentNullException.ThrowIfNull(sb);
+
         const string value = "new ";
         sb.Append(value.PadLeft(value.Length + indentSpaces));
     }
@@ -354,6 +359,8 @@ public static class GenerateXunitTestPartsHelper
         StringBuilder sb,
         string variableName)
     {
+        ArgumentNullException.ThrowIfNull(sb);
+
         var value = $"{variableName} = new ";
         sb.Append(value.PadLeft(value.Length + indentSpaces));
     }
@@ -363,6 +370,8 @@ public static class GenerateXunitTestPartsHelper
         StringBuilder sb,
         string variableName = "data")
     {
+        ArgumentNullException.ThrowIfNull(sb);
+
         var value = $"var {variableName} = new ";
         sb.Append(value.PadLeft(value.Length + indentSpaces));
     }
@@ -373,6 +382,8 @@ public static class GenerateXunitTestPartsHelper
         string variableName,
         string dataType)
     {
+        ArgumentNullException.ThrowIfNull(sb);
+
         var value = $"{variableName} = new List<{dataType}>";
         sb.Append(value.PadLeft(value.Length + indentSpaces));
     }
@@ -383,6 +394,8 @@ public static class GenerateXunitTestPartsHelper
         string variableName,
         string dataType)
     {
+        ArgumentNullException.ThrowIfNull(sb);
+
         var value = $"var {variableName} = new List<{dataType}>";
         sb.Append(value.PadLeft(value.Length + indentSpaces));
     }

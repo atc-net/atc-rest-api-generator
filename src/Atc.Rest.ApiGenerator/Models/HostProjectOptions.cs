@@ -25,6 +25,8 @@ public class HostProjectOptions : BaseProjectOptions
             apiOptions,
             usingCodingRules)
     {
+        ArgumentNullException.ThrowIfNull(apiOptions);
+
         ApiProjectSrcPath = apiProjectSrcPath ?? throw new ArgumentNullException(nameof(apiProjectSrcPath));
         DomainProjectSrcPath = domainProjectSrcPath ?? throw new ArgumentNullException(nameof(domainProjectSrcPath));
         UseRestExtended = apiOptions.Generator.UseRestExtended;

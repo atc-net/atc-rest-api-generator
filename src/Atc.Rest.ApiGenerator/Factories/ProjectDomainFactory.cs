@@ -6,6 +6,8 @@ public static class ProjectDomainFactory
         DomainProjectOptions domainProjectOptions,
         string focusOnSegmentName)
     {
+        ArgumentNullException.ThrowIfNull(domainProjectOptions);
+
         var list = new List<string>
         {
             "System.Threading",

@@ -318,6 +318,8 @@ public class EndpointMethodMetadata
     public List<KeyValuePair<string, OpenApiSchema>> GetRelevantSchemasForBadRequestBodyParameters(
         OpenApiSchema modelSchema)
     {
+        ArgumentNullException.ThrowIfNull(modelSchema);
+
         var relevantSchemas = new List<KeyValuePair<string, OpenApiSchema>>();
         foreach (var schemaProperty in modelSchema.Properties)
         {
@@ -354,6 +356,8 @@ public class EndpointMethodMetadata
     public bool Contains(
         string value)
     {
+        ArgumentNullException.ThrowIfNull(value);
+
         if (value.EndsWith("Tests", StringComparison.Ordinal))
         {
             value = value.Substring(0, value.IndexOf("Tests", StringComparison.Ordinal));

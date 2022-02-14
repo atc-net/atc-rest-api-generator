@@ -17,6 +17,8 @@ public abstract class GeneratorTestBase
         GeneratorTestInput yamlFile,
         ApiProjectOptions apiOptions)
     {
+        ArgumentNullException.ThrowIfNull(yamlFile);
+
         var settings = new VerifySettings();
         settings.UseDirectory(yamlFile.TestDirectory);
         settings.UseFileName(yamlFile.TestName);
@@ -28,6 +30,8 @@ public abstract class GeneratorTestBase
     protected async Task<ApiProjectOptions> CreateApiProjectAsync(
         GeneratorTestInput testInput)
     {
+        ArgumentNullException.ThrowIfNull(testInput);
+
         var spec = await testInput.LoadYamlSpecContentAsync();
         var options = testInput.GeneratorOptions.Value;
         var document = GenerateApiDocument(spec);

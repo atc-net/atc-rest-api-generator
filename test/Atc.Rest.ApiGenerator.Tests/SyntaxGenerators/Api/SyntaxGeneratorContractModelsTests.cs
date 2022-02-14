@@ -10,6 +10,8 @@ public class SyntaxGeneratorContractModelsTests : SyntaxGeneratorContractModelsT
     protected override ISyntaxGeneratorContractModels CreateGenerator(
         ApiProjectOptions apiProject)
     {
+        ArgumentNullException.ThrowIfNull(apiProject);
+
         // Verify spec file supported for unit test
         Assert.True(apiProject.Document.Components.Schemas.Count > 0);
 

@@ -10,6 +10,8 @@ public class SyntaxGeneratorContractInterfaceTests : SyntaxCodeGeneratorTestBase
     protected override ISyntaxCodeGenerator CreateGenerator(
         ApiProjectOptions apiProject)
     {
+        ArgumentNullException.ThrowIfNull(apiProject);
+
         // Verify spec file supported for unit test
         Assert.Single(apiProject.Document.Paths);
         var urlPath = apiProject.Document.Paths.First();

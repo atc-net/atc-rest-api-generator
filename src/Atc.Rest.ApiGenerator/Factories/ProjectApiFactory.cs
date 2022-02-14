@@ -9,6 +9,7 @@ public static class ProjectApiFactory
         bool includeRestResults,
         string focusOnSegmentName)
     {
+        ArgumentNullException.ThrowIfNull(apiProjectOptions);
         ArgumentNullException.ThrowIfNull(apiOperations);
 
         var list = new List<string>

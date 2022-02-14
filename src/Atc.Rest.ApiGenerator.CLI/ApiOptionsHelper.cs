@@ -5,6 +5,8 @@ public static class ApiOptionsHelper
     public static async Task<ApiOptions> CreateApiOptions(
         BaseConfigurationCommandSettings settings)
     {
+        ArgumentNullException.ThrowIfNull(settings);
+
         if (settings.OptionsPath is null ||
             !settings.OptionsPath.IsSet)
         {
