@@ -8,7 +8,7 @@ public class ApiProjectOptions : BaseProjectOptions
         OpenApiDocument openApiDocument,
         FileInfo openApiDocumentFile,
         string projectPrefixName,
-        string projectSuffixName,
+        string? projectSuffixName,
         ApiOptions apiOptions,
         bool usingCodingRules,
         bool forClient = false,
