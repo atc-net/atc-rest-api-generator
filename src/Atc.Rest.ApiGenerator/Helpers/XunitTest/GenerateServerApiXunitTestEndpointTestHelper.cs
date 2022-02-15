@@ -4,6 +4,7 @@
 // ReSharper disable SuggestBaseTypeForParameter
 namespace Atc.Rest.ApiGenerator.Helpers.XunitTest;
 
+[SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1118:Parameter should not span multiple lines", Justification = "OK.")]
 public static class GenerateServerApiXunitTestEndpointTestHelper
 {
     public static void Generate(

@@ -3,6 +3,7 @@
 // ReSharper disable UseDeconstructionOnParameter
 namespace Atc.Rest.ApiGenerator.Helpers.XunitTest;
 
+[SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1118:Parameter should not span multiple lines", Justification = "OK.")]
 public static class GenerateXunitTestHelper
 {
     public static void AppendVarDataListSimpleType(

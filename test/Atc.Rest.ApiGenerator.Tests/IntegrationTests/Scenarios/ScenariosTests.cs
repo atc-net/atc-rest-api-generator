@@ -5,6 +5,7 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
 {
     private static readonly string WorkingDirectory = Path.Combine(Path.GetTempPath(), "atc-rest-api-generator-integration-test");
 
+    [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1118:Parameter should not span multiple lines", Justification = "OK.")]
     [Fact]
     public async Task ValidateAndBuildScenarios()
     {

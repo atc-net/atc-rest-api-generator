@@ -530,9 +530,6 @@ dotnet_diagnostic.CA1305.severity = none			# 39 occurrences - Specify IFormatPro
 # Microsoft.CompilerErrors.Undocumented
 dotnet_diagnostic.CS8618.severity = none			# 5 occurrences - Non-nullable field is uninitialized. Consider declaring as nullable.
 
-# StyleCop.Analyzers
-dotnet_diagnostic.SA1118.severity = none			# 13 occurrences - Category: 'Readability' - Parameter must not span multiple lines - https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/documentation/SA1118.md
-
 # Unknown
 dotnet_diagnostic.CA1848.severity = none			# 43 occurrences
 dotnet_diagnostic.CA2254.severity = none			# 18 occurrences

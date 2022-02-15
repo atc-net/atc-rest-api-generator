@@ -75,6 +75,7 @@ public static class OpenApiDocumentHelper
         return new Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo>(openApiDocument, diagnostic, new FileInfo(apiDocFile.FullName));
     }
 
+    [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1118:Parameter should not span multiple lines", Justification = "OK.")]
     public static bool Validate(
         ILogger logger,
         Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument,
