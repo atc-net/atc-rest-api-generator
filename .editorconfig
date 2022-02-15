@@ -513,16 +513,3 @@ dotnet_diagnostic.CA1848.severity = suggestion		# Use the LoggerMessage delegate
 dotnet_diagnostic.CA2254.severity = suggestion		# Template should be a static expression - https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2254
 
 dotnet_diagnostic.S3267.severity = none				# Loop should be simplified by calling Select(x => x.Value)) - We dont like this rule because of readability/maintainability
-
-##########################################
-# ATC temporary suppressions
-# generated @ Monday, February 14, 2022 3:28:57 PM
-# Please fix all generated temporary suppressions
-# either by code changes or move the
-# suppressions one by one to the relevant
-# 'Custom - Code Analyzers Rules' section.
-##########################################
-[*.cs]
-
-# Meziantou.Analyzer
-dotnet_diagnostic.MA0011.severity = none			# 40 occurrences - Category: 'Usage' - IFormatProvider is missing - https://github.com/meziantou/Meziantou.Analyzer/blob/main/docs/Rules/MA0011.md

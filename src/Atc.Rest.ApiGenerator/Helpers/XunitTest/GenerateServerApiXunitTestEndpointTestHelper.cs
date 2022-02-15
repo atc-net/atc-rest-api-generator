@@ -6,6 +6,7 @@ namespace Atc.Rest.ApiGenerator.Helpers.XunitTest;
 
 [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1118:Parameter should not span multiple lines", Justification = "OK.")]
 [SuppressMessage("Globalization", "CA1305:Specify IFormatProvider", Justification = "OK.")]
+[SuppressMessage("Usage", "MA0011:IFormatProvider is missing", Justification = "OK.")]
 public static class GenerateServerApiXunitTestEndpointTestHelper
 {
     public static void Generate(

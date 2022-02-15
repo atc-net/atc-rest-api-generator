@@ -44,7 +44,7 @@ internal static class SyntaxEnumFactory
 
             var sa = openApiString.Value.Split('=', StringSplitOptions.RemoveEmptyEntries);
             var s = sa.Last().Trim();
-            if (int.TryParse(s, out var val))
+            if (int.TryParse(s, NumberStyles.Integer, GlobalizationConstants.EnglishCultureInfo, out var val))
             {
                 intValues.Add(val);
             }
