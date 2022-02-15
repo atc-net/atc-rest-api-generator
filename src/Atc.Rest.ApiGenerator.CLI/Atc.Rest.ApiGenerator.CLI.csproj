@@ -9,6 +9,7 @@
     <OutputType>Exe</OutputType>
     <AssemblyName>atc-rest-api-generator</AssemblyName>
     <PackAsTool>true</PackAsTool>
+    <DebugType>pdbonly</DebugType>
   </PropertyGroup>
 
   <ItemGroup>
