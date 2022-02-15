@@ -4,7 +4,7 @@ public class BaseGenerateCommandSettings : BaseConfigurationCommandSettings
 {
     [CommandOption($"{ArgumentCommandConstants.ShortProjectPrefixName}|{ArgumentCommandConstants.LongProjectPrefixName} <PROJECTPREFIXNAME>")]
     [Description("Project prefix name (e.g. 'PetStore' becomes 'PetStore.Api.Generated')")]
-    public string ProjectPrefixName { get; init; }
+    public string ProjectPrefixName { get; init; } = string.Empty;
 
     [CommandOption($"{ArgumentCommandConstants.LongServerDisableCodingRules}")]
     [Description("Disable ATC-Coding-Rules")]

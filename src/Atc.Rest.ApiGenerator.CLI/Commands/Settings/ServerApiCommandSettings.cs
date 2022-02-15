@@ -4,7 +4,7 @@ public class ServerApiCommandSettings : BaseGenerateCommandSettings
 {
     [CommandOption($"{ArgumentCommandConstants.ShortOutputPath}|{ArgumentCommandConstants.LongOutputPath} <OUTPUTPATH>")]
     [Description("Path to generated project (directory)")]
-    public string OutputPath { get; init; }
+    public string OutputPath { get; init; } = string.Empty;
 
     [CommandOption($"{ArgumentCommandConstants.LongServerOutputTestPath} [OUTPUTTESTPATH]")]
     [Description("Path to generated test projects (directory)")]

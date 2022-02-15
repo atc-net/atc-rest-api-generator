@@ -4,7 +4,7 @@ public class ClientApiCommandSettings : BaseGenerateCommandSettings
 {
     [CommandOption($"{ArgumentCommandConstants.ShortOutputPath}|{ArgumentCommandConstants.LongOutputPath} <OUTPUTPATH>")]
     [Description("Path to generated project (directory)")]
-    public string OutputPath { get; init; }
+    public string OutputPath { get; init; } = string.Empty;
 
     [CommandOption($"{ArgumentCommandConstants.LongClientFolderName} <CLIENTFOLDERNAME>")]
     [Description("If client folder is provided, generated files will be placed here instead of the project root.")]
