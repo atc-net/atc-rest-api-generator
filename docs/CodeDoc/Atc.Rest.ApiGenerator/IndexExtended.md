@@ -10,20 +10,16 @@
   -  Static Fields
      - string AreaCodingRules
      - string AreaDirectoryBuildProps
+     - string AreaDownload
      - string AreaEditorConfig
      - string AreaGenerateCode
      - string AreaGenerateTest
      - string AreaValidation
 - [AtcRestApiGeneratorAssemblyTypeInitializer](Atc.Rest.ApiGenerator.md#atcrestapigeneratorassemblytypeinitializer)
-- [Util](Atc.Rest.ApiGenerator.md#util)
-  -  Static Methods
-     - GetCsFileNameForContract(DirectoryInfo pathForContracts, string area, string modelName)
-     - GetCsFileNameForContract(DirectoryInfo pathForContracts, string area, string subArea, string modelName)
-     - GetCsFileNameForContractEnumTypes(DirectoryInfo pathForContracts, string modelName)
-     - GetCsFileNameForContractShared(DirectoryInfo pathForContracts, string modelName)
-     - GetCsFileNameForEndpoints(DirectoryInfo pathForEndpoints, string modelName)
-     - GetCsFileNameForHandler(DirectoryInfo pathForHandlers, string area, string handlerName)
-     - GetProjectPath()
+- [Constants](Atc.Rest.ApiGenerator.md#constants)
+  -  Static Fields
+     - string GitHubPrefix
+     - string GitRawContentUrl
 - [ValidationRuleNameConstants](Atc.Rest.ApiGenerator.md#validationrulenameconstants)
   -  Static Fields
      - string OpenApiCore
@@ -78,6 +74,12 @@
      - string Schema11
      - string Server01
 
+## [Atc.Rest.ApiGenerator.Extensions](Atc.Rest.ApiGenerator.Extensions.md)
+
+- [ListExtensions](Atc.Rest.ApiGenerator.Extensions.md#listextensions)
+  -  Static Methods
+     - TrimEndForEmptyValues(this IList&lt;string&gt; values)
+
 ## [Atc.Rest.ApiGenerator.Factories](Atc.Rest.ApiGenerator.Factories.md)
 
 - [ProjectApiClientFactory](Atc.Rest.ApiGenerator.Factories.md#projectapiclientfactory)
@@ -125,6 +127,15 @@
 - [ApiGeneratorHelper](Atc.Rest.ApiGenerator.Helpers.md#apigeneratorhelper)
   -  Static Methods
      - CollectMissingContractModelFromOperationSchemaMappings(ILogger logger, ApiProjectOptions projectOptions, List&lt;ApiOperationSchemaMap&gt; operationSchemaMappings, List&lt;SyntaxGeneratorContractModel&gt; sgContractModels)
+- [DirectoryInfoHelper](Atc.Rest.ApiGenerator.Helpers.md#directoryinfohelper)
+  -  Static Methods
+     - GetCsFileNameForContract(DirectoryInfo pathForContracts, string area, string modelName)
+     - GetCsFileNameForContract(DirectoryInfo pathForContracts, string area, string subArea, string modelName)
+     - GetCsFileNameForContractEnumTypes(DirectoryInfo pathForContracts, string modelName)
+     - GetCsFileNameForContractShared(DirectoryInfo pathForContracts, string modelName)
+     - GetCsFileNameForEndpoints(DirectoryInfo pathForEndpoints, string modelName)
+     - GetCsFileNameForHandler(DirectoryInfo pathForHandlers, string area, string handlerName)
+     - GetProjectPath()
 - [GenerateAtcCodingRulesHelper](Atc.Rest.ApiGenerator.Helpers.md#generateatccodingruleshelper)
   -  Static Fields
      - string FileNameDirectoryBuildProps
@@ -146,8 +157,8 @@
      - GetAtcVersionAsString4()
 - [HttpClientHelper](Atc.Rest.ApiGenerator.Helpers.md#httpclienthelper)
   -  Static Methods
-     - DownloadToTempFile(string apiDesignPath)
-     - GetRawFile(string rawFileUrl)
+     - DownloadToTempFile(ILogger logger, string apiDesignPath)
+     - GetAsString(ILogger logger, string url, string displayName, CancellationToken cancellationToken = null)
 - [LogItemHelper](Atc.Rest.ApiGenerator.Helpers.md#logitemhelper)
   -  Static Methods
      - Create(LogCategoryType logCategoryType, string ruleName, string description)
@@ -159,7 +170,7 @@
      - CreateForTestProject(bool useMvc)
 - [OpenApiDocumentHelper](Atc.Rest.ApiGenerator.Helpers.md#openapidocumenthelper)
   -  Static Methods
-     - CombineAndGetApiDocument(string specificationPath)
+     - CombineAndGetApiDocument(ILogger logger, string specificationPath)
      - GetBasePathSegmentNames(OpenApiDocument openApiDocument)
      - GetServerUrlBasePath(OpenApiDocument openApiDocument)
      - Validate(ILogger logger, Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, ApiOptionsValidation validationOptions)
@@ -184,13 +195,13 @@
      - GetBoolFromNullableString(string value)
      - GetNullableStringFromBool(bool value)
      - GetNullableValueFromProject(XElement element)
-     - ScaffoldProjFile(ILogger logger, FileInfo projectCsProjFile, bool createAsWeb, bool createAsTestProject, string projectName, string targetFramework, List&lt;string&gt; frameworkReferences, List&lt;Tuple&lt;string, string, string&gt;&gt; packageReferences, List&lt;FileInfo&gt; projectReferences, bool includeApiSpecification, bool usingCodingRules)
+     - ScaffoldProjFile(ILogger logger, FileInfo projectCsProjFile, string fileDisplayLocation, bool createAsWeb, bool createAsTestProject, string projectName, string targetFramework, List&lt;string&gt; frameworkReferences, List&lt;Tuple&lt;string, string, string&gt;&gt; packageReferences, List&lt;FileInfo&gt; projectReferences, bool includeApiSpecification, bool usingCodingRules)
      - ScaffoldSlnFile(ILogger logger, FileInfo slnFile, string projectName, DirectoryInfo apiPath, DirectoryInfo domainPath, DirectoryInfo hostPath, DirectoryInfo domainTestPath = null, DirectoryInfo hostTestPath = null)
      - SetNullableValueForProject(XElement element, string newNullableValue)
 - [TextFileHelper](Atc.Rest.ApiGenerator.Helpers.md#textfilehelper)
   -  Static Methods
-     - Save(ILogger logger, FileInfo fileInfo, string text, bool overrideIfExist = True)
-     - Save(ILogger logger, string file, string text, bool overrideIfExist = True)
+     - Save(ILogger logger, FileInfo fileInfo, string fileDisplayLocation, string text, bool overrideIfExist = True)
+     - Save(ILogger logger, string file, string fileDisplayLocation, string text, bool overrideIfExist = True)
 - [ValidatePathsAndOperationsHelper](Atc.Rest.ApiGenerator.Helpers.md#validatepathsandoperationshelper)
   -  Static Methods
      - ValidateGetOperations(ApiOptionsValidation validationOptions, KeyValuePair&lt;string, OpenApiPathItem&gt; path)
@@ -290,7 +301,9 @@
      - ProjectName
      - ProjectPrefixName
      - ProjectSrcCsProj
+     - ProjectSrcCsProjDisplayLocation
      - ProjectTestCsProj
+     - ProjectTestCsProjDisplayLocation
      - RouteBase
      - ToolName
      - ToolNameAndVersion
@@ -309,6 +322,7 @@
      - PathForSrcGenerate
      - ProjectName
      - ProjectSrcCsProj
+     - ProjectSrcCsProjDisplayLocation
      - ToolName
      - ToolNameAndVersion
      - ToolVersion
@@ -382,23 +396,23 @@
      - SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles(ILogger logger)
 - [SchemaMapLocatedAreaType](Atc.Rest.ApiGenerator.Models.md#schemamaplocatedareatype)
 
-## [Atc.Rest.ApiGenerator.Models.ApiOptions](Atc.Rest.ApiGenerator.Models.ApiOptions.md)
+## [Atc.Rest.ApiGenerator.Models.OptionsFile](Atc.Rest.ApiGenerator.Models.OptionsFile.md)
 
-- [ApiOptions](Atc.Rest.ApiGenerator.Models.ApiOptions.md#apioptions)
+- [ApiOptions](Atc.Rest.ApiGenerator.Models.OptionsFile.md#apioptions)
   -  Properties
      - Generator
      - Validation
-- [ApiOptionsGenerator](Atc.Rest.ApiGenerator.Models.ApiOptions.md#apioptionsgenerator)
+- [ApiOptionsGenerator](Atc.Rest.ApiGenerator.Models.OptionsFile.md#apioptionsgenerator)
   -  Properties
      - Request
      - Response
      - UseAuthorization
      - UseRestExtended
-- [ApiOptionsGeneratorRequest](Atc.Rest.ApiGenerator.Models.ApiOptions.md#apioptionsgeneratorrequest)
-- [ApiOptionsGeneratorResponse](Atc.Rest.ApiGenerator.Models.ApiOptions.md#apioptionsgeneratorresponse)
+- [ApiOptionsGeneratorRequest](Atc.Rest.ApiGenerator.Models.OptionsFile.md#apioptionsgeneratorrequest)
+- [ApiOptionsGeneratorResponse](Atc.Rest.ApiGenerator.Models.OptionsFile.md#apioptionsgeneratorresponse)
   -  Properties
      - UseProblemDetailsAsDefaultBody
-- [ApiOptionsValidation](Atc.Rest.ApiGenerator.Models.ApiOptions.md#apioptionsvalidation)
+- [ApiOptionsValidation](Atc.Rest.ApiGenerator.Models.OptionsFile.md#apioptionsvalidation)
   -  Properties
      - ModelNameCasingStyle
      - ModelPropertyNameCasingStyle
@@ -653,6 +667,12 @@
 ## [Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.Interfaces](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.Interfaces.md)
 
 - [ISyntaxGeneratorClientEndpoints](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.Interfaces.md#isyntaxgeneratorclientendpoints)
+  -  Properties
+     - ApiProjectOptions
+     - FocusOnSegmentName
+     - OperationSchemaMappings
+  -  Methods
+     - GenerateSyntaxTrees()
 
 ## [Atc.Rest.ApiGenerator.SyntaxGenerators.Domain](Atc.Rest.ApiGenerator.SyntaxGenerators.Domain.md)
 

@@ -1,3 +1,5 @@
+using Atc.Rest.ApiGenerator.Extensions;
+
 namespace Atc.Rest.ApiGenerator.Tests;
 
 public class CodeComplianceTests
@@ -61,6 +63,7 @@ public class CodeComplianceTests
         typeof(ProjectHostFactory),
         typeof(ProjectDomainFactory),
         typeof(SyntaxGeneratorSwaggerDocOptions),
+        typeof(ListExtensions),
     };
 
     public CodeComplianceTests(

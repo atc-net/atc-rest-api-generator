@@ -23,6 +23,10 @@
 >```csharp
 >string AreaDirectoryBuildProps
 >```
+#### AreaDownload
+>```csharp
+>string AreaDownload
+>```
 #### AreaEditorConfig
 >```csharp
 >string AreaEditorConfig
@@ -51,41 +55,21 @@
 
 <br />
 
-## Util
+## Constants
 
 >```csharp
->public static class Util
+>public static class Constants
 >```
 
-### Static Methods
+### Static Fields
 
-#### GetCsFileNameForContract
+#### GitHubPrefix
 >```csharp
->string GetCsFileNameForContract(DirectoryInfo pathForContracts, string area, string modelName)
+>string GitHubPrefix
 >```
-#### GetCsFileNameForContract
+#### GitRawContentUrl
 >```csharp
->string GetCsFileNameForContract(DirectoryInfo pathForContracts, string area, string subArea, string modelName)
->```
-#### GetCsFileNameForContractEnumTypes
->```csharp
->string GetCsFileNameForContractEnumTypes(DirectoryInfo pathForContracts, string modelName)
->```
-#### GetCsFileNameForContractShared
->```csharp
->string GetCsFileNameForContractShared(DirectoryInfo pathForContracts, string modelName)
->```
-#### GetCsFileNameForEndpoints
->```csharp
->string GetCsFileNameForEndpoints(DirectoryInfo pathForEndpoints, string modelName)
->```
-#### GetCsFileNameForHandler
->```csharp
->string GetCsFileNameForHandler(DirectoryInfo pathForHandlers, string area, string handlerName)
->```
-#### GetProjectPath
->```csharp
->DirectoryInfo GetProjectPath()
+>string GitRawContentUrl
 >```
 
 <br />

@@ -8,8 +8,12 @@
 
 - [AppEmojisConstants](Atc.Rest.ApiGenerator.md#appemojisconstants)
 - [AtcRestApiGeneratorAssemblyTypeInitializer](Atc.Rest.ApiGenerator.md#atcrestapigeneratorassemblytypeinitializer)
-- [Util](Atc.Rest.ApiGenerator.md#util)
+- [Constants](Atc.Rest.ApiGenerator.md#constants)
 - [ValidationRuleNameConstants](Atc.Rest.ApiGenerator.md#validationrulenameconstants)
+
+## [Atc.Rest.ApiGenerator.Extensions](Atc.Rest.ApiGenerator.Extensions.md)
+
+- [ListExtensions](Atc.Rest.ApiGenerator.Extensions.md#listextensions)
 
 ## [Atc.Rest.ApiGenerator.Factories](Atc.Rest.ApiGenerator.Factories.md)
 
@@ -28,6 +32,7 @@
 ## [Atc.Rest.ApiGenerator.Helpers](Atc.Rest.ApiGenerator.Helpers.md)
 
 - [ApiGeneratorHelper](Atc.Rest.ApiGenerator.Helpers.md#apigeneratorhelper)
+- [DirectoryInfoHelper](Atc.Rest.ApiGenerator.Helpers.md#directoryinfohelper)
 - [GenerateAtcCodingRulesHelper](Atc.Rest.ApiGenerator.Helpers.md#generateatccodingruleshelper)
 - [GenerateHelper](Atc.Rest.ApiGenerator.Helpers.md#generatehelper)
 - [HttpClientHelper](Atc.Rest.ApiGenerator.Helpers.md#httpclienthelper)
@@ -63,13 +68,13 @@
 - [HostProjectOptions](Atc.Rest.ApiGenerator.Models.md#hostprojectoptions)
 - [SchemaMapLocatedAreaType](Atc.Rest.ApiGenerator.Models.md#schemamaplocatedareatype)
 
-## [Atc.Rest.ApiGenerator.Models.ApiOptions](Atc.Rest.ApiGenerator.Models.ApiOptions.md)
+## [Atc.Rest.ApiGenerator.Models.OptionsFile](Atc.Rest.ApiGenerator.Models.OptionsFile.md)
 
-- [ApiOptions](Atc.Rest.ApiGenerator.Models.ApiOptions.md#apioptions)
-- [ApiOptionsGenerator](Atc.Rest.ApiGenerator.Models.ApiOptions.md#apioptionsgenerator)
-- [ApiOptionsGeneratorRequest](Atc.Rest.ApiGenerator.Models.ApiOptions.md#apioptionsgeneratorrequest)
-- [ApiOptionsGeneratorResponse](Atc.Rest.ApiGenerator.Models.ApiOptions.md#apioptionsgeneratorresponse)
-- [ApiOptionsValidation](Atc.Rest.ApiGenerator.Models.ApiOptions.md#apioptionsvalidation)
+- [ApiOptions](Atc.Rest.ApiGenerator.Models.OptionsFile.md#apioptions)
+- [ApiOptionsGenerator](Atc.Rest.ApiGenerator.Models.OptionsFile.md#apioptionsgenerator)
+- [ApiOptionsGeneratorRequest](Atc.Rest.ApiGenerator.Models.OptionsFile.md#apioptionsgeneratorrequest)
+- [ApiOptionsGeneratorResponse](Atc.Rest.ApiGenerator.Models.OptionsFile.md#apioptionsgeneratorresponse)
+- [ApiOptionsValidation](Atc.Rest.ApiGenerator.Models.OptionsFile.md#apioptionsvalidation)
 
 ## [Atc.Rest.ApiGenerator.SyntaxGenerators](Atc.Rest.ApiGenerator.SyntaxGenerators.md)
 

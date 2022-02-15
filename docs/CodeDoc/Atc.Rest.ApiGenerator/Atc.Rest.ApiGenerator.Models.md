@@ -131,9 +131,17 @@
 >```csharp
 >ProjectSrcCsProj
 >```
+#### ProjectSrcCsProjDisplayLocation
+>```csharp
+>ProjectSrcCsProjDisplayLocation
+>```
 #### ProjectTestCsProj
 >```csharp
 >ProjectTestCsProj
+>```
+#### ProjectTestCsProjDisplayLocation
+>```csharp
+>ProjectTestCsProjDisplayLocation
 >```
 #### RouteBase
 >```csharp
@@ -209,6 +217,10 @@
 #### ProjectSrcCsProj
 >```csharp
 >ProjectSrcCsProj
+>```
+#### ProjectSrcCsProjDisplayLocation
+>```csharp
+>ProjectSrcCsProjDisplayLocation
 >```
 #### ToolName
 >```csharp
