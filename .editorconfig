@@ -507,7 +507,7 @@ dotnet_diagnostic.MA0016.severity = suggestion	    # Prefer return collection ab
 
 dotnet_diagnostic.CA1054.severity = suggestion		# URI parameters should not be strings - https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1054
 dotnet_diagnostic.CA1056.severity = suggestion		# URI properties should not be strings - https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1056
-
+dotnet_diagnostic.CA1848.severity = suggestion		# Use the LoggerMessage delegates - https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1848
 
 ##########################################
 # ATC temporary suppressions
@@ -531,6 +531,6 @@ dotnet_diagnostic.CA1305.severity = none			# 39 occurrences - Specify IFormatPro
 dotnet_diagnostic.CS8618.severity = none			# 5 occurrences - Non-nullable field is uninitialized. Consider declaring as nullable.
 
 # Unknown
-dotnet_diagnostic.CA1848.severity = none			# 43 occurrences
+
 dotnet_diagnostic.CA2254.severity = none			# 18 occurrences
 dotnet_diagnostic.S3267.severity = none				# 6 occurrences
