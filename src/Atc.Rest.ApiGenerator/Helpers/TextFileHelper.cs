@@ -51,7 +51,7 @@ public static class TextFileHelper
         {
             if (!overrideIfExist)
             {
-                logger.LogDebug($"{EmojisConstants.FileNotUpdated}    {fileDisplayLocation} nothing to update");
+                logger.LogDebug($"{EmojisConstants.FileNotUpdated}   {fileDisplayLocation} nothing to update");
                 return false;
             }
 
@@ -63,24 +63,24 @@ public static class TextFileHelper
                 var orgText = FileHelper.ReadAllText(fileInfo);
                 if (orgText == text)
                 {
-                    logger.LogDebug($"{EmojisConstants.FileNotUpdated}    {fileDisplayLocation} nothing to update");
+                    logger.LogDebug($"{EmojisConstants.FileNotUpdated}   {fileDisplayLocation} nothing to update");
                     return false;
                 }
 
                 if (RemoveApiGeneratorVersionLine(orgText, removeNewLines: true) == RemoveApiGeneratorVersionLine(text, removeNewLines: true))
                 {
-                    logger.LogDebug($"{EmojisConstants.FileNotUpdated}    {fileDisplayLocation} nothing to update");
+                    logger.LogDebug($"{EmojisConstants.FileNotUpdated}   {fileDisplayLocation} nothing to update");
                     return false;
                 }
             }
 
             FileHelper.WriteAllText(fileInfo, text);
-            logger.LogDebug($"{EmojisConstants.FileUpdated}    {fileDisplayLocation} updated");
+            logger.LogDebug($"{EmojisConstants.FileUpdated}   {fileDisplayLocation} updated");
             return true;
         }
 
         FileHelper.WriteAllText(fileInfo, text);
-        logger.LogDebug($"{EmojisConstants.FileCreated}    {fileDisplayLocation} created");
+        logger.LogDebug($"{EmojisConstants.FileCreated}   {fileDisplayLocation} created");
         return true;
     }
 

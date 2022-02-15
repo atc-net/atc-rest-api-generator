@@ -134,7 +134,96 @@ atc-rest-api-generator generate server all `
 
 Running the above command produces the following output:
 
-INSERTXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+```powershell
+     _      ____    ___      ____                                        _
+    / \    |  _ \  |_ _|    / ___|   ___   _ __     ___   _ __    __ _  | |_    ___    _ __
+   / _ \   | |_) |  | |    | |  _   / _ \ | '_ \   / _ \ | '__|  / _` | | __|  / _ \  | '__|
+  / ___ \  |  __/   | |    | |_| | |  __/ | | | | |  __/ | |    | (_| | | |_  | (_) | | |
+ /_/   \_\ |_|     |___|    \____|  \___| |_| |_|  \___| |_|     \__,_|  \__|  \___/  |_|
+
+🔽 Fetching api specification
+     Download from: https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml
+     Download time: 390.229 ms
+🔍 Working on validation
+     CR0103: Schema - Missing title on object type '#/components/schemas/Pet'.
+     CR0101: Schema - Missing title on array type '#/components/schemas/Pets'.
+     CR0103: Schema - Missing title on object type '#/components/schemas/Error'.
+     CR0203: Operation - OperationId should start with the prefix 'Get' or 'List' for operation 'showPetById'.
+     CR0214: Operation - Missing NotFound response type for operation 'ShowPetById', required by url parameter.
+🔷 Working on server api generation (PetStore.Api.Generated)
+     CR0801 - Old project does not exist
+🟢   src:  PetStore.Api.Generated.csproj created
+🟢   src:  ApiRegistration.cs created
+🟢   src:  Contracts\Pets\Models\Error.cs created
+🟢   src:  Contracts\Pets\Models\Pet.cs created
+🟢   src:  Contracts\Pets\Models\Pets.cs created
+🟢   src:  Contracts\Pets\Parameters\ListPetsParameters.cs created
+🟢   src:  Contracts\Pets\Parameters\ShowPetByIdParameters.cs created
+🟢   src:  Contracts\Pets\Results\ListPetsResult.cs created
+🟢   src:  Contracts\Pets\Results\CreatePetsResult.cs created
+🟢   src:  Contracts\Pets\Results\ShowPetByIdResult.cs created
+🟢   src:  Contracts\Pets\Interfaces\IListPetsHandler.cs created
+🟢   src:  Contracts\Pets\Interfaces\ICreatePetsHandler.cs created
+🟢   src:  Contracts\Pets\Interfaces\IShowPetByIdHandler.cs created
+🟢   src:  Endpoints\PetsController.cs created
+🔷 Working on server domain generation (PetStore.Domain)
+🟢   src:  PetStore.Domain.csproj created
+🟢   src:  DomainRegistration.cs created
+🟢   src:  Handlers\Pets\ListPetsHandler.cs created
+🟢   src:  Handlers\Pets\CreatePetsHandler.cs created
+🟢   src:  Handlers\Pets\ShowPetByIdHandler.cs created
+🔶 Working on server domain unit-test generation (PetStore.Domain.Tests)
+🟢   test: PetStore.Domain.Tests.csproj created
+🟢   test: Handlers\Pets\Generated\ListPetsHandlerGeneratedTests.cs created
+🟢   test: Handlers\Pets\ListPetsHandlerTests.cs created
+🟢   test: Handlers\Pets\Generated\CreatePetsHandlerGeneratedTests.cs created
+🟢   test: Handlers\Pets\CreatePetsHandlerTests.cs created
+🟢   test: Handlers\Pets\Generated\ShowPetByIdHandlerGeneratedTests.cs created
+🟢   test: Handlers\Pets\ShowPetByIdHandlerTests.cs created
+🔷 Working on server host generation (PetStore.Api)
+🟢   src:  PetStore.Api.csproj created
+🟢   src:  Properties\launchSettings.json created
+🟢   src:  Program.cs created
+🟢   src:  Startup.cs created
+🟢   src:  web.config created
+🟢   src:  ConfigureSwaggerDocOptions.cs created
+🔶 Working on server host unit-test generation (PetStore.Api.Tests)
+🟢   test: PetStore.Api.Tests.csproj created
+🟢   test: WebApiStartupFactory.cs created
+🟢   test: WebApiControllerBaseTest.cs created
+🟢   test: Endpoints\Pets\Generated\ListPetsHandlerStub.cs created
+🟢   test: Endpoints\Pets\Generated\ListPetsTests.cs created
+🟢   test: Endpoints\Pets\Generated\CreatePetsHandlerStub.cs created
+🟢   test: Endpoints\Pets\Generated\CreatePetsTests.cs created
+🟢   test: Endpoints\Pets\Generated\ShowPetByIdHandlerStub.cs created
+🟢   test: Endpoints\Pets\Generated\ShowPetByIdTests.cs created
+🟢   root: PetStore.sln created
+🟢   root: PetStore.sln.DotSettings created
+📐 Working on Coding Rules files
+🟢   root: atc-coding-rules-updater.json created
+🟢   root: atc-coding-rules-updater.ps1 created
+🐭 Working on EditorConfig files
+     Download from: [GitHub] /atc-net/atc-coding-rules/main/distribution/dotnet6/.editorconfig
+     Download time: 27.947 ms
+🟢   root: .editorconfig created
+     Download from: [GitHub] /atc-net/atc-coding-rules/main/distribution/dotnet6/src/.editorconfig
+     Download time: 22.987 ms
+🟢   src: .editorconfig created
+     Download from: [GitHub] /atc-net/atc-coding-rules/main/distribution/dotnet6/test/.editorconfig
+     Download time: 24.465 ms
+🟢   test: .editorconfig created
+🔨 Working on Directory.Build.props files
+     Download from: [GitHub] /atc-net/atc-coding-rules/main/distribution/dotnet6/Directory.Build.props
+     Download time: 20.880 ms
+🟢   root: Directory.Build.props created
+     Download from: [GitHub] /atc-net/atc-coding-rules/main/distribution/dotnet6/src/Directory.Build.props
+     Download time: 48.340 ms
+🟢   src: Directory.Build.props created
+     Download from: [GitHub] /atc-net/atc-coding-rules/main/distribution/dotnet6/test/Directory.Build.props
+     Download time: 29.480 ms
+🟢   test: Directory.Build.props created
+✅ Done
+```
 
 After the generator is finished running, you can start the API by running the following command:
 
