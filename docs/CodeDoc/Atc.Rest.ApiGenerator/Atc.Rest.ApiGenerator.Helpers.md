@@ -22,6 +22,45 @@
 
 <br />
 
+## DirectoryInfoHelper
+
+>```csharp
+>public static class DirectoryInfoHelper
+>```
+
+### Static Methods
+
+#### GetCsFileNameForContract
+>```csharp
+>string GetCsFileNameForContract(DirectoryInfo pathForContracts, string area, string modelName)
+>```
+#### GetCsFileNameForContract
+>```csharp
+>string GetCsFileNameForContract(DirectoryInfo pathForContracts, string area, string subArea, string modelName)
+>```
+#### GetCsFileNameForContractEnumTypes
+>```csharp
+>string GetCsFileNameForContractEnumTypes(DirectoryInfo pathForContracts, string modelName)
+>```
+#### GetCsFileNameForContractShared
+>```csharp
+>string GetCsFileNameForContractShared(DirectoryInfo pathForContracts, string modelName)
+>```
+#### GetCsFileNameForEndpoints
+>```csharp
+>string GetCsFileNameForEndpoints(DirectoryInfo pathForEndpoints, string modelName)
+>```
+#### GetCsFileNameForHandler
+>```csharp
+>string GetCsFileNameForHandler(DirectoryInfo pathForHandlers, string area, string handlerName)
+>```
+#### GetProjectPath
+>```csharp
+>DirectoryInfo GetProjectPath()
+>```
+
+<br />
+
 ## GenerateAtcCodingRulesHelper
 
 >```csharp
@@ -112,11 +151,11 @@
 
 #### DownloadToTempFile
 >```csharp
->FileInfo DownloadToTempFile(string apiDesignPath)
+>FileInfo DownloadToTempFile(ILogger logger, string apiDesignPath)
 >```
-#### GetRawFile
+#### GetAsString
 >```csharp
->string GetRawFile(string rawFileUrl)
+>string GetAsString(ILogger logger, string url, string displayName, CancellationToken cancellationToken = null)
 >```
 
 <br />
@@ -173,7 +212,7 @@
 
 #### CombineAndGetApiDocument
 >```csharp
->Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> CombineAndGetApiDocument(string specificationPath)
+>Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> CombineAndGetApiDocument(ILogger logger, string specificationPath)
 >```
 #### GetBasePathSegmentNames
 >```csharp
@@ -285,7 +324,7 @@
 >```
 #### ScaffoldProjFile
 >```csharp
->void ScaffoldProjFile(ILogger logger, FileInfo projectCsProjFile, bool createAsWeb, bool createAsTestProject, string projectName, string targetFramework, List<string> frameworkReferences, List<Tuple<string, string, string>> packageReferences, List<FileInfo> projectReferences, bool includeApiSpecification, bool usingCodingRules)
+>void ScaffoldProjFile(ILogger logger, FileInfo projectCsProjFile, string fileDisplayLocation, bool createAsWeb, bool createAsTestProject, string projectName, string targetFramework, List<string> frameworkReferences, List<Tuple<string, string, string>> packageReferences, List<FileInfo> projectReferences, bool includeApiSpecification, bool usingCodingRules)
 >```
 #### ScaffoldSlnFile
 >```csharp
@@ -308,11 +347,11 @@
 
 #### Save
 >```csharp
->bool Save(ILogger logger, string file, string text, bool overrideIfExist = True)
+>bool Save(ILogger logger, string file, string fileDisplayLocation, string text, bool overrideIfExist = True)
 >```
 #### Save
 >```csharp
->bool Save(ILogger logger, FileInfo fileInfo, string text, bool overrideIfExist = True)
+>bool Save(ILogger logger, FileInfo fileInfo, string fileDisplayLocation, string text, bool overrideIfExist = True)
 >```
 
 <br />
@@ -334,6 +373,8 @@
 ><b>Parameters:</b><br>
 >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`validationOptions`&nbsp;&nbsp;-&nbsp;&nbsp;The validation options.<br />
 >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`path`&nbsp;&nbsp;-&nbsp;&nbsp;The path.<br />
+>
+><b>Returns:</b> List of possible validation errors
 #### ValidateGlobalParameters
 >```csharp
 >List<LogKeyValueItem> ValidateGlobalParameters(ApiOptionsValidation validationOptions, IEnumerable<string> globalPathParameterNames, KeyValuePair<string, OpenApiPathItem> path)
@@ -344,6 +385,8 @@
 >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`validationOptions`&nbsp;&nbsp;-&nbsp;&nbsp;The validation options.<br />
 >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`globalPathParameterNames`&nbsp;&nbsp;-&nbsp;&nbsp;The global path parameter names.<br />
 >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`path`&nbsp;&nbsp;-&nbsp;&nbsp;The path.<br />
+>
+><b>Returns:</b> List of possible validation errors
 #### ValidateMissingOperationParameters
 >```csharp
 >List<LogKeyValueItem> ValidateMissingOperationParameters(ApiOptionsValidation validationOptions, KeyValuePair<string, OpenApiPathItem> path)
@@ -353,6 +396,8 @@
 ><b>Parameters:</b><br>
 >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`validationOptions`&nbsp;&nbsp;-&nbsp;&nbsp;The validation options.<br />
 >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`path`&nbsp;&nbsp;-&nbsp;&nbsp;The path.<br />
+>
+><b>Returns:</b> List of possible validation errors
 #### ValidateOperationsWithParametersNotPresentInPath
 >```csharp
 >List<LogKeyValueItem> ValidateOperationsWithParametersNotPresentInPath(ApiOptionsValidation validationOptions, KeyValuePair<string, OpenApiPathItem> path)
@@ -362,4 +407,6 @@
 ><b>Parameters:</b><br>
 >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`validationOptions`&nbsp;&nbsp;-&nbsp;&nbsp;The validation options.<br />
 >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`path`&nbsp;&nbsp;-&nbsp;&nbsp;The path.<br />
+>
+><b>Returns:</b> List of possible validation errors
 <hr /><div style='text-align: right'><i>Generated by MarkdownCodeDoc version 1.2</i></div>
