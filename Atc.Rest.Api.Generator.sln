@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30413.136
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F39DCB66-0A9F-47BA-A916-301EC83F26EA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{A4F3156B-9E74-4710-ADBC-4628DF389F68}"
@@ -14,7 +14,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{1575FE97-3F0C-4E58-963E-30B06A03133F}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
-		src\Atc.Rest.ApiGenerator.CLI\README.md = src\Atc.Rest.ApiGenerator.CLI\README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{02E0684C-13A4-4D2C-B6D3-379C52E724E7}"
@@ -39,21 +38,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.Api.Generated", "sampl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.Domain", "sample\Demo.Domain\Demo.Domain.csproj", "{12635ED2-1D8E-4E7D-9640-9ED08E22251A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demo.Client.Generated.Typescript", "Demo.Client.Generated.Typescript", "{8BD9F010-3F5A-4CB9-B288-AC20FAC528D1}"
-	ProjectSection(SolutionItems) = preProject
-		sample\Demo.Client.Generated.Typescript\ServiceClient.ts = sample\Demo.Client.Generated.Typescript\ServiceClient.ts
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demo.Client.Generated.CSharp", "Demo.Client.Generated.CSharp", "{F36989AA-E190-406F-AB62-9D2B3894A581}"
-	ProjectSection(SolutionItems) = preProject
-		sample\Demo.Client.Generated.CSharp\ServiceClient.cs = sample\Demo.Client.Generated.CSharp\ServiceClient.cs
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Rest.ApiGenerator.CLI", "src\Atc.Rest.ApiGenerator.CLI\Atc.Rest.ApiGenerator.CLI.csproj", "{0F69048E-9C05-4BE1-9C73-F703B8ACC8C4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.Api.Tests", "sample\Demo.Api.Tests\Demo.Api.Tests.csproj", "{0D7D2065-7A83-4DAD-9DD8-D76FB7682DD7}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.Api.Generated.Tests", "sample\Demo.Api.Generated.Tests\Demo.Api.Generated.Tests.csproj", "{5FE93063-A83E-4315-A540-6C5F3AE6E4DE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.Domain.Tests", "sample\Demo.Domain.Tests\Demo.Domain.Tests.csproj", "{40B0B0D0-B8AD-486B-A75A-0DF7CFFDC4E8}"
 EndProject
@@ -95,10 +82,6 @@ Global
 		{0D7D2065-7A83-4DAD-9DD8-D76FB7682DD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D7D2065-7A83-4DAD-9DD8-D76FB7682DD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D7D2065-7A83-4DAD-9DD8-D76FB7682DD7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5FE93063-A83E-4315-A540-6C5F3AE6E4DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5FE93063-A83E-4315-A540-6C5F3AE6E4DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5FE93063-A83E-4315-A540-6C5F3AE6E4DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5FE93063-A83E-4315-A540-6C5F3AE6E4DE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{40B0B0D0-B8AD-486B-A75A-0DF7CFFDC4E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{40B0B0D0-B8AD-486B-A75A-0DF7CFFDC4E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{40B0B0D0-B8AD-486B-A75A-0DF7CFFDC4E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -116,11 +99,8 @@ Global
 		{C27353DA-1802-4443-80EE-B838A29AC419} = {7676D3AA-2882-4517-8E93-93E632C9EA80}
 		{94AEFFF3-7233-4ABD-9321-4786F7FA5631} = {02E0684C-13A4-4D2C-B6D3-379C52E724E7}
 		{12635ED2-1D8E-4E7D-9640-9ED08E22251A} = {02E0684C-13A4-4D2C-B6D3-379C52E724E7}
-		{8BD9F010-3F5A-4CB9-B288-AC20FAC528D1} = {02E0684C-13A4-4D2C-B6D3-379C52E724E7}
-		{F36989AA-E190-406F-AB62-9D2B3894A581} = {02E0684C-13A4-4D2C-B6D3-379C52E724E7}
 		{0F69048E-9C05-4BE1-9C73-F703B8ACC8C4} = {A4F3156B-9E74-4710-ADBC-4628DF389F68}
 		{0D7D2065-7A83-4DAD-9DD8-D76FB7682DD7} = {02E0684C-13A4-4D2C-B6D3-379C52E724E7}
-		{5FE93063-A83E-4315-A540-6C5F3AE6E4DE} = {02E0684C-13A4-4D2C-B6D3-379C52E724E7}
 		{40B0B0D0-B8AD-486B-A75A-0DF7CFFDC4E8} = {02E0684C-13A4-4D2C-B6D3-379C52E724E7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution

@@ -1,124 +1,68 @@
-using System;
-using System.IO;
-using System.Linq;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Atc.Rest.ApiGenerator.Models.ApiOptions;
-using McMaster.Extensions.CommandLineUtils;
+namespace Atc.Rest.ApiGenerator.CLI;
 
-namespace Atc.Rest.ApiGenerator.CLI
+public static class ApiOptionsHelper
 {
-    public static class ApiOptionsHelper
+    public static async Task<ApiOptions> CreateApiOptions(
+        BaseConfigurationCommandSettings settings)
     {
-        public static ApiOptions CreateDefault(CommandLineApplication configCmd)
+        ArgumentNullException.ThrowIfNull(settings);
+
+        if (settings.OptionsPath is null ||
+            !settings.OptionsPath.IsSet)
         {
-            if (configCmd == null)
-            {
-                throw new ArgumentNullException(nameof(configCmd));
-            }
-
-            var cmdOptionOptionsPath = configCmd
-                .GetOptions()
-                .FirstOrDefault(x => x.LongName!.Equals("optionsPath", StringComparison.OrdinalIgnoreCase));
-
-            var apiOptions = new ApiOptions();
-
-            if (cmdOptionOptionsPath == null || string.IsNullOrEmpty(cmdOptionOptionsPath.Value()))
-            {
-                return apiOptions;
-            }
-
-            var optionsPath = cmdOptionOptionsPath.Value()!;
-
-            var fileInfo = optionsPath.EndsWith(".json", StringComparison.Ordinal)
-                ? new FileInfo(optionsPath)
-                : new FileInfo(Path.Combine(optionsPath, "ApiGeneratorOptions.json"));
-
-            if (!fileInfo.Exists)
-            {
-                return apiOptions;
-            }
-
-            var serializeOptions = new JsonSerializerOptions();
-            serializeOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
-            serializeOptions.WriteIndented = true;
-
-            using var stream = new StreamReader(fileInfo.FullName);
-            var json = stream.ReadToEnd();
-            apiOptions = JsonSerializer.Deserialize<ApiOptions>(json, serializeOptions);
-
-            return apiOptions!;
+            return new ApiOptions();
         }
 
-        public static void ApplyValidationOverrides(ApiOptions apiOptions, CommandLineApplication configCmd)
+        var fileInfo = new FileInfo(settings.OptionsPath.Value);
+        if (!fileInfo.Exists)
         {
-            if (apiOptions == null)
-            {
-                throw new ArgumentNullException(nameof(apiOptions));
-            }
-
-            if (configCmd == null)
-            {
-                throw new ArgumentNullException(nameof(configCmd));
-            }
-
-            var cmdOptionStrictMode = configCmd
-                .GetOptions()
-                .FirstOrDefault(x => x.LongName!.EndsWith("strictMode", StringComparison.OrdinalIgnoreCase));
-            apiOptions.Validation.StrictMode = cmdOptionStrictMode != null && cmdOptionStrictMode.HasValue();
-
-            var cmdOptionOperationIdCasingStyle = configCmd
-                .GetOptions()
-                .FirstOrDefault(x => x.LongName!.EndsWith("operationIdCasingStyle", StringComparison.OrdinalIgnoreCase));
-            if (cmdOptionOperationIdCasingStyle != null && !string.IsNullOrEmpty(cmdOptionOperationIdCasingStyle.Value()))
-            {
-                apiOptions.Validation.OperationIdCasingStyle = Enum<CasingStyle>.Parse(cmdOptionOperationIdCasingStyle.Value()!);
-            }
-
-            var cmdOptionModelNameCasingStyle = configCmd
-                .GetOptions()
-                .FirstOrDefault(x => x.LongName!.EndsWith("modelNameCasingStyle", StringComparison.OrdinalIgnoreCase));
-            if (cmdOptionModelNameCasingStyle != null && !string.IsNullOrEmpty(cmdOptionModelNameCasingStyle.Value()))
-            {
-                apiOptions.Validation.ModelNameCasingStyle = Enum<CasingStyle>.Parse(cmdOptionModelNameCasingStyle.Value()!);
-            }
-
-            var cmdOptionModelPropertyNameCasingStyle = configCmd
-                .GetOptions()
-                .FirstOrDefault(x => x.LongName!.EndsWith("modelPropertyNameCasingStyle", StringComparison.OrdinalIgnoreCase));
-            if (cmdOptionModelPropertyNameCasingStyle != null && !string.IsNullOrEmpty(cmdOptionModelPropertyNameCasingStyle.Value()))
-            {
-                apiOptions.Validation.ModelPropertyNameCasingStyle = Enum<CasingStyle>.Parse(cmdOptionModelPropertyNameCasingStyle.Value()!);
-            }
+            throw new FileNotFoundException("Could not find options file.", settings.OptionsPath.Value);
         }
 
-        public static void ApplyGeneratorOverrides(ApiOptions apiOptions, CommandLineApplication configCmd)
+        var options = await FileHelper<ApiOptions>.ReadJsonFileAndDeserializeAsync(fileInfo);
+        if (options is null)
         {
-            if (apiOptions == null)
-            {
-                throw new ArgumentNullException(nameof(apiOptions));
-            }
+            throw new SerializationException($"Could not read options file '{settings.OptionsPath.Value}'.");
+        }
 
-            if (configCmd == null)
-            {
-                throw new ArgumentNullException(nameof(configCmd));
-            }
+        ApplyValidationOverrides(options, settings);
+        ApplyGeneratorOverrides(options, settings);
 
-            var cmdOptionUseNullableReferenceTypes = configCmd
-                .GetOptions()
-                .FirstOrDefault(x => x.LongName!.EndsWith("useNullableReferenceTypes", StringComparison.OrdinalIgnoreCase));
-            if (cmdOptionUseNullableReferenceTypes != null && !string.IsNullOrEmpty(cmdOptionUseNullableReferenceTypes.Value()))
-            {
-                apiOptions.Generator.UseNullableReferenceTypes = bool.Parse(cmdOptionUseNullableReferenceTypes.Value()!);
-            }
+        return options;
+    }
 
-            var cmdOptionUseAuthorization = configCmd
-                .GetOptions()
-                .FirstOrDefault(x => x.LongName!.EndsWith("useAuthorization", StringComparison.OrdinalIgnoreCase));
-            if (cmdOptionUseAuthorization != null && !string.IsNullOrEmpty(cmdOptionUseAuthorization.Value()))
-            {
-                apiOptions.Generator.UseAuthorization = bool.Parse(cmdOptionUseAuthorization.Value()!);
-            }
+    private static void ApplyValidationOverrides(
+        ApiOptions apiOptions,
+        BaseConfigurationCommandSettings settings)
+    {
+        if (settings.StrictMode)
+        {
+            apiOptions.Validation.StrictMode = settings.StrictMode;
+        }
+
+        if (settings.OperationIdCasingStyle.IsSet)
+        {
+            apiOptions.Validation.OperationIdCasingStyle = settings.OperationIdCasingStyle.Value;
+        }
+
+        if (settings.ModelNameCasingStyle.IsSet)
+        {
+            apiOptions.Validation.ModelNameCasingStyle = settings.ModelNameCasingStyle.Value;
+        }
+
+        if (settings.ModelPropertyNameCasingStyle.IsSet)
+        {
+            apiOptions.Validation.ModelPropertyNameCasingStyle = settings.ModelPropertyNameCasingStyle.Value;
+        }
+    }
+
+    private static void ApplyGeneratorOverrides(
+        ApiOptions apiOptions,
+        BaseConfigurationCommandSettings settings)
+    {
+        if (settings.UseAuthorization)
+        {
+            apiOptions.Generator.UseAuthorization = settings.UseAuthorization;
         }
     }
 }

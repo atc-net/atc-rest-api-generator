@@ -1,4 +1,4 @@
-﻿using System.CodeDom.Compiler;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -43,7 +43,7 @@ namespace Scenario2.Api.Tests.Endpoints.Files.Generated
         private async Task<MultipartFormDataContent> GetMultipartFormDataContentFromFilesAsFormDataRequest(FilesAsFormDataRequest request)
         {
             var formDataContent = new MultipartFormDataContent();
-            if (request.Files != null)
+            if (request.Files is not null)
             {
                 foreach (var item in request.Files)
                 {

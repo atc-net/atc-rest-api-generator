@@ -1,49 +1,47 @@
-using System.IO;
-using Microsoft.OpenApi.Models;
+namespace Atc.Rest.ApiGenerator.Models;
 
-namespace Atc.Rest.ApiGenerator.Models
+public class ApiProjectOptions : BaseProjectOptions
 {
-    public class ApiProjectOptions : BaseProjectOptions
+    public ApiProjectOptions(
+        DirectoryInfo projectSrcGeneratePath,
+        DirectoryInfo? projectTestGeneratePath,
+        OpenApiDocument openApiDocument,
+        FileInfo openApiDocumentFile,
+        string projectPrefixName,
+        string? projectSuffixName,
+        ApiOptions apiOptions,
+        bool usingCodingRules,
+        bool forClient = false,
+        string? clientFolderName = null)
+        : base(
+            projectSrcGeneratePath,
+            projectTestGeneratePath,
+            openApiDocument,
+            openApiDocumentFile,
+            projectPrefixName,
+            projectSuffixName,
+            apiOptions,
+            usingCodingRules,
+            forClient,
+            clientFolderName)
     {
-        public ApiProjectOptions(
-            DirectoryInfo projectSrcGeneratePath,
-            DirectoryInfo? projectTestGeneratePath,
-            OpenApiDocument openApiDocument,
-            FileInfo openApiDocumentFile,
-            string projectPrefixName,
-            string projectSuffixName,
-            ApiOptions.ApiOptions apiOptions,
-            bool forClient = false,
-            string? clientFolderName = null)
-            : base(
-                projectSrcGeneratePath,
-                projectTestGeneratePath,
-                openApiDocument,
-                openApiDocumentFile,
-                projectPrefixName,
-                projectSuffixName,
-                apiOptions,
-                forClient,
-                clientFolderName)
+        if (string.IsNullOrEmpty(clientFolderName))
         {
-            if (string.IsNullOrEmpty(clientFolderName))
-            {
-                PathForEndpoints = new DirectoryInfo(Path.Combine(PathForSrcGenerate.FullName, NameConstants.Endpoints));
-                PathForContracts = new DirectoryInfo(Path.Combine(PathForSrcGenerate.FullName, NameConstants.Contracts));
-                PathForContractsShared = new DirectoryInfo(Path.Combine(PathForContracts.FullName, NameConstants.ContractsSharedModels));
-            }
-            else
-            {
-                PathForEndpoints = new DirectoryInfo(Path.Combine(Path.Combine(PathForSrcGenerate.FullName, clientFolderName), NameConstants.Endpoints));
-                PathForContracts = new DirectoryInfo(Path.Combine(Path.Combine(PathForSrcGenerate.FullName, clientFolderName), NameConstants.Contracts));
-                PathForContractsShared = new DirectoryInfo(Path.Combine(Path.Combine(PathForContracts.FullName), NameConstants.ContractsSharedModels));
-            }
+            PathForEndpoints = new DirectoryInfo(Path.Combine(PathForSrcGenerate.FullName, NameConstants.Endpoints));
+            PathForContracts = new DirectoryInfo(Path.Combine(PathForSrcGenerate.FullName, NameConstants.Contracts));
+            PathForContractsShared = new DirectoryInfo(Path.Combine(PathForContracts.FullName, NameConstants.ContractsSharedModels));
         }
-
-        public DirectoryInfo PathForEndpoints { get; }
-
-        public DirectoryInfo PathForContracts { get; }
-
-        public DirectoryInfo PathForContractsShared { get; }
+        else
+        {
+            PathForEndpoints = new DirectoryInfo(Path.Combine(Path.Combine(PathForSrcGenerate.FullName, clientFolderName), NameConstants.Endpoints));
+            PathForContracts = new DirectoryInfo(Path.Combine(Path.Combine(PathForSrcGenerate.FullName, clientFolderName), NameConstants.Contracts));
+            PathForContractsShared = new DirectoryInfo(Path.Combine(Path.Combine(PathForContracts.FullName), NameConstants.ContractsSharedModels));
+        }
     }
+
+    public DirectoryInfo PathForEndpoints { get; }
+
+    public DirectoryInfo PathForContracts { get; }
+
+    public DirectoryInfo PathForContractsShared { get; }
 }

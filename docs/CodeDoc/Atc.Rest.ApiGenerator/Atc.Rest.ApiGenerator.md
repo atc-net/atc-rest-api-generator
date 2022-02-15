@@ -7,6 +7,41 @@
 
 <br />
 
+## AppEmojisConstants
+
+>```csharp
+>public static class AppEmojisConstants
+>```
+
+### Static Fields
+
+#### AreaCodingRules
+>```csharp
+>string AreaCodingRules
+>```
+#### AreaDirectoryBuildProps
+>```csharp
+>string AreaDirectoryBuildProps
+>```
+#### AreaEditorConfig
+>```csharp
+>string AreaEditorConfig
+>```
+#### AreaGenerateCode
+>```csharp
+>string AreaGenerateCode
+>```
+#### AreaGenerateTest
+>```csharp
+>string AreaGenerateTest
+>```
+#### AreaValidation
+>```csharp
+>string AreaValidation
+>```
+
+<br />
+
 ## AtcRestApiGeneratorAssemblyTypeInitializer
 
 >```csharp

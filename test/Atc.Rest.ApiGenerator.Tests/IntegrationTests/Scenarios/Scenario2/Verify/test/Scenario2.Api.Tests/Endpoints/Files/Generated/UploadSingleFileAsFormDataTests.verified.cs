@@ -1,4 +1,4 @@
-﻿using System.CodeDom.Compiler;
+using System.CodeDom.Compiler;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -38,7 +38,7 @@ namespace Scenario2.Api.Tests.Endpoints.Files.Generated
         private async Task<MultipartFormDataContent> GetMultipartFormDataContentFromUploadSingleFileAsFormDataRequest(IFormFile request)
         {
             var formDataContent = new MultipartFormDataContent();
-            if (request != null)
+            if (request is not null)
             {
                 var bytesContent = new ByteArrayContent(await request.GetBytes());
                 formDataContent.Add(bytesContent, "Request", request.FileName);

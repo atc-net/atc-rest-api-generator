@@ -1,14 +1,10 @@
-﻿using System.Collections.Generic;
-using Atc.Rest.ApiGenerator.Models;
+namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Domain;
 
-namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Domain
+public interface ISyntaxGeneratorHandlers
 {
-    public interface ISyntaxGeneratorHandlers
-    {
-        DomainProjectOptions DomainProjectOptions { get; }
+    DomainProjectOptions DomainProjectOptions { get; }
 
-        string FocusOnSegmentName { get; }
+    string FocusOnSegmentName { get; }
 
-        List<SyntaxGeneratorHandler> GenerateSyntaxTrees();
-    }
+    List<SyntaxGeneratorHandler> GenerateSyntaxTrees();
 }

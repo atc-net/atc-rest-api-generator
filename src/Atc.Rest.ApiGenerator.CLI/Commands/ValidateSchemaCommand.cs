@@ -1,32 +1,46 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using Atc.Data.Models;
-using Atc.Rest.ApiGenerator.CLI.Commands.Options;
-using Atc.Rest.ApiGenerator.Helpers;
-using McMaster.Extensions.CommandLineUtils;
+namespace Atc.Rest.ApiGenerator.CLI.Commands;
 
-// ReSharper disable LocalizableElement
-namespace Atc.Rest.ApiGenerator.CLI.Commands
+public class ValidateSchemaCommand : AsyncCommand<BaseConfigurationCommandSettings>
 {
-    [Command("schema", Description = "Validate OpenApi Specification.")]
-    public class ValidateSchemaCommand : SchemaCommandOptions
+    private readonly ILogger<ValidateSchemaCommand> logger;
+
+    public ValidateSchemaCommand(ILogger<ValidateSchemaCommand> logger) => this.logger = logger;
+
+    public override Task<int> ExecuteAsync(
+        CommandContext context,
+        BaseConfigurationCommandSettings settings)
     {
-        [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "OK.")]
-        public int OnExecute(CommandLineApplication configCmd)
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(settings);
+        return ExecuteInternalAsync(settings);
+    }
+
+    [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "OK.")]
+    private async Task<int> ExecuteInternalAsync(
+        BaseConfigurationCommandSettings settings)
+    {
+        ConsoleHelper.WriteHeader();
+
+        var apiOptions = await ApiOptionsHelper.CreateApiOptions(settings);
+        var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(logger, settings.SpecificationPath);
+
+        try
         {
-            ConsoleHelper.WriteHeader();
-
-            var verboseMode = CommandLineApplicationHelper.GetVerboseMode(configCmd);
-            var apiOptions = ApiOptionsHelper.CreateDefault(configCmd);
-            ApiOptionsHelper.ApplyValidationOverrides(apiOptions, configCmd);
-
-            var specificationPath = CommandLineApplicationHelper.GetSpecificationPath(configCmd);
-            var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(specificationPath);
-
-            var logItems = new List<LogKeyValueItem>();
-            logItems.AddRange(OpenApiDocumentHelper.Validate(apiDocument, apiOptions.Validation));
-
-            return ConsoleHelper.WriteLogItemsAndExit(logItems, verboseMode, "Schema");
+            if (!OpenApiDocumentHelper.Validate(
+                    logger,
+                    apiDocument,
+                    apiOptions.Validation))
+            {
+                return ConsoleExitStatusCodes.Failure;
+            }
         }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Validation failed.");
+            return ConsoleExitStatusCodes.Failure;
+        }
+
+        logger.LogInformation("Schema validated successfully.");
+        return ConsoleExitStatusCodes.Success;
     }
 }

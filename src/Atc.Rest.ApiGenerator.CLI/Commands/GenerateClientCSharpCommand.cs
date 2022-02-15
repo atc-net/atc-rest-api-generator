@@ -1,53 +1,61 @@
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using Atc.Data.Models;
-using Atc.Rest.ApiGenerator.CLI.Commands.Options;
-using Atc.Rest.ApiGenerator.Helpers;
-using McMaster.Extensions.CommandLineUtils;
+namespace Atc.Rest.ApiGenerator.CLI.Commands;
 
-// ReSharper disable LocalizableElement
-namespace Atc.Rest.ApiGenerator.CLI.Commands
+public class GenerateClientCSharpCommand : AsyncCommand<ClientApiCommandSettings>
 {
-    [Command("csharp", Description = "Generate client project in C#.")]
-    public class GenerateClientCSharpCommand : ClientApiCommandOptions
+    private readonly ILogger<GenerateClientCSharpCommand> logger;
+
+    public GenerateClientCSharpCommand(ILogger<GenerateClientCSharpCommand> logger) => this.logger = logger;
+
+    public override Task<int> ExecuteAsync(
+        CommandContext context,
+        ClientApiCommandSettings settings)
     {
-        private const string CommandArea = "Client-CSharp";
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(settings);
+        return ExecuteInternalAsync(settings);
+    }
 
-        [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "OK.")]
-        public int OnExecute(CommandLineApplication configCmd)
+    [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "OK.")]
+    private async Task<int> ExecuteInternalAsync(
+        ClientApiCommandSettings settings)
+    {
+        ConsoleHelper.WriteHeader();
+
+        var apiOptions = await ApiOptionsHelper.CreateApiOptions(settings);
+        var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(logger, settings.SpecificationPath);
+
+        var usingCodingRules = settings.DisableCodingRules; // TODO: Detect
+
+        try
         {
-            ConsoleHelper.WriteHeader();
-
-            var verboseMode = CommandLineApplicationHelper.GetVerboseMode(configCmd);
-            var apiOptions = ApiOptionsHelper.CreateDefault(configCmd);
-            ApiOptionsHelper.ApplyValidationOverrides(apiOptions, configCmd);
-
-            var specificationPath = CommandLineApplicationHelper.GetSpecificationPath(configCmd);
-            var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(specificationPath);
-
-            var logItems = new List<LogKeyValueItem>();
-            logItems.AddRange(OpenApiDocumentHelper.Validate(apiDocument, apiOptions.Validation));
-
-            if (logItems.Any(x => x.LogCategory == LogCategoryType.Error))
+            if (!OpenApiDocumentHelper.Validate(
+                    logger,
+                    apiDocument,
+                    apiOptions.Validation))
             {
-                return ConsoleHelper.WriteLogItemsAndExit(logItems, verboseMode, CommandArea);
+                return ConsoleExitStatusCodes.Failure;
             }
 
-            var projectPrefixName = CommandLineApplicationHelper.GetProjectPrefixName(configCmd);
-            var clientFolderName = CommandLineApplicationHelper.GetClientFolderName(configCmd);
-            var outputPath = CommandLineApplicationHelper.GetOutputPath(configCmd);
-            var excludeEndpointGeneration = CommandLineApplicationHelper.GetExcludeEndpointGeneration(configCmd);
-
-            logItems.AddRange(GenerateHelper.GenerateServerCSharpClient(
-                projectPrefixName,
-                clientFolderName,
-                outputPath,
-                apiDocument,
-                excludeEndpointGeneration,
-                apiOptions));
-
-            return ConsoleHelper.WriteLogItemsAndExit(logItems, verboseMode, CommandArea);
+            if (!GenerateHelper.GenerateServerCSharpClient(
+                    logger,
+                    settings.ProjectPrefixName,
+                    settings.ClientFolderName,
+                    new DirectoryInfo(settings.OutputPath),
+                    apiDocument,
+                    settings.ExcludeEndpointGeneration,
+                    apiOptions,
+                    usingCodingRules))
+            {
+                return ConsoleExitStatusCodes.Failure;
+            }
         }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, $"{EmojisConstants.Error} Generation failed.");
+            return ConsoleExitStatusCodes.Failure;
+        }
+
+        logger.LogInformation($"{EmojisConstants.Success} Done");
+        return ConsoleExitStatusCodes.Success;
     }
 }

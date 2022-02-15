@@ -1,19 +1,42 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using McMaster.Extensions.CommandLineUtils;
+namespace Atc.Rest.ApiGenerator.CLI.Commands;
 
-// ReSharper disable once ClassNeverInstantiated.Global
-namespace Atc.Rest.ApiGenerator.CLI.Commands
+public class RootCommand : AsyncCommand<RootCommandSettings>
 {
-    [Subcommand(
-        typeof(ValidateCommand),
-        typeof(GenerateCommand))]
-    public class RootCommand
+    public override Task<int> ExecuteAsync(
+        CommandContext context,
+        RootCommandSettings settings)
     {
-        [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "OK.")]
-        public int OnExecute(CommandLineApplication configCmd)
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(settings);
+        return ExecuteInternalAsync(settings);
+    }
+
+    private static async Task<int> ExecuteInternalAsync(
+        RootCommandSettings settings)
+    {
+        if (settings.IsOptionValueTrue(settings.Version))
         {
-            ConsoleHelper.WriteHelp(configCmd, "Specify a command");
-            return ExitStatusCodes.Failure;
+            HandleVersionOption();
         }
+
+        await Task.Delay(1);
+        return ConsoleExitStatusCodes.Success;
+    }
+
+    [SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "OK.")]
+    private static void HandleVersionOption()
+    {
+        System.Console.WriteLine(CliHelper.GetCurrentVersion().ToString());
+        if (CliVersionHelper.IsLatestVersion())
+        {
+            return;
+        }
+
+        var latestVersion = CliVersionHelper.GetLatestVersion()!;
+        System.Console.WriteLine(string.Empty);
+        System.Console.WriteLine($"Version {latestVersion} of ATC-Rest-Api-Generator is available!");
+        System.Console.WriteLine(string.Empty);
+        System.Console.WriteLine("To update run the following command:");
+        System.Console.WriteLine("   dotnet tool update --global atc-rest-api-generator");
     }
 }

@@ -1,34 +1,76 @@
-using System;
-using System.Collections.Concurrent;
-using System.IO;
-using System.Net;
+using System.Diagnostics;
 
-namespace Atc.Rest.ApiGenerator.Helpers
+namespace Atc.Rest.ApiGenerator.Helpers;
+
+public static class HttpClientHelper
 {
-    public static class HttpClientHelper
-    {
-        private static readonly ConcurrentDictionary<string, string> Cache = new ConcurrentDictionary<string, string>(StringComparer.Ordinal);
+    private static readonly ConcurrentDictionary<string, string> Cache = new (StringComparer.Ordinal);
 
-        public static string GetRawFile(string rawFileUrl)
+    public static string GetAsString(
+        ILogger logger,
+        string url,
+        string displayName,
+        CancellationToken cancellationToken = default)
+    {
+        var cacheValue = Cache.GetValueOrDefault(url);
+        if (cacheValue is not null)
         {
-            using var client = new WebClient();
-            return Cache.GetOrAdd(rawFileUrl, client.DownloadString(rawFileUrl));
+            return cacheValue;
         }
 
-        public static FileInfo DownloadToTempFile(string apiDesignPath)
+        if (string.IsNullOrEmpty(displayName))
         {
-            if (apiDesignPath == null)
+            displayName = url;
+        }
+
+        try
+        {
+            var response = string.Empty;
+            TaskHelper.RunSync(async () =>
             {
-                throw new ArgumentNullException(nameof(apiDesignPath));
+                var stopwatch = Stopwatch.StartNew();
+                logger.LogTrace($"     Download from: [link={url}]{displayName}[/]");
+
+                var uri = new Uri(url);
+                using var client = new HttpClient();
+                response = await client.GetStringAsync(uri, cancellationToken);
+
+                stopwatch.Stop();
+                logger.LogTrace($"     Download time: {stopwatch.Elapsed.GetPrettyTime()}");
+            });
+
+            return Cache.GetOrAdd(url, response);
+        }
+        catch (WebException ex)
+        {
+            if (ex.Status == WebExceptionStatus.ProtocolError &&
+                ex.Message.Contains("404", StringComparison.Ordinal))
+            {
+                return string.Empty;
             }
 
-            var fileName = new FileInfo(apiDesignPath).Name;
-            var downloadTempFile = new FileInfo(Path.Combine(Path.GetTempPath(), fileName));
-
-            using var client = new WebClient();
-            client.DownloadFile(apiDesignPath, downloadTempFile.FullName);
-
-            return downloadTempFile;
+            logger.LogTrace($"     Download error: {ex.GetMessage()}");
+            throw;
         }
+    }
+
+    public static FileInfo DownloadToTempFile(
+        ILogger logger,
+        string apiDesignPath)
+    {
+        ArgumentNullException.ThrowIfNull(apiDesignPath);
+
+        logger.LogInformation($"{AppEmojisConstants.AreaDownload} Fetching api specification");
+
+        var yamlContent = GetAsString(
+            logger,
+            apiDesignPath,
+            apiDesignPath);
+
+        var fileName = new FileInfo(apiDesignPath).Name;
+        var downloadTempFile = new FileInfo(Path.Combine(Path.GetTempPath(), fileName));
+        FileHelper.WriteAllText(downloadTempFile, yamlContent);
+
+        return downloadTempFile;
     }
 }

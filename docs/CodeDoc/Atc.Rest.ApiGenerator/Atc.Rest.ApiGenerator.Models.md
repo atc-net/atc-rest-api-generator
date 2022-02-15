@@ -151,6 +151,14 @@
 >```csharp
 >ToolVersion
 >```
+#### UseNullableReferenceTypes
+>```csharp
+>UseNullableReferenceTypes
+>```
+#### UsingCodingRules
+>```csharp
+>UsingCodingRules
+>```
 
 <br />
 
@@ -165,10 +173,6 @@
 #### ApiOptions
 >```csharp
 >ApiOptions
->```
-#### ApiVersion
->```csharp
->ApiVersion
 >```
 #### BasePathSegmentNames
 >```csharp
@@ -218,6 +222,14 @@
 >```csharp
 >ToolVersion
 >```
+#### UseNullableReferenceTypes
+>```csharp
+>UseNullableReferenceTypes
+>```
+#### UsingCodingRules
+>```csharp
+>UsingCodingRules
+>```
 ### Methods
 
 #### ToString
@@ -255,7 +267,7 @@
 
 #### SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles
 >```csharp
->List<LogKeyValueItem> SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles()
+>bool SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles(ILogger logger)
 >```
 
 <br />
@@ -481,7 +493,7 @@
 
 #### SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles
 >```csharp
->List<LogKeyValueItem> SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles()
+>bool SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles(ILogger logger)
 >```
 
 <br />

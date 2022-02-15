@@ -35,11 +35,6 @@ namespace Scenario1.Api
                         Contact = new OpenApiContact
                         {
                             Name = "atc-net A/S",
-                            Email = null,
-                        },
-                        License = new OpenApiLicense
-                        {
-                            Name = null,
                         },
                     });
             }

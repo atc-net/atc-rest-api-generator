@@ -47,7 +47,7 @@
 >```
 #### ToFile
 >```csharp
->LogKeyValueItem ToFile()
+>void ToFile()
 >```
 #### ToFile
 >```csharp
@@ -95,6 +95,10 @@
 #### HasParametersOrRequestBody
 >```csharp
 >HasParametersOrRequestBody
+>```
+#### Logger
+>```csharp
+>Logger
 >```
 #### OperationSchemaMappings
 >```csharp
@@ -147,7 +151,7 @@
 >```
 #### ToFile
 >```csharp
->LogKeyValueItem ToFile()
+>void ToFile()
 >```
 #### ToFile
 >```csharp
@@ -225,7 +229,7 @@
 >```
 #### ToFile
 >```csharp
->LogKeyValueItem ToFile()
+>void ToFile()
 >```
 #### ToFile
 >```csharp
@@ -270,7 +274,7 @@
 >```
 #### ToFile
 >```csharp
->LogKeyValueItem ToFile()
+>void ToFile()
 >```
 #### ToFile
 >```csharp

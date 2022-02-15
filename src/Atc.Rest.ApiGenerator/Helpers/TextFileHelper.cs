@@ -1,128 +1,158 @@
-using System;
-using System.IO;
-using System.Text;
-using Atc.Data;
-using Atc.Data.Models;
+using Atc.Console.Spectre;
 
-namespace Atc.Rest.ApiGenerator.Helpers
+namespace Atc.Rest.ApiGenerator.Helpers;
+
+public static class TextFileHelper
 {
-    public static class TextFileHelper
+    public static bool Save(
+        ILogger logger,
+        string file,
+        string fileDisplayLocation,
+        string text,
+        bool overrideIfExist = true)
     {
-        public static LogKeyValueItem Save(string file, string text, bool overrideIfExist = true)
+        ArgumentNullException.ThrowIfNull(logger);
+        ArgumentNullException.ThrowIfNull(file);
+        ArgumentNullException.ThrowIfNull(fileDisplayLocation);
+        ArgumentNullException.ThrowIfNull(text);
+
+        return Save(logger, new FileInfo(file), fileDisplayLocation, text, overrideIfExist);
+    }
+
+    public static bool Save(
+        ILogger logger,
+        FileInfo fileInfo,
+        string fileDisplayLocation,
+        string text,
+        bool overrideIfExist = true)
+    {
+        ArgumentNullException.ThrowIfNull(logger);
+        ArgumentNullException.ThrowIfNull(fileInfo);
+        ArgumentNullException.ThrowIfNull(fileDisplayLocation);
+        ArgumentNullException.ThrowIfNull(text);
+
+        if (fileInfo.Directory is not null &&
+            !fileInfo.Directory.Exists)
         {
-            if (file == null)
-            {
-                throw new ArgumentNullException(nameof(file));
-            }
-
-            if (text == null)
-            {
-                throw new ArgumentNullException(nameof(text));
-            }
-
-            return Save(new FileInfo(file), text, overrideIfExist);
+            Directory.CreateDirectory(fileInfo.Directory.FullName);
         }
 
-        public static LogKeyValueItem Save(FileInfo fileInfo, string text, bool overrideIfExist = true)
+        // Trim last NewLine in in *.cs files
+        if (fileInfo.Extension.Equals(".cs", StringComparison.OrdinalIgnoreCase) &&
+            text.EndsWith("}" + Environment.NewLine, StringComparison.Ordinal))
         {
-            if (fileInfo == null)
-            {
-                throw new ArgumentNullException(nameof(fileInfo));
-            }
-
-            if (text == null)
-            {
-                throw new ArgumentNullException(nameof(text));
-            }
-
-            if (fileInfo.Directory != null && !fileInfo.Directory.Exists)
-            {
-                Directory.CreateDirectory(fileInfo.Directory.FullName);
-            }
-
-            // Trim last NewLine in in *.cs files
-            if (fileInfo.Extension.Equals(".cs", StringComparison.OrdinalIgnoreCase) &&
-                text.EndsWith("}" + Environment.NewLine, StringComparison.Ordinal))
-            {
-                var index = text.LastIndexOf(Environment.NewLine, StringComparison.Ordinal);
-                text = text.Remove(index);
-            }
-
-            if (File.Exists(fileInfo.FullName))
-            {
-                if (!overrideIfExist)
-                {
-                    return LogItemFactory.CreateDebug("FileSkip", "#", fileInfo.FullName);
-                }
-
-                if (fileInfo.Extension.Equals(".cs", StringComparison.OrdinalIgnoreCase) ||
-                    fileInfo.Extension.Equals(".csproj", StringComparison.OrdinalIgnoreCase) ||
-                    fileInfo.Extension.Equals(".sln", StringComparison.OrdinalIgnoreCase))
-                {
-                    // If the content is the same - Note this don't take care of GIT-CRLF handling process.
-                    string orgText = File.ReadAllText(fileInfo.FullName, Encoding.UTF8);
-                    if (orgText == text)
-                    {
-                        return LogItemFactory.CreateDebug("FileSkip", "#", fileInfo.FullName);
-                    }
-
-                    if (RemoveApiGeneratorVersionLine(orgText, true) == RemoveApiGeneratorVersionLine(text, true))
-                    {
-                        return LogItemFactory.CreateDebug("FileSkip", "#", fileInfo.FullName);
-                    }
-                }
-
-                File.WriteAllText(fileInfo.FullName, text, Encoding.UTF8);
-                return LogItemFactory.CreateDebug("FileUpdate", "#", fileInfo.FullName);
-            }
-
-            File.WriteAllText(fileInfo.FullName, text, Encoding.UTF8);
-            return LogItemFactory.CreateDebug("FileCreate", "#", fileInfo.FullName);
+            var index = text.LastIndexOf(Environment.NewLine, StringComparison.Ordinal);
+            text = text.Remove(index);
         }
 
-        private static string RemoveApiGeneratorVersionLine(string text, bool removeNewLines = false)
+        fileDisplayLocation = ReformatFileDisplayLocationIfNeeded(fileInfo, fileDisplayLocation);
+
+        if (File.Exists(fileInfo.FullName))
         {
-            string[] sa = text.Split(Environment.NewLine.ToCharArray());
-            var sb = new StringBuilder();
-            bool isRemovedComment = false;
-            bool isRemovedAttribute = false;
-            int lastIndex = sa.Length - 1;
-            for (int i = 0; i < sa.Length; i++)
+            if (!overrideIfExist)
             {
-                if (!isRemovedComment &&
-                    sa[i].Contains("auto-generated", StringComparison.Ordinal) &&
-                    sa[i].Contains("ApiGenerator", StringComparison.Ordinal))
+                logger.LogDebug($"{EmojisConstants.FileNotUpdated}   {fileDisplayLocation} nothing to update");
+                return false;
+            }
+
+            if (fileInfo.Extension.Equals(".cs", StringComparison.OrdinalIgnoreCase) ||
+                fileInfo.Extension.Equals(".csproj", StringComparison.OrdinalIgnoreCase) ||
+                fileInfo.Extension.Equals(".sln", StringComparison.OrdinalIgnoreCase))
+            {
+                // If the content is the same - Note this don't take care of GIT-CRLF handling process.
+                var orgText = FileHelper.ReadAllText(fileInfo);
+                if (orgText == text)
                 {
-                    isRemovedComment = true;
-                    continue;
+                    logger.LogDebug($"{EmojisConstants.FileNotUpdated}   {fileDisplayLocation} nothing to update");
+                    return false;
                 }
 
-                if (!isRemovedAttribute &&
-                    sa[i].Contains("GeneratedCode", StringComparison.Ordinal) &&
-                    sa[i].Contains("ApiGenerator", StringComparison.Ordinal))
+                if (RemoveApiGeneratorVersionLine(orgText, removeNewLines: true) == RemoveApiGeneratorVersionLine(text, removeNewLines: true))
                 {
-                    isRemovedAttribute = true;
-                    continue;
+                    logger.LogDebug($"{EmojisConstants.FileNotUpdated}   {fileDisplayLocation} nothing to update");
+                    return false;
                 }
+            }
 
-                if (removeNewLines)
+            FileHelper.WriteAllText(fileInfo, text);
+            logger.LogDebug($"{EmojisConstants.FileUpdated}   {fileDisplayLocation} updated");
+            return true;
+        }
+
+        FileHelper.WriteAllText(fileInfo, text);
+        logger.LogDebug($"{EmojisConstants.FileCreated}   {fileDisplayLocation} created");
+        return true;
+    }
+
+    private static string ReformatFileDisplayLocationIfNeeded(
+        FileSystemInfo fileInfo,
+        string fileDisplayLocation)
+    {
+        if (string.IsNullOrEmpty(fileDisplayLocation))
+        {
+            fileDisplayLocation = fileInfo.FullName;
+        }
+
+        if (fileDisplayLocation.StartsWith("src: \\", StringComparison.Ordinal))
+        {
+            fileDisplayLocation = fileDisplayLocation.Replace("src: \\", "src:  ", StringComparison.Ordinal);
+        }
+        else if (fileDisplayLocation.StartsWith("test: \\", StringComparison.Ordinal))
+        {
+            fileDisplayLocation = fileDisplayLocation.Replace("test: \\", "test: ", StringComparison.Ordinal);
+        }
+        else if (fileDisplayLocation.StartsWith("root: \\", StringComparison.Ordinal))
+        {
+            fileDisplayLocation = fileDisplayLocation.Replace("root: \\", "root: ", StringComparison.Ordinal);
+        }
+
+        return fileDisplayLocation;
+    }
+
+    private static string RemoveApiGeneratorVersionLine(
+        string text,
+        bool removeNewLines = false)
+    {
+        var sa = text.Split(Environment.NewLine.ToCharArray());
+        var sb = new StringBuilder();
+        var isRemovedComment = false;
+        var isRemovedAttribute = false;
+        var lastIndex = sa.Length - 1;
+        for (var i = 0; i < sa.Length; i++)
+        {
+            if (!isRemovedComment &&
+                sa[i].Contains("auto-generated", StringComparison.Ordinal) &&
+                sa[i].Contains("ApiGenerator", StringComparison.Ordinal))
+            {
+                isRemovedComment = true;
+                continue;
+            }
+
+            if (!isRemovedAttribute &&
+                sa[i].Contains("GeneratedCode", StringComparison.Ordinal) &&
+                sa[i].Contains("ApiGenerator", StringComparison.Ordinal))
+            {
+                isRemovedAttribute = true;
+                continue;
+            }
+
+            if (removeNewLines)
+            {
+                sb.Append(sa[i]);
+            }
+            else
+            {
+                if (i == lastIndex)
                 {
                     sb.Append(sa[i]);
                 }
                 else
                 {
-                    if (i == lastIndex)
-                    {
-                        sb.Append(sa[i]);
-                    }
-                    else
-                    {
-                        sb.AppendLine(sa[i]);
-                    }
+                    sb.AppendLine(sa[i]);
                 }
             }
-
-            return sb.ToString();
         }
+
+        return sb.ToString();
     }
 }

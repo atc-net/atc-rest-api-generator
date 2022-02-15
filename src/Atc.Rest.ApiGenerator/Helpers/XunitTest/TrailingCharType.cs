@@ -1,10 +1,9 @@
-namespace Atc.Rest.ApiGenerator.Helpers.XunitTest
+namespace Atc.Rest.ApiGenerator.Helpers.XunitTest;
+
+public enum TrailingCharType
 {
-    public enum TrailingCharType
-    {
-        None,
-        Comma,
-        SemiColon,
-        Colon,
-    }
+    None,
+    Comma,
+    SemiColon,
+    Colon,
 }

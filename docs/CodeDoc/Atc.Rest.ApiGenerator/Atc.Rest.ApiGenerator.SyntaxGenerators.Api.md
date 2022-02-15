@@ -55,7 +55,7 @@
 >```
 #### ToFile
 >```csharp
->LogKeyValueItem ToFile()
+>void ToFile()
 >```
 #### ToFile
 >```csharp
@@ -141,7 +141,7 @@
 >```
 #### ToFile
 >```csharp
->LogKeyValueItem ToFile()
+>void ToFile()
 >```
 #### ToFile
 >```csharp
@@ -235,7 +235,7 @@
 >```
 #### ToFile
 >```csharp
->LogKeyValueItem ToFile()
+>void ToFile()
 >```
 #### ToFile
 >```csharp
@@ -317,7 +317,7 @@
 >```
 #### ToFile
 >```csharp
->LogKeyValueItem ToFile()
+>void ToFile()
 >```
 #### ToFile
 >```csharp
@@ -387,7 +387,7 @@
 >```
 #### ToFile
 >```csharp
->LogKeyValueItem ToFile()
+>void ToFile()
 >```
 #### ToFile
 >```csharp

@@ -1,8 +1,7 @@
 {
   "Generator": {
-    "UseNullableReferenceTypes": true,
     "UseAuthorization": false,
-    "UseRestExtended": false,
+    "UseRestExtended": true,
     "Request": {
     },
     "Response": {
@@ -10,7 +9,7 @@
     }
   },
 	"Validation": {
-		"StrictMode": false,
+		"StrictMode": true,
 		"OperationIdCasingStyle": "CamelCase",
 		"ModelNameCasingStyle": "PascalCase",
 		"ModelPropertyNameCasingStyle": "CamelCase"

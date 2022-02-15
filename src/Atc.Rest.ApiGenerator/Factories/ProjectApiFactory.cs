@@ -1,246 +1,232 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using Atc.Rest.ApiGenerator.Models;
-using Microsoft.OpenApi.Models;
+namespace Atc.Rest.ApiGenerator.Factories;
 
-namespace Atc.Rest.ApiGenerator.Factories
+public static class ProjectApiFactory
 {
-    public static class ProjectApiFactory
+    public static string[] CreateUsingListForEndpoint(
+        ApiProjectOptions apiProjectOptions,
+        List<OpenApiOperation> apiOperations,
+        bool hasSharedModel,
+        bool includeRestResults,
+        string focusOnSegmentName)
     {
-        public static string[] CreateUsingListForEndpoint(
-            ApiProjectOptions apiProjectOptions,
-            List<OpenApiOperation> apiOperations,
-            bool hasSharedModel,
-            bool includeRestResults,
-            string focusOnSegmentName)
+        ArgumentNullException.ThrowIfNull(apiProjectOptions);
+        ArgumentNullException.ThrowIfNull(apiOperations);
+
+        var list = new List<string>
         {
-            if (apiOperations == null)
-            {
-                throw new ArgumentNullException(nameof(apiOperations));
-            }
+            "System",
+            "System.CodeDom.Compiler",
+            "System.Threading",
+            "System.Threading.Tasks",
+        };
 
-            var list = new List<string>
-            {
-                "System",
-                "System.CodeDom.Compiler",
-                "System.Threading",
-                "System.Threading.Tasks",
-            };
+        if (includeRestResults)
+        {
+            list.Add("Atc.Rest.Results");
+        }
 
-            if (includeRestResults)
-            {
-                list.Add("Atc.Rest.Results");
-            }
+        list.Add("Microsoft.AspNetCore.Http");
+        list.Add("Microsoft.AspNetCore.Mvc");
 
+        if (apiOperations.HasDataTypeFromSystemCollectionGenericNamespace())
+        {
+            list.Add("System.Collections.Generic");
+        }
+
+        if (apiProjectOptions.ApiOptions.Generator.UseAuthorization)
+        {
+            list.Add("Microsoft.AspNetCore.Authorization");
+        }
+
+        if (hasSharedModel)
+        {
+            list.Add($"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}");
+        }
+
+        list.Add($"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}.{focusOnSegmentName.EnsureFirstCharacterToUpper()}");
+
+        return list.ToArray();
+    }
+
+    public static string[] CreateUsingListForContractInterface()
+        => new[]
+        {
+            "System.CodeDom.Compiler",
+            "System.Threading",
+            "System.Threading.Tasks",
+        };
+
+    public static string[] CreateUsingListForContractModel(
+        OpenApiSchema? apiSchema)
+    {
+        ArgumentNullException.ThrowIfNull(apiSchema);
+
+        var list = new List<string>();
+        var schemasToCheck = apiSchema.Properties
+            .Select(x => x.Value)
+            .ToList();
+
+        if (schemasToCheck.HasFormatTypeFromSystemNamespace())
+        {
+            list.Add("System");
+        }
+
+        list.Add("System.CodeDom.Compiler");
+
+        if (apiSchema.IsTypeArray() ||
+            schemasToCheck.HasDataTypeFromSystemCollectionGenericNamespace(new Dictionary<string, OpenApiSchema>(StringComparer.Ordinal)))
+        {
+            list.Add("System.Collections.Generic");
+        }
+
+        if (apiSchema.Required.Any() ||
+            schemasToCheck.HasFormatTypeFromDataAnnotationsNamespace())
+        {
+            list.Add("System.ComponentModel.DataAnnotations");
+        }
+
+        if (schemasToCheck.HasFormatTypeFromAspNetCoreHttpNamespace())
+        {
             list.Add("Microsoft.AspNetCore.Http");
-            list.Add("Microsoft.AspNetCore.Mvc");
-
-            if (apiOperations.HasDataTypeFromSystemCollectionGenericNamespace())
-            {
-                list.Add("System.Collections.Generic");
-            }
-
-            if (apiProjectOptions.ApiOptions.Generator.UseAuthorization)
-            {
-                list.Add("Microsoft.AspNetCore.Authorization");
-            }
-
-            if (hasSharedModel)
-            {
-                list.Add($"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}");
-            }
-
-            list.Add($"{apiProjectOptions.ProjectName}.{NameConstants.Contracts}.{focusOnSegmentName.EnsureFirstCharacterToUpper()}");
-
-            return list.ToArray();
         }
 
-        public static string[] CreateUsingListForContractInterface()
+        return list.ToArray();
+    }
+
+    public static string[] CreateUsingListForContractParameter(
+        IList<OpenApiParameter>? globalParameters,
+        IList<OpenApiParameter>? parameters,
+        OpenApiRequestBody? requestBody,
+        bool forClient)
+    {
+        var list = new List<string>();
+
+        if (globalParameters is not null)
         {
-            return new[]
-            {
-                "System.CodeDom.Compiler",
-                "System.Threading",
-                "System.Threading.Tasks",
-            };
-        }
-
-        public static string[] CreateUsingListForContractModel(OpenApiSchema? apiSchema)
-        {
-            if (apiSchema == null)
-            {
-                throw new ArgumentNullException(nameof(apiSchema));
-            }
-
-            var list = new List<string>();
-            var schemasToCheck = apiSchema.Properties
-                .Select(x => x.Value)
-                .ToList();
-
-            if (schemasToCheck.HasFormatTypeFromSystemNamespace())
+            if (globalParameters.HasFormatTypeFromSystemNamespace() ||
+                globalParameters.Any(x => x.Schema.IsTypeArray()))
             {
                 list.Add("System");
             }
 
-            list.Add("System.CodeDom.Compiler");
+            if (ShouldUseDataAnnotationsNamespace(globalParameters))
+            {
+                list.Add("System.ComponentModel.DataAnnotations");
+            }
+        }
 
-            if (apiSchema.IsTypeArray() ||
-                schemasToCheck.HasDataTypeFromSystemCollectionGenericNamespace(new Dictionary<string, OpenApiSchema>()))
+        if (parameters is not null)
+        {
+            if (list.All(x => x != "System") &&
+                (parameters.HasFormatTypeFromSystemNamespace() ||
+                 parameters.Any(x => x.Schema.IsTypeArray())))
+            {
+                list.Add("System");
+            }
+
+            if (list.All(x => x != "System.Collections.Generic") &&
+                parameters.Any(x => x.Schema.IsTypeArray() || x.Schema.HasDataTypeFromSystemCollectionGenericNamespace(new Dictionary<string, OpenApiSchema>(StringComparer.Ordinal))))
             {
                 list.Add("System.Collections.Generic");
             }
 
-            if (apiSchema.Required.Any() ||
-                schemasToCheck.HasFormatTypeFromDataAnnotationsNamespace())
+            list.Add("System.CodeDom.Compiler");
+
+            if (list.All(x => x != "System.ComponentModel.DataAnnotations") &&
+                ShouldUseDataAnnotationsNamespace(parameters))
             {
                 list.Add("System.ComponentModel.DataAnnotations");
             }
 
-            if (schemasToCheck.HasFormatTypeFromAspNetCoreHttpNamespace())
+            if (!forClient)
             {
-                list.Add("Microsoft.AspNetCore.Http");
+                list.Add("Microsoft.AspNetCore.Mvc");
             }
-
-            return list.ToArray();
         }
 
-        public static string[] CreateUsingListForContractParameter(
-            IList<OpenApiParameter>? globalParameters,
-            IList<OpenApiParameter>? parameters,
-            OpenApiRequestBody? requestBody,
-            bool forClient)
+        var contentSchema = requestBody?.Content?.GetSchemaByFirstMediaType();
+        if (contentSchema is not null)
         {
-            var list = new List<string>();
-
-            if (globalParameters != null)
+            if (list.All(x => x != "System") &&
+                contentSchema.HasFormatTypeFromSystemNamespace())
             {
-                if (globalParameters.HasFormatTypeFromSystemNamespace() ||
-                    globalParameters.Any(x => x.Schema.IsTypeArray()))
-                {
-                    list.Add("System");
-                }
-
-                if (ShouldUseDataAnnotationsNamespace(globalParameters))
-                {
-                    list.Add("System.ComponentModel.DataAnnotations");
-                }
+                list.Add("System");
             }
 
-            if (parameters != null)
+            if (list.All(x => x != "System.Collections.Generic") &&
+                (contentSchema.IsTypeArray() || contentSchema.HasDataTypeFromSystemCollectionGenericNamespace(new Dictionary<string, OpenApiSchema>(StringComparer.Ordinal))))
             {
-                if (list.All(x => x != "System") &&
-                    (parameters.HasFormatTypeFromSystemNamespace() ||
-                    parameters.Any(x => x.Schema.IsTypeArray())))
-                {
-                    list.Add("System");
-                }
-
-                if (list.All(x => x != "System.Collections.Generic") &&
-                    parameters.Any(x => x.Schema.IsTypeArray() || x.Schema.HasDataTypeFromSystemCollectionGenericNamespace(new Dictionary<string, OpenApiSchema>())))
-                {
-                    list.Add("System.Collections.Generic");
-                }
-
-                list.Add("System.CodeDom.Compiler");
-
-                if (list.All(x => x != "System.ComponentModel.DataAnnotations") &&
-                    ShouldUseDataAnnotationsNamespace(parameters))
-                {
-                    list.Add("System.ComponentModel.DataAnnotations");
-                }
-
-                if (!forClient)
-                {
-                    list.Add("Microsoft.AspNetCore.Mvc");
-                }
-            }
-
-            var contentSchema = requestBody?.Content?.GetSchemaByFirstMediaType();
-            if (contentSchema != null)
-            {
-                if (list.All(x => x != "System") &&
-                    contentSchema.HasFormatTypeFromSystemNamespace())
-                {
-                    list.Add("System");
-                }
-
-                if (list.All(x => x != "System.Collections.Generic") &&
-                    (contentSchema.IsTypeArray() || contentSchema.HasDataTypeFromSystemCollectionGenericNamespace(new Dictionary<string, OpenApiSchema>())))
-                {
-                    list.Add("System.Collections.Generic");
-                }
-
-                if (list.All(x => x != "System.ComponentModel.DataAnnotations"))
-                {
-                    list.Add("System.ComponentModel.DataAnnotations");
-                }
-
-                if (contentSchema.IsFormatTypeBinary() || contentSchema.HasItemsWithFormatTypeBinary())
-                {
-                    list.Add("Microsoft.AspNetCore.Http");
-                }
-            }
-
-            return list.ToArray();
-        }
-
-        public static string[] CreateUsingListForContractResult(
-            OpenApiResponses responses,
-            bool useProblemDetailsAsDefaultResponseBody,
-            bool hasCreateContentResult)
-        {
-            if (responses == null)
-            {
-                throw new ArgumentNullException(nameof(responses));
-            }
-
-            var list = new List<string>
-            {
-                "System.CodeDom.Compiler",
-                "Microsoft.AspNetCore.Mvc",
-            };
-
-            if (responses.HasSchemaTypeArray())
-            {
-                list.Add("System.Linq");
                 list.Add("System.Collections.Generic");
             }
 
-            if (hasCreateContentResult)
+            if (list.All(x => x != "System.ComponentModel.DataAnnotations"))
             {
-                if (responses.GetHttpStatusCodes().Any())
-                {
-                    list.Add("System.Net");
-                }
-            }
-            else
-            {
-                if (responses.GetHttpStatusCodes().Any(x => x != HttpStatusCode.OK))
-                {
-                    list.Add("System.Net");
-                }
+                list.Add("System.ComponentModel.DataAnnotations");
             }
 
-            if (useProblemDetailsAsDefaultResponseBody)
+            if (contentSchema.IsFormatTypeBinary() ||
+                contentSchema.HasItemsWithFormatTypeBinary())
             {
-                list.Add("Atc.Rest.Results");
+                list.Add("Microsoft.AspNetCore.Http");
             }
-            else
-            {
-                list.Add("Atc.Rest.Results");
-
-                if (responses.HasSchemaHttpStatusCodeUsingAspNetCoreHttp())
-                {
-                    list.Add("Microsoft.AspNetCore.Http");
-                }
-            }
-
-            return list.ToArray();
         }
 
-        private static bool ShouldUseDataAnnotationsNamespace(IList<OpenApiParameter> parameters)
-            => parameters.Any(x => x.Required) || parameters.HasFormatTypeFromDataAnnotationsNamespace();
+        return list.ToArray();
     }
+
+    public static string[] CreateUsingListForContractResult(
+        OpenApiResponses responses,
+        bool useProblemDetailsAsDefaultResponseBody,
+        bool hasCreateContentResult)
+    {
+        ArgumentNullException.ThrowIfNull(responses);
+
+        var list = new List<string>
+        {
+            "System.CodeDom.Compiler",
+            "Microsoft.AspNetCore.Mvc",
+        };
+
+        if (responses.HasSchemaTypeArray())
+        {
+            list.Add("System.Linq");
+            list.Add("System.Collections.Generic");
+        }
+
+        if (hasCreateContentResult)
+        {
+            if (responses.GetHttpStatusCodes().Any())
+            {
+                list.Add("System.Net");
+            }
+        }
+        else
+        {
+            if (responses.GetHttpStatusCodes().Any(x => x != HttpStatusCode.OK))
+            {
+                list.Add("System.Net");
+            }
+        }
+
+        if (useProblemDetailsAsDefaultResponseBody)
+        {
+            list.Add("Atc.Rest.Results");
+        }
+        else
+        {
+            list.Add("Atc.Rest.Results");
+
+            if (responses.HasSchemaHttpStatusCodeUsingAspNetCoreHttp())
+            {
+                list.Add("Microsoft.AspNetCore.Http");
+            }
+        }
+
+        return list.ToArray();
+    }
+
+    private static bool ShouldUseDataAnnotationsNamespace(
+        IList<OpenApiParameter> parameters)
+        => parameters.Any(x => x.Required) ||
+           parameters.HasFormatTypeFromDataAnnotationsNamespace();
 }

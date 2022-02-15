@@ -1,4 +1,4 @@
-﻿using System.CodeDom.Compiler;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -47,13 +47,13 @@ namespace Scenario2.Api.Tests.Endpoints.Files.Generated
         {
             var formDataContent = new MultipartFormDataContent();
             formDataContent.Add(new StringContent(request.ItemName), "Request.ItemName");
-            if (request.File != null)
+            if (request.File is not null)
             {
                 var bytesContent = new ByteArrayContent(await request.File.GetBytes());
                 formDataContent.Add(bytesContent, "Request.File", request.File.FileName);
             }
 
-            if (request.Items != null && request.Items.Count > 0)
+            if (request.Items is not null && request.Items.Count > 0)
             {
                 foreach (var item in request.Items)
                 {

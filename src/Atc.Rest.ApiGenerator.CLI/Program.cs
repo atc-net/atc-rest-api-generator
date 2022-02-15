@@ -1,36 +1,41 @@
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
-using System.Reflection;
-using Atc.Rest.ApiGenerator.CLI.Commands;
-using Microsoft.Extensions.Hosting;
+namespace Atc.Rest.ApiGenerator.CLI;
 
-namespace Atc.Rest.ApiGenerator.CLI
+[ExcludeFromCodeCoverage]
+public static class Program
 {
-    [ExcludeFromCodeCoverage]
-    public static class Program
+    public static Task<int> Main(
+        string[] args)
     {
-        public static int Main(string[] args)
-        {
-            var builder = new HostBuilder();
+        ArgumentNullException.ThrowIfNull(args);
 
-            try
-            {
-                return builder
-                    .RunCommandLineApplicationAsync<RootCommand>(args)
-                    .GetAwaiter()
-                    .GetResult();
-            }
-            catch (TargetInvocationException ex) when (ex.InnerException != null)
-            {
-                Colorful.Console.WriteLine($"Error: {ex.InnerException.Message}", Color.Red);
-                return ExitStatusCodes.Failure;
-            }
-            catch (Exception ex)
-            {
-                Colorful.Console.WriteLine($"Error: {ex.Message}", Color.Red);
-                return ExitStatusCodes.Failure;
-            }
+        args = SetHelpArgumentIfNeeded(args);
+
+        var configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: false)
+            .Build();
+
+        var consoleLoggerConfiguration = new ConsoleLoggerConfiguration();
+        configuration.GetRequiredSection("ConsoleLogger").Bind(consoleLoggerConfiguration);
+
+        ProgramCsHelper.SetMinimumLogLevelIfNeeded(args, consoleLoggerConfiguration);
+
+        var serviceCollection = ServiceCollectionFactory.Create(consoleLoggerConfiguration);
+
+        var app = CommandAppFactory.CreateWithRootCommand<RootCommand>(serviceCollection);
+        app.ConfigureCommands();
+
+        return app.RunAsync(args);
+    }
+
+    private static string[] SetHelpArgumentIfNeeded(
+        string[] args)
+    {
+        if (args.Length == 0)
+        {
+            return new[] { CommandConstants.ArgumentShortHelp };
         }
+
+        // TODO: Add multiple validations
+        return args;
     }
 }

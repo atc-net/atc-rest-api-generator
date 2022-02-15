@@ -17,7 +17,7 @@
 
 #### Generate
 >```csharp
->LogKeyValueItem Generate(HostProjectOptions hostProjectOptions, EndpointMethodMetadata endpointMethodMetadata)
+>void Generate(ILogger logger, HostProjectOptions hostProjectOptions, EndpointMethodMetadata endpointMethodMetadata)
 >```
 
 <br />
@@ -32,7 +32,7 @@
 
 #### Generate
 >```csharp
->LogKeyValueItem Generate(HostProjectOptions hostProjectOptions, EndpointMethodMetadata endpointMethodMetadata)
+>void Generate(ILogger logger, HostProjectOptions hostProjectOptions, EndpointMethodMetadata endpointMethodMetadata)
 >```
 
 <br />
@@ -47,11 +47,11 @@
 
 #### GenerateCustomTests
 >```csharp
->LogKeyValueItem GenerateCustomTests(DomainProjectOptions domainProjectOptions, SyntaxGeneratorHandler sgHandler)
+>void GenerateCustomTests(ILogger logger, DomainProjectOptions domainProjectOptions, SyntaxGeneratorHandler sgHandler)
 >```
 #### GenerateGeneratedTests
 >```csharp
->LogKeyValueItem GenerateGeneratedTests(DomainProjectOptions domainProjectOptions, SyntaxGeneratorHandler sgHandler)
+>void GenerateGeneratedTests(ILogger logger, DomainProjectOptions domainProjectOptions, SyntaxGeneratorHandler sgHandler)
 >```
 
 <br />

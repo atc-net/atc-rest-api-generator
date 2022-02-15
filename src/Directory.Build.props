@@ -22,7 +22,6 @@
 
   <PropertyGroup Label="Build instructions">
     <OutputType>Library</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
     <!-- Creates a regular package and a symbols package -->
     <IncludeSymbols>true</IncludeSymbols>
     <!-- Creates symbol package in the new .snupkg format -->

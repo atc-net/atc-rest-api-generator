@@ -1,14 +1,10 @@
-using Atc.Rest.ApiGenerator.Models;
-using Microsoft.OpenApi.Models;
+namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces;
 
-namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces
+public interface ISyntaxOperationCodeGenerator : ISyntaxCodeGenerator
 {
-    public interface ISyntaxOperationCodeGenerator : ISyntaxCodeGenerator
-    {
-        ApiProjectOptions ApiProjectOptions { get; }
+    ApiProjectOptions ApiProjectOptions { get; }
 
-        OperationType ApiOperationType { get; }
+    OperationType ApiOperationType { get; }
 
-        OpenApiOperation ApiOperation { get; }
-    }
+    OpenApiOperation ApiOperation { get; }
 }
