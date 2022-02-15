@@ -11,6 +11,7 @@ public static class ValidatePathsAndOperationsHelper
     /// <param name="validationOptions">The validation options.</param>
     /// <param name="globalPathParameterNames">The global path parameter names.</param>
     /// <param name="path">The path.</param>
+    /// <returns>List of possible validation errors</returns>
     public static List<LogKeyValueItem> ValidateGlobalParameters(
         ApiOptionsValidation validationOptions,
         IEnumerable<string> globalPathParameterNames,
@@ -40,6 +41,7 @@ public static class ValidatePathsAndOperationsHelper
     /// </summary>
     /// <param name="validationOptions">The validation options.</param>
     /// <param name="path">The path.</param>
+    /// <returns>List of possible validation errors</returns>
     public static List<LogKeyValueItem> ValidateMissingOperationParameters(
         ApiOptionsValidation validationOptions,
         KeyValuePair<string, OpenApiPathItem> path)
@@ -91,6 +93,7 @@ public static class ValidatePathsAndOperationsHelper
     /// </summary>
     /// <param name="validationOptions">The validation options.</param>
     /// <param name="path">The path.</param>
+    /// <returns>List of possible validation errors</returns>
     public static List<LogKeyValueItem> ValidateOperationsWithParametersNotPresentInPath(
         ApiOptionsValidation validationOptions,
         KeyValuePair<string, OpenApiPathItem> path)
@@ -140,6 +143,7 @@ public static class ValidatePathsAndOperationsHelper
     /// </summary>
     /// <param name="validationOptions">The validation options.</param>
     /// <param name="path">The path.</param>
+    /// <returns>List of possible validation errors</returns>
     public static List<LogKeyValueItem> ValidateGetOperations(
         ApiOptionsValidation validationOptions,
         KeyValuePair<string, OpenApiPathItem> path)

@@ -535,7 +535,6 @@ dotnet_diagnostic.CS8618.severity = none			# 5 occurrences - Non-nullable field 
 
 # StyleCop.Analyzers
 dotnet_diagnostic.SA1118.severity = none			# 13 occurrences - Category: 'Readability' - Parameter must not span multiple lines - https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/documentation/SA1118.md
-dotnet_diagnostic.SA1615.severity = none			# 4 occurrences - Category: 'Documentation' - Element return value must be documented - https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/documentation/SA1615.md
 
 # Unknown
 dotnet_diagnostic.CA1848.severity = none			# 43 occurrences
