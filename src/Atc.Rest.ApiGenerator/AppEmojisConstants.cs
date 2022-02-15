@@ -8,6 +8,7 @@ public static class AppEmojisConstants
     public const string AreaEditorConfig = Emoji.Known.MouseFace;
     public const string AreaDirectoryBuildProps = Emoji.Known.Hammer;
 
+    public const string AreaDownload = Emoji.Known.DownwardsButton;
     public const string AreaValidation = Emoji.Known.MagnifyingGlassTiltedLeft;
     public const string AreaGenerateCode = Emoji.Known.LargeBlueDiamond;
     public const string AreaGenerateTest = Emoji.Known.LargeOrangeDiamond;

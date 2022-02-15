@@ -540,4 +540,3 @@ dotnet_diagnostic.SA1118.severity = none			# 13 occurrences - Category: 'Readabi
 dotnet_diagnostic.CA1848.severity = none			# 43 occurrences
 dotnet_diagnostic.CA2254.severity = none			# 18 occurrences
 dotnet_diagnostic.S3267.severity = none				# 6 occurrences
-dotnet_diagnostic.SYSLIB0014.severity = none			# 2 occurrences

@@ -17,6 +17,8 @@ internal static class StringExtensions
     private static readonly Regex AutoBracketSpacingEndRegex = new (@"(\S)(})(\S)");
     private static readonly Regex ConstructorWithInheritResultRegex = new (@":\s*base\(result\)\s*\{\s*\}");
 
+    private static readonly string[] LineBreaks = { "\r\n", "\r", "\n" };
+
     public static string FormatAutoPropertiesOnOneLine(
         this string value)
     {
@@ -164,5 +166,21 @@ internal static class StringExtensions
             StringComparison.Ordinal);
 
         return value;
+    }
+
+    public static string TrimEndForEmptyLines(
+        this string value)
+    {
+        if (string.IsNullOrEmpty(value))
+        {
+            return value;
+        }
+
+        var values = value
+            .Split(LineBreaks, StringSplitOptions.None)
+            .ToList();
+
+        values.TrimEndForEmptyValues();
+        return string.Join(Environment.NewLine, values);
     }
 }

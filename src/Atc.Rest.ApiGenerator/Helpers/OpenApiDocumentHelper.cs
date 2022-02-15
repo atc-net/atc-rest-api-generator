@@ -6,9 +6,9 @@ namespace Atc.Rest.ApiGenerator.Helpers;
 
 public static class OpenApiDocumentHelper
 {
-    [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "OK.")]
     [SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "OK.")]
     public static Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> CombineAndGetApiDocument(
+        ILogger logger,
         string specificationPath)
     {
         ArgumentNullException.ThrowIfNull(specificationPath);
@@ -17,7 +17,9 @@ public static class OpenApiDocumentHelper
         if (specificationPath.EndsWith(".yaml", StringComparison.Ordinal))
         {
             apiDocFile = specificationPath.StartsWith("http", StringComparison.CurrentCultureIgnoreCase)
-                ? HttpClientHelper.DownloadToTempFile(specificationPath)
+                ? HttpClientHelper.DownloadToTempFile(
+                    logger,
+                    specificationPath)
                 : new FileInfo(specificationPath);
 
             if (apiDocFile is null ||
@@ -29,7 +31,7 @@ public static class OpenApiDocumentHelper
         else if (specificationPath.EndsWith(".json", StringComparison.Ordinal))
         {
             apiDocFile = specificationPath.StartsWith("http", StringComparison.CurrentCultureIgnoreCase)
-                ? HttpClientHelper.DownloadToTempFile(specificationPath)
+                ? HttpClientHelper.DownloadToTempFile(logger, specificationPath)
                 : new FileInfo(specificationPath);
 
             if (apiDocFile is null ||

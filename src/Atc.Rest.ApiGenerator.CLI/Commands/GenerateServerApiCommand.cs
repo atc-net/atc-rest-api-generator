@@ -29,7 +29,7 @@ public class GenerateServerApiCommand : AsyncCommand<ServerApiCommandSettings>
         }
 
         var apiOptions = await ApiOptionsHelper.CreateApiOptions(settings);
-        var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(settings.SpecificationPath);
+        var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(logger, settings.SpecificationPath);
 
         var usingCodingRules = settings.DisableCodingRules; // TODO: Detect
 

@@ -133,11 +133,11 @@ public static class GenerateAtcCodingRulesHelper
             sb.AppendLine("  }");
             sb.AppendLine("}");
             File.WriteAllText(filePath, sb.ToString());
-            logger.LogDebug($"{EmojisConstants.FileCreated}   root: {file} created");
+            logger.LogDebug($"{EmojisConstants.FileCreated}    root: {file} created");
         }
         catch (Exception ex)
         {
-            logger.LogError($"{EmojisConstants.Error}   root: {file} skipped - {ex.Message}");
+            logger.LogError($"{EmojisConstants.Error}    root: {file} skipped - {ex.Message}");
         }
     }
 
@@ -162,11 +162,11 @@ public static class GenerateAtcCodingRulesHelper
             sb.AppendLine("  -v true");
             File.WriteAllText(file, sb.ToString());
             File.WriteAllText(filePath, sb.ToString());
-            logger.LogDebug($"{EmojisConstants.FileCreated}   root: {file} created");
+            logger.LogDebug($"{EmojisConstants.FileCreated}    root: {file} created");
         }
         catch (Exception ex)
         {
-            logger.LogError($"{EmojisConstants.Error}   root: {file} skipped - {ex.Message}");
+            logger.LogError($"{EmojisConstants.Error}    root: {file} skipped - {ex.Message}");
         }
     }
 
@@ -189,14 +189,16 @@ public static class GenerateAtcCodingRulesHelper
                 Directory.CreateDirectory(file.Directory.FullName);
             }
 
-            var rawEditorConfig = HttpClientHelper.GetRawFile(rawGitUrl);
+            var displayName = rawGitUrl.Replace(Constants.GitRawContentUrl, Constants.GitHubPrefix, StringComparison.Ordinal);
+            var rawEditorConfig = HttpClientHelper.GetAsString(logger, rawGitUrl, displayName).TrimEndForEmptyLines();
+
             rawEditorConfig += $"{Environment.NewLine}dotnet_diagnostic.IDE0058.severity = none           # Have to override this for now - to get smoke-test to run";
             File.WriteAllText(file.FullName, rawEditorConfig);
-            logger.LogDebug($"{EmojisConstants.FileCreated}   {area}: {FileNameEditorConfig} created");
+            logger.LogDebug($"{EmojisConstants.FileCreated}    {area}: {FileNameEditorConfig} created");
         }
         catch (Exception ex)
         {
-            logger.LogError($"{EmojisConstants.Error}   {area}: {FileNameEditorConfig} skipped - {ex.Message}");
+            logger.LogError($"{EmojisConstants.Error}    {area}: {FileNameEditorConfig} skipped - {ex.Message}");
         }
     }
 
@@ -219,13 +221,14 @@ public static class GenerateAtcCodingRulesHelper
                 Directory.CreateDirectory(file.Directory.FullName);
             }
 
-            var rawDirectoryBuildProps = HttpClientHelper.GetRawFile(rawGitUrl);
+            var displayName = rawGitUrl.Replace(Constants.GitRawContentUrl, Constants.GitHubPrefix, StringComparison.Ordinal);
+            var rawDirectoryBuildProps = HttpClientHelper.GetAsString(logger, rawGitUrl, displayName).TrimEndForEmptyLines();
             File.WriteAllText(file.FullName, rawDirectoryBuildProps);
-            logger.LogDebug($"{EmojisConstants.FileCreated}   {area}: {FileNameDirectoryBuildProps} created");
+            logger.LogDebug($"{EmojisConstants.FileCreated}    {area}: {FileNameDirectoryBuildProps} created");
         }
         catch (Exception ex)
         {
-            logger.LogError($"{EmojisConstants.Error}   {area}: {FileNameDirectoryBuildProps} skipped - {ex.Message}");
+            logger.LogError($"{EmojisConstants.Error}    {area}: {FileNameDirectoryBuildProps} skipped - {ex.Message}");
         }
     }
 }

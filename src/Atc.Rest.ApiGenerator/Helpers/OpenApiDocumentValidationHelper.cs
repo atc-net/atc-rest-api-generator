@@ -25,6 +25,11 @@ public static class OpenApiDocumentValidationHelper
         logItems.AddRange(ValidatePathsAndOperations(validationOptions, apiDocument.Paths));
         logItems.AddRange(ValidateOperationsParametersAndResponses(validationOptions, apiDocument.Paths.Values));
 
+        foreach (var item in logItems)
+        {
+            item.Key = item.Key.Insert(0, "     ");
+        }
+
         logger.LogKeyValueItems(logItems);
         return logItems.All(x => x.LogCategory != LogCategoryType.Error);
     }

@@ -33,7 +33,7 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
         }
 
         var apiOptions = await ApiOptionsHelper.CreateApiOptions(settings);
-        var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(settings.SpecificationPath);
+        var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(logger, settings.SpecificationPath);
 
         var usingCodingRules = settings.DisableCodingRules; // TODO: Detect
 
