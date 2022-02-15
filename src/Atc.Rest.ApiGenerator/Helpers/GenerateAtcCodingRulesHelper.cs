@@ -135,7 +135,7 @@ public static class GenerateAtcCodingRulesHelper
             File.WriteAllText(filePath, sb.ToString());
             logger.LogDebug($"{EmojisConstants.FileCreated}    root: {file} created");
         }
-        catch (Exception ex)
+        catch (IOException ex)
         {
             logger.LogError($"{EmojisConstants.Error}    root: {file} skipped - {ex.Message}");
         }
@@ -164,7 +164,7 @@ public static class GenerateAtcCodingRulesHelper
             File.WriteAllText(filePath, sb.ToString());
             logger.LogDebug($"{EmojisConstants.FileCreated}    root: {file} created");
         }
-        catch (Exception ex)
+        catch (IOException ex)
         {
             logger.LogError($"{EmojisConstants.Error}    root: {file} skipped - {ex.Message}");
         }
@@ -196,7 +196,7 @@ public static class GenerateAtcCodingRulesHelper
             File.WriteAllText(file.FullName, rawEditorConfig);
             logger.LogDebug($"{EmojisConstants.FileCreated}    {area}: {FileNameEditorConfig} created");
         }
-        catch (Exception ex)
+        catch (IOException ex)
         {
             logger.LogError($"{EmojisConstants.Error}    {area}: {FileNameEditorConfig} skipped - {ex.Message}");
         }
@@ -226,7 +226,7 @@ public static class GenerateAtcCodingRulesHelper
             File.WriteAllText(file.FullName, rawDirectoryBuildProps);
             logger.LogDebug($"{EmojisConstants.FileCreated}    {area}: {FileNameDirectoryBuildProps} created");
         }
-        catch (Exception ex)
+        catch (IOException ex)
         {
             logger.LogError($"{EmojisConstants.Error}    {area}: {FileNameDirectoryBuildProps} skipped - {ex.Message}");
         }

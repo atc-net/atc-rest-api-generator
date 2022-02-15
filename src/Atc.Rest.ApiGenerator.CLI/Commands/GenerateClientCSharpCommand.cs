@@ -15,6 +15,7 @@ public class GenerateClientCSharpCommand : AsyncCommand<ClientApiCommandSettings
         return ExecuteInternalAsync(settings);
     }
 
+    [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "OK.")]
     private async Task<int> ExecuteInternalAsync(
         ClientApiCommandSettings settings)
     {

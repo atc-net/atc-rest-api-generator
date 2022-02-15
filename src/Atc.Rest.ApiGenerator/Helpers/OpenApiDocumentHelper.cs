@@ -173,6 +173,7 @@ public static class OpenApiDocumentHelper
     }
 
     [SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "OK.")]
+    [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "OK.")]
     private static List<OpenApiDocumentContainer> GetAllApiDocuments(
         DirectoryInfo specificationPath)
     {
