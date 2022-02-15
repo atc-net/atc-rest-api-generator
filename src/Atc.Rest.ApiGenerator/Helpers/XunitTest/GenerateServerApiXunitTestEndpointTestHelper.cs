@@ -284,7 +284,7 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
                 foreach (var headerParameter in headerRequiredParameters)
                 {
                     var useInvalidData = headerParameter.Name == testForParameter.Name;
-                    string propertyValueGenerated = PropertyValueGenerator(headerParameter, endpointMethodMetadata.ComponentsSchemas, useInvalidData, customValue: null);
+                    var propertyValueGenerated = PropertyValueGenerator(headerParameter, endpointMethodMetadata.ComponentsSchemas, useInvalidData, customValue: null);
                     sb.AppendLine(
                         12,
                         $"HttpClient.DefaultRequestHeaders.Add(\"{headerParameter.Name}\", \"{propertyValueGenerated}\");");

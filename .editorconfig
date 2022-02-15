@@ -510,6 +510,8 @@ dotnet_diagnostic.CA1056.severity = suggestion		# URI properties should not be s
 dotnet_diagnostic.CA1848.severity = suggestion		# Use the LoggerMessage delegates - https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1848
 dotnet_diagnostic.CA2254.severity = suggestion		# Template should be a static expression - https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2254
 
+dotnet_diagnostic.S3267.severity = none				# Loop should be simplified by calling Select(x => x.Value)) - We dont like this rule because of readability/maintainability
+
 ##########################################
 # ATC temporary suppressions
 # generated @ Monday, February 14, 2022 3:28:57 PM
@@ -530,6 +532,3 @@ dotnet_diagnostic.CA1305.severity = none			# 39 occurrences - Specify IFormatPro
 
 # Microsoft.CompilerErrors.Undocumented
 dotnet_diagnostic.CS8618.severity = none			# 5 occurrences - Non-nullable field is uninitialized. Consider declaring as nullable.
-
-# Unknown
-dotnet_diagnostic.S3267.severity = none				# 6 occurrences
