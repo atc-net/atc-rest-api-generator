@@ -505,6 +505,7 @@ dotnet_diagnostic.S1135.severity = suggestion       # https://github.com/atc-net
 
 dotnet_diagnostic.MA0016.severity = suggestion	    # Prefer return collection abstraction instead of implementation - https://github.com/meziantou/Meziantou.Analyzer/blob/main/docs/Rules/MA0016.md
 
+dotnet_diagnostic.CA1002.severity = suggestion		# Do not expose generic lists - https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1002
 dotnet_diagnostic.CA1054.severity = suggestion		# URI parameters should not be strings - https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1054
 dotnet_diagnostic.CA1056.severity = suggestion		# URI properties should not be strings - https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1056
 dotnet_diagnostic.CA1848.severity = suggestion		# Use the LoggerMessage delegates - https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1848
@@ -525,6 +526,3 @@ dotnet_diagnostic.S3267.severity = none				# Loop should be simplified by callin
 # Meziantou.Analyzer
 dotnet_diagnostic.MA0011.severity = none			# 40 occurrences - Category: 'Usage' - IFormatProvider is missing - https://github.com/meziantou/Meziantou.Analyzer/blob/main/docs/Rules/MA0011.md
 dotnet_diagnostic.MA0051.severity = none			# 32 occurrences - Category: 'Design' - Method is too long - https://github.com/meziantou/Meziantou.Analyzer/blob/main/docs/Rules/MA0051.md
-
-# Microsoft.CodeAnalysis.NetAnalyzers
-dotnet_diagnostic.CA1002.severity = none			# 61 occurrences - Do not expose generic lists - https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1002
