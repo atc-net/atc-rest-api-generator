@@ -1,5 +1,6 @@
 namespace Atc.Rest.ApiGenerator.Helpers;
 
+[SuppressMessage("Globalization", "CA1305:Specify IFormatProvider", Justification = "OK.")]
 internal static class GenerateCodeHelper
 {
     internal static void AppendGeneratedCodeWarningComment(

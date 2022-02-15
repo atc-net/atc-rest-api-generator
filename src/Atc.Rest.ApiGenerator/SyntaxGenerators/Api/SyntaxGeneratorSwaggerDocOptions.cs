@@ -1,6 +1,7 @@
 namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
 
 // TODO: FIX THIS - Use CompilationUnit
+[SuppressMessage("Globalization", "CA1305:Specify IFormatProvider", Justification = "OK.")]
 public class SyntaxGeneratorSwaggerDocOptions
 {
     private readonly string fullNamespace;

@@ -1,5 +1,6 @@
 namespace Atc.Rest.ApiGenerator.Helpers.XunitTest;
 
+[SuppressMessage("Globalization", "CA1305:Specify IFormatProvider", Justification = "OK.")]
 public static class GenerateServerDomainXunitTestHelper
 {
     public static void GenerateGeneratedTests(

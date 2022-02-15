@@ -2,6 +2,7 @@
 // ReSharper disable SuggestBaseTypeForParameter
 namespace Atc.Rest.ApiGenerator.Helpers;
 
+[SuppressMessage("Globalization", "CA1305:Specify IFormatProvider", Justification = "OK.")]
 public static class SolutionAndProjectHelper
 {
     [SuppressMessage("Major Code Smell", "S107:Methods should not have too many parameters", Justification = "OK.")]
