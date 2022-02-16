@@ -14,6 +14,8 @@
     setting --operationIdCasingStyle renamed to --validate-operationIdCasingStyle
     setting --modelNameCasingStyle renamed to --validate-modelNameCasingStyle
     setting --modelPropertyNameCasingStyle renamed to --validate-modelPropertyNameCasingStyle
+* atc-rest-api-generator options-file validate command
+* atc-rest-api-generator options-file create command
  * Api-Options file
     Generator->UseNullableReferenceTypes has been removed (default in c# 10)
  ```
@@ -27,7 +29,10 @@
 
 ## CLI Tool
 
-The Atc.Rest.ApiGenerator.CLI library is available through a cross platform command line application.
+The `atc-rest-api-generator` is a cross platform command line application known as CLI tool.
+
+The main purpose of this application is to create and maintain a REST-API service based on an Open-API specification file. So the consept is the `Design First` approse.
+And the `atc-rest-api-generator` should be categorized as a `Rapid Application Development Tool` for REST-API in .NET/C#.
 
 ### Requirements
 
@@ -75,8 +80,9 @@ OPTIONS:
         --version    Display version
 
 COMMANDS:
-    generate    Operations related to generation of code
-    validate    Operations related to validation of specifications
+    options-file    Commands for the options file 'ApiGeneratorOptions.json'
+    generate        Operations related to generation of code
+    validate        Operations related to validation of specifications
 ```
 
 #### Option <span style="color:yellow">generate server all -h</span>
@@ -103,7 +109,44 @@ OPTIONS:
         --disableCodingRules                                                      Disable ATC-Coding-Rules
 ```
 
-#### PetStore Example
+#### Command <span style="color:yellow">options-file</span>
+```powershell
+USAGE:
+    atc-rest-api-generator.exe options-file [OPTIONS] <COMMAND>
+
+EXAMPLES:
+    atc-rest-api-generator.exe options-file create
+    atc-rest-api-generator.exe options-file validate
+
+OPTIONS:
+    -h, --help    Prints help information
+
+COMMANDS:
+    create      Create default options file 'ApiGeneratorOptions.json' if it doesn´t exist
+    validate    Validate the options file 'ApiGeneratorOptions.json'
+```
+
+#### Default options-file - ApiGeneratorOptions.json
+```json
+{
+  "generator": {
+    "useAuthorization": false,
+    "useRestExtended": true,
+    "request": {},
+    "response": {
+      "useProblemDetailsAsDefaultBody": false
+    }
+  },
+  "validation": {
+    "strictMode": false,
+    "operationIdCasingStyle": "CamelCase",
+    "modelNameCasingStyle": "PascalCase",
+    "modelPropertyNameCasingStyle": "CamelCase"
+  }
+}
+```
+
+## PetStore Example
 
 The following command will generate an API that implements the offcial Pet Store example from Swagger.
 
@@ -112,13 +155,13 @@ atc-rest-api-generator generate server all `
     --validate-strictMode `
     -s https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml `
     -p PetStore `
-    --outputSlnPath <MY-PROJECT-FOLDER> `
-    --outputSrcPath <MY-PROJECT-FOLDER>\src `
-    --outputTestPath <MY-PROJECT-FOLDER>\test `
+    --outputSlnPath <MY_PROJECT_FOLDER> `
+    --outputSrcPath <MY_PROJECT_FOLDER>\src `
+    --outputTestPath <MMY_PROJECT_FOLDER>\test `
     -v
 ```
 
-Replace `<MY-PROJECT-FOLDER>` with an absolute path where you want to projects created. For example,
+Replace `<MY_PROJECT_FOLDER>` with an absolute path where you want to projects created. For example,
 to put the generated solution in a folder called `C:\PetStore`, do the following:
 
 ```powershell
@@ -137,7 +180,7 @@ Running the above command produces the following output:
 ```powershell
      _      ____    ___      ____                                        _
     / \    |  _ \  |_ _|    / ___|   ___   _ __     ___   _ __    __ _  | |_    ___    _ __
-   / _ \   | |_) |  | |    | |  _   / _ \ | '_ \   / _ \ | '__|  / _` | | __|  / _ \  | '__|
+   / _ \   | |_) |  | |    | |  _   / _ \ | `_ \   / _ \ | `__|  / _` | | __|  / _ \  | `__|
   / ___ \  |  __/   | |    | |_| | |  __/ | | | | |  __/ | |    | (_| | | |_  | (_) | | |
  /_/   \_\ |_|     |___|    \____|  \___| |_| |_|  \___| |_|     \__,_|  \__|  \___/  |_|
 
@@ -232,6 +275,20 @@ dotnet run --project C:\PetStore\src\PetStore.Api
 ```
 
 And then open a browser with url: https://localhost:5001/swagger
+
+So what have we genereted by using the command:
+
+```mermaid
+flowchart TB;
+    CMD[command: generate server all] --> HOST[Host project] & API[API project] &  DOMAIN[Domain project];
+    HOST-.-> API;
+    API-.-> DOMAIN;
+```
+
+- The Host-project is the layer for the `.NET Core API` application. Project suffix: `.Api`.
+- The API-project is the layer with all the contracts, interfaces and endpoints. Project suffix: `.Api.Generated`.
+- The Domain-project is the layer where you can implement the all the handlers with the actual bussiness logic you have. Project suffix: `.Domain`.
+
 
 ## How to contribute
 
