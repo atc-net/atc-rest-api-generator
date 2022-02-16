@@ -1,6 +1,6 @@
 namespace Atc.Rest.ApiGenerator.CLI.Commands;
 
-public class ValidateSchemaCommand : AsyncCommand<BaseConfigurationCommandSettings>
+public class ValidateSchemaCommand : AsyncCommand<BaseSchemaCommandSettings>
 {
     private readonly ILogger<ValidateSchemaCommand> logger;
 
@@ -8,7 +8,7 @@ public class ValidateSchemaCommand : AsyncCommand<BaseConfigurationCommandSettin
 
     public override Task<int> ExecuteAsync(
         CommandContext context,
-        BaseConfigurationCommandSettings settings)
+        BaseSchemaCommandSettings settings)
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(settings);
@@ -17,11 +17,11 @@ public class ValidateSchemaCommand : AsyncCommand<BaseConfigurationCommandSettin
 
     [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "OK.")]
     private async Task<int> ExecuteInternalAsync(
-        BaseConfigurationCommandSettings settings)
+        BaseSchemaCommandSettings settings)
     {
         ConsoleHelper.WriteHeader();
 
-        var apiOptions = await ApiOptionsHelper.CreateApiOptions(settings);
+        var apiOptions = await ApiOptionsHelper.CreateDefault(settings.GetOptionsPath());
         var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(logger, settings.SpecificationPath);
 
         try

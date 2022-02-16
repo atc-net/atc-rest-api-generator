@@ -42,4 +42,15 @@ public class BaseConfigurationCommandSettings : BaseCommandSettings
             ? ValidationResult.Error($"{nameof(SpecificationPath)} is missing.")
             : ValidationResult.Success();
     }
+
+    internal string GetOptionsPath()
+    {
+        var optionsPath = string.Empty;
+        if (this.OptionsPath is not null && this.OptionsPath.IsSet)
+        {
+            optionsPath = this.OptionsPath.Value;
+        }
+
+        return optionsPath;
+    }
 }

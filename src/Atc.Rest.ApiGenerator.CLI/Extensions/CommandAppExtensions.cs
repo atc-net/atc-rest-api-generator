@@ -9,10 +9,35 @@ public static class CommandAppExtensions
 
         app.Configure(config =>
         {
+            config.AddBranch(NameCommandConstants.OptionsFile, ConfigureOptionsFileCommands());
             config.AddBranch(NameCommandConstants.Generate, ConfigureGenerateCommands());
             config.AddBranch(NameCommandConstants.Validate, ConfigureValidateCommands());
         });
     }
+
+    private static Action<IConfigurator<CommandSettings>> ConfigureOptionsFileCommands()
+        => node =>
+        {
+            node.SetDescription("Commands for the options file 'ApiGeneratorOptions.json'");
+
+            node
+                .AddCommand<OptionsFileCreateCommand>(NameCommandConstants.OptionsFileCreate)
+                .WithDescription("Create default options file 'ApiGeneratorOptions.json' if it doesn't exist")
+                .WithExample(new[]
+                {
+                    CreateArgumentCommandsOptionsFileWithCreate(),
+                    CreateArgumentConfigurationOptionsPath(),
+                });
+
+            node
+                .AddCommand<OptionsFileValidateCommand>(NameCommandConstants.OptionsFileValidate)
+                .WithDescription("Validate the options file 'ApiGeneratorOptions.json'")
+                .WithExample(new[]
+                {
+                    CreateArgumentCommandsOptionsFileWithValidate(),
+                    CreateArgumentConfigurationOptionsPath(),
+                });
+        };
 
     private static Action<IConfigurator<CommandSettings>> ConfigureGenerateCommands()
         => node =>
@@ -113,8 +138,17 @@ public static class CommandAppExtensions
                 });
         });
 
+    private static string CreateArgumentCommandsOptionsFileWithCreate()
+        => $"{NameCommandConstants.OptionsFile} {NameCommandConstants.OptionsFileCreate}";
+
+    private static string CreateArgumentCommandsOptionsFileWithValidate()
+        => $"{NameCommandConstants.OptionsFile} {NameCommandConstants.OptionsFileValidate}";
+
     private static string CreateArgumentConfigurationSpecificationPath()
         => @$"{ArgumentCommandConstants.ShortConfigurationSpecificationPath} c:\temp\MyProject\api.yml";
+
+    private static string CreateArgumentConfigurationOptionsPath()
+        => @$"{ArgumentCommandConstants.LongConfigurationOptionsPath} c:\temp\MyProject\ApiGeneratorOptions.json";
 
     private static string CreateArgumentConfigurationOutputSolutionPath()
         => @$"{ArgumentCommandConstants.LongServerOutputSolutionPath} c:\temp\MyProject";

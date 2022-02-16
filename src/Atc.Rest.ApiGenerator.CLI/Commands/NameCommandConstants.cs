@@ -2,6 +2,10 @@ namespace Atc.Rest.ApiGenerator.CLI.Commands;
 
 public static class NameCommandConstants
 {
+    public const string OptionsFile = "options-file";
+    public const string OptionsFileCreate = "create";
+    public const string OptionsFileValidate = "validate";
+
     public const string Generate = "generate";
     public const string Validate = "validate";
 
