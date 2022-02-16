@@ -9,7 +9,7 @@ public static class CommandAppExtensions
 
         app.Configure(config =>
         {
-            config.AddBranch(NameCommandConstants.OptionsFile, ConfigureOptionsFileCommands());
+            config.AddBranch(CommandConstants.NameOptionsFile, ConfigureOptionsFileCommands());
             config.AddBranch(NameCommandConstants.Generate, ConfigureGenerateCommands());
             config.AddBranch(NameCommandConstants.Validate, ConfigureValidateCommands());
         });
@@ -21,7 +21,7 @@ public static class CommandAppExtensions
             node.SetDescription("Commands for the options file 'ApiGeneratorOptions.json'");
 
             node
-                .AddCommand<OptionsFileCreateCommand>(NameCommandConstants.OptionsFileCreate)
+                .AddCommand<OptionsFileCreateCommand>(CommandConstants.NameOptionsFileCreate)
                 .WithDescription("Create default options file 'ApiGeneratorOptions.json' if it doesn't exist")
                 .WithExample(new[]
                 {
@@ -30,7 +30,7 @@ public static class CommandAppExtensions
                 });
 
             node
-                .AddCommand<OptionsFileValidateCommand>(NameCommandConstants.OptionsFileValidate)
+                .AddCommand<OptionsFileValidateCommand>(CommandConstants.NameOptionsFileValidate)
                 .WithDescription("Validate the options file 'ApiGeneratorOptions.json'")
                 .WithExample(new[]
                 {
@@ -139,10 +139,10 @@ public static class CommandAppExtensions
         });
 
     private static string CreateArgumentCommandsOptionsFileWithCreate()
-        => $"{NameCommandConstants.OptionsFile} {NameCommandConstants.OptionsFileCreate}";
+        => $"{CommandConstants.NameOptionsFile} {CommandConstants.NameOptionsFileCreate}";
 
     private static string CreateArgumentCommandsOptionsFileWithValidate()
-        => $"{NameCommandConstants.OptionsFile} {NameCommandConstants.OptionsFileValidate}";
+        => $"{CommandConstants.NameOptionsFile} {CommandConstants.NameOptionsFileValidate}";
 
     private static string CreateArgumentConfigurationSpecificationPath()
         => @$"{ArgumentCommandConstants.ShortConfigurationSpecificationPath} c:\temp\MyProject\api.yml";

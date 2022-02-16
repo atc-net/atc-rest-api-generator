@@ -396,23 +396,23 @@
      - SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles(ILogger logger)
 - [SchemaMapLocatedAreaType](Atc.Rest.ApiGenerator.Models.md#schemamaplocatedareatype)
 
-## [Atc.Rest.ApiGenerator.Models.OptionsFile](Atc.Rest.ApiGenerator.Models.OptionsFile.md)
+## [Atc.Rest.ApiGenerator.Models.Options](Atc.Rest.ApiGenerator.Models.Options.md)
 
-- [ApiOptions](Atc.Rest.ApiGenerator.Models.OptionsFile.md#apioptions)
+- [ApiOptions](Atc.Rest.ApiGenerator.Models.Options.md#apioptions)
   -  Properties
      - Generator
      - Validation
-- [ApiOptionsGenerator](Atc.Rest.ApiGenerator.Models.OptionsFile.md#apioptionsgenerator)
+- [ApiOptionsGenerator](Atc.Rest.ApiGenerator.Models.Options.md#apioptionsgenerator)
   -  Properties
      - Request
      - Response
      - UseAuthorization
      - UseRestExtended
-- [ApiOptionsGeneratorRequest](Atc.Rest.ApiGenerator.Models.OptionsFile.md#apioptionsgeneratorrequest)
-- [ApiOptionsGeneratorResponse](Atc.Rest.ApiGenerator.Models.OptionsFile.md#apioptionsgeneratorresponse)
+- [ApiOptionsGeneratorRequest](Atc.Rest.ApiGenerator.Models.Options.md#apioptionsgeneratorrequest)
+- [ApiOptionsGeneratorResponse](Atc.Rest.ApiGenerator.Models.Options.md#apioptionsgeneratorresponse)
   -  Properties
      - UseProblemDetailsAsDefaultBody
-- [ApiOptionsValidation](Atc.Rest.ApiGenerator.Models.OptionsFile.md#apioptionsvalidation)
+- [ApiOptionsValidation](Atc.Rest.ApiGenerator.Models.Options.md#apioptionsvalidation)
   -  Properties
      - ModelNameCasingStyle
      - ModelPropertyNameCasingStyle

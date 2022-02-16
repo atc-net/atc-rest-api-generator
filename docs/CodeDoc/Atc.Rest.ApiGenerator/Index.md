@@ -68,13 +68,13 @@
 - [HostProjectOptions](Atc.Rest.ApiGenerator.Models.md#hostprojectoptions)
 - [SchemaMapLocatedAreaType](Atc.Rest.ApiGenerator.Models.md#schemamaplocatedareatype)
 
-## [Atc.Rest.ApiGenerator.Models.OptionsFile](Atc.Rest.ApiGenerator.Models.OptionsFile.md)
+## [Atc.Rest.ApiGenerator.Models.Options](Atc.Rest.ApiGenerator.Models.Options.md)
 
-- [ApiOptions](Atc.Rest.ApiGenerator.Models.OptionsFile.md#apioptions)
-- [ApiOptionsGenerator](Atc.Rest.ApiGenerator.Models.OptionsFile.md#apioptionsgenerator)
-- [ApiOptionsGeneratorRequest](Atc.Rest.ApiGenerator.Models.OptionsFile.md#apioptionsgeneratorrequest)
-- [ApiOptionsGeneratorResponse](Atc.Rest.ApiGenerator.Models.OptionsFile.md#apioptionsgeneratorresponse)
-- [ApiOptionsValidation](Atc.Rest.ApiGenerator.Models.OptionsFile.md#apioptionsvalidation)
+- [ApiOptions](Atc.Rest.ApiGenerator.Models.Options.md#apioptions)
+- [ApiOptionsGenerator](Atc.Rest.ApiGenerator.Models.Options.md#apioptionsgenerator)
+- [ApiOptionsGeneratorRequest](Atc.Rest.ApiGenerator.Models.Options.md#apioptionsgeneratorrequest)
+- [ApiOptionsGeneratorResponse](Atc.Rest.ApiGenerator.Models.Options.md#apioptionsgeneratorresponse)
+- [ApiOptionsValidation](Atc.Rest.ApiGenerator.Models.Options.md#apioptionsvalidation)
 
 ## [Atc.Rest.ApiGenerator.SyntaxGenerators](Atc.Rest.ApiGenerator.SyntaxGenerators.md)
 

@@ -12,7 +12,7 @@ global using Atc.Rest.ApiGenerator.Generators;
 global using Atc.Rest.ApiGenerator.Helpers;
 global using Atc.Rest.ApiGenerator.Helpers.XunitTest;
 global using Atc.Rest.ApiGenerator.Models;
-global using Atc.Rest.ApiGenerator.Models.OptionsFile;
+global using Atc.Rest.ApiGenerator.Models.Options;
 global using Atc.Rest.ApiGenerator.SyntaxGenerators;
 global using Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
 global using Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces;

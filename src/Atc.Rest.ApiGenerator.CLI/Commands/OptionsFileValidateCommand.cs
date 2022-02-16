@@ -19,7 +19,6 @@ public class OptionsFileValidateCommand : AsyncCommand<BaseOptionsCommandSetting
     private async Task<int> ExecuteInternalAsync(
         BaseOptionsCommandSettings settings)
     {
-        ArgumentNullException.ThrowIfNull(settings);
         ConsoleHelper.WriteHeader();
 
         try
