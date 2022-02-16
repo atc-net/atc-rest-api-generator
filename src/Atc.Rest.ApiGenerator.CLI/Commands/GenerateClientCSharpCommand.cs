@@ -21,7 +21,7 @@ public class GenerateClientCSharpCommand : AsyncCommand<ClientApiCommandSettings
     {
         ConsoleHelper.WriteHeader();
 
-        var apiOptions = await ApiOptionsHelper.CreateApiOptions(settings);
+        var apiOptions = await ApiOptionsHelper.CreateDefault(settings);
         var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(logger, settings.SpecificationPath);
 
         var usingCodingRules = settings.DisableCodingRules; // TODO: Detect

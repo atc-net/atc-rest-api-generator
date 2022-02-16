@@ -2,33 +2,89 @@ namespace Atc.Rest.ApiGenerator.CLI;
 
 public static class ApiOptionsHelper
 {
-    public static async Task<ApiOptions> CreateApiOptions(
+    public static async Task<ApiOptions> CreateDefault(
         BaseConfigurationCommandSettings settings)
     {
         ArgumentNullException.ThrowIfNull(settings);
 
-        if (settings.OptionsPath is null ||
-            !settings.OptionsPath.IsSet)
+        var optionsPath = settings.GetOptionsPath();
+        if (string.IsNullOrEmpty(optionsPath))
+        {
+            var fileInfo = new FileInfo(settings.SpecificationPath);
+            if (!string.IsNullOrEmpty(fileInfo.DirectoryName))
+            {
+                optionsPath = fileInfo.DirectoryName;
+            }
+        }
+
+        if (string.IsNullOrEmpty(optionsPath))
         {
             return new ApiOptions();
         }
 
-        var fileInfo = new FileInfo(settings.OptionsPath.Value);
-        if (!fileInfo.Exists)
-        {
-            throw new FileNotFoundException("Could not find options file.", settings.OptionsPath.Value);
-        }
-
-        var options = await FileHelper<ApiOptions>.ReadJsonFileAndDeserializeAsync(fileInfo);
-        if (options is null)
-        {
-            throw new SerializationException($"Could not read options file '{settings.OptionsPath.Value}'.");
-        }
+        var options = await CreateDefault(optionsPath);
 
         ApplyValidationOverrides(options, settings);
         ApplyGeneratorOverrides(options, settings);
 
         return options;
+    }
+
+    public static async Task<ApiOptions> CreateDefault(
+        string optionsPath)
+    {
+        ArgumentNullException.ThrowIfNull(optionsPath);
+
+        var fileInfo = GetOptionsFile(optionsPath);
+        if (!fileInfo.Exists)
+        {
+            return new ApiOptions();
+        }
+
+        var options = await FileHelper<ApiOptions>.ReadJsonFileAndDeserializeAsync(fileInfo);
+        return options ?? new ApiOptions();
+    }
+
+    public static async Task<(bool, string)> CreateOptionsFile(
+        string optionsPath)
+    {
+        ArgumentNullException.ThrowIfNull(optionsPath);
+
+        var fileInfo = GetOptionsFile(optionsPath);
+        if (fileInfo.Exists)
+        {
+            return (false, "File already exist");
+        }
+
+        var options = new ApiOptions();
+
+        await FileHelper<ApiOptions>.WriteModelToJsonFileAsync(fileInfo, options);
+        return (true, string.Empty);
+    }
+
+    public static async Task<(bool, string)> ValidateOptionsFile(
+        string optionsPath)
+    {
+        ArgumentNullException.ThrowIfNull(optionsPath);
+
+        var fileInfo = GetOptionsFile(optionsPath);
+        if (!fileInfo.Exists)
+        {
+            return (false, "File does not exist");
+        }
+
+        var options = await FileHelper<ApiOptions>.ReadJsonFileAndDeserializeAsync(fileInfo);
+        return options is null
+            ? (false, "File is invalid")
+            : (true, string.Empty);
+    }
+
+    private static FileInfo GetOptionsFile(
+        string optionsPath)
+    {
+        return optionsPath.EndsWith(".json", StringComparison.Ordinal)
+            ? new FileInfo(optionsPath)
+            : new FileInfo(Path.Combine(optionsPath, "ApiGeneratorOptions.json"));
     }
 
     private static void ApplyValidationOverrides(

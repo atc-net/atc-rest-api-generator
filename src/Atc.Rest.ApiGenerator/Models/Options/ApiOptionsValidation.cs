@@ -1,6 +1,6 @@
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
-namespace Atc.Rest.ApiGenerator.Models.OptionsFile;
+namespace Atc.Rest.ApiGenerator.Models.Options;
 
 public class ApiOptionsValidation
 {

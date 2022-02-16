@@ -3,7 +3,7 @@
 [References](Index.md)&nbsp;&nbsp;-&nbsp;&nbsp;[References extended](IndexExtended.md)
 </div>
 
-# Atc.Rest.ApiGenerator.Models.OptionsFile
+# Atc.Rest.ApiGenerator.Models.Options
 
 <br />
 

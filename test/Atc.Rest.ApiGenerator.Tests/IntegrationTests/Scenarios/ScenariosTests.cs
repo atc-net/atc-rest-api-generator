@@ -28,7 +28,7 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
                 StringSplitOptions.RemoveEmptyEntries);
 
             Assert.True(cliExecutionResult.isSuccessful);
-            Assert.Equal("Schema validated successfully.", cliOutputLines[^1]);
+            Assert.Contains("Schema validated successfully.", cliOutputLines[^1], StringComparison.Ordinal);
 
             //----------------------------------------------------------------------------------------
             // Step 2:
