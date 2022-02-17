@@ -56,3 +56,9 @@ jobs:
         run: |
           dotnet nuget push ${GITHUB_WORKSPACE}/packages/'Atc.Rest.ApiGenerator.'${NBGV_NuGetPackageVersion}'.nupkg' -k ${{ secrets.NUGET_KEY }} -s ${{ env.NUGET_REPO_URL }} --skip-duplicate --no-symbols
           dotnet nuget push ${GITHUB_WORKSPACE}/packages/'atc-rest-api-generator.'${NBGV_NuGetPackageVersion}'.nupkg' -k ${{ secrets.NUGET_KEY }} -s ${{ env.NUGET_REPO_URL }} --skip-duplicate --no-symbols
+
+      - name: 🌩️ ATC-API invalidate cache for CLI-Tool
+        uses: satak/webrequest-action@master
+        with:
+          url: https://atc-api.azurewebsites.net/nuget-search/package?packageId=atc-rest-api-generator&invalidateCache=true
+          method: GET
