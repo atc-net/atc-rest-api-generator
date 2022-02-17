@@ -16,6 +16,7 @@ public class GenerateServerDomainCommand : AsyncCommand<ServerDomainCommandSetti
     }
 
     [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "OK.")]
+    [SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "OK.")]
     private async Task<int> ExecuteInternalAsync(
         ServerDomainCommandSettings settings)
     {
@@ -32,7 +33,14 @@ public class GenerateServerDomainCommand : AsyncCommand<ServerDomainCommandSetti
         var apiOptions = await ApiOptionsHelper.CreateDefault(settings);
         var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(logger, settings.SpecificationPath);
 
-        var usingCodingRules = settings.DisableCodingRules; // TODO: Detect
+        var usingCodingRules = !settings.DisableCodingRules; // TODO: Detect
+
+        if (usingCodingRules &&
+            !NetworkInformationHelper.HasConnection())
+        {
+            System.Console.WriteLine("This tool requires internet connection!");
+            return ConsoleExitStatusCodes.Failure;
+        }
 
         try
         {

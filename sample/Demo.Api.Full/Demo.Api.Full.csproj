@@ -9,9 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc" Version="2.0.55" />
-    <PackageReference Include="Atc.Rest" Version="2.0.55" />
-    <PackageReference Include="Atc.Rest.Extended" Version="2.0.55" />
+    <PackageReference Include="Atc" Version="2.0.67" />
+    <PackageReference Include="Atc.Rest" Version="2.0.67" />
+    <PackageReference Include="Atc.Rest.Extended" Version="2.0.67" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.6" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.20.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
