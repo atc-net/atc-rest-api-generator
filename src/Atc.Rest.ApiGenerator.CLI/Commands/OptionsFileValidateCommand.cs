@@ -23,7 +23,7 @@ public class OptionsFileValidateCommand : AsyncCommand<BaseOptionsCommandSetting
 
         try
         {
-            (bool isSuccessful, string error) = await ApiOptionsHelper.ValidateOptionsFile(settings.OptionsPath);
+            var (isSuccessful, error) = await ApiOptionsHelper.ValidateOptionsFile(settings.OptionsPath);
             if (isSuccessful)
             {
                 logger.LogInformation("The options file is valid");
