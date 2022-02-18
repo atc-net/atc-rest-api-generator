@@ -182,6 +182,7 @@ public static class GenerateServerDomainXunitTestHelper
             nsSrc,
             "System",
             "System.CodeDom.Compiler",
+            "Microsoft.Extensions.Logging",
             "Xunit",
         };
 
