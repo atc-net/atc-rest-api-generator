@@ -191,7 +191,7 @@ public static class GenerateHelper
     public static bool GenerateServerCSharpClient(
         ILogger logger,
         string projectPrefixName,
-        string? clientFolder,
+        string? clientFolderName,
         DirectoryInfo outputPath,
         Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument,
         bool excludeEndpointGeneration,
@@ -206,7 +206,7 @@ public static class GenerateHelper
 
         var clientCSharpApiProjectOptions = new ClientCSharpApiProjectOptions(
             outputPath,
-            clientFolder,
+            clientFolderName,
             apiDocument.Item1,
             apiDocument.Item3,
             projectPrefixName,
