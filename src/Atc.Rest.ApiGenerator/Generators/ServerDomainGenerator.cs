@@ -88,46 +88,28 @@ public class ServerDomainGenerator
         if (projectOptions.PathForSrcGenerate.Exists &&
             projectOptions.ProjectSrcCsProj.Exists)
         {
-            var element = XElement.Load(projectOptions.ProjectSrcCsProj.FullName);
-            var originalNullableValue = SolutionAndProjectHelper.GetBoolFromNullableString(SolutionAndProjectHelper.GetNullableValueFromProject(element));
-
-            var hasUpdates = false;
-            if (projectOptions.UseNullableReferenceTypes != originalNullableValue)
-            {
-                var newNullableValue = SolutionAndProjectHelper.GetNullableStringFromBool(projectOptions.UseNullableReferenceTypes);
-                SolutionAndProjectHelper.SetNullableValueForProject(element, newNullableValue);
-                element.Save(projectOptions.ProjectSrcCsProj.FullName);
-                logger.LogDebug($"{EmojisConstants.FileUpdated}   Update domain csproj - Nullable value={newNullableValue}");
-                hasUpdates = true;
-            }
-
-            if (!hasUpdates)
-            {
-                logger.LogDebug($"{EmojisConstants.FileNotUpdated}   No updates for domain csproj");
-            }
+            return;
         }
-        else
+
+        var projectReferences = new List<FileInfo>();
+        if (projectOptions.ApiProjectSrcCsProj is not null)
         {
-            var projectReferences = new List<FileInfo>();
-            if (projectOptions.ApiProjectSrcCsProj is not null)
-            {
-                projectReferences.Add(projectOptions.ApiProjectSrcCsProj);
-            }
-
-            SolutionAndProjectHelper.ScaffoldProjFile(
-                logger,
-                projectOptions.ProjectSrcCsProj,
-                projectOptions.ProjectSrcCsProjDisplayLocation,
-                createAsWeb: false,
-                createAsTestProject: false,
-                projectOptions.ProjectName,
-                "net6.0",
-                new List<string> { "Microsoft.AspNetCore.App" },
-                packageReferences: null,
-                projectReferences,
-                includeApiSpecification: false,
-                usingCodingRules: projectOptions.UsingCodingRules);
+            projectReferences.Add(projectOptions.ApiProjectSrcCsProj);
         }
+
+        SolutionAndProjectHelper.ScaffoldProjFile(
+            logger,
+            projectOptions.ProjectSrcCsProj,
+            projectOptions.ProjectSrcCsProjDisplayLocation,
+            createAsWeb: false,
+            createAsTestProject: false,
+            projectOptions.ProjectName,
+            "net6.0",
+            new List<string> { "Microsoft.AspNetCore.App" },
+            packageReferences: null,
+            projectReferences,
+            includeApiSpecification: false,
+            usingCodingRules: projectOptions.UsingCodingRules);
 
         ScaffoldBasicFileDomainRegistration();
     }
