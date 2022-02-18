@@ -36,10 +36,10 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
 
         var apiOptions = await ApiOptionsHelper.CreateDefault(settings);
         var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(logger, settings.SpecificationPath);
+        var shouldScaffoldCodingRules = CodingRulesHelper.ShouldScaffoldCodingRules(outputSlnPath, settings.DisableCodingRules);
+        var isUsingCodingRules = CodingRulesHelper.IsUsingCodingRules(outputSlnPath, settings.DisableCodingRules);
 
-        var usingCodingRules = !settings.DisableCodingRules; // TODO: Detect
-
-        if (usingCodingRules &&
+        if (shouldScaffoldCodingRules &&
             !NetworkInformationHelper.HasConnection())
         {
             System.Console.WriteLine("This tool requires internet connection!");
@@ -63,7 +63,7 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
                     outputTestPath,
                     apiDocument,
                     apiOptions,
-                    usingCodingRules))
+                    isUsingCodingRules))
             {
                 return ConsoleExitStatusCodes.Failure;
             }
@@ -75,7 +75,7 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
                     outputTestPath,
                     apiDocument,
                     apiOptions,
-                    usingCodingRules,
+                    isUsingCodingRules,
                     outputSrcPath))
             {
                 return ConsoleExitStatusCodes.Failure;
@@ -88,7 +88,7 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
                     outputTestPath,
                     apiDocument,
                     apiOptions,
-                    usingCodingRules,
+                    isUsingCodingRules,
                     outputSrcPath,
                     outputSrcPath))
             {
@@ -105,7 +105,7 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
                 return ConsoleExitStatusCodes.Failure;
             }
 
-            if (!settings.DisableCodingRules &&
+            if (shouldScaffoldCodingRules &&
                 !GenerateAtcCodingRulesHelper.Generate(
                     logger,
                     outputSlnPath,

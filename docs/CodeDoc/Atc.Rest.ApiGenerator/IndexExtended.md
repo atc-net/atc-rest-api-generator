@@ -696,6 +696,7 @@
      - ResultTypeName
   -  Methods
      - GenerateCode()
+     - GetFilePath()
      - ToCodeAsString()
      - ToFile()
      - ToFile(FileInfo file)

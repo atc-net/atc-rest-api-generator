@@ -22,7 +22,7 @@ public class OptionsFileCreateCommand : AsyncCommand<BaseOptionsCommandSettings>
 
         try
         {
-            (bool isSuccessful, string error) = await ApiOptionsHelper.CreateOptionsFile(settings.OptionsPath);
+            var (isSuccessful, error) = await ApiOptionsHelper.CreateOptionsFile(settings.OptionsPath);
             if (isSuccessful)
             {
                 logger.LogInformation("The options file is created");

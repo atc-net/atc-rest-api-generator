@@ -107,40 +107,22 @@ public class ServerApiGenerator
         if (projectOptions.PathForSrcGenerate.Exists &&
             projectOptions.ProjectSrcCsProj.Exists)
         {
-            var element = XElement.Load(projectOptions.ProjectSrcCsProj.FullName);
-            var originalNullableValue = SolutionAndProjectHelper.GetBoolFromNullableString(SolutionAndProjectHelper.GetNullableValueFromProject(element));
-
-            var hasUpdates = false;
-            if (projectOptions.UseNullableReferenceTypes != originalNullableValue)
-            {
-                var newNullableValue = SolutionAndProjectHelper.GetNullableStringFromBool(projectOptions.UseNullableReferenceTypes);
-                SolutionAndProjectHelper.SetNullableValueForProject(element, newNullableValue);
-                element.Save(projectOptions.ProjectSrcCsProj.FullName);
-                logger.LogDebug($"{EmojisConstants.FileUpdated}   Update API csproj - Nullable value={newNullableValue}");
-                hasUpdates = true;
-            }
-
-            if (!hasUpdates)
-            {
-                logger.LogDebug($"{EmojisConstants.FileNotUpdated}   No updates for API csproj");
-            }
+            return;
         }
-        else
-        {
-            SolutionAndProjectHelper.ScaffoldProjFile(
-                logger,
-                projectOptions.ProjectSrcCsProj,
-                projectOptions.ProjectSrcCsProjDisplayLocation,
-                createAsWeb: false,
-                createAsTestProject: false,
-                projectOptions.ProjectName,
-                "net6.0",
-                new List<string> { "Microsoft.AspNetCore.App" },
-                NugetPackageReferenceHelper.CreateForApiProject(),
-                projectReferences: null,
-                includeApiSpecification: true,
-                usingCodingRules: projectOptions.UsingCodingRules);
-        }
+
+        SolutionAndProjectHelper.ScaffoldProjFile(
+            logger,
+            projectOptions.ProjectSrcCsProj,
+            projectOptions.ProjectSrcCsProjDisplayLocation,
+            createAsWeb: false,
+            createAsTestProject: false,
+            projectOptions.ProjectName,
+            "net6.0",
+            new List<string> { "Microsoft.AspNetCore.App" },
+            NugetPackageReferenceHelper.CreateForApiProject(),
+            projectReferences: null,
+            includeApiSpecification: true,
+            usingCodingRules: projectOptions.UsingCodingRules);
 
         ScaffoldBasicFileApiGenerated();
         DeleteLegacyScaffoldBasicFileResultFactory();

@@ -49,58 +49,41 @@ public class ServerHostGenerator
         if (projectOptions.PathForSrcGenerate.Exists &&
             projectOptions.ProjectSrcCsProj.Exists)
         {
-            var element = XElement.Load(projectOptions.ProjectSrcCsProj.FullName);
-            var originalNullableValue = SolutionAndProjectHelper.GetBoolFromNullableString(SolutionAndProjectHelper.GetNullableValueFromProject(element));
-
-            var hasUpdates = false;
-            if (projectOptions.UseNullableReferenceTypes != originalNullableValue)
-            {
-                var newNullableValue = SolutionAndProjectHelper.GetNullableStringFromBool(projectOptions.UseNullableReferenceTypes);
-                SolutionAndProjectHelper.SetNullableValueForProject(element, newNullableValue);
-                element.Save(projectOptions.ProjectSrcCsProj.FullName);
-                logger.LogDebug($"{EmojisConstants.FileUpdated}   Update host csproj - Nullable value={newNullableValue}");
-                hasUpdates = true;
-            }
-
-            if (!hasUpdates)
-            {
-                logger.LogDebug($"{EmojisConstants.FileNotUpdated}   No updates for host csproj");
-            }
+            return;
         }
-        else
+
+        var projectReferences = new List<FileInfo>();
+        if (projectOptions.ApiProjectSrcCsProj is not null)
         {
-            var projectReferences = new List<FileInfo>();
-            if (projectOptions.ApiProjectSrcCsProj is not null)
-            {
-                projectReferences.Add(projectOptions.ApiProjectSrcCsProj);
-            }
-
-            if (projectOptions.DomainProjectSrcCsProj is not null)
-            {
-                projectReferences.Add(projectOptions.DomainProjectSrcCsProj);
-            }
-
-            SolutionAndProjectHelper.ScaffoldProjFile(
-                logger,
-                projectOptions.ProjectSrcCsProj,
-                projectOptions.ProjectSrcCsProjDisplayLocation,
-                createAsWeb: true,
-                createAsTestProject: false,
-                projectOptions.ProjectName,
-                "net6.0",
-                frameworkReferences: null,
-                NugetPackageReferenceHelper.CreateForHostProject(projectOptions.UseRestExtended),
-                projectReferences,
-                includeApiSpecification: false,
-                usingCodingRules: projectOptions.UsingCodingRules);
-
-            ScaffoldPropertiesLaunchSettingsFile(
-                projectOptions.PathForSrcGenerate,
-                projectOptions.UseRestExtended);
-            ScaffoldProgramFile();
-            ScaffoldStartupFile();
-            ScaffoldWebConfig();
+            projectReferences.Add(projectOptions.ApiProjectSrcCsProj);
         }
+
+        if (projectOptions.DomainProjectSrcCsProj is not null)
+        {
+            projectReferences.Add(projectOptions.DomainProjectSrcCsProj);
+        }
+
+        SolutionAndProjectHelper.ScaffoldProjFile(
+            logger,
+            projectOptions.ProjectSrcCsProj,
+            projectOptions.ProjectSrcCsProjDisplayLocation,
+            createAsWeb: true,
+            createAsTestProject: false,
+            projectOptions.ProjectName,
+            "net6.0",
+            frameworkReferences: null,
+            NugetPackageReferenceHelper.CreateForHostProject(projectOptions.UseRestExtended),
+            projectReferences,
+            includeApiSpecification: false,
+            usingCodingRules: projectOptions.UsingCodingRules);
+
+        ScaffoldPropertiesLaunchSettingsFile(
+            projectOptions.PathForSrcGenerate,
+            projectOptions.UseRestExtended);
+
+        ScaffoldProgramFile();
+        ScaffoldStartupFile();
+        ScaffoldWebConfig();
 
         if (projectOptions.UseRestExtended)
         {
@@ -128,7 +111,7 @@ public class ServerHostGenerator
 
         if (file.Exists)
         {
-            logger.LogDebug($"{EmojisConstants.FileNotUpdated}   {file.FullName} nothing to update");
+            logger.LogTrace($"{EmojisConstants.FileNotUpdated}   {file.FullName} nothing to update");
         }
         else
         {
@@ -1016,7 +999,7 @@ public class ServerHostGenerator
         var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "Program.cs"));
         if (file.Exists)
         {
-            logger.LogDebug($"{EmojisConstants.FileNotUpdated}   {file.FullName} nothing to update");
+            logger.LogTrace($"{EmojisConstants.FileNotUpdated}   {file.FullName} nothing to update");
         }
         else
         {
@@ -1073,7 +1056,7 @@ public class ServerHostGenerator
 
         if (file.Exists)
         {
-            logger.LogDebug($"{EmojisConstants.FileNotUpdated}   {file.FullName} nothing to update");
+            logger.LogTrace($"{EmojisConstants.FileNotUpdated}   {file.FullName} nothing to update");
         }
         else
         {
@@ -1099,7 +1082,7 @@ public class ServerHostGenerator
         var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "web.config"));
         if (file.Exists)
         {
-            logger.LogDebug($"{EmojisConstants.FileNotUpdated}   {file.FullName} nothing to update");
+            logger.LogTrace($"{EmojisConstants.FileNotUpdated}   {file.FullName} nothing to update");
         }
         else
         {

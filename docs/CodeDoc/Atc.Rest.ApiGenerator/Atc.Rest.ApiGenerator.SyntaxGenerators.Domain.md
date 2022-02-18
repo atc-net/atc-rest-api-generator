@@ -86,6 +86,10 @@
 >```csharp
 >bool GenerateCode()
 >```
+#### GetFilePath
+>```csharp
+>FileInfo GetFilePath()
+>```
 #### ToCodeAsString
 >```csharp
 >string ToCodeAsString()

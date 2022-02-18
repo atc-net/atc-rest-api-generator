@@ -32,10 +32,10 @@ public class GenerateServerHostCommand : AsyncCommand<ServerHostCommandSettings>
 
         var apiOptions = await ApiOptionsHelper.CreateDefault(settings);
         var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(logger, settings.SpecificationPath);
+        var shouldScaffoldCodingRules = CodingRulesHelper.ShouldScaffoldCodingRules(settings.OutputPath, settings.DisableCodingRules);
+        var isUsingCodingRules = CodingRulesHelper.IsUsingCodingRules(settings.OutputPath, settings.DisableCodingRules);
 
-        var usingCodingRules = !settings.DisableCodingRules; // TODO: Detect
-
-        if (usingCodingRules &&
+        if (shouldScaffoldCodingRules &&
             !NetworkInformationHelper.HasConnection())
         {
             System.Console.WriteLine("This tool requires internet connection!");
@@ -59,7 +59,7 @@ public class GenerateServerHostCommand : AsyncCommand<ServerHostCommandSettings>
                     outputTestPath,
                     apiDocument,
                     apiOptions,
-                    usingCodingRules,
+                    isUsingCodingRules,
                     new DirectoryInfo(settings.ApiPath),
                     new DirectoryInfo(settings.DomainPath)))
             {
