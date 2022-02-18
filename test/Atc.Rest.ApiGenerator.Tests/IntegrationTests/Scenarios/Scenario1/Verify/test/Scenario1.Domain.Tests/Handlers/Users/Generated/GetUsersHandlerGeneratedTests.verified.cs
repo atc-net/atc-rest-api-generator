@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.CodeDom.Compiler;
+using Microsoft.Extensions.Logging;
 using Scenario1.Domain.Handlers.Users;
 using Xunit;
 
