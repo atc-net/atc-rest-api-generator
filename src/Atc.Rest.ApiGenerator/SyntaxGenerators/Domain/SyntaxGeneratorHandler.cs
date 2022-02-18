@@ -100,12 +100,15 @@ public class SyntaxGeneratorHandler
             .FormatCs1998();
     }
 
-    public void ToFile()
+    public FileInfo GetFilePath()
     {
         var area = FocusOnSegmentName.EnsureFirstCharacterToUpper();
         var file = DirectoryInfoHelper.GetCsFileNameForHandler(DomainProjectOptions.PathForSrcHandlers!, area, HandlerTypeName);
-        ToFile(new FileInfo(file));
+        return new FileInfo(file);
     }
+
+    public void ToFile()
+        => ToFile(GetFilePath());
 
     public void ToFile(
         FileInfo file)
