@@ -54,7 +54,10 @@ public class ServerDomainGenerator
 
         foreach (var sg in sgHandlers)
         {
-            sg.ToFile();
+            if (!sg.GetFilePath().Exists)
+            {
+                sg.ToFile();
+            }
         }
     }
 
