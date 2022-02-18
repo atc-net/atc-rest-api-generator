@@ -128,7 +128,7 @@ public class ServerHostGenerator
 
         if (file.Exists)
         {
-            logger.LogDebug($"{EmojisConstants.FileNotUpdated}   {file.FullName} nothing to update");
+            logger.LogTrace($"{EmojisConstants.FileNotUpdated}   {file.FullName} nothing to update");
         }
         else
         {
@@ -1016,7 +1016,7 @@ public class ServerHostGenerator
         var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "Program.cs"));
         if (file.Exists)
         {
-            logger.LogDebug($"{EmojisConstants.FileNotUpdated}   {file.FullName} nothing to update");
+            logger.LogTrace($"{EmojisConstants.FileNotUpdated}   {file.FullName} nothing to update");
         }
         else
         {
@@ -1073,7 +1073,7 @@ public class ServerHostGenerator
 
         if (file.Exists)
         {
-            logger.LogDebug($"{EmojisConstants.FileNotUpdated}   {file.FullName} nothing to update");
+            logger.LogTrace($"{EmojisConstants.FileNotUpdated}   {file.FullName} nothing to update");
         }
         else
         {
@@ -1099,7 +1099,7 @@ public class ServerHostGenerator
         var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "web.config"));
         if (file.Exists)
         {
-            logger.LogDebug($"{EmojisConstants.FileNotUpdated}   {file.FullName} nothing to update");
+            logger.LogTrace($"{EmojisConstants.FileNotUpdated}   {file.FullName} nothing to update");
         }
         else
         {
