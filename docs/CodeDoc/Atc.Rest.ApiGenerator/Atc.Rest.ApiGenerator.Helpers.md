@@ -100,7 +100,7 @@
 >```
 #### GenerateServerCSharpClient
 >```csharp
->bool GenerateServerCSharpClient(ILogger logger, string projectPrefixName, string clientFolder, DirectoryInfo outputPath, Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument, bool excludeEndpointGeneration, ApiOptions apiOptions, bool useCodingRules)
+>bool GenerateServerCSharpClient(ILogger logger, string projectPrefixName, string clientFolderName, DirectoryInfo outputPath, Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument, bool excludeEndpointGeneration, ApiOptions apiOptions, bool useCodingRules)
 >```
 #### GenerateServerDomain
 >```csharp

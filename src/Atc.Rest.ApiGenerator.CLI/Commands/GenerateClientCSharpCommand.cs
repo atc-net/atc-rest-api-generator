@@ -47,7 +47,7 @@ public class GenerateClientCSharpCommand : AsyncCommand<ClientApiCommandSettings
             if (!GenerateHelper.GenerateServerCSharpClient(
                     logger,
                     settings.ProjectPrefixName,
-                    settings.ClientFolderName,
+                    settings.ClientFolderName is not null && settings.ClientFolderName.IsSet ? settings.ClientFolderName.Value : string.Empty,
                     new DirectoryInfo(settings.OutputPath),
                     apiDocument,
                     settings.ExcludeEndpointGeneration,
