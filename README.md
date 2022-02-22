@@ -1,6 +1,6 @@
 [![NuGet Version](https://img.shields.io/nuget/v/atc-rest-api-generator.svg?logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/atc-rest-api-generator)
 
-# ATC.Net Rest API Generator
+# ATC-NET REST API Generator
 
 ## Breaking changes
 
