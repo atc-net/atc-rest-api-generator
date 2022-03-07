@@ -59,7 +59,14 @@ public class ClientCSharpApiGenerator
         if (projectOptions.PathForSrcGenerate.Exists &&
             projectOptions.ProjectSrcCsProj.Exists)
         {
-            logger.LogDebug($"{EmojisConstants.FileNotUpdated}   No updates for csproj");
+            var harUpdates = SolutionAndProjectHelper.EnsureLatestPackageReferencesVersionInProjFile(
+                logger,
+                projectOptions.ProjectSrcCsProj,
+                projectOptions.ProjectSrcCsProjDisplayLocation);
+            if (!harUpdates)
+            {
+                logger.LogDebug($"{EmojisConstants.FileNotUpdated}   No updates for csproj");
+            }
         }
         else
         {
