@@ -127,6 +127,10 @@
 - [ApiGeneratorHelper](Atc.Rest.ApiGenerator.Helpers.md#apigeneratorhelper)
   -  Static Methods
      - CollectMissingContractModelFromOperationSchemaMappings(ILogger logger, ApiProjectOptions projectOptions, List&lt;ApiOperationSchemaMap&gt; operationSchemaMappings, List&lt;SyntaxGeneratorContractModel&gt; sgContractModels)
+- [AtcApiNugetClientHelper](Atc.Rest.ApiGenerator.Helpers.md#atcapinugetclienthelper)
+  -  Static Methods
+     - GetLatestVersionForPackageId(ILogger logger, string packageId, CancellationToken cancellationToken = null)
+     - GetLatestVersionForPackageId(string packageId, CancellationToken cancellationToken = null)
 - [DirectoryInfoHelper](Atc.Rest.ApiGenerator.Helpers.md#directoryinfohelper)
   -  Static Methods
      - GetCsFileNameForContract(DirectoryInfo pathForContracts, string area, string modelName)
