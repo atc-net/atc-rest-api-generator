@@ -107,26 +107,35 @@ public class ServerApiGenerator
         if (projectOptions.PathForSrcGenerate.Exists &&
             projectOptions.ProjectSrcCsProj.Exists)
         {
-            return;
+            var harUpdates = SolutionAndProjectHelper.EnsureLatestPackageReferencesVersionInProjFile(
+                logger,
+                projectOptions.ProjectSrcCsProj,
+                projectOptions.ProjectSrcCsProjDisplayLocation);
+            if (!harUpdates)
+            {
+                logger.LogDebug($"{EmojisConstants.FileNotUpdated}   No updates for csproj");
+            }
         }
+        else
+        {
+            SolutionAndProjectHelper.ScaffoldProjFile(
+                logger,
+                projectOptions.ProjectSrcCsProj,
+                projectOptions.ProjectSrcCsProjDisplayLocation,
+                createAsWeb: false,
+                createAsTestProject: false,
+                projectOptions.ProjectName,
+                "net6.0",
+                new List<string> { "Microsoft.AspNetCore.App" },
+                NugetPackageReferenceHelper.CreateForApiProject(),
+                projectReferences: null,
+                includeApiSpecification: true,
+                usingCodingRules: projectOptions.UsingCodingRules);
 
-        SolutionAndProjectHelper.ScaffoldProjFile(
-            logger,
-            projectOptions.ProjectSrcCsProj,
-            projectOptions.ProjectSrcCsProjDisplayLocation,
-            createAsWeb: false,
-            createAsTestProject: false,
-            projectOptions.ProjectName,
-            "net6.0",
-            new List<string> { "Microsoft.AspNetCore.App" },
-            NugetPackageReferenceHelper.CreateForApiProject(),
-            projectReferences: null,
-            includeApiSpecification: true,
-            usingCodingRules: projectOptions.UsingCodingRules);
-
-        ScaffoldBasicFileApiGenerated();
-        DeleteLegacyScaffoldBasicFileResultFactory();
-        DeleteLegacyScaffoldBasicFilePagination();
+            ScaffoldBasicFileApiGenerated();
+            DeleteLegacyScaffoldBasicFileResultFactory();
+            DeleteLegacyScaffoldBasicFilePagination();
+        }
     }
 
     private void CopyApiSpecification()

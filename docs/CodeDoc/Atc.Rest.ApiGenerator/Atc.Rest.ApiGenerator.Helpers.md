@@ -22,6 +22,25 @@
 
 <br />
 
+## AtcApiNugetClientHelper
+
+>```csharp
+>public static class AtcApiNugetClientHelper
+>```
+
+### Static Methods
+
+#### GetLatestVersionForPackageId
+>```csharp
+>Version GetLatestVersionForPackageId(string packageId, CancellationToken cancellationToken = null)
+>```
+#### GetLatestVersionForPackageId
+>```csharp
+>Version GetLatestVersionForPackageId(ILogger logger, string packageId, CancellationToken cancellationToken = null)
+>```
+
+<br />
+
 ## DirectoryInfoHelper
 
 >```csharp

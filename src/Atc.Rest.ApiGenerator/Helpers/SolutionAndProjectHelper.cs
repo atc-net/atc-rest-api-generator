@@ -1,4 +1,5 @@
 // ReSharper disable ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
+// ReSharper disable InvertIf
 // ReSharper disable SuggestBaseTypeForParameter
 namespace Atc.Rest.ApiGenerator.Helpers;
 
@@ -239,6 +240,37 @@ public static class SolutionAndProjectHelper
 
         TextFileHelper.Save(logger, slnFile, $"root: {slnFile.Name}", slnFileContent, overrideIfExist: false);
         TextFileHelper.Save(logger, slnDotSettingsFile, $"root: {slnDotSettingsFile.Name}", slnDotSettingsFileContent, slnDotSettingsFileOverrideIfExist);
+    }
+
+    public static bool EnsureLatestPackageReferencesVersionInProjFile(
+        ILogger logger,
+        FileInfo projectCsProjFile,
+        string fileDisplayLocation)
+    {
+        ArgumentNullException.ThrowIfNull(logger);
+        ArgumentNullException.ThrowIfNull(projectCsProjFile);
+
+        var fileContent = File.ReadAllText(projectCsProjFile.FullName);
+        var packageReferencesThatNeedsToBeUpdated = GetPackageReferencesThatNeedsToBeUpdated(logger, fileContent);
+        if (!packageReferencesThatNeedsToBeUpdated.Any())
+        {
+            return false;
+        }
+
+        foreach (var item in packageReferencesThatNeedsToBeUpdated)
+        {
+            fileContent = fileContent.Replace(
+                $"<PackageReference Include=\"{item.PackageId}\" Version=\"{item.Version}\"",
+                $"<PackageReference Include=\"{item.PackageId}\" Version=\"{item.NewestVersion}\"",
+                StringComparison.Ordinal);
+
+            var logMessage = $"{AppEmojisConstants.PackageReference}   PackageReference {item.PackageId} @ {item.Version} => {item.NewestVersion}";
+            logger.LogTrace(logMessage);
+        }
+
+        FileHelper.WriteAllText(projectCsProjFile, fileContent);
+
+        return true;
     }
 
     private static bool TryGetGuidByProject(
@@ -489,78 +521,34 @@ public static class SolutionAndProjectHelper
         return $"{sb1}{sb2}";
     }
 
-    public static string GetNullableValueFromProject(
-        XElement element)
+    private static List<DotnetNugetPackage> GetPackageReferencesThatNeedsToBeUpdated(
+        ILogger logger,
+        string fileContent)
     {
-        ArgumentNullException.ThrowIfNull(element);
+        var result = new List<DotnetNugetPackage>();
 
-        foreach (var propertyGroup in element.Descendants("PropertyGroup"))
+        var packageReferencesGit = DotnetNugetHelper.GetAllPackageReferences(fileContent);
+        if (packageReferencesGit.Any())
         {
-            foreach (var propertyGroupElement in propertyGroup.Elements())
+            foreach (var item in packageReferencesGit)
             {
-                if (propertyGroupElement.Name == "Nullable")
+                if (Version.TryParse(item.Version, out var version))
                 {
-                    return propertyGroupElement.Value;
+                    var latestVersion = AtcApiNugetClientHelper.GetLatestVersionForPackageId(logger, item.PackageId, CancellationToken.None);
+
+                    if (latestVersion is not null &&
+                        latestVersion.GreaterThan(version, significantParts: 4, startingPart: 2))
+                    {
+                        result.Add(
+                            new DotnetNugetPackage(
+                                item.PackageId,
+                                version,
+                                latestVersion));
+                    }
                 }
             }
         }
 
-        return string.Empty;
+        return result;
     }
-
-    public static void SetNullableValueForProject(
-        XElement element,
-        string newNullableValue)
-    {
-        ArgumentNullException.ThrowIfNull(element);
-
-        var isUpdated = false;
-        var hasLanguageVersion = false;
-
-        foreach (var propertyGroup in element.Descendants("PropertyGroup"))
-        {
-            foreach (var propertyGroupElement in propertyGroup.Elements())
-            {
-                if (propertyGroupElement.Name != "Nullable")
-                {
-                    continue;
-                }
-
-                propertyGroupElement.Value = newNullableValue;
-                isUpdated = true;
-            }
-        }
-
-        foreach (var propertyGroup in element.Descendants("PropertyGroup"))
-        {
-            foreach (var propertyGroupElement in propertyGroup.Elements())
-            {
-                if (propertyGroupElement.Name == "LangVersion")
-                {
-                    hasLanguageVersion = true;
-                }
-            }
-        }
-
-        if (isUpdated)
-        {
-            return;
-        }
-
-        var nullabilityRoot = XElement.Parse(hasLanguageVersion
-            ? @"<PropertyGroup><Nullable>enable</Nullable></PropertyGroup>"
-            : @"<PropertyGroup><Nullable>enable</Nullable><LangVersion>10.0</LangVersion></PropertyGroup>");
-
-        element.Add(nullabilityRoot);
-    }
-
-    public static bool GetBoolFromNullableString(
-        string value)
-        => value == "enable";
-
-    public static string GetNullableStringFromBool(
-        bool value)
-        => value
-            ? "enable"
-            : "disable";
 }

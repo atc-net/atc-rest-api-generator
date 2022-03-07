@@ -49,45 +49,54 @@ public class ServerHostGenerator
         if (projectOptions.PathForSrcGenerate.Exists &&
             projectOptions.ProjectSrcCsProj.Exists)
         {
-            return;
+            var harUpdates = SolutionAndProjectHelper.EnsureLatestPackageReferencesVersionInProjFile(
+                logger,
+                projectOptions.ProjectSrcCsProj,
+                projectOptions.ProjectSrcCsProjDisplayLocation);
+            if (!harUpdates)
+            {
+                logger.LogDebug($"{EmojisConstants.FileNotUpdated}   No updates for csproj");
+            }
         }
-
-        var projectReferences = new List<FileInfo>();
-        if (projectOptions.ApiProjectSrcCsProj is not null)
+        else
         {
-            projectReferences.Add(projectOptions.ApiProjectSrcCsProj);
-        }
+            var projectReferences = new List<FileInfo>();
+            if (projectOptions.ApiProjectSrcCsProj is not null)
+            {
+                projectReferences.Add(projectOptions.ApiProjectSrcCsProj);
+            }
 
-        if (projectOptions.DomainProjectSrcCsProj is not null)
-        {
-            projectReferences.Add(projectOptions.DomainProjectSrcCsProj);
-        }
+            if (projectOptions.DomainProjectSrcCsProj is not null)
+            {
+                projectReferences.Add(projectOptions.DomainProjectSrcCsProj);
+            }
 
-        SolutionAndProjectHelper.ScaffoldProjFile(
-            logger,
-            projectOptions.ProjectSrcCsProj,
-            projectOptions.ProjectSrcCsProjDisplayLocation,
-            createAsWeb: true,
-            createAsTestProject: false,
-            projectOptions.ProjectName,
-            "net6.0",
-            frameworkReferences: null,
-            NugetPackageReferenceHelper.CreateForHostProject(projectOptions.UseRestExtended),
-            projectReferences,
-            includeApiSpecification: false,
-            usingCodingRules: projectOptions.UsingCodingRules);
+            SolutionAndProjectHelper.ScaffoldProjFile(
+                logger,
+                projectOptions.ProjectSrcCsProj,
+                projectOptions.ProjectSrcCsProjDisplayLocation,
+                createAsWeb: true,
+                createAsTestProject: false,
+                projectOptions.ProjectName,
+                "net6.0",
+                frameworkReferences: null,
+                NugetPackageReferenceHelper.CreateForHostProject(projectOptions.UseRestExtended),
+                projectReferences,
+                includeApiSpecification: false,
+                usingCodingRules: projectOptions.UsingCodingRules);
 
-        ScaffoldPropertiesLaunchSettingsFile(
-            projectOptions.PathForSrcGenerate,
-            projectOptions.UseRestExtended);
+            ScaffoldPropertiesLaunchSettingsFile(
+                projectOptions.PathForSrcGenerate,
+                projectOptions.UseRestExtended);
 
-        ScaffoldProgramFile();
-        ScaffoldStartupFile();
-        ScaffoldWebConfig();
+            ScaffoldProgramFile();
+            ScaffoldStartupFile();
+            ScaffoldWebConfig();
 
-        if (projectOptions.UseRestExtended)
-        {
-            ScaffoldConfigureSwaggerDocOptions();
+            if (projectOptions.UseRestExtended)
+            {
+                ScaffoldConfigureSwaggerDocOptions();
+            }
         }
     }
 
@@ -891,7 +900,14 @@ public class ServerHostGenerator
         if (projectOptions.PathForTestGenerate.Exists &&
             projectOptions.ProjectTestCsProj.Exists)
         {
-            // Update
+            var harUpdates = SolutionAndProjectHelper.EnsureLatestPackageReferencesVersionInProjFile(
+                logger,
+                projectOptions.ProjectTestCsProj,
+                projectOptions.ProjectTestCsProjDisplayLocation);
+            if (!harUpdates)
+            {
+                logger.LogDebug($"{EmojisConstants.FileNotUpdated}   No updates for csproj");
+            }
         }
         else
         {

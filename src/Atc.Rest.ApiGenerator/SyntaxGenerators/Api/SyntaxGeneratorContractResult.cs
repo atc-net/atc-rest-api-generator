@@ -340,7 +340,7 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
                     break;
                 case HttpStatusCode.Conflict:
                     methodDeclaration = useProblemDetails
-                        ? CreateTypeRequestWithSpecifiedResultFactoryMethodWithMessageAllowNull("CreateContentResultWithProblemDetails", className, httpStatusCode, "error")
+                        ? CreateTypeRequestWithSpecifiedResultFactoryMethodWithMessageAllowNull("CreateContentResultWithProblemDetails", className, httpStatusCode, "error", false)
                         : CreateTypeRequestWithMessageAllowNull(className, httpStatusCode, nameof(ConflictObjectResult), "error");
                     break;
                 case HttpStatusCode.MethodNotAllowed:
@@ -542,7 +542,8 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
         string resultFactoryMethodName,
         string className,
         HttpStatusCode httpStatusCode,
-        string parameterName = "message")
+        string parameterName = "message",
+        bool isParameterStringType = true)
         => SyntaxFactory.MethodDeclaration(
                 SyntaxFactory.IdentifierName(className),
                 SyntaxFactory.Identifier(httpStatusCode.ToNormalizedString()))
@@ -551,7 +552,10 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
                 SyntaxFactory.ParameterList(
                     SyntaxFactory.SingletonSeparatedList(
                         SyntaxFactory.Parameter(SyntaxFactory.Identifier(parameterName))
-                            .WithType(SyntaxFactory.NullableType(SyntaxFactory.PredefinedType(SyntaxTokenFactory.StringKeyword())))
+                            .WithType(SyntaxFactory.NullableType(
+                                SyntaxFactory.PredefinedType(isParameterStringType
+                                    ? SyntaxTokenFactory.StringKeyword()
+                                    : SyntaxTokenFactory.ObjectKeyword())))
                             .WithDefault(
                                 SyntaxFactory.EqualsValueClause(
                                     SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression))))))

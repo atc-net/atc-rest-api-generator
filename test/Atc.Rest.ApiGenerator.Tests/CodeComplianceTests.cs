@@ -12,6 +12,7 @@ public class CodeComplianceTests
     private readonly List<Type> excludeTypes = new ()
     {
         // TODO: Add UnitTest and remove from this list!!
+        typeof(AtcApiNugetClientHelper),
         typeof(EndpointMethodMetadata),
         typeof(DomainProjectOptions),
         typeof(HostProjectOptions),

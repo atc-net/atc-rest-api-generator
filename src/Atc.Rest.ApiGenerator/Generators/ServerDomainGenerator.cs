@@ -1,3 +1,5 @@
+using Atc.Console.Spectre;
+
 // ReSharper disable InvertIf
 // ReSharper disable SuggestBaseTypeForParameter
 // ReSharper disable ReturnTypeCanBeEnumerable.Local
@@ -88,30 +90,39 @@ public class ServerDomainGenerator
         if (projectOptions.PathForSrcGenerate.Exists &&
             projectOptions.ProjectSrcCsProj.Exists)
         {
-            return;
+            var harUpdates = SolutionAndProjectHelper.EnsureLatestPackageReferencesVersionInProjFile(
+                logger,
+                projectOptions.ProjectSrcCsProj,
+                projectOptions.ProjectSrcCsProjDisplayLocation);
+            if (!harUpdates)
+            {
+                logger.LogDebug($"{EmojisConstants.FileNotUpdated}   No updates for csproj");
+            }
         }
-
-        var projectReferences = new List<FileInfo>();
-        if (projectOptions.ApiProjectSrcCsProj is not null)
+        else
         {
-            projectReferences.Add(projectOptions.ApiProjectSrcCsProj);
+            var projectReferences = new List<FileInfo>();
+            if (projectOptions.ApiProjectSrcCsProj is not null)
+            {
+                projectReferences.Add(projectOptions.ApiProjectSrcCsProj);
+            }
+
+            SolutionAndProjectHelper.ScaffoldProjFile(
+                logger,
+                projectOptions.ProjectSrcCsProj,
+                projectOptions.ProjectSrcCsProjDisplayLocation,
+                createAsWeb: false,
+                createAsTestProject: false,
+                projectOptions.ProjectName,
+                "net6.0",
+                new List<string> { "Microsoft.AspNetCore.App" },
+                packageReferences: null,
+                projectReferences,
+                includeApiSpecification: false,
+                usingCodingRules: projectOptions.UsingCodingRules);
+
+            ScaffoldBasicFileDomainRegistration();
         }
-
-        SolutionAndProjectHelper.ScaffoldProjFile(
-            logger,
-            projectOptions.ProjectSrcCsProj,
-            projectOptions.ProjectSrcCsProjDisplayLocation,
-            createAsWeb: false,
-            createAsTestProject: false,
-            projectOptions.ProjectName,
-            "net6.0",
-            new List<string> { "Microsoft.AspNetCore.App" },
-            packageReferences: null,
-            projectReferences,
-            includeApiSpecification: false,
-            usingCodingRules: projectOptions.UsingCodingRules);
-
-        ScaffoldBasicFileDomainRegistration();
     }
 
     private void ScaffoldTest()
@@ -125,7 +136,14 @@ public class ServerDomainGenerator
         if (projectOptions.PathForTestGenerate.Exists &&
             projectOptions.ProjectTestCsProj.Exists)
         {
-            // Update
+            var harUpdates = SolutionAndProjectHelper.EnsureLatestPackageReferencesVersionInProjFile(
+                logger,
+                projectOptions.ProjectTestCsProj,
+                projectOptions.ProjectTestCsProjDisplayLocation);
+            if (!harUpdates)
+            {
+                logger.LogDebug($"{EmojisConstants.FileNotUpdated}   No updates for csproj");
+            }
         }
         else
         {
