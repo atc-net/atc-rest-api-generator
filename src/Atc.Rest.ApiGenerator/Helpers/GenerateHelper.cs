@@ -1,13 +1,21 @@
 // ReSharper disable ReturnTypeCanBeEnumerable.Global
+
+using Microsoft.Extensions.Logging.Abstractions;
+
 namespace Atc.Rest.ApiGenerator.Helpers;
 
 public static class GenerateHelper
 {
-    private static readonly Version AtcVersion = new (2, 0, 36, 0); // TODO: Kill and use nuget lookup helper
     private static readonly Version AtcToolVersion = new (1, 1, 405, 0); // TODO: Fix version
 
-    [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "OK.")]
-    public static Version GetAtcVersion() => AtcVersion;
+    public static Version GetAtcVersion()
+    {
+        var version = AtcApiNugetClientHelper.GetLatestVersionForPackageId(
+            NullLogger.Instance,
+            "Atc",
+            CancellationToken.None) ?? new Version(2, 0, 81, 0);
+        return version;
+    }
 
     public static string GetAtcVersionAsString3()
     {
@@ -23,10 +31,14 @@ public static class GenerateHelper
 
     public static Version GetAtcToolVersion()
     {
-        var assembly = Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly();
-        var assemblyVersion = assembly!.GetName().Version!;
+        var version = AtcApiNugetClientHelper.GetLatestVersionForPackageId(
+            NullLogger.Instance,
+            "Atc.Rest.ApiGenerator",
+            CancellationToken.None) ?? new Version(2, 0, 101, 0);
 
-        return assemblyVersion.GreaterThan(AtcToolVersion)
+        var assemblyVersion = CliHelper.GetCurrentVersion();
+
+        return assemblyVersion.GreaterThan(version)
             ? assemblyVersion
             : AtcToolVersion;
     }
