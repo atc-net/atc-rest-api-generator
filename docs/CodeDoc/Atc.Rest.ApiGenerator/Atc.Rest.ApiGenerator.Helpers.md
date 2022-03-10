@@ -204,19 +204,19 @@
 
 #### CreateForApiProject
 >```csharp
->List<Tuple<string, string, string>> CreateForApiProject()
+>IList<Tuple<string, string, string>> CreateForApiProject()
 >```
 #### CreateForClientApiProject
 >```csharp
->List<Tuple<string, string, string>> CreateForClientApiProject()
+>IList<Tuple<string, string, string>> CreateForClientApiProject()
 >```
 #### CreateForHostProject
 >```csharp
->List<Tuple<string, string, string>> CreateForHostProject(bool useRestExtended)
+>IList<Tuple<string, string, string>> CreateForHostProject(bool useRestExtended)
 >```
 #### CreateForTestProject
 >```csharp
->List<Tuple<string, string, string>> CreateForTestProject(bool useMvc)
+>IList<Tuple<string, string, string>> CreateForTestProject(bool useMvc)
 >```
 
 <br />
@@ -329,29 +329,17 @@
 
 ### Static Methods
 
-#### GetBoolFromNullableString
+#### EnsureLatestPackageReferencesVersionInProjFile
 >```csharp
->bool GetBoolFromNullableString(string value)
->```
-#### GetNullableStringFromBool
->```csharp
->string GetNullableStringFromBool(bool value)
->```
-#### GetNullableValueFromProject
->```csharp
->string GetNullableValueFromProject(XElement element)
+>bool EnsureLatestPackageReferencesVersionInProjFile(ILogger logger, FileInfo projectCsProjFile, string fileDisplayLocation)
 >```
 #### ScaffoldProjFile
 >```csharp
->void ScaffoldProjFile(ILogger logger, FileInfo projectCsProjFile, string fileDisplayLocation, bool createAsWeb, bool createAsTestProject, string projectName, string targetFramework, List<string> frameworkReferences, List<Tuple<string, string, string>> packageReferences, List<FileInfo> projectReferences, bool includeApiSpecification, bool usingCodingRules)
+>void ScaffoldProjFile(ILogger logger, FileInfo projectCsProjFile, string fileDisplayLocation, bool createAsWeb, bool createAsTestProject, string projectName, string targetFramework, IList<string> frameworkReferences, IList<Tuple<string, string, string>> packageReferences, IList<FileInfo> projectReferences, bool includeApiSpecification, bool usingCodingRules)
 >```
 #### ScaffoldSlnFile
 >```csharp
 >void ScaffoldSlnFile(ILogger logger, FileInfo slnFile, string projectName, DirectoryInfo apiPath, DirectoryInfo domainPath, DirectoryInfo hostPath, DirectoryInfo domainTestPath = null, DirectoryInfo hostTestPath = null)
->```
-#### SetNullableValueForProject
->```csharp
->void SetNullableValueForProject(XElement element, string newNullableValue)
 >```
 
 <br />

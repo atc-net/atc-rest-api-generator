@@ -284,6 +284,39 @@
 
 <br />
 
+## DotnetNugetPackage
+
+>```csharp
+>public class DotnetNugetPackage
+>```
+
+### Properties
+
+#### IsNewest
+>```csharp
+>IsNewest
+>```
+#### NewestVersion
+>```csharp
+>NewestVersion
+>```
+#### PackageId
+>```csharp
+>PackageId
+>```
+#### Version
+>```csharp
+>Version
+>```
+### Methods
+
+#### ToString
+>```csharp
+>string ToString()
+>```
+
+<br />
+
 ## EndpointMethodMetadata
 
 >```csharp
