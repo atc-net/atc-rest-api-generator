@@ -3,7 +3,7 @@ namespace Atc.Rest.ApiGenerator.Helpers;
 
 public static class NugetPackageReferenceHelper
 {
-    public static List<Tuple<string, string, string?>> CreateForHostProject(bool useRestExtended)
+    public static IList<Tuple<string, string, string?>> CreateForHostProject(bool useRestExtended)
     {
         var atcVersion = GenerateHelper.GetAtcVersionAsString3();
 
@@ -27,7 +27,7 @@ public static class NugetPackageReferenceHelper
         return packageReference;
     }
 
-    public static List<Tuple<string, string, string?>> CreateForApiProject()
+    public static IList<Tuple<string, string, string?>> CreateForApiProject()
     {
         var atcVersion = GenerateHelper.GetAtcVersionAsString3();
 
@@ -40,7 +40,7 @@ public static class NugetPackageReferenceHelper
         return packageReference;
     }
 
-    public static List<Tuple<string, string, string?>> CreateForClientApiProject()
+    public static IList<Tuple<string, string, string?>> CreateForClientApiProject()
     {
         var atcVersion = GenerateHelper.GetAtcVersionAsString3();
 
@@ -53,7 +53,7 @@ public static class NugetPackageReferenceHelper
         return packageReference;
     }
 
-    public static List<Tuple<string, string, string?>> CreateForTestProject(bool useMvc)
+    public static IList<Tuple<string, string, string?>> CreateForTestProject(bool useMvc)
     {
         var packageReference = new List<Tuple<string, string, string?>>
         {

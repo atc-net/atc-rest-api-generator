@@ -17,9 +17,9 @@ public static class SolutionAndProjectHelper
         bool createAsTestProject,
         string projectName,
         string targetFramework,
-        List<string>? frameworkReferences,
-        List<Tuple<string, string, string?>>? packageReferences,
-        List<FileInfo>? projectReferences,
+        IList<string>? frameworkReferences,
+        IList<Tuple<string, string, string?>>? packageReferences,
+        IList<FileInfo>? projectReferences,
         bool includeApiSpecification,
         bool usingCodingRules)
     {
