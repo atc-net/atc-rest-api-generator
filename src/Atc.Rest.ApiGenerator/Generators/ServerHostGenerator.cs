@@ -49,11 +49,11 @@ public class ServerHostGenerator
         if (projectOptions.PathForSrcGenerate.Exists &&
             projectOptions.ProjectSrcCsProj.Exists)
         {
-            var harUpdates = SolutionAndProjectHelper.EnsureLatestPackageReferencesVersionInProjFile(
+            var hasUpdates = SolutionAndProjectHelper.EnsureLatestPackageReferencesVersionInProjFile(
                 logger,
                 projectOptions.ProjectSrcCsProj,
                 projectOptions.ProjectSrcCsProjDisplayLocation);
-            if (!harUpdates)
+            if (!hasUpdates)
             {
                 logger.LogDebug($"{EmojisConstants.FileNotUpdated}   No updates for csproj");
             }
@@ -900,11 +900,11 @@ public class ServerHostGenerator
         if (projectOptions.PathForTestGenerate.Exists &&
             projectOptions.ProjectTestCsProj.Exists)
         {
-            var harUpdates = SolutionAndProjectHelper.EnsureLatestPackageReferencesVersionInProjFile(
+            var hasUpdates = SolutionAndProjectHelper.EnsureLatestPackageReferencesVersionInProjFile(
                 logger,
                 projectOptions.ProjectTestCsProj,
                 projectOptions.ProjectTestCsProjDisplayLocation);
-            if (!harUpdates)
+            if (!hasUpdates)
             {
                 logger.LogDebug($"{EmojisConstants.FileNotUpdated}   No updates for csproj");
             }

@@ -107,11 +107,11 @@ public class ServerApiGenerator
         if (projectOptions.PathForSrcGenerate.Exists &&
             projectOptions.ProjectSrcCsProj.Exists)
         {
-            var harUpdates = SolutionAndProjectHelper.EnsureLatestPackageReferencesVersionInProjFile(
+            var hasUpdates = SolutionAndProjectHelper.EnsureLatestPackageReferencesVersionInProjFile(
                 logger,
                 projectOptions.ProjectSrcCsProj,
                 projectOptions.ProjectSrcCsProjDisplayLocation);
-            if (!harUpdates)
+            if (!hasUpdates)
             {
                 logger.LogDebug($"{EmojisConstants.FileNotUpdated}   No updates for csproj");
             }
