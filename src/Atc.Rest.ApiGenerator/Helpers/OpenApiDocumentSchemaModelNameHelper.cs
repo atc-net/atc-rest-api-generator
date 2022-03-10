@@ -70,6 +70,7 @@ public static class OpenApiDocumentSchemaModelNameHelper
         }
 
         if (!modelName.Contains('.', StringComparison.Ordinal) &&
+            !SimpleTypeHelper.IsSimpleType(modelName) &&
             IsReservedTypeName(modelName))
         {
             if (isShared)
