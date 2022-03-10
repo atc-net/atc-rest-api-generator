@@ -120,6 +120,13 @@ public static class GenerateServerApiXunitTestEndpointHandlerStubHelper
                         ? $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName)}.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}());"
                         : $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName)}.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}(42.2));");
                 break;
+            case "Guid":
+                sb.AppendLine(
+                    12,
+                    httpStatusCode == HttpStatusCode.Created
+                        ? $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName)}.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}());"
+                        : $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName)}.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}(System.Guid.NewGuid()));");
+                break;
             case "byte[]":
                 sb.AppendLine(12, "var bytes = System.Text.Encoding.UTF8.GetBytes(\"Hello World\");");
                 sb.AppendLine(12, $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName)}.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}(bytes, \"dummy.txt\"));");
