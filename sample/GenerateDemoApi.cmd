@@ -9,7 +9,7 @@ SET generatorFile=%srcDirectory%\Atc.Rest.ApiGenerator.CLI\bin\Debug\net6.0\atc-
 SET projectName=Demo
 SET specFile=%currentDirectory%\Demo.ApiDesign\SingleFileVersion\Api.v1.yaml
 SET generatedDirectory=%currentDirectory%
-SET optionsFile=%currentDirectory%\\Demo.ApiDesign\ApiGeneratorOptions.json
+SET optionsFile=%currentDirectory%\Demo.ApiDesign\ApiGeneratorOptions.json
 
-%generatorFile% generate server all -p %projectName% -s %specFile% --outputSlnPath %generatedDirectory% --outputSrcPath %generatedDirectory% --outputTestPath %generatedDirectory% --optionsPath %optionsFile% -v true
+%generatorFile% generate server all -p %projectName% -s %specFile% --outputSlnPath %generatedDirectory% --outputSrcPath %generatedDirectory%\src --outputTestPath %generatedDirectory%\test --optionsPath %optionsFile% -v true
 

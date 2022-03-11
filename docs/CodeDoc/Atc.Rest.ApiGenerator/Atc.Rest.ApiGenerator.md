@@ -43,6 +43,10 @@
 >```csharp
 >string AreaValidation
 >```
+#### PackageReference
+>```csharp
+>string PackageReference
+>```
 
 <br />
 

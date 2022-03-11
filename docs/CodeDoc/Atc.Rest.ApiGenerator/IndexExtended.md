@@ -15,6 +15,7 @@
      - string AreaGenerateCode
      - string AreaGenerateTest
      - string AreaValidation
+     - string PackageReference
 - [AtcRestApiGeneratorAssemblyTypeInitializer](Atc.Rest.ApiGenerator.md#atcrestapigeneratorassemblytypeinitializer)
 - [Constants](Atc.Rest.ApiGenerator.md#constants)
   -  Static Fields
@@ -196,12 +197,9 @@
      - GetSegmentName(string path)
 - [SolutionAndProjectHelper](Atc.Rest.ApiGenerator.Helpers.md#solutionandprojecthelper)
   -  Static Methods
-     - GetBoolFromNullableString(string value)
-     - GetNullableStringFromBool(bool value)
-     - GetNullableValueFromProject(XElement element)
-     - ScaffoldProjFile(ILogger logger, FileInfo projectCsProjFile, string fileDisplayLocation, bool createAsWeb, bool createAsTestProject, string projectName, string targetFramework, List&lt;string&gt; frameworkReferences, List&lt;Tuple&lt;string, string, string&gt;&gt; packageReferences, List&lt;FileInfo&gt; projectReferences, bool includeApiSpecification, bool usingCodingRules)
+     - EnsureLatestPackageReferencesVersionInProjFile(ILogger logger, FileInfo projectCsProjFile, string fileDisplayLocation)
+     - ScaffoldProjFile(ILogger logger, FileInfo projectCsProjFile, string fileDisplayLocation, bool createAsWeb, bool createAsTestProject, string projectName, string targetFramework, IList&lt;string&gt; frameworkReferences, IList&lt;Tuple&lt;string, string, string&gt;&gt; packageReferences, IList&lt;FileInfo&gt; projectReferences, bool includeApiSpecification, bool usingCodingRules)
      - ScaffoldSlnFile(ILogger logger, FileInfo slnFile, string projectName, DirectoryInfo apiPath, DirectoryInfo domainPath, DirectoryInfo hostPath, DirectoryInfo domainTestPath = null, DirectoryInfo hostTestPath = null)
-     - SetNullableValueForProject(XElement element, string newNullableValue)
 - [TextFileHelper](Atc.Rest.ApiGenerator.Helpers.md#textfilehelper)
   -  Static Methods
      - Save(ILogger logger, FileInfo fileInfo, string fileDisplayLocation, string text, bool overrideIfExist = True)
@@ -342,6 +340,14 @@
      - PathForTestHandlers
   -  Methods
      - SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles(ILogger logger)
+- [DotnetNugetPackage](Atc.Rest.ApiGenerator.Models.md#dotnetnugetpackage)
+  -  Properties
+     - IsNewest
+     - NewestVersion
+     - PackageId
+     - Version
+  -  Methods
+     - ToString()
 - [EndpointMethodMetadata](Atc.Rest.ApiGenerator.Models.md#endpointmethodmetadata)
   -  Properties
      - ComponentsSchemas

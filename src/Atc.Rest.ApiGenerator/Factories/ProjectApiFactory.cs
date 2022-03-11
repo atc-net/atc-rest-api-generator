@@ -187,6 +187,13 @@ public static class ProjectApiFactory
             "Microsoft.AspNetCore.Mvc",
         };
 
+        var schemaForStatusCode = responses.GetSchemaForStatusCode(HttpStatusCode.OK);
+        if (schemaForStatusCode is not null &&
+            schemaForStatusCode.IsFormatTypeUuid())
+        {
+            list.Add("System");
+        }
+
         if (responses.HasSchemaTypeArray())
         {
             list.Add("System.Linq");
