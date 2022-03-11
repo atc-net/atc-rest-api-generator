@@ -92,6 +92,23 @@ public static class CommandAppExtensions
                 {
                     NameCommandConstants.Generate,
                     NameCommandConstants.GenerateServer,
+                    CreateArgumentConfigurationSpecificationPath(),
+                    CreateArgumentProjectPrefixName(),
+                    ".",
+                })
+                .WithExample(new[]
+                {
+                    NameCommandConstants.Generate,
+                    NameCommandConstants.GenerateServer,
+                    NameCommandConstants.GenerateServerAll,
+                    CreateArgumentConfigurationSpecificationPath(),
+                    CreateArgumentProjectPrefixName(),
+                    ".",
+                })
+                .WithExample(new[]
+                {
+                    NameCommandConstants.Generate,
+                    NameCommandConstants.GenerateServer,
                     NameCommandConstants.GenerateServerAll,
                     CreateArgumentConfigurationSpecificationPath(),
                     CreateArgumentProjectPrefixName(),
