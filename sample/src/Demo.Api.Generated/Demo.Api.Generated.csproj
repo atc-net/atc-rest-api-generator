@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <!-- PropertyGroup: Compile settings with some properties like LangVersion is inherit from root/Directory.Build.props -->
+
+  <PropertyGroup>
+    <DocumentationFile>bin\Debug\net6.0\Demo.Api.Generated.xml</DocumentationFile>
+    <NoWarn>1573;1591;1701;1702;1712;8618</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\ApiSpecification.yaml" />
+    <EmbeddedResource Include="Resources\ApiSpecification.yaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Atc" Version="2.0.91" />
+    <PackageReference Include="Atc.Rest" Version="2.0.91" />
+  </ItemGroup>
+
+</Project>
