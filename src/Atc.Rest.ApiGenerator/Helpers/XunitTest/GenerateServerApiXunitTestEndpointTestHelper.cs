@@ -60,6 +60,7 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
 
         GenerateCodeHelper.AppendGeneratedCodeAttribute(sb, hostProjectOptions.ToolName, hostProjectOptions.ToolVersion);
         sb.AppendLine(4, "[Collection(\"Sequential-Endpoints\")]");
+        sb.AppendLine(4, "[Trait(Traits.Category, Traits.Categories.Integration)]");
         sb.AppendLine(4, $"public class {endpointMethodMetadata.MethodName}Tests : WebApiControllerBaseTest");
         sb.AppendLine(4, "{");
     }
@@ -147,6 +148,7 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
 
         var list = new List<string>
         {
+            "Atc.XUnit",
             "FluentAssertions",
             "Xunit",
         };
