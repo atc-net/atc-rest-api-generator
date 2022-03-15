@@ -451,17 +451,29 @@ public class ServerHostGenerator
                                                         SyntaxFactory.LocalDeclarationStatement(
                                                             SyntaxFactory.VariableDeclaration(SyntaxFactory.IdentifierName("var"))
                                                                 .WithVariables(
-                                                                    SyntaxFactory.SingletonSeparatedList(
-                                                                        SyntaxFactory.VariableDeclarator(SyntaxFactory.Identifier("integrationConfig"))
-                                                                            .WithInitializer(
-                                                                                SyntaxFactory.EqualsValueClause(
-                                                                                    SyntaxFactory.InvocationExpression(
-                                                                                        SyntaxFactory.MemberAccessExpression(
-                                                                                            SyntaxKind.SimpleMemberAccessExpression,
-                                                                                            SyntaxFactory.ObjectCreationExpression(SyntaxFactory.IdentifierName("ConfigurationBuilder"))
+                                                                    SyntaxFactory.SingletonSeparatedList<VariableDeclaratorSyntax>(
+                                                                        SyntaxFactory.VariableDeclarator(
+                                                                            SyntaxFactory.Identifier("integrationConfig"))
+                                                                        .WithInitializer(
+                                                                            SyntaxFactory.EqualsValueClause(
+                                                                                SyntaxFactory.InvocationExpression(
+                                                                                    SyntaxFactory.MemberAccessExpression(
+                                                                                        SyntaxKind.SimpleMemberAccessExpression,
+                                                                                        SyntaxFactory.InvocationExpression(
+                                                                                            SyntaxFactory.MemberAccessExpression(
+                                                                                                SyntaxKind.SimpleMemberAccessExpression,
+                                                                                                SyntaxFactory.ObjectCreationExpression(SyntaxFactory.IdentifierName("ConfigurationBuilder"))
                                                                                                 .WithArgumentList(
                                                                                                     SyntaxFactory.ArgumentList()),
-                                                                                            SyntaxFactory.IdentifierName("Build")))))))),
+                                                                                                SyntaxFactory.IdentifierName("AddJsonFile")))
+                                                                                        .WithArgumentList(
+                                                                                            SyntaxFactory.ArgumentList(
+                                                                                                SyntaxFactory.SingletonSeparatedList(
+                                                                                                    SyntaxFactory.Argument(
+                                                                                                        SyntaxFactory.LiteralExpression(
+                                                                                                            SyntaxKind.StringLiteralExpression,
+                                                                                                            SyntaxFactory.Literal("appsettings.integrationtest.json")))))),
+                                                                                        SyntaxFactory.IdentifierName("Build")))))))),
                                                         SyntaxFactory.ExpressionStatement(
                                                             SyntaxFactory.InvocationExpression(
                                                                     SyntaxMemberAccessExpressionFactory.Create("AddConfiguration", "config"))
