@@ -256,12 +256,24 @@ public static class SolutionAndProjectHelper
     public static bool EnsureLatestPackageReferencesVersionInProjFile(
         ILogger logger,
         FileInfo projectCsProjFile,
-        string fileDisplayLocation)
+        string fileDisplayLocation,
+        ProjectType projectType,
+        bool isTestProject)
     {
         ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(projectCsProjFile);
 
         var fileContent = File.ReadAllText(projectCsProjFile.FullName);
+        if (isTestProject &&
+            projectType == ProjectType.ServerHost &&
+            !fileContent.Contains("Atc.XUnit", StringComparison.Ordinal))
+        {
+            fileContent = fileContent.Replace(
+                "<PackageReference Include=\"AutoFixture\"",
+                "<PackageReference Include=\"Atc.XUnit\" Version=\"1.0.0\" />" + Environment.NewLine + "    <PackageReference Include=\"AutoFixture\"",
+                StringComparison.Ordinal);
+        }
+
         var packageReferencesThatNeedsToBeUpdated = GetPackageReferencesThatNeedsToBeUpdated(logger, fileContent);
         if (!packageReferencesThatNeedsToBeUpdated.Any())
         {

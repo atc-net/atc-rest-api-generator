@@ -52,7 +52,9 @@ public class ServerHostGenerator
             var hasUpdates = SolutionAndProjectHelper.EnsureLatestPackageReferencesVersionInProjFile(
                 logger,
                 projectOptions.ProjectSrcCsProj,
-                projectOptions.ProjectSrcCsProjDisplayLocation);
+                projectOptions.ProjectSrcCsProjDisplayLocation,
+                ProjectType.ServerHost,
+                isTestProject: false);
             if (!hasUpdates)
             {
                 logger.LogDebug($"{EmojisConstants.FileNotUpdated}   No updates for csproj");
@@ -916,7 +918,9 @@ public class ServerHostGenerator
             var hasUpdates = SolutionAndProjectHelper.EnsureLatestPackageReferencesVersionInProjFile(
                 logger,
                 projectOptions.ProjectTestCsProj,
-                projectOptions.ProjectTestCsProjDisplayLocation);
+                projectOptions.ProjectTestCsProjDisplayLocation,
+                ProjectType.ServerHost,
+                isTestProject: true);
             if (!hasUpdates)
             {
                 logger.LogDebug($"{EmojisConstants.FileNotUpdated}   No updates for csproj");
