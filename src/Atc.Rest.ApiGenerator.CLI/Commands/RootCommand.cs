@@ -16,7 +16,7 @@ public class RootCommand : AsyncCommand<RootCommandSettings>
     private static async Task<int> ExecuteInternalAsync(
         RootCommandSettings settings)
     {
-        if (!NetworkInformationHelper.HasConnection())
+        if (!NetworkInformationHelper.HasHttpConnection())
         {
             System.Console.WriteLine("This tool requires internet connection!");
             return ConsoleExitStatusCodes.Failure;
