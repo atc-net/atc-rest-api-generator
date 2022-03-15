@@ -454,7 +454,7 @@ public class ServerHostGenerator
                                                         SyntaxFactory.LocalDeclarationStatement(
                                                             SyntaxFactory.VariableDeclaration(SyntaxFactory.IdentifierName("var"))
                                                                 .WithVariables(
-                                                                    SyntaxFactory.SingletonSeparatedList<VariableDeclaratorSyntax>(
+                                                                    SyntaxFactory.SingletonSeparatedList(
                                                                         SyntaxFactory.VariableDeclarator(
                                                                             SyntaxFactory.Identifier("integrationConfig"))
                                                                         .WithInitializer(
