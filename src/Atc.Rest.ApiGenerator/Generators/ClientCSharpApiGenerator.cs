@@ -62,7 +62,9 @@ public class ClientCSharpApiGenerator
             var hasUpdates = SolutionAndProjectHelper.EnsureLatestPackageReferencesVersionInProjFile(
                 logger,
                 projectOptions.ProjectSrcCsProj,
-                projectOptions.ProjectSrcCsProjDisplayLocation);
+                projectOptions.ProjectSrcCsProjDisplayLocation,
+                ProjectType.ClientApi,
+                isTestProject: false);
             if (!hasUpdates)
             {
                 logger.LogDebug($"{EmojisConstants.FileNotUpdated}   No updates for csproj");
@@ -74,6 +76,7 @@ public class ClientCSharpApiGenerator
                 logger,
                 projectOptions.ProjectSrcCsProj,
                 projectOptions.ProjectSrcCsProjDisplayLocation,
+                ProjectType.ClientApi,
                 createAsWeb: false,
                 createAsTestProject: false,
                 projectName: projectOptions.ProjectName,

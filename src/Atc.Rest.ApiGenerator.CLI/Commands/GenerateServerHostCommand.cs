@@ -36,7 +36,7 @@ public class GenerateServerHostCommand : AsyncCommand<ServerHostCommandSettings>
         var isUsingCodingRules = CodingRulesHelper.IsUsingCodingRules(settings.OutputPath, settings.DisableCodingRules);
 
         if (shouldScaffoldCodingRules &&
-            !NetworkInformationHelper.HasConnection())
+            !NetworkInformationHelper.HasHttpConnection())
         {
             System.Console.WriteLine("This tool requires internet connection!");
             return ConsoleExitStatusCodes.Failure;

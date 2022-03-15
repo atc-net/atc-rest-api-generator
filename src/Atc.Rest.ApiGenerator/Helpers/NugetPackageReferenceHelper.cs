@@ -57,6 +57,7 @@ public static class NugetPackageReferenceHelper
     {
         var packageReference = new List<Tuple<string, string, string?>>
         {
+            new ("Atc.XUnit", "2.0.93", null),
             new ("AutoFixture", "4.17.0", null),
             new ("AutoFixture.AutoNSubstitute", "4.17.0", null),
             new ("AutoFixture.Xunit2", "4.17.0", null),

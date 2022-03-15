@@ -331,11 +331,11 @@
 
 #### EnsureLatestPackageReferencesVersionInProjFile
 >```csharp
->bool EnsureLatestPackageReferencesVersionInProjFile(ILogger logger, FileInfo projectCsProjFile, string fileDisplayLocation)
+>bool EnsureLatestPackageReferencesVersionInProjFile(ILogger logger, FileInfo projectCsProjFile, string fileDisplayLocation, ProjectType projectType, bool isTestProject)
 >```
 #### ScaffoldProjFile
 >```csharp
->void ScaffoldProjFile(ILogger logger, FileInfo projectCsProjFile, string fileDisplayLocation, bool createAsWeb, bool createAsTestProject, string projectName, string targetFramework, IList<string> frameworkReferences, IList<Tuple<string, string, string>> packageReferences, IList<FileInfo> projectReferences, bool includeApiSpecification, bool usingCodingRules)
+>void ScaffoldProjFile(ILogger logger, FileInfo projectCsProjFile, string fileDisplayLocation, ProjectType projectType, bool createAsWeb, bool createAsTestProject, string projectName, string targetFramework, IList<string> frameworkReferences, IList<Tuple<string, string, string>> packageReferences, IList<FileInfo> projectReferences, bool includeApiSpecification, bool usingCodingRules)
 >```
 #### ScaffoldSlnFile
 >```csharp

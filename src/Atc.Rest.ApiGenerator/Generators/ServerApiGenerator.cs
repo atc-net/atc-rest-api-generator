@@ -110,7 +110,9 @@ public class ServerApiGenerator
             var hasUpdates = SolutionAndProjectHelper.EnsureLatestPackageReferencesVersionInProjFile(
                 logger,
                 projectOptions.ProjectSrcCsProj,
-                projectOptions.ProjectSrcCsProjDisplayLocation);
+                projectOptions.ProjectSrcCsProjDisplayLocation,
+                ProjectType.ServerApi,
+                isTestProject: false);
             if (!hasUpdates)
             {
                 logger.LogDebug($"{EmojisConstants.FileNotUpdated}   No updates for csproj");
@@ -122,6 +124,7 @@ public class ServerApiGenerator
                 logger,
                 projectOptions.ProjectSrcCsProj,
                 projectOptions.ProjectSrcCsProjDisplayLocation,
+                ProjectType.ServerApi,
                 createAsWeb: false,
                 createAsTestProject: false,
                 projectOptions.ProjectName,

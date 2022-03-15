@@ -13,6 +13,7 @@ public static class SolutionAndProjectHelper
         ILogger logger,
         FileInfo projectCsProjFile,
         string fileDisplayLocation,
+        ProjectType projectType,
         bool createAsWeb,
         bool createAsTestProject,
         string projectName,
@@ -131,6 +132,16 @@ public static class SolutionAndProjectHelper
             sb.AppendLine();
         }
 
+        if (createAsTestProject &&
+            projectType == ProjectType.ServerHost)
+        {
+            sb.AppendLine(2, "<ItemGroup>");
+            sb.AppendLine(4, "<None Update=\"appsettings.integrationtest.json\">");
+            sb.AppendLine(6, "<CopyToOutputDirectory>Always</CopyToOutputDirectory>");
+            sb.AppendLine(4, "</None>");
+            sb.AppendLine(2, "</ItemGroup>");
+        }
+
         sb.AppendLine("</Project>");
         TextFileHelper.Save(logger, projectCsProjFile, fileDisplayLocation, sb.ToString());
     }
@@ -245,12 +256,24 @@ public static class SolutionAndProjectHelper
     public static bool EnsureLatestPackageReferencesVersionInProjFile(
         ILogger logger,
         FileInfo projectCsProjFile,
-        string fileDisplayLocation)
+        string fileDisplayLocation,
+        ProjectType projectType,
+        bool isTestProject)
     {
         ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(projectCsProjFile);
 
         var fileContent = File.ReadAllText(projectCsProjFile.FullName);
+        if (isTestProject &&
+            projectType == ProjectType.ServerHost &&
+            !fileContent.Contains("Atc.XUnit", StringComparison.Ordinal))
+        {
+            fileContent = fileContent.Replace(
+                "<PackageReference Include=\"AutoFixture\"",
+                "<PackageReference Include=\"Atc.XUnit\" Version=\"1.0.0\" />" + Environment.NewLine + "    <PackageReference Include=\"AutoFixture\"",
+                StringComparison.Ordinal);
+        }
+
         var packageReferencesThatNeedsToBeUpdated = GetPackageReferencesThatNeedsToBeUpdated(logger, fileContent);
         if (!packageReferencesThatNeedsToBeUpdated.Any())
         {

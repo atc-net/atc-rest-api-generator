@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Atc.XUnit;
 using FluentAssertions;
 using Scenario2.Api.Generated.Contracts.Orders;
 using Xunit;
@@ -16,6 +17,7 @@ namespace Scenario2.Api.Tests.Endpoints.Orders.Generated
 {
     [GeneratedCode("ApiGenerator", "x.x.x.x")]
     [Collection("Sequential-Endpoints")]
+    [Trait(Traits.Category, Traits.Categories.Integration)]
     public class GetOrderByIdTests : WebApiControllerBaseTest
     {
         public GetOrderByIdTests(WebApiStartupFactory fixture) : base(fixture) { }

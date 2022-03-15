@@ -2,6 +2,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using Atc.Rest.Results;
+using Atc.XUnit;
 using FluentAssertions;
 using Xunit;
 
@@ -15,6 +16,7 @@ namespace Scenario2.Api.Tests.Endpoints.Pagination.Generated
 {
     [GeneratedCode("ApiGenerator", "x.x.x.x")]
     [Collection("Sequential-Endpoints")]
+    [Trait(Traits.Category, Traits.Categories.Integration)]
     public class GetPaginatedListOfIntsTests : WebApiControllerBaseTest
     {
         public GetPaginatedListOfIntsTests(WebApiStartupFactory fixture) : base(fixture) { }

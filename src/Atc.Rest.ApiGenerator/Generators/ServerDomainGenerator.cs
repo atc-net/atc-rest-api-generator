@@ -93,7 +93,9 @@ public class ServerDomainGenerator
             var hasUpdates = SolutionAndProjectHelper.EnsureLatestPackageReferencesVersionInProjFile(
                 logger,
                 projectOptions.ProjectSrcCsProj,
-                projectOptions.ProjectSrcCsProjDisplayLocation);
+                projectOptions.ProjectSrcCsProjDisplayLocation,
+                ProjectType.ServerDomain,
+                isTestProject: false);
             if (!hasUpdates)
             {
                 logger.LogDebug($"{EmojisConstants.FileNotUpdated}   No updates for csproj");
@@ -111,6 +113,7 @@ public class ServerDomainGenerator
                 logger,
                 projectOptions.ProjectSrcCsProj,
                 projectOptions.ProjectSrcCsProjDisplayLocation,
+                ProjectType.ServerDomain,
                 createAsWeb: false,
                 createAsTestProject: false,
                 projectOptions.ProjectName,
@@ -139,7 +142,9 @@ public class ServerDomainGenerator
             var hasUpdates = SolutionAndProjectHelper.EnsureLatestPackageReferencesVersionInProjFile(
                 logger,
                 projectOptions.ProjectTestCsProj,
-                projectOptions.ProjectTestCsProjDisplayLocation);
+                projectOptions.ProjectTestCsProjDisplayLocation,
+                ProjectType.ServerDomain,
+                isTestProject: true);
             if (!hasUpdates)
             {
                 logger.LogDebug($"{EmojisConstants.FileNotUpdated}   No updates for csproj");
@@ -163,6 +168,7 @@ public class ServerDomainGenerator
                 logger,
                 projectOptions.ProjectTestCsProj,
                 projectOptions.ProjectTestCsProjDisplayLocation,
+                ProjectType.ServerDomain,
                 createAsWeb: false,
                 createAsTestProject: true,
                 $"{projectOptions.ProjectName}.Tests",

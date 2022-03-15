@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Atc.XUnit;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Scenario2.Api.Generated.Contracts.Files;
@@ -18,6 +19,7 @@ namespace Scenario2.Api.Tests.Endpoints.Files.Generated
 {
     [GeneratedCode("ApiGenerator", "x.x.x.x")]
     [Collection("Sequential-Endpoints")]
+    [Trait(Traits.Category, Traits.Categories.Integration)]
     public class UploadMultiFilesAsFormDataTests : WebApiControllerBaseTest
     {
         public UploadMultiFilesAsFormDataTests(WebApiStartupFactory fixture) : base(fixture) { }

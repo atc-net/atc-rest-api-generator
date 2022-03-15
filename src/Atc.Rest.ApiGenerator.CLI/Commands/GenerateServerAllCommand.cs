@@ -40,7 +40,7 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
         var isUsingCodingRules = CodingRulesHelper.IsUsingCodingRules(outputSlnPath, settings.DisableCodingRules);
 
         if (shouldScaffoldCodingRules &&
-            !NetworkInformationHelper.HasConnection())
+            !NetworkInformationHelper.HasHttpConnection())
         {
             System.Console.WriteLine("This tool requires internet connection!");
             return ConsoleExitStatusCodes.Failure;

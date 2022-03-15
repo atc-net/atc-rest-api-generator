@@ -52,7 +52,9 @@ public class ServerHostGenerator
             var hasUpdates = SolutionAndProjectHelper.EnsureLatestPackageReferencesVersionInProjFile(
                 logger,
                 projectOptions.ProjectSrcCsProj,
-                projectOptions.ProjectSrcCsProjDisplayLocation);
+                projectOptions.ProjectSrcCsProjDisplayLocation,
+                ProjectType.ServerHost,
+                isTestProject: false);
             if (!hasUpdates)
             {
                 logger.LogDebug($"{EmojisConstants.FileNotUpdated}   No updates for csproj");
@@ -75,6 +77,7 @@ public class ServerHostGenerator
                 logger,
                 projectOptions.ProjectSrcCsProj,
                 projectOptions.ProjectSrcCsProjDisplayLocation,
+                ProjectType.ServerHost,
                 createAsWeb: true,
                 createAsTestProject: false,
                 projectOptions.ProjectName,
@@ -452,16 +455,28 @@ public class ServerHostGenerator
                                                             SyntaxFactory.VariableDeclaration(SyntaxFactory.IdentifierName("var"))
                                                                 .WithVariables(
                                                                     SyntaxFactory.SingletonSeparatedList(
-                                                                        SyntaxFactory.VariableDeclarator(SyntaxFactory.Identifier("integrationConfig"))
-                                                                            .WithInitializer(
-                                                                                SyntaxFactory.EqualsValueClause(
-                                                                                    SyntaxFactory.InvocationExpression(
-                                                                                        SyntaxFactory.MemberAccessExpression(
-                                                                                            SyntaxKind.SimpleMemberAccessExpression,
-                                                                                            SyntaxFactory.ObjectCreationExpression(SyntaxFactory.IdentifierName("ConfigurationBuilder"))
+                                                                        SyntaxFactory.VariableDeclarator(
+                                                                            SyntaxFactory.Identifier("integrationConfig"))
+                                                                        .WithInitializer(
+                                                                            SyntaxFactory.EqualsValueClause(
+                                                                                SyntaxFactory.InvocationExpression(
+                                                                                    SyntaxFactory.MemberAccessExpression(
+                                                                                        SyntaxKind.SimpleMemberAccessExpression,
+                                                                                        SyntaxFactory.InvocationExpression(
+                                                                                            SyntaxFactory.MemberAccessExpression(
+                                                                                                SyntaxKind.SimpleMemberAccessExpression,
+                                                                                                SyntaxFactory.ObjectCreationExpression(SyntaxFactory.IdentifierName("ConfigurationBuilder"))
                                                                                                 .WithArgumentList(
                                                                                                     SyntaxFactory.ArgumentList()),
-                                                                                            SyntaxFactory.IdentifierName("Build")))))))),
+                                                                                                SyntaxFactory.IdentifierName("AddJsonFile")))
+                                                                                        .WithArgumentList(
+                                                                                            SyntaxFactory.ArgumentList(
+                                                                                                SyntaxFactory.SingletonSeparatedList(
+                                                                                                    SyntaxFactory.Argument(
+                                                                                                        SyntaxFactory.LiteralExpression(
+                                                                                                            SyntaxKind.StringLiteralExpression,
+                                                                                                            SyntaxFactory.Literal("appsettings.integrationtest.json")))))),
+                                                                                        SyntaxFactory.IdentifierName("Build")))))))),
                                                         SyntaxFactory.ExpressionStatement(
                                                             SyntaxFactory.InvocationExpression(
                                                                     SyntaxMemberAccessExpressionFactory.Create("AddConfiguration", "config"))
@@ -903,7 +918,9 @@ public class ServerHostGenerator
             var hasUpdates = SolutionAndProjectHelper.EnsureLatestPackageReferencesVersionInProjFile(
                 logger,
                 projectOptions.ProjectTestCsProj,
-                projectOptions.ProjectTestCsProjDisplayLocation);
+                projectOptions.ProjectTestCsProjDisplayLocation,
+                ProjectType.ServerHost,
+                isTestProject: true);
             if (!hasUpdates)
             {
                 logger.LogDebug($"{EmojisConstants.FileNotUpdated}   No updates for csproj");
@@ -932,6 +949,7 @@ public class ServerHostGenerator
                 logger,
                 projectOptions.ProjectTestCsProj,
                 projectOptions.ProjectTestCsProjDisplayLocation,
+                ProjectType.ServerHost,
                 createAsWeb: false,
                 createAsTestProject: true,
                 $"{projectOptions.ProjectName}.Tests",
@@ -945,6 +963,7 @@ public class ServerHostGenerator
 
         GenerateTestWebApiStartupFactory();
         GenerateTestWebApiControllerBaseTest();
+        ScaffoldAppSettingsIntegrationTest();
     }
 
     private void GenerateTestEndpoints()
@@ -1109,20 +1128,20 @@ public class ServerHostGenerator
 
     // TODO: FIX THIS - Use CompilationUnit
     private void ScaffoldConfigureSwaggerDocOptions()
-    {
-        var fullNamespace = string.IsNullOrEmpty(projectOptions.ClientFolderName)
-            ? $"{projectOptions.ProjectName}"
-            : $"{projectOptions.ProjectName}.{projectOptions.ClientFolderName}";
+{
+    var fullNamespace = string.IsNullOrEmpty(projectOptions.ClientFolderName)
+        ? $"{projectOptions.ProjectName}"
+        : $"{projectOptions.ProjectName}.{projectOptions.ClientFolderName}";
 
-        var syntaxGenerator = new SyntaxGeneratorSwaggerDocOptions(fullNamespace, projectOptions.Document);
-        var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "ConfigureSwaggerDocOptions.cs"));
+    var syntaxGenerator = new SyntaxGeneratorSwaggerDocOptions(fullNamespace, projectOptions.Document);
+    var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "ConfigureSwaggerDocOptions.cs"));
 
-        var sb = new StringBuilder();
-        GenerateCodeHelper.AppendGeneratedCodeWarningComment(sb, projectOptions.ToolNameAndVersion);
-        sb.Append(syntaxGenerator.GenerateCode());
-        var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
-        TextFileHelper.Save(logger, file, fileDisplayLocation, sb.ToString());
-    }
+    var sb = new StringBuilder();
+    GenerateCodeHelper.AppendGeneratedCodeWarningComment(sb, projectOptions.ToolNameAndVersion);
+    sb.Append(syntaxGenerator.GenerateCode());
+    var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
+    TextFileHelper.Save(logger, file, fileDisplayLocation, sb.ToString());
+}
 
     private void GenerateTestWebApiStartupFactory()
     {
@@ -1242,5 +1261,21 @@ public class ServerHostGenerator
         var file = new FileInfo(Path.Combine(projectOptions.PathForTestGenerate!.FullName, "WebApiControllerBaseTest.cs"));
         var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForTestGenerate.FullName, "test: ", StringComparison.Ordinal);
         TextFileHelper.Save(logger, file, fileDisplayLocation, codeAsString);
+    }
+
+    private void ScaffoldAppSettingsIntegrationTest()
+    {
+        var sb = new StringBuilder();
+        sb.AppendLine("{");
+        sb.AppendLine("}");
+
+        var file = new FileInfo(Path.Combine(projectOptions.PathForTestGenerate!.FullName, "appsettings.integrationtest.json"));
+        if (file.Exists)
+        {
+            return;
+        }
+
+        var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForTestGenerate.FullName, "test: ", StringComparison.Ordinal);
+        TextFileHelper.Save(logger, file, fileDisplayLocation, sb.ToString());
     }
 }

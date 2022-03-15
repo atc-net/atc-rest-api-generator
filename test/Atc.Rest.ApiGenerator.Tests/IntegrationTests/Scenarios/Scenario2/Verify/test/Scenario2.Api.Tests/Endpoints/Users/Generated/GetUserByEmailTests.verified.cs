@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Atc.XUnit;
 using FluentAssertions;
 using Scenario2.Api.Generated.Contracts.Users;
 using Xunit;
@@ -16,6 +17,7 @@ namespace Scenario2.Api.Tests.Endpoints.Users.Generated
 {
     [GeneratedCode("ApiGenerator", "x.x.x.x")]
     [Collection("Sequential-Endpoints")]
+    [Trait(Traits.Category, Traits.Categories.Integration)]
     public class GetUserByEmailTests : WebApiControllerBaseTest
     {
         public GetUserByEmailTests(WebApiStartupFactory fixture) : base(fixture) { }
