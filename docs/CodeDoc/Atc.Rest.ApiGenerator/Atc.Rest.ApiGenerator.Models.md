@@ -543,6 +543,24 @@
 
 <br />
 
+## ProjectType
+
+>```csharp
+>public enum ProjectType
+>```
+
+
+| Value | Name | Description | Summary | 
+| --- | --- | --- | --- | 
+| 0 | ServerHost | Server Host |  | 
+| 1 | ServerApi | Server Api |  | 
+| 2 | ServerDomain | Server Domain |  | 
+| 3 | ClientApi | Client Api |  | 
+
+
+
+<br />
+
 ## SchemaMapLocatedAreaType
 
 >```csharp

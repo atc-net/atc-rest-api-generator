@@ -68,6 +68,7 @@
 - [DotnetNugetPackage](Atc.Rest.ApiGenerator.Models.md#dotnetnugetpackage)
 - [EndpointMethodMetadata](Atc.Rest.ApiGenerator.Models.md#endpointmethodmetadata)
 - [HostProjectOptions](Atc.Rest.ApiGenerator.Models.md#hostprojectoptions)
+- [ProjectType](Atc.Rest.ApiGenerator.Models.md#projecttype)
 - [SchemaMapLocatedAreaType](Atc.Rest.ApiGenerator.Models.md#schemamaplocatedareatype)
 
 ## [Atc.Rest.ApiGenerator.Models.Options](Atc.Rest.ApiGenerator.Models.Options.md)

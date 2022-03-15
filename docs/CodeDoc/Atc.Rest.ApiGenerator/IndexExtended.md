@@ -197,8 +197,8 @@
      - GetSegmentName(string path)
 - [SolutionAndProjectHelper](Atc.Rest.ApiGenerator.Helpers.md#solutionandprojecthelper)
   -  Static Methods
-     - EnsureLatestPackageReferencesVersionInProjFile(ILogger logger, FileInfo projectCsProjFile, string fileDisplayLocation)
-     - ScaffoldProjFile(ILogger logger, FileInfo projectCsProjFile, string fileDisplayLocation, bool createAsWeb, bool createAsTestProject, string projectName, string targetFramework, IList&lt;string&gt; frameworkReferences, IList&lt;Tuple&lt;string, string, string&gt;&gt; packageReferences, IList&lt;FileInfo&gt; projectReferences, bool includeApiSpecification, bool usingCodingRules)
+     - EnsureLatestPackageReferencesVersionInProjFile(ILogger logger, FileInfo projectCsProjFile, string fileDisplayLocation, ProjectType projectType, bool isTestProject)
+     - ScaffoldProjFile(ILogger logger, FileInfo projectCsProjFile, string fileDisplayLocation, ProjectType projectType, bool createAsWeb, bool createAsTestProject, string projectName, string targetFramework, IList&lt;string&gt; frameworkReferences, IList&lt;Tuple&lt;string, string, string&gt;&gt; packageReferences, IList&lt;FileInfo&gt; projectReferences, bool includeApiSpecification, bool usingCodingRules)
      - ScaffoldSlnFile(ILogger logger, FileInfo slnFile, string projectName, DirectoryInfo apiPath, DirectoryInfo domainPath, DirectoryInfo hostPath, DirectoryInfo domainTestPath = null, DirectoryInfo hostTestPath = null)
 - [TextFileHelper](Atc.Rest.ApiGenerator.Helpers.md#textfilehelper)
   -  Static Methods
@@ -404,6 +404,7 @@
      - UseRestExtended
   -  Methods
      - SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles(ILogger logger)
+- [ProjectType](Atc.Rest.ApiGenerator.Models.md#projecttype)
 - [SchemaMapLocatedAreaType](Atc.Rest.ApiGenerator.Models.md#schemamaplocatedareatype)
 
 ## [Atc.Rest.ApiGenerator.Models.Options](Atc.Rest.ApiGenerator.Models.Options.md)
