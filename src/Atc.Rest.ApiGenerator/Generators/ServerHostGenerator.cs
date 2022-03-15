@@ -75,6 +75,7 @@ public class ServerHostGenerator
                 logger,
                 projectOptions.ProjectSrcCsProj,
                 projectOptions.ProjectSrcCsProjDisplayLocation,
+                ProjectType.ServerHost,
                 createAsWeb: true,
                 createAsTestProject: false,
                 projectOptions.ProjectName,
@@ -944,6 +945,7 @@ public class ServerHostGenerator
                 logger,
                 projectOptions.ProjectTestCsProj,
                 projectOptions.ProjectTestCsProjDisplayLocation,
+                ProjectType.ServerHost,
                 createAsWeb: false,
                 createAsTestProject: true,
                 $"{projectOptions.ProjectName}.Tests",
@@ -957,6 +959,7 @@ public class ServerHostGenerator
 
         GenerateTestWebApiStartupFactory();
         GenerateTestWebApiControllerBaseTest();
+        ScaffoldAppSettingsIntegrationTest();
     }
 
     private void GenerateTestEndpoints()
@@ -1121,20 +1124,20 @@ public class ServerHostGenerator
 
     // TODO: FIX THIS - Use CompilationUnit
     private void ScaffoldConfigureSwaggerDocOptions()
-    {
-        var fullNamespace = string.IsNullOrEmpty(projectOptions.ClientFolderName)
-            ? $"{projectOptions.ProjectName}"
-            : $"{projectOptions.ProjectName}.{projectOptions.ClientFolderName}";
+{
+    var fullNamespace = string.IsNullOrEmpty(projectOptions.ClientFolderName)
+        ? $"{projectOptions.ProjectName}"
+        : $"{projectOptions.ProjectName}.{projectOptions.ClientFolderName}";
 
-        var syntaxGenerator = new SyntaxGeneratorSwaggerDocOptions(fullNamespace, projectOptions.Document);
-        var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "ConfigureSwaggerDocOptions.cs"));
+    var syntaxGenerator = new SyntaxGeneratorSwaggerDocOptions(fullNamespace, projectOptions.Document);
+    var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "ConfigureSwaggerDocOptions.cs"));
 
-        var sb = new StringBuilder();
-        GenerateCodeHelper.AppendGeneratedCodeWarningComment(sb, projectOptions.ToolNameAndVersion);
-        sb.Append(syntaxGenerator.GenerateCode());
-        var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
-        TextFileHelper.Save(logger, file, fileDisplayLocation, sb.ToString());
-    }
+    var sb = new StringBuilder();
+    GenerateCodeHelper.AppendGeneratedCodeWarningComment(sb, projectOptions.ToolNameAndVersion);
+    sb.Append(syntaxGenerator.GenerateCode());
+    var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
+    TextFileHelper.Save(logger, file, fileDisplayLocation, sb.ToString());
+}
 
     private void GenerateTestWebApiStartupFactory()
     {
@@ -1254,5 +1257,21 @@ public class ServerHostGenerator
         var file = new FileInfo(Path.Combine(projectOptions.PathForTestGenerate!.FullName, "WebApiControllerBaseTest.cs"));
         var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForTestGenerate.FullName, "test: ", StringComparison.Ordinal);
         TextFileHelper.Save(logger, file, fileDisplayLocation, codeAsString);
+    }
+
+    private void ScaffoldAppSettingsIntegrationTest()
+    {
+        var sb = new StringBuilder();
+        sb.AppendLine("{");
+        sb.AppendLine("}");
+
+        var file = new FileInfo(Path.Combine(projectOptions.PathForTestGenerate!.FullName, "appsettings.integrationtest.json"));
+        if (file.Exists)
+        {
+            return;
+        }
+
+        var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForTestGenerate.FullName, "test: ", StringComparison.Ordinal);
+        TextFileHelper.Save(logger, file, fileDisplayLocation, sb.ToString());
     }
 }

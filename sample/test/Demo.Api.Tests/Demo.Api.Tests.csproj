@@ -25,4 +25,10 @@
     <ProjectReference Include="..\..\src\Demo.Domain\Demo.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="appsettings.integrationtest.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

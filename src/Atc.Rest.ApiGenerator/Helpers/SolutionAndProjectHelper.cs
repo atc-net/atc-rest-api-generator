@@ -13,6 +13,7 @@ public static class SolutionAndProjectHelper
         ILogger logger,
         FileInfo projectCsProjFile,
         string fileDisplayLocation,
+        ProjectType projectType,
         bool createAsWeb,
         bool createAsTestProject,
         string projectName,
@@ -129,6 +130,16 @@ public static class SolutionAndProjectHelper
 
             sb.AppendLine(2, "</ItemGroup>");
             sb.AppendLine();
+        }
+
+        if (createAsTestProject &&
+            projectType == ProjectType.ServerHost)
+        {
+            sb.AppendLine(2, "<ItemGroup>");
+            sb.AppendLine(4, "<None Update=\"appsettings.integrationtest.json\">");
+            sb.AppendLine(6, "<CopyToOutputDirectory>Always</CopyToOutputDirectory>");
+            sb.AppendLine(4, "</None>");
+            sb.AppendLine(2, "</ItemGroup>");
         }
 
         sb.AppendLine("</Project>");

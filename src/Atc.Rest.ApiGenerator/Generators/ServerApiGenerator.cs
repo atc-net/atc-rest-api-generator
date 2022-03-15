@@ -122,6 +122,7 @@ public class ServerApiGenerator
                 logger,
                 projectOptions.ProjectSrcCsProj,
                 projectOptions.ProjectSrcCsProjDisplayLocation,
+                ProjectType.ServerApi,
                 createAsWeb: false,
                 createAsTestProject: false,
                 projectOptions.ProjectName,
