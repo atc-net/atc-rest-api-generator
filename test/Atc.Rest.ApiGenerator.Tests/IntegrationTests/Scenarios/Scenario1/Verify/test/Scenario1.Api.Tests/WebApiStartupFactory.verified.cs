@@ -29,7 +29,7 @@ namespace Scenario1.Api.Tests
             builder.ConfigureAppConfiguration(config =>
             {
                 ModifyConfiguration(config);
-                var integrationConfig = new ConfigurationBuilder().Build();
+                var integrationConfig = new ConfigurationBuilder().AddJsonFile("appsettings.integrationtest.json").Build();
                 config.AddConfiguration(integrationConfig);
             });
             builder.ConfigureTestServices(services =>

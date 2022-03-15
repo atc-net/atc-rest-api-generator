@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Atc.XUnit;
 using FluentAssertions;
 using Scenario2.Api.Generated.Contracts;
 using Scenario2.Api.Generated.Contracts.Users;
@@ -18,6 +19,7 @@ namespace Scenario2.Api.Tests.Endpoints.Users.Generated
 {
     [GeneratedCode("ApiGenerator", "x.x.x.x")]
     [Collection("Sequential-Endpoints")]
+    [Trait(Traits.Category, Traits.Categories.Integration)]
     public class UpdateUserByIdTests : WebApiControllerBaseTest
     {
         public UpdateUserByIdTests(WebApiStartupFactory fixture) : base(fixture) { }

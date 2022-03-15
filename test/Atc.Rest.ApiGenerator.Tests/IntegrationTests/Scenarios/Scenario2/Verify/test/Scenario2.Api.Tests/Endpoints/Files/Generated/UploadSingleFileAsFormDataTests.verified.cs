@@ -2,6 +2,7 @@ using System.CodeDom.Compiler;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Atc.XUnit;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Xunit;
@@ -16,6 +17,7 @@ namespace Scenario2.Api.Tests.Endpoints.Files.Generated
 {
     [GeneratedCode("ApiGenerator", "x.x.x.x")]
     [Collection("Sequential-Endpoints")]
+    [Trait(Traits.Category, Traits.Categories.Integration)]
     public class UploadSingleFileAsFormDataTests : WebApiControllerBaseTest
     {
         public UploadSingleFileAsFormDataTests(WebApiStartupFactory fixture) : base(fixture) { }
