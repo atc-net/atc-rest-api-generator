@@ -18,9 +18,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc" Version="2.0.95" />
-    <PackageReference Include="Atc.Rest" Version="2.0.95" />
-    <PackageReference Include="Atc.Rest.Extended" Version="2.0.95" />
+    <PackageReference Include="Atc" Version="2.0.115" />
+    <PackageReference Include="Atc.Rest" Version="2.0.115" />
+    <PackageReference Include="Atc.Rest.Extended" Version="2.0.115" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="10.4.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.20.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.3" />
