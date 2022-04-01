@@ -560,7 +560,7 @@ public static class SolutionAndProjectHelper
                     var latestVersion = AtcApiNugetClientHelper.GetLatestVersionForPackageId(logger, item.PackageId, CancellationToken.None);
 
                     if (latestVersion is not null &&
-                        latestVersion.IsNewerMinorReleaseThen(version))
+                        latestVersion.IsNewerThan(version, withinMinorReleaseOnly: true))
                     {
                         result.Add(
                             new DotnetNugetPackage(
