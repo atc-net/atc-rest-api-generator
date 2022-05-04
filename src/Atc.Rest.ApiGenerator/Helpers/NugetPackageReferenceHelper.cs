@@ -16,12 +16,12 @@ public static class NugetPackageReferenceHelper
         if (useRestExtended)
         {
             packageReference.Add(new Tuple<string, string, string?>("Atc.Rest.Extended", atcVersion, null));
-            packageReference.Add(new Tuple<string, string, string?>("FluentValidation.AspNetCore", "10.3.6", null));
+            packageReference.Add(new Tuple<string, string, string?>("FluentValidation.AspNetCore", "11.0.0", null));
             packageReference.Add(new Tuple<string, string, string?>("Microsoft.ApplicationInsights.AspNetCore", "2.20.0", null));
-            packageReference.Add(new Tuple<string, string, string?>("Microsoft.AspNetCore.Authentication.JwtBearer", "6.0.3", null));
+            packageReference.Add(new Tuple<string, string, string?>("Microsoft.AspNetCore.Authentication.JwtBearer", "6.0.4", null));
             packageReference.Add(new Tuple<string, string, string?>("Microsoft.AspNetCore.Mvc.Versioning", "5.0.0", null));
             packageReference.Add(new Tuple<string, string, string?>("Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer", "5.0.0", null));
-            packageReference.Add(new Tuple<string, string, string?>("Swashbuckle.AspNetCore", "6.3.0", null));
+            packageReference.Add(new Tuple<string, string, string?>("Swashbuckle.AspNetCore", "6.3.1", null));
         }
 
         return packageReference;

@@ -7,6 +7,18 @@ public static class Program
     public static Task<int> Main(
         string[] args)
     {
+        ////args = new[]
+        ////{
+        ////    "generate", "server", "all",
+        ////    "-p", "ERUT",
+        ////    "-s", @"D:\Code\Lego-CrystalBall\data-federation-erut\src\ERUT.Api.Spec\api.v1.yaml",
+        ////    "--outputSlnPath", @"D:\Code\Lego-CrystalBall\data-federation-erut\",
+        ////    "--outputSrcPath", @"D:\Code\Lego-CrystalBall\data-federation-erut\src",
+        ////    "--outputTestPath", @"D:\Code\Lego-CrystalBall\data-federation-erut\test",
+        ////    "--optionsPath", @"D:\Code\Lego-CrystalBall\data-federation-erut\src\ERUT.Api.Spec\ERUT.Api.Spec\DelegateApiGeneratorOptions.json",
+        ////    "-v",
+        ////};
+
         ArgumentNullException.ThrowIfNull(args);
 
         args = SetOutputPathFromDotArgumentIfNeeded(args);
