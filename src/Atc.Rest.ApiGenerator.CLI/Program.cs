@@ -7,42 +7,6 @@ public static class Program
     public static Task<int> Main(
         string[] args)
     {
-        ////args = new[]
-        ////{
-        ////    "generate", "server", "all",
-        ////    "-p", "ERUT",
-        ////    "-s", @"D:\Code\Lego-CrystalBall\data-federation-erut\src\ERUT.Api.Spec\api.v1.yaml",
-        ////    "--outputSlnPath", @"D:\Code\Lego-CrystalBall\data-federation-erut\",
-        ////    "--outputSrcPath", @"D:\Code\Lego-CrystalBall\data-federation-erut\src",
-        ////    "--outputTestPath", @"D:\Code\Lego-CrystalBall\data-federation-erut\test",
-        ////    "--optionsPath", @"D:\Code\Lego-CrystalBall\data-federation-erut\src\ERUT.Api.Spec\ERUT.Api.Spec\DelegateApiGeneratorOptions.json",
-        ////    "-v",
-        ////};
-
-        ////args = new[]
-        ////{
-        ////    "generate", "server", "all",
-        ////    "-p", "MIOT.Configuration",
-        ////    "-s", @"D:\Code\Lego-Github\miot-configuration\src\MIOT.Configuration.Api.Spec\api.v1.yaml",
-        ////    "--outputSlnPath", @"D:\Code\Lego-Github\miot-configuration\",
-        ////    "--outputSrcPath", @"D:\Code\Lego-Github\miot-configuration\src",
-        ////    "--outputTestPath", @"D:\Code\Lego-Github\miot-configuration\test",
-        ////    "--optionsPath", @"D:\Code\Lego-Github\miot-configuration\src\MIOT.Configuration.Api.Spec\ApiGeneratorOptions.json",
-        ////    "-v",
-        ////};
-
-        ////args = new[]
-        ////{
-        ////    "generate", "server", "all",
-        ////    "-p", "Demo",
-        ////    "-s", @"D:\Code\atc-net\atc-rest-api-generator\sample\Demo.ApiDesign\SingleFileVersion\api.v1.yaml",
-        ////    "--outputSlnPath", @"D:\Code\atc-net\atc-rest-api-generator\sample\",
-        ////    "--outputSrcPath", @"D:\Code\atc-net\atc-rest-api-generator\sample\src",
-        ////    "--outputTestPath", @"D:\Code\atc-net\atc-rest-api-generator\sample\test",
-        ////    "--optionsPath", @"D:\Code\atc-net\atc-rest-api-generator\sample\Demo.ApiDesign\DemoApiGeneratorOptions.json",
-        ////    "-v",
-        ////};
-
         ArgumentNullException.ThrowIfNull(args);
 
         args = SetOutputPathFromDotArgumentIfNeeded(args);
