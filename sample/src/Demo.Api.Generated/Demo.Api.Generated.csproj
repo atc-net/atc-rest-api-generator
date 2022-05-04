@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -27,8 +27,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc" Version="2.0.115" />
-    <PackageReference Include="Atc.Rest" Version="2.0.115" />
+    <PackageReference Include="Atc" Version="2.0.166" />
+    <PackageReference Include="Atc.Rest" Version="2.0.166" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Threading;
@@ -35,7 +35,7 @@ namespace Scenario2.Api.Tests.Endpoints.Orders.Generated
                     MyBool = true,
                     MyUri = new Uri("http://www.dr.dk"),
                     MyByte = "Hallo110",
-                    MyStringList = null,
+                    MyStringList = new List<string>(),
                     MyLong = 42,
                     DeliveryAddress = new Address
                     {
@@ -64,7 +64,7 @@ namespace Scenario2.Api.Tests.Endpoints.Orders.Generated
                     MyBool = true,
                     MyUri = new Uri("http://www.dr.dk"),
                     MyByte = "Hallo210",
-                    MyStringList = null,
+                    MyStringList = new List<string>(),
                     MyLong = 42,
                     DeliveryAddress = new Address
                     {
@@ -93,7 +93,7 @@ namespace Scenario2.Api.Tests.Endpoints.Orders.Generated
                     MyBool = true,
                     MyUri = new Uri("http://www.dr.dk"),
                     MyByte = "Hallo310",
-                    MyStringList = null,
+                    MyStringList = new List<string>(),
                     MyLong = 42,
                     DeliveryAddress = new Address
                     {

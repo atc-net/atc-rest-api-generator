@@ -21,51 +21,61 @@ public static class GenerateXunitTestPartsHelper
         var propertyName = schemaProperty.Key.EnsureFirstCharacterToUpper();
 
         var isHandled = false;
-        if (isRequired &&
-            OpenApiDataTypeConstants.Array.Equals(dataType, StringComparison.OrdinalIgnoreCase))
+        if (OpenApiDataTypeConstants.Array.Equals(dataType, StringComparison.OrdinalIgnoreCase))
         {
-            var itemsDataType = schemaProperty.Value.Items.GetDataType();
-
-            if (asJsonBody)
+            if (isRequired)
             {
-                switch (itemsDataType)
+                var itemsDataType = schemaProperty.Value.Items.GetDataType();
+                if (asJsonBody)
                 {
-                    case OpenApiDataTypeConstants.String:
-                        sb.AppendLine(indentSpaces, $"sb.AppendLine(\"  {WrapInQuotes(propertyName)}: [ {WrapInQuotes("Hallo")}, {WrapInQuotes("World")} ]{GenerateCodeHelper.GetTrailingChar(trailingChar)}\");");
-                        isHandled = true;
-                        break;
-                    case OpenApiDataTypeConstants.Integer:
-                        sb.AppendLine(indentSpaces, $"sb.AppendLine(\"  {WrapInQuotes(propertyName)}: [ 42, 17 ]{GenerateCodeHelper.GetTrailingChar(trailingChar)}\");");
-                        isHandled = true;
-                        break;
-                    case OpenApiDataTypeConstants.Boolean:
-                        sb.AppendLine(indentSpaces, $"sb.AppendLine(\"  {WrapInQuotes(propertyName)}: [ true, false, true ]{GenerateCodeHelper.GetTrailingChar(trailingChar)}\");");
-                        isHandled = true;
-                        break;
-                    case "IFormFile":
-                        throw new NotSupportedException("IFormFile is not supported when working with Json.");
+                    switch (itemsDataType)
+                    {
+                        case OpenApiDataTypeConstants.String:
+                            sb.AppendLine(indentSpaces, $"sb.AppendLine(\"  {WrapInQuotes(propertyName)}: [ {WrapInQuotes("Hallo")}, {WrapInQuotes("World")} ]{GenerateCodeHelper.GetTrailingChar(trailingChar)}\");");
+                            isHandled = true;
+                            break;
+                        case OpenApiDataTypeConstants.Integer:
+                            sb.AppendLine(indentSpaces, $"sb.AppendLine(\"  {WrapInQuotes(propertyName)}: [ 42, 17 ]{GenerateCodeHelper.GetTrailingChar(trailingChar)}\");");
+                            isHandled = true;
+                            break;
+                        case OpenApiDataTypeConstants.Boolean:
+                            sb.AppendLine(indentSpaces, $"sb.AppendLine(\"  {WrapInQuotes(propertyName)}: [ true, false, true ]{GenerateCodeHelper.GetTrailingChar(trailingChar)}\");");
+                            isHandled = true;
+                            break;
+                        case "IFormFile":
+                            throw new NotSupportedException("IFormFile is not supported when working with Json.");
+                    }
+                }
+                else
+                {
+                    switch (itemsDataType)
+                    {
+                        case OpenApiDataTypeConstants.String:
+                            sb.AppendLine(indentSpaces + 4, $"{propertyName} = new List<string>() {{ \"Hallo\", \"World\" }},");
+                            isHandled = true;
+                            break;
+                        case OpenApiDataTypeConstants.Integer:
+                            sb.AppendLine(indentSpaces + 4, $"{propertyName} = new List<int>() {{ 42, 17 }},");
+                            isHandled = true;
+                            break;
+                        case OpenApiDataTypeConstants.Boolean:
+                            sb.AppendLine(indentSpaces + 4, $"{propertyName} = new List<bool>() {{ true, false, true }},");
+                            isHandled = true;
+                            break;
+                        case "IFormFile":
+                            sb.AppendLine(indentSpaces + 4, $"{propertyName} = GetTestFiles(),");
+                            isHandled = true;
+                            break;
+                    }
                 }
             }
             else
             {
-                switch (itemsDataType)
+                var itemsDataType = schemaProperty.Value.GetSimpleDataTypeFromArray();
+                if (!string.IsNullOrEmpty(itemsDataType))
                 {
-                    case OpenApiDataTypeConstants.String:
-                        sb.AppendLine(indentSpaces + 4, $"{propertyName} = new List<string>() {{ \"Hallo\", \"World\" }},");
-                        isHandled = true;
-                        break;
-                    case OpenApiDataTypeConstants.Integer:
-                        sb.AppendLine(indentSpaces + 4, $"{propertyName} = new List<int>() {{ 42, 17 }},");
-                        isHandled = true;
-                        break;
-                    case OpenApiDataTypeConstants.Boolean:
-                        sb.AppendLine(indentSpaces + 4, $"{propertyName} = new List<bool>() {{ true, false, true }},");
-                        isHandled = true;
-                        break;
-                    case "IFormFile":
-                        sb.AppendLine(indentSpaces + 4, $"{propertyName} = GetTestFiles(),");
-                        isHandled = true;
-                        break;
+                    sb.AppendLine(indentSpaces + 4, $"{propertyName} = new List<{itemsDataType}>(),");
+                    isHandled = true;
                 }
             }
         }
