@@ -34,9 +34,20 @@ The `atc-rest-api-generator` is a cross platform command line application known 
 The main purpose of this application is to create and maintain a REST-API service based on an Open-API specification file. So the consept is the `Design First` approse.
 And the `atc-rest-api-generator` should be categorized as a `Rapid Application Development Tool` for REST-API in .NET/C#.
 
+## Prerequisites
+
+To get the benefit out of this CLI tool, a `Design first approach` of the REST API in a `OpenAPI specification` should be made. The CLI tool needs at least a `OpenAPI specification` in a `yaml` or `json` file format, to work with as argument value for parameter `--specificationPath` or the short-version `-s`.
+
+Read more about REST API design in [ATC DevOps Playbook](https://atc-net.github.io/manuals/devops-playbook#rest-api-design).
+
+Recommended tools for working with OpenAPI specifications:
+
+- [Stoplight.io](https://stoplight.io/). Read more about it in the [Stoplight Documentation](https://meta.stoplight.io/) and get it from [Stoplight Download](https://stoplight.io/studio)
+- [OpenAPI (Swagger) Editor](https://marketplace.visualstudio.com/items?itemName=42Crunch.vscode-openapi) extension for Visual Studio Code
+
 ### Requirements
 
-* [.NET 6 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
+- [.NET 6 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
 
 ### Installation
 
@@ -294,9 +305,9 @@ flowchart TB;
     API-.-> DOMAIN;
 ```
 
-* The Host-project is the layer for the `.NET WebApi` application. Project suffix: `.Api`.
-* The API-project is the layer with all the contracts, interfaces, result classes and endpoints. Project suffix: `.Api.Generated`.
-* The Domain-project is the layer where handlers can be implemented with necessary business logic. Project suffix: `.Domain`.
+- The Host-project is the layer for the `.NET WebApi` application. Project suffix: `.Api`.
+- The API-project is the layer with all the contracts, interfaces, result classes and endpoints. Project suffix: `.Api.Generated`.
+- The Domain-project is the layer where handlers can be implemented with necessary business logic. Project suffix: `.Domain`.
 
 ## How to contribute
 
