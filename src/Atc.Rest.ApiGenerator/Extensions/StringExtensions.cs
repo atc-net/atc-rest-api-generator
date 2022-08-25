@@ -6,16 +6,16 @@ internal static class StringExtensions
 {
     private const string AutoPropGetSetResultPattern = " { get; set; }";
     private const string AutoPropGetResultPattern = " { get; }";
-    private static readonly Regex AutoPropGetSetRegex = new (@"\s*\{\s*get;\s*set;\s*}");
-    private static readonly Regex AutoPropGetRegex = new (@"\s*\{\s*get;\s*}");
-    private static readonly Regex AutoPropInitializerGetSetRegex = new (@"\s*\{ get; set; }\s*= \s*");
-    private static readonly Regex AutoPropInitializerGetRegex = new (@"\s*\{ get; }\s*= \s*");
-    private static readonly Regex AutoPublicLinesRegex = new (@"\s*;\s*public \s*");
-    private static readonly Regex AutoPrivateLinesRegex = new (@"\s*;\s*private \s*");
-    private static readonly Regex AutoCommentLinesRegex = new (@"\s*;\s*/// \s*");
-    private static readonly Regex AutoBracketSpacingStartRegex = new (@"(\S)({)(\S)");
-    private static readonly Regex AutoBracketSpacingEndRegex = new (@"(\S)(})(\S)");
-    private static readonly Regex ConstructorWithInheritResultRegex = new (@":\s*base\(result\)\s*\{\s*\}");
+    private static readonly Regex AutoPropGetSetRegex = new(@"\s*\{\s*get;\s*set;\s*}");
+    private static readonly Regex AutoPropGetRegex = new(@"\s*\{\s*get;\s*}");
+    private static readonly Regex AutoPropInitializerGetSetRegex = new(@"\s*\{ get; set; }\s*= \s*");
+    private static readonly Regex AutoPropInitializerGetRegex = new(@"\s*\{ get; }\s*= \s*");
+    private static readonly Regex AutoPublicLinesRegex = new(@"\s*;\s*public \s*");
+    private static readonly Regex AutoPrivateLinesRegex = new(@"\s*;\s*private \s*");
+    private static readonly Regex AutoCommentLinesRegex = new(@"\s*;\s*/// \s*");
+    private static readonly Regex AutoBracketSpacingStartRegex = new(@"(\S)({)(\S)");
+    private static readonly Regex AutoBracketSpacingEndRegex = new(@"(\S)(})(\S)");
+    private static readonly Regex ConstructorWithInheritResultRegex = new(@":\s*base\(result\)\s*\{\s*\}");
 
     private static readonly string[] LineBreaks = { "\r\n", "\r", "\n" };
 

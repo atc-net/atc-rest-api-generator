@@ -30,6 +30,6 @@ internal static class GenerateCodeHelper
             TrailingCharType.Comma => ",",
             TrailingCharType.SemiColon => ";",
             TrailingCharType.Colon => ":",
-            _ => throw new ArgumentOutOfRangeException(nameof(trailingChar), trailingChar, null)
+            _ => throw new ArgumentOutOfRangeException(nameof(trailingChar), trailingChar, null),
         };
 }

@@ -210,7 +210,8 @@ public class SyntaxGeneratorHandler
                     SyntaxFactory.Token(
                         CreatePragmaWarningCodeStyle1998(true),
                         SyntaxKind.PrivateKeyword,
-                        SyntaxFactory.TriviaList()), SyntaxFactory.Token(SyntaxKind.AsyncKeyword)))
+                        SyntaxFactory.TriviaList()),
+                    SyntaxFactory.Token(SyntaxKind.AsyncKeyword)))
             .WithParameterList(SyntaxFactory.ParameterList(SyntaxFactory.SeparatedList<ParameterSyntax>(arguments)))
             .WithBody(
                 SyntaxFactory.Block(SyntaxThrowStatementFactory.CreateNotImplementedException())

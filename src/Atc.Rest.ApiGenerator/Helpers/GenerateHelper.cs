@@ -6,7 +6,7 @@ namespace Atc.Rest.ApiGenerator.Helpers;
 
 public static class GenerateHelper
 {
-    private static readonly Version AtcToolVersion = new (1, 1, 405, 0); // TODO: Fix version
+    private static readonly Version AtcToolVersion = new(1, 1, 405, 0); // TODO: Fix version
 
     public static Version GetAtcVersion()
     {

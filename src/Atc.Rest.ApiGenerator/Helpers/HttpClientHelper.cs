@@ -1,10 +1,8 @@
-using System.Diagnostics;
-
 namespace Atc.Rest.ApiGenerator.Helpers;
 
 public static class HttpClientHelper
 {
-    private static readonly ConcurrentDictionary<string, string> Cache = new (StringComparer.Ordinal);
+    private static readonly ConcurrentDictionary<string, string> Cache = new(StringComparer.Ordinal);
 
     public static string GetAsString(
         ILogger logger,

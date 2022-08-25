@@ -23,7 +23,7 @@ internal static class SuppressMessageAttributeFactory
         {
             // TODO: Add all rules
             1062 => new SuppressMessageAttribute("Design", "CA1062:Validate arguments of public methods") { Justification = justification },
-            _ => throw new NotImplementedException($"Rule for CA{checkId} must be implemented.")
+            _ => throw new NotImplementedException($"Rule for CA{checkId} must be implemented."),
         };
     }
 }

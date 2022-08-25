@@ -61,7 +61,7 @@ public static class OpenApiDocumentHelper
             {
                 0 => throw new IOException("Api specification file don't exist in folder."),
                 1 => new FileInfo(docFiles.First()),
-                _ => CreateCombineApiDocumentFile(specificationPath)
+                _ => CreateCombineApiDocumentFile(specificationPath),
             };
         }
 

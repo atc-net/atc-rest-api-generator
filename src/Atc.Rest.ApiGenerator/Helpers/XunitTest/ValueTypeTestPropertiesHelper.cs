@@ -43,7 +43,7 @@ public static class ValueTypeTestPropertiesHelper
         {
             OpenApiDataTypeConstants.Number when !schema.HasFormatType() => CreateNumberDouble(schema),
             OpenApiDataTypeConstants.Integer when schema.HasFormatType() && schema.IsFormatTypeInt64() => CreateNumberLong(schema),
-            _ => CreateNumberInt(schema)
+            _ => CreateNumberInt(schema),
         };
     }
 
@@ -335,6 +335,6 @@ public static class ValueTypeTestPropertiesHelper
             "Guid" => CreateValueGuid(useForBadRequest, itemNumber),
             "Uri" => CreateValueUri(useForBadRequest),
             "Email" => CreateValueEmail(useForBadRequest, itemNumber),
-            _ => throw new NotSupportedException($"PropertyValueGenerator: {name} - array of ({itemSchema.GetDataType()})")
+            _ => throw new NotSupportedException($"PropertyValueGenerator: {name} - array of ({itemSchema.GetDataType()})"),
         };
 }
