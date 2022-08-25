@@ -9,8 +9,8 @@ public static class NugetPackageReferenceHelper
 
         var packageReference = new List<Tuple<string, string, string?>>
         {
-            new ("Atc", atcVersion, null),
-            new ("Atc.Rest", atcVersion, null),
+            new("Atc", atcVersion, null),
+            new("Atc.Rest", atcVersion, null),
         };
 
         if (useRestExtended)
@@ -33,8 +33,8 @@ public static class NugetPackageReferenceHelper
 
         var packageReference = new List<Tuple<string, string, string?>>
         {
-            new ("Atc", atcVersion, null),
-            new ("Atc.Rest", atcVersion, null),
+            new("Atc", atcVersion, null),
+            new("Atc.Rest", atcVersion, null),
         };
 
         return packageReference;
@@ -46,8 +46,8 @@ public static class NugetPackageReferenceHelper
 
         var packageReference = new List<Tuple<string, string, string?>>
         {
-            new ("Atc", atcVersion, null),
-            new ("Atc.Rest.Client", "1.0.36", null),
+            new("Atc", atcVersion, null),
+            new("Atc.Rest.Client", "1.0.36", null),
         };
 
         return packageReference;
@@ -57,11 +57,11 @@ public static class NugetPackageReferenceHelper
     {
         var packageReference = new List<Tuple<string, string, string?>>
         {
-            new ("Atc.XUnit", "2.0.93", null),
-            new ("AutoFixture", "4.17.0", null),
-            new ("AutoFixture.AutoNSubstitute", "4.17.0", null),
-            new ("AutoFixture.Xunit2", "4.17.0", null),
-            new ("FluentAssertions", "6.5.1", null),
+            new("Atc.XUnit", "2.0.93", null),
+            new("AutoFixture", "4.17.0", null),
+            new("AutoFixture.AutoNSubstitute", "4.17.0", null),
+            new("AutoFixture.Xunit2", "4.17.0", null),
+            new("FluentAssertions", "6.5.1", null),
         };
 
         if (useMvc)
@@ -71,10 +71,10 @@ public static class NugetPackageReferenceHelper
 
         packageReference.AddRange(new List<Tuple<string, string, string?>>
         {
-            new ("Microsoft.NET.Test.Sdk", "17.1.0", null),
-            new ("NSubstitute", "4.3.0", null),
-            new ("xunit", "2.4.1", null),
-            new ("xunit.runner.visualstudio", "2.4.3", "<PrivateAssets>all</PrivateAssets>\n<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>"),
+            new("Microsoft.NET.Test.Sdk", "17.1.0", null),
+            new("NSubstitute", "4.3.0", null),
+            new("xunit", "2.4.1", null),
+            new("xunit.runner.visualstudio", "2.4.3", "<PrivateAssets>all</PrivateAssets>\n<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>"),
         });
 
         return packageReference;
