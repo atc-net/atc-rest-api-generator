@@ -24,7 +24,8 @@ public class CodeDocumentationTests
         var codeDocPath =
             Path.Combine(
                 Path.Combine(
-                    Path.Combine(rootDirectory!.FullName, "docs"), "CodeDoc"), sourceAssembly.GetName().Name!);
+                    Path.Combine(rootDirectory!.FullName, "docs"), "CodeDoc"),
+                sourceAssembly.GetName().Name!);
         var codeDocDirectory = new DirectoryInfo(codeDocPath);
         if (!codeDocDirectory.Exists)
         {

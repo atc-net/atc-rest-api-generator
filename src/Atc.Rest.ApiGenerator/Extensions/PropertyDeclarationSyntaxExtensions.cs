@@ -109,7 +109,7 @@ internal static class PropertyDeclarationSyntaxExtensions
                 OpenApiFormatTypeConstants.Email => propertyDeclaration.AddValidationAttributeEmail(schema),
                 OpenApiFormatTypeConstants.Uri => propertyDeclaration.AddValidationAttribute(new UriAttribute()),
 
-                _ => throw new NotImplementedException($"Schema Format '{schema.Format}' must be implemented.")
+                _ => throw new NotImplementedException($"Schema Format '{schema.Format}' must be implemented."),
             };
         }
 
@@ -165,7 +165,7 @@ internal static class PropertyDeclarationSyntaxExtensions
             {
                 OpenApiDataTypeConstants.Number when !schema.HasFormatType() => RangeAttributeDouble(propertyDeclaration, schema),
                 OpenApiDataTypeConstants.Integer when schema.HasFormatType() && schema.IsFormatTypeInt64() => RangeAttributeLong(propertyDeclaration, schema),
-                _ => RangeAttributeInt(propertyDeclaration, schema)
+                _ => RangeAttributeInt(propertyDeclaration, schema),
             };
         }
 

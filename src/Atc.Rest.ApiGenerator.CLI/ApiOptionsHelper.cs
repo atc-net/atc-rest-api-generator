@@ -96,6 +96,11 @@ public static class ApiOptionsHelper
             apiOptions.Validation.StrictMode = settings.StrictMode;
         }
 
+        if (settings.OperationIdValidation)
+        {
+            apiOptions.Validation.OperationIdValidation = settings.OperationIdValidation;
+        }
+
         if (settings.OperationIdCasingStyle.IsSet)
         {
             apiOptions.Validation.OperationIdCasingStyle = settings.OperationIdCasingStyle.Value;

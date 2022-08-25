@@ -470,7 +470,7 @@ public static class GenerateXunitTestPartsHelper
             "Guid" => ValueTypeTestPropertiesHelper.CreateValueGuid(useForBadRequest, itemNumber),
             "Uri" => ValueTypeTestPropertiesHelper.CreateValueUri(useForBadRequest),
             "Email" => ValueTypeTestPropertiesHelper.CreateValueEmail(useForBadRequest),
-            _ => PropertyValueGeneratorTypeResolver(schema, componentsSchemas, useForBadRequest)
+            _ => PropertyValueGeneratorTypeResolver(schema, componentsSchemas, useForBadRequest),
         };
     }
 

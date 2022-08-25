@@ -514,3 +514,5 @@ dotnet_diagnostic.CA2254.severity = suggestion		# Template should be a static ex
 
 dotnet_diagnostic.S1172.severity = none				# False positive
 dotnet_diagnostic.S3267.severity = none				# Loop should be simplified by calling Select(x => x.Value)) - We dont like this rule because of readability/maintainability
+
+dotnet_diagnostic.SA1414.Severity = none			# Tuple types in signatures should have element names

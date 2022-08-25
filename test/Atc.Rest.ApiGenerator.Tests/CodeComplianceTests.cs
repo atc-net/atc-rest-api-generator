@@ -9,7 +9,7 @@ public class CodeComplianceTests
     private readonly Assembly sourceAssembly = typeof(AtcRestApiGeneratorAssemblyTypeInitializer).Assembly;
     private readonly Assembly testAssembly = typeof(CodeComplianceTests).Assembly;
 
-    private readonly List<Type> excludeTypes = new ()
+    private readonly List<Type> excludeTypes = new()
     {
         // TODO: Add UnitTest and remove from this list!!
         typeof(AtcApiNugetClientHelper),

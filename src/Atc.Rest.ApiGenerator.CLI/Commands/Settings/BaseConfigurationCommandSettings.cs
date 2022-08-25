@@ -14,17 +14,21 @@ public class BaseConfigurationCommandSettings : BaseCommandSettings
     [Description("Use strictmode")]
     public bool StrictMode { get; init; }
 
+    [CommandOption($"{ArgumentCommandConstants.LongConfigurationValidateOperationIdValidation}")]
+    [Description("Use operationId validation")]
+    public bool OperationIdValidation { get; init; }
+
     [CommandOption($"{ArgumentCommandConstants.LongConfigurationValidateOperationIdCasingStyle} [OPERATIONIDCASINGSTYLE]")]
     [CasingStyleDescription(Default = CasingStyle.CamelCase, Prefix = "Set casingStyle for operationId")]
-    public FlagValue<CasingStyle> OperationIdCasingStyle { get; init; } = new ();
+    public FlagValue<CasingStyle> OperationIdCasingStyle { get; init; } = new();
 
     [CommandOption($"{ArgumentCommandConstants.LongConfigurationValidateModelNameCasingStyle} [MODELNAMECASINGSTYLE]")]
     [CasingStyleDescription(Default = CasingStyle.PascalCase, Prefix = "Set casingStyle for model name")]
-    public FlagValue<CasingStyle> ModelNameCasingStyle { get; init; } = new ();
+    public FlagValue<CasingStyle> ModelNameCasingStyle { get; init; } = new();
 
     [CommandOption($"{ArgumentCommandConstants.LongConfigurationValidateModelPropertyNameCasingStyle} [MODELPROPERTYNAMECASINGSTYLE]")]
     [CasingStyleDescription(Default = CasingStyle.CamelCase, Prefix = "Set casingStyle for model property name")]
-    public FlagValue<CasingStyle> ModelPropertyNameCasingStyle { get; init; } = new ();
+    public FlagValue<CasingStyle> ModelPropertyNameCasingStyle { get; init; } = new();
 
     [CommandOption($"{ArgumentCommandConstants.LongConfigurationAuthorization}")]
     [Description("Use authorization")]

@@ -3,7 +3,7 @@ namespace Atc.Rest.ApiGenerator.CLI;
 public static class AtcApiNugetClientHelper
 {
     private const string BaseAddress = "https://atc-api.azurewebsites.net/nuget-search";
-    private static readonly ConcurrentDictionary<string, Version> Cache = new (StringComparer.Ordinal);
+    private static readonly ConcurrentDictionary<string, Version> Cache = new(StringComparer.Ordinal);
 
     [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "OK.")]
     public static Version? GetLatestVersionForPackageId(

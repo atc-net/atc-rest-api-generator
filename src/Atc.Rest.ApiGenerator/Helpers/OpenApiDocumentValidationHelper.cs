@@ -240,29 +240,32 @@ public static class OpenApiDocumentValidationHelper
                 }
             }
 
-            foreach (var (operationKey, operationValue) in pathValue.Operations)
+            if (validationOptions.OperationIdValidation)
             {
-                // Validate Response Schema
-                var responseModelSchema = operationValue.GetModelSchemaFromResponse();
-                if (responseModelSchema is not null)
+                foreach (var (operationKey, operationValue) in pathValue.Operations)
                 {
-                    if (operationValue.IsOperationIdPluralized(operationKey))
+                    // Validate Response Schema
+                    var responseModelSchema = operationValue.GetModelSchemaFromResponse();
+                    if (responseModelSchema is not null)
                     {
-                        if (!IsModelOfTypeArray(responseModelSchema, modelSchemas))
+                        if (operationValue.IsOperationIdPluralized(operationKey))
                         {
-                            logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation08, $"OperationId '{operationValue.OperationId}' is not singular - Response model is defined as a single item."));
+                            if (!IsModelOfTypeArray(responseModelSchema, modelSchemas))
+                            {
+                                logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation08, $"OperationId '{operationValue.OperationId}' is not singular - Response model is defined as a single item."));
+                            }
+                        }
+                        else
+                        {
+                            if (IsModelOfTypeArray(responseModelSchema, modelSchemas))
+                            {
+                                logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation09, $"OperationId '{operationValue.OperationId}' is not pluralized - Response model is defined as an array."));
+                            }
                         }
                     }
-                    else
-                    {
-                        if (IsModelOfTypeArray(responseModelSchema, modelSchemas))
-                        {
-                            logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation09, $"OperationId '{operationValue.OperationId}' is not pluralized - Response model is defined as an array."));
-                        }
-                    }
-                }
 
-                //// TO-DO Validate RequestBody Schema
+                    //// TO-DO Validate RequestBody Schema
+                }
             }
         }
 

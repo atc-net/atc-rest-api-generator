@@ -369,7 +369,7 @@ public class SyntaxGeneratorClientEndpoint : SyntaxGeneratorClientEndpointBase, 
             ParameterLocation.Query => nameof(IMessageRequestBuilder.WithQueryParameter),
             ParameterLocation.Header => nameof(IMessageRequestBuilder.WithHeaderParameter),
             ParameterLocation.Path => nameof(IMessageRequestBuilder.WithPathParameter),
-            _ => throw new NotSupportedException(nameof(parameter.In))
+            _ => throw new NotSupportedException(nameof(parameter.In)),
         };
 
         var parameterMapName = parameter.Name;

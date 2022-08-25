@@ -437,7 +437,7 @@ internal static class SyntaxDocumentationFactory
                 CreateComment("Url validation being enforced."),
                 CreateComment("</remarks>"),
             },
-            _ => SyntaxFactory.TriviaList()
+            _ => SyntaxFactory.TriviaList(),
         };
 
     private static bool ShouldGenerateDefaultSummary(

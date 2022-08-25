@@ -13,6 +13,7 @@ public static class ArgumentCommandConstants
     public const string LongConfigurationAuthorization = "--useAuthorization";
 
     public const string LongConfigurationValidateStrictMode = "--validate-strictMode";
+    public const string LongConfigurationValidateOperationIdValidation = "--validate-operationIdValidation";
     public const string LongConfigurationValidateOperationIdCasingStyle = "--validate-operationIdCasingStyle";
     public const string LongConfigurationValidateModelNameCasingStyle = "--validate-modelNameCasingStyle";
     public const string LongConfigurationValidateModelPropertyNameCasingStyle = "--validate-modelPropertyNameCasingStyle";

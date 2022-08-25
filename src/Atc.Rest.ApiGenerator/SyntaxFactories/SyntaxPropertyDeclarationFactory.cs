@@ -144,7 +144,7 @@ internal static class SyntaxPropertyDeclarationFactory
                 ParameterLocation.Header => propertyDeclaration.AddFromHeaderAttribute(parameter.Name, parameter.Schema),
                 ParameterLocation.Path => propertyDeclaration.AddFromRouteAttribute(parameter.Name, parameter.Schema),
                 ParameterLocation.Query => propertyDeclaration.AddFromQueryAttribute(parameter.Name, parameter.Schema),
-                _ => throw new NotImplementedException("ParameterLocation: " + nameof(ParameterLocation) + " " + parameter.In)
+                _ => throw new NotImplementedException("ParameterLocation: " + nameof(ParameterLocation) + " " + parameter.In),
             };
         }
 
