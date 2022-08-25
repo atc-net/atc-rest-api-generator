@@ -239,31 +239,6 @@ public static class OpenApiDocumentValidationHelper
                     }
                 }
             }
-
-            foreach (var (operationKey, operationValue) in pathValue.Operations)
-            {
-                // Validate Response Schema
-                var responseModelSchema = operationValue.GetModelSchemaFromResponse();
-                if (responseModelSchema is not null)
-                {
-                    if (operationValue.IsOperationIdPluralized(operationKey))
-                    {
-                        if (!IsModelOfTypeArray(responseModelSchema, modelSchemas))
-                        {
-                            logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation08, $"OperationId '{operationValue.OperationId}' is not singular - Response model is defined as a single item."));
-                        }
-                    }
-                    else
-                    {
-                        if (IsModelOfTypeArray(responseModelSchema, modelSchemas))
-                        {
-                            logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Operation09, $"OperationId '{operationValue.OperationId}' is not pluralized - Response model is defined as an array."));
-                        }
-                    }
-                }
-
-                //// TO-DO Validate RequestBody Schema
-            }
         }
 
         return logItems;
