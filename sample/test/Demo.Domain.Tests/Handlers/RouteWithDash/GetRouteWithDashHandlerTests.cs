@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-namespace Demo.Domain.Tests.Handlers.RouteWithDash
+﻿namespace Demo.Domain.Tests.Handlers.RouteWithDash
 {
     public class GetRouteWithDashHandlerTests
     {

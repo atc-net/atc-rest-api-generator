@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-namespace Demo.Domain.Tests.Handlers.Items
+﻿namespace Demo.Domain.Tests.Handlers.Items
 {
     public class CreateItemHandlerTests
     {

@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-namespace Demo.Domain.Tests.Handlers.Tasks
+﻿namespace Demo.Domain.Tests.Handlers.Tasks
 {
     public class GetTasksHandlerTests
     {

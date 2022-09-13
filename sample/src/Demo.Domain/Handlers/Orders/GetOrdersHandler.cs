@@ -1,8 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Demo.Api.Generated.Contracts.Orders;
-
-namespace Demo.Domain.Handlers.Orders
+﻿namespace Demo.Domain.Handlers.Orders
 {
     /// <summary>
     /// Handler for operation request.

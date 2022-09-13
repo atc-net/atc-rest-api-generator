@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-namespace Demo.Domain.Tests.Handlers.Accounts
+﻿namespace Demo.Domain.Tests.Handlers.Accounts
 {
     public class UpdateAccountNameHandlerTests
     {

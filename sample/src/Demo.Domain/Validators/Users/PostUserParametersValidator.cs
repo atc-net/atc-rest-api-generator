@@ -1,6 +1,3 @@
-using Demo.Api.Generated.Contracts.Users;
-using FluentValidation;
-
 // ReSharper disable ConditionIsAlwaysTrueOrFalse
 namespace Demo.Domain.Validators.Users;
 

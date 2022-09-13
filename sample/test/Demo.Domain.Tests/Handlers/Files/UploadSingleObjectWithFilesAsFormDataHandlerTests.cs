@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-namespace Demo.Domain.Tests.Handlers.Files
+﻿namespace Demo.Domain.Tests.Handlers.Files
 {
     public class UploadSingleObjectWithFilesAsFormDataHandlerTests
     {

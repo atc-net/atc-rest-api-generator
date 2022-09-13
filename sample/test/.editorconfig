@@ -52,3 +52,4 @@ dotnet_diagnostic.SA1133.severity = none            # https://github.com/atc-net
 ##########################################
 # Custom - Code Analyzers Rules
 ##########################################
+dotnet_diagnostic.IDE0058.severity = none           # Have to override this for now - to get smoke-test to run

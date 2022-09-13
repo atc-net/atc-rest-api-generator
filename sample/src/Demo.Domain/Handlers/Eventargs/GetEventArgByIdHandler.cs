@@ -1,8 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Demo.Api.Generated.Contracts.Eventargs;
-
-namespace Demo.Domain.Handlers.Eventargs
+﻿namespace Demo.Domain.Handlers.Eventargs
 {
     /// <summary>
     /// Handler for operation request.

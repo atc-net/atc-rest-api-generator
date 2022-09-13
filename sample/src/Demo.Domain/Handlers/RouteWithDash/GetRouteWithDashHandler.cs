@@ -1,8 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Demo.Api.Generated.Contracts.RouteWithDash;
-
-namespace Demo.Domain.Handlers.RouteWithDash
+﻿namespace Demo.Domain.Handlers.RouteWithDash
 {
     /// <summary>
     /// Handler for operation request.
