@@ -160,6 +160,9 @@
      - GetAtcVersion()
      - GetAtcVersionAsString3()
      - GetAtcVersionAsString4()
+- [GlobalUsingsHelper](Atc.Rest.ApiGenerator.Helpers.md#globalusingshelper)
+  -  Static Methods
+     - CreateOrUpdate(ILogger logger, string fileDisplayLocation, DirectoryInfo directoryInfo, List&lt;string&gt; requiredUsings)
 - [HttpClientHelper](Atc.Rest.ApiGenerator.Helpers.md#httpclienthelper)
   -  Static Methods
      - DownloadToTempFile(ILogger logger, string apiDesignPath)
@@ -418,6 +421,7 @@
      - Request
      - Response
      - UseAuthorization
+     - UseGlobalUsings
      - UseRestExtended
 - [ApiOptionsGeneratorRequest](Atc.Rest.ApiGenerator.Models.Options.md#apioptionsgeneratorrequest)
 - [ApiOptionsGeneratorResponse](Atc.Rest.ApiGenerator.Models.Options.md#apioptionsgeneratorresponse)
@@ -554,7 +558,7 @@
      - ToFile(FileInfo file)
 - [SyntaxGeneratorSwaggerDocOptions](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorswaggerdocoptions)
   -  Methods
-     - GenerateCode()
+     - GenerateCode(bool useGlobalUsings)
 
 ## [Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces.md)
 
