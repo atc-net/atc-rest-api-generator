@@ -40,6 +40,11 @@ public class ServerApiGenerator
         GenerateEndpoints(operationSchemaMappings);
         PerformCleanup();
 
+        if (projectOptions.ApiOptions.Generator.UseGlobalUsings)
+        {
+            GenerateSrcGlobalUsings();
+        }
+
         return true;
     }
 
@@ -260,8 +265,11 @@ public class ServerApiGenerator
         // Add class to namespace
         @namespace = @namespace.AddMembers(classDeclaration);
 
-        // Add using statement to compilationUnit
-        compilationUnit = compilationUnit.AddUsingStatements(new[] { "System.CodeDom.Compiler" });
+        if (!projectOptions.ApiOptions.Generator.UseGlobalUsings)
+        {
+            // Add using statement to compilationUnit
+            compilationUnit = compilationUnit.AddUsingStatements(new[] { "System.CodeDom.Compiler" });
+        }
 
         // Add namespace to compilationUnit
         compilationUnit = compilationUnit.AddMembers(@namespace);
@@ -298,5 +306,44 @@ public class ServerApiGenerator
         {
             File.Delete(file.FullName);
         }
+    }
+
+    private void GenerateSrcGlobalUsings()
+    {
+        var requiredUsings = new List<string>
+        {
+            "System",
+            "System.CodeDom.Compiler",
+            "System.Collections.Generic",
+            "System.ComponentModel.DataAnnotations",
+            "System.Diagnostics.CodeAnalysis",
+            "System.Linq",
+            "System.Net",
+            "System.Threading",
+            "System.Threading.Tasks",
+            "Microsoft.AspNetCore.Http",
+            "Microsoft.AspNetCore.Mvc",
+            "Atc.Rest.Results",
+        };
+
+        if (projectOptions.ApiOptions.Generator.UseAuthorization)
+        {
+            requiredUsings.Add("Microsoft.AspNetCore.Authorization");
+        }
+
+        requiredUsings.Add($"{projectOptions.ProjectName}.Contracts");
+        foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
+        {
+            requiredUsings.Add($"{projectOptions.ProjectName}.Contracts.{basePathSegmentName}");
+        }
+
+        var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "GlobalUsings.cs"));
+        var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
+
+        GlobalUsingsHelper.CreateOrUpdate(
+            logger,
+            fileDisplayLocation,
+            projectOptions.PathForSrcGenerate,
+            requiredUsings);
     }
 }

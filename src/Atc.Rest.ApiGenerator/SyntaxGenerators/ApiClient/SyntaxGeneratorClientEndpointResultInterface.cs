@@ -51,22 +51,25 @@ public class SyntaxGeneratorClientEndpointResultInterface : SyntaxGeneratorClien
         interfaceDeclaration = interfaceDeclaration.AddMembers(CreatePropertiesForIsStatusCode());
         interfaceDeclaration = interfaceDeclaration.AddMembers(CreatePropertiesForStatusCodeContent());
 
-        // Add using statement to compilationUnit
-        var includeRestResults = interfaceDeclaration
-            .Select<IdentifierNameSyntax>()
-            .Any(x => x.Identifier.ValueText.Contains(
-                $"({Microsoft.OpenApi.Models.NameConstants.Pagination}<",
-                StringComparison.Ordinal));
+        if (!ApiProjectOptions.ApiOptions.Generator.UseGlobalUsings)
+        {
+            // Add using statement to compilationUnit
+            var includeRestResults = interfaceDeclaration
+                .Select<IdentifierNameSyntax>()
+                .Any(x => x.Identifier.ValueText.Contains(
+                    $"({Microsoft.OpenApi.Models.NameConstants.Pagination}<",
+                    StringComparison.Ordinal));
 
-        compilationUnit = compilationUnit.AddUsingStatements(
-            ProjectApiClientFactory.CreateUsingListForEndpointResultInterface(
-                ApiProjectOptions,
-                includeRestResults,
-                OpenApiDocumentSchemaModelNameHelper.HasList(ResultTypeName),
-                OpenApiDocumentSchemaModelNameHelper.HasSharedResponseContract(
-                    ApiProjectOptions.Document,
-                    OperationSchemaMappings,
-                    FocusOnSegmentName)));
+            compilationUnit = compilationUnit.AddUsingStatements(
+                ProjectApiClientFactory.CreateUsingListForEndpointResultInterface(
+                    ApiProjectOptions,
+                    includeRestResults,
+                    OpenApiDocumentSchemaModelNameHelper.HasList(ResultTypeName),
+                    OpenApiDocumentSchemaModelNameHelper.HasSharedResponseContract(
+                        ApiProjectOptions.Document,
+                        OperationSchemaMappings,
+                        FocusOnSegmentName)));
+        }
 
         // Add the interface to the namespace.
         @namespace = @namespace.AddMembers(interfaceDeclaration);

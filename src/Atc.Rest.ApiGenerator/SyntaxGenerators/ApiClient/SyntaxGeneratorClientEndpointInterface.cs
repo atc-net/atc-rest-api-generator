@@ -53,21 +53,24 @@ public class SyntaxGeneratorClientEndpointInterface : SyntaxGeneratorClientEndpo
         interfaceDeclaration = interfaceDeclaration.AddMembers(CreateMembers());
         //// TODO: var methodDeclaration = ...
 
-        // Add using statement to compilationUnit
-        var includeRestResults = interfaceDeclaration
-            .Select<IdentifierNameSyntax>()
-            .Any(x => x.Identifier.ValueText.Contains(
-                $"({Microsoft.OpenApi.Models.NameConstants.Pagination}<",
-                StringComparison.Ordinal));
-        compilationUnit = compilationUnit.AddUsingStatements(
-            ProjectApiClientFactory.CreateUsingListForEndpointInterface(
-                ApiProjectOptions,
-                includeRestResults,
-                OpenApiDocumentSchemaModelNameHelper.HasList(ResultTypeName),
-                OpenApiDocumentSchemaModelNameHelper.HasSharedResponseContract(
-                    ApiProjectOptions.Document,
-                    OperationSchemaMappings,
-                    FocusOnSegmentName)));
+        if (!ApiProjectOptions.ApiOptions.Generator.UseGlobalUsings)
+        {
+            // Add using statement to compilationUnit
+            var includeRestResults = interfaceDeclaration
+                .Select<IdentifierNameSyntax>()
+                .Any(x => x.Identifier.ValueText.Contains(
+                    $"({Microsoft.OpenApi.Models.NameConstants.Pagination}<",
+                    StringComparison.Ordinal));
+            compilationUnit = compilationUnit.AddUsingStatements(
+                ProjectApiClientFactory.CreateUsingListForEndpointInterface(
+                    ApiProjectOptions,
+                    includeRestResults,
+                    OpenApiDocumentSchemaModelNameHelper.HasList(ResultTypeName),
+                    OpenApiDocumentSchemaModelNameHelper.HasSharedResponseContract(
+                        ApiProjectOptions.Document,
+                        OperationSchemaMappings,
+                        FocusOnSegmentName)));
+        }
 
         // Add interface-method to interface
         //// TODO: interfaceDeclaration = interfaceDeclaration.AddMembers(methodDeclaration);

@@ -16,25 +16,30 @@ public class SyntaxGeneratorSwaggerDocOptions
         this.document = document;
     }
 
-    public string GenerateCode()
+    public string GenerateCode(bool useGlobalUsings)
         => SyntaxFactory
-            .ParseSyntaxTree(GetSyntaxTreeText())
+            .ParseSyntaxTree(GetSyntaxTreeText(useGlobalUsings))
             .GetCompilationUnitRoot()
             .ToFullString()
             .EnsureEnvironmentNewLines();
 
-    private string GetSyntaxTreeText()
+    private string GetSyntaxTreeText(
+        bool useGlobalUsings)
     {
         var sb = new StringBuilder();
 
-        sb.AppendLine("using System;");
-        sb.AppendLine("using System.IO;");
-        sb.AppendLine("using Microsoft.AspNetCore.Mvc.ApiExplorer;");
-        sb.AppendLine("using Microsoft.Extensions.DependencyInjection;");
-        sb.AppendLine("using Microsoft.Extensions.Options;");
-        sb.AppendLine("using Microsoft.OpenApi.Models;");
-        sb.AppendLine("using Swashbuckle.AspNetCore.SwaggerGen;");
-        sb.AppendLine();
+        if (!useGlobalUsings)
+        {
+            sb.AppendLine("using System;");
+            sb.AppendLine("using System.IO;");
+            sb.AppendLine("using Microsoft.AspNetCore.Mvc.ApiExplorer;");
+            sb.AppendLine("using Microsoft.Extensions.DependencyInjection;");
+            sb.AppendLine("using Microsoft.Extensions.Options;");
+            sb.AppendLine("using Microsoft.OpenApi.Models;");
+            sb.AppendLine("using Swashbuckle.AspNetCore.SwaggerGen;");
+            sb.AppendLine();
+        }
+
         sb.AppendLine($"namespace {fullNamespace}");
         sb.AppendLine("{");
         sb.AppendLine(4, "public class ConfigureSwaggerDocOptions : IConfigureOptions<SwaggerGenOptions>");
