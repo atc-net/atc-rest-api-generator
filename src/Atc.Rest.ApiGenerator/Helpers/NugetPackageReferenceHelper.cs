@@ -72,10 +72,10 @@ public static class NugetPackageReferenceHelper
 
         packageReference.AddRange(new List<Tuple<string, string, string?>>
         {
-            new ("Microsoft.NET.Test.Sdk", "17.1.0", null),
-            new ("NSubstitute", "4.3.0", null),
-            new ("xunit", "2.4.1", null),
-            new ("xunit.runner.visualstudio", "2.4.3", "<PrivateAssets>all</PrivateAssets>\n<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>"),
+            new ("Microsoft.NET.Test.Sdk", "17.3.1", null),
+            new ("NSubstitute", "4.4.0", null),
+            new ("xunit", "2.4.2", null),
+            new ("xunit.runner.visualstudio", "2.4.5", "<PrivateAssets>all</PrivateAssets>\n<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>"),
         });
 
         return packageReference;
