@@ -13,11 +13,11 @@ public class SyntaxGeneratorHandler
         bool hasParametersOrRequestBody)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        this.DomainProjectOptions = domainProjectOptions ?? throw new ArgumentNullException(nameof(domainProjectOptions));
-        this.ApiOperationType = apiOperationType;
-        this.ApiOperation = apiOperation ?? throw new ArgumentNullException(nameof(apiOperation));
-        this.FocusOnSegmentName = focusOnSegmentName ?? throw new ArgumentNullException(nameof(focusOnSegmentName));
-        this.HasParametersOrRequestBody = hasParametersOrRequestBody;
+        DomainProjectOptions = domainProjectOptions ?? throw new ArgumentNullException(nameof(domainProjectOptions));
+        ApiOperationType = apiOperationType;
+        ApiOperation = apiOperation ?? throw new ArgumentNullException(nameof(apiOperation));
+        FocusOnSegmentName = focusOnSegmentName ?? throw new ArgumentNullException(nameof(focusOnSegmentName));
+        HasParametersOrRequestBody = hasParametersOrRequestBody;
     }
 
     public DomainProjectOptions DomainProjectOptions { get; }

@@ -58,9 +58,9 @@ public abstract class BaseProjectOptions
             ProjectTestCsProj = new FileInfo(Path.Combine(PathForTestGenerate.FullName, $"{ProjectName}.Tests.csproj"));
         }
 
-        this.UsingCodingRules = usingCodingRules;
-        this.IsForClient = forClient;
-        this.ClientFolderName = clientFolderName;
+        UsingCodingRules = usingCodingRules;
+        IsForClient = forClient;
+        ClientFolderName = clientFolderName;
 
         BasePathSegmentNames = OpenApiDocumentHelper.GetBasePathSegmentNames(openApiDocument);
     }

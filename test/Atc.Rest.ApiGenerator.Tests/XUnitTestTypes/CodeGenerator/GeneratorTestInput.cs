@@ -71,5 +71,5 @@ public class GeneratorTestInput : IXunitSerializable
         => yamlSpec!.OpenText().ReadToEndAsync();
 
     public override string ToString()
-        => this.TestName;
+        => TestName;
 }
