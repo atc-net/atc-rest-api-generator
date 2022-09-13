@@ -65,6 +65,7 @@ public class CodeComplianceTests
         typeof(ProjectDomainFactory),
         typeof(SyntaxGeneratorSwaggerDocOptions),
         typeof(ListExtensions),
+        typeof(GlobalUsingsHelper),
     };
 
     public CodeComplianceTests(

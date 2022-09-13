@@ -1,5 +1,3 @@
-﻿using Xunit;
-
 namespace Scenario2.Domain.Tests.Handlers.Orders
 {
     public class PatchOrdersIdHandlerTests

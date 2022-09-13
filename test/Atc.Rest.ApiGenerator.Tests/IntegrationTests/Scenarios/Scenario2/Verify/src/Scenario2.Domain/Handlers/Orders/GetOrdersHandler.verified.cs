@@ -1,7 +1,3 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Scenario2.Api.Generated.Contracts.Orders;
-
 namespace Scenario2.Domain.Handlers.Orders
 {
     /// <summary>

@@ -1,5 +1,3 @@
-﻿using Xunit;
-
 namespace Scenario1.Domain.Tests.Handlers.Addresses
 {
     public class GetAddressesByPostalCodesHandlerTests
