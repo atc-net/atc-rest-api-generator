@@ -17,7 +17,7 @@ public class ClientCSharpApiGenerator
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
 
-        this.apiProjectOptions = new ApiProjectOptions(
+        apiProjectOptions = new ApiProjectOptions(
             projectOptions.PathForSrcGenerate,
             projectTestGeneratePath: null,
             projectOptions.Document,
@@ -29,7 +29,7 @@ public class ClientCSharpApiGenerator
             projectOptions.ForClient,
             projectOptions.ClientFolderName);
 
-        this.ExcludeEndpointGeneration = projectOptions.ExcludeEndpointGeneration;
+        ExcludeEndpointGeneration = projectOptions.ExcludeEndpointGeneration;
     }
 
     public bool ExcludeEndpointGeneration { get; }
@@ -40,7 +40,7 @@ public class ClientCSharpApiGenerator
 
         var operationSchemaMappings = OpenApiOperationSchemaMapHelper.CollectMappings(projectOptions.Document);
         GenerateContracts(operationSchemaMappings);
-        if (!this.ExcludeEndpointGeneration)
+        if (!ExcludeEndpointGeneration)
         {
             GenerateEndpoints(operationSchemaMappings);
         }

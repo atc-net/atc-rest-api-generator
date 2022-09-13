@@ -15,17 +15,17 @@ public class SyntaxGeneratorContractModel : ISyntaxSchemaCodeGenerator
         string focusOnSegmentName)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        this.ApiProjectOptions = apiProjectOptions ?? throw new ArgumentNullException(nameof(apiProjectOptions));
-        this.ApiSchemaKey = apiSchemaKey ?? throw new ArgumentNullException(nameof(apiSchemaKey));
-        this.ApiSchema = apiSchema ?? throw new ArgumentNullException(nameof(apiSchema));
-        this.FocusOnSegmentName = focusOnSegmentName ?? throw new ArgumentNullException(nameof(focusOnSegmentName));
-        if (this.FocusOnSegmentName == "#")
+        ApiProjectOptions = apiProjectOptions ?? throw new ArgumentNullException(nameof(apiProjectOptions));
+        ApiSchemaKey = apiSchemaKey ?? throw new ArgumentNullException(nameof(apiSchemaKey));
+        ApiSchema = apiSchema ?? throw new ArgumentNullException(nameof(apiSchema));
+        FocusOnSegmentName = focusOnSegmentName ?? throw new ArgumentNullException(nameof(focusOnSegmentName));
+        if (FocusOnSegmentName == "#")
         {
-            this.IsSharedContract = true;
+            IsSharedContract = true;
         }
 
-        this.IsForClient = false;
-        this.UseOwnFolder = true;
+        IsForClient = false;
+        UseOwnFolder = true;
     }
 
     private ApiProjectOptions ApiProjectOptions { get; }

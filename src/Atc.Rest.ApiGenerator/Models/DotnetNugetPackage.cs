@@ -4,16 +4,16 @@ public class DotnetNugetPackage
 {
     public DotnetNugetPackage(string packageId, Version currentVersion)
     {
-        this.PackageId = packageId;
-        this.Version = currentVersion;
-        this.NewestVersion = currentVersion;
+        PackageId = packageId;
+        Version = currentVersion;
+        NewestVersion = currentVersion;
     }
 
     public DotnetNugetPackage(string packageId, Version currentVersion, Version newestVersion)
     {
-        this.PackageId = packageId;
-        this.Version = currentVersion;
-        this.NewestVersion = newestVersion;
+        PackageId = packageId;
+        Version = currentVersion;
+        NewestVersion = newestVersion;
     }
 
     public string PackageId { get; }

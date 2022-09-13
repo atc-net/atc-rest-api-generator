@@ -9,13 +9,13 @@ public sealed class ApiOperationSchemaMap
         OperationType operationType,
         string? parentSchemaKey)
     {
-        this.SchemaKey = schemaKey;
-        this.LocatedArea = locatedArea;
-        this.Path = path;
-        this.OperationType = operationType;
-        this.ParentSchemaKey = parentSchemaKey;
+        SchemaKey = schemaKey;
+        LocatedArea = locatedArea;
+        Path = path;
+        OperationType = operationType;
+        ParentSchemaKey = parentSchemaKey;
 
-        this.SegmentName = OpenApiOperationSchemaMapHelper.GetSegmentName(this.Path);
+        SegmentName = OpenApiOperationSchemaMapHelper.GetSegmentName(Path);
     }
 
     public string SchemaKey { get; }
@@ -45,7 +45,7 @@ public sealed class ApiOperationSchemaMap
     public override bool Equals(
         object? obj)
         => !ReferenceEquals(null, obj) &&
-           (ReferenceEquals(this, obj) || (obj.GetType() == this.GetType() && Equals((ApiOperationSchemaMap)obj)));
+           (ReferenceEquals(this, obj) || (obj.GetType() == GetType() && Equals((ApiOperationSchemaMap)obj)));
 
     public override int GetHashCode()
         => HashCode.Combine(SchemaKey, (int)LocatedArea, SegmentName, Path, (int)OperationType, ParentSchemaKey);
