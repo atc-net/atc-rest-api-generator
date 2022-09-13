@@ -1,6 +1,8 @@
 // ReSharper disable LoopCanBeConvertedToQuery
 // ReSharper disable ConvertIfStatementToConditionalTernaryExpression
 // ReSharper disable UseDeconstruction
+using Atc.Rest.ApiGenerator.Models.Options;
+
 namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
 
 public class SyntaxGeneratorContractModel : ISyntaxSchemaCodeGenerator
@@ -141,16 +143,19 @@ public class SyntaxGeneratorContractModel : ISyntaxSchemaCodeGenerator
         // Create an enum
         var enumDeclaration = SyntaxEnumFactory.Create(apiEnumSchema.Item1.EnsureFirstCharacterToUpper(), apiEnumSchema.Item2);
 
-        if (enumDeclaration.HasAttributeOfAttributeType(typeof(FlagsAttribute)))
+        if (!ApiProjectOptions.ApiOptions.Generator.UseGlobalUsings)
         {
-            // Add using statement to compilationUnit
-            compilationUnit = compilationUnit.AddUsingStatements(new[] { "System" });
-        }
+            if (enumDeclaration.HasAttributeOfAttributeType(typeof(FlagsAttribute)))
+            {
+                // Add using statement to compilationUnit
+                compilationUnit = compilationUnit.AddUsingStatements(new[] { "System" });
+            }
 
-        if (enumDeclaration.HasAttributeOfAttributeType(typeof(SuppressMessageAttribute)))
-        {
-            // Add using statement to compilationUnit
-            compilationUnit = compilationUnit.AddUsingStatements(new[] { "System.Diagnostics.CodeAnalysis" });
+            if (enumDeclaration.HasAttributeOfAttributeType(typeof(SuppressMessageAttribute)))
+            {
+                // Add using statement to compilationUnit
+                compilationUnit = compilationUnit.AddUsingStatements(new[] { "System.Diagnostics.CodeAnalysis" });
+            }
         }
 
         // Add the enum to the namespace.
@@ -228,8 +233,11 @@ public class SyntaxGeneratorContractModel : ISyntaxSchemaCodeGenerator
             }
         }
 
-        // Add using statement to compilationUnit
-        compilationUnit = compilationUnit!.AddUsingStatements(ProjectApiFactory.CreateUsingListForContractModel(ApiSchema));
+        if (!ApiProjectOptions.ApiOptions.Generator.UseGlobalUsings)
+        {
+            // Add using statement to compilationUnit
+            compilationUnit = compilationUnit!.AddUsingStatements(ProjectApiFactory.CreateUsingListForContractModel(ApiSchema));
+        }
 
         // Add the class to the namespace.
         @namespace = @namespace.AddMembers(classDeclaration);

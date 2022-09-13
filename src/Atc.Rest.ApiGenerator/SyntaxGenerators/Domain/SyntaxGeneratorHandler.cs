@@ -64,11 +64,14 @@ public class SyntaxGeneratorHandler
             classDeclaration,
             (current, memberDeclaration) => current.AddMembers(memberDeclaration));
 
-        // Add using statement to compilationUnit
-        compilationUnit = compilationUnit.AddUsingStatements(
-            ProjectDomainFactory.CreateUsingListForHandler(
-                DomainProjectOptions,
-                FocusOnSegmentName));
+        if (!DomainProjectOptions.ApiOptions.Generator.UseGlobalUsings)
+        {
+            // Add using statement to compilationUnit
+            compilationUnit = compilationUnit.AddUsingStatements(
+                ProjectDomainFactory.CreateUsingListForHandler(
+                    DomainProjectOptions,
+                    FocusOnSegmentName));
+        }
 
         // Add the class to the namespace.
         @namespace = @namespace.AddMembers(classDeclaration);

@@ -26,12 +26,16 @@ public static class GenerateServerDomainXunitTestHelper
             usedInterfacesInConstructor.Count > 0);
 
         var sb = new StringBuilder();
-        foreach (var item in usingStatements)
+        if (!domainProjectOptions.ApiOptions.Generator.UseGlobalUsings)
         {
-            sb.AppendLine($"using {item};");
+            foreach (var item in usingStatements)
+            {
+                sb.AppendLine($"using {item};");
+            }
+
+            sb.AppendLine();
         }
 
-        sb.AppendLine();
         GenerateCodeHelper.AppendGeneratedCodeWarningComment(sb, domainProjectOptions.ToolNameAndVersion);
         sb.AppendLine($"namespace {nsTest}");
         sb.AppendLine("{");
@@ -68,8 +72,12 @@ public static class GenerateServerDomainXunitTestHelper
         var nsTest = $"{domainProjectOptions.ProjectName}.Tests.{NameConstants.Handlers}.{area}";
 
         var sb = new StringBuilder();
-        sb.AppendLine("using Xunit;");
-        sb.AppendLine();
+        if (!domainProjectOptions.ApiOptions.Generator.UseGlobalUsings)
+        {
+            sb.AppendLine("using Xunit;");
+            sb.AppendLine();
+        }
+
         sb.AppendLine($"namespace {nsTest}");
         sb.AppendLine("{");
         sb.AppendLine(4, $"public class {sgHandler.HandlerTypeName}Tests");

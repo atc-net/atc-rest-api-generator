@@ -1,5 +1,6 @@
 using Atc.Console.Spectre;
 
+// ReSharper disable ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
 // ReSharper disable InvertIf
 // ReSharper disable SuggestBaseTypeForParameter
 // ReSharper disable ReturnTypeCanBeEnumerable.Local
@@ -29,12 +30,20 @@ public class ServerDomainGenerator
 
         ScaffoldSrc();
         GenerateSrcHandlers(projectOptions, out var sgHandlers);
+        if (projectOptions.ApiOptions.Generator.UseGlobalUsings)
+        {
+            GenerateSrcGlobalUsings();
+        }
 
         if (projectOptions.PathForTestGenerate is not null)
         {
             logger.LogInformation($"{AppEmojisConstants.AreaGenerateTest} Working on server domain unit-test generation ({projectOptions.ProjectName}.Tests)");
             ScaffoldTest();
             GenerateTestHandlers(projectOptions, sgHandlers);
+            if (projectOptions.ApiOptions.Generator.UseGlobalUsings)
+            {
+                GenerateTestGlobalUsings();
+            }
         }
 
         return true;
@@ -179,6 +188,11 @@ public class ServerDomainGenerator
                 includeApiSpecification: true,
                 usingCodingRules: projectOptions.UsingCodingRules);
         }
+
+        if (projectOptions.ApiOptions.Generator.UseGlobalUsings)
+        {
+            // TODO: UseGlobalUsings
+        }
     }
 
     private void ScaffoldBasicFileDomainRegistration()
@@ -196,8 +210,11 @@ public class ServerDomainGenerator
         // Add class to namespace
         @namespace = @namespace.AddMembers(classDeclaration);
 
-        // Add using statement to compilationUnit
-        compilationUnit = compilationUnit.AddUsingStatements(new[] { "System.CodeDom.Compiler" });
+        if (!projectOptions.ApiOptions.Generator.UseGlobalUsings)
+        {
+            // Add using statement to compilationUnit
+            compilationUnit = compilationUnit.AddUsingStatements(new[] { "System.CodeDom.Compiler" });
+        }
 
         // Add namespace to compilationUnit
         compilationUnit = compilationUnit.AddMembers(@namespace);
@@ -210,5 +227,53 @@ public class ServerDomainGenerator
         var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "DomainRegistration.cs"));
         var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
         TextFileHelper.Save(logger, file, fileDisplayLocation, codeAsString);
+    }
+
+    private void GenerateSrcGlobalUsings()
+    {
+        var requiredUsings = new List<string>
+        {
+            "System.CodeDom.Compiler",
+            "System.Threading",
+            "System.Threading.Tasks",
+        };
+
+        foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
+        {
+            requiredUsings.Add($"{projectOptions.ProjectPrefixName}.Api.Generated.Contracts.{basePathSegmentName}");
+        }
+
+        var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "GlobalUsings.cs"));
+        var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
+
+        GlobalUsingsHelper.CreateOrUpdate(
+            logger,
+            fileDisplayLocation,
+            projectOptions.PathForSrcGenerate,
+            requiredUsings);
+    }
+
+    private void GenerateTestGlobalUsings()
+    {
+        var requiredUsings = new List<string>
+        {
+            "System",
+            "System.CodeDom.Compiler",
+            "Xunit",
+        };
+
+        foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
+        {
+            requiredUsings.Add($"{projectOptions.ProjectName}.Handlers.{basePathSegmentName}");
+        }
+
+        var file = new FileInfo(Path.Combine(projectOptions.PathForTestGenerate!.FullName, "GlobalUsings.cs"));
+        var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForTestGenerate!.FullName, "test: ", StringComparison.Ordinal);
+
+        GlobalUsingsHelper.CreateOrUpdate(
+            logger,
+            fileDisplayLocation,
+            projectOptions.PathForTestGenerate!,
+            requiredUsings);
     }
 }

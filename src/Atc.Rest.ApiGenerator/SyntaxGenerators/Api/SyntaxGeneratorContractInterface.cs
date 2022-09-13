@@ -60,8 +60,11 @@ public class SyntaxGeneratorContractInterface : ISyntaxOperationCodeGenerator
         var methodDeclaration = SyntaxMethodDeclarationFactory.CreateInterfaceMethod(parameterTypeName, resultTypeName, HasParametersOrRequestBody)
             .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForInterfaceMethod(GlobalPathParameters.Any() || ApiOperation.HasParametersOrRequestBody()));
 
-        // Add using statement to compilationUnit
-        compilationUnit = compilationUnit.AddUsingStatements(ProjectApiFactory.CreateUsingListForContractInterface());
+        if (!ApiProjectOptions.ApiOptions.Generator.UseGlobalUsings)
+        {
+            // Add using statement to compilationUnit
+            compilationUnit = compilationUnit.AddUsingStatements(ProjectApiFactory.CreateUsingListForContractInterface());
+        }
 
         // Add interface-method to interface
         interfaceDeclaration = interfaceDeclaration.AddMembers(methodDeclaration);

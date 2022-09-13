@@ -179,13 +179,16 @@ public class SyntaxGeneratorContractParameter : ISyntaxOperationCodeGenerator
             classDeclaration = classDeclaration.AddMembers(methodDeclaration);
         }
 
-        // Add using statement to compilationUnit
-        compilationUnit = compilationUnit.AddUsingStatements(
-            ProjectApiFactory.CreateUsingListForContractParameter(
-                GlobalPathParameters,
-                ApiOperation.Parameters,
-                ApiOperation.RequestBody,
-                ApiProjectOptions.IsForClient));
+        if (!ApiProjectOptions.ApiOptions.Generator.UseGlobalUsings)
+        {
+            // Add using statement to compilationUnit
+            compilationUnit = compilationUnit.AddUsingStatements(
+                ProjectApiFactory.CreateUsingListForContractParameter(
+                    GlobalPathParameters,
+                    ApiOperation.Parameters,
+                    ApiOperation.RequestBody,
+                    ApiProjectOptions.IsForClient));
+        }
 
         // Add the class to the namespace.
         @namespace = @namespace.AddMembers(classDeclaration);

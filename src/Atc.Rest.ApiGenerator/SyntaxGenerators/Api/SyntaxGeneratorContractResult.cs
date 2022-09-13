@@ -61,12 +61,15 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
             classDeclaration,
             (current, memberDeclaration) => current.AddMembers(memberDeclaration));
 
-        // Add using statement to compilationUnit
-        compilationUnit = compilationUnit.AddUsingStatements(
-            ProjectApiFactory.CreateUsingListForContractResult(
-                ApiOperation.Responses,
-                ApiProjectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
-                HasCreateContentResult));
+        if (!ApiProjectOptions.ApiOptions.Generator.UseGlobalUsings)
+        {
+            // Add using statement to compilationUnit
+            compilationUnit = compilationUnit.AddUsingStatements(
+                ProjectApiFactory.CreateUsingListForContractResult(
+                    ApiOperation.Responses,
+                    ApiProjectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
+                    HasCreateContentResult));
+        }
 
         // Add the class to the namespace.
         @namespace = @namespace.AddMembers(classDeclaration);

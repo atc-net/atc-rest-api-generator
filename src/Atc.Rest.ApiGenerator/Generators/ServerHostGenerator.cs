@@ -29,11 +29,21 @@ public class ServerHostGenerator
 
         ScaffoldSrc();
 
+        if (projectOptions.ApiOptions.Generator.UseGlobalUsings)
+        {
+            GenerateSrcGlobalUsings();
+        }
+
         if (projectOptions.PathForTestGenerate is not null)
         {
             logger.LogInformation($"{AppEmojisConstants.AreaGenerateTest} Working on server host unit-test generation ({projectOptions.ProjectName}.Tests)");
             ScaffoldTest();
             GenerateTestEndpoints();
+
+            if (projectOptions.ApiOptions.Generator.UseGlobalUsings)
+            {
+                GenerateTestGlobalUsings();
+            }
         }
 
         return true;
@@ -964,6 +974,11 @@ public class ServerHostGenerator
         GenerateTestWebApiStartupFactory();
         GenerateTestWebApiControllerBaseTest();
         ScaffoldAppSettingsIntegrationTest();
+
+        if (projectOptions.ApiOptions.Generator.UseGlobalUsings)
+        {
+            // TODO: UseGlobalUsings
+        }
     }
 
     private void GenerateTestEndpoints()
@@ -1023,8 +1038,11 @@ public class ServerHostGenerator
         // Add namespace to compilationUnit
         compilationUnit = compilationUnit.AddMembers(@namespace);
 
-        // Add using to compilationUnit
-        compilationUnit = compilationUnit.AddUsingStatements(ProjectHostFactory.CreateUsingListForProgram());
+        if (!projectOptions.ApiOptions.Generator.UseGlobalUsings)
+        {
+            // Add using to compilationUnit
+            compilationUnit = compilationUnit.AddUsingStatements(ProjectHostFactory.CreateUsingListForProgram());
+        }
 
         var codeAsString = compilationUnit
             .NormalizeWhitespace()
@@ -1074,10 +1092,13 @@ public class ServerHostGenerator
         // Add namespace to compilationUnit
         compilationUnit = compilationUnit.AddMembers(@namespace);
 
-        // Add using to compilationUnit
-        compilationUnit = compilationUnit.AddUsingStatements(ProjectHostFactory.CreateUsingListForStartup(
-            projectOptions.ProjectName,
-            projectOptions.UseRestExtended));
+        if (!projectOptions.ApiOptions.Generator.UseGlobalUsings)
+        {
+            // Add using to compilationUnit
+            compilationUnit = compilationUnit.AddUsingStatements(ProjectHostFactory.CreateUsingListForStartup(
+                projectOptions.ProjectName,
+                projectOptions.UseRestExtended));
+        }
 
         var codeAsString = compilationUnit
             .NormalizeWhitespace()
@@ -1138,7 +1159,7 @@ public class ServerHostGenerator
 
     var sb = new StringBuilder();
     GenerateCodeHelper.AppendGeneratedCodeWarningComment(sb, projectOptions.ToolNameAndVersion);
-    sb.Append(syntaxGenerator.GenerateCode());
+    sb.Append(syntaxGenerator.GenerateCode(projectOptions.ApiOptions.Generator.UseGlobalUsings));
     var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
     TextFileHelper.Save(logger, file, fileDisplayLocation, sb.ToString());
 }
@@ -1185,10 +1206,13 @@ public class ServerHostGenerator
         // Add namespace to compilationUnit
         compilationUnit = compilationUnit.AddMembers(@namespace);
 
-        // Add using to compilationUnit
-        compilationUnit = compilationUnit.AddUsingStatements(
-            ProjectHostFactory.CreateUsingListForWebApiStartupFactory(
-                projectOptions.ProjectName));
+        if (!projectOptions.ApiOptions.Generator.UseGlobalUsings)
+        {
+            // Add using to compilationUnit
+            compilationUnit = compilationUnit.AddUsingStatements(
+                ProjectHostFactory.CreateUsingListForWebApiStartupFactory(
+                    projectOptions.ProjectName));
+        }
 
         var codeAsString = compilationUnit
             .NormalizeWhitespace()
@@ -1250,8 +1274,11 @@ public class ServerHostGenerator
         // Add namespace to compilationUnit
         compilationUnit = compilationUnit.AddMembers(@namespace);
 
-        // Add using to compilationUnit
-        compilationUnit = compilationUnit.AddUsingStatements(ProjectHostFactory.CreateUsingListForWebApiControllerBaseTest());
+        if (!projectOptions.ApiOptions.Generator.UseGlobalUsings)
+        {
+            // Add using to compilationUnit
+            compilationUnit = compilationUnit.AddUsingStatements(ProjectHostFactory.CreateUsingListForWebApiControllerBaseTest());
+        }
 
         var codeAsString = compilationUnit
             .NormalizeWhitespace()
@@ -1277,5 +1304,73 @@ public class ServerHostGenerator
 
         var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForTestGenerate.FullName, "test: ", StringComparison.Ordinal);
         TextFileHelper.Save(logger, file, fileDisplayLocation, sb.ToString());
+    }
+
+    private void GenerateSrcGlobalUsings()
+    {
+        var requiredUsings = new List<string>
+        {
+            "System.Reflection",
+            "System.IO",
+            "Microsoft.AspNetCore.Builder",
+            "Microsoft.AspNetCore.Hosting",
+            "Microsoft.Extensions.Configuration",
+            "Microsoft.Extensions.DependencyInjection",
+            "Microsoft.Extensions.Hosting",
+            $"{projectOptions.ProjectPrefixName}.Domain",
+            $"{projectOptions.ProjectName}.Generated",
+        };
+
+        if (projectOptions.UseRestExtended)
+        {
+            requiredUsings.Add("Atc.Rest.Extended.Options");
+            requiredUsings.Add("Microsoft.AspNetCore.Mvc.ApiExplorer");
+            requiredUsings.Add("Microsoft.Extensions.Options");
+            requiredUsings.Add("Microsoft.OpenApi.Models");
+            requiredUsings.Add("Swashbuckle.AspNetCore.SwaggerGen");
+        }
+
+        var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "GlobalUsings.cs"));
+        var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
+
+        GlobalUsingsHelper.CreateOrUpdate(
+            logger,
+            fileDisplayLocation,
+            projectOptions.PathForSrcGenerate,
+            requiredUsings);
+    }
+
+    private void GenerateTestGlobalUsings()
+    {
+        var requiredUsings = new List<string>
+        {
+            "System.CodeDom.Compiler",
+            "System.Collections.Generic",
+            "System.IO",
+            "System.Net.Http",
+            "System.Text",
+            "System.Text.Json",
+            "System.Text.Json.Serialization",
+            "Microsoft.AspNetCore.Http",
+            "Microsoft.Extensions.Configuration",
+            "Xunit",
+            "System.Reflection",
+            "Atc.Rest.Options",
+            "Microsoft.AspNetCore.Hosting",
+            "Microsoft.AspNetCore.Mvc.Testing",
+            "Microsoft.AspNetCore.TestHost",
+            "Microsoft.Extensions.Configuration",
+            "Microsoft.Extensions.DependencyInjection",
+            $"{projectOptions.ProjectName}.Generated",
+        };
+
+        var file = new FileInfo(Path.Combine(projectOptions.PathForTestGenerate!.FullName, "GlobalUsings.cs"));
+        var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForTestGenerate!.FullName, "test: ", StringComparison.Ordinal);
+
+        GlobalUsingsHelper.CreateOrUpdate(
+            logger,
+            fileDisplayLocation,
+            projectOptions.PathForTestGenerate!,
+            requiredUsings);
     }
 }
