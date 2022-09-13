@@ -160,6 +160,21 @@
 
 <br />
 
+## GlobalUsingsHelper
+
+>```csharp
+>public static class GlobalUsingsHelper
+>```
+
+### Static Methods
+
+#### CreateOrUpdate
+>```csharp
+>void CreateOrUpdate(ILogger logger, string fileDisplayLocation, DirectoryInfo directoryInfo, List<string> requiredUsings)
+>```
+
+<br />
+
 ## HttpClientHelper
 
 >```csharp

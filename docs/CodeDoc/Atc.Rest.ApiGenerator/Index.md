@@ -36,6 +36,7 @@
 - [DirectoryInfoHelper](Atc.Rest.ApiGenerator.Helpers.md#directoryinfohelper)
 - [GenerateAtcCodingRulesHelper](Atc.Rest.ApiGenerator.Helpers.md#generateatccodingruleshelper)
 - [GenerateHelper](Atc.Rest.ApiGenerator.Helpers.md#generatehelper)
+- [GlobalUsingsHelper](Atc.Rest.ApiGenerator.Helpers.md#globalusingshelper)
 - [HttpClientHelper](Atc.Rest.ApiGenerator.Helpers.md#httpclienthelper)
 - [LogItemHelper](Atc.Rest.ApiGenerator.Helpers.md#logitemhelper)
 - [NugetPackageReferenceHelper](Atc.Rest.ApiGenerator.Helpers.md#nugetpackagereferencehelper)
