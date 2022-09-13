@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-namespace Demo.Domain.Tests.Handlers.Users
+﻿namespace Demo.Domain.Tests.Handlers.Users
 {
     public class GetUserByEmailHandlerTests
     {

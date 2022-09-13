@@ -1,8 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Demo.Api.Generated.Contracts.Files;
-
-namespace Demo.Domain.Handlers.Files
+﻿namespace Demo.Domain.Handlers.Files
 {
     /// <summary>
     /// Handler for operation request.
