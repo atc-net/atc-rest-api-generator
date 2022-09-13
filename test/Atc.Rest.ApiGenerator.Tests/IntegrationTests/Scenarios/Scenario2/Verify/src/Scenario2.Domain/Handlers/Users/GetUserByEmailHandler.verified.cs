@@ -1,7 +1,3 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Scenario2.Api.Generated.Contracts.Users;
-
 namespace Scenario2.Domain.Handlers.Users
 {
     /// <summary>
