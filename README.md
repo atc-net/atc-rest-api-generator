@@ -172,12 +172,13 @@ The following command will generate an API that implements the offcial Pet Store
 
 ```powershell
 atc-rest-api-generator generate server all `
-    --validate-strictMode `
+    --validate-strictMode false `
     -s https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml `
     -p PetStore `
     --outputSlnPath <MY_PROJECT_FOLDER> `
     --outputSrcPath <MY_PROJECT_FOLDER>\src `
     --outputTestPath <MMY_PROJECT_FOLDER>\test `
+    --disableCodingRules `
     -v
 ```
 
@@ -186,12 +187,13 @@ to put the generated solution in a folder called `C:\PetStore`, do the following
 
 ```powershell
 atc-rest-api-generator generate server all `
-    --validate-strictMode `
+    --validate-strictMode false `
     -s https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml `
     -p PetStore `
     --outputSlnPath C:\PetStore `
     --outputSrcPath C:\PetStore\src `
     --outputTestPath C:\PetStore\test `
+    --disableCodingRules `
     -v
 ```
 
