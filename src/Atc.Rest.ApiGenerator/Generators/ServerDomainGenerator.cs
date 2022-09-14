@@ -238,9 +238,10 @@ public class ServerDomainGenerator
             "System.Threading.Tasks",
         };
 
+        var projectName = projectOptions.ProjectName.Replace(".Domain", ".Api.Generated", StringComparison.Ordinal);
         foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
         {
-            requiredUsings.Add($"{projectOptions.ProjectPrefixName}.Api.Generated.Contracts.{basePathSegmentName}");
+            requiredUsings.Add($"{projectName}.Contracts.{basePathSegmentName}");
         }
 
         var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "GlobalUsings.cs"));
