@@ -1317,7 +1317,7 @@ public class ServerHostGenerator
             "Microsoft.Extensions.Configuration",
             "Microsoft.Extensions.DependencyInjection",
             "Microsoft.Extensions.Hosting",
-            $"{projectOptions.ProjectPrefixName}.Domain",
+            projectOptions.ProjectName.Replace(".Api", ".Domain", StringComparison.Ordinal),
             $"{projectOptions.ProjectName}.Generated",
         };
 
