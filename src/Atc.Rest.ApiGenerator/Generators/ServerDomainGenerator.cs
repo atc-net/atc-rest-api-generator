@@ -30,20 +30,14 @@ public class ServerDomainGenerator
 
         ScaffoldSrc();
         GenerateSrcHandlers(projectOptions, out var sgHandlers);
-        if (projectOptions.ApiOptions.Generator.UseGlobalUsings)
-        {
-            GenerateSrcGlobalUsings();
-        }
+        GenerateSrcGlobalUsings();
 
         if (projectOptions.PathForTestGenerate is not null)
         {
             logger.LogInformation($"{AppEmojisConstants.AreaGenerateTest} Working on server domain unit-test generation ({projectOptions.ProjectName}.Tests)");
             ScaffoldTest();
             GenerateTestHandlers(projectOptions, sgHandlers);
-            if (projectOptions.ApiOptions.Generator.UseGlobalUsings)
-            {
-                GenerateTestGlobalUsings();
-            }
+            GenerateTestGlobalUsings();
         }
 
         return true;
@@ -188,11 +182,6 @@ public class ServerDomainGenerator
                 includeApiSpecification: true,
                 usingCodingRules: projectOptions.UsingCodingRules);
         }
-
-        if (projectOptions.ApiOptions.Generator.UseGlobalUsings)
-        {
-            // TODO: UseGlobalUsings
-        }
     }
 
     private void ScaffoldBasicFileDomainRegistration()
@@ -209,12 +198,6 @@ public class ServerDomainGenerator
 
         // Add class to namespace
         @namespace = @namespace.AddMembers(classDeclaration);
-
-        if (!projectOptions.ApiOptions.Generator.UseGlobalUsings)
-        {
-            // Add using statement to compilationUnit
-            compilationUnit = compilationUnit.AddUsingStatements(new[] { "System.CodeDom.Compiler" });
-        }
 
         // Add namespace to compilationUnit
         compilationUnit = compilationUnit.AddMembers(@namespace);

@@ -46,11 +46,7 @@ public class ClientCSharpApiGenerator
         }
 
         PerformCleanup();
-
-        if (projectOptions.ApiOptions.Generator.UseGlobalUsings)
-        {
-            GenerateSrcGlobalUsings();
-        }
+        GenerateSrcGlobalUsings();
 
         return true;
     }
