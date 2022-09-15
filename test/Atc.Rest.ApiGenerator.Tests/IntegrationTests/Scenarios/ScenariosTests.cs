@@ -23,11 +23,11 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
                 cliExeFile,
                 $"validate schema --specificationPath {specificationPath}");
 
-            var cliOutputLines = cliExecutionResult.output.Split(
+            var cliOutputLines = cliExecutionResult.Output.Split(
                 Environment.NewLine,
                 StringSplitOptions.RemoveEmptyEntries);
 
-            Assert.True(cliExecutionResult.isSuccessful);
+            Assert.True(cliExecutionResult.IsSuccessful);
             Assert.Contains("Schema validated successfully.", cliOutputLines[^1], StringComparison.Ordinal);
 
             //----------------------------------------------------------------------------------------
@@ -47,7 +47,7 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
                 "--disableCodingRules " +
                 "-v");
 
-            Assert.True(cliExecutionResult.isSuccessful);
+            Assert.True(cliExecutionResult.IsSuccessful);
 
             //----------------------------------------------------------------------------------------
             // Step 3:
