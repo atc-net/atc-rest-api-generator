@@ -15,13 +15,6 @@
 
 - [ListExtensions](Atc.Rest.ApiGenerator.Extensions.md#listextensions)
 
-## [Atc.Rest.ApiGenerator.Factories](Atc.Rest.ApiGenerator.Factories.md)
-
-- [ProjectApiClientFactory](Atc.Rest.ApiGenerator.Factories.md#projectapiclientfactory)
-- [ProjectApiFactory](Atc.Rest.ApiGenerator.Factories.md#projectapifactory)
-- [ProjectDomainFactory](Atc.Rest.ApiGenerator.Factories.md#projectdomainfactory)
-- [ProjectHostFactory](Atc.Rest.ApiGenerator.Factories.md#projecthostfactory)
-
 ## [Atc.Rest.ApiGenerator.Generators](Atc.Rest.ApiGenerator.Generators.md)
 
 - [ClientCSharpApiGenerator](Atc.Rest.ApiGenerator.Generators.md#clientcsharpapigenerator)

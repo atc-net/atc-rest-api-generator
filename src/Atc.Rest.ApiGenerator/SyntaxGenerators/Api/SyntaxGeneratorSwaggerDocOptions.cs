@@ -16,29 +16,16 @@ public class SyntaxGeneratorSwaggerDocOptions
         this.document = document;
     }
 
-    public string GenerateCode(bool useGlobalUsings)
+    public string GenerateCode()
         => SyntaxFactory
-            .ParseSyntaxTree(GetSyntaxTreeText(useGlobalUsings))
+            .ParseSyntaxTree(GetSyntaxTreeText())
             .GetCompilationUnitRoot()
             .ToFullString()
             .EnsureEnvironmentNewLines();
 
-    private string GetSyntaxTreeText(
-        bool useGlobalUsings)
+    private string GetSyntaxTreeText()
     {
         var sb = new StringBuilder();
-
-        if (!useGlobalUsings)
-        {
-            sb.AppendLine("using System;");
-            sb.AppendLine("using System.IO;");
-            sb.AppendLine("using Microsoft.AspNetCore.Mvc.ApiExplorer;");
-            sb.AppendLine("using Microsoft.Extensions.DependencyInjection;");
-            sb.AppendLine("using Microsoft.Extensions.Options;");
-            sb.AppendLine("using Microsoft.OpenApi.Models;");
-            sb.AppendLine("using Swashbuckle.AspNetCore.SwaggerGen;");
-            sb.AppendLine();
-        }
 
         sb.AppendLine($"namespace {fullNamespace}");
         sb.AppendLine("{");

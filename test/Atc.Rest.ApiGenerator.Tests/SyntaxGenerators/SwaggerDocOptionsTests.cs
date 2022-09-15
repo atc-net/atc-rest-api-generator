@@ -32,7 +32,7 @@ Some useful links:
         };
 
         var generator = new SyntaxGeneratorSwaggerDocOptions(GetType().Namespace!, openApiDocument);
-        code = generator.GenerateCode(useGlobalUsings: true);
+        code = generator.GenerateCode();
     }
 
     [Fact]

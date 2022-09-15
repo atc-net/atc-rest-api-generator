@@ -39,11 +39,7 @@ public class ServerApiGenerator
         GenerateContracts(operationSchemaMappings);
         GenerateEndpoints(operationSchemaMappings);
         PerformCleanup();
-
-        if (projectOptions.ApiOptions.Generator.UseGlobalUsings)
-        {
-            GenerateSrcGlobalUsings();
-        }
+        GenerateSrcGlobalUsings();
 
         return true;
     }
@@ -264,12 +260,6 @@ public class ServerApiGenerator
 
         // Add class to namespace
         @namespace = @namespace.AddMembers(classDeclaration);
-
-        if (!projectOptions.ApiOptions.Generator.UseGlobalUsings)
-        {
-            // Add using statement to compilationUnit
-            compilationUnit = compilationUnit.AddUsingStatements(new[] { "System.CodeDom.Compiler" });
-        }
 
         // Add namespace to compilationUnit
         compilationUnit = compilationUnit.AddMembers(@namespace);

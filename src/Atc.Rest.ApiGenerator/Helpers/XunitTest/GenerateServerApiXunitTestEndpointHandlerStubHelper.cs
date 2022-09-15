@@ -17,11 +17,6 @@ public static class GenerateServerApiXunitTestEndpointHandlerStubHelper
         ArgumentNullException.ThrowIfNull(endpointMethodMetadata);
 
         var sb = new StringBuilder();
-        if (!hostProjectOptions.ApiOptions.Generator.UseGlobalUsings)
-        {
-            AppendUsingStatements(sb, hostProjectOptions, endpointMethodMetadata);
-            sb.AppendLine();
-        }
 
         GenerateCodeHelper.AppendGeneratedCodeWarningComment(sb, hostProjectOptions.ToolNameAndVersion);
         AppendNamespaceAndClassStart(sb, hostProjectOptions, endpointMethodMetadata);

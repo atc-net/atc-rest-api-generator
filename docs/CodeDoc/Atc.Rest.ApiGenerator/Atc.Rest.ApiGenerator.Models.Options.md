@@ -46,10 +46,6 @@
 >```csharp
 >UseAuthorization
 >```
-#### UseGlobalUsings
->```csharp
->UseGlobalUsings
->```
 #### UseRestExtended
 >```csharp
 >UseRestExtended

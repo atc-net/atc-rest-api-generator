@@ -81,31 +81,6 @@
   -  Static Methods
      - TrimEndForEmptyValues(this IList&lt;string&gt; values)
 
-## [Atc.Rest.ApiGenerator.Factories](Atc.Rest.ApiGenerator.Factories.md)
-
-- [ProjectApiClientFactory](Atc.Rest.ApiGenerator.Factories.md#projectapiclientfactory)
-  -  Static Methods
-     - CreateUsingListForEndpoint(ApiProjectOptions apiProjectOptions, bool includeRestResults, bool hasParameter, bool hasList, bool hasSharedModel)
-     - CreateUsingListForEndpointInterface(ApiProjectOptions apiProjectOptions, bool includeRestResults, bool hasList, bool hasSharedModel)
-     - CreateUsingListForEndpointResult(ApiProjectOptions apiProjectOptions, bool includeRestResults, bool hasList, bool hasSharedModel)
-     - CreateUsingListForEndpointResultInterface(ApiProjectOptions apiProjectOptions, bool includeRestResults, bool hasList, bool hasSharedModel)
-- [ProjectApiFactory](Atc.Rest.ApiGenerator.Factories.md#projectapifactory)
-  -  Static Methods
-     - CreateUsingListForContractInterface()
-     - CreateUsingListForContractModel(OpenApiSchema apiSchema)
-     - CreateUsingListForContractParameter(IList&lt;OpenApiParameter&gt; globalParameters, IList&lt;OpenApiParameter&gt; parameters, OpenApiRequestBody requestBody, bool forClient)
-     - CreateUsingListForContractResult(OpenApiResponses responses, bool useProblemDetailsAsDefaultResponseBody, bool hasCreateContentResult)
-     - CreateUsingListForEndpoint(ApiProjectOptions apiProjectOptions, List&lt;OpenApiOperation&gt; apiOperations, bool hasSharedModel, bool includeRestResults, string focusOnSegmentName)
-- [ProjectDomainFactory](Atc.Rest.ApiGenerator.Factories.md#projectdomainfactory)
-  -  Static Methods
-     - CreateUsingListForHandler(DomainProjectOptions domainProjectOptions, string focusOnSegmentName)
-- [ProjectHostFactory](Atc.Rest.ApiGenerator.Factories.md#projecthostfactory)
-  -  Static Methods
-     - CreateUsingListForProgram()
-     - CreateUsingListForStartup(string projectName, bool useExtended)
-     - CreateUsingListForWebApiControllerBaseTest()
-     - CreateUsingListForWebApiStartupFactory(string projectName)
-
 ## [Atc.Rest.ApiGenerator.Generators](Atc.Rest.ApiGenerator.Generators.md)
 
 - [ClientCSharpApiGenerator](Atc.Rest.ApiGenerator.Generators.md#clientcsharpapigenerator)
@@ -421,7 +396,6 @@
      - Request
      - Response
      - UseAuthorization
-     - UseGlobalUsings
      - UseRestExtended
 - [ApiOptionsGeneratorRequest](Atc.Rest.ApiGenerator.Models.Options.md#apioptionsgeneratorrequest)
 - [ApiOptionsGeneratorResponse](Atc.Rest.ApiGenerator.Models.Options.md#apioptionsgeneratorresponse)
@@ -558,7 +532,7 @@
      - ToFile(FileInfo file)
 - [SyntaxGeneratorSwaggerDocOptions](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorswaggerdocoptions)
   -  Methods
-     - GenerateCode(bool useGlobalUsings)
+     - GenerateCode()
 
 ## [Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces.md)
 

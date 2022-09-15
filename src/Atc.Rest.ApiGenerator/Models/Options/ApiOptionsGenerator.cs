@@ -4,8 +4,6 @@ namespace Atc.Rest.ApiGenerator.Models.Options;
 
 public class ApiOptionsGenerator
 {
-    public bool UseGlobalUsings { get; set; } = true;
-
     public bool UseAuthorization { get; set; }
 
     public bool UseRestExtended { get; set; } = true;

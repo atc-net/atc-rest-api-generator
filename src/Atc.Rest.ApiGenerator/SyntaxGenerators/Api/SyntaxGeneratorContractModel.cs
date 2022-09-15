@@ -143,21 +143,6 @@ public class SyntaxGeneratorContractModel : ISyntaxSchemaCodeGenerator
         // Create an enum
         var enumDeclaration = SyntaxEnumFactory.Create(apiEnumSchema.Item1.EnsureFirstCharacterToUpper(), apiEnumSchema.Item2);
 
-        if (!ApiProjectOptions.ApiOptions.Generator.UseGlobalUsings)
-        {
-            if (enumDeclaration.HasAttributeOfAttributeType(typeof(FlagsAttribute)))
-            {
-                // Add using statement to compilationUnit
-                compilationUnit = compilationUnit.AddUsingStatements(new[] { "System" });
-            }
-
-            if (enumDeclaration.HasAttributeOfAttributeType(typeof(SuppressMessageAttribute)))
-            {
-                // Add using statement to compilationUnit
-                compilationUnit = compilationUnit.AddUsingStatements(new[] { "System.Diagnostics.CodeAnalysis" });
-            }
-        }
-
         // Add the enum to the namespace.
         @namespace = @namespace.AddMembers(enumDeclaration);
         return @namespace;
@@ -231,12 +216,6 @@ public class SyntaxGeneratorContractModel : ISyntaxSchemaCodeGenerator
                 methodDeclaration = methodDeclaration.WithLeadingTrivia(SyntaxDocumentationFactory.CreateForOverrideToString());
                 classDeclaration = classDeclaration.AddMembers(methodDeclaration);
             }
-        }
-
-        if (!ApiProjectOptions.ApiOptions.Generator.UseGlobalUsings)
-        {
-            // Add using statement to compilationUnit
-            compilationUnit = compilationUnit!.AddUsingStatements(ProjectApiFactory.CreateUsingListForContractModel(ApiSchema));
         }
 
         // Add the class to the namespace.
