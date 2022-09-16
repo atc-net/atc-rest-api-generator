@@ -4,58 +4,57 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace Scenario2.Api.Generated.Contracts.Orders
+namespace Scenario2.Api.Generated.Contracts.Orders;
+
+/// <summary>
+/// Parameters for operation request.
+/// Description: Update part of order by id.
+/// Operation: PatchOrdersId.
+/// Area: Orders.
+/// </summary>
+[GeneratedCode("ApiGenerator", "x.x.x.x")]
+public class PatchOrdersIdParameters
 {
     /// <summary>
-    /// Parameters for operation request.
-    /// Description: Update part of order by id.
-    /// Operation: PatchOrdersId.
-    /// Area: Orders.
+    /// The id of the order.
     /// </summary>
-    [GeneratedCode("ApiGenerator", "x.x.x.x")]
-    public class PatchOrdersIdParameters
+    [FromRoute(Name = "id")]
+    [Required]
+    public Guid Id { get; set; }
+
+    /// <summary>
+    /// The myTestHeader special key.
+    /// </summary>
+    [FromHeader(Name = "myTestHeader")]
+    [Required]
+    public string MyTestHeader { get; set; }
+
+    /// <summary>
+    /// The myTestHeaderBool special key.
+    /// </summary>
+    [FromHeader(Name = "myTestHeaderBool")]
+    [Required]
+    public bool MyTestHeaderBool { get; set; }
+
+    /// <summary>
+    /// The myTestHeaderInt special key.
+    /// </summary>
+    [FromHeader(Name = "myTestHeaderInt")]
+    [Required]
+    public int MyTestHeaderInt { get; set; }
+
+    /// <summary>
+    /// Request to update an order.
+    /// </summary>
+    [FromBody]
+    [Required]
+    public UpdateOrderRequest Request { get; set; }
+
+    /// <summary>
+    /// Converts to string.
+    /// </summary>
+    public override string ToString()
     {
-        /// <summary>
-        /// The id of the order.
-        /// </summary>
-        [FromRoute(Name = "id")]
-        [Required]
-        public Guid Id { get; set; }
-
-        /// <summary>
-        /// The myTestHeader special key.
-        /// </summary>
-        [FromHeader(Name = "myTestHeader")]
-        [Required]
-        public string MyTestHeader { get; set; }
-
-        /// <summary>
-        /// The myTestHeaderBool special key.
-        /// </summary>
-        [FromHeader(Name = "myTestHeaderBool")]
-        [Required]
-        public bool MyTestHeaderBool { get; set; }
-
-        /// <summary>
-        /// The myTestHeaderInt special key.
-        /// </summary>
-        [FromHeader(Name = "myTestHeaderInt")]
-        [Required]
-        public int MyTestHeaderInt { get; set; }
-
-        /// <summary>
-        /// Request to update an order.
-        /// </summary>
-        [FromBody]
-        [Required]
-        public UpdateOrderRequest Request { get; set; }
-
-        /// <summary>
-        /// Converts to string.
-        /// </summary>
-        public override string ToString()
-        {
-            return $"{nameof(Id)}: {Id}, {nameof(MyTestHeader)}: {MyTestHeader}, {nameof(MyTestHeaderBool)}: {MyTestHeaderBool}, {nameof(MyTestHeaderInt)}: {MyTestHeaderInt}, {nameof(Request)}: ({Request})";
-        }
+        return $"{nameof(Id)}: {Id}, {nameof(MyTestHeader)}: {MyTestHeader}, {nameof(MyTestHeaderBool)}: {MyTestHeaderBool}, {nameof(MyTestHeaderInt)}: {MyTestHeaderInt}, {nameof(Request)}: ({Request})";
     }
 }

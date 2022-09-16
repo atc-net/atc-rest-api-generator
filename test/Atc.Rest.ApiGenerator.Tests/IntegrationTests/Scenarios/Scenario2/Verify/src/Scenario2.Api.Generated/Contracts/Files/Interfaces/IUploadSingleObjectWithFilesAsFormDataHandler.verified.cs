@@ -4,22 +4,21 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace Scenario2.Api.Generated.Contracts.Files
+namespace Scenario2.Api.Generated.Contracts.Files;
+
+/// <summary>
+/// Domain Interface for RequestHandler.
+/// Description: Upload files as FormData.
+/// Operation: UploadSingleObjectWithFilesAsFormData.
+/// Area: Files.
+/// </summary>
+[GeneratedCode("ApiGenerator", "x.x.x.x")]
+public interface IUploadSingleObjectWithFilesAsFormDataHandler
 {
     /// <summary>
-    /// Domain Interface for RequestHandler.
-    /// Description: Upload files as FormData.
-    /// Operation: UploadSingleObjectWithFilesAsFormData.
-    /// Area: Files.
+    /// Execute method.
     /// </summary>
-    [GeneratedCode("ApiGenerator", "x.x.x.x")]
-    public interface IUploadSingleObjectWithFilesAsFormDataHandler
-    {
-        /// <summary>
-        /// Execute method.
-        /// </summary>
-        /// <param name="parameters">The parameters.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        Task<UploadSingleObjectWithFilesAsFormDataResult> ExecuteAsync(UploadSingleObjectWithFilesAsFormDataParameters parameters, CancellationToken cancellationToken = default);
-    }
+    /// <param name="parameters">The parameters.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    Task<UploadSingleObjectWithFilesAsFormDataResult> ExecuteAsync(UploadSingleObjectWithFilesAsFormDataParameters parameters, CancellationToken cancellationToken = default);
 }

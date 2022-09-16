@@ -1,8 +1,6 @@
 // ReSharper disable LoopCanBeConvertedToQuery
 // ReSharper disable ConvertIfStatementToConditionalTernaryExpression
 // ReSharper disable UseDeconstruction
-using Atc.Rest.ApiGenerator.Models.Options;
-
 namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
 
 public class SyntaxGeneratorContractModel : ISyntaxSchemaCodeGenerator
@@ -53,7 +51,7 @@ public class SyntaxGeneratorContractModel : ISyntaxSchemaCodeGenerator
         // Create compilationUnit
         var compilationUnit = SyntaxFactory.CompilationUnit();
 
-        NamespaceDeclarationSyntax @namespace;
+        FileScopedNamespaceDeclarationSyntax @namespace;
         if (ApiSchema.IsSchemaEnumOrPropertyEnum())
         {
             @namespace = GenerateCodeForEnum(ref compilationUnit);
@@ -89,7 +87,8 @@ public class SyntaxGeneratorContractModel : ISyntaxSchemaCodeGenerator
             .EnsureEnvironmentNewLines()
             .FormatAutoPropertiesOnOneLine()
             .FormatPublicPrivateLines()
-            .FormatDoubleLines();
+            .FormatDoubleLines()
+            .EnsureFileScopedNamespace();
     }
 
     public void ToFile()
@@ -128,7 +127,7 @@ public class SyntaxGeneratorContractModel : ISyntaxSchemaCodeGenerator
     public override string ToString()
         => $"{nameof(ApiSchemaKey)}: {ApiSchemaKey}, SegmentName: {FocusOnSegmentName}, IsShared: {IsSharedContract}, {nameof(IsEnum)}: {IsEnum}";
 
-    private NamespaceDeclarationSyntax GenerateCodeForEnum(
+    private FileScopedNamespaceDeclarationSyntax GenerateCodeForEnum(
         ref CompilationUnitSyntax compilationUnit)
     {
         IsEnum = true;
@@ -148,7 +147,7 @@ public class SyntaxGeneratorContractModel : ISyntaxSchemaCodeGenerator
         return @namespace;
     }
 
-    private NamespaceDeclarationSyntax GenerateCodeForOtherThanEnum(
+    private FileScopedNamespaceDeclarationSyntax GenerateCodeForOtherThanEnum(
         ref CompilationUnitSyntax? compilationUnit)
     {
         // Create a namespace

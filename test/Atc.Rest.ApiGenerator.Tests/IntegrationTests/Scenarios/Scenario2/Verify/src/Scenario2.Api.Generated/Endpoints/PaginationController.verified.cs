@@ -4,59 +4,58 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace Scenario2.Api.Generated.Endpoints
+namespace Scenario2.Api.Generated.Endpoints;
+
+/// <summary>
+/// Endpoint definitions.
+/// Area: Pagination.
+/// </summary>
+[ApiController]
+[Route("/api/v1/pagination")]
+[GeneratedCode("ApiGenerator", "x.x.x.x")]
+public class PaginationController : ControllerBase
 {
     /// <summary>
-    /// Endpoint definitions.
+    /// Description: Your GET endpoint.
+    /// Operation: GetPaginatedListOfInts.
     /// Area: Pagination.
     /// </summary>
-    [ApiController]
-    [Route("/api/v1/pagination")]
-    [GeneratedCode("ApiGenerator", "x.x.x.x")]
-    public class PaginationController : ControllerBase
+    [HttpGet("list/int")]
+    [ProducesResponseType(typeof(Pagination<int>), StatusCodes.Status200OK)]
+    public Task<ActionResult> GetPaginatedListOfIntsAsync([FromServices] IGetPaginatedListOfIntsHandler handler, CancellationToken cancellationToken)
     {
-        /// <summary>
-        /// Description: Your GET endpoint.
-        /// Operation: GetPaginatedListOfInts.
-        /// Area: Pagination.
-        /// </summary>
-        [HttpGet("list/int")]
-        [ProducesResponseType(typeof(Pagination<int>), StatusCodes.Status200OK)]
-        public Task<ActionResult> GetPaginatedListOfIntsAsync([FromServices] IGetPaginatedListOfIntsHandler handler, CancellationToken cancellationToken)
+        if (handler is null)
         {
-            if (handler is null)
-            {
-                throw new ArgumentNullException(nameof(handler));
-            }
-
-            return InvokeGetPaginatedListOfIntsAsync(handler, cancellationToken);
+            throw new ArgumentNullException(nameof(handler));
         }
 
-        /// <summary>
-        /// Description: Your GET endpoint.
-        /// Operation: GetPaginatedListOfStrings.
-        /// Area: Pagination.
-        /// </summary>
-        [HttpGet("list/string")]
-        [ProducesResponseType(typeof(Pagination<string>), StatusCodes.Status200OK)]
-        public Task<ActionResult> GetPaginatedListOfStringsAsync([FromServices] IGetPaginatedListOfStringsHandler handler, CancellationToken cancellationToken)
-        {
-            if (handler is null)
-            {
-                throw new ArgumentNullException(nameof(handler));
-            }
+        return InvokeGetPaginatedListOfIntsAsync(handler, cancellationToken);
+    }
 
-            return InvokeGetPaginatedListOfStringsAsync(handler, cancellationToken);
+    /// <summary>
+    /// Description: Your GET endpoint.
+    /// Operation: GetPaginatedListOfStrings.
+    /// Area: Pagination.
+    /// </summary>
+    [HttpGet("list/string")]
+    [ProducesResponseType(typeof(Pagination<string>), StatusCodes.Status200OK)]
+    public Task<ActionResult> GetPaginatedListOfStringsAsync([FromServices] IGetPaginatedListOfStringsHandler handler, CancellationToken cancellationToken)
+    {
+        if (handler is null)
+        {
+            throw new ArgumentNullException(nameof(handler));
         }
 
-        private static async Task<ActionResult> InvokeGetPaginatedListOfIntsAsync([FromServices] IGetPaginatedListOfIntsHandler handler, CancellationToken cancellationToken)
-        {
-            return await handler.ExecuteAsync(cancellationToken);
-        }
+        return InvokeGetPaginatedListOfStringsAsync(handler, cancellationToken);
+    }
 
-        private static async Task<ActionResult> InvokeGetPaginatedListOfStringsAsync([FromServices] IGetPaginatedListOfStringsHandler handler, CancellationToken cancellationToken)
-        {
-            return await handler.ExecuteAsync(cancellationToken);
-        }
+    private static async Task<ActionResult> InvokeGetPaginatedListOfIntsAsync([FromServices] IGetPaginatedListOfIntsHandler handler, CancellationToken cancellationToken)
+    {
+        return await handler.ExecuteAsync(cancellationToken);
+    }
+
+    private static async Task<ActionResult> InvokeGetPaginatedListOfStringsAsync([FromServices] IGetPaginatedListOfStringsHandler handler, CancellationToken cancellationToken)
+    {
+        return await handler.ExecuteAsync(cancellationToken);
     }
 }

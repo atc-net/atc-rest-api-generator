@@ -4,21 +4,20 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace Scenario2.Api.Generated.Contracts.RouteWithDash
+namespace Scenario2.Api.Generated.Contracts.RouteWithDash;
+
+/// <summary>
+/// Domain Interface for RequestHandler.
+/// Description: Your GET endpoint.
+/// Operation: GetRouteWithDash.
+/// Area: RouteWithDash.
+/// </summary>
+[GeneratedCode("ApiGenerator", "x.x.x.x")]
+public interface IGetRouteWithDashHandler
 {
     /// <summary>
-    /// Domain Interface for RequestHandler.
-    /// Description: Your GET endpoint.
-    /// Operation: GetRouteWithDash.
-    /// Area: RouteWithDash.
+    /// Execute method.
     /// </summary>
-    [GeneratedCode("ApiGenerator", "x.x.x.x")]
-    public interface IGetRouteWithDashHandler
-    {
-        /// <summary>
-        /// Execute method.
-        /// </summary>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        Task<GetRouteWithDashResult> ExecuteAsync(CancellationToken cancellationToken = default);
-    }
+    /// <param name="cancellationToken">The cancellation token.</param>
+    Task<GetRouteWithDashResult> ExecuteAsync(CancellationToken cancellationToken = default);
 }

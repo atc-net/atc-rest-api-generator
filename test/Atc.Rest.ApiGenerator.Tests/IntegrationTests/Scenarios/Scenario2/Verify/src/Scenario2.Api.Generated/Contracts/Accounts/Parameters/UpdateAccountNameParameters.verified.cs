@@ -4,36 +4,35 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace Scenario2.Api.Generated.Contracts.Accounts
+namespace Scenario2.Api.Generated.Contracts.Accounts;
+
+/// <summary>
+/// Parameters for operation request.
+/// Description: Update name of account.
+/// Operation: UpdateAccountName.
+/// Area: Accounts.
+/// </summary>
+[GeneratedCode("ApiGenerator", "x.x.x.x")]
+public class UpdateAccountNameParameters
 {
     /// <summary>
-    /// Parameters for operation request.
-    /// Description: Update name of account.
-    /// Operation: UpdateAccountName.
-    /// Area: Accounts.
+    /// The accountId.
     /// </summary>
-    [GeneratedCode("ApiGenerator", "x.x.x.x")]
-    public class UpdateAccountNameParameters
+    [FromRoute(Name = "accountId")]
+    [Required]
+    public Guid AccountId { get; set; }
+
+    /// <summary>
+    /// The account name.
+    /// </summary>
+    [FromHeader(Name = "name")]
+    public string Name { get; set; }
+
+    /// <summary>
+    /// Converts to string.
+    /// </summary>
+    public override string ToString()
     {
-        /// <summary>
-        /// The accountId.
-        /// </summary>
-        [FromRoute(Name = "accountId")]
-        [Required]
-        public Guid AccountId { get; set; }
-
-        /// <summary>
-        /// The account name.
-        /// </summary>
-        [FromHeader(Name = "name")]
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Converts to string.
-        /// </summary>
-        public override string ToString()
-        {
-            return $"{nameof(AccountId)}: {AccountId}, {nameof(Name)}: {Name}";
-        }
+        return $"{nameof(AccountId)}: {AccountId}, {nameof(Name)}: {Name}";
     }
 }

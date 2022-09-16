@@ -208,7 +208,8 @@ public class SyntaxGeneratorContractParameter : ISyntaxOperationCodeGenerator
             .EnsureEnvironmentNewLines()
             .FormatAutoPropertiesOnOneLine()
             .FormatPublicPrivateLines()
-            .FormatDoubleLines();
+            .FormatDoubleLines()
+            .EnsureFileScopedNamespace();
     }
 
     public void ToFile()

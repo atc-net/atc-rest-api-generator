@@ -4,37 +4,36 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace Scenario2.Api.Generated.Contracts.Users
+namespace Scenario2.Api.Generated.Contracts.Users;
+
+/// <summary>
+/// Results for operation request.
+/// Description: Delete user by id.
+/// Operation: DeleteUserById.
+/// Area: Users.
+/// </summary>
+[GeneratedCode("ApiGenerator", "x.x.x.x")]
+public class DeleteUserByIdResult : ResultBase
 {
+    private DeleteUserByIdResult(ActionResult result) : base(result) { }
+
     /// <summary>
-    /// Results for operation request.
-    /// Description: Delete user by id.
-    /// Operation: DeleteUserById.
-    /// Area: Users.
+    /// 200 - Ok response.
     /// </summary>
-    [GeneratedCode("ApiGenerator", "x.x.x.x")]
-    public class DeleteUserByIdResult : ResultBase
-    {
-        private DeleteUserByIdResult(ActionResult result) : base(result) { }
+    public static DeleteUserByIdResult Ok(string? message = null) => new DeleteUserByIdResult(new OkObjectResult(message));
 
-        /// <summary>
-        /// 200 - Ok response.
-        /// </summary>
-        public static DeleteUserByIdResult Ok(string? message = null) => new DeleteUserByIdResult(new OkObjectResult(message));
+    /// <summary>
+    /// 404 - NotFound response.
+    /// </summary>
+    public static DeleteUserByIdResult NotFound(string? message = null) => new DeleteUserByIdResult(new NotFoundObjectResult(message));
 
-        /// <summary>
-        /// 404 - NotFound response.
-        /// </summary>
-        public static DeleteUserByIdResult NotFound(string? message = null) => new DeleteUserByIdResult(new NotFoundObjectResult(message));
+    /// <summary>
+    /// 409 - Conflict response.
+    /// </summary>
+    public static DeleteUserByIdResult Conflict(string? error = null) => new DeleteUserByIdResult(new ConflictObjectResult(error));
 
-        /// <summary>
-        /// 409 - Conflict response.
-        /// </summary>
-        public static DeleteUserByIdResult Conflict(string? error = null) => new DeleteUserByIdResult(new ConflictObjectResult(error));
-
-        /// <summary>
-        /// Performs an implicit conversion from DeleteUserByIdResult to ActionResult.
-        /// </summary>
-        public static implicit operator DeleteUserByIdResult(string response) => Ok(response);
-    }
+    /// <summary>
+    /// Performs an implicit conversion from DeleteUserByIdResult to ActionResult.
+    /// </summary>
+    public static implicit operator DeleteUserByIdResult(string response) => Ok(response);
 }

@@ -4,16 +4,15 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace Scenario2.Api.Generated.Contracts
+namespace Scenario2.Api.Generated.Contracts;
+
+[SuppressMessage("Maintainability Rules", "SA1413:Use trailing comma in multi-line initializers", Justification = "OK.")]
+[Flags]
+public enum ColorType
 {
-    [SuppressMessage("Maintainability Rules", "SA1413:Use trailing comma in multi-line initializers", Justification = "OK.")]
-    [Flags]
-    public enum ColorType
-    {
-        None = 0,
-        Black = 1,
-        White = 2,
-        Yellow = 4,
-        Red = 8
-    }
+    None = 0,
+    Black = 1,
+    White = 2,
+    Yellow = 4,
+    Red = 8
 }

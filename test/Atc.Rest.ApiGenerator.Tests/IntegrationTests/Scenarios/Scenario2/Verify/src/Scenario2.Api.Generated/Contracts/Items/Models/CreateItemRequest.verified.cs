@@ -4,29 +4,28 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace Scenario2.Api.Generated.Contracts.Items
+namespace Scenario2.Api.Generated.Contracts.Items;
+
+/// <summary>
+/// CreateItemRequest.
+/// </summary>
+[GeneratedCode("ApiGenerator", "x.x.x.x")]
+public class CreateItemRequest
 {
     /// <summary>
-    /// CreateItemRequest.
+    /// Item.
     /// </summary>
-    [GeneratedCode("ApiGenerator", "x.x.x.x")]
-    public class CreateItemRequest
+    [Required]
+    public Item Item { get; set; }
+
+    [Required]
+    public List<Item> MyItems { get; set; }
+
+    /// <summary>
+    /// Converts to string.
+    /// </summary>
+    public override string ToString()
     {
-        /// <summary>
-        /// Item.
-        /// </summary>
-        [Required]
-        public Item Item { get; set; }
-
-        [Required]
-        public List<Item> MyItems { get; set; }
-
-        /// <summary>
-        /// Converts to string.
-        /// </summary>
-        public override string ToString()
-        {
-            return $"{nameof(Item)}: ({Item}), {nameof(MyItems)}.Count: {MyItems?.Count ?? 0}";
-        }
+        return $"{nameof(Item)}: ({Item}), {nameof(MyItems)}.Count: {MyItems?.Count ?? 0}";
     }
 }

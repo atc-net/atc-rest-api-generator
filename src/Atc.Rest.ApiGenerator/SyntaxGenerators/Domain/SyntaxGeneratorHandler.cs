@@ -91,7 +91,8 @@ public class SyntaxGeneratorHandler
             .NormalizeWhitespace()
             .ToFullString()
             .EnsureEnvironmentNewLines()
-            .FormatCs1998();
+            .FormatCs1998()
+            .EnsureFileScopedNamespace();
     }
 
     public FileInfo GetFilePath()

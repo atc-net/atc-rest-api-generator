@@ -4,30 +4,29 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace Scenario2.Api.Generated.Contracts.Files
+namespace Scenario2.Api.Generated.Contracts.Files;
+
+/// <summary>
+/// Parameters for operation request.
+/// Description: Get File By Id.
+/// Operation: GetFileById.
+/// Area: Files.
+/// </summary>
+[GeneratedCode("ApiGenerator", "x.x.x.x")]
+public class GetFileByIdParameters
 {
     /// <summary>
-    /// Parameters for operation request.
-    /// Description: Get File By Id.
-    /// Operation: GetFileById.
-    /// Area: Files.
+    /// The file id.
     /// </summary>
-    [GeneratedCode("ApiGenerator", "x.x.x.x")]
-    public class GetFileByIdParameters
-    {
-        /// <summary>
-        /// The file id.
-        /// </summary>
-        [FromRoute(Name = "id")]
-        [Required]
-        public string Id { get; set; }
+    [FromRoute(Name = "id")]
+    [Required]
+    public string Id { get; set; }
 
-        /// <summary>
-        /// Converts to string.
-        /// </summary>
-        public override string ToString()
-        {
-            return $"{nameof(Id)}: {Id}";
-        }
+    /// <summary>
+    /// Converts to string.
+    /// </summary>
+    public override string ToString()
+    {
+        return $"{nameof(Id)}: {Id}";
     }
 }

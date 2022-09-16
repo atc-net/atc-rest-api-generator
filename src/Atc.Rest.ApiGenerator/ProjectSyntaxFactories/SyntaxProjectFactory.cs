@@ -2,7 +2,7 @@ namespace Atc.Rest.ApiGenerator.ProjectSyntaxFactories;
 
 internal static class SyntaxProjectFactory
 {
-    public static NamespaceDeclarationSyntax CreateNamespace(
+    public static FileScopedNamespaceDeclarationSyntax CreateNamespace(
         BaseProjectOptions baseProjectOptions,
         bool withAutoGen = true)
     {
@@ -14,16 +14,16 @@ internal static class SyntaxProjectFactory
 
         if (withAutoGen)
         {
-            return SyntaxNamespaceDeclarationFactory.Create(
+            return SyntaxFileScopedNamespaceDeclarationFactory.Create(
                 baseProjectOptions.ToolNameAndVersion,
                 fullNamespace);
         }
 
-        return SyntaxNamespaceDeclarationFactory.Create(
+        return SyntaxFileScopedNamespaceDeclarationFactory.Create(
             fullNamespace);
     }
 
-    public static NamespaceDeclarationSyntax CreateNamespace(
+    public static FileScopedNamespaceDeclarationSyntax CreateNamespace(
         BaseProjectOptions baseProjectOptions,
         string namespacePart,
         bool withAutoGen = true)
@@ -45,15 +45,15 @@ internal static class SyntaxProjectFactory
 
         if (withAutoGen)
         {
-            return SyntaxNamespaceDeclarationFactory.Create(
+            return SyntaxFileScopedNamespaceDeclarationFactory.Create(
                 baseProjectOptions.ToolNameAndVersion,
                 fullNamespace);
         }
 
-        return SyntaxNamespaceDeclarationFactory.Create(fullNamespace);
+        return SyntaxFileScopedNamespaceDeclarationFactory.Create(fullNamespace);
     }
 
-    public static NamespaceDeclarationSyntax CreateNamespace(
+    public static FileScopedNamespaceDeclarationSyntax CreateNamespace(
         BaseProjectOptions baseProjectOptions,
         string namespacePart,
         string focusOnSegmentName,
@@ -77,11 +77,11 @@ internal static class SyntaxProjectFactory
 
         if (withAutoGen)
         {
-            return SyntaxNamespaceDeclarationFactory.Create(
+            return SyntaxFileScopedNamespaceDeclarationFactory.Create(
                 baseProjectOptions.ToolNameAndVersion,
                 fullNamespace);
         }
 
-        return SyntaxNamespaceDeclarationFactory.Create(fullNamespace);
+        return SyntaxFileScopedNamespaceDeclarationFactory.Create(fullNamespace);
     }
 }

@@ -91,7 +91,8 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
             .FormatPublicPrivateLines()
             .FormatDoubleLines()
             .FormatBracketSpacing()
-            .FormatConstructorWithInheritResult();
+            .FormatConstructorWithInheritResult()
+            .EnsureFileScopedNamespace();
     }
 
     public void ToFile()

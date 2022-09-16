@@ -4,22 +4,21 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace Scenario2.Api.Generated.Contracts.Users
+namespace Scenario2.Api.Generated.Contracts.Users;
+
+/// <summary>
+/// Domain Interface for RequestHandler.
+/// Description: Create a new user.
+/// Operation: PostUser.
+/// Area: Users.
+/// </summary>
+[GeneratedCode("ApiGenerator", "x.x.x.x")]
+public interface IPostUserHandler
 {
     /// <summary>
-    /// Domain Interface for RequestHandler.
-    /// Description: Create a new user.
-    /// Operation: PostUser.
-    /// Area: Users.
+    /// Execute method.
     /// </summary>
-    [GeneratedCode("ApiGenerator", "x.x.x.x")]
-    public interface IPostUserHandler
-    {
-        /// <summary>
-        /// Execute method.
-        /// </summary>
-        /// <param name="parameters">The parameters.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        Task<PostUserResult> ExecuteAsync(PostUserParameters parameters, CancellationToken cancellationToken = default);
-    }
+    /// <param name="parameters">The parameters.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    Task<PostUserResult> ExecuteAsync(PostUserParameters parameters, CancellationToken cancellationToken = default);
 }

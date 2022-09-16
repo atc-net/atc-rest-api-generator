@@ -4,21 +4,20 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace Scenario2.Api.Generated.Contracts.Eventargs
+namespace Scenario2.Api.Generated.Contracts.Eventargs;
+
+/// <summary>
+/// Domain Interface for RequestHandler.
+/// Description: Get EventArgs List.
+/// Operation: GetEventArgs.
+/// Area: Eventargs.
+/// </summary>
+[GeneratedCode("ApiGenerator", "x.x.x.x")]
+public interface IGetEventArgsHandler
 {
     /// <summary>
-    /// Domain Interface for RequestHandler.
-    /// Description: Get EventArgs List.
-    /// Operation: GetEventArgs.
-    /// Area: Eventargs.
+    /// Execute method.
     /// </summary>
-    [GeneratedCode("ApiGenerator", "x.x.x.x")]
-    public interface IGetEventArgsHandler
-    {
-        /// <summary>
-        /// Execute method.
-        /// </summary>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        Task<GetEventArgsResult> ExecuteAsync(CancellationToken cancellationToken = default);
-    }
+    /// <param name="cancellationToken">The cancellation token.</param>
+    Task<GetEventArgsResult> ExecuteAsync(CancellationToken cancellationToken = default);
 }

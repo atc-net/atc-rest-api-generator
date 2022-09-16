@@ -4,27 +4,26 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace Scenario2.Api.Generated.Contracts.Files
+namespace Scenario2.Api.Generated.Contracts.Files;
+
+/// <summary>
+/// Results for operation request.
+/// Description: Get File By Id.
+/// Operation: GetFileById.
+/// Area: Files.
+/// </summary>
+[GeneratedCode("ApiGenerator", "x.x.x.x")]
+public class GetFileByIdResult : ResultBase
 {
+    private GetFileByIdResult(ActionResult result) : base(result) { }
+
     /// <summary>
-    /// Results for operation request.
-    /// Description: Get File By Id.
-    /// Operation: GetFileById.
-    /// Area: Files.
+    /// 200 - Ok response.
     /// </summary>
-    [GeneratedCode("ApiGenerator", "x.x.x.x")]
-    public class GetFileByIdResult : ResultBase
-    {
-        private GetFileByIdResult(ActionResult result) : base(result) { }
+    public static GetFileByIdResult Ok(byte[] bytes, string fileName) => new GetFileByIdResult(ResultFactory.CreateFileContentResult(bytes, fileName));
 
-        /// <summary>
-        /// 200 - Ok response.
-        /// </summary>
-        public static GetFileByIdResult Ok(byte[] bytes, string fileName) => new GetFileByIdResult(ResultFactory.CreateFileContentResult(bytes, fileName));
-
-        /// <summary>
-        /// 404 - NotFound response.
-        /// </summary>
-        public static GetFileByIdResult NotFound(string? message = null) => new GetFileByIdResult(new NotFoundObjectResult(message));
-    }
+    /// <summary>
+    /// 404 - NotFound response.
+    /// </summary>
+    public static GetFileByIdResult NotFound(string? message = null) => new GetFileByIdResult(new NotFoundObjectResult(message));
 }

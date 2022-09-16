@@ -89,7 +89,8 @@ public class SyntaxGeneratorContractInterface : ISyntaxOperationCodeGenerator
         return Code
             .NormalizeWhitespace()
             .ToFullString()
-            .EnsureEnvironmentNewLines();
+            .EnsureEnvironmentNewLines()
+            .EnsureFileScopedNamespace();
     }
 
     public void ToFile()

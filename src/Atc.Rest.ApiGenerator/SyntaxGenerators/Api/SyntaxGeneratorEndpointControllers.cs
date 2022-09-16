@@ -110,7 +110,8 @@ public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointContro
         return Code
             .NormalizeWhitespace()
             .ToFullString()
-            .EnsureEnvironmentNewLines();
+            .EnsureEnvironmentNewLines()
+            .EnsureFileScopedNamespace();
     }
 
     public void ToFile()

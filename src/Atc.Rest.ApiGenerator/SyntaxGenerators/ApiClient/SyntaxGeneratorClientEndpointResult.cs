@@ -82,7 +82,8 @@ public class SyntaxGeneratorClientEndpointResult : SyntaxGeneratorClientEndpoint
             .NormalizeWhitespace()
             .ToFullString()
             .EnsureEnvironmentNewLines()
-            .FormatClientEndpointResult();
+            .FormatClientEndpointResult()
+            .EnsureFileScopedNamespace();
     }
 
     public void ToFile()

@@ -4,17 +4,16 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace Scenario2.Api.Generated.Contracts.Users
+namespace Scenario2.Api.Generated.Contracts.Users;
+
+/// <summary>
+/// A list of users.
+/// </summary>
+[GeneratedCode("ApiGenerator", "x.x.x.x")]
+public class Users
 {
     /// <summary>
-    /// A list of users.
+    /// A list of User.
     /// </summary>
-    [GeneratedCode("ApiGenerator", "x.x.x.x")]
-    public class Users
-    {
-        /// <summary>
-        /// A list of User.
-        /// </summary>
-        public List<User> UserList { get; set; } = new List<User>();
-    }
+    public List<User> UserList { get; set; } = new List<User>();
 }

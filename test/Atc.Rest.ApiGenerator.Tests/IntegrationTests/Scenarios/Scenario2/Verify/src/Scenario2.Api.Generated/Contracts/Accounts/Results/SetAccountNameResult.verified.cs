@@ -4,27 +4,26 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace Scenario2.Api.Generated.Contracts.Accounts
+namespace Scenario2.Api.Generated.Contracts.Accounts;
+
+/// <summary>
+/// Results for operation request.
+/// Description: Set name of account.
+/// Operation: SetAccountName.
+/// Area: Accounts.
+/// </summary>
+[GeneratedCode("ApiGenerator", "x.x.x.x")]
+public class SetAccountNameResult : ResultBase
 {
+    private SetAccountNameResult(ActionResult result) : base(result) { }
+
     /// <summary>
-    /// Results for operation request.
-    /// Description: Set name of account.
-    /// Operation: SetAccountName.
-    /// Area: Accounts.
+    /// 200 - Ok response.
     /// </summary>
-    [GeneratedCode("ApiGenerator", "x.x.x.x")]
-    public class SetAccountNameResult : ResultBase
-    {
-        private SetAccountNameResult(ActionResult result) : base(result) { }
+    public static SetAccountNameResult Ok(string? message = null) => new SetAccountNameResult(new OkObjectResult(message));
 
-        /// <summary>
-        /// 200 - Ok response.
-        /// </summary>
-        public static SetAccountNameResult Ok(string? message = null) => new SetAccountNameResult(new OkObjectResult(message));
-
-        /// <summary>
-        /// Performs an implicit conversion from SetAccountNameResult to ActionResult.
-        /// </summary>
-        public static implicit operator SetAccountNameResult(string response) => Ok(response);
-    }
+    /// <summary>
+    /// Performs an implicit conversion from SetAccountNameResult to ActionResult.
+    /// </summary>
+    public static implicit operator SetAccountNameResult(string response) => Ok(response);
 }

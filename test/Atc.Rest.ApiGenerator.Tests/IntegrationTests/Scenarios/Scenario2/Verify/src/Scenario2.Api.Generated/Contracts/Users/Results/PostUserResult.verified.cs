@@ -4,32 +4,31 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace Scenario2.Api.Generated.Contracts.Users
+namespace Scenario2.Api.Generated.Contracts.Users;
+
+/// <summary>
+/// Results for operation request.
+/// Description: Create a new user.
+/// Operation: PostUser.
+/// Area: Users.
+/// </summary>
+[GeneratedCode("ApiGenerator", "x.x.x.x")]
+public class PostUserResult : ResultBase
 {
+    private PostUserResult(ActionResult result) : base(result) { }
+
     /// <summary>
-    /// Results for operation request.
-    /// Description: Create a new user.
-    /// Operation: PostUser.
-    /// Area: Users.
+    /// 201 - Created response.
     /// </summary>
-    [GeneratedCode("ApiGenerator", "x.x.x.x")]
-    public class PostUserResult : ResultBase
-    {
-        private PostUserResult(ActionResult result) : base(result) { }
+    public static PostUserResult Created() => new PostUserResult(new StatusCodeResult(StatusCodes.Status201Created));
 
-        /// <summary>
-        /// 201 - Created response.
-        /// </summary>
-        public static PostUserResult Created() => new PostUserResult(new StatusCodeResult(StatusCodes.Status201Created));
+    /// <summary>
+    /// 400 - BadRequest response.
+    /// </summary>
+    public static PostUserResult BadRequest(string message) => new PostUserResult(new BadRequestObjectResult(message));
 
-        /// <summary>
-        /// 400 - BadRequest response.
-        /// </summary>
-        public static PostUserResult BadRequest(string message) => new PostUserResult(new BadRequestObjectResult(message));
-
-        /// <summary>
-        /// 409 - Conflict response.
-        /// </summary>
-        public static PostUserResult Conflict(string? error = null) => new PostUserResult(new ConflictObjectResult(error));
-    }
+    /// <summary>
+    /// 409 - Conflict response.
+    /// </summary>
+    public static PostUserResult Conflict(string? error = null) => new PostUserResult(new ConflictObjectResult(error));
 }
