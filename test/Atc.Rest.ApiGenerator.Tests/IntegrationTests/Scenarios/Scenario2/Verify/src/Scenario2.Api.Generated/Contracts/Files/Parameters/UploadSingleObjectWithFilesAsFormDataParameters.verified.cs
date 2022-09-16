@@ -4,27 +4,26 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace Scenario2.Api.Generated.Contracts.Files
-{
-    /// <summary>
-    /// Parameters for operation request.
-    /// Description: Upload files as FormData.
-    /// Operation: UploadSingleObjectWithFilesAsFormData.
-    /// Area: Files.
-    /// </summary>
-    [GeneratedCode("ApiGenerator", "x.x.x.x")]
-    public class UploadSingleObjectWithFilesAsFormDataParameters
-    {
-        [FromForm]
-        [Required]
-        public FilesAsFormDataRequest Request { get; set; }
+namespace Scenario2.Api.Generated.Contracts.Files;
 
-        /// <summary>
-        /// Converts to string.
-        /// </summary>
-        public override string ToString()
-        {
-            return $"{nameof(Request)}: ({Request})";
-        }
+/// <summary>
+/// Parameters for operation request.
+/// Description: Upload files as FormData.
+/// Operation: UploadSingleObjectWithFilesAsFormData.
+/// Area: Files.
+/// </summary>
+[GeneratedCode("ApiGenerator", "x.x.x.x")]
+public class UploadSingleObjectWithFilesAsFormDataParameters
+{
+    [FromForm]
+    [Required]
+    public FilesAsFormDataRequest Request { get; set; }
+
+    /// <summary>
+    /// Converts to string.
+    /// </summary>
+    public override string ToString()
+    {
+        return $"{nameof(Request)}: ({Request})";
     }
 }

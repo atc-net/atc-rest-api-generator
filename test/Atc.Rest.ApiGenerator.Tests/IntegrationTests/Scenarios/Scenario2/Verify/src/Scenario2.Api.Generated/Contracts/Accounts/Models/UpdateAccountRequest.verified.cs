@@ -4,22 +4,21 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace Scenario2.Api.Generated.Contracts.Accounts
-{
-    /// <summary>
-    /// UpdateAccountRequest.
-    /// </summary>
-    [GeneratedCode("ApiGenerator", "x.x.x.x")]
-    public class UpdateAccountRequest
-    {
-        public string Name { get; set; }
+namespace Scenario2.Api.Generated.Contracts.Accounts;
 
-        /// <summary>
-        /// Converts to string.
-        /// </summary>
-        public override string ToString()
-        {
-            return $"{nameof(Name)}: {Name}";
-        }
+/// <summary>
+/// UpdateAccountRequest.
+/// </summary>
+[GeneratedCode("ApiGenerator", "x.x.x.x")]
+public class UpdateAccountRequest
+{
+    public string Name { get; set; }
+
+    /// <summary>
+    /// Converts to string.
+    /// </summary>
+    public override string ToString()
+    {
+        return $"{nameof(Name)}: {Name}";
     }
 }

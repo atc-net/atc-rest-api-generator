@@ -21,7 +21,8 @@ public class SyntaxGeneratorSwaggerDocOptions
             .ParseSyntaxTree(GetSyntaxTreeText())
             .GetCompilationUnitRoot()
             .ToFullString()
-            .EnsureEnvironmentNewLines();
+            .EnsureEnvironmentNewLines()
+            .EnsureFileScopedNamespace();
 
     private string GetSyntaxTreeText()
     {

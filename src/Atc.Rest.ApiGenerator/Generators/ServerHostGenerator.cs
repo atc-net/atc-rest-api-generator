@@ -1028,7 +1028,8 @@ public class ServerHostGenerator
         var codeAsString = compilationUnit
             .NormalizeWhitespace()
             .ToFullString()
-            .EnsureEnvironmentNewLines();
+            .EnsureEnvironmentNewLines()
+            .EnsureFileScopedNamespace();
 
         var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "Program.cs"));
         if (file.Exists)
@@ -1079,7 +1080,8 @@ public class ServerHostGenerator
             .EnsureEnvironmentNewLines()
             .FormatAutoPropertiesOnOneLine()
             .FormatRemoveEmptyBracketsInitialize()
-            .FormatPublicPrivateLines();
+            .FormatPublicPrivateLines()
+            .EnsureFileScopedNamespace();
 
         var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "Startup.cs"));
 
@@ -1183,7 +1185,8 @@ public class ServerHostGenerator
             .NormalizeWhitespace()
             .ToFullString()
             .EnsureEnvironmentNewLines()
-            .EnsureNewlineAfterMethod("partial void ModifyConfiguration(IConfigurationBuilder config);");
+            .EnsureNewlineAfterMethod("partial void ModifyConfiguration(IConfigurationBuilder config);")
+            .EnsureFileScopedNamespace();
 
         var file = new FileInfo(Path.Combine(projectOptions.PathForTestGenerate!.FullName, "WebApiStartupFactory.cs"));
         var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForTestGenerate.FullName, "test: ", StringComparison.Ordinal);
@@ -1242,7 +1245,8 @@ public class ServerHostGenerator
         var codeAsString = compilationUnit
             .NormalizeWhitespace()
             .ToFullString()
-            .EnsureEnvironmentNewLines();
+            .EnsureEnvironmentNewLines()
+            .EnsureFileScopedNamespace();
 
         var file = new FileInfo(Path.Combine(projectOptions.PathForTestGenerate!.FullName, "WebApiControllerBaseTest.cs"));
         var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForTestGenerate.FullName, "test: ", StringComparison.Ordinal);

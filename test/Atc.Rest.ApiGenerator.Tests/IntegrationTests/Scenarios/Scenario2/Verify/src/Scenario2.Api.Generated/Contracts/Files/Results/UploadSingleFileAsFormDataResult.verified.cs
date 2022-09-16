@@ -4,27 +4,26 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace Scenario2.Api.Generated.Contracts.Files
+namespace Scenario2.Api.Generated.Contracts.Files;
+
+/// <summary>
+/// Results for operation request.
+/// Description: Upload a file as OctetStream.
+/// Operation: UploadSingleFileAsFormData.
+/// Area: Files.
+/// </summary>
+[GeneratedCode("ApiGenerator", "x.x.x.x")]
+public class UploadSingleFileAsFormDataResult : ResultBase
 {
+    private UploadSingleFileAsFormDataResult(ActionResult result) : base(result) { }
+
     /// <summary>
-    /// Results for operation request.
-    /// Description: Upload a file as OctetStream.
-    /// Operation: UploadSingleFileAsFormData.
-    /// Area: Files.
+    /// 200 - Ok response.
     /// </summary>
-    [GeneratedCode("ApiGenerator", "x.x.x.x")]
-    public class UploadSingleFileAsFormDataResult : ResultBase
-    {
-        private UploadSingleFileAsFormDataResult(ActionResult result) : base(result) { }
+    public static UploadSingleFileAsFormDataResult Ok(string? message = null) => new UploadSingleFileAsFormDataResult(new OkObjectResult(message));
 
-        /// <summary>
-        /// 200 - Ok response.
-        /// </summary>
-        public static UploadSingleFileAsFormDataResult Ok(string? message = null) => new UploadSingleFileAsFormDataResult(new OkObjectResult(message));
-
-        /// <summary>
-        /// Performs an implicit conversion from UploadSingleFileAsFormDataResult to ActionResult.
-        /// </summary>
-        public static implicit operator UploadSingleFileAsFormDataResult(string response) => Ok(response);
-    }
+    /// <summary>
+    /// Performs an implicit conversion from UploadSingleFileAsFormDataResult to ActionResult.
+    /// </summary>
+    public static implicit operator UploadSingleFileAsFormDataResult(string response) => Ok(response);
 }

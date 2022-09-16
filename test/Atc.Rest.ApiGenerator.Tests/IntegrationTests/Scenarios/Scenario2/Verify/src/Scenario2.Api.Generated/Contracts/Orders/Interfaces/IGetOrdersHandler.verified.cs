@@ -4,22 +4,21 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace Scenario2.Api.Generated.Contracts.Orders
+namespace Scenario2.Api.Generated.Contracts.Orders;
+
+/// <summary>
+/// Domain Interface for RequestHandler.
+/// Description: Get orders.
+/// Operation: GetOrders.
+/// Area: Orders.
+/// </summary>
+[GeneratedCode("ApiGenerator", "x.x.x.x")]
+public interface IGetOrdersHandler
 {
     /// <summary>
-    /// Domain Interface for RequestHandler.
-    /// Description: Get orders.
-    /// Operation: GetOrders.
-    /// Area: Orders.
+    /// Execute method.
     /// </summary>
-    [GeneratedCode("ApiGenerator", "x.x.x.x")]
-    public interface IGetOrdersHandler
-    {
-        /// <summary>
-        /// Execute method.
-        /// </summary>
-        /// <param name="parameters">The parameters.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        Task<GetOrdersResult> ExecuteAsync(GetOrdersParameters parameters, CancellationToken cancellationToken = default);
-    }
+    /// <param name="parameters">The parameters.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    Task<GetOrdersResult> ExecuteAsync(GetOrdersParameters parameters, CancellationToken cancellationToken = default);
 }

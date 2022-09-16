@@ -4,27 +4,26 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace Scenario2.Api.Generated.Contracts.Items
-{
-    /// <summary>
-    /// Parameters for operation request.
-    /// Description: Create a new item.
-    /// Operation: CreateItem.
-    /// Area: Items.
-    /// </summary>
-    [GeneratedCode("ApiGenerator", "x.x.x.x")]
-    public class CreateItemParameters
-    {
-        [FromBody]
-        [Required]
-        public CreateItemRequest Request { get; set; }
+namespace Scenario2.Api.Generated.Contracts.Items;
 
-        /// <summary>
-        /// Converts to string.
-        /// </summary>
-        public override string ToString()
-        {
-            return $"{nameof(Request)}: ({Request})";
-        }
+/// <summary>
+/// Parameters for operation request.
+/// Description: Create a new item.
+/// Operation: CreateItem.
+/// Area: Items.
+/// </summary>
+[GeneratedCode("ApiGenerator", "x.x.x.x")]
+public class CreateItemParameters
+{
+    [FromBody]
+    [Required]
+    public CreateItemRequest Request { get; set; }
+
+    /// <summary>
+    /// Converts to string.
+    /// </summary>
+    public override string ToString()
+    {
+        return $"{nameof(Request)}: ({Request})";
     }
 }

@@ -4,32 +4,31 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace Scenario2.Api.Generated.Contracts.Files
+namespace Scenario2.Api.Generated.Contracts.Files;
+
+/// <summary>
+/// Results for operation request.
+/// Description: Upload a file as FormData.
+/// Operation: UploadSingleObjectWithFileAsFormData.
+/// Area: Files.
+/// </summary>
+[GeneratedCode("ApiGenerator", "x.x.x.x")]
+public class UploadSingleObjectWithFileAsFormDataResult : ResultBase
 {
+    private UploadSingleObjectWithFileAsFormDataResult(ActionResult result) : base(result) { }
+
     /// <summary>
-    /// Results for operation request.
-    /// Description: Upload a file as FormData.
-    /// Operation: UploadSingleObjectWithFileAsFormData.
-    /// Area: Files.
+    /// 200 - Ok response.
     /// </summary>
-    [GeneratedCode("ApiGenerator", "x.x.x.x")]
-    public class UploadSingleObjectWithFileAsFormDataResult : ResultBase
-    {
-        private UploadSingleObjectWithFileAsFormDataResult(ActionResult result) : base(result) { }
+    public static UploadSingleObjectWithFileAsFormDataResult Ok(string? message = null) => new UploadSingleObjectWithFileAsFormDataResult(new OkObjectResult(message));
 
-        /// <summary>
-        /// 200 - Ok response.
-        /// </summary>
-        public static UploadSingleObjectWithFileAsFormDataResult Ok(string? message = null) => new UploadSingleObjectWithFileAsFormDataResult(new OkObjectResult(message));
+    /// <summary>
+    /// 400 - BadRequest response.
+    /// </summary>
+    public static UploadSingleObjectWithFileAsFormDataResult BadRequest(string message) => new UploadSingleObjectWithFileAsFormDataResult(new BadRequestObjectResult(message));
 
-        /// <summary>
-        /// 400 - BadRequest response.
-        /// </summary>
-        public static UploadSingleObjectWithFileAsFormDataResult BadRequest(string message) => new UploadSingleObjectWithFileAsFormDataResult(new BadRequestObjectResult(message));
-
-        /// <summary>
-        /// Performs an implicit conversion from UploadSingleObjectWithFileAsFormDataResult to ActionResult.
-        /// </summary>
-        public static implicit operator UploadSingleObjectWithFileAsFormDataResult(string response) => Ok(response);
-    }
+    /// <summary>
+    /// Performs an implicit conversion from UploadSingleObjectWithFileAsFormDataResult to ActionResult.
+    /// </summary>
+    public static implicit operator UploadSingleObjectWithFileAsFormDataResult(string response) => Ok(response);
 }

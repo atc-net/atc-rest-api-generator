@@ -267,7 +267,8 @@ public class ServerApiGenerator
         var codeAsString = compilationUnit
             .NormalizeWhitespace()
             .ToFullString()
-            .EnsureEnvironmentNewLines();
+            .EnsureEnvironmentNewLines()
+            .EnsureFileScopedNamespace();
 
         var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "ApiRegistration.cs"));
         var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);

@@ -4,37 +4,36 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace Scenario2.Api.Generated.Endpoints
+namespace Scenario2.Api.Generated.Endpoints;
+
+/// <summary>
+/// Endpoint definitions.
+/// Area: RouteWithDash.
+/// </summary>
+[ApiController]
+[Route("/api/v1/route-with-dash")]
+[GeneratedCode("ApiGenerator", "x.x.x.x")]
+public class RouteWithDashController : ControllerBase
 {
     /// <summary>
-    /// Endpoint definitions.
+    /// Description: Your GET endpoint.
+    /// Operation: GetRouteWithDash.
     /// Area: RouteWithDash.
     /// </summary>
-    [ApiController]
-    [Route("/api/v1/route-with-dash")]
-    [GeneratedCode("ApiGenerator", "x.x.x.x")]
-    public class RouteWithDashController : ControllerBase
+    [HttpGet]
+    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+    public Task<ActionResult> GetRouteWithDashAsync([FromServices] IGetRouteWithDashHandler handler, CancellationToken cancellationToken)
     {
-        /// <summary>
-        /// Description: Your GET endpoint.
-        /// Operation: GetRouteWithDash.
-        /// Area: RouteWithDash.
-        /// </summary>
-        [HttpGet]
-        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-        public Task<ActionResult> GetRouteWithDashAsync([FromServices] IGetRouteWithDashHandler handler, CancellationToken cancellationToken)
+        if (handler is null)
         {
-            if (handler is null)
-            {
-                throw new ArgumentNullException(nameof(handler));
-            }
-
-            return InvokeGetRouteWithDashAsync(handler, cancellationToken);
+            throw new ArgumentNullException(nameof(handler));
         }
 
-        private static async Task<ActionResult> InvokeGetRouteWithDashAsync([FromServices] IGetRouteWithDashHandler handler, CancellationToken cancellationToken)
-        {
-            return await handler.ExecuteAsync(cancellationToken);
-        }
+        return InvokeGetRouteWithDashAsync(handler, cancellationToken);
+    }
+
+    private static async Task<ActionResult> InvokeGetRouteWithDashAsync([FromServices] IGetRouteWithDashHandler handler, CancellationToken cancellationToken)
+    {
+        return await handler.ExecuteAsync(cancellationToken);
     }
 }

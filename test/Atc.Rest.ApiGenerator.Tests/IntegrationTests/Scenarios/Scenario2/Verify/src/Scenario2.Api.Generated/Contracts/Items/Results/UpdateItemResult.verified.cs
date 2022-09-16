@@ -4,27 +4,26 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace Scenario2.Api.Generated.Contracts.Items
+namespace Scenario2.Api.Generated.Contracts.Items;
+
+/// <summary>
+/// Results for operation request.
+/// Description: Updates an item.
+/// Operation: UpdateItem.
+/// Area: Items.
+/// </summary>
+[GeneratedCode("ApiGenerator", "x.x.x.x")]
+public class UpdateItemResult : ResultBase
 {
+    private UpdateItemResult(ActionResult result) : base(result) { }
+
     /// <summary>
-    /// Results for operation request.
-    /// Description: Updates an item.
-    /// Operation: UpdateItem.
-    /// Area: Items.
+    /// 200 - Ok response.
     /// </summary>
-    [GeneratedCode("ApiGenerator", "x.x.x.x")]
-    public class UpdateItemResult : ResultBase
-    {
-        private UpdateItemResult(ActionResult result) : base(result) { }
+    public static UpdateItemResult Ok(string? message = null) => new UpdateItemResult(new OkObjectResult(message));
 
-        /// <summary>
-        /// 200 - Ok response.
-        /// </summary>
-        public static UpdateItemResult Ok(string? message = null) => new UpdateItemResult(new OkObjectResult(message));
-
-        /// <summary>
-        /// Performs an implicit conversion from UpdateItemResult to ActionResult.
-        /// </summary>
-        public static implicit operator UpdateItemResult(string response) => Ok(response);
-    }
+    /// <summary>
+    /// Performs an implicit conversion from UpdateItemResult to ActionResult.
+    /// </summary>
+    public static implicit operator UpdateItemResult(string response) => Ok(response);
 }

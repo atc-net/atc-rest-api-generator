@@ -1,16 +1,15 @@
-namespace Scenario2.Domain.Handlers.Pagination
+namespace Scenario2.Domain.Handlers.Pagination;
+
+/// <summary>
+/// Handler for operation request.
+/// Description: Your GET endpoint.
+/// Operation: GetPaginatedListOfStrings.
+/// Area: Pagination.
+/// </summary>
+public class GetPaginatedListOfStringsHandler : IGetPaginatedListOfStringsHandler
 {
-    /// <summary>
-    /// Handler for operation request.
-    /// Description: Your GET endpoint.
-    /// Operation: GetPaginatedListOfStrings.
-    /// Area: Pagination.
-    /// </summary>
-    public class GetPaginatedListOfStringsHandler : IGetPaginatedListOfStringsHandler
+    public Task<GetPaginatedListOfStringsResult> ExecuteAsync(CancellationToken cancellationToken = default)
     {
-        public Task<GetPaginatedListOfStringsResult> ExecuteAsync(CancellationToken cancellationToken = default)
-        {
-            throw new System.NotImplementedException();
-        }
+        throw new System.NotImplementedException();
     }
 }

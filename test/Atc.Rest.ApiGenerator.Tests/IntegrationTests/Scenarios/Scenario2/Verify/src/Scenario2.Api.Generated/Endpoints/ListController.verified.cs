@@ -4,59 +4,58 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace Scenario2.Api.Generated.Endpoints
+namespace Scenario2.Api.Generated.Endpoints;
+
+/// <summary>
+/// Endpoint definitions.
+/// Area: List.
+/// </summary>
+[ApiController]
+[Route("/api/v1/list")]
+[GeneratedCode("ApiGenerator", "x.x.x.x")]
+public class ListController : ControllerBase
 {
     /// <summary>
-    /// Endpoint definitions.
+    /// Description: Your GET endpoint.
+    /// Operation: GetListOfInts.
     /// Area: List.
     /// </summary>
-    [ApiController]
-    [Route("/api/v1/list")]
-    [GeneratedCode("ApiGenerator", "x.x.x.x")]
-    public class ListController : ControllerBase
+    [HttpGet("int")]
+    [ProducesResponseType(typeof(List<int>), StatusCodes.Status200OK)]
+    public Task<ActionResult> GetListOfIntsAsync([FromServices] IGetListOfIntsHandler handler, CancellationToken cancellationToken)
     {
-        /// <summary>
-        /// Description: Your GET endpoint.
-        /// Operation: GetListOfInts.
-        /// Area: List.
-        /// </summary>
-        [HttpGet("int")]
-        [ProducesResponseType(typeof(List<int>), StatusCodes.Status200OK)]
-        public Task<ActionResult> GetListOfIntsAsync([FromServices] IGetListOfIntsHandler handler, CancellationToken cancellationToken)
+        if (handler is null)
         {
-            if (handler is null)
-            {
-                throw new ArgumentNullException(nameof(handler));
-            }
-
-            return InvokeGetListOfIntsAsync(handler, cancellationToken);
+            throw new ArgumentNullException(nameof(handler));
         }
 
-        /// <summary>
-        /// Description: Your GET endpoint.
-        /// Operation: GetListOfStrings.
-        /// Area: List.
-        /// </summary>
-        [HttpGet("string")]
-        [ProducesResponseType(typeof(List<string>), StatusCodes.Status200OK)]
-        public Task<ActionResult> GetListOfStringsAsync([FromServices] IGetListOfStringsHandler handler, CancellationToken cancellationToken)
-        {
-            if (handler is null)
-            {
-                throw new ArgumentNullException(nameof(handler));
-            }
+        return InvokeGetListOfIntsAsync(handler, cancellationToken);
+    }
 
-            return InvokeGetListOfStringsAsync(handler, cancellationToken);
+    /// <summary>
+    /// Description: Your GET endpoint.
+    /// Operation: GetListOfStrings.
+    /// Area: List.
+    /// </summary>
+    [HttpGet("string")]
+    [ProducesResponseType(typeof(List<string>), StatusCodes.Status200OK)]
+    public Task<ActionResult> GetListOfStringsAsync([FromServices] IGetListOfStringsHandler handler, CancellationToken cancellationToken)
+    {
+        if (handler is null)
+        {
+            throw new ArgumentNullException(nameof(handler));
         }
 
-        private static async Task<ActionResult> InvokeGetListOfIntsAsync([FromServices] IGetListOfIntsHandler handler, CancellationToken cancellationToken)
-        {
-            return await handler.ExecuteAsync(cancellationToken);
-        }
+        return InvokeGetListOfStringsAsync(handler, cancellationToken);
+    }
 
-        private static async Task<ActionResult> InvokeGetListOfStringsAsync([FromServices] IGetListOfStringsHandler handler, CancellationToken cancellationToken)
-        {
-            return await handler.ExecuteAsync(cancellationToken);
-        }
+    private static async Task<ActionResult> InvokeGetListOfIntsAsync([FromServices] IGetListOfIntsHandler handler, CancellationToken cancellationToken)
+    {
+        return await handler.ExecuteAsync(cancellationToken);
+    }
+
+    private static async Task<ActionResult> InvokeGetListOfStringsAsync([FromServices] IGetListOfStringsHandler handler, CancellationToken cancellationToken)
+    {
+        return await handler.ExecuteAsync(cancellationToken);
     }
 }

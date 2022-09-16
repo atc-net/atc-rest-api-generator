@@ -4,40 +4,39 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace Scenario2.Api.Generated.Contracts.Users
+namespace Scenario2.Api.Generated.Contracts.Users;
+
+/// <summary>
+/// Parameters for operation request.
+/// Description: Update gender on a user.
+/// Operation: UpdateMyTestGender.
+/// Area: Users.
+/// </summary>
+[GeneratedCode("ApiGenerator", "x.x.x.x")]
+public class UpdateMyTestGenderParameters
 {
     /// <summary>
-    /// Parameters for operation request.
-    /// Description: Update gender on a user.
-    /// Operation: UpdateMyTestGender.
-    /// Area: Users.
+    /// Id of the user.
     /// </summary>
-    [GeneratedCode("ApiGenerator", "x.x.x.x")]
-    public class UpdateMyTestGenderParameters
+    [FromRoute(Name = "id")]
+    [Required]
+    public Guid Id { get; set; }
+
+    /// <summary>
+    /// The gender to set on the user.
+    /// </summary>
+    [FromQuery(Name = "genderParam")]
+    public GenderType? GenderParam { get; set; }
+
+    [FromBody]
+    [Required]
+    public UpdateTestGenderRequest Request { get; set; }
+
+    /// <summary>
+    /// Converts to string.
+    /// </summary>
+    public override string ToString()
     {
-        /// <summary>
-        /// Id of the user.
-        /// </summary>
-        [FromRoute(Name = "id")]
-        [Required]
-        public Guid Id { get; set; }
-
-        /// <summary>
-        /// The gender to set on the user.
-        /// </summary>
-        [FromQuery(Name = "genderParam")]
-        public GenderType? GenderParam { get; set; }
-
-        [FromBody]
-        [Required]
-        public UpdateTestGenderRequest Request { get; set; }
-
-        /// <summary>
-        /// Converts to string.
-        /// </summary>
-        public override string ToString()
-        {
-            return $"{nameof(Id)}: {Id}, {nameof(GenderParam)}: ({GenderParam}), {nameof(Request)}: ({Request})";
-        }
+        return $"{nameof(Id)}: {Id}, {nameof(GenderParam)}: ({GenderParam}), {nameof(Request)}: ({Request})";
     }
 }

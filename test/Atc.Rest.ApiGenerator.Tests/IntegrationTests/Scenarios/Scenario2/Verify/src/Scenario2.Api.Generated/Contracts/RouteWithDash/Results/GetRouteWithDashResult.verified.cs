@@ -4,27 +4,26 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace Scenario2.Api.Generated.Contracts.RouteWithDash
+namespace Scenario2.Api.Generated.Contracts.RouteWithDash;
+
+/// <summary>
+/// Results for operation request.
+/// Description: Your GET endpoint.
+/// Operation: GetRouteWithDash.
+/// Area: RouteWithDash.
+/// </summary>
+[GeneratedCode("ApiGenerator", "x.x.x.x")]
+public class GetRouteWithDashResult : ResultBase
 {
+    private GetRouteWithDashResult(ActionResult result) : base(result) { }
+
     /// <summary>
-    /// Results for operation request.
-    /// Description: Your GET endpoint.
-    /// Operation: GetRouteWithDash.
-    /// Area: RouteWithDash.
+    /// 200 - Ok response.
     /// </summary>
-    [GeneratedCode("ApiGenerator", "x.x.x.x")]
-    public class GetRouteWithDashResult : ResultBase
-    {
-        private GetRouteWithDashResult(ActionResult result) : base(result) { }
+    public static GetRouteWithDashResult Ok(string? message = null) => new GetRouteWithDashResult(new OkObjectResult(message));
 
-        /// <summary>
-        /// 200 - Ok response.
-        /// </summary>
-        public static GetRouteWithDashResult Ok(string? message = null) => new GetRouteWithDashResult(new OkObjectResult(message));
-
-        /// <summary>
-        /// Performs an implicit conversion from GetRouteWithDashResult to ActionResult.
-        /// </summary>
-        public static implicit operator GetRouteWithDashResult(string response) => Ok(response);
-    }
+    /// <summary>
+    /// Performs an implicit conversion from GetRouteWithDashResult to ActionResult.
+    /// </summary>
+    public static implicit operator GetRouteWithDashResult(string response) => Ok(response);
 }

@@ -4,27 +4,26 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace Scenario2.Api.Generated.Contracts.Tasks
+namespace Scenario2.Api.Generated.Contracts.Tasks;
+
+/// <summary>
+/// Results for operation request.
+/// Description: Returns tasks.
+/// Operation: GetTasks.
+/// Area: Tasks.
+/// </summary>
+[GeneratedCode("ApiGenerator", "x.x.x.x")]
+public class GetTasksResult : ResultBase
 {
+    private GetTasksResult(ActionResult result) : base(result) { }
+
     /// <summary>
-    /// Results for operation request.
-    /// Description: Returns tasks.
-    /// Operation: GetTasks.
-    /// Area: Tasks.
+    /// 200 - Ok response.
     /// </summary>
-    [GeneratedCode("ApiGenerator", "x.x.x.x")]
-    public class GetTasksResult : ResultBase
-    {
-        private GetTasksResult(ActionResult result) : base(result) { }
+    public static GetTasksResult Ok(IEnumerable<Task> response) => new GetTasksResult(new OkObjectResult(response ?? Enumerable.Empty<Task>()));
 
-        /// <summary>
-        /// 200 - Ok response.
-        /// </summary>
-        public static GetTasksResult Ok(IEnumerable<Task> response) => new GetTasksResult(new OkObjectResult(response ?? Enumerable.Empty<Task>()));
-
-        /// <summary>
-        /// Performs an implicit conversion from GetTasksResult to ActionResult.
-        /// </summary>
-        public static implicit operator GetTasksResult(List<Task> response) => Ok(response);
-    }
+    /// <summary>
+    /// Performs an implicit conversion from GetTasksResult to ActionResult.
+    /// </summary>
+    public static implicit operator GetTasksResult(List<Task> response) => Ok(response);
 }

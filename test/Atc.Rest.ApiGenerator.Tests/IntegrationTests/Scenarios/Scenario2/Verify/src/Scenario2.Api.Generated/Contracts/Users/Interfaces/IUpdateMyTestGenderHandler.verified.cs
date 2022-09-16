@@ -4,22 +4,21 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace Scenario2.Api.Generated.Contracts.Users
+namespace Scenario2.Api.Generated.Contracts.Users;
+
+/// <summary>
+/// Domain Interface for RequestHandler.
+/// Description: Update gender on a user.
+/// Operation: UpdateMyTestGender.
+/// Area: Users.
+/// </summary>
+[GeneratedCode("ApiGenerator", "x.x.x.x")]
+public interface IUpdateMyTestGenderHandler
 {
     /// <summary>
-    /// Domain Interface for RequestHandler.
-    /// Description: Update gender on a user.
-    /// Operation: UpdateMyTestGender.
-    /// Area: Users.
+    /// Execute method.
     /// </summary>
-    [GeneratedCode("ApiGenerator", "x.x.x.x")]
-    public interface IUpdateMyTestGenderHandler
-    {
-        /// <summary>
-        /// Execute method.
-        /// </summary>
-        /// <param name="parameters">The parameters.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        Task<UpdateMyTestGenderResult> ExecuteAsync(UpdateMyTestGenderParameters parameters, CancellationToken cancellationToken = default);
-    }
+    /// <param name="parameters">The parameters.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    Task<UpdateMyTestGenderResult> ExecuteAsync(UpdateMyTestGenderParameters parameters, CancellationToken cancellationToken = default);
 }
