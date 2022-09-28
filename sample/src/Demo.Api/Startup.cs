@@ -1,12 +1,3 @@
-﻿using System.Reflection;
-using Atc.Rest.Extended.Options;
-using Demo.Api.Generated;
-using Demo.Domain;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-
 namespace Demo.Api
 {
     public class Startup

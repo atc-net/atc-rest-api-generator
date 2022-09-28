@@ -1,24 +1,24 @@
 namespace Atc.Rest.ApiGenerator.ProjectSyntaxFactories;
 
-internal static class SyntaxNamespaceDeclarationFactory
+internal static class SyntaxFileScopedNamespaceDeclarationFactory
 {
-    public static NamespaceDeclarationSyntax Create(
+    public static FileScopedNamespaceDeclarationSyntax Create(
         string fullNamespace)
     {
         ArgumentNullException.ThrowIfNull(fullNamespace);
 
-        return SyntaxFactory.NamespaceDeclaration(
+        return SyntaxFactory.FileScopedNamespaceDeclaration(
             SyntaxFactory.IdentifierName(fullNamespace));
     }
 
-    public static NamespaceDeclarationSyntax Create(
+    public static FileScopedNamespaceDeclarationSyntax Create(
         string generatedByToolAndVersion,
         string fullNamespace)
     {
         ArgumentNullException.ThrowIfNull(generatedByToolAndVersion);
         ArgumentNullException.ThrowIfNull(fullNamespace);
 
-        return SyntaxFactory.NamespaceDeclaration(
+        return SyntaxFactory.FileScopedNamespaceDeclaration(
                 SyntaxFactory.IdentifierName(fullNamespace))
             .WithNamespaceKeyword(
                 SyntaxFactory.Token(

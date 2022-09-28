@@ -1,32 +1,27 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Scenario2.Api.Generated.Contracts.Files;
+namespace Scenario2.Domain.Handlers.Files;
 
-namespace Scenario2.Domain.Handlers.Files
+/// <summary>
+/// Handler for operation request.
+/// Description: Upload a file as OctetStream.
+/// Operation: UploadSingleFileAsFormData.
+/// Area: Files.
+/// </summary>
+public class UploadSingleFileAsFormDataHandler : IUploadSingleFileAsFormDataHandler
 {
-    /// <summary>
-    /// Handler for operation request.
-    /// Description: Upload a file as OctetStream.
-    /// Operation: UploadSingleFileAsFormData.
-    /// Area: Files.
-    /// </summary>
-    public class UploadSingleFileAsFormDataHandler : IUploadSingleFileAsFormDataHandler
+    public Task<UploadSingleFileAsFormDataResult> ExecuteAsync(UploadSingleFileAsFormDataParameters parameters, CancellationToken cancellationToken = default)
     {
-        public Task<UploadSingleFileAsFormDataResult> ExecuteAsync(UploadSingleFileAsFormDataParameters parameters, CancellationToken cancellationToken = default)
+        if (parameters is null)
         {
-            if (parameters is null)
-            {
-                throw new System.ArgumentNullException(nameof(parameters));
-            }
-
-            return InvokeExecuteAsync(parameters, cancellationToken);
+            throw new System.ArgumentNullException(nameof(parameters));
         }
+
+        return InvokeExecuteAsync(parameters, cancellationToken);
+    }
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-        private async Task<UploadSingleFileAsFormDataResult> InvokeExecuteAsync(UploadSingleFileAsFormDataParameters parameters, CancellationToken cancellationToken)
+    private async Task<UploadSingleFileAsFormDataResult> InvokeExecuteAsync(UploadSingleFileAsFormDataParameters parameters, CancellationToken cancellationToken)
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
-        {
-            throw new System.NotImplementedException();
-        }
+    {
+        throw new System.NotImplementedException();
     }
 }

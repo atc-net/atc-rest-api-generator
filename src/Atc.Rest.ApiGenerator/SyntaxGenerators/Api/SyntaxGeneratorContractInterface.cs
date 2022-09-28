@@ -14,12 +14,12 @@ public class SyntaxGeneratorContractInterface : ISyntaxOperationCodeGenerator
         bool hasParametersOrRequestBody)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        this.ApiProjectOptions = apiProjectOptions ?? throw new ArgumentNullException(nameof(apiProjectOptions));
-        this.GlobalPathParameters = globalPathParameters ?? throw new ArgumentNullException(nameof(globalPathParameters));
-        this.ApiOperationType = apiOperationType;
-        this.ApiOperation = apiOperation ?? throw new ArgumentNullException(nameof(apiOperation));
-        this.FocusOnSegmentName = focusOnSegmentName ?? throw new ArgumentNullException(nameof(focusOnSegmentName));
-        this.HasParametersOrRequestBody = hasParametersOrRequestBody;
+        ApiProjectOptions = apiProjectOptions ?? throw new ArgumentNullException(nameof(apiProjectOptions));
+        GlobalPathParameters = globalPathParameters ?? throw new ArgumentNullException(nameof(globalPathParameters));
+        ApiOperationType = apiOperationType;
+        ApiOperation = apiOperation ?? throw new ArgumentNullException(nameof(apiOperation));
+        FocusOnSegmentName = focusOnSegmentName ?? throw new ArgumentNullException(nameof(focusOnSegmentName));
+        HasParametersOrRequestBody = hasParametersOrRequestBody;
     }
 
     public ApiProjectOptions ApiProjectOptions { get; }
@@ -60,9 +60,6 @@ public class SyntaxGeneratorContractInterface : ISyntaxOperationCodeGenerator
         var methodDeclaration = SyntaxMethodDeclarationFactory.CreateInterfaceMethod(parameterTypeName, resultTypeName, HasParametersOrRequestBody)
             .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForInterfaceMethod(GlobalPathParameters.Any() || ApiOperation.HasParametersOrRequestBody()));
 
-        // Add using statement to compilationUnit
-        compilationUnit = compilationUnit.AddUsingStatements(ProjectApiFactory.CreateUsingListForContractInterface());
-
         // Add interface-method to interface
         interfaceDeclaration = interfaceDeclaration.AddMembers(methodDeclaration);
 
@@ -92,7 +89,8 @@ public class SyntaxGeneratorContractInterface : ISyntaxOperationCodeGenerator
         return Code
             .NormalizeWhitespace()
             .ToFullString()
-            .EnsureEnvironmentNewLines();
+            .EnsureEnvironmentNewLines()
+            .EnsureFileScopedNamespace();
     }
 
     public void ToFile()

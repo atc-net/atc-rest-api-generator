@@ -16,9 +16,9 @@ public static class NugetPackageReferenceHelper
         if (useRestExtended)
         {
             packageReference.Add(new Tuple<string, string, string?>("Atc.Rest.Extended", atcVersion, null));
-            packageReference.Add(new Tuple<string, string, string?>("FluentValidation.AspNetCore", "11.1.3", null));
+            packageReference.Add(new Tuple<string, string, string?>("FluentValidation.AspNetCore", "11.2.2", null));
             packageReference.Add(new Tuple<string, string, string?>("Microsoft.ApplicationInsights.AspNetCore", "2.21.0", null));
-            packageReference.Add(new Tuple<string, string, string?>("Microsoft.AspNetCore.Authentication.JwtBearer", "6.0.7", null));
+            packageReference.Add(new Tuple<string, string, string?>("Microsoft.AspNetCore.Authentication.JwtBearer", "6.0.9", null));
             packageReference.Add(new Tuple<string, string, string?>("Microsoft.AspNetCore.Mvc.Versioning", "5.0.0", null));
             packageReference.Add(new Tuple<string, string, string?>("Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer", "5.0.0", null));
             packageReference.Add(new Tuple<string, string, string?>("Swashbuckle.AspNetCore", "6.4.0", null));
@@ -47,6 +47,7 @@ public static class NugetPackageReferenceHelper
         var packageReference = new List<Tuple<string, string, string?>>
         {
             new("Atc", atcVersion, null),
+            new("Atc.Rest", atcVersion, null),
             new("Atc.Rest.Client", "1.0.36", null),
         };
 
@@ -71,10 +72,10 @@ public static class NugetPackageReferenceHelper
 
         packageReference.AddRange(new List<Tuple<string, string, string?>>
         {
-            new("Microsoft.NET.Test.Sdk", "17.1.0", null),
-            new("NSubstitute", "4.3.0", null),
-            new("xunit", "2.4.1", null),
-            new("xunit.runner.visualstudio", "2.4.3", "<PrivateAssets>all</PrivateAssets>\n<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>"),
+            new("Microsoft.NET.Test.Sdk", "17.3.1", null),
+            new("NSubstitute", "4.4.0", null),
+            new("xunit", "2.4.2", null),
+            new("xunit.runner.visualstudio", "2.4.4", "<PrivateAssets>all</PrivateAssets>\n<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>"),
         });
 
         return packageReference;

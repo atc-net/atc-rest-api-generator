@@ -1,5 +1,3 @@
-﻿using Xunit;
-
 namespace Scenario2.Domain.Tests.Handlers.Files
 {
     public class UploadSingleObjectWithFileAsFormDataHandlerTests

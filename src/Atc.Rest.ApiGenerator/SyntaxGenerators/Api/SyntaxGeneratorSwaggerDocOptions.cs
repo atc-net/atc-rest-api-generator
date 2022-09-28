@@ -21,20 +21,13 @@ public class SyntaxGeneratorSwaggerDocOptions
             .ParseSyntaxTree(GetSyntaxTreeText())
             .GetCompilationUnitRoot()
             .ToFullString()
-            .EnsureEnvironmentNewLines();
+            .EnsureEnvironmentNewLines()
+            .EnsureFileScopedNamespace();
 
     private string GetSyntaxTreeText()
     {
         var sb = new StringBuilder();
 
-        sb.AppendLine("using System;");
-        sb.AppendLine("using System.IO;");
-        sb.AppendLine("using Microsoft.AspNetCore.Mvc.ApiExplorer;");
-        sb.AppendLine("using Microsoft.Extensions.DependencyInjection;");
-        sb.AppendLine("using Microsoft.Extensions.Options;");
-        sb.AppendLine("using Microsoft.OpenApi.Models;");
-        sb.AppendLine("using Swashbuckle.AspNetCore.SwaggerGen;");
-        sb.AppendLine();
         sb.AppendLine($"namespace {fullNamespace}");
         sb.AppendLine("{");
         sb.AppendLine(4, "public class ConfigureSwaggerDocOptions : IConfigureOptions<SwaggerGenOptions>");

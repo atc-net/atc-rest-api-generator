@@ -14,24 +14,13 @@ public static class GenerateServerDomainXunitTestHelper
         ArgumentNullException.ThrowIfNull(sgHandler);
 
         var area = sgHandler.FocusOnSegmentName.EnsureFirstCharacterToUpper();
-        var nsSrc = $"{domainProjectOptions.ProjectName}.{NameConstants.Handlers}.{area}";
         var nsTest = $"{domainProjectOptions.ProjectName}.Tests.{NameConstants.Handlers}.{area}.Generated";
 
         var srcSyntaxNodeRoot = ReadCsFile(domainProjectOptions, sgHandler.FocusOnSegmentName, sgHandler);
         var usedInterfacesInConstructor = GetUsedInterfacesInConstructor(srcSyntaxNodeRoot);
 
-        var usingStatements = GetUsedUsingStatements(
-            srcSyntaxNodeRoot,
-            nsSrc,
-            usedInterfacesInConstructor.Count > 0);
-
         var sb = new StringBuilder();
-        foreach (var item in usingStatements)
-        {
-            sb.AppendLine($"using {item};");
-        }
 
-        sb.AppendLine();
         GenerateCodeHelper.AppendGeneratedCodeWarningComment(sb, domainProjectOptions.ToolNameAndVersion);
         sb.AppendLine($"namespace {nsTest}");
         sb.AppendLine("{");
@@ -68,8 +57,7 @@ public static class GenerateServerDomainXunitTestHelper
         var nsTest = $"{domainProjectOptions.ProjectName}.Tests.{NameConstants.Handlers}.{area}";
 
         var sb = new StringBuilder();
-        sb.AppendLine("using Xunit;");
-        sb.AppendLine();
+
         sb.AppendLine($"namespace {nsTest}");
         sb.AppendLine("{");
         sb.AppendLine(4, $"public class {sgHandler.HandlerTypeName}Tests");
@@ -170,48 +158,6 @@ public static class GenerateServerDomainXunitTestHelper
         var csSrcCode = File.ReadAllText(csSrcFile);
         var tree = CSharpSyntaxTree.ParseText(csSrcCode);
         return tree.GetRoot();
-    }
-
-    private static List<string> GetUsedUsingStatements(
-        SyntaxNode root,
-        string nsSrc,
-        bool useExtra)
-    {
-        var list = new List<string>
-        {
-            nsSrc,
-            "System",
-            "System.CodeDom.Compiler",
-            "Microsoft.Extensions.Logging",
-            "Xunit",
-        };
-
-        if (useExtra)
-        {
-            list.Add("NSubstitute");
-
-            var usingDirective = root.GetUsedUsingStatementsWithoutAlias();
-            foreach (var item in usingDirective)
-            {
-                if (item.StartsWith("System", StringComparison.Ordinal))
-                {
-                    continue;
-                }
-
-                list.Add(item);
-            }
-        }
-
-        var usings = new List<string>();
-        usings.AddRange(
-            list
-                .Where(x => x.StartsWith("System", StringComparison.Ordinal))
-                .OrderBy(x => x));
-        usings.AddRange(
-            list
-                .Where(x => !x.StartsWith("System", StringComparison.Ordinal))
-                .OrderBy(x => x));
-        return usings;
     }
 
     private static List<Tuple<string, string>> GetUsedInterfacesInConstructor(

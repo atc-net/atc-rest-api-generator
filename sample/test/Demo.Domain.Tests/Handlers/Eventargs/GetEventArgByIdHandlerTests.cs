@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-namespace Demo.Domain.Tests.Handlers.Eventargs
+﻿namespace Demo.Domain.Tests.Handlers.Eventargs
 {
     public class GetEventArgByIdHandlerTests
     {

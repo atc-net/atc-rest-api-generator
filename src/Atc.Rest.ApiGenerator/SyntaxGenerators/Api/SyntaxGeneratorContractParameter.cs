@@ -14,14 +14,14 @@ public class SyntaxGeneratorContractParameter : ISyntaxOperationCodeGenerator
         string focusOnSegmentName)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        this.ApiProjectOptions = apiProjectOptions ?? throw new ArgumentNullException(nameof(apiProjectOptions));
-        this.GlobalPathParameters = globalPathParameters ?? throw new ArgumentNullException(nameof(globalPathParameters));
-        this.ApiOperationType = apiOperationType;
-        this.ApiOperation = apiOperation ?? throw new ArgumentNullException(nameof(apiOperation));
-        this.FocusOnSegmentName = focusOnSegmentName ?? throw new ArgumentNullException(nameof(focusOnSegmentName));
+        ApiProjectOptions = apiProjectOptions ?? throw new ArgumentNullException(nameof(apiProjectOptions));
+        GlobalPathParameters = globalPathParameters ?? throw new ArgumentNullException(nameof(globalPathParameters));
+        ApiOperationType = apiOperationType;
+        ApiOperation = apiOperation ?? throw new ArgumentNullException(nameof(apiOperation));
+        FocusOnSegmentName = focusOnSegmentName ?? throw new ArgumentNullException(nameof(focusOnSegmentName));
 
-        this.IsForClient = false;
-        this.UseOwnFolder = true;
+        IsForClient = false;
+        UseOwnFolder = true;
     }
 
     public ApiProjectOptions ApiProjectOptions { get; }
@@ -179,14 +179,6 @@ public class SyntaxGeneratorContractParameter : ISyntaxOperationCodeGenerator
             classDeclaration = classDeclaration.AddMembers(methodDeclaration);
         }
 
-        // Add using statement to compilationUnit
-        compilationUnit = compilationUnit.AddUsingStatements(
-            ProjectApiFactory.CreateUsingListForContractParameter(
-                GlobalPathParameters,
-                ApiOperation.Parameters,
-                ApiOperation.RequestBody,
-                ApiProjectOptions.IsForClient));
-
         // Add the class to the namespace.
         @namespace = @namespace.AddMembers(classDeclaration);
 
@@ -216,7 +208,8 @@ public class SyntaxGeneratorContractParameter : ISyntaxOperationCodeGenerator
             .EnsureEnvironmentNewLines()
             .FormatAutoPropertiesOnOneLine()
             .FormatPublicPrivateLines()
-            .FormatDoubleLines();
+            .FormatDoubleLines()
+            .EnsureFileScopedNamespace();
     }
 
     public void ToFile()

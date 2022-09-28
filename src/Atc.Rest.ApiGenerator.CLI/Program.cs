@@ -29,6 +29,7 @@ public static class Program
         return app.RunAsync(args);
     }
 
+    [SuppressMessage("Design", "MA0051:Method is too long", Justification = "OK.")]
     private static string[] SetOutputPathFromDotArgumentIfNeeded(
         string[] args)
     {

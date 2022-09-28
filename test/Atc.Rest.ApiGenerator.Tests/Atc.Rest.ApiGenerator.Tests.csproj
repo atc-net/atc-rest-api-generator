@@ -6,16 +6,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc.DotNet" Version="2.0.166" />
+    <PackageReference Include="Atc.DotNet" Version="2.0.227" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
-    <PackageReference Include="Atc.CodeDocumentation" Version="2.0.166" />
-    <PackageReference Include="Atc.XUnit" Version="2.0.166" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
-    <PackageReference Include="Verify" Version="16.7.0" />
-    <PackageReference Include="Verify.Xunit" Version="16.7.0" />
-    <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.4">
+    <PackageReference Include="Atc.CodeDocumentation" Version="2.0.227" />
+    <PackageReference Include="Atc.XUnit" Version="2.0.227" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
+    <PackageReference Include="Verify" Version="17.10.2" />
+    <PackageReference Include="Verify.Xunit" Version="17.10.2" />
+    <PackageReference Include="xunit" Version="2.4.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

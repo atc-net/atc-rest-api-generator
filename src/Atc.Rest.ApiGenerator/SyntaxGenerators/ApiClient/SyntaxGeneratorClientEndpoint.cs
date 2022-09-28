@@ -58,24 +58,6 @@ public class SyntaxGeneratorClientEndpoint : SyntaxGeneratorClientEndpointBase, 
         classDeclaration = classDeclaration.AddMembers(CreateConstructor());
         classDeclaration = classDeclaration.AddMembers(CreateMembers());
 
-        // Add using statement to compilationUnit
-        var includeRestResults = classDeclaration
-            .Select<IdentifierNameSyntax>()
-            .Any(x => x.Identifier.ValueText.Contains(
-                $"({Microsoft.OpenApi.Models.NameConstants.Pagination}<",
-                StringComparison.Ordinal));
-
-        compilationUnit = compilationUnit.AddUsingStatements(
-            ProjectApiClientFactory.CreateUsingListForEndpoint(
-                ApiProjectOptions,
-                includeRestResults,
-                HasParametersOrRequestBody,
-                OpenApiDocumentSchemaModelNameHelper.HasList(ResultTypeName),
-                OpenApiDocumentSchemaModelNameHelper.HasSharedResponseContract(
-                    ApiProjectOptions.Document,
-                    OperationSchemaMappings,
-                    FocusOnSegmentName)));
-
         // Add the class to the namespace.
         @namespace = @namespace.AddMembers(classDeclaration);
 
@@ -104,7 +86,8 @@ public class SyntaxGeneratorClientEndpoint : SyntaxGeneratorClientEndpointBase, 
             .ToFullString()
             .EnsureEnvironmentNewLines()
             .FormatClientEndpointNewLineSpaceBefore8()
-            .FormatClientEndpointNewLineSpaceAfter12();
+            .FormatClientEndpointNewLineSpaceAfter12()
+            .EnsureFileScopedNamespace();
     }
 
     public void ToFile()

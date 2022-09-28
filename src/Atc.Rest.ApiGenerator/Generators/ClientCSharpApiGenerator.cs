@@ -17,7 +17,7 @@ public class ClientCSharpApiGenerator
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
 
-        this.apiProjectOptions = new ApiProjectOptions(
+        apiProjectOptions = new ApiProjectOptions(
             projectOptions.PathForSrcGenerate,
             projectTestGeneratePath: null,
             projectOptions.Document,
@@ -29,7 +29,7 @@ public class ClientCSharpApiGenerator
             projectOptions.ForClient,
             projectOptions.ClientFolderName);
 
-        this.ExcludeEndpointGeneration = projectOptions.ExcludeEndpointGeneration;
+        ExcludeEndpointGeneration = projectOptions.ExcludeEndpointGeneration;
     }
 
     public bool ExcludeEndpointGeneration { get; }
@@ -40,12 +40,14 @@ public class ClientCSharpApiGenerator
 
         var operationSchemaMappings = OpenApiOperationSchemaMapHelper.CollectMappings(projectOptions.Document);
         GenerateContracts(operationSchemaMappings);
-        if (!this.ExcludeEndpointGeneration)
+        if (!ExcludeEndpointGeneration)
         {
             GenerateEndpoints(operationSchemaMappings);
         }
 
         PerformCleanup();
+        GenerateSrcGlobalUsings();
+
         return true;
     }
 
@@ -80,7 +82,7 @@ public class ClientCSharpApiGenerator
                 createAsWeb: false,
                 createAsTestProject: false,
                 projectName: projectOptions.ProjectName,
-                "netstandard2.1",
+                "net6.0",
                 frameworkReferences: null,
                 packageReferences: NugetPackageReferenceHelper.CreateForClientApiProject(),
                 projectReferences: null,
@@ -170,5 +172,36 @@ public class ClientCSharpApiGenerator
     private static void PerformCleanup()
     {
         // TODO: Implement
+    }
+
+    private void GenerateSrcGlobalUsings()
+    {
+        var requiredUsings = new List<string>
+        {
+            "System",
+            "System.CodeDom.Compiler",
+            "System.Collections.Generic",
+            "System.ComponentModel.DataAnnotations",
+            "System.Diagnostics.CodeAnalysis",
+            "System.Net",
+            "System.Net.Http",
+            "System.Threading",
+            "System.Threading.Tasks",
+            "Atc.Rest.Client",
+            "Atc.Rest.Client.Builder",
+            "Atc.Rest.Results",
+            "Microsoft.AspNetCore.Mvc",
+            "Microsoft.AspNetCore.Http",
+            $"{projectOptions.ProjectName}.Contracts",
+        };
+
+        var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "GlobalUsings.cs"));
+        var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
+
+        GlobalUsingsHelper.CreateOrUpdate(
+            logger,
+            fileDisplayLocation,
+            projectOptions.PathForSrcGenerate,
+            requiredUsings);
     }
 }

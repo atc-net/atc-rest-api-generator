@@ -15,13 +15,6 @@
 
 - [ListExtensions](Atc.Rest.ApiGenerator.Extensions.md#listextensions)
 
-## [Atc.Rest.ApiGenerator.Factories](Atc.Rest.ApiGenerator.Factories.md)
-
-- [ProjectApiClientFactory](Atc.Rest.ApiGenerator.Factories.md#projectapiclientfactory)
-- [ProjectApiFactory](Atc.Rest.ApiGenerator.Factories.md#projectapifactory)
-- [ProjectDomainFactory](Atc.Rest.ApiGenerator.Factories.md#projectdomainfactory)
-- [ProjectHostFactory](Atc.Rest.ApiGenerator.Factories.md#projecthostfactory)
-
 ## [Atc.Rest.ApiGenerator.Generators](Atc.Rest.ApiGenerator.Generators.md)
 
 - [ClientCSharpApiGenerator](Atc.Rest.ApiGenerator.Generators.md#clientcsharpapigenerator)
@@ -36,6 +29,7 @@
 - [DirectoryInfoHelper](Atc.Rest.ApiGenerator.Helpers.md#directoryinfohelper)
 - [GenerateAtcCodingRulesHelper](Atc.Rest.ApiGenerator.Helpers.md#generateatccodingruleshelper)
 - [GenerateHelper](Atc.Rest.ApiGenerator.Helpers.md#generatehelper)
+- [GlobalUsingsHelper](Atc.Rest.ApiGenerator.Helpers.md#globalusingshelper)
 - [HttpClientHelper](Atc.Rest.ApiGenerator.Helpers.md#httpclienthelper)
 - [LogItemHelper](Atc.Rest.ApiGenerator.Helpers.md#logitemhelper)
 - [NugetPackageReferenceHelper](Atc.Rest.ApiGenerator.Helpers.md#nugetpackagereferencehelper)

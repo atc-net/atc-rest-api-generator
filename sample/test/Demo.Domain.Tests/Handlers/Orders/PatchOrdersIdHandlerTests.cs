@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-namespace Demo.Domain.Tests.Handlers.Orders
+﻿namespace Demo.Domain.Tests.Handlers.Orders
 {
     public class PatchOrdersIdHandlerTests
     {

@@ -1,32 +1,27 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Scenario2.Api.Generated.Contracts.Files;
+namespace Scenario2.Domain.Handlers.Files;
 
-namespace Scenario2.Domain.Handlers.Files
+/// <summary>
+/// Handler for operation request.
+/// Description: Upload a file as FormData.
+/// Operation: UploadSingleObjectWithFileAsFormData.
+/// Area: Files.
+/// </summary>
+public class UploadSingleObjectWithFileAsFormDataHandler : IUploadSingleObjectWithFileAsFormDataHandler
 {
-    /// <summary>
-    /// Handler for operation request.
-    /// Description: Upload a file as FormData.
-    /// Operation: UploadSingleObjectWithFileAsFormData.
-    /// Area: Files.
-    /// </summary>
-    public class UploadSingleObjectWithFileAsFormDataHandler : IUploadSingleObjectWithFileAsFormDataHandler
+    public Task<UploadSingleObjectWithFileAsFormDataResult> ExecuteAsync(UploadSingleObjectWithFileAsFormDataParameters parameters, CancellationToken cancellationToken = default)
     {
-        public Task<UploadSingleObjectWithFileAsFormDataResult> ExecuteAsync(UploadSingleObjectWithFileAsFormDataParameters parameters, CancellationToken cancellationToken = default)
+        if (parameters is null)
         {
-            if (parameters is null)
-            {
-                throw new System.ArgumentNullException(nameof(parameters));
-            }
-
-            return InvokeExecuteAsync(parameters, cancellationToken);
+            throw new System.ArgumentNullException(nameof(parameters));
         }
+
+        return InvokeExecuteAsync(parameters, cancellationToken);
+    }
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-        private async Task<UploadSingleObjectWithFileAsFormDataResult> InvokeExecuteAsync(UploadSingleObjectWithFileAsFormDataParameters parameters, CancellationToken cancellationToken)
+    private async Task<UploadSingleObjectWithFileAsFormDataResult> InvokeExecuteAsync(UploadSingleObjectWithFileAsFormDataParameters parameters, CancellationToken cancellationToken)
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
-        {
-            throw new System.NotImplementedException();
-        }
+    {
+        throw new System.NotImplementedException();
     }
 }

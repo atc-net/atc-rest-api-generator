@@ -17,10 +17,10 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
         string focusOnSegmentName)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        this.ApiProjectOptions = apiProjectOptions ?? throw new ArgumentNullException(nameof(apiProjectOptions));
-        this.ApiOperationType = apiOperationType;
-        this.ApiOperation = apiOperation ?? throw new ArgumentNullException(nameof(apiOperation));
-        this.FocusOnSegmentName = focusOnSegmentName ?? throw new ArgumentNullException(nameof(focusOnSegmentName));
+        ApiProjectOptions = apiProjectOptions ?? throw new ArgumentNullException(nameof(apiProjectOptions));
+        ApiOperationType = apiOperationType;
+        ApiOperation = apiOperation ?? throw new ArgumentNullException(nameof(apiOperation));
+        FocusOnSegmentName = focusOnSegmentName ?? throw new ArgumentNullException(nameof(focusOnSegmentName));
     }
 
     public ApiProjectOptions ApiProjectOptions { get; }
@@ -61,13 +61,6 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
             classDeclaration,
             (current, memberDeclaration) => current.AddMembers(memberDeclaration));
 
-        // Add using statement to compilationUnit
-        compilationUnit = compilationUnit.AddUsingStatements(
-            ProjectApiFactory.CreateUsingListForContractResult(
-                ApiOperation.Responses,
-                ApiProjectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
-                HasCreateContentResult));
-
         // Add the class to the namespace.
         @namespace = @namespace.AddMembers(classDeclaration);
 
@@ -98,7 +91,8 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
             .FormatPublicPrivateLines()
             .FormatDoubleLines()
             .FormatBracketSpacing()
-            .FormatConstructorWithInheritResult();
+            .FormatConstructorWithInheritResult()
+            .EnsureFileScopedNamespace();
     }
 
     public void ToFile()

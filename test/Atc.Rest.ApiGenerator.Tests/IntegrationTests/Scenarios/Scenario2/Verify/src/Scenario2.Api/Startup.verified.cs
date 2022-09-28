@@ -1,12 +1,3 @@
-﻿using System.Reflection;
-using Atc.Rest.Extended.Options;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Scenario2.Api.Generated;
-using Scenario2.Domain;
-
 namespace Scenario2.Api
 {
     public class Startup

@@ -1,32 +1,27 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Scenario2.Api.Generated.Contracts.Eventargs;
+namespace Scenario2.Domain.Handlers.Eventargs;
 
-namespace Scenario2.Domain.Handlers.Eventargs
+/// <summary>
+/// Handler for operation request.
+/// Description: Get EventArgs By Id.
+/// Operation: GetEventArgsById.
+/// Area: Eventargs.
+/// </summary>
+public class GetEventArgsByIdHandler : IGetEventArgsByIdHandler
 {
-    /// <summary>
-    /// Handler for operation request.
-    /// Description: Get EventArgs By Id.
-    /// Operation: GetEventArgsById.
-    /// Area: Eventargs.
-    /// </summary>
-    public class GetEventArgsByIdHandler : IGetEventArgsByIdHandler
+    public Task<GetEventArgsByIdResult> ExecuteAsync(GetEventArgsByIdParameters parameters, CancellationToken cancellationToken = default)
     {
-        public Task<GetEventArgsByIdResult> ExecuteAsync(GetEventArgsByIdParameters parameters, CancellationToken cancellationToken = default)
+        if (parameters is null)
         {
-            if (parameters is null)
-            {
-                throw new System.ArgumentNullException(nameof(parameters));
-            }
-
-            return InvokeExecuteAsync(parameters, cancellationToken);
+            throw new System.ArgumentNullException(nameof(parameters));
         }
+
+        return InvokeExecuteAsync(parameters, cancellationToken);
+    }
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-        private async Task<GetEventArgsByIdResult> InvokeExecuteAsync(GetEventArgsByIdParameters parameters, CancellationToken cancellationToken)
+    private async Task<GetEventArgsByIdResult> InvokeExecuteAsync(GetEventArgsByIdParameters parameters, CancellationToken cancellationToken)
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
-        {
-            throw new System.NotImplementedException();
-        }
+    {
+        throw new System.NotImplementedException();
     }
 }

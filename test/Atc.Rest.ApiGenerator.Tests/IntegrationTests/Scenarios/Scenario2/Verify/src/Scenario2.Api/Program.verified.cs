@@ -1,6 +1,3 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
-
 namespace Scenario2.Api
 {
     public static class Program

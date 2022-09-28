@@ -15,9 +15,9 @@ public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointContro
         string focusOnSegmentName)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        this.ApiProjectOptions = apiProjectOptions ?? throw new ArgumentNullException(nameof(apiProjectOptions));
-        this.OperationSchemaMappings = operationSchemaMappings ?? throw new ArgumentNullException(nameof(operationSchemaMappings));
-        this.FocusOnSegmentName = focusOnSegmentName ?? throw new ArgumentNullException(nameof(focusOnSegmentName));
+        ApiProjectOptions = apiProjectOptions ?? throw new ArgumentNullException(nameof(apiProjectOptions));
+        OperationSchemaMappings = operationSchemaMappings ?? throw new ArgumentNullException(nameof(operationSchemaMappings));
+        FocusOnSegmentName = focusOnSegmentName ?? throw new ArgumentNullException(nameof(focusOnSegmentName));
     }
 
     private ApiProjectOptions ApiProjectOptions { get; }
@@ -87,19 +87,6 @@ public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointContro
         // Add the class to the namespace.
         @namespace = @namespace.AddMembers(classDeclaration);
 
-        // Add using statement to compilationUnit
-        var includeRestResults = classDeclaration
-            .Select<IdentifierNameSyntax>()
-            .Any(x => x.Identifier.ValueText.Contains($"({Microsoft.OpenApi.Models.NameConstants.Pagination}<", StringComparison.Ordinal));
-
-        compilationUnit = compilationUnit.AddUsingStatements(
-            ProjectApiFactory.CreateUsingListForEndpoint(
-                ApiProjectOptions,
-                usedApiOperations,
-                HasSharedResponseContract(),
-                includeRestResults,
-                FocusOnSegmentName));
-
         // Add namespace to compilationUnit
         compilationUnit = compilationUnit.AddMembers(@namespace);
 
@@ -123,7 +110,8 @@ public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointContro
         return Code
             .NormalizeWhitespace()
             .ToFullString()
-            .EnsureEnvironmentNewLines();
+            .EnsureEnvironmentNewLines()
+            .EnsureFileScopedNamespace();
     }
 
     public void ToFile()

@@ -59,12 +59,9 @@ public class CodeComplianceTests
         typeof(GenerateServerDomainXunitTestHelper),
         typeof(ParameterCombinationHelper),
         typeof(OpenApiDocumentSchemaModelNameHelper),
-        typeof(ProjectApiFactory),
-        typeof(ProjectApiClientFactory),
-        typeof(ProjectHostFactory),
-        typeof(ProjectDomainFactory),
         typeof(SyntaxGeneratorSwaggerDocOptions),
         typeof(ListExtensions),
+        typeof(GlobalUsingsHelper),
     };
 
     public CodeComplianceTests(

@@ -13,11 +13,11 @@ public class SyntaxGeneratorHandler
         bool hasParametersOrRequestBody)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        this.DomainProjectOptions = domainProjectOptions ?? throw new ArgumentNullException(nameof(domainProjectOptions));
-        this.ApiOperationType = apiOperationType;
-        this.ApiOperation = apiOperation ?? throw new ArgumentNullException(nameof(apiOperation));
-        this.FocusOnSegmentName = focusOnSegmentName ?? throw new ArgumentNullException(nameof(focusOnSegmentName));
-        this.HasParametersOrRequestBody = hasParametersOrRequestBody;
+        DomainProjectOptions = domainProjectOptions ?? throw new ArgumentNullException(nameof(domainProjectOptions));
+        ApiOperationType = apiOperationType;
+        ApiOperation = apiOperation ?? throw new ArgumentNullException(nameof(apiOperation));
+        FocusOnSegmentName = focusOnSegmentName ?? throw new ArgumentNullException(nameof(focusOnSegmentName));
+        HasParametersOrRequestBody = hasParametersOrRequestBody;
     }
 
     public DomainProjectOptions DomainProjectOptions { get; }
@@ -64,12 +64,6 @@ public class SyntaxGeneratorHandler
             classDeclaration,
             (current, memberDeclaration) => current.AddMembers(memberDeclaration));
 
-        // Add using statement to compilationUnit
-        compilationUnit = compilationUnit.AddUsingStatements(
-            ProjectDomainFactory.CreateUsingListForHandler(
-                DomainProjectOptions,
-                FocusOnSegmentName));
-
         // Add the class to the namespace.
         @namespace = @namespace.AddMembers(classDeclaration);
 
@@ -97,7 +91,8 @@ public class SyntaxGeneratorHandler
             .NormalizeWhitespace()
             .ToFullString()
             .EnsureEnvironmentNewLines()
-            .FormatCs1998();
+            .FormatCs1998()
+            .EnsureFileScopedNamespace();
     }
 
     public FileInfo GetFilePath()
