@@ -37,13 +37,7 @@ public static class TextFileHelper
             Directory.CreateDirectory(fileInfo.Directory.FullName);
         }
 
-        // Trim last NewLine in in *.cs files
-        if (fileInfo.Extension.Equals(".cs", StringComparison.OrdinalIgnoreCase) &&
-            text.EndsWith("}" + Environment.NewLine, StringComparison.Ordinal))
-        {
-            var index = text.LastIndexOf(Environment.NewLine, StringComparison.Ordinal);
-            text = text.Remove(index);
-        }
+        text = RemoveLastNewLineIfNeeded(fileInfo, text);
 
         fileDisplayLocation = ReformatFileDisplayLocationIfNeeded(fileInfo, fileDisplayLocation);
 
@@ -82,6 +76,33 @@ public static class TextFileHelper
         FileHelper.WriteAllText(fileInfo, text);
         logger.LogDebug($"{EmojisConstants.FileCreated}   {fileDisplayLocation} created");
         return true;
+    }
+
+    private static string RemoveLastNewLineIfNeeded(
+        FileInfo fileInfo,
+        string text)
+    {
+        if (fileInfo.Extension.Equals(".cs", StringComparison.OrdinalIgnoreCase) &&
+            text.EndsWith("}" + Environment.NewLine, StringComparison.Ordinal))
+        {
+            // Trim last NewLine in in *.cs files
+            text = RemoveLastNewLine(text);
+        }
+        else if (fileInfo.Name.Equals("GlobalUsings.cs", StringComparison.Ordinal) &&
+                 text.EndsWith(";" + Environment.NewLine, StringComparison.Ordinal))
+        {
+            // Trim last NewLine in in GlobalUsings.cs files
+            text = RemoveLastNewLine(text);
+        }
+
+        return text;
+    }
+
+    private static string RemoveLastNewLine(
+        string text)
+    {
+        var index = text.LastIndexOf(Environment.NewLine, StringComparison.Ordinal);
+        return text.Remove(index);
     }
 
     private static string ReformatFileDisplayLocationIfNeeded(
