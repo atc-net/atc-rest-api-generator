@@ -47,6 +47,7 @@ public static class NugetPackageReferenceHelper
         var packageReference = new List<Tuple<string, string, string?>>
         {
             new("Atc", atcVersion, null),
+            new("Atc.Rest", atcVersion, null),
             new("Atc.Rest.Client", "1.0.36", null),
         };
 
