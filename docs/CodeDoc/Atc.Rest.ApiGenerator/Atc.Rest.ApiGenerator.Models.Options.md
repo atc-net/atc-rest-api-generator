@@ -97,6 +97,10 @@
 >```csharp
 >OperationIdCasingStyle
 >```
+#### OperationIdValidation
+>```csharp
+>OperationIdValidation
+>```
 #### StrictMode
 >```csharp
 >StrictMode

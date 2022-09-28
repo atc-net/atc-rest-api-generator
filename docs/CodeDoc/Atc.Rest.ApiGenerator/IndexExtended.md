@@ -406,6 +406,7 @@
      - ModelNameCasingStyle
      - ModelPropertyNameCasingStyle
      - OperationIdCasingStyle
+     - OperationIdValidation
      - StrictMode
 
 ## [Atc.Rest.ApiGenerator.SyntaxGenerators](Atc.Rest.ApiGenerator.SyntaxGenerators.md)
