@@ -25,8 +25,8 @@ public class ClientCSharpApiProjectOptions
         Document = openApiDocument ?? throw new ArgumentNullException(nameof(openApiDocument));
         DocumentFile = openApiDocumentFile ?? throw new ArgumentNullException(nameof(openApiDocumentFile));
 
-        ToolName = "ApiGenerator";
-        ToolVersion = GenerateHelper.GetAtcToolVersion();
+        ApiGeneratorName = "ApiGenerator";
+        ApiGeneratorVersion = GenerateHelper.GetAtcApiGeneratorVersion();
         ApiOptions = apiOptions;
         ProjectName = projectPrefixName
             .Replace(" ", ".", StringComparison.Ordinal)
@@ -45,11 +45,11 @@ public class ClientCSharpApiProjectOptions
 
     public bool UseNullableReferenceTypes { get; } = true;
 
-    public string ToolName { get; }
+    public string ApiGeneratorName { get; }
 
-    public Version ToolVersion { get; }
+    public Version ApiGeneratorVersion { get; }
 
-    public string ToolNameAndVersion => $"{ToolName} {ToolVersion}";
+    public string ApiGeneratorNameAndVersion => $"{ApiGeneratorName} {ApiGeneratorVersion}";
 
     public ApiOptions ApiOptions { get; }
 
@@ -75,5 +75,5 @@ public class ClientCSharpApiProjectOptions
     public bool ExcludeEndpointGeneration { get; }
 
     public override string ToString()
-        => $"{nameof(ToolName)}: {ToolName}, {nameof(ToolVersion)}: {ToolVersion}, {nameof(ToolNameAndVersion)}: {ToolNameAndVersion}, {nameof(ApiOptions)}: {ApiOptions}, {nameof(PathForSrcGenerate)}: {PathForSrcGenerate}, {nameof(ProjectSrcCsProj)}: {ProjectSrcCsProj}, {nameof(ForClient)}: {ForClient}, {nameof(ClientFolderName)}: {ClientFolderName}, {nameof(Document)}: {Document}, {nameof(DocumentFile)}: {DocumentFile}, {nameof(ProjectName)}: {ProjectName}, {nameof(BasePathSegmentNames)}: {BasePathSegmentNames}, {nameof(ExcludeEndpointGeneration)}: {ExcludeEndpointGeneration}";
+        => $"{nameof(ApiGeneratorName)}: {ApiGeneratorName}, {nameof(ApiGeneratorVersion)}: {ApiGeneratorVersion}, {nameof(ApiGeneratorNameAndVersion)}: {ApiGeneratorNameAndVersion}, {nameof(ApiOptions)}: {ApiOptions}, {nameof(PathForSrcGenerate)}: {PathForSrcGenerate}, {nameof(ProjectSrcCsProj)}: {ProjectSrcCsProj}, {nameof(ForClient)}: {ForClient}, {nameof(ClientFolderName)}: {ClientFolderName}, {nameof(Document)}: {Document}, {nameof(DocumentFile)}: {DocumentFile}, {nameof(ProjectName)}: {ProjectName}, {nameof(BasePathSegmentNames)}: {BasePathSegmentNames}, {nameof(ExcludeEndpointGeneration)}: {ExcludeEndpointGeneration}";
 }

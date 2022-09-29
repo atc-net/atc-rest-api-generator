@@ -1,12 +1,10 @@
 // ReSharper disable ReturnTypeCanBeEnumerable.Global
 
-using Microsoft.Extensions.Logging.Abstractions;
-
 namespace Atc.Rest.ApiGenerator.Helpers;
 
 public static class GenerateHelper
 {
-    private static readonly Version AtcToolVersion = new(1, 1, 405, 0); // TODO: Fix version
+    private static readonly Version AtcApiGeneratorVersion = new(1, 1, 405, 0); // TODO: Fix version
 
     public static Version GetAtcVersion()
     {
@@ -29,7 +27,7 @@ public static class GenerateHelper
         return $"{atcVersion.Major}.{atcVersion.Minor}.{atcVersion.Build}.{atcVersion.Revision}";
     }
 
-    public static Version GetAtcToolVersion()
+    public static Version GetAtcApiGeneratorVersion()
     {
         var version = AtcApiNugetClientHelper.GetLatestVersionForPackageId(
             NullLogger.Instance,
@@ -40,19 +38,19 @@ public static class GenerateHelper
 
         return assemblyVersion.GreaterThan(version)
             ? assemblyVersion
-            : AtcToolVersion;
+            : AtcApiGeneratorVersion;
     }
 
-    public static string GetAtcToolVersionAsString3()
+    public static string GetAtcApiGeneratorVersionAsString3()
     {
-        var atcToolVersion = GetAtcToolVersion();
-        return $"{atcToolVersion.Major}.{atcToolVersion.Minor}.{atcToolVersion.Build}";
+        var atcApiGeneratorVersion = GetAtcApiGeneratorVersion();
+        return $"{atcApiGeneratorVersion.Major}.{atcApiGeneratorVersion.Minor}.{atcApiGeneratorVersion.Build}";
     }
 
-    public static string GetAtcToolVersionAsString4()
+    public static string GetAtcApiGeneratorVersionAsString4()
     {
-        var atcToolVersion = GetAtcToolVersion();
-        return $"{atcToolVersion.Major}.{atcToolVersion.Minor}.{atcToolVersion.Build}.{atcToolVersion.Revision}";
+        var atcApiGeneratorVersion = GetAtcApiGeneratorVersion();
+        return $"{atcApiGeneratorVersion.Major}.{atcApiGeneratorVersion.Minor}.{atcApiGeneratorVersion.Build}.{atcApiGeneratorVersion.Revision}";
     }
 
     public static bool GenerateServerApi(

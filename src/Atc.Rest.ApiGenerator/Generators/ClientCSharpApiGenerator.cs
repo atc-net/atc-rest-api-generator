@@ -195,12 +195,9 @@ public class ClientCSharpApiGenerator
             $"{projectOptions.ProjectName}.Contracts",
         };
 
-        var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "GlobalUsings.cs"));
-        var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
-
         GlobalUsingsHelper.CreateOrUpdate(
             logger,
-            fileDisplayLocation,
+            ContentWriterArea.Src,
             projectOptions.PathForSrcGenerate,
             requiredUsings);
     }

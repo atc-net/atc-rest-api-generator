@@ -53,7 +53,7 @@ public class SyntaxGeneratorContractInterface : ISyntaxOperationCodeGenerator
 
         // Create interface
         var interfaceDeclaration = SyntaxInterfaceDeclarationFactory.Create(interfaceTypeName)
-            .AddGeneratedCodeAttribute(ApiProjectOptions.ToolName, ApiProjectOptions.ToolVersion.ToString())
+            .AddGeneratedCodeAttribute(ApiProjectOptions.ApiGeneratorName, ApiProjectOptions.ApiGeneratorVersion.ToString())
             .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForInterface(ApiOperation, FocusOnSegmentName));
 
         // Create interface-method
@@ -106,8 +106,12 @@ public class SyntaxGeneratorContractInterface : ISyntaxOperationCodeGenerator
     {
         ArgumentNullException.ThrowIfNull(file);
 
-        var fileDisplayLocation = file.FullName.Replace(ApiProjectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
-        TextFileHelper.Save(logger, file.FullName, fileDisplayLocation, ToCodeAsString());
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            ApiProjectOptions.PathForSrcGenerate,
+            file,
+            ContentWriterArea.Src,
+            ToCodeAsString());
     }
 
     public override string ToString()

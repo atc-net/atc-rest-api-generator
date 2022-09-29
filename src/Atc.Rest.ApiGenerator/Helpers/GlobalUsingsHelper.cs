@@ -6,7 +6,7 @@ namespace Atc.Rest.ApiGenerator.Helpers
     {
         public static void CreateOrUpdate(
             ILogger logger,
-            string fileDisplayLocation,
+            ContentWriterArea contentWriterArea,
             DirectoryInfo directoryInfo,
             List<string> requiredUsings)
         {
@@ -25,7 +25,12 @@ namespace Atc.Rest.ApiGenerator.Helpers
             var globalUsingFile = new FileInfo(Path.Combine(directoryInfo.FullName, "GlobalUsings.cs"));
             if (!string.IsNullOrEmpty(content))
             {
-                TextFileHelper.Save(logger, globalUsingFile, fileDisplayLocation, content);
+                var contentWriter = new ContentWriter(logger);
+                contentWriter.Write(
+                    globalUsingFile.Directory!,
+                    globalUsingFile,
+                    contentWriterArea,
+                    content);
             }
         }
     }

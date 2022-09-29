@@ -26,7 +26,6 @@ public class CodeComplianceTests
         typeof(ServerHostGenerator),
         typeof(ApiGeneratorHelper),
         typeof(NugetPackageReferenceHelper),
-        typeof(TextFileHelper),
         typeof(HttpClientHelper),
         typeof(OpenApiDocumentHelper),
         typeof(OpenApiDocumentValidationHelper),
@@ -59,7 +58,6 @@ public class CodeComplianceTests
         typeof(GenerateServerDomainXunitTestHelper),
         typeof(ParameterCombinationHelper),
         typeof(OpenApiDocumentSchemaModelNameHelper),
-        typeof(SyntaxGeneratorSwaggerDocOptions),
         typeof(ListExtensions),
         typeof(GlobalUsingsHelper),
     };

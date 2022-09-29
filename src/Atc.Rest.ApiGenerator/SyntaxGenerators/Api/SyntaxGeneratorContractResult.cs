@@ -50,7 +50,7 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
 
         // Create class
         var classDeclaration = SyntaxClassDeclarationFactory.CreateWithInheritClassType(resultTypeName, "ResultBase")
-            .AddGeneratedCodeAttribute(ApiProjectOptions.ToolName, ApiProjectOptions.ToolVersion.ToString())
+            .AddGeneratedCodeAttribute(ApiProjectOptions.ApiGeneratorName, ApiProjectOptions.ApiGeneratorVersion.ToString())
             .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForResults(ApiOperation, FocusOnSegmentName));
 
         // Create members
@@ -108,8 +108,12 @@ public class SyntaxGeneratorContractResult : ISyntaxOperationCodeGenerator
     {
         ArgumentNullException.ThrowIfNull(file);
 
-        var fileDisplayLocation = file.FullName.Replace(ApiProjectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
-        TextFileHelper.Save(logger, file.FullName, fileDisplayLocation, ToCodeAsString());
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            ApiProjectOptions.PathForSrcGenerate,
+            file,
+            ContentWriterArea.Src,
+            ToCodeAsString());
     }
 
     public override string ToString()

@@ -194,7 +194,7 @@ public class ServerDomainGenerator
 
         // Create class
         var classDeclaration = SyntaxClassDeclarationFactory.Create("DomainRegistration")
-            .AddGeneratedCodeAttribute(projectOptions.ToolName, projectOptions.ToolVersion.ToString());
+            .AddGeneratedCodeAttribute(projectOptions.ApiGeneratorName, projectOptions.ApiGeneratorVersion.ToString());
 
         // Add class to namespace
         @namespace = @namespace.AddMembers(classDeclaration);
@@ -209,8 +209,13 @@ public class ServerDomainGenerator
             .EnsureFileScopedNamespace();
 
         var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "DomainRegistration.cs"));
-        var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
-        TextFileHelper.Save(logger, file, fileDisplayLocation, codeAsString);
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectOptions.PathForSrcGenerate,
+            file,
+            ContentWriterArea.Src,
+            codeAsString);
     }
 
     private void GenerateSrcGlobalUsings()
@@ -228,12 +233,9 @@ public class ServerDomainGenerator
             requiredUsings.Add($"{projectName}.Contracts.{basePathSegmentName}");
         }
 
-        var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "GlobalUsings.cs"));
-        var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
-
         GlobalUsingsHelper.CreateOrUpdate(
             logger,
-            fileDisplayLocation,
+            ContentWriterArea.Src,
             projectOptions.PathForSrcGenerate,
             requiredUsings);
     }
@@ -252,12 +254,9 @@ public class ServerDomainGenerator
             requiredUsings.Add($"{projectOptions.ProjectName}.Handlers.{basePathSegmentName}");
         }
 
-        var file = new FileInfo(Path.Combine(projectOptions.PathForTestGenerate!.FullName, "GlobalUsings.cs"));
-        var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForTestGenerate!.FullName, "test: ", StringComparison.Ordinal);
-
         GlobalUsingsHelper.CreateOrUpdate(
             logger,
-            fileDisplayLocation,
+            ContentWriterArea.Test,
             projectOptions.PathForTestGenerate!,
             requiredUsings);
     }

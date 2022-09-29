@@ -129,8 +129,12 @@ public class ServerHostGenerator
         }
         else
         {
-            var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
-            TextFileHelper.Save(logger, file, fileDisplayLocation, json);
+            var contentWriter = new ContentWriter(logger);
+            contentWriter.Write(
+                projectOptions.PathForSrcGenerate,
+                file,
+                ContentWriterArea.Src,
+                json);
         }
     }
 
@@ -957,7 +961,7 @@ public class ServerHostGenerator
                 $"{projectOptions.ProjectName}.Tests",
                 "net6.0",
                 frameworkReferences: null,
-                NugetPackageReferenceHelper.CreateForTestProject(true),
+                NugetPackageReferenceHelper.CreateForTestProject(useMvc: true),
                 projectReferences,
                 includeApiSpecification: true,
                 usingCodingRules: projectOptions.UsingCodingRules);
@@ -1006,7 +1010,7 @@ public class ServerHostGenerator
         var compilationUnit = SyntaxFactory.CompilationUnit();
 
         // Create a namespace
-        var @namespace = SyntaxProjectFactory.CreateNamespace(projectOptions, false);
+        var @namespace = SyntaxProjectFactory.CreateNamespace(projectOptions, withAutoGen: false);
 
         // Create class
         var classDeclaration = SyntaxClassDeclarationFactory.CreateAsPublicStatic("Program");
@@ -1038,8 +1042,12 @@ public class ServerHostGenerator
         }
         else
         {
-            var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
-            TextFileHelper.Save(logger, file, fileDisplayLocation, codeAsString);
+            var contentWriter = new ContentWriter(logger);
+            contentWriter.Write(
+                projectOptions.PathForSrcGenerate,
+                file,
+                ContentWriterArea.Src,
+                codeAsString);
         }
     }
 
@@ -1049,7 +1057,7 @@ public class ServerHostGenerator
         var compilationUnit = SyntaxFactory.CompilationUnit();
 
         // Create a namespace
-        var @namespace = SyntaxProjectFactory.CreateNamespace(projectOptions, false);
+        var @namespace = SyntaxProjectFactory.CreateNamespace(projectOptions, withAutoGen: false);
 
         // Create class
         var classDeclaration = SyntaxClassDeclarationFactory.Create("Startup");
@@ -1091,8 +1099,12 @@ public class ServerHostGenerator
         }
         else
         {
-            var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
-            TextFileHelper.Save(logger, file, fileDisplayLocation, codeAsString);
+            var contentWriter = new ContentWriter(logger);
+            contentWriter.Write(
+                projectOptions.PathForSrcGenerate,
+                file,
+                ContentWriterArea.Src,
+                codeAsString);
         }
     }
 
@@ -1117,27 +1129,40 @@ public class ServerHostGenerator
         }
         else
         {
-            var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
-            TextFileHelper.Save(logger, file, fileDisplayLocation, sb.ToString());
+            var contentWriter = new ContentWriter(logger);
+            contentWriter.Write(
+                projectOptions.PathForSrcGenerate,
+                file,
+                ContentWriterArea.Src,
+                sb.ToString());
         }
     }
 
-    // TODO: FIX THIS - Use CompilationUnit
     private void ScaffoldConfigureSwaggerDocOptions()
-{
-    var fullNamespace = string.IsNullOrEmpty(projectOptions.ClientFolderName)
-        ? $"{projectOptions.ProjectName}"
-        : $"{projectOptions.ProjectName}.{projectOptions.ClientFolderName}";
+    {
+        var fullNamespace = string.IsNullOrEmpty(projectOptions.ClientFolderName)
+            ? $"{projectOptions.ProjectName}"
+            : $"{projectOptions.ProjectName}.{projectOptions.ClientFolderName}";
 
-    var syntaxGenerator = new SyntaxGeneratorSwaggerDocOptions(fullNamespace, projectOptions.Document);
-    var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "ConfigureSwaggerDocOptions.cs"));
+        var contentGeneratorServerSwaggerDocOptionsParameters = new ContentGeneratorServerSwaggerDocOptionsParameters(
+            projectOptions.ApiGeneratorVersion,
+            fullNamespace,
+            projectOptions.Document.ToSwaggerDocOptionsParameters());
 
-    var sb = new StringBuilder();
-    GenerateCodeHelper.AppendGeneratedCodeWarningComment(sb, projectOptions.ToolNameAndVersion);
-    sb.Append(syntaxGenerator.GenerateCode());
-    var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
-    TextFileHelper.Save(logger, file, fileDisplayLocation, sb.ToString());
-}
+        var contentGenerator = new ContentGeneratorServerSwaggerDocOptions(
+            new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+            new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+            contentGeneratorServerSwaggerDocOptionsParameters);
+
+        var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "ConfigureSwaggerDocOptions.cs"));
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectOptions.PathForSrcGenerate,
+            file,
+            ContentWriterArea.Src,
+            contentGenerator.Generate());
+    }
 
     private void GenerateTestWebApiStartupFactory()
     {
@@ -1149,7 +1174,7 @@ public class ServerHostGenerator
 
         // Create class
         var classDeclaration = SyntaxClassDeclarationFactory.CreateAsPublicPartial("WebApiStartupFactory")
-            .AddGeneratedCodeAttribute(projectOptions.ToolName, projectOptions.ToolVersion.ToString())
+            .AddGeneratedCodeAttribute(projectOptions.ApiGeneratorName, projectOptions.ApiGeneratorVersion.ToString())
             .WithBaseList(
                 SyntaxFactory.BaseList(
                     SyntaxFactory.SingletonSeparatedList<BaseTypeSyntax>(
@@ -1189,8 +1214,13 @@ public class ServerHostGenerator
             .EnsureFileScopedNamespace();
 
         var file = new FileInfo(Path.Combine(projectOptions.PathForTestGenerate!.FullName, "WebApiStartupFactory.cs"));
-        var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForTestGenerate.FullName, "test: ", StringComparison.Ordinal);
-        TextFileHelper.Save(logger, file, fileDisplayLocation, codeAsString);
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectOptions.PathForTestGenerate,
+            file,
+            ContentWriterArea.Test,
+            codeAsString);
     }
 
     private void GenerateTestWebApiControllerBaseTest()
@@ -1204,7 +1234,7 @@ public class ServerHostGenerator
         // Create class
         var classDeclaration = SyntaxClassDeclarationFactory.Create("WebApiControllerBaseTest")
             .AddModifiers(SyntaxTokenFactory.AbstractKeyword())
-            .AddGeneratedCodeAttribute(projectOptions.ToolName, projectOptions.ToolVersion.ToString())
+            .AddGeneratedCodeAttribute(projectOptions.ApiGeneratorName, projectOptions.ApiGeneratorVersion.ToString())
             .WithBaseList(
                 SyntaxFactory.BaseList(
                     SyntaxFactory.SingletonSeparatedList<BaseTypeSyntax>(
@@ -1249,8 +1279,13 @@ public class ServerHostGenerator
             .EnsureFileScopedNamespace();
 
         var file = new FileInfo(Path.Combine(projectOptions.PathForTestGenerate!.FullName, "WebApiControllerBaseTest.cs"));
-        var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForTestGenerate.FullName, "test: ", StringComparison.Ordinal);
-        TextFileHelper.Save(logger, file, fileDisplayLocation, codeAsString);
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectOptions.PathForTestGenerate,
+            file,
+            ContentWriterArea.Test,
+            codeAsString);
     }
 
     private void ScaffoldAppSettingsIntegrationTest()
@@ -1265,14 +1300,19 @@ public class ServerHostGenerator
             return;
         }
 
-        var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForTestGenerate.FullName, "test: ", StringComparison.Ordinal);
-        TextFileHelper.Save(logger, file, fileDisplayLocation, sb.ToString());
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectOptions.PathForTestGenerate,
+            file,
+            ContentWriterArea.Test,
+            sb.ToString());
     }
 
     private void GenerateSrcGlobalUsings()
     {
         var requiredUsings = new List<string>
         {
+            "System.CodeDom.Compiler",
             "System.Reflection",
             "System.IO",
             "Microsoft.AspNetCore.Builder",
@@ -1293,12 +1333,9 @@ public class ServerHostGenerator
             requiredUsings.Add("Swashbuckle.AspNetCore.SwaggerGen");
         }
 
-        var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "GlobalUsings.cs"));
-        var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
-
         GlobalUsingsHelper.CreateOrUpdate(
             logger,
-            fileDisplayLocation,
+            ContentWriterArea.Src,
             projectOptions.PathForSrcGenerate,
             requiredUsings);
     }
@@ -1327,12 +1364,9 @@ public class ServerHostGenerator
             $"{projectOptions.ProjectName}.Generated",
         };
 
-        var file = new FileInfo(Path.Combine(projectOptions.PathForTestGenerate!.FullName, "GlobalUsings.cs"));
-        var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForTestGenerate!.FullName, "test: ", StringComparison.Ordinal);
-
         GlobalUsingsHelper.CreateOrUpdate(
             logger,
-            fileDisplayLocation,
+            ContentWriterArea.Test,
             projectOptions.PathForTestGenerate!,
             requiredUsings);
     }

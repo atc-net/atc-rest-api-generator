@@ -31,8 +31,8 @@ public abstract class BaseProjectOptions
         Document = openApiDocument ?? throw new ArgumentNullException(nameof(openApiDocument));
         DocumentFile = openApiDocumentFile ?? throw new ArgumentNullException(nameof(openApiDocumentFile));
 
-        ToolName = "ApiGenerator";
-        ToolVersion = GenerateHelper.GetAtcToolVersion();
+        ApiGeneratorName = "ApiGenerator";
+        ApiGeneratorVersion = GenerateHelper.GetAtcApiGeneratorVersion();
         ApiOptions = apiOptions;
 
         RouteBase = OpenApiDocumentHelper.GetServerUrlBasePath(openApiDocument);
@@ -69,11 +69,11 @@ public abstract class BaseProjectOptions
 
     public bool UseNullableReferenceTypes { get; } = true;
 
-    public string ToolName { get; }
+    public string ApiGeneratorName { get; }
 
-    public Version ToolVersion { get; }
+    public Version ApiGeneratorVersion { get; }
 
-    public string ToolNameAndVersion => $"{ToolName} {ToolVersion}";
+    public string ApiGeneratorNameAndVersion => $"{ApiGeneratorName} {ApiGeneratorVersion}";
 
     public ApiOptions ApiOptions { get; }
 

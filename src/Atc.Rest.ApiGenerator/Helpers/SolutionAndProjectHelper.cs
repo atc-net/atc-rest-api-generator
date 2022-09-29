@@ -143,7 +143,13 @@ public static class SolutionAndProjectHelper
         }
 
         sb.AppendLine("</Project>");
-        TextFileHelper.Save(logger, projectCsProjFile, fileDisplayLocation, sb.ToString());
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectCsProjFile.Directory!,
+            projectCsProjFile,
+            ContentWriterArea.Src,
+            sb.ToString());
     }
 
     public static void ScaffoldSlnFile(
@@ -249,8 +255,21 @@ public static class SolutionAndProjectHelper
             }
         }
 
-        TextFileHelper.Save(logger, slnFile, $"root: {slnFile.Name}", slnFileContent, overrideIfExist: false);
-        TextFileHelper.Save(logger, slnDotSettingsFile, $"root: {slnDotSettingsFile.Name}", slnDotSettingsFileContent, slnDotSettingsFileOverrideIfExist);
+        var contentWriter = new ContentWriter(logger);
+
+        contentWriter.Write(
+            slnFile.Directory!,
+            slnFile,
+            ContentWriterArea.Root,
+            slnFileContent,
+            overrideIfExist: false);
+
+        contentWriter.Write(
+            slnFile.Directory!,
+            slnDotSettingsFile,
+            ContentWriterArea.Root,
+            slnDotSettingsFileContent,
+            overrideIfExist: slnDotSettingsFileOverrideIfExist);
     }
 
     public static bool EnsureLatestPackageReferencesVersionInProjFile(

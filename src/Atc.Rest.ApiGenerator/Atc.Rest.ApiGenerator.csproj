@@ -24,4 +24,9 @@
     <EmbeddedResource Include="Resources\launchSettings.json" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Atc.Rest.ApiGenerator.Framework.Mvc\Atc.Rest.ApiGenerator.Framework.Mvc.csproj" />
+    <ProjectReference Include="..\Atc.Rest.ApiGenerator.OpenApi\Atc.Rest.ApiGenerator.OpenApi.csproj" />
+  </ItemGroup>
+
 </Project>

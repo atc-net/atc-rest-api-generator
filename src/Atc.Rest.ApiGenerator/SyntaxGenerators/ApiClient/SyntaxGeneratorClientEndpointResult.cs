@@ -4,6 +4,8 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient;
 
 public class SyntaxGeneratorClientEndpointResult : SyntaxGeneratorClientEndpointBase, ISyntaxCodeGenerator
 {
+    private readonly ILogger logger;
+
     public SyntaxGeneratorClientEndpointResult(
         ILogger logger,
         ApiProjectOptions apiProjectOptions,
@@ -25,6 +27,7 @@ public class SyntaxGeneratorClientEndpointResult : SyntaxGeneratorClientEndpoint
             urlPath,
             hasParametersOrRequestBody)
     {
+        this.logger = logger;
     }
 
     public CompilationUnitSyntax? Code { get; private set; }
@@ -48,7 +51,7 @@ public class SyntaxGeneratorClientEndpointResult : SyntaxGeneratorClientEndpoint
 
         // Create class
         var classDeclaration = SyntaxClassDeclarationFactory.CreateWithInheritClassType(EndpointTypeName, "EndpointResponse")
-            .AddGeneratedCodeAttribute(ApiProjectOptions.ToolName, ApiProjectOptions.ToolVersion.ToString())
+            .AddGeneratedCodeAttribute(ApiProjectOptions.ApiGeneratorName, ApiProjectOptions.ApiGeneratorVersion.ToString())
             .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForResults(ApiOperation, FocusOnSegmentName));
 
         classDeclaration = classDeclaration.AddMembers(CreateConstructor());
@@ -99,8 +102,12 @@ public class SyntaxGeneratorClientEndpointResult : SyntaxGeneratorClientEndpoint
     {
         ArgumentNullException.ThrowIfNull(file);
 
-        var fileDisplayLocation = file.FullName.Replace(ApiProjectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
-        TextFileHelper.Save(Logger, file.FullName, fileDisplayLocation, ToCodeAsString());
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            ApiProjectOptions.PathForSrcGenerate,
+            file,
+            ContentWriterArea.Src,
+            ToCodeAsString());
     }
 
     public override string ToString()

@@ -61,18 +61,17 @@ public class ServerApiGenerator
 
         var lines = File.ReadLines(apiGeneratedFile).ToList();
 
-        const string toolName = "ApiGenerator";
-        var newVersion = GenerateHelper.GetAtcToolVersion();
+        var newVersion = GenerateHelper.GetAtcApiGeneratorVersion();
 
         foreach (var line in lines)
         {
-            var indexOfToolName = line.IndexOf(toolName, StringComparison.Ordinal);
-            if (indexOfToolName == -1)
+            var indexOfApiGeneratorName = line.IndexOf(projectOptions.ApiGeneratorName, StringComparison.Ordinal);
+            if (indexOfApiGeneratorName == -1)
             {
                 continue;
             }
 
-            var oldVersion = line.Substring(indexOfToolName + toolName.Length);
+            var oldVersion = line.Substring(indexOfApiGeneratorName + projectOptions.ApiGeneratorName.Length);
             if (oldVersion.EndsWith('.'))
             {
                 oldVersion = oldVersion.Substring(0, oldVersion.Length - 1);
@@ -256,7 +255,7 @@ public class ServerApiGenerator
 
         // Create class
         var classDeclaration = SyntaxClassDeclarationFactory.Create("ApiRegistration")
-            .AddGeneratedCodeAttribute(projectOptions.ToolName, projectOptions.ToolVersion.ToString());
+            .AddGeneratedCodeAttribute(projectOptions.ApiGeneratorName, projectOptions.ApiGeneratorVersion.ToString());
 
         // Add class to namespace
         @namespace = @namespace.AddMembers(classDeclaration);
@@ -271,8 +270,13 @@ public class ServerApiGenerator
             .EnsureFileScopedNamespace();
 
         var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "ApiRegistration.cs"));
-        var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
-        TextFileHelper.Save(logger, file, fileDisplayLocation, codeAsString);
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectOptions.PathForSrcGenerate,
+            file,
+            ContentWriterArea.Src,
+            codeAsString);
     }
 
     private void DeleteLegacyScaffoldBasicFileResultFactory()
@@ -328,12 +332,9 @@ public class ServerApiGenerator
             requiredUsings.Add($"{projectOptions.ProjectName}.Contracts.{basePathSegmentName}");
         }
 
-        var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "GlobalUsings.cs"));
-        var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
-
         GlobalUsingsHelper.CreateOrUpdate(
             logger,
-            fileDisplayLocation,
+            ContentWriterArea.Src,
             projectOptions.PathForSrcGenerate,
             requiredUsings);
     }

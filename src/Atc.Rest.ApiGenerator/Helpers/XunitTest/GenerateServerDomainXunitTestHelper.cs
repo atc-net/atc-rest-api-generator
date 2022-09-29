@@ -1,7 +1,7 @@
+using Atc.Rest.ApiGenerator.Framework.Interfaces;
+
 namespace Atc.Rest.ApiGenerator.Helpers.XunitTest;
 
-[SuppressMessage("Globalization", "CA1305:Specify IFormatProvider", Justification = "OK.")]
-[SuppressMessage("Usage", "MA0011:IFormatProvider is missing", Justification = "OK.")]
 public static class GenerateServerDomainXunitTestHelper
 {
     public static void GenerateGeneratedTests(
@@ -21,10 +21,10 @@ public static class GenerateServerDomainXunitTestHelper
 
         var sb = new StringBuilder();
 
-        GenerateCodeHelper.AppendGeneratedCodeWarningComment(sb, domainProjectOptions.ToolNameAndVersion);
+        GenerateCodeHelper.AppendGeneratedCodeWarningComment(sb, domainProjectOptions.ApiGeneratorNameAndVersion);
         sb.AppendLine($"namespace {nsTest}");
         sb.AppendLine("{");
-        GenerateCodeHelper.AppendGeneratedCodeAttribute(sb, domainProjectOptions.ToolName, domainProjectOptions.ToolVersion);
+        GenerateCodeHelper.AppendGeneratedCodeAttribute(sb, domainProjectOptions.ApiGeneratorName, domainProjectOptions.ApiGeneratorVersion);
         sb.AppendLine(4, $"public class {sgHandler.HandlerTypeName}GeneratedTests");
         sb.AppendLine(4, "{");
         AppendInstantiateConstructor(sb, sgHandler, usedInterfacesInConstructor);
@@ -40,8 +40,12 @@ public static class GenerateServerDomainXunitTestHelper
         var pathGenerated = Path.Combine(Path.Combine(domainProjectOptions.PathForTestHandlers!.FullName, area), "Generated");
         var fileGenerated = new FileInfo(Path.Combine(pathGenerated, $"{sgHandler.HandlerTypeName}GeneratedTests.cs"));
 
-        var fileDisplayLocation = fileGenerated.FullName.Replace(domainProjectOptions.PathForTestGenerate!.FullName, "test: ", StringComparison.Ordinal);
-        TextFileHelper.Save(logger, fileGenerated, fileDisplayLocation, sb.ToString());
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            domainProjectOptions.PathForTestGenerate!,
+            fileGenerated,
+            ContentWriterArea.Test,
+            sb.ToString());
     }
 
     public static void GenerateCustomTests(
@@ -77,8 +81,13 @@ public static class GenerateServerDomainXunitTestHelper
         var pathCustom = Path.Combine(domainProjectOptions.PathForTestHandlers!.FullName, area);
         var fileCustom = new FileInfo(Path.Combine(pathCustom, $"{sgHandler.HandlerTypeName}Tests.cs"));
 
-        var fileDisplayLocation = fileCustom.FullName.Replace(domainProjectOptions.PathForTestGenerate!.FullName, "test: ", StringComparison.Ordinal);
-        TextFileHelper.Save(logger, fileCustom, fileDisplayLocation, sb.ToString(), overrideIfExist: false);
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            domainProjectOptions.PathForTestGenerate!,
+            fileCustom,
+            ContentWriterArea.Test,
+            sb.ToString(),
+            overrideIfExist: false);
     }
 
     private static void AppendInstantiateConstructor(

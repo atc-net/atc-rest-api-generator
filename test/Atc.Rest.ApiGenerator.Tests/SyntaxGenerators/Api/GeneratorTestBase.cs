@@ -23,7 +23,7 @@ public abstract class GeneratorTestBase
         settings.UseDirectory(yamlFile.TestDirectory);
         settings.UseFileName(yamlFile.TestName);
         settings.UseExtension("cs");
-        settings.AddScrubber(input => input.Replace(apiOptions.ToolVersion.ToString(), "x.x.x.x"));
+        settings.AddScrubber(input => input.Replace(apiOptions.ApiGeneratorVersion.ToString(), "x.x.x.x"));
         return settings;
     }
 

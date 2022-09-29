@@ -2,6 +2,8 @@
 // ReSharper disable LoopCanBeConvertedToQuery
 // ReSharper disable ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
 // ReSharper disable UseDeconstruction
+using Atc.Rest.ApiGenerator.Framework.Interfaces;
+
 namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
 
 public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointControllers
@@ -53,7 +55,7 @@ public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointContro
                 SyntaxAttributeListFactory.Create(nameof(ApiControllerAttribute)),
                 SyntaxAttributeListFactory.CreateWithOneItemWithOneArgument(nameof(RouteAttribute), $"{ApiProjectOptions.RouteBase}/{GetRouteSegment()}"))
             .AddBaseListTypes(SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseTypeName(nameof(ControllerBase))))
-            .AddGeneratedCodeAttribute(ApiProjectOptions.ToolName, ApiProjectOptions.ToolVersion.ToString())
+            .AddGeneratedCodeAttribute(ApiProjectOptions.ApiGeneratorName, ApiProjectOptions.ApiGeneratorVersion.ToString())
             .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForEndpoints(FocusOnSegmentName));
 
         // Create Methods
@@ -126,8 +128,12 @@ public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointContro
     {
         ArgumentNullException.ThrowIfNull(file);
 
-        var fileDisplayLocation = file.FullName.Replace(ApiProjectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
-        TextFileHelper.Save(logger, file.FullName, fileDisplayLocation, ToCodeAsString());
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            ApiProjectOptions.PathForSrcGenerate,
+            file,
+            ContentWriterArea.Src,
+            ToCodeAsString());
     }
 
     public List<EndpointMethodMetadata> GetMetadataForMethods()
