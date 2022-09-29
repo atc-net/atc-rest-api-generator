@@ -133,17 +133,17 @@
 >```csharp
 >bool GenerateServerSln(ILogger logger, string projectPrefixName, string outputSlnPath, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath)
 >```
-#### GetAtcToolVersion
+#### GetAtcApiGeneratorVersion
 >```csharp
->Version GetAtcToolVersion()
+>Version GetAtcApiGeneratorVersion()
 >```
-#### GetAtcToolVersionAsString3
+#### GetAtcApiGeneratorVersionAsString3
 >```csharp
->string GetAtcToolVersionAsString3()
+>string GetAtcApiGeneratorVersionAsString3()
 >```
-#### GetAtcToolVersionAsString4
+#### GetAtcApiGeneratorVersionAsString4
 >```csharp
->string GetAtcToolVersionAsString4()
+>string GetAtcApiGeneratorVersionAsString4()
 >```
 #### GetAtcVersion
 >```csharp
@@ -170,7 +170,7 @@
 
 #### CreateOrUpdate
 >```csharp
->void CreateOrUpdate(ILogger logger, string fileDisplayLocation, DirectoryInfo directoryInfo, List<string> requiredUsings)
+>void CreateOrUpdate(ILogger logger, ContentWriterArea contentWriterArea, DirectoryInfo directoryInfo, List<string> requiredUsings)
 >```
 
 <br />
@@ -355,25 +355,6 @@
 #### ScaffoldSlnFile
 >```csharp
 >void ScaffoldSlnFile(ILogger logger, FileInfo slnFile, string projectName, DirectoryInfo apiPath, DirectoryInfo domainPath, DirectoryInfo hostPath, DirectoryInfo domainTestPath = null, DirectoryInfo hostTestPath = null)
->```
-
-<br />
-
-## TextFileHelper
-
->```csharp
->public static class TextFileHelper
->```
-
-### Static Methods
-
-#### Save
->```csharp
->bool Save(ILogger logger, string file, string fileDisplayLocation, string text, bool overrideIfExist = True)
->```
-#### Save
->```csharp
->bool Save(ILogger logger, FileInfo fileInfo, string fileDisplayLocation, string text, bool overrideIfExist = True)
 >```
 
 <br />

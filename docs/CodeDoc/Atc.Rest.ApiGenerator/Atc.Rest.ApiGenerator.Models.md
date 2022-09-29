@@ -87,6 +87,18 @@
 
 ### Properties
 
+#### ApiGeneratorName
+>```csharp
+>ApiGeneratorName
+>```
+#### ApiGeneratorNameAndVersion
+>```csharp
+>ApiGeneratorNameAndVersion
+>```
+#### ApiGeneratorVersion
+>```csharp
+>ApiGeneratorVersion
+>```
 #### ApiOptions
 >```csharp
 >ApiOptions
@@ -147,18 +159,6 @@
 >```csharp
 >RouteBase
 >```
-#### ToolName
->```csharp
->ToolName
->```
-#### ToolNameAndVersion
->```csharp
->ToolNameAndVersion
->```
-#### ToolVersion
->```csharp
->ToolVersion
->```
 #### UseNullableReferenceTypes
 >```csharp
 >UseNullableReferenceTypes
@@ -178,6 +178,18 @@
 
 ### Properties
 
+#### ApiGeneratorName
+>```csharp
+>ApiGeneratorName
+>```
+#### ApiGeneratorNameAndVersion
+>```csharp
+>ApiGeneratorNameAndVersion
+>```
+#### ApiGeneratorVersion
+>```csharp
+>ApiGeneratorVersion
+>```
 #### ApiOptions
 >```csharp
 >ApiOptions
@@ -221,18 +233,6 @@
 #### ProjectSrcCsProjDisplayLocation
 >```csharp
 >ProjectSrcCsProjDisplayLocation
->```
-#### ToolName
->```csharp
->ToolName
->```
-#### ToolNameAndVersion
->```csharp
->ToolNameAndVersion
->```
-#### ToolVersion
->```csharp
->ToolVersion
 >```
 #### UseNullableReferenceTypes
 >```csharp

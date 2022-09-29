@@ -38,7 +38,6 @@
 - [OpenApiDocumentValidationHelper](Atc.Rest.ApiGenerator.Helpers.md#openapidocumentvalidationhelper)
 - [OpenApiOperationSchemaMapHelper](Atc.Rest.ApiGenerator.Helpers.md#openapioperationschemamaphelper)
 - [SolutionAndProjectHelper](Atc.Rest.ApiGenerator.Helpers.md#solutionandprojecthelper)
-- [TextFileHelper](Atc.Rest.ApiGenerator.Helpers.md#textfilehelper)
 - [ValidatePathsAndOperationsHelper](Atc.Rest.ApiGenerator.Helpers.md#validatepathsandoperationshelper)
 
 ## [Atc.Rest.ApiGenerator.Helpers.XunitTest](Atc.Rest.ApiGenerator.Helpers.XunitTest.md)
@@ -90,7 +89,6 @@
 - [SyntaxGeneratorContractResult](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorcontractresult)
 - [SyntaxGeneratorContractResults](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorcontractresults)
 - [SyntaxGeneratorEndpointControllers](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorendpointcontrollers)
-- [SyntaxGeneratorSwaggerDocOptions](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorswaggerdocoptions)
 
 ## [Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces.md)
 

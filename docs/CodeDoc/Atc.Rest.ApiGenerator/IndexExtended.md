@@ -129,15 +129,15 @@
      - GenerateServerDomain(ILogger logger, string projectPrefixName, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath, Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, ApiOptions apiOptions, bool useCodingRules, DirectoryInfo apiPath)
      - GenerateServerHost(ILogger logger, string projectPrefixName, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath, Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, ApiOptions apiOptions, bool usingCodingRules, DirectoryInfo apiPath, DirectoryInfo domainPath)
      - GenerateServerSln(ILogger logger, string projectPrefixName, string outputSlnPath, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath)
-     - GetAtcToolVersion()
-     - GetAtcToolVersionAsString3()
-     - GetAtcToolVersionAsString4()
+     - GetAtcApiGeneratorVersion()
+     - GetAtcApiGeneratorVersionAsString3()
+     - GetAtcApiGeneratorVersionAsString4()
      - GetAtcVersion()
      - GetAtcVersionAsString3()
      - GetAtcVersionAsString4()
 - [GlobalUsingsHelper](Atc.Rest.ApiGenerator.Helpers.md#globalusingshelper)
   -  Static Methods
-     - CreateOrUpdate(ILogger logger, string fileDisplayLocation, DirectoryInfo directoryInfo, List&lt;string&gt; requiredUsings)
+     - CreateOrUpdate(ILogger logger, ContentWriterArea contentWriterArea, DirectoryInfo directoryInfo, List&lt;string&gt; requiredUsings)
 - [HttpClientHelper](Atc.Rest.ApiGenerator.Helpers.md#httpclienthelper)
   -  Static Methods
      - DownloadToTempFile(ILogger logger, string apiDesignPath)
@@ -178,10 +178,6 @@
      - EnsureLatestPackageReferencesVersionInProjFile(ILogger logger, FileInfo projectCsProjFile, string fileDisplayLocation, ProjectType projectType, bool isTestProject)
      - ScaffoldProjFile(ILogger logger, FileInfo projectCsProjFile, string fileDisplayLocation, ProjectType projectType, bool createAsWeb, bool createAsTestProject, string projectName, string targetFramework, IList&lt;string&gt; frameworkReferences, IList&lt;Tuple&lt;string, string, string&gt;&gt; packageReferences, IList&lt;FileInfo&gt; projectReferences, bool includeApiSpecification, bool usingCodingRules)
      - ScaffoldSlnFile(ILogger logger, FileInfo slnFile, string projectName, DirectoryInfo apiPath, DirectoryInfo domainPath, DirectoryInfo hostPath, DirectoryInfo domainTestPath = null, DirectoryInfo hostTestPath = null)
-- [TextFileHelper](Atc.Rest.ApiGenerator.Helpers.md#textfilehelper)
-  -  Static Methods
-     - Save(ILogger logger, FileInfo fileInfo, string fileDisplayLocation, string text, bool overrideIfExist = True)
-     - Save(ILogger logger, string file, string fileDisplayLocation, string text, bool overrideIfExist = True)
 - [ValidatePathsAndOperationsHelper](Atc.Rest.ApiGenerator.Helpers.md#validatepathsandoperationshelper)
   -  Static Methods
      - ValidateGetOperations(ApiOptionsValidation validationOptions, KeyValuePair&lt;string, OpenApiPathItem&gt; path)
@@ -270,6 +266,9 @@
      - PathForEndpoints
 - [BaseProjectOptions](Atc.Rest.ApiGenerator.Models.md#baseprojectoptions)
   -  Properties
+     - ApiGeneratorName
+     - ApiGeneratorNameAndVersion
+     - ApiGeneratorVersion
      - ApiOptions
      - BasePathSegmentNames
      - ClientFolderName
@@ -285,13 +284,13 @@
      - ProjectTestCsProj
      - ProjectTestCsProjDisplayLocation
      - RouteBase
-     - ToolName
-     - ToolNameAndVersion
-     - ToolVersion
      - UseNullableReferenceTypes
      - UsingCodingRules
 - [ClientCSharpApiProjectOptions](Atc.Rest.ApiGenerator.Models.md#clientcsharpapiprojectoptions)
   -  Properties
+     - ApiGeneratorName
+     - ApiGeneratorNameAndVersion
+     - ApiGeneratorVersion
      - ApiOptions
      - BasePathSegmentNames
      - ClientFolderName
@@ -303,9 +302,6 @@
      - ProjectName
      - ProjectSrcCsProj
      - ProjectSrcCsProjDisplayLocation
-     - ToolName
-     - ToolNameAndVersion
-     - ToolVersion
      - UseNullableReferenceTypes
      - UsingCodingRules
   -  Methods
@@ -531,9 +527,6 @@
      - ToCodeAsString()
      - ToFile()
      - ToFile(FileInfo file)
-- [SyntaxGeneratorSwaggerDocOptions](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorswaggerdocoptions)
-  -  Methods
-     - GenerateCode()
 
 ## [Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces.md)
 

@@ -20,7 +20,7 @@ public class ContentGeneratorServerSwaggerDocOptions : IContentGenerator
     {
         var sb = new StringBuilder();
 
-        sb.AppendLine(codeHeaderGenerator.Generate());
+        sb.Append(codeHeaderGenerator.Generate());
         sb.AppendLine($"namespace {parameters.Namespace};");
         sb.AppendLine();
         sb.AppendLine(codeAttributeGenerator.Generate());

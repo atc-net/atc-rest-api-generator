@@ -9,18 +9,6 @@ public static class Program
     {
         ArgumentNullException.ThrowIfNull(args);
 
-        args = new[]
-        {
-            "generate", "server", "all",
-            "-p", "SletMig",
-            "-s", @"C:\Temp\sletmig\api.v1.yaml",
-            "--outputSlnPath", @"C:\Temp\sletmig\crap",
-            "--outputSrcPath", @"C:\Temp\sletmig\crap\src",
-            "--outputTestPath", @"C:\Temp\sletmig\crap\test",
-            "--optionsPath", @"C:\Temp\sletmig\DelegateApiGeneratorOptions.json",
-            "-v",
-        };
-
         args = SetOutputPathFromDotArgumentIfNeeded(args);
         args = SetHelpArgumentIfNeeded(args);
 
