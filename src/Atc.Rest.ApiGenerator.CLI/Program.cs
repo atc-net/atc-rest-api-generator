@@ -23,13 +23,14 @@ public static class Program
 
         var serviceCollection = ServiceCollectionFactory.Create(consoleLoggerConfiguration);
 
+        serviceCollection.AddSingleton<IApiOperationSchemaMapExtractor, ApiOperationSchemaMapExtractor>();
+
         var app = CommandAppFactory.CreateWithRootCommand<RootCommand>(serviceCollection);
         app.ConfigureCommands();
 
         return app.RunAsync(args);
     }
 
-    [SuppressMessage("Design", "MA0051:Method is too long", Justification = "OK.")]
     private static string[] SetOutputPathFromDotArgumentIfNeeded(
         string[] args)
     {

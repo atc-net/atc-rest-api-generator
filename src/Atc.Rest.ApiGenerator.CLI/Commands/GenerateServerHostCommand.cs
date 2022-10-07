@@ -3,8 +3,15 @@ namespace Atc.Rest.ApiGenerator.CLI.Commands;
 public class GenerateServerHostCommand : AsyncCommand<ServerHostCommandSettings>
 {
     private readonly ILogger<GenerateServerHostCommand> logger;
+    private readonly IApiOperationSchemaMapExtractor apiOperationSchemaMapExtractor;
 
-    public GenerateServerHostCommand(ILogger<GenerateServerHostCommand> logger) => this.logger = logger;
+    public GenerateServerHostCommand(
+        ILogger<GenerateServerHostCommand> logger,
+        IApiOperationSchemaMapExtractor apiOperationSchemaMapExtractor)
+    {
+        this.logger = logger;
+        this.apiOperationSchemaMapExtractor = apiOperationSchemaMapExtractor;
+    }
 
     public override Task<int> ExecuteAsync(
         CommandContext context,
@@ -54,6 +61,7 @@ public class GenerateServerHostCommand : AsyncCommand<ServerHostCommandSettings>
 
             if (!GenerateHelper.GenerateServerHost(
                     logger,
+                    apiOperationSchemaMapExtractor,
                     settings.ProjectPrefixName,
                     new DirectoryInfo(settings.OutputPath),
                     outputTestPath,

@@ -1,5 +1,7 @@
 // ReSharper disable ReturnTypeCanBeEnumerable.Global
 
+using Atc.Rest.ApiGenerator.OpenApi.Extractors;
+
 namespace Atc.Rest.ApiGenerator.Helpers;
 
 public static class GenerateHelper
@@ -55,6 +57,7 @@ public static class GenerateHelper
 
     public static bool GenerateServerApi(
         ILogger logger,
+        IApiOperationSchemaMapExtractor apiOperationSchemaMapExtractor,
         string projectPrefixName,
         DirectoryInfo outputPath,
         DirectoryInfo? outputTestPath,
@@ -63,6 +66,7 @@ public static class GenerateHelper
         bool useCodingRules)
     {
         ArgumentNullException.ThrowIfNull(logger);
+        ArgumentNullException.ThrowIfNull(apiOperationSchemaMapExtractor);
         ArgumentNullException.ThrowIfNull(projectPrefixName);
         ArgumentNullException.ThrowIfNull(outputPath);
         ArgumentNullException.ThrowIfNull(apiDocument);
@@ -77,7 +81,7 @@ public static class GenerateHelper
             "Api.Generated",
             apiOptions,
             useCodingRules);
-        var serverApiGenerator = new ServerApiGenerator(logger, projectOptions);
+        var serverApiGenerator = new ServerApiGenerator(logger, apiOperationSchemaMapExtractor, projectOptions);
         return serverApiGenerator.Generate();
     }
 
@@ -113,6 +117,7 @@ public static class GenerateHelper
 
     public static bool GenerateServerHost(
         ILogger logger,
+        IApiOperationSchemaMapExtractor apiOperationSchemaMapExtractor,
         string projectPrefixName,
         DirectoryInfo outputSourcePath,
         DirectoryInfo? outputTestPath,
@@ -140,7 +145,7 @@ public static class GenerateHelper
             usingCodingRules,
             apiPath,
             domainPath);
-        var serverHostGenerator = new ServerHostGenerator(logger, hostProjectOptions);
+        var serverHostGenerator = new ServerHostGenerator(logger, apiOperationSchemaMapExtractor, hostProjectOptions);
         return serverHostGenerator.Generate();
     }
 
@@ -200,6 +205,7 @@ public static class GenerateHelper
 
     public static bool GenerateServerCSharpClient(
         ILogger logger,
+        IApiOperationSchemaMapExtractor apiOperationSchemaMapExtractor,
         string projectPrefixName,
         string? clientFolderName,
         DirectoryInfo outputPath,
@@ -224,7 +230,7 @@ public static class GenerateHelper
             excludeEndpointGeneration,
             apiOptions,
             useCodingRules);
-        var clientCSharpApiGenerator = new ClientCSharpApiGenerator(logger, clientCSharpApiProjectOptions);
+        var clientCSharpApiGenerator = new ClientCSharpApiGenerator(logger, apiOperationSchemaMapExtractor, clientCSharpApiProjectOptions);
         return clientCSharpApiGenerator.Generate();
     }
 }
