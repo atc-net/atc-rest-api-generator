@@ -102,7 +102,7 @@
 
 - [ApiGeneratorHelper](Atc.Rest.ApiGenerator.Helpers.md#apigeneratorhelper)
   -  Static Methods
-     - CollectMissingContractModelFromOperationSchemaMappings(ILogger logger, ApiProjectOptions projectOptions, List&lt;ApiOperationSchemaMap&gt; operationSchemaMappings, List&lt;SyntaxGeneratorContractModel&gt; sgContractModels)
+     - CollectMissingContractModelFromOperationSchemaMappings(ILogger logger, ApiProjectOptions projectOptions, IList&lt;ApiOperationSchemaMap&gt; operationSchemaMappings, List&lt;SyntaxGeneratorContractModel&gt; sgContractModels)
 - [AtcApiNugetClientHelper](Atc.Rest.ApiGenerator.Helpers.md#atcapinugetclienthelper)
   -  Static Methods
      - GetLatestVersionForPackageId(ILogger logger, string packageId, CancellationToken cancellationToken = null)
@@ -169,10 +169,6 @@
 - [OpenApiDocumentValidationHelper](Atc.Rest.ApiGenerator.Helpers.md#openapidocumentvalidationhelper)
   -  Static Methods
      - ValidateDocument(ILogger logger, OpenApiDocument apiDocument, ApiOptionsValidation validationOptions)
-- [OpenApiOperationSchemaMapHelper](Atc.Rest.ApiGenerator.Helpers.md#openapioperationschemamaphelper)
-  -  Static Methods
-     - CollectMappings(OpenApiDocument apiDocument)
-     - GetSegmentName(string path)
 - [SolutionAndProjectHelper](Atc.Rest.ApiGenerator.Helpers.md#solutionandprojecthelper)
   -  Static Methods
      - EnsureLatestPackageReferencesVersionInProjFile(ILogger logger, FileInfo projectCsProjFile, string fileDisplayLocation, ProjectType projectType, bool isTestProject)
@@ -204,7 +200,7 @@
      - AppendModelComplexProperty(int indentSpaces, StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata, KeyValuePair&lt;string, OpenApiSchema&gt; schemaProperty, string dataType, TrailingCharType trailingChar, int itemNumber, int maxItemsForList, int depthHierarchy, int maxDepthHierarchy, KeyValuePair&lt;KeyValuePair&lt;string, OpenApiSchema&gt;&gt; badPropertySchema, bool asJsonBody)
      - AppendVarDataEqualNewListOfModel(int indentSpaces, StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata, KeyValuePair&lt;string, OpenApiSchema&gt; schemaProperty, TrailingCharType trailingChar, int maxItemsForList, int depthHierarchy, int maxDepthHierarchy, KeyValuePair&lt;KeyValuePair&lt;string, OpenApiSchema&gt;&gt; badPropertySchema, bool asJsonBody)
      - AppendVarDataListSimpleType(int indentSpaces, StringBuilder sb, string simpleDataType, int maxItemsForList = 3)
-     - AppendVarDataModelOrListOfModel(int indentSpaces, StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata, OpenApiSchema schema, HttpStatusCode httpStatusCode, SchemaMapLocatedAreaType locatedAreaType, KeyValuePair&lt;KeyValuePair&lt;string, OpenApiSchema&gt;&gt; badPropertySchema = null, bool asJsonBody = False, int maxItemsForList = 3, int depthHierarchy = 0, int maxDepthHierarchy = 2)
+     - AppendVarDataModelOrListOfModel(int indentSpaces, StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata, OpenApiSchema schema, HttpStatusCode httpStatusCode, ApiSchemaMapLocatedAreaType locatedAreaType, KeyValuePair&lt;KeyValuePair&lt;string, OpenApiSchema&gt;&gt; badPropertySchema = null, bool asJsonBody = False, int maxItemsForList = 3, int depthHierarchy = 0, int maxDepthHierarchy = 2)
 - [GenerateXunitTestPartsHelper](Atc.Rest.ApiGenerator.Helpers.XunitTest.md#generatexunittestpartshelper)
   -  Static Methods
      - AppendModelSimpleProperty(int indentSpaces, StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata, KeyValuePair&lt;string, OpenApiSchema&gt; schemaProperty, string dataType, bool isRequired, string propertyValueGenerated, int countString, bool asJsonBody, int depthHierarchy, TrailingCharType trailingChar)
@@ -247,18 +243,6 @@
 
 ## [Atc.Rest.ApiGenerator.Models](Atc.Rest.ApiGenerator.Models.md)
 
-- [ApiOperationSchemaMap](Atc.Rest.ApiGenerator.Models.md#apioperationschemamap)
-  -  Properties
-     - LocatedArea
-     - OperationType
-     - ParentSchemaKey
-     - Path
-     - SchemaKey
-     - SegmentName
-  -  Methods
-     - Equals(object obj)
-     - GetHashCode()
-     - ToString()
 - [ApiProjectOptions](Atc.Rest.ApiGenerator.Models.md#apiprojectoptions)
   -  Properties
      - PathForContracts
@@ -379,7 +363,6 @@
   -  Methods
      - SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles(ILogger logger)
 - [ProjectType](Atc.Rest.ApiGenerator.Models.md#projecttype)
-- [SchemaMapLocatedAreaType](Atc.Rest.ApiGenerator.Models.md#schemamaplocatedareatype)
 
 ## [Atc.Rest.ApiGenerator.Models.Options](Atc.Rest.ApiGenerator.Models.Options.md)
 
@@ -696,7 +679,7 @@
 - [OpenApiSchemaExtensions](Microsoft.OpenApi.Models.md#openapischemaextensions)
   -  Static Methods
      - HasAnySharedModel(this OpenApiSchema schema, List&lt;ApiOperationSchemaMap&gt; apiOperationSchemaMaps)
-     - HasAnySharedModelOrEnum(this OpenApiSchema schema, List&lt;ApiOperationSchemaMap&gt; apiOperationSchemaMaps, bool includeProperties = True)
+     - HasAnySharedModelOrEnum(this OpenApiSchema schema, IList&lt;ApiOperationSchemaMap&gt; apiOperationSchemaMaps, bool includeProperties = True)
 - [OperationTypeExtensions](Microsoft.OpenApi.Models.md#operationtypeextensions)
   -  Static Methods
      - IsRequestBodySupported(this OperationType operationType)

@@ -1,4 +1,5 @@
 using Atc.Console.Spectre;
+using Atc.Rest.ApiGenerator.OpenApi.Extractors;
 
 // ReSharper disable ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
 // ReSharper disable SuggestBaseTypeForParameter
@@ -34,7 +35,8 @@ public class ServerApiGenerator
 
         CopyApiSpecification();
 
-        var operationSchemaMappings = OpenApiOperationSchemaMapHelper.CollectMappings(projectOptions.Document);
+        var extractor = new ApiOperationSchemaMapExtractor();
+        var operationSchemaMappings = extractor.Extract(projectOptions.Document);
 
         GenerateContracts(operationSchemaMappings);
         GenerateEndpoints(operationSchemaMappings);
@@ -167,7 +169,7 @@ public class ServerApiGenerator
     }
 
     private void GenerateContracts(
-        List<ApiOperationSchemaMap> operationSchemaMappings)
+        IList<ApiOperationSchemaMap> operationSchemaMappings)
     {
         ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 
@@ -222,7 +224,7 @@ public class ServerApiGenerator
     }
 
     private void GenerateEndpoints(
-        List<ApiOperationSchemaMap> operationSchemaMappings)
+        IList<ApiOperationSchemaMap> operationSchemaMappings)
     {
         ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 

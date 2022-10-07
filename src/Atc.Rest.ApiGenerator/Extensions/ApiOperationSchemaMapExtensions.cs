@@ -3,7 +3,7 @@ namespace Atc.Rest.ApiGenerator.Extensions;
 internal static class ApiOperationSchemaMapExtensions
 {
     public static bool IsShared(
-        this List<ApiOperationSchemaMap> apiOperationSchemaMaps,
+        this IList<ApiOperationSchemaMap> apiOperationSchemaMaps,
         string schemaKey)
     {
         var maps = apiOperationSchemaMaps.Where(x => x.SchemaKey == schemaKey).ToList();

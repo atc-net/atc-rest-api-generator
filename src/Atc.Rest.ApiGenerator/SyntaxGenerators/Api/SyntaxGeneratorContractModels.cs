@@ -10,7 +10,7 @@ public class SyntaxGeneratorContractModels : ISyntaxGeneratorContractModels
     public SyntaxGeneratorContractModels(
         ILogger logger,
         ApiProjectOptions apiProjectOptions,
-        List<ApiOperationSchemaMap> operationSchemaMappings,
+        IList<ApiOperationSchemaMap> operationSchemaMappings,
         string focusOnSegmentName)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -21,7 +21,7 @@ public class SyntaxGeneratorContractModels : ISyntaxGeneratorContractModels
 
     public ApiProjectOptions ApiProjectOptions { get; }
 
-    public List<ApiOperationSchemaMap> OperationSchemaMappings { get; }
+    public IList<ApiOperationSchemaMap> OperationSchemaMappings { get; }
 
     public string FocusOnSegmentName { get; }
 

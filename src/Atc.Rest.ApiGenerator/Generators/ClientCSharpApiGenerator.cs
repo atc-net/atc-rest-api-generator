@@ -1,4 +1,5 @@
 using Atc.Console.Spectre;
+using Atc.Rest.ApiGenerator.OpenApi.Extractors;
 
 // ReSharper disable ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
 // ReSharper disable ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
@@ -38,7 +39,8 @@ public class ClientCSharpApiGenerator
     {
         ScaffoldSrc();
 
-        var operationSchemaMappings = OpenApiOperationSchemaMapHelper.CollectMappings(projectOptions.Document);
+        var extractor = new ApiOperationSchemaMapExtractor();
+        var operationSchemaMappings = extractor.Extract(projectOptions.Document);
         GenerateContracts(operationSchemaMappings);
         if (!ExcludeEndpointGeneration)
         {
@@ -92,7 +94,7 @@ public class ClientCSharpApiGenerator
     }
 
     private void GenerateContracts(
-        List<ApiOperationSchemaMap> operationSchemaMappings)
+        IList<ApiOperationSchemaMap> operationSchemaMappings)
     {
         ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 
@@ -131,7 +133,7 @@ public class ClientCSharpApiGenerator
     }
 
     private void GenerateEndpoints(
-        List<ApiOperationSchemaMap> operationSchemaMappings)
+        IList<ApiOperationSchemaMap> operationSchemaMappings)
     {
         ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 

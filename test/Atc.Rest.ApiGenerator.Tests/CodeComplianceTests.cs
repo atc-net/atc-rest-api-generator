@@ -29,7 +29,6 @@ public class CodeComplianceTests
         typeof(HttpClientHelper),
         typeof(OpenApiDocumentHelper),
         typeof(OpenApiDocumentValidationHelper),
-        typeof(OpenApiOperationSchemaMapHelper),
         typeof(SyntaxGeneratorContractInterface),
         typeof(SyntaxGeneratorContractInterfaces),
         typeof(SyntaxGeneratorContractModel),

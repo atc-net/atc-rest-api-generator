@@ -17,7 +17,7 @@
 
 #### CollectMissingContractModelFromOperationSchemaMappings
 >```csharp
->void CollectMissingContractModelFromOperationSchemaMappings(ILogger logger, ApiProjectOptions projectOptions, List<ApiOperationSchemaMap> operationSchemaMappings, List<SyntaxGeneratorContractModel> sgContractModels)
+>void CollectMissingContractModelFromOperationSchemaMappings(ILogger logger, ApiProjectOptions projectOptions, IList<ApiOperationSchemaMap> operationSchemaMappings, List<SyntaxGeneratorContractModel> sgContractModels)
 >```
 
 <br />
@@ -313,25 +313,6 @@
 #### ValidateDocument
 >```csharp
 >bool ValidateDocument(ILogger logger, OpenApiDocument apiDocument, ApiOptionsValidation validationOptions)
->```
-
-<br />
-
-## OpenApiOperationSchemaMapHelper
-
->```csharp
->public static class OpenApiOperationSchemaMapHelper
->```
-
-### Static Methods
-
-#### CollectMappings
->```csharp
->List<ApiOperationSchemaMap> CollectMappings(OpenApiDocument apiDocument)
->```
-#### GetSegmentName
->```csharp
->string GetSegmentName(string path)
 >```
 
 <br />

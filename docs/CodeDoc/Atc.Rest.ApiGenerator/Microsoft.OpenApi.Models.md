@@ -21,7 +21,7 @@
 >```
 #### HasAnySharedModelOrEnum
 >```csharp
->bool HasAnySharedModelOrEnum(this OpenApiSchema schema, List<ApiOperationSchemaMap> apiOperationSchemaMaps, bool includeProperties = True)
+>bool HasAnySharedModelOrEnum(this OpenApiSchema schema, IList<ApiOperationSchemaMap> apiOperationSchemaMaps, bool includeProperties = True)
 >```
 
 <br />

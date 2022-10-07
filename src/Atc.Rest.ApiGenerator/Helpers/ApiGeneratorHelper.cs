@@ -6,7 +6,7 @@ public static class ApiGeneratorHelper
     public static void CollectMissingContractModelFromOperationSchemaMappings(
         ILogger logger,
         ApiProjectOptions projectOptions,
-        List<ApiOperationSchemaMap> operationSchemaMappings,
+        IList<ApiOperationSchemaMap> operationSchemaMappings,
         List<SyntaxGeneratorContractModel> sgContractModels)
     {
         ArgumentNullException.ThrowIfNull(logger);

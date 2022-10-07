@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Atc.Rest.ApiGenerator.CLI\Atc.Rest.ApiGenerator.CLI.csproj" />
+    <ProjectReference Include="..\..\src\Atc.Rest.ApiGenerator.OpenApi\Atc.Rest.ApiGenerator.OpenApi.csproj" />
     <ProjectReference Include="..\..\src\Atc.Rest.ApiGenerator\Atc.Rest.ApiGenerator.csproj" />
   </ItemGroup>
 

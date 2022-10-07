@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Atc" Version="2.0.227" />
+    <PackageReference Include="Atc.OpenApi" Version="2.0.227" />
     <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.4.1" />
   </ItemGroup>
 

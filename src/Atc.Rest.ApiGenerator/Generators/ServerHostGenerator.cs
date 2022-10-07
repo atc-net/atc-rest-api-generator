@@ -1,4 +1,5 @@
 using Atc.Console.Spectre;
+using Atc.Rest.ApiGenerator.OpenApi.Extractors;
 
 // ReSharper disable ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
 // ReSharper disable SuggestBaseTypeForParameter
@@ -984,7 +985,8 @@ public class ServerHostGenerator
             projectOptions.ApiOptions,
             projectOptions.UsingCodingRules);
 
-        var operationSchemaMappings = OpenApiOperationSchemaMapHelper.CollectMappings(projectOptions.Document);
+        var extractor = new ApiOperationSchemaMapExtractor();
+        var operationSchemaMappings = extractor.Extract(projectOptions.Document);
         var sgEndpointControllers = new List<SyntaxGeneratorEndpointControllers>();
         foreach (var segmentName in projectOptions.BasePathSegmentNames)
         {

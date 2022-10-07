@@ -86,7 +86,7 @@
 >```
 #### AppendVarDataModelOrListOfModel
 >```csharp
->void AppendVarDataModelOrListOfModel(int indentSpaces, StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata, OpenApiSchema schema, HttpStatusCode httpStatusCode, SchemaMapLocatedAreaType locatedAreaType, KeyValuePair<KeyValuePair<string, OpenApiSchema>> badPropertySchema = null, bool asJsonBody = False, int maxItemsForList = 3, int depthHierarchy = 0, int maxDepthHierarchy = 2)
+>void AppendVarDataModelOrListOfModel(int indentSpaces, StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata, OpenApiSchema schema, HttpStatusCode httpStatusCode, ApiSchemaMapLocatedAreaType locatedAreaType, KeyValuePair<KeyValuePair<string, OpenApiSchema>> badPropertySchema = null, bool asJsonBody = False, int maxItemsForList = 3, int depthHierarchy = 0, int maxDepthHierarchy = 2)
 >```
 
 <br />
