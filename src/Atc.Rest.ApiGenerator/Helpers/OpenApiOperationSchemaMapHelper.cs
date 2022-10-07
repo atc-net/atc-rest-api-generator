@@ -1,21 +1,11 @@
 // ReSharper disable UseDeconstruction
 // ReSharper disable InvertIf
 // ReSharper disable ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
+
 namespace Atc.Rest.ApiGenerator.Helpers;
 
 public static class OpenApiOperationSchemaMapHelper
 {
-    public static string GetSegmentName(
-        string path)
-    {
-        ArgumentNullException.ThrowIfNull(path);
-
-        return path
-            .Split('/', StringSplitOptions.RemoveEmptyEntries)
-            .First()
-            .PascalCase(true);
-    }
-
     public static List<ApiOperationSchemaMap> CollectMappings(
         OpenApiDocument apiDocument)
     {
@@ -29,13 +19,13 @@ public static class OpenApiOperationSchemaMapHelper
             foreach (var apiOperation in apiPath.Value.Operations)
             {
                 // Parameters
-                CollectMappingsForParameters(componentsSchemas, apiOperation, apiPath, list);
+                CollectMappingsForParameters(componentsSchemas, (apiOperation.Key.ToHttpOperationType(), apiOperation.Value), apiPath, list);
 
                 // RequestBody
-                CollectMappingsForRequestBody(componentsSchemas, apiOperation, apiPath, list);
+                CollectMappingsForRequestBody(componentsSchemas, (apiOperation.Key.ToHttpOperationType(), apiOperation.Value), apiPath, list);
 
                 // Responses
-                CollectMappingsForResponses(componentsSchemas, apiOperation, apiPath, list);
+                CollectMappingsForResponses(componentsSchemas, (apiOperation.Key.ToHttpOperationType(), apiOperation.Value), apiPath, list);
             }
         }
 
@@ -44,11 +34,11 @@ public static class OpenApiOperationSchemaMapHelper
 
     private static void CollectMappingsForParameters(
         IDictionary<string, OpenApiSchema> componentsSchemas,
-        KeyValuePair<OperationType, OpenApiOperation> apiOperation,
+        (HttpOperationType HttpOperationType, OpenApiOperation OpenApiOperation) apiOperation,
         KeyValuePair<string, OpenApiPathItem> apiPath,
         List<ApiOperationSchemaMap> list)
     {
-        foreach (var apiParameter in apiOperation.Value.Parameters)
+        foreach (var apiParameter in apiOperation.OpenApiOperation.Parameters)
         {
             if (apiParameter.Content is null)
             {
@@ -60,9 +50,9 @@ public static class OpenApiOperationSchemaMapHelper
                 CollectSchema(
                     componentsSchemas,
                     apiMediaType.Value.Schema,
-                    SchemaMapLocatedAreaType.Parameter,
+                    ApiSchemaMapLocatedAreaType.Parameter,
                     apiPath.Key,
-                    apiOperation.Key,
+                    apiOperation.HttpOperationType,
                     null,
                     list);
             }
@@ -71,20 +61,20 @@ public static class OpenApiOperationSchemaMapHelper
 
     private static void CollectMappingsForRequestBody(
         IDictionary<string, OpenApiSchema> componentsSchemas,
-        KeyValuePair<OperationType, OpenApiOperation> apiOperation,
+        (HttpOperationType HttpOperationType, OpenApiOperation OpenApiOperation) apiOperation,
         KeyValuePair<string, OpenApiPathItem> apiPath,
         List<ApiOperationSchemaMap> list)
     {
-        if (apiOperation.Value.RequestBody?.Content is not null)
+        if (apiOperation.OpenApiOperation.RequestBody?.Content is not null)
         {
-            foreach (var apiMediaType in apiOperation.Value.RequestBody.Content)
+            foreach (var apiMediaType in apiOperation.OpenApiOperation.RequestBody.Content)
             {
                 CollectSchema(
                     componentsSchemas,
                     apiMediaType.Value.Schema,
-                    SchemaMapLocatedAreaType.RequestBody,
+                    ApiSchemaMapLocatedAreaType.RequestBody,
                     apiPath.Key,
-                    apiOperation.Key,
+                    apiOperation.HttpOperationType,
                     null,
                     list);
             }
@@ -93,11 +83,11 @@ public static class OpenApiOperationSchemaMapHelper
 
     private static void CollectMappingsForResponses(
         IDictionary<string, OpenApiSchema> componentsSchemas,
-        KeyValuePair<OperationType, OpenApiOperation> apiOperation,
+        (HttpOperationType HttpOperationType, OpenApiOperation OpenApiOperation) apiOperation,
         KeyValuePair<string, OpenApiPathItem> apiPath,
         List<ApiOperationSchemaMap> list)
     {
-        foreach (var apiResponse in apiOperation.Value.Responses)
+        foreach (var apiResponse in apiOperation.OpenApiOperation.Responses)
         {
             if (apiResponse.Value?.Content is null)
             {
@@ -109,9 +99,9 @@ public static class OpenApiOperationSchemaMapHelper
                 CollectSchema(
                     componentsSchemas,
                     apiMediaType.Value.Schema,
-                    SchemaMapLocatedAreaType.Response,
+                    ApiSchemaMapLocatedAreaType.Response,
                     apiPath.Key,
-                    apiOperation.Key,
+                    apiOperation.HttpOperationType,
                     null,
                     list);
             }
@@ -121,9 +111,9 @@ public static class OpenApiOperationSchemaMapHelper
     private static void CollectSchema(
         IDictionary<string, OpenApiSchema> componentsSchemas,
         OpenApiSchema? apiSchema,
-        SchemaMapLocatedAreaType locatedArea,
+        ApiSchemaMapLocatedAreaType locatedArea,
         string apiPath,
-        OperationType apiOperationType,
+        HttpOperationType apiOperationType,
         string? parentApiSchema,
         List<ApiOperationSchemaMap> list)
     {
@@ -216,9 +206,9 @@ public static class OpenApiOperationSchemaMapHelper
     private static void Collect(
         IDictionary<string, OpenApiSchema> componentsSchemas,
         IEnumerable<KeyValuePair<string, OpenApiSchema>> propertySchemas,
-        SchemaMapLocatedAreaType areaType,
+        ApiSchemaMapLocatedAreaType areaType,
         string apiPath,
-        OperationType apiOperationType,
+        HttpOperationType apiOperationType,
         string parentApiSchema,
         List<ApiOperationSchemaMap> list)
     {

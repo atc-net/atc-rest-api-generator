@@ -30,7 +30,7 @@ public class SyntaxGeneratorContractModels : ISyntaxGeneratorContractModels
         var list = new List<SyntaxGeneratorContractModel>();
 
         var apiOperationSchemaMaps = OperationSchemaMappings
-            .Where(x => x.LocatedArea is SchemaMapLocatedAreaType.Response or SchemaMapLocatedAreaType.RequestBody &&
+            .Where(x => x.LocatedArea is ApiSchemaMapLocatedAreaType.Response or ApiSchemaMapLocatedAreaType.RequestBody &&
                         x.SegmentName.Equals(FocusOnSegmentName, StringComparison.OrdinalIgnoreCase))
             .ToList();
 

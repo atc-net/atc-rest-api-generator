@@ -140,7 +140,7 @@ public static class GenerateServerApiXunitTestEndpointHandlerStubHelper
                         endpointMethodMetadata,
                         modelSchema,
                         httpStatusCode,
-                        SchemaMapLocatedAreaType.Response);
+                        ApiSchemaMapLocatedAreaType.Response);
                     sb.AppendLine();
                 }
 

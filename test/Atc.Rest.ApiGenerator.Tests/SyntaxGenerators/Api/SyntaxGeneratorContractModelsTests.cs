@@ -17,7 +17,7 @@ public class SyntaxGeneratorContractModelsTests : SyntaxGeneratorContractModelsT
 
         // Construct SUT
         var apiOperationSchemaMaps = apiProject.Document.Components.Schemas
-            .Select(schema => new ApiOperationSchemaMap(schema.Key, SchemaMapLocatedAreaType.Response, FocusOnSegment, OperationType.Get, parentSchemaKey: null))
+            .Select(schema => new ApiOperationSchemaMap(schema.Key, ApiSchemaMapLocatedAreaType.Response, FocusOnSegment, HttpOperationType.Get, parentSchemaKey: null))
             .ToList();
 
         return new SyntaxGeneratorContractModels(NullLogger.Instance, apiProject, apiOperationSchemaMaps, FocusOnSegment);

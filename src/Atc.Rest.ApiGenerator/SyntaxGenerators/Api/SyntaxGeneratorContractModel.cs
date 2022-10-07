@@ -1,8 +1,6 @@
 // ReSharper disable LoopCanBeConvertedToQuery
 // ReSharper disable ConvertIfStatementToConditionalTernaryExpression
 // ReSharper disable UseDeconstruction
-using Atc.Rest.ApiGenerator.Models;
-
 namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
 
 public class SyntaxGeneratorContractModel : ISyntaxSchemaCodeGenerator

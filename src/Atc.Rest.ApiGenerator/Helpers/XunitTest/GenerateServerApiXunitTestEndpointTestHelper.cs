@@ -676,7 +676,7 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
             endpointMethodMetadata,
             schema,
             httpStatusCode,
-            SchemaMapLocatedAreaType.RequestBody);
+            ApiSchemaMapLocatedAreaType.RequestBody);
 
         return true;
     }
@@ -700,7 +700,7 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
             endpointMethodMetadata,
             schema,
             httpStatusCode,
-            SchemaMapLocatedAreaType.RequestBody,
+            ApiSchemaMapLocatedAreaType.RequestBody,
             badPropertySchema,
             asJsonBody: true);
     }
