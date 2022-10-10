@@ -77,39 +77,6 @@ public class EndpointMethodMetadata
                returnType.StartsWith(Microsoft.OpenApi.Models.NameConstants.List, StringComparison.Ordinal);
     }
 
-    public bool IsContractReturnTypeUsingSystemCollectionGenericNamespace()
-    {
-        if (IsContractReturnTypeUsingList())
-        {
-            return true;
-        }
-
-        var responseType = ContractReturnTypeNames.FirstOrDefault(x => x.StatusCode == HttpStatusCode.OK);
-        if (responseType is null)
-        {
-            return false;
-        }
-
-        return (responseType.Schema is not null &&
-                responseType.Schema.HasAnyPropertiesFormatTypeFromSystemCollectionGenericNamespace(ComponentsSchemas)) ||
-               responseType.FullModelName.StartsWith(Microsoft.OpenApi.Models.NameConstants.Pagination, StringComparison.Ordinal);
-    }
-
-    public bool IsContractReturnTypeUsingString()
-    {
-        var responseType = ContractReturnTypeNames.FirstOrDefault(x => x.StatusCode is HttpStatusCode.OK or HttpStatusCode.Created);
-
-        return responseType is not null &&
-               OpenApiDataTypeConstants.String.Equals(responseType.FullModelName, StringComparison.Ordinal);
-    }
-
-    public bool IsContractReturnTypeUsingSystemNamespace()
-        => ContractReturnTypeNames
-            .Where(x => x.Schema is not null &&
-                        x.Schema.IsObjectReferenceTypeDeclared())
-            .Any(x => x.Schema is not null &&
-                      x.Schema.HasAnyPropertiesFormatTypeFromSystemNamespace(ComponentsSchemas));
-
     public bool IsContractReturnTypeUsingTaskName()
     {
         if (ContractResultTypeName is null ||

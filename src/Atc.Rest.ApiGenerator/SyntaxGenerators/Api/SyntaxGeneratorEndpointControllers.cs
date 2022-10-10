@@ -208,29 +208,6 @@ public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointContro
                ?? throw new NotSupportedException("SegmentName was not found in any route.");
     }
 
-    private bool HasSharedResponseContract()
-    {
-        foreach (var (_, value) in ApiProjectOptions.Document.GetPathsByBasePathSegmentName(FocusOnSegmentName))
-        {
-            foreach (var apiOperation in value.Operations)
-            {
-                if (apiOperation.Value.Responses is null)
-                {
-                    continue;
-                }
-
-                var responseModelName = apiOperation.Value.Responses.GetModelNameForStatusCode(HttpStatusCode.OK);
-                var isSharedResponseModel = !string.IsNullOrEmpty(responseModelName) && OperationSchemaMappings.IsShared(responseModelName);
-                if (isSharedResponseModel)
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
     private List<ResponseTypeNameAndItemSchema> GetResponseTypeNamesAndItemSchema(
         List<Tuple<HttpStatusCode, string>> responseTypeNames)
     {
