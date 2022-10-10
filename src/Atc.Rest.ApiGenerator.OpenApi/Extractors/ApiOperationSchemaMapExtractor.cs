@@ -132,6 +132,16 @@ public sealed class ApiOperationSchemaMapExtractor : IApiOperationSchemaMapExtra
             return;
         }
 
+        if (apiSchema.IsSchemaEnumOrPropertyEnum())
+        {
+            apiOperationSchemaMap.IsEnum = true;
+        }
+
+        if (apiOperationSchemaMap.Cardinality == CardinalityType.None)
+        {
+            apiOperationSchemaMap.Cardinality = CardinalityType.Single;
+        }
+
         result.Add(apiOperationSchemaMap);
 
         if (apiSchema.Properties.Any())
@@ -145,28 +155,44 @@ public sealed class ApiOperationSchemaMapExtractor : IApiOperationSchemaMapExtra
                 schemaKey,
                 result);
         }
-        else if (apiSchema.AllOf.Count == 2 &&
-                 (NameConstants.Pagination.Equals(apiSchema.AllOf[0].Reference?.Id, StringComparison.OrdinalIgnoreCase) ||
-                  NameConstants.Pagination.Equals(apiSchema.AllOf[1].Reference?.Id, StringComparison.OrdinalIgnoreCase)))
+        else if (apiSchema.IsPaging())
         {
-            string? subSchemaKey = null;
-            if (!NameConstants.Pagination.Equals(apiSchema.AllOf[0].Reference?.Id, StringComparison.OrdinalIgnoreCase))
-            {
-                subSchemaKey = apiSchema.AllOf[0].GetModelName();
-            }
+            apiOperationSchemaMap.Cardinality = CardinalityType.Paged;
+            HandleCardinalityPaged(componentsSchemas, apiSchema, locatedArea, apiPath, httpOperation, result, schemaKey);
+        }
+        else if (apiSchema.IsArray())
+        {
+            apiOperationSchemaMap.Cardinality = CardinalityType.Multiple;
+            HandleCardinalityMultiple(componentsSchemas, apiSchema, locatedArea, apiPath, httpOperation, parentApiSchema, result);
+        }
+    }
 
-            if (!NameConstants.Pagination.Equals(apiSchema.AllOf[1].Reference?.Id, StringComparison.OrdinalIgnoreCase))
-            {
-                subSchemaKey = apiSchema.AllOf[1].GetModelName();
-            }
+    private static void HandleCardinalityMultiple(
+        IDictionary<string, OpenApiSchema> componentsSchemas,
+        OpenApiSchema apiSchema,
+        ApiSchemaMapLocatedAreaType locatedArea,
+        string apiPath,
+        HttpOperationType httpOperation,
+        string? parentApiSchema,
+        List<ApiOperationSchemaMap> result)
+    {
+        var subSchemaKey = apiSchema.Items.GetModelName();
+        var subApiOperationSchemaMap = new ApiOperationSchemaMap(subSchemaKey, locatedArea, apiPath, httpOperation, parentApiSchema);
+        if (result.Any(x => x.Equals(subApiOperationSchemaMap)))
+        {
+            return;
+        }
 
-            if (subSchemaKey is null)
-            {
-                return;
-            }
+        if (subApiOperationSchemaMap.Cardinality == CardinalityType.None)
+        {
+            subApiOperationSchemaMap.Cardinality = CardinalityType.Single;
+        }
 
-            var subApiSchema = componentsSchemas.Single(x => x.Key.Equals(schemaKey, StringComparison.OrdinalIgnoreCase)).Value;
+        result.Add(subApiOperationSchemaMap);
 
+        var subApiSchema = componentsSchemas.Single(x => x.Key.Equals(subSchemaKey, StringComparison.OrdinalIgnoreCase)).Value;
+        if (subApiSchema.Properties.Any())
+        {
             Collect(
                 componentsSchemas,
                 subApiSchema.Properties.ToList(),
@@ -176,31 +202,43 @@ public sealed class ApiOperationSchemaMapExtractor : IApiOperationSchemaMapExtra
                 subSchemaKey,
                 result);
         }
-        else if (apiSchema.IsTypeArray() &&
-                 apiSchema.Items?.Reference?.Id is not null)
+    }
+
+    private static void HandleCardinalityPaged(
+        IDictionary<string, OpenApiSchema> componentsSchemas,
+        OpenApiSchema apiSchema,
+        ApiSchemaMapLocatedAreaType locatedArea,
+        string apiPath,
+        HttpOperationType httpOperation,
+        List<ApiOperationSchemaMap> result,
+        string schemaKey)
+    {
+        string? subSchemaKey = null;
+        if (!NameConstants.Pagination.Equals(apiSchema.AllOf[0].Reference?.Id, StringComparison.OrdinalIgnoreCase))
         {
-            var subSchemaKey = apiSchema.Items.GetModelName();
-            var subApiOperationSchemaMap = new ApiOperationSchemaMap(subSchemaKey, locatedArea, apiPath, httpOperation, parentApiSchema);
-            if (result.Any(x => x.Equals(subApiOperationSchemaMap)))
-            {
-                return;
-            }
-
-            result.Add(subApiOperationSchemaMap);
-
-            var subApiSchema = componentsSchemas.Single(x => x.Key.Equals(subSchemaKey, StringComparison.OrdinalIgnoreCase)).Value;
-            if (subApiSchema.Properties.Any())
-            {
-                Collect(
-                    componentsSchemas,
-                    subApiSchema.Properties.ToList(),
-                    locatedArea,
-                    apiPath,
-                    httpOperation,
-                    subSchemaKey,
-                    result);
-            }
+            subSchemaKey = apiSchema.AllOf[0].GetModelName();
         }
+
+        if (!NameConstants.Pagination.Equals(apiSchema.AllOf[1].Reference?.Id, StringComparison.OrdinalIgnoreCase))
+        {
+            subSchemaKey = apiSchema.AllOf[1].GetModelName();
+        }
+
+        if (subSchemaKey is null)
+        {
+            return;
+        }
+
+        var subApiSchema = componentsSchemas.Single(x => x.Key.Equals(schemaKey, StringComparison.OrdinalIgnoreCase)).Value;
+
+        Collect(
+            componentsSchemas,
+            subApiSchema.Properties.ToList(),
+            locatedArea,
+            apiPath,
+            httpOperation,
+            subSchemaKey,
+            result);
     }
 
     private static void Collect(
@@ -233,8 +271,7 @@ public sealed class ApiOperationSchemaMapExtractor : IApiOperationSchemaMapExtra
         {
             schemaKey = apiSchema.Reference.Id.EnsureFirstCharacterToUpper();
         }
-        else if (apiSchema.IsTypeArray() &&
-                 apiSchema.Items?.Reference?.Id is not null)
+        else if (apiSchema.IsArray())
         {
             schemaKey = apiSchema.Items.Reference.Id.EnsureFirstCharacterToUpper();
             apiSchema = apiSchema.Items;
@@ -245,9 +282,7 @@ public sealed class ApiOperationSchemaMapExtractor : IApiOperationSchemaMapExtra
             schemaKey = apiSchema.OneOf.First().Reference.Id.EnsureFirstCharacterToUpper();
             apiSchema = apiSchema.OneOf.First();
         }
-        else if (apiSchema.AllOf.Count == 2 &&
-                 (NameConstants.Pagination.Equals(apiSchema.AllOf[0].Reference?.Id, StringComparison.OrdinalIgnoreCase) ||
-                  NameConstants.Pagination.Equals(apiSchema.AllOf[1].Reference?.Id, StringComparison.OrdinalIgnoreCase)))
+        else if (apiSchema.IsPaging())
         {
             if (!NameConstants.Pagination.Equals(apiSchema.AllOf[0].Reference?.Id, StringComparison.OrdinalIgnoreCase))
             {

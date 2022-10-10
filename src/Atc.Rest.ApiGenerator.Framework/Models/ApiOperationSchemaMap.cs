@@ -29,10 +29,14 @@ public sealed class ApiOperationSchemaMap
 
     public string? ParentSchemaKey { get; }
 
+    public bool IsEnum { get; set; }
+
     public bool IsShared { get; set; }
 
+    public CardinalityType Cardinality { get; set; }
+
     public override string ToString()
-        => $"{nameof(SchemaKey)}: {SchemaKey}, {nameof(LocatedArea)}: {LocatedArea}, {nameof(SegmentName)}: {SegmentName}, {nameof(Path)}: {Path}, {nameof(HttpOperation)}: {HttpOperation}, {nameof(ParentSchemaKey)}: {ParentSchemaKey}, {nameof(IsShared)}: {IsShared}";
+        => $"{nameof(SchemaKey)}: {SchemaKey}, {nameof(LocatedArea)}: {LocatedArea}, {nameof(SegmentName)}: {SegmentName}, {nameof(Path)}: {Path}, {nameof(HttpOperation)}: {HttpOperation}, {nameof(ParentSchemaKey)}: {ParentSchemaKey}, {nameof(IsEnum)}: {IsEnum}, {nameof(IsShared)}: {IsShared}, {nameof(Cardinality)}: {Cardinality}";
 
     public override int GetHashCode()
         => HashCode.Combine(SchemaKey, (int)LocatedArea, SegmentName, Path, (int)HttpOperation, ParentSchemaKey);
@@ -42,6 +46,12 @@ public sealed class ApiOperationSchemaMap
         => obj is not null &&
            (ReferenceEquals(this, obj) || (obj.GetType() == GetType() && Equals((ApiOperationSchemaMap)obj)));
 
+    /// <summary>
+    /// Compares two instances of ApiOperationSchemaMap.
+    /// </summary>
+    /// <remarks>
+    /// We do not want to compare on IsEnum, IsShared, Cardinality!
+    /// </remarks>
     private bool Equals(
         ApiOperationSchemaMap other)
         => SchemaKey == other.SchemaKey &&
