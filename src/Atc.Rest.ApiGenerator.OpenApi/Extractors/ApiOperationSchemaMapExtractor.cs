@@ -20,6 +20,8 @@ public sealed class ApiOperationSchemaMapExtractor : IApiOperationSchemaMapExtra
             }
         }
 
+        SetIsShared(result);
+
         return result;
     }
 
@@ -259,5 +261,27 @@ public sealed class ApiOperationSchemaMapExtractor : IApiOperationSchemaMapExtra
         }
 
         return (schemaKey, apiSchema);
+    }
+
+    private static void SetIsShared(
+        List<ApiOperationSchemaMap> result)
+    {
+        foreach (var schemaMap in result)
+        {
+            var mapsForSchemaKey = result.Where(x => x.SchemaKey == schemaMap.SchemaKey).ToList();
+
+            var segmentNames = new List<string>();
+            foreach (var s in mapsForSchemaKey
+                         .Select(map => map.SegmentName)
+                         .Where(s => !segmentNames.Contains(s, StringComparer.Ordinal)))
+            {
+                segmentNames.Add(s);
+            }
+
+            if (segmentNames.Count > 1)
+            {
+                schemaMap.IsShared = true;
+            }
+        }
     }
 }

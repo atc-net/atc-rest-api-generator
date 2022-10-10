@@ -6,16 +6,8 @@ internal static class ApiOperationSchemaMapExtensions
         this IList<ApiOperationSchemaMap> apiOperationSchemaMaps,
         string schemaKey)
     {
-        var maps = apiOperationSchemaMaps.Where(x => x.SchemaKey == schemaKey).ToList();
-
-        var segmentNames = new List<string>();
-        foreach (var s in maps
-                     .Select(map => map.SegmentName)
-                     .Where(s => !segmentNames.Contains(s, StringComparer.Ordinal)))
-        {
-            segmentNames.Add(s);
-        }
-
-        return segmentNames.Count > 1;
+        var apiOperationSchemaMap = apiOperationSchemaMaps.FirstOrDefault(x => x.SchemaKey.Equals(schemaKey, StringComparison.Ordinal));
+        return apiOperationSchemaMap is not null &&
+               apiOperationSchemaMap.IsShared;
     }
 }

@@ -29,8 +29,10 @@ public sealed class ApiOperationSchemaMap
 
     public string? ParentSchemaKey { get; }
 
+    public bool IsShared { get; set; }
+
     public override string ToString()
-        => $"{nameof(SchemaKey)}: {SchemaKey}, {nameof(LocatedArea)}: {LocatedArea}, {nameof(SegmentName)}: {SegmentName}, {nameof(Path)}: {Path}, {nameof(HttpOperation)}: {HttpOperation}, {nameof(ParentSchemaKey)}: {ParentSchemaKey}";
+        => $"{nameof(SchemaKey)}: {SchemaKey}, {nameof(LocatedArea)}: {LocatedArea}, {nameof(SegmentName)}: {SegmentName}, {nameof(Path)}: {Path}, {nameof(HttpOperation)}: {HttpOperation}, {nameof(ParentSchemaKey)}: {ParentSchemaKey}, {nameof(IsShared)}: {IsShared}";
 
     public override int GetHashCode()
         => HashCode.Combine(SchemaKey, (int)LocatedArea, SegmentName, Path, (int)HttpOperation, ParentSchemaKey);
