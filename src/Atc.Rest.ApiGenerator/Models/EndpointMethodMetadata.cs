@@ -220,20 +220,6 @@ public class EndpointMethodMetadata
         return HasContractParameterRequestBody();
     }
 
-    public bool HasContractReturnTypeAsComplexAndNotSharedModel()
-    {
-        var returnType = ContractReturnTypeNames.FirstOrDefault(x => x.StatusCode == HttpStatusCode.OK);
-        if (returnType is null ||
-            string.IsNullOrEmpty(returnType.FullModelName) ||
-            returnType.Schema?.Type != OpenApiDataTypeConstants.Object)
-        {
-            return false;
-        }
-
-        var rawModelName = OpenApiDocumentSchemaModelNameHelper.GetRawModelName(returnType.FullModelName);
-        return !OperationSchemaMappings.IsShared(rawModelName);
-    }
-
     public bool HasContractReturnTypeAsComplex()
     {
         var returnType = ContractReturnTypeNames.FirstOrDefault(x => x.StatusCode == HttpStatusCode.OK);
