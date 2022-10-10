@@ -3,14 +3,14 @@ namespace Atc.Rest.ApiGenerator.CLI.Commands;
 public class GenerateClientCSharpCommand : AsyncCommand<ClientApiCommandSettings>
 {
     private readonly ILogger<GenerateClientCSharpCommand> logger;
-    private readonly IApiOperationSchemaMapExtractor apiOperationSchemaMapExtractor;
+    private readonly IApiOperationExtractor apiOperationExtractor;
 
     public GenerateClientCSharpCommand(
         ILogger<GenerateClientCSharpCommand> logger,
-        IApiOperationSchemaMapExtractor apiOperationSchemaMapExtractor)
+        IApiOperationExtractor apiOperationExtractor)
     {
         this.logger = logger;
-        this.apiOperationSchemaMapExtractor = apiOperationSchemaMapExtractor;
+        this.apiOperationExtractor = apiOperationExtractor;
     }
 
     public override Task<int> ExecuteAsync(
@@ -53,7 +53,7 @@ public class GenerateClientCSharpCommand : AsyncCommand<ClientApiCommandSettings
 
             if (!GenerateHelper.GenerateServerCSharpClient(
                     logger,
-                    apiOperationSchemaMapExtractor,
+                    apiOperationExtractor,
                     settings.ProjectPrefixName,
                     settings.ClientFolderName is not null && settings.ClientFolderName.IsSet ? settings.ClientFolderName.Value : string.Empty,
                     new DirectoryInfo(settings.OutputPath),

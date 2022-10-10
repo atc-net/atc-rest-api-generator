@@ -10,16 +10,16 @@ namespace Atc.Rest.ApiGenerator.Generators;
 public class ServerApiGenerator
 {
     private readonly ILogger logger;
-    private readonly IApiOperationSchemaMapExtractor apiOperationSchemaMapExtractor;
+    private readonly IApiOperationExtractor apiOperationExtractor;
     private readonly ApiProjectOptions projectOptions;
 
     public ServerApiGenerator(
         ILogger logger,
-        IApiOperationSchemaMapExtractor apiOperationSchemaMapExtractor,
+        IApiOperationExtractor apiOperationExtractor,
         ApiProjectOptions projectOptions)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        this.apiOperationSchemaMapExtractor = apiOperationSchemaMapExtractor ?? throw new ArgumentNullException(nameof(apiOperationSchemaMapExtractor));
+        this.apiOperationExtractor = apiOperationExtractor ?? throw new ArgumentNullException(nameof(apiOperationExtractor));
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
     }
 
@@ -37,7 +37,7 @@ public class ServerApiGenerator
 
         CopyApiSpecification();
 
-        var operationSchemaMappings = apiOperationSchemaMapExtractor.Extract(projectOptions.Document);
+        var operationSchemaMappings = apiOperationExtractor.Extract(projectOptions.Document);
 
         GenerateContracts(operationSchemaMappings);
         GenerateEndpoints(operationSchemaMappings);
@@ -170,7 +170,7 @@ public class ServerApiGenerator
     }
 
     private void GenerateContracts(
-        IList<ApiOperationSchemaMap> operationSchemaMappings)
+        IList<ApiOperation> operationSchemaMappings)
     {
         ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 
@@ -225,7 +225,7 @@ public class ServerApiGenerator
     }
 
     private void GenerateEndpoints(
-        IList<ApiOperationSchemaMap> operationSchemaMappings)
+        IList<ApiOperation> operationSchemaMappings)
     {
         ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 

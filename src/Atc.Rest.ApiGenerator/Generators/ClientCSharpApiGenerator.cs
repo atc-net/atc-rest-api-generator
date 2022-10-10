@@ -7,17 +7,17 @@ namespace Atc.Rest.ApiGenerator.Generators;
 public class ClientCSharpApiGenerator
 {
     private readonly ILogger logger;
-    private readonly IApiOperationSchemaMapExtractor apiOperationSchemaMapExtractor;
+    private readonly IApiOperationExtractor apiOperationExtractor;
     private readonly ClientCSharpApiProjectOptions projectOptions;
     private readonly ApiProjectOptions apiProjectOptions;
 
     public ClientCSharpApiGenerator(
         ILogger logger,
-        IApiOperationSchemaMapExtractor apiOperationSchemaMapExtractor,
+        IApiOperationExtractor apiOperationExtractor,
         ClientCSharpApiProjectOptions projectOptions)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        this.apiOperationSchemaMapExtractor = apiOperationSchemaMapExtractor ?? throw new ArgumentNullException(nameof(apiOperationSchemaMapExtractor));
+        this.apiOperationExtractor = apiOperationExtractor ?? throw new ArgumentNullException(nameof(apiOperationExtractor));
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
 
         apiProjectOptions = new ApiProjectOptions(
@@ -41,7 +41,7 @@ public class ClientCSharpApiGenerator
     {
         ScaffoldSrc();
 
-        var operationSchemaMappings = apiOperationSchemaMapExtractor.Extract(projectOptions.Document);
+        var operationSchemaMappings = apiOperationExtractor.Extract(projectOptions.Document);
         GenerateContracts(operationSchemaMappings);
         if (!ExcludeEndpointGeneration)
         {
@@ -95,7 +95,7 @@ public class ClientCSharpApiGenerator
     }
 
     private void GenerateContracts(
-        IList<ApiOperationSchemaMap> operationSchemaMappings)
+        IList<ApiOperation> operationSchemaMappings)
     {
         ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 
@@ -134,7 +134,7 @@ public class ClientCSharpApiGenerator
     }
 
     private void GenerateEndpoints(
-        IList<ApiOperationSchemaMap> operationSchemaMappings)
+        IList<ApiOperation> operationSchemaMappings)
     {
         ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 

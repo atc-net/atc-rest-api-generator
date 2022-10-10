@@ -8,16 +8,16 @@ namespace Atc.Rest.ApiGenerator.Generators;
 public class ServerHostGenerator
 {
     private readonly ILogger logger;
-    private readonly IApiOperationSchemaMapExtractor apiOperationSchemaMapExtractor;
+    private readonly IApiOperationExtractor apiOperationExtractor;
     private readonly HostProjectOptions projectOptions;
 
     public ServerHostGenerator(
         ILogger logger,
-        IApiOperationSchemaMapExtractor apiOperationSchemaMapExtractor,
+        IApiOperationExtractor apiOperationExtractor,
         HostProjectOptions projectOptions)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        this.apiOperationSchemaMapExtractor = apiOperationSchemaMapExtractor ?? throw new ArgumentNullException(nameof(apiOperationSchemaMapExtractor));
+        this.apiOperationExtractor = apiOperationExtractor ?? throw new ArgumentNullException(nameof(apiOperationExtractor));
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
     }
 
@@ -987,7 +987,7 @@ public class ServerHostGenerator
             projectOptions.ApiOptions,
             projectOptions.UsingCodingRules);
 
-        var operationSchemaMappings = apiOperationSchemaMapExtractor.Extract(projectOptions.Document);
+        var operationSchemaMappings = apiOperationExtractor.Extract(projectOptions.Document);
         var sgEndpointControllers = new List<SyntaxGeneratorEndpointControllers>();
         foreach (var segmentName in projectOptions.BasePathSegmentNames)
         {

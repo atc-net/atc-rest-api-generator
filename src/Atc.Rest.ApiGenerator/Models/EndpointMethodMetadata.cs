@@ -16,7 +16,7 @@ public class EndpointMethodMetadata
         List<ResponseTypeNameAndItemSchema> contractReturnTypeNames,
         SyntaxGeneratorContractParameter? sgContractParameter,
         IDictionary<string, OpenApiSchema> componentsSchemas,
-        IList<ApiOperationSchemaMap> apiOperationSchemaMappings)
+        IList<ApiOperation> apiOperationSchemaMappings)
     {
         UseNullableReferenceTypes = useNullableReferenceTypes;
         ProjectName = projectName;
@@ -57,7 +57,7 @@ public class EndpointMethodMetadata
 
     public IDictionary<string, OpenApiSchema> ComponentsSchemas { get; }
 
-    public IList<ApiOperationSchemaMap> OperationSchemaMappings { get; }
+    public IList<ApiOperation> OperationSchemaMappings { get; }
 
     public bool IsSharedModel(
         string modelName)

@@ -1,15 +1,15 @@
 namespace Atc.Rest.ApiGenerator.OpenApi.Extractors;
 
-public sealed class ApiOperationSchemaMapExtractor : IApiOperationSchemaMapExtractor
+public sealed class ApiOperationExtractor : IApiOperationExtractor
 {
-    public IList<ApiOperationSchemaMap> Extract(
+    public IList<ApiOperation> Extract(
         OpenApiDocument apiDocument)
     {
         ArgumentNullException.ThrowIfNull(apiDocument);
 
         var componentsSchemas = apiDocument.Components.Schemas;
 
-        var result = new List<ApiOperationSchemaMap>();
+        var result = new List<ApiOperation>();
         foreach (var apiPath in apiDocument.Paths)
         {
             foreach (var apiOperation in apiPath.Value.Operations)
@@ -29,7 +29,7 @@ public sealed class ApiOperationSchemaMapExtractor : IApiOperationSchemaMapExtra
         IDictionary<string, OpenApiSchema> componentsSchemas,
         (HttpOperationType HttpOperationType, OpenApiOperation OpenApiOperation) apiOperation,
         KeyValuePair<string, OpenApiPathItem> apiPath,
-        List<ApiOperationSchemaMap> result)
+        List<ApiOperation> result)
     {
         foreach (var apiParameter in apiOperation.OpenApiOperation.Parameters)
         {
@@ -56,7 +56,7 @@ public sealed class ApiOperationSchemaMapExtractor : IApiOperationSchemaMapExtra
         IDictionary<string, OpenApiSchema> componentsSchemas,
         (HttpOperationType HttpOperationType, OpenApiOperation OpenApiOperation) apiOperation,
         KeyValuePair<string, OpenApiPathItem> apiPath,
-        List<ApiOperationSchemaMap> result)
+        List<ApiOperation> result)
     {
         if (apiOperation.OpenApiOperation.RequestBody?.Content is null)
         {
@@ -80,7 +80,7 @@ public sealed class ApiOperationSchemaMapExtractor : IApiOperationSchemaMapExtra
         IDictionary<string, OpenApiSchema> componentsSchemas,
         (HttpOperationType HttpOperationType, OpenApiOperation OpenApiOperation) apiOperation,
         KeyValuePair<string, OpenApiPathItem> apiPath,
-        List<ApiOperationSchemaMap> result)
+        List<ApiOperation> result)
     {
         foreach (var apiResponse in apiOperation.OpenApiOperation.Responses)
         {
@@ -110,7 +110,7 @@ public sealed class ApiOperationSchemaMapExtractor : IApiOperationSchemaMapExtra
         string apiPath,
         HttpOperationType httpOperation,
         string? parentApiSchema,
-        List<ApiOperationSchemaMap> result)
+        List<ApiOperation> result)
     {
         if (apiSchema is null)
         {
@@ -126,23 +126,23 @@ public sealed class ApiOperationSchemaMapExtractor : IApiOperationSchemaMapExtra
             return;
         }
 
-        var apiOperationSchemaMap = new ApiOperationSchemaMap(schemaKey, locatedArea, apiPath, httpOperation, parentApiSchema);
-        if (result.Any(x => x.Equals(apiOperationSchemaMap)))
+        var apiOperation = new ApiOperation(schemaKey, locatedArea, apiPath, httpOperation, parentApiSchema);
+        if (result.Any(x => x.Equals(apiOperation)))
         {
             return;
         }
 
         if (apiSchema.IsSchemaEnumOrPropertyEnum())
         {
-            apiOperationSchemaMap.IsEnum = true;
+            apiOperation.Model.IsEnum = true;
         }
 
-        if (apiOperationSchemaMap.Cardinality == CardinalityType.None)
+        if (apiOperation.Cardinality == CardinalityType.None)
         {
-            apiOperationSchemaMap.Cardinality = CardinalityType.Single;
+            apiOperation.Cardinality = CardinalityType.Single;
         }
 
-        result.Add(apiOperationSchemaMap);
+        result.Add(apiOperation);
 
         if (apiSchema.Properties.Any())
         {
@@ -157,12 +157,12 @@ public sealed class ApiOperationSchemaMapExtractor : IApiOperationSchemaMapExtra
         }
         else if (apiSchema.IsPaging())
         {
-            apiOperationSchemaMap.Cardinality = CardinalityType.Paged;
+            apiOperation.Cardinality = CardinalityType.Paged;
             HandleCardinalityPaged(componentsSchemas, apiSchema, locatedArea, apiPath, httpOperation, result, schemaKey);
         }
         else if (apiSchema.IsArray())
         {
-            apiOperationSchemaMap.Cardinality = CardinalityType.Multiple;
+            apiOperation.Cardinality = CardinalityType.Multiple;
             HandleCardinalityMultiple(componentsSchemas, apiSchema, locatedArea, apiPath, httpOperation, parentApiSchema, result);
         }
     }
@@ -174,21 +174,21 @@ public sealed class ApiOperationSchemaMapExtractor : IApiOperationSchemaMapExtra
         string apiPath,
         HttpOperationType httpOperation,
         string? parentApiSchema,
-        List<ApiOperationSchemaMap> result)
+        List<ApiOperation> result)
     {
         var subSchemaKey = apiSchema.Items.GetModelName();
-        var subApiOperationSchemaMap = new ApiOperationSchemaMap(subSchemaKey, locatedArea, apiPath, httpOperation, parentApiSchema);
-        if (result.Any(x => x.Equals(subApiOperationSchemaMap)))
+        var subApiOperation = new ApiOperation(subSchemaKey, locatedArea, apiPath, httpOperation, parentApiSchema);
+        if (result.Any(x => x.Equals(subApiOperation)))
         {
             return;
         }
 
-        if (subApiOperationSchemaMap.Cardinality == CardinalityType.None)
+        if (subApiOperation.Cardinality == CardinalityType.None)
         {
-            subApiOperationSchemaMap.Cardinality = CardinalityType.Single;
+            subApiOperation.Cardinality = CardinalityType.Single;
         }
 
-        result.Add(subApiOperationSchemaMap);
+        result.Add(subApiOperation);
 
         var subApiSchema = componentsSchemas.Single(x => x.Key.Equals(subSchemaKey, StringComparison.OrdinalIgnoreCase)).Value;
         if (subApiSchema.Properties.Any())
@@ -210,7 +210,7 @@ public sealed class ApiOperationSchemaMapExtractor : IApiOperationSchemaMapExtra
         ApiSchemaMapLocatedAreaType locatedArea,
         string apiPath,
         HttpOperationType httpOperation,
-        List<ApiOperationSchemaMap> result,
+        List<ApiOperation> result,
         string schemaKey)
     {
         string? subSchemaKey = null;
@@ -248,7 +248,7 @@ public sealed class ApiOperationSchemaMapExtractor : IApiOperationSchemaMapExtra
         string apiPath,
         HttpOperationType httpOperation,
         string parentApiSchema,
-        List<ApiOperationSchemaMap> result)
+        List<ApiOperation> result)
     {
         foreach (var propertySchema in propertySchemas)
         {
@@ -299,11 +299,11 @@ public sealed class ApiOperationSchemaMapExtractor : IApiOperationSchemaMapExtra
     }
 
     private static void SetIsShared(
-        List<ApiOperationSchemaMap> result)
+        List<ApiOperation> result)
     {
         foreach (var schemaMap in result)
         {
-            var mapsForSchemaKey = result.Where(x => x.SchemaKey == schemaMap.SchemaKey).ToList();
+            var mapsForSchemaKey = result.Where(x => x.Model.Name == schemaMap.Model.Name).ToList();
 
             var segmentNames = new List<string>();
             foreach (var s in mapsForSchemaKey
@@ -315,7 +315,7 @@ public sealed class ApiOperationSchemaMapExtractor : IApiOperationSchemaMapExtra
 
             if (segmentNames.Count > 1)
             {
-                schemaMap.IsShared = true;
+                schemaMap.Model.IsShared = true;
             }
         }
     }

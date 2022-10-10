@@ -1,15 +1,21 @@
+using System.Reflection;
+
 namespace Atc.Rest.ApiGenerator.Framework.Models;
 
-public sealed class ApiOperationSchemaMap
+public sealed class ApiOperation
 {
-    public ApiOperationSchemaMap(
+    public ApiOperation(
         string schemaKey,
         ApiSchemaMapLocatedAreaType locatedArea,
         string path,
         HttpOperationType httpOperation,
         string? parentSchemaKey)
     {
-        SchemaKey = schemaKey;
+        Model = new ApiOperationModel
+        {
+            Name = schemaKey,
+        };
+
         LocatedArea = locatedArea;
         Path = path;
         HttpOperation = httpOperation;
@@ -17,7 +23,7 @@ public sealed class ApiOperationSchemaMap
         SegmentName = ExtractSegmentName(Path);
     }
 
-    public string SchemaKey { get; }
+    public ApiOperationModel Model { get; }
 
     public ApiSchemaMapLocatedAreaType LocatedArea { get; }
 
@@ -29,32 +35,28 @@ public sealed class ApiOperationSchemaMap
 
     public string? ParentSchemaKey { get; }
 
-    public bool IsEnum { get; set; }
-
-    public bool IsShared { get; set; }
-
     public CardinalityType Cardinality { get; set; }
 
     public override string ToString()
-        => $"{nameof(SchemaKey)}: {SchemaKey}, {nameof(LocatedArea)}: {LocatedArea}, {nameof(SegmentName)}: {SegmentName}, {nameof(Path)}: {Path}, {nameof(HttpOperation)}: {HttpOperation}, {nameof(ParentSchemaKey)}: {ParentSchemaKey}, {nameof(IsEnum)}: {IsEnum}, {nameof(IsShared)}: {IsShared}, {nameof(Cardinality)}: {Cardinality}";
+        => $"{nameof(Model)}: ({Model}), {nameof(LocatedArea)}: {LocatedArea}, {nameof(SegmentName)}: {SegmentName}, {nameof(Path)}: {Path}, {nameof(HttpOperation)}: {HttpOperation}, {nameof(ParentSchemaKey)}: {ParentSchemaKey}, {nameof(Cardinality)}: {Cardinality}";
 
     public override int GetHashCode()
-        => HashCode.Combine(SchemaKey, (int)LocatedArea, SegmentName, Path, (int)HttpOperation, ParentSchemaKey);
+        => HashCode.Combine(Model.Name, (int)LocatedArea, SegmentName, Path, (int)HttpOperation, ParentSchemaKey);
 
     public override bool Equals(
         object? obj)
         => obj is not null &&
-           (ReferenceEquals(this, obj) || (obj.GetType() == GetType() && Equals((ApiOperationSchemaMap)obj)));
+           (ReferenceEquals(this, obj) || (obj.GetType() == GetType() && Equals((ApiOperation)obj)));
 
     /// <summary>
-    /// Compares two instances of ApiOperationSchemaMap.
+    /// Compares two instances of ApiOperation.
     /// </summary>
     /// <remarks>
-    /// We do not want to compare on IsEnum, IsShared, Cardinality!
+    /// We do not want to compare on Cardinality!
     /// </remarks>
     private bool Equals(
-        ApiOperationSchemaMap other)
-        => SchemaKey == other.SchemaKey &&
+        ApiOperation other)
+        => Model.Name == other.Model.Name &&
            LocatedArea == other.LocatedArea &&
            SegmentName == other.SegmentName &&
            Path == other.Path &&

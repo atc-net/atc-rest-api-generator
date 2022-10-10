@@ -9,7 +9,7 @@ public class SyntaxGeneratorClientEndpointResult : SyntaxGeneratorClientEndpoint
     public SyntaxGeneratorClientEndpointResult(
         ILogger logger,
         ApiProjectOptions apiProjectOptions,
-        IList<ApiOperationSchemaMap> operationSchemaMappings,
+        IList<ApiOperation> operationSchemaMappings,
         IList<OpenApiParameter> globalPathParameters,
         OperationType apiOperationType,
         OpenApiOperation apiOperation,

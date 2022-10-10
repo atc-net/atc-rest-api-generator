@@ -41,9 +41,9 @@ public class SyntaxGeneratorContractParameters : ISyntaxGeneratorContractParamet
                 var generator = new SyntaxGeneratorContractParameter(
                     logger,
                     ApiProjectOptions,
-                    urlPath.Value.Parameters,
-                    apiOperation.Key,
-                    apiOperation.Value,
+                    globalPathParameters: urlPath.Value.Parameters,
+                    apiOperationType: apiOperation.Key,
+                    apiOperation: apiOperation.Value,
                     FocusOnSegmentName);
 
                 generator.GenerateCode();

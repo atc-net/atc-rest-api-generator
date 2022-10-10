@@ -7,7 +7,7 @@ public class SyntaxGeneratorClientEndpointInterface : SyntaxGeneratorClientEndpo
     public SyntaxGeneratorClientEndpointInterface(
         ILogger logger,
         ApiProjectOptions apiProjectOptions,
-        IList<ApiOperationSchemaMap> operationSchemaMappings,
+        IList<ApiOperation> operationSchemaMappings,
         IList<OpenApiParameter> globalPathParameters,
         OperationType apiOperationType,
         OpenApiOperation apiOperation,

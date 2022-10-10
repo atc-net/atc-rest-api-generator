@@ -1,7 +1,7 @@
 namespace Atc.Rest.ApiGenerator.OpenApi.Interfaces;
 
-public interface IApiOperationSchemaMapExtractor
+public interface IApiOperationExtractor
 {
-    IList<ApiOperationSchemaMap> Extract(
+    IList<ApiOperation> Extract(
         OpenApiDocument apiDocument);
 }

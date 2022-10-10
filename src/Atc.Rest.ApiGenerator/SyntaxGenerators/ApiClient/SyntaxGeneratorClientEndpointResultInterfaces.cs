@@ -9,7 +9,7 @@ public class SyntaxGeneratorClientEndpointResultInterfaces
     public SyntaxGeneratorClientEndpointResultInterfaces(
         ILogger logger,
         ApiProjectOptions apiProjectOptions,
-        List<ApiOperationSchemaMap> operationSchemaMappings,
+        List<ApiOperation> operationSchemaMappings,
         string focusOnSegmentName)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -20,7 +20,7 @@ public class SyntaxGeneratorClientEndpointResultInterfaces
 
     public ApiProjectOptions ApiProjectOptions { get; }
 
-    public List<ApiOperationSchemaMap> OperationSchemaMappings { get; }
+    public List<ApiOperation> OperationSchemaMappings { get; }
 
     public string FocusOnSegmentName { get; }
 

@@ -5,7 +5,7 @@ public abstract class SyntaxGeneratorClientEndpointBase
     protected SyntaxGeneratorClientEndpointBase(
         ILogger logger,
         ApiProjectOptions apiProjectOptions,
-        IList<ApiOperationSchemaMap> operationSchemaMappings,
+        IList<ApiOperation> operationSchemaMappings,
         IList<OpenApiParameter> globalPathParameters,
         OperationType apiOperationType,
         OpenApiOperation apiOperation,
@@ -43,7 +43,7 @@ public abstract class SyntaxGeneratorClientEndpointBase
 
     public ApiProjectOptions ApiProjectOptions { get; }
 
-    public IList<ApiOperationSchemaMap> OperationSchemaMappings { get; }
+    public IList<ApiOperation> OperationSchemaMappings { get; }
 
     public IList<OpenApiParameter> GlobalPathParameters { get; }
 

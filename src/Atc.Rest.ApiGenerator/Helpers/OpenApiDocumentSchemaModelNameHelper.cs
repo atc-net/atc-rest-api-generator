@@ -100,42 +100,6 @@ public static class OpenApiDocumentSchemaModelNameHelper
             : "Task";
     }
 
-    public static bool HasSharedResponseContract(
-        OpenApiDocument apiDocument,
-        List<ApiOperationSchemaMap> operationSchemaMappings,
-        string focusOnSegmentName)
-    {
-        ArgumentNullException.ThrowIfNull(apiDocument);
-        ArgumentNullException.ThrowIfNull(operationSchemaMappings);
-        ArgumentNullException.ThrowIfNull(focusOnSegmentName);
-
-        foreach (var (_, value) in apiDocument.GetPathsByBasePathSegmentName(focusOnSegmentName))
-        {
-            foreach (var apiOperation in value.Operations)
-            {
-                if (apiOperation.Value.Responses is null)
-                {
-                    continue;
-                }
-
-                var responseModelName = apiOperation.Value.Responses.GetModelNameForStatusCode(HttpStatusCode.OK);
-                var isSharedResponseModel = !string.IsNullOrEmpty(responseModelName) &&
-                                            operationSchemaMappings.IsShared(responseModelName);
-                if (isSharedResponseModel)
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    public static bool HasList(
-        string typeName)
-        => !string.IsNullOrEmpty(typeName) &&
-           typeName.Contains(Microsoft.OpenApi.Models.NameConstants.List + "<", StringComparison.Ordinal);
-
     private static bool HasNamespaceRawModelName(
         string namespacePart,
         string rawModelName)

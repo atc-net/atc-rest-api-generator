@@ -8,7 +8,7 @@ internal static class OpenApiResponsesExtensions
 {
     public static List<string> GetProducesResponseAttributeParts(
         this OpenApiResponses responses,
-        IList<ApiOperationSchemaMap> apiOperationSchemaMappings,
+        IList<ApiOperation> apiOperationSchemaMappings,
         string contractArea,
         string projectName,
         bool useProblemDetailsAsDefaultResponseBody,
@@ -38,7 +38,7 @@ internal static class OpenApiResponsesExtensions
 
     public static List<Tuple<HttpStatusCode, string>> GetResponseTypes(
         this OpenApiResponses responses,
-        IList<ApiOperationSchemaMap> apiOperationSchemaMappings,
+        IList<ApiOperation> apiOperationSchemaMappings,
         string contractArea,
         string projectName,
         bool useProblemDetailsAsDefaultResponseBody,
