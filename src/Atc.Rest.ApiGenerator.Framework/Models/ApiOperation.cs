@@ -1,5 +1,3 @@
-using System.Reflection;
-
 namespace Atc.Rest.ApiGenerator.Framework.Models;
 
 public sealed class ApiOperation
