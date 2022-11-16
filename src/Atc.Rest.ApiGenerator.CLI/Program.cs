@@ -23,7 +23,7 @@ public static class Program
 
         var serviceCollection = ServiceCollectionFactory.Create(consoleLoggerConfiguration);
 
-        serviceCollection.AddSingleton<IApiOperationSchemaMapExtractor, ApiOperationSchemaMapExtractor>();
+        serviceCollection.AddSingleton<IApiOperationExtractor, ApiOperationExtractor>();
 
         var app = CommandAppFactory.CreateWithRootCommand<RootCommand>(serviceCollection);
         app.ConfigureCommands();
