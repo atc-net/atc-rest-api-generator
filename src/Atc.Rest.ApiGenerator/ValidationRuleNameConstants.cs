@@ -15,6 +15,7 @@ public static class ValidationRuleNameConstants
     public const string Schema09 = "CR0109";
     public const string Schema10 = "CR0110";
     public const string Schema11 = "CR0111";
+    public const string Schema12 = "CR0112";
 
     public const string Operation01 = "CR0201";
     public const string Operation02 = "CR0202";

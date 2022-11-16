@@ -126,6 +126,12 @@ public static class OpenApiDocumentValidationHelper
 
                     foreach (var (key, value) in schema.Properties)
                     {
+                        if (string.IsNullOrEmpty(key))
+                        {
+                            logItems.Add(LogItemHelper.Create(logCategory, ValidationRuleNameConstants.Schema12, $"Missing key/name for one or more properties on object type '{schema.Reference.ReferenceV3}'."));
+                            break;
+                        }
+
                         switch (value.Type)
                         {
                             case OpenApiDataTypeConstants.Object:
