@@ -1,6 +1,6 @@
 namespace Atc.Rest.ApiGenerator.Framework.Mvc.ContentGenerators.Server;
 
-public class ContentGeneratorServerSwaggerDocOptions : IContentGenerator
+public sealed class ContentGeneratorServerSwaggerDocOptions : IContentGenerator
 {
     private readonly GeneratedCodeHeaderGenerator codeHeaderGenerator;
     private readonly GeneratedCodeAttributeGenerator codeAttributeGenerator;
