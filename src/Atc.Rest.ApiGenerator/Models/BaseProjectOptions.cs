@@ -35,7 +35,7 @@ public abstract class BaseProjectOptions
         ApiGeneratorVersion = GenerateHelper.GetAtcApiGeneratorVersion();
         ApiOptions = apiOptions;
 
-        RouteBase = OpenApiDocumentHelper.GetServerUrlBasePath(openApiDocument);
+        RouteBase = openApiDocument.GetServerUrlBasePath();
         ProjectName = string.IsNullOrEmpty(projectSuffixName)
             ? projectPrefixName
                 .Replace(" ", ".", StringComparison.Ordinal)
@@ -62,7 +62,7 @@ public abstract class BaseProjectOptions
         IsForClient = forClient;
         ClientFolderName = clientFolderName;
 
-        BasePathSegmentNames = OpenApiDocumentHelper.GetBasePathSegmentNames(openApiDocument);
+        BasePathSegmentNames = openApiDocument.GetBasePathSegmentNames();
     }
 
     public bool UsingCodingRules { get; }

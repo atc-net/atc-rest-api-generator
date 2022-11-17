@@ -1,4 +1,4 @@
-namespace Atc.Rest.ApiGenerator.Framework;
+namespace Atc.Rest.ApiGenerator.Framework.Writers;
 
 public static class ContentWriterConstants
 {

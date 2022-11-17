@@ -30,7 +30,14 @@ public class GenerateClientCSharpCommand : AsyncCommand<ClientApiCommandSettings
         ConsoleHelper.WriteHeader();
 
         var apiOptions = await ApiOptionsHelper.CreateDefault(settings);
-        var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(logger, settings.SpecificationPath);
+        var apiSpecificationContentReader = new ApiSpecificationContentReader();
+        var apiDocumentContainer = apiSpecificationContentReader.CombineAndGetApiDocumentContainer(logger, settings.SpecificationPath);
+        if (apiDocumentContainer.Exception is not null)
+        {
+            logger.LogError(apiDocumentContainer.Exception, $"{EmojisConstants.Error} Reading specification failed.");
+            return ConsoleExitStatusCodes.Failure;
+        }
+
         var shouldScaffoldCodingRules = CodingRulesHelper.ShouldScaffoldCodingRules(settings.OutputPath, settings.DisableCodingRules);
         var isUsingCodingRules = CodingRulesHelper.IsUsingCodingRules(settings.OutputPath, settings.DisableCodingRules);
 
@@ -45,7 +52,7 @@ public class GenerateClientCSharpCommand : AsyncCommand<ClientApiCommandSettings
         {
             if (!OpenApiDocumentHelper.Validate(
                     logger,
-                    apiDocument,
+                    apiDocumentContainer,
                     apiOptions.Validation))
             {
                 return ConsoleExitStatusCodes.Failure;
@@ -57,7 +64,7 @@ public class GenerateClientCSharpCommand : AsyncCommand<ClientApiCommandSettings
                     settings.ProjectPrefixName,
                     settings.ClientFolderName is not null && settings.ClientFolderName.IsSet ? settings.ClientFolderName.Value : string.Empty,
                     new DirectoryInfo(settings.OutputPath),
-                    apiDocument,
+                    apiDocumentContainer,
                     settings.ExcludeEndpointGeneration,
                     apiOptions,
                     isUsingCodingRules))

@@ -1,5 +1,5 @@
 // ReSharper disable SuggestBaseTypeForParameter
-namespace Atc.Rest.ApiGenerator.Framework;
+namespace Atc.Rest.ApiGenerator.Framework.Writers;
 
 public class ContentWriter : IContentWriter
 {
@@ -120,7 +120,7 @@ public class ContentWriter : IContentWriter
         string content,
         string orgText)
         => orgText == content ||
-           (RemoveApiGeneratorVersionLine(orgText, removeNewLines: true) == RemoveApiGeneratorVersionLine(content, removeNewLines: true));
+           RemoveApiGeneratorVersionLine(orgText, removeNewLines: true) == RemoveApiGeneratorVersionLine(content, removeNewLines: true);
 
     private static string RemoveApiGeneratorVersionLine(
         string text,

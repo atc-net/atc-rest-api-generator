@@ -1,3 +1,5 @@
+using Atc.Rest.ApiGenerator.Framework.Writers;
+
 namespace Atc.Rest.ApiGenerator.Framework.ContentGenerators;
 
 public class GeneratedCodeHeaderGenerator : IContentGenerator

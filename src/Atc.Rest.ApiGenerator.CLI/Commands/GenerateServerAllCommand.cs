@@ -42,7 +42,14 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
         }
 
         var apiOptions = await ApiOptionsHelper.CreateDefault(settings);
-        var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(logger, settings.SpecificationPath);
+        var apiSpecificationContentReader = new ApiSpecificationContentReader();
+        var apiDocumentContainer = apiSpecificationContentReader.CombineAndGetApiDocumentContainer(logger, settings.SpecificationPath);
+        if (apiDocumentContainer.Exception is not null)
+        {
+            logger.LogError(apiDocumentContainer.Exception, $"{EmojisConstants.Error} Reading specification failed.");
+            return ConsoleExitStatusCodes.Failure;
+        }
+
         var shouldScaffoldCodingRules = CodingRulesHelper.ShouldScaffoldCodingRules(outputSlnPath, settings.DisableCodingRules);
         var isUsingCodingRules = CodingRulesHelper.IsUsingCodingRules(outputSlnPath, settings.DisableCodingRules);
 
@@ -57,7 +64,7 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
         {
             if (!OpenApiDocumentHelper.Validate(
                     logger,
-                    apiDocument,
+                    apiDocumentContainer,
                     apiOptions.Validation))
             {
                 return ConsoleExitStatusCodes.Failure;
@@ -69,7 +76,7 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
                     projectPrefixName,
                     outputSrcPath,
                     outputTestPath,
-                    apiDocument,
+                    apiDocumentContainer,
                     apiOptions,
                     isUsingCodingRules))
             {
@@ -81,7 +88,7 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
                     projectPrefixName,
                     outputSrcPath,
                     outputTestPath,
-                    apiDocument,
+                    apiDocumentContainer,
                     apiOptions,
                     isUsingCodingRules,
                     outputSrcPath))
@@ -95,7 +102,7 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
                     projectPrefixName,
                     outputSrcPath,
                     outputTestPath,
-                    apiDocument,
+                    apiDocumentContainer,
                     apiOptions,
                     isUsingCodingRules,
                     outputSrcPath,

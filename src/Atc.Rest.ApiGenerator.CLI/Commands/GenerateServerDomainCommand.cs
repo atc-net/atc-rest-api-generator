@@ -31,7 +31,14 @@ public class GenerateServerDomainCommand : AsyncCommand<ServerDomainCommandSetti
         }
 
         var apiOptions = await ApiOptionsHelper.CreateDefault(settings);
-        var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(logger, settings.SpecificationPath);
+        var apiSpecificationContentReader = new ApiSpecificationContentReader();
+        var apiDocumentContainer = apiSpecificationContentReader.CombineAndGetApiDocumentContainer(logger, settings.SpecificationPath);
+        if (apiDocumentContainer.Exception is not null)
+        {
+            logger.LogError(apiDocumentContainer.Exception, $"{EmojisConstants.Error} Reading specification failed.");
+            return ConsoleExitStatusCodes.Failure;
+        }
+
         var shouldScaffoldCodingRules = CodingRulesHelper.ShouldScaffoldCodingRules(settings.OutputPath, settings.DisableCodingRules);
         var isUsingCodingRules = CodingRulesHelper.IsUsingCodingRules(settings.OutputPath, settings.DisableCodingRules);
 
@@ -46,7 +53,7 @@ public class GenerateServerDomainCommand : AsyncCommand<ServerDomainCommandSetti
         {
             if (!OpenApiDocumentHelper.Validate(
                     logger,
-                    apiDocument,
+                    apiDocumentContainer,
                     apiOptions.Validation))
             {
                 return ConsoleExitStatusCodes.Failure;
@@ -57,7 +64,7 @@ public class GenerateServerDomainCommand : AsyncCommand<ServerDomainCommandSetti
                     settings.ProjectPrefixName,
                     new DirectoryInfo(settings.OutputPath),
                     outputTestPath,
-                    apiDocument,
+                    apiDocumentContainer,
                     apiOptions,
                     isUsingCodingRules,
                     new DirectoryInfo(settings.ApiPath)))

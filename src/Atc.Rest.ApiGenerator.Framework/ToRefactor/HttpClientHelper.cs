@@ -1,4 +1,4 @@
-namespace Atc.Rest.ApiGenerator.Helpers;
+namespace Atc.Rest.ApiGenerator.Framework.ToRefactor;
 
 public static class HttpClientHelper
 {
@@ -58,7 +58,7 @@ public static class HttpClientHelper
     {
         ArgumentNullException.ThrowIfNull(apiDesignPath);
 
-        logger.LogInformation($"{AppEmojisConstants.AreaDownload} Fetching api specification");
+        logger.LogInformation($"{ContentReaderConstants.AreaDownload} Fetching api specification");
 
         var yamlContent = GetAsString(
             logger,

@@ -35,7 +35,7 @@ public class ClientCSharpApiProjectOptions
         PathForSrcGenerate = new DirectoryInfo(Path.Combine(PathForSrcGenerate.FullName, ProjectName));
         ProjectSrcCsProj = new FileInfo(Path.Combine(PathForSrcGenerate.FullName, $"{ProjectName}.csproj"));
 
-        BasePathSegmentNames = OpenApiDocumentHelper.GetBasePathSegmentNames(openApiDocument);
+        BasePathSegmentNames = openApiDocument.GetBasePathSegmentNames();
 
         UsingCodingRules = usingCodingRules;
         ExcludeEndpointGeneration = excludeEndpointGeneration;

@@ -22,13 +22,19 @@ public class ValidateSchemaCommand : AsyncCommand<BaseSchemaCommandSettings>
         ConsoleHelper.WriteHeader();
 
         var apiOptions = await ApiOptionsHelper.CreateDefault(settings.GetOptionsPath());
-        var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(logger, settings.SpecificationPath);
+        var apiSpecificationContentReader = new ApiSpecificationContentReader();
+        var apiDocumentContainer = apiSpecificationContentReader.CombineAndGetApiDocumentContainer(logger, settings.SpecificationPath);
+        if (apiDocumentContainer.Exception is not null)
+        {
+            logger.LogError(apiDocumentContainer.Exception, $"{EmojisConstants.Error} Reading specification failed.");
+            return ConsoleExitStatusCodes.Failure;
+        }
 
         try
         {
             if (!OpenApiDocumentHelper.Validate(
                     logger,
-                    apiDocument,
+                    apiDocumentContainer,
                     apiOptions.Validation))
             {
                 return ConsoleExitStatusCodes.Failure;

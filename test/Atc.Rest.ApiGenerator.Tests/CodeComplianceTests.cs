@@ -1,5 +1,3 @@
-using Atc.Rest.ApiGenerator.Extensions;
-
 namespace Atc.Rest.ApiGenerator.Tests;
 
 public class CodeComplianceTests
@@ -26,7 +24,6 @@ public class CodeComplianceTests
         typeof(ServerHostGenerator),
         typeof(ApiGeneratorHelper),
         typeof(NugetPackageReferenceHelper),
-        typeof(HttpClientHelper),
         typeof(OpenApiDocumentHelper),
         typeof(OpenApiDocumentValidationHelper),
         typeof(SyntaxGeneratorContractInterface),

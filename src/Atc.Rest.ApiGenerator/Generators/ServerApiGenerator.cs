@@ -244,6 +244,7 @@ public class ServerApiGenerator
         }
         else
         {
+            // ApiProjectOptions.ApiOptions.Generator.UseAuthorization
             // New approach for server
             foreach (var area in projectOptions.BasePathSegmentNames)
             {

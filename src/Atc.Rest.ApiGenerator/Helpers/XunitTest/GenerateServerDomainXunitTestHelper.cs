@@ -1,5 +1,3 @@
-using Atc.Rest.ApiGenerator.Framework.Interfaces;
-
 namespace Atc.Rest.ApiGenerator.Helpers.XunitTest;
 
 public static class GenerateServerDomainXunitTestHelper

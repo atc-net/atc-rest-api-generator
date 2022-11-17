@@ -61,7 +61,7 @@ public static class GenerateHelper
         string projectPrefixName,
         DirectoryInfo outputPath,
         DirectoryInfo? outputTestPath,
-        Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument,
+        OpenApiDocumentContainer apiDocumentContainer,
         ApiOptions apiOptions,
         bool useCodingRules)
     {
@@ -69,14 +69,14 @@ public static class GenerateHelper
         ArgumentNullException.ThrowIfNull(apiOperationExtractor);
         ArgumentNullException.ThrowIfNull(projectPrefixName);
         ArgumentNullException.ThrowIfNull(outputPath);
-        ArgumentNullException.ThrowIfNull(apiDocument);
+        ArgumentNullException.ThrowIfNull(apiDocumentContainer);
         ArgumentNullException.ThrowIfNull(apiOptions);
 
         var projectOptions = new ApiProjectOptions(
             outputPath,
             outputTestPath,
-            apiDocument.Item1,
-            apiDocument.Item3,
+            apiDocumentContainer.Document!,
+            apiDocumentContainer.DocFile,
             projectPrefixName,
             "Api.Generated",
             apiOptions,
@@ -90,7 +90,7 @@ public static class GenerateHelper
         string projectPrefixName,
         DirectoryInfo outputSourcePath,
         DirectoryInfo? outputTestPath,
-        Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument,
+        OpenApiDocumentContainer apiDocumentContainer,
         ApiOptions apiOptions,
         bool useCodingRules,
         DirectoryInfo apiPath)
@@ -98,15 +98,15 @@ public static class GenerateHelper
         ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(projectPrefixName);
         ArgumentNullException.ThrowIfNull(outputSourcePath);
-        ArgumentNullException.ThrowIfNull(apiDocument);
+        ArgumentNullException.ThrowIfNull(apiDocumentContainer);
         ArgumentNullException.ThrowIfNull(apiOptions);
         ArgumentNullException.ThrowIfNull(apiPath);
 
         var domainProjectOptions = new DomainProjectOptions(
             outputSourcePath,
             outputTestPath,
-            apiDocument.Item1,
-            apiDocument.Item3,
+            apiDocumentContainer.Document!,
+            apiDocumentContainer.DocFile,
             projectPrefixName,
             apiOptions,
             useCodingRules,
@@ -121,7 +121,7 @@ public static class GenerateHelper
         string projectPrefixName,
         DirectoryInfo outputSourcePath,
         DirectoryInfo? outputTestPath,
-        Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument,
+        OpenApiDocumentContainer apiDocumentContainer,
         ApiOptions apiOptions,
         bool usingCodingRules,
         DirectoryInfo apiPath,
@@ -130,7 +130,7 @@ public static class GenerateHelper
         ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(projectPrefixName);
         ArgumentNullException.ThrowIfNull(outputSourcePath);
-        ArgumentNullException.ThrowIfNull(apiDocument);
+        ArgumentNullException.ThrowIfNull(apiDocumentContainer);
         ArgumentNullException.ThrowIfNull(apiOptions);
         ArgumentNullException.ThrowIfNull(apiPath);
         ArgumentNullException.ThrowIfNull(domainPath);
@@ -138,8 +138,8 @@ public static class GenerateHelper
         var hostProjectOptions = new HostProjectOptions(
             outputSourcePath,
             outputTestPath,
-            apiDocument.Item1,
-            apiDocument.Item3,
+            apiDocumentContainer.Document!,
+            apiDocumentContainer.DocFile,
             projectPrefixName,
             apiOptions,
             usingCodingRules,
@@ -209,7 +209,7 @@ public static class GenerateHelper
         string projectPrefixName,
         string? clientFolderName,
         DirectoryInfo outputPath,
-        Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument,
+        OpenApiDocumentContainer apiDocumentContainer,
         bool excludeEndpointGeneration,
         ApiOptions apiOptions,
         bool useCodingRules)
@@ -217,14 +217,14 @@ public static class GenerateHelper
         ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(projectPrefixName);
         ArgumentNullException.ThrowIfNull(outputPath);
-        ArgumentNullException.ThrowIfNull(apiDocument);
+        ArgumentNullException.ThrowIfNull(apiDocumentContainer);
         ArgumentNullException.ThrowIfNull(apiOptions);
 
         var clientCSharpApiProjectOptions = new ClientCSharpApiProjectOptions(
             outputPath,
             clientFolderName,
-            apiDocument.Item1,
-            apiDocument.Item3,
+            apiDocumentContainer.Document!,
+            apiDocumentContainer.DocFile,
             projectPrefixName,
             "ApiClient.Generated",
             excludeEndpointGeneration,

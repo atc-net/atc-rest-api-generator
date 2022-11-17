@@ -7,6 +7,7 @@ global using System.Text.RegularExpressions;
 global using Atc.CodeDocumentation.Markdown;
 global using Atc.DotNet;
 global using Atc.Helpers;
+global using Atc.Rest.ApiGenerator.Extensions;
 global using Atc.Rest.ApiGenerator.Framework.Contracts;
 global using Atc.Rest.ApiGenerator.Framework.Contracts.Models;
 global using Atc.Rest.ApiGenerator.Framework.Contracts.Resolver;

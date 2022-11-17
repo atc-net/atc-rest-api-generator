@@ -38,7 +38,14 @@ public class GenerateServerHostCommand : AsyncCommand<ServerHostCommandSettings>
         }
 
         var apiOptions = await ApiOptionsHelper.CreateDefault(settings);
-        var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(logger, settings.SpecificationPath);
+        var apiSpecificationContentReader = new ApiSpecificationContentReader();
+        var apiDocumentContainer = apiSpecificationContentReader.CombineAndGetApiDocumentContainer(logger, settings.SpecificationPath);
+        if (apiDocumentContainer.Exception is not null)
+        {
+            logger.LogError(apiDocumentContainer.Exception, $"{EmojisConstants.Error} Reading specification failed.");
+            return ConsoleExitStatusCodes.Failure;
+        }
+
         var shouldScaffoldCodingRules = CodingRulesHelper.ShouldScaffoldCodingRules(settings.OutputPath, settings.DisableCodingRules);
         var isUsingCodingRules = CodingRulesHelper.IsUsingCodingRules(settings.OutputPath, settings.DisableCodingRules);
 
@@ -53,7 +60,7 @@ public class GenerateServerHostCommand : AsyncCommand<ServerHostCommandSettings>
         {
             if (!OpenApiDocumentHelper.Validate(
                     logger,
-                    apiDocument,
+                    apiDocumentContainer,
                     apiOptions.Validation))
             {
                 return ConsoleExitStatusCodes.Failure;
@@ -65,7 +72,7 @@ public class GenerateServerHostCommand : AsyncCommand<ServerHostCommandSettings>
                     settings.ProjectPrefixName,
                     new DirectoryInfo(settings.OutputPath),
                     outputTestPath,
-                    apiDocument,
+                    apiDocumentContainer,
                     apiOptions,
                     isUsingCodingRules,
                     new DirectoryInfo(settings.ApiPath),
