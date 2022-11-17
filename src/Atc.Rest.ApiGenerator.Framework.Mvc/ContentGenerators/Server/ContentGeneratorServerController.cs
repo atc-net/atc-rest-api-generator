@@ -39,41 +39,7 @@ public sealed class ContentGeneratorServerController : IContentGenerator
         {
             var item = parameters.MethodParameters[i];
 
-            sb.AppendLine(4, "/// <summary>");
-            sb.AppendLine(4, $"/// Description: {item.Description}");
-            sb.AppendLine(4, $"/// Operation: {item.Name}.");
-            sb.AppendLine(4, $"/// Area: {parameters.Area}.");
-            sb.AppendLine(4, "/// </summary>");
-            //// TODO: Authorize Attribute  [Authorize]
-            sb.AppendLine(4, string.IsNullOrEmpty(item.RouteSuffix)
-                ? $"[Http{item.OperationTypeRepresentation}]"
-                : $"[Http{item.OperationTypeRepresentation}(\"{item.RouteSuffix}\")]");
-
-            if (item.MultipartBodyLengthLimit.HasValue)
-            {
-                sb.AppendLine(4, item.MultipartBodyLengthLimit.Value == long.MaxValue
-                    ? "[RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue)]"
-                    : $"[RequestFormLimits(MultipartBodyLengthLimit = {item.MultipartBodyLengthLimit.Value})]");
-            }
-
-            foreach (var producesResponseTypeRepresentation in item.ProducesResponseTypeRepresentations)
-            {
-                sb.AppendLine(4, $"[{producesResponseTypeRepresentation}]");
-            }
-
-            sb.AppendLine(4, $"public async Task<ActionResult> {item.Name}(");
-
-            if (!string.IsNullOrEmpty(item.ParameterTypeName))
-            {
-                sb.AppendLine(8, $"{item.ParameterTypeName} parameters,");
-            }
-
-            sb.AppendLine(8, $"[FromServices] {item.InterfaceName} handler,");
-            sb.AppendLine(8, "CancellationToken cancellationToken)");
-
-            sb.AppendLine(8, !string.IsNullOrEmpty(item.ParameterTypeName)
-                    ? "=> await handler.ExecuteAsync(parameters, cancellationToken);"
-                    : "=> await handler.ExecuteAsync(cancellationToken);");
+            AppendMethodContent(sb, item);
 
             if (i < parameters.MethodParameters.Count - 1)
             {
@@ -83,5 +49,46 @@ public sealed class ContentGeneratorServerController : IContentGenerator
 
         sb.AppendLine("}");
         return sb.ToString();
+    }
+
+    private void AppendMethodContent(
+        StringBuilder sb,
+        ContentGeneratorServerControllerMethodParameters item)
+    {
+        sb.AppendLine(4, "/// <summary>");
+        sb.AppendLine(4, $"/// Description: {item.Description}");
+        sb.AppendLine(4, $"/// Operation: {item.Name}.");
+        sb.AppendLine(4, $"/// Area: {parameters.Area}.");
+        sb.AppendLine(4, "/// </summary>");
+        //// TODO: Authorize Attribute  [Authorize]
+        sb.AppendLine(4, string.IsNullOrEmpty(item.RouteSuffix)
+            ? $"[Http{item.OperationTypeRepresentation}]"
+            : $"[Http{item.OperationTypeRepresentation}(\"{item.RouteSuffix}\")]");
+
+        if (item.MultipartBodyLengthLimit.HasValue)
+        {
+            sb.AppendLine(4, item.MultipartBodyLengthLimit.Value == long.MaxValue
+                ? "[RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue)]"
+                : $"[RequestFormLimits(MultipartBodyLengthLimit = {item.MultipartBodyLengthLimit.Value})]");
+        }
+
+        foreach (var producesResponseTypeRepresentation in item.ProducesResponseTypeRepresentations)
+        {
+            sb.AppendLine(4, $"[{producesResponseTypeRepresentation}]");
+        }
+
+        sb.AppendLine(4, $"public async Task<ActionResult> {item.Name}(");
+
+        if (!string.IsNullOrEmpty(item.ParameterTypeName))
+        {
+            sb.AppendLine(8, $"{item.ParameterTypeName} parameters,");
+        }
+
+        sb.AppendLine(8, $"[FromServices] {item.InterfaceName} handler,");
+        sb.AppendLine(8, "CancellationToken cancellationToken)");
+
+        sb.AppendLine(8, !string.IsNullOrEmpty(item.ParameterTypeName)
+            ? "=> await handler.ExecuteAsync(parameters, cancellationToken);"
+            : "=> await handler.ExecuteAsync(cancellationToken);");
     }
 }
