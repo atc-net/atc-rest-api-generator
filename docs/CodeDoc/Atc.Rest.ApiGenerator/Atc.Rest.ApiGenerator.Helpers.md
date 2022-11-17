@@ -17,7 +17,7 @@
 
 #### CollectMissingContractModelFromOperationSchemaMappings
 >```csharp
->void CollectMissingContractModelFromOperationSchemaMappings(ILogger logger, ApiProjectOptions projectOptions, IList<ApiOperationSchemaMap> operationSchemaMappings, List<SyntaxGeneratorContractModel> sgContractModels)
+>void CollectMissingContractModelFromOperationSchemaMappings(ILogger logger, ApiProjectOptions projectOptions, IList<ApiOperation> apiOperations, List<SyntaxGeneratorContractModel> sgContractModels)
 >```
 
 <br />
@@ -115,11 +115,11 @@
 
 #### GenerateServerApi
 >```csharp
->bool GenerateServerApi(ILogger logger, string projectPrefixName, DirectoryInfo outputPath, DirectoryInfo outputTestPath, Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument, ApiOptions apiOptions, bool useCodingRules)
+>bool GenerateServerApi(ILogger logger, IApiOperationExtractor apiOperationExtractor, string projectPrefixName, DirectoryInfo outputPath, DirectoryInfo outputTestPath, Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument, ApiOptions apiOptions, bool useCodingRules)
 >```
 #### GenerateServerCSharpClient
 >```csharp
->bool GenerateServerCSharpClient(ILogger logger, string projectPrefixName, string clientFolderName, DirectoryInfo outputPath, Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument, bool excludeEndpointGeneration, ApiOptions apiOptions, bool useCodingRules)
+>bool GenerateServerCSharpClient(ILogger logger, IApiOperationExtractor apiOperationExtractor, string projectPrefixName, string clientFolderName, DirectoryInfo outputPath, Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument, bool excludeEndpointGeneration, ApiOptions apiOptions, bool useCodingRules)
 >```
 #### GenerateServerDomain
 >```csharp
@@ -127,7 +127,7 @@
 >```
 #### GenerateServerHost
 >```csharp
->bool GenerateServerHost(ILogger logger, string projectPrefixName, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath, Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument, ApiOptions apiOptions, bool usingCodingRules, DirectoryInfo apiPath, DirectoryInfo domainPath)
+>bool GenerateServerHost(ILogger logger, IApiOperationExtractor apiOperationExtractor, string projectPrefixName, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath, Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument, ApiOptions apiOptions, bool usingCodingRules, DirectoryInfo apiPath, DirectoryInfo domainPath)
 >```
 #### GenerateServerSln
 >```csharp
@@ -279,25 +279,9 @@
 >```csharp
 >string EnsureModelNameWithNamespaceIfNeeded(EndpointMethodMetadata endpointMethodMetadata, string modelName)
 >```
-#### EnsureModelNameWithNamespaceIfNeeded
->```csharp
->string EnsureModelNameWithNamespaceIfNeeded(string projectName, string segmentName, string modelName, bool isShared = False, bool isClient = False)
->```
 #### EnsureTaskNameWithNamespaceIfNeeded
 >```csharp
 >string EnsureTaskNameWithNamespaceIfNeeded(ResponseTypeNameAndItemSchema contractReturnTypeNameAndSchema)
->```
-#### GetRawModelName
->```csharp
->string GetRawModelName(string modelName)
->```
-#### HasList
->```csharp
->bool HasList(string typeName)
->```
-#### HasSharedResponseContract
->```csharp
->bool HasSharedResponseContract(OpenApiDocument apiDocument, List<ApiOperationSchemaMap> operationSchemaMappings, string focusOnSegmentName)
 >```
 
 <br />

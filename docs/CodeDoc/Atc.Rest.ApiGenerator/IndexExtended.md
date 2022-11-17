@@ -73,6 +73,7 @@
      - string Schema09
      - string Schema10
      - string Schema11
+     - string Schema12
      - string Server01
 
 ## [Atc.Rest.ApiGenerator.Extensions](Atc.Rest.ApiGenerator.Extensions.md)
@@ -102,7 +103,7 @@
 
 - [ApiGeneratorHelper](Atc.Rest.ApiGenerator.Helpers.md#apigeneratorhelper)
   -  Static Methods
-     - CollectMissingContractModelFromOperationSchemaMappings(ILogger logger, ApiProjectOptions projectOptions, IList&lt;ApiOperationSchemaMap&gt; operationSchemaMappings, List&lt;SyntaxGeneratorContractModel&gt; sgContractModels)
+     - CollectMissingContractModelFromOperationSchemaMappings(ILogger logger, ApiProjectOptions projectOptions, IList&lt;ApiOperation&gt; apiOperations, List&lt;SyntaxGeneratorContractModel&gt; sgContractModels)
 - [AtcApiNugetClientHelper](Atc.Rest.ApiGenerator.Helpers.md#atcapinugetclienthelper)
   -  Static Methods
      - GetLatestVersionForPackageId(ILogger logger, string packageId, CancellationToken cancellationToken = null)
@@ -124,10 +125,10 @@
      - Generate(ILogger logger, string outputSlnPath, DirectoryInfo outputSrcPath, DirectoryInfo outputTestPath)
 - [GenerateHelper](Atc.Rest.ApiGenerator.Helpers.md#generatehelper)
   -  Static Methods
-     - GenerateServerApi(ILogger logger, string projectPrefixName, DirectoryInfo outputPath, DirectoryInfo outputTestPath, Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, ApiOptions apiOptions, bool useCodingRules)
-     - GenerateServerCSharpClient(ILogger logger, string projectPrefixName, string clientFolderName, DirectoryInfo outputPath, Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, bool excludeEndpointGeneration, ApiOptions apiOptions, bool useCodingRules)
+     - GenerateServerApi(ILogger logger, IApiOperationExtractor apiOperationExtractor, string projectPrefixName, DirectoryInfo outputPath, DirectoryInfo outputTestPath, Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, ApiOptions apiOptions, bool useCodingRules)
+     - GenerateServerCSharpClient(ILogger logger, IApiOperationExtractor apiOperationExtractor, string projectPrefixName, string clientFolderName, DirectoryInfo outputPath, Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, bool excludeEndpointGeneration, ApiOptions apiOptions, bool useCodingRules)
      - GenerateServerDomain(ILogger logger, string projectPrefixName, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath, Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, ApiOptions apiOptions, bool useCodingRules, DirectoryInfo apiPath)
-     - GenerateServerHost(ILogger logger, string projectPrefixName, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath, Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, ApiOptions apiOptions, bool usingCodingRules, DirectoryInfo apiPath, DirectoryInfo domainPath)
+     - GenerateServerHost(ILogger logger, IApiOperationExtractor apiOperationExtractor, string projectPrefixName, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath, Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, ApiOptions apiOptions, bool usingCodingRules, DirectoryInfo apiPath, DirectoryInfo domainPath)
      - GenerateServerSln(ILogger logger, string projectPrefixName, string outputSlnPath, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath)
      - GetAtcApiGeneratorVersion()
      - GetAtcApiGeneratorVersionAsString3()
@@ -161,11 +162,7 @@
   -  Static Methods
      - ContainsModelNameTask(string modelName)
      - EnsureModelNameWithNamespaceIfNeeded(EndpointMethodMetadata endpointMethodMetadata, string modelName)
-     - EnsureModelNameWithNamespaceIfNeeded(string projectName, string segmentName, string modelName, bool isShared = False, bool isClient = False)
      - EnsureTaskNameWithNamespaceIfNeeded(ResponseTypeNameAndItemSchema contractReturnTypeNameAndSchema)
-     - GetRawModelName(string modelName)
-     - HasList(string typeName)
-     - HasSharedResponseContract(OpenApiDocument apiDocument, List&lt;ApiOperationSchemaMap&gt; operationSchemaMappings, string focusOnSegmentName)
 - [OpenApiDocumentValidationHelper](Atc.Rest.ApiGenerator.Helpers.md#openapidocumentvalidationhelper)
   -  Static Methods
      - ValidateDocument(ILogger logger, OpenApiDocument apiDocument, ApiOptionsValidation validationOptions)
@@ -334,7 +331,6 @@
      - HasContractParameterAnyParametersOrRequestBody()
      - HasContractParameterRequestBody()
      - HasContractReturnTypeAsComplex()
-     - HasContractReturnTypeAsComplexAndNotSharedModel()
      - HasContractReturnTypeAsComplexAsListOrPagination()
      - HasSharedModelOrEnumInContractParameterRequestBody()
      - HasSharedModelOrEnumInContractReturnType(bool includeProperties = True)
@@ -347,9 +343,6 @@
      - IsContractParameterRequestBodyUsingSystemNamespace()
      - IsContractReturnTypeUsingList()
      - IsContractReturnTypeUsingPagination()
-     - IsContractReturnTypeUsingString()
-     - IsContractReturnTypeUsingSystemCollectionGenericNamespace()
-     - IsContractReturnTypeUsingSystemNamespace()
      - IsContractReturnTypeUsingTaskName()
      - IsSharedModel(string modelName)
      - ToString()
@@ -678,8 +671,8 @@
 
 - [OpenApiSchemaExtensions](Microsoft.OpenApi.Models.md#openapischemaextensions)
   -  Static Methods
-     - HasAnySharedModel(this OpenApiSchema schema, List&lt;ApiOperationSchemaMap&gt; apiOperationSchemaMaps)
-     - HasAnySharedModelOrEnum(this OpenApiSchema schema, IList&lt;ApiOperationSchemaMap&gt; apiOperationSchemaMaps, bool includeProperties = True)
+     - HasAnySharedModel(this OpenApiSchema schema, List&lt;ApiOperation&gt; apiOperationSchemaMaps)
+     - HasAnySharedModelOrEnum(this OpenApiSchema schema, IList&lt;ApiOperation&gt; apiOperationSchemaMaps, bool includeProperties = True)
 - [OperationTypeExtensions](Microsoft.OpenApi.Models.md#operationtypeextensions)
   -  Static Methods
      - IsRequestBodySupported(this OperationType operationType)

@@ -17,11 +17,11 @@
 
 #### HasAnySharedModel
 >```csharp
->bool HasAnySharedModel(this OpenApiSchema schema, List<ApiOperationSchemaMap> apiOperationSchemaMaps)
+>bool HasAnySharedModel(this OpenApiSchema schema, List<ApiOperation> apiOperationSchemaMaps)
 >```
 #### HasAnySharedModelOrEnum
 >```csharp
->bool HasAnySharedModelOrEnum(this OpenApiSchema schema, IList<ApiOperationSchemaMap> apiOperationSchemaMaps, bool includeProperties = True)
+>bool HasAnySharedModelOrEnum(this OpenApiSchema schema, IList<ApiOperation> apiOperationSchemaMaps, bool includeProperties = True)
 >```
 
 <br />

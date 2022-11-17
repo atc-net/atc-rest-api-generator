@@ -378,10 +378,6 @@
 >```csharp
 >bool HasContractReturnTypeAsComplex()
 >```
-#### HasContractReturnTypeAsComplexAndNotSharedModel
->```csharp
->bool HasContractReturnTypeAsComplexAndNotSharedModel()
->```
 #### HasContractReturnTypeAsComplexAsListOrPagination
 >```csharp
 >bool HasContractReturnTypeAsComplexAsListOrPagination()
@@ -429,18 +425,6 @@
 #### IsContractReturnTypeUsingPagination
 >```csharp
 >bool IsContractReturnTypeUsingPagination()
->```
-#### IsContractReturnTypeUsingString
->```csharp
->bool IsContractReturnTypeUsingString()
->```
-#### IsContractReturnTypeUsingSystemCollectionGenericNamespace
->```csharp
->bool IsContractReturnTypeUsingSystemCollectionGenericNamespace()
->```
-#### IsContractReturnTypeUsingSystemNamespace
->```csharp
->bool IsContractReturnTypeUsingSystemNamespace()
 >```
 #### IsContractReturnTypeUsingTaskName
 >```csharp
