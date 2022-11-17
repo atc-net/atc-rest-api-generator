@@ -11,6 +11,7 @@ global using System.Text.RegularExpressions;
 
 global using Atc.CodeAnalysis.CSharp;
 global using Atc.CodeAnalysis.CSharp.SyntaxFactories;
+global using Atc.Console.Spectre;
 global using Atc.Data;
 global using Atc.Data.Models;
 global using Atc.DotNet;

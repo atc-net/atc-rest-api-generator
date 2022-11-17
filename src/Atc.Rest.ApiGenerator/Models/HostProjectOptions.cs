@@ -1,5 +1,3 @@
-using Atc.Console.Spectre;
-
 namespace Atc.Rest.ApiGenerator.Models;
 
 public class HostProjectOptions : BaseProjectOptions

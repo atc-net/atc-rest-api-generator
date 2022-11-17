@@ -1,5 +1,3 @@
-using Atc.Console.Spectre;
-
 // ReSharper disable ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
 // ReSharper disable SuggestBaseTypeForParameter
 // ReSharper disable ReturnTypeCanBeEnumerable.Local

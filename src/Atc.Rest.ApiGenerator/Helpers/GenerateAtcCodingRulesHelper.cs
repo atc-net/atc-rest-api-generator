@@ -1,5 +1,3 @@
-using Atc.Console.Spectre;
-
 // ReSharper disable SuggestBaseTypeForParameter
 // ReSharper disable InvertIf
 namespace Atc.Rest.ApiGenerator.Helpers;

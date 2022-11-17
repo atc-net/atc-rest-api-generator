@@ -1,5 +1,3 @@
-using Atc.Console.Spectre;
-
 // ReSharper disable ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
 // ReSharper disable ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
 namespace Atc.Rest.ApiGenerator.Generators;
@@ -48,7 +46,6 @@ public class ClientCSharpApiGenerator
             GenerateEndpoints(operationSchemaMappings);
         }
 
-        PerformCleanup();
         GenerateSrcGlobalUsings();
 
         return true;
@@ -170,11 +167,6 @@ public class ClientCSharpApiGenerator
         {
             sg.ToFile();
         }
-    }
-
-    private static void PerformCleanup()
-    {
-        // TODO: Implement
     }
 
     private void GenerateSrcGlobalUsings()
