@@ -23,15 +23,11 @@ public class ItemsController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public Task<ActionResult> CreateItemAsync(CreateItemParameters parameters, [FromServices] ICreateItemHandler handler, CancellationToken cancellationToken)
-    {
-        if (handler is null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
-
-        return InvokeCreateItemAsync(parameters, handler, cancellationToken);
-    }
+    public async Task<ActionResult> CreateItem(
+        CreateItemParameters parameters,
+        [FromServices] ICreateItemHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(parameters, cancellationToken);
 
     /// <summary>
     /// Description: Updates an item.
@@ -41,23 +37,9 @@ public class ItemsController : ControllerBase
     [HttpPut("{id}")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public Task<ActionResult> UpdateItemAsync(UpdateItemParameters parameters, [FromServices] IUpdateItemHandler handler, CancellationToken cancellationToken)
-    {
-        if (handler is null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
-
-        return InvokeUpdateItemAsync(parameters, handler, cancellationToken);
-    }
-
-    private static async Task<ActionResult> InvokeCreateItemAsync(CreateItemParameters parameters, ICreateItemHandler handler, CancellationToken cancellationToken)
-    {
-        return await handler.ExecuteAsync(parameters, cancellationToken);
-    }
-
-    private static async Task<ActionResult> InvokeUpdateItemAsync(UpdateItemParameters parameters, IUpdateItemHandler handler, CancellationToken cancellationToken)
-    {
-        return await handler.ExecuteAsync(parameters, cancellationToken);
-    }
+    public async Task<ActionResult> UpdateItem(
+        UpdateItemParameters parameters,
+        [FromServices] IUpdateItemHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(parameters, cancellationToken);
 }

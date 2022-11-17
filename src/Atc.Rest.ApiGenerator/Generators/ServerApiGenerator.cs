@@ -39,7 +39,6 @@ public class ServerApiGenerator
 
         GenerateContracts(operationSchemaMappings);
         GenerateEndpoints(operationSchemaMappings);
-        PerformCleanup();
         GenerateSrcGlobalUsings();
 
         return true;
@@ -227,23 +226,73 @@ public class ServerApiGenerator
     {
         ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 
-        var sgEndpoints = new List<SyntaxGeneratorEndpointControllers>();
-        foreach (var segmentName in projectOptions.BasePathSegmentNames)
+        if (projectOptions.IsForClient)
         {
-            var generator = new SyntaxGeneratorEndpointControllers(logger, projectOptions, operationSchemaMappings, segmentName);
-            generator.GenerateCode();
-            sgEndpoints.Add(generator);
-        }
+            // TODO: This is the old approach only generating for ApiClient now - consolidate later with new ContentGenerator
+            var sgEndpoints = new List<SyntaxGeneratorEndpointControllers>();
+            foreach (var segmentName in projectOptions.BasePathSegmentNames)
+            {
+                var generator = new SyntaxGeneratorEndpointControllers(logger, projectOptions, operationSchemaMappings, segmentName);
+                generator.GenerateCode();
+                sgEndpoints.Add(generator);
+            }
 
-        foreach (var sg in sgEndpoints)
+            foreach (var sg in sgEndpoints)
+            {
+                sg.ToFile();
+            }
+        }
+        else
         {
-            sg.ToFile();
+            // New approach for server
+            foreach (var area in projectOptions.BasePathSegmentNames)
+            {
+                var contentGeneratorServerControllerParameters = ContentGeneratorServerControllerParameterFactory
+                    .Create(
+                        operationSchemaMappings,
+                        projectOptions.ProjectName,
+                        projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
+                        $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Endpoints}",
+                        area,
+                        GetRouteByArea(area),
+                        projectOptions.Document.GetPathsByBasePathSegmentName(area));
+
+                var contentGenerator = new ContentGeneratorServerController(
+                    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                    contentGeneratorServerControllerParameters);
+
+                var content = contentGenerator.Generate();
+
+                // TODO: Move responsibility of generating the file object
+                var controllerName = area.EnsureFirstCharacterToUpper() + ContentGeneratorConstants.Controller;
+                var fileAsString = DirectoryInfoHelper.GetCsFileNameForEndpoints(projectOptions.PathForEndpoints, controllerName);
+                var file = new FileInfo(fileAsString);
+
+                var contentWriter = new ContentWriter(logger);
+                contentWriter.Write(
+                    projectOptions.PathForSrcGenerate,
+                    file,
+                    ContentWriterArea.Src,
+                    content);
+            }
         }
     }
 
-    private static void PerformCleanup()
+    private string GetRouteByArea(
+        string area)
     {
-        // TODO: Implement
+        var (key, _) = projectOptions.Document.Paths.FirstOrDefault(x => x.IsPathStartingSegmentName(area));
+        if (key is null)
+        {
+            throw new NotSupportedException("Area was not found in any route.");
+        }
+
+        var routeSuffix = key
+            .Split('/', StringSplitOptions.RemoveEmptyEntries)?
+            .FirstOrDefault();
+
+        return $"{projectOptions.RouteBase}/{routeSuffix}";
     }
 
     private void ScaffoldBasicFileApiGenerated()

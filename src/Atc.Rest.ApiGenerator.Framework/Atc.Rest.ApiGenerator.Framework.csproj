@@ -6,11 +6,13 @@
 
   <ItemGroup>
     <PackageReference Include="Atc" Version="2.0.227" />
+    <PackageReference Include="Atc.OpenApi" Version="2.0.227" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Atc.Rest.ApiGenerator.Framework.Contracts\Atc.Rest.ApiGenerator.Framework.Contracts.csproj" />
+    <ProjectReference Include="..\Atc.Rest.ApiGenerator.OpenApi\Atc.Rest.ApiGenerator.OpenApi.csproj" />
   </ItemGroup>
 
 </Project>

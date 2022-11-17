@@ -1,5 +1,5 @@
 // ReSharper disable CheckNamespace
-namespace Atc.Rest.ApiGenerator.Framework;
+namespace Atc.Rest.ApiGenerator.Framework.Contracts;
 
 /// <summary>
 /// Http Operation type.

@@ -1,4 +1,4 @@
-namespace Atc.Rest.ApiGenerator.Framework.Models;
+namespace Atc.Rest.ApiGenerator.Framework.Contracts.Models;
 
 public sealed class ApiOperationModel
 {

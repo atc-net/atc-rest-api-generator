@@ -1,6 +1,6 @@
-namespace Atc.Rest.ApiGenerator.Extensions;
+namespace Atc.Rest.ApiGenerator.Framework.Contracts.Extensions;
 
-internal static class ApiOperationSchemaMapExtensions
+public static class ApiOperationSchemaMapExtensions
 {
     public static bool IsShared(
         this IList<ApiOperation> apiOperationSchemaMaps,

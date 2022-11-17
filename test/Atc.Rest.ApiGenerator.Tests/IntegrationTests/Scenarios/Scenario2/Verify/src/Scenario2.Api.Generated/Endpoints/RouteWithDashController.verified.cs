@@ -22,18 +22,8 @@ public class RouteWithDashController : ControllerBase
     /// </summary>
     [HttpGet]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-    public Task<ActionResult> GetRouteWithDashAsync([FromServices] IGetRouteWithDashHandler handler, CancellationToken cancellationToken)
-    {
-        if (handler is null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
-
-        return InvokeGetRouteWithDashAsync(handler, cancellationToken);
-    }
-
-    private static async Task<ActionResult> InvokeGetRouteWithDashAsync([FromServices] IGetRouteWithDashHandler handler, CancellationToken cancellationToken)
-    {
-        return await handler.ExecuteAsync(cancellationToken);
-    }
+    public async Task<ActionResult> GetRouteWithDash(
+        [FromServices] IGetRouteWithDashHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(cancellationToken);
 }

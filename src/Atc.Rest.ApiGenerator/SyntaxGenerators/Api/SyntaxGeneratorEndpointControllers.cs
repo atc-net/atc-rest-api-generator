@@ -2,8 +2,6 @@
 // ReSharper disable LoopCanBeConvertedToQuery
 // ReSharper disable ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
 // ReSharper disable UseDeconstruction
-using Atc.Rest.ApiGenerator.Framework.Interfaces;
-
 namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
 
 public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointControllers
@@ -220,10 +218,10 @@ public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointContro
             }
             else
             {
-                var rawModelName = OpenApiDocumentSchemaModelNameHelper.GetRawModelName(responseTypeName.Item2);
+                var rawModelName = OpenApiDocumentSchemaModelNameResolver.GetRawModelName(responseTypeName.Item2);
 
                 var isShared = OperationSchemaMappings.IsShared(rawModelName);
-                var fullModelName = OpenApiDocumentSchemaModelNameHelper.EnsureModelNameWithNamespaceIfNeeded(
+                var fullModelName = OpenApiDocumentSchemaModelNameResolver.EnsureModelNameWithNamespaceIfNeeded(
                     ApiProjectOptions.ProjectName,
                     FocusOnSegmentName,
                     responseTypeName.Item2,

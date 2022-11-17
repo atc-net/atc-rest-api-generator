@@ -23,15 +23,11 @@ public class FilesController : ControllerBase
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(byte[]), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    public Task<ActionResult> GetFileByIdAsync(GetFileByIdParameters parameters, [FromServices] IGetFileByIdHandler handler, CancellationToken cancellationToken)
-    {
-        if (handler is null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
-
-        return InvokeGetFileByIdAsync(parameters, handler, cancellationToken);
-    }
+    public async Task<ActionResult> GetFileById(
+        GetFileByIdParameters parameters,
+        [FromServices] IGetFileByIdHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(parameters, cancellationToken);
 
     /// <summary>
     /// Description: Upload multi files as form data.
@@ -42,15 +38,11 @@ public class FilesController : ControllerBase
     [RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue)]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public Task<ActionResult> UploadMultiFilesAsFormDataAsync(UploadMultiFilesAsFormDataParameters parameters, [FromServices] IUploadMultiFilesAsFormDataHandler handler, CancellationToken cancellationToken)
-    {
-        if (handler is null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
-
-        return InvokeUploadMultiFilesAsFormDataAsync(parameters, handler, cancellationToken);
-    }
+    public async Task<ActionResult> UploadMultiFilesAsFormData(
+        UploadMultiFilesAsFormDataParameters parameters,
+        [FromServices] IUploadMultiFilesAsFormDataHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(parameters, cancellationToken);
 
     /// <summary>
     /// Description: Upload a file as OctetStream.
@@ -61,15 +53,11 @@ public class FilesController : ControllerBase
     [RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue)]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public Task<ActionResult> UploadSingleFileAsFormDataAsync(UploadSingleFileAsFormDataParameters parameters, [FromServices] IUploadSingleFileAsFormDataHandler handler, CancellationToken cancellationToken)
-    {
-        if (handler is null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
-
-        return InvokeUploadSingleFileAsFormDataAsync(parameters, handler, cancellationToken);
-    }
+    public async Task<ActionResult> UploadSingleFileAsFormData(
+        UploadSingleFileAsFormDataParameters parameters,
+        [FromServices] IUploadSingleFileAsFormDataHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(parameters, cancellationToken);
 
     /// <summary>
     /// Description: Upload a file as FormData.
@@ -80,15 +68,11 @@ public class FilesController : ControllerBase
     [RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue)]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public Task<ActionResult> UploadSingleObjectWithFileAsFormDataAsync(UploadSingleObjectWithFileAsFormDataParameters parameters, [FromServices] IUploadSingleObjectWithFileAsFormDataHandler handler, CancellationToken cancellationToken)
-    {
-        if (handler is null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
-
-        return InvokeUploadSingleObjectWithFileAsFormDataAsync(parameters, handler, cancellationToken);
-    }
+    public async Task<ActionResult> UploadSingleObjectWithFileAsFormData(
+        UploadSingleObjectWithFileAsFormDataParameters parameters,
+        [FromServices] IUploadSingleObjectWithFileAsFormDataHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(parameters, cancellationToken);
 
     /// <summary>
     /// Description: Upload files as FormData.
@@ -99,38 +83,9 @@ public class FilesController : ControllerBase
     [RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue)]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public Task<ActionResult> UploadSingleObjectWithFilesAsFormDataAsync(UploadSingleObjectWithFilesAsFormDataParameters parameters, [FromServices] IUploadSingleObjectWithFilesAsFormDataHandler handler, CancellationToken cancellationToken)
-    {
-        if (handler is null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
-
-        return InvokeUploadSingleObjectWithFilesAsFormDataAsync(parameters, handler, cancellationToken);
-    }
-
-    private static async Task<ActionResult> InvokeGetFileByIdAsync(GetFileByIdParameters parameters, IGetFileByIdHandler handler, CancellationToken cancellationToken)
-    {
-        return await handler.ExecuteAsync(parameters, cancellationToken);
-    }
-
-    private static async Task<ActionResult> InvokeUploadMultiFilesAsFormDataAsync(UploadMultiFilesAsFormDataParameters parameters, IUploadMultiFilesAsFormDataHandler handler, CancellationToken cancellationToken)
-    {
-        return await handler.ExecuteAsync(parameters, cancellationToken);
-    }
-
-    private static async Task<ActionResult> InvokeUploadSingleFileAsFormDataAsync(UploadSingleFileAsFormDataParameters parameters, IUploadSingleFileAsFormDataHandler handler, CancellationToken cancellationToken)
-    {
-        return await handler.ExecuteAsync(parameters, cancellationToken);
-    }
-
-    private static async Task<ActionResult> InvokeUploadSingleObjectWithFileAsFormDataAsync(UploadSingleObjectWithFileAsFormDataParameters parameters, IUploadSingleObjectWithFileAsFormDataHandler handler, CancellationToken cancellationToken)
-    {
-        return await handler.ExecuteAsync(parameters, cancellationToken);
-    }
-
-    private static async Task<ActionResult> InvokeUploadSingleObjectWithFilesAsFormDataAsync(UploadSingleObjectWithFilesAsFormDataParameters parameters, IUploadSingleObjectWithFilesAsFormDataHandler handler, CancellationToken cancellationToken)
-    {
-        return await handler.ExecuteAsync(parameters, cancellationToken);
-    }
+    public async Task<ActionResult> UploadSingleObjectWithFilesAsFormData(
+        UploadSingleObjectWithFilesAsFormDataParameters parameters,
+        [FromServices] IUploadSingleObjectWithFilesAsFormDataHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(parameters, cancellationToken);
 }

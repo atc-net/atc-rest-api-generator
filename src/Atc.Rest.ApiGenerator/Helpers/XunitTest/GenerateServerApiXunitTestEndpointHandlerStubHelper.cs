@@ -1,5 +1,6 @@
 // ReSharper disable UseDeconstruction
 // ReSharper disable SuggestBaseTypeForParameter
+
 namespace Atc.Rest.ApiGenerator.Helpers.XunitTest;
 
 [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1118:Parameter should not span multiple lines", Justification = "OK.")]
@@ -119,7 +120,7 @@ public static class GenerateServerApiXunitTestEndpointHandlerStubHelper
                 break;
             default:
             {
-                var singleReturnTypeName = OpenApiDocumentSchemaModelNameHelper.GetRawModelName(returnTypeName);
+                var singleReturnTypeName = OpenApiDocumentSchemaModelNameResolver.GetRawModelName(returnTypeName);
                 var simpleTypePair = SimpleTypeHelper.BeautifySimpleTypeLookup.FirstOrDefault(x => x.Value == singleReturnTypeName);
 
                 if (simpleTypePair.Key is not null)

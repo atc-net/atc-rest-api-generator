@@ -22,15 +22,10 @@ public class ListController : ControllerBase
     /// </summary>
     [HttpGet("int")]
     [ProducesResponseType(typeof(List<int>), StatusCodes.Status200OK)]
-    public Task<ActionResult> GetListOfIntsAsync([FromServices] IGetListOfIntsHandler handler, CancellationToken cancellationToken)
-    {
-        if (handler is null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
-
-        return InvokeGetListOfIntsAsync(handler, cancellationToken);
-    }
+    public async Task<ActionResult> GetListOfInts(
+        [FromServices] IGetListOfIntsHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(cancellationToken);
 
     /// <summary>
     /// Description: Your GET endpoint.
@@ -39,23 +34,8 @@ public class ListController : ControllerBase
     /// </summary>
     [HttpGet("string")]
     [ProducesResponseType(typeof(List<string>), StatusCodes.Status200OK)]
-    public Task<ActionResult> GetListOfStringsAsync([FromServices] IGetListOfStringsHandler handler, CancellationToken cancellationToken)
-    {
-        if (handler is null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
-
-        return InvokeGetListOfStringsAsync(handler, cancellationToken);
-    }
-
-    private static async Task<ActionResult> InvokeGetListOfIntsAsync([FromServices] IGetListOfIntsHandler handler, CancellationToken cancellationToken)
-    {
-        return await handler.ExecuteAsync(cancellationToken);
-    }
-
-    private static async Task<ActionResult> InvokeGetListOfStringsAsync([FromServices] IGetListOfStringsHandler handler, CancellationToken cancellationToken)
-    {
-        return await handler.ExecuteAsync(cancellationToken);
-    }
+    public async Task<ActionResult> GetListOfStrings(
+        [FromServices] IGetListOfStringsHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(cancellationToken);
 }

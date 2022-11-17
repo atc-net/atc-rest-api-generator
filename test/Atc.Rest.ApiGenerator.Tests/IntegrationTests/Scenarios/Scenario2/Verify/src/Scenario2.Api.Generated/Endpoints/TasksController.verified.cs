@@ -22,18 +22,8 @@ public class TasksController : ControllerBase
     /// </summary>
     [HttpGet]
     [ProducesResponseType(typeof(List<Scenario2.Api.Generated.Contracts.Tasks.Task>), StatusCodes.Status200OK)]
-    public Task<ActionResult> GetTasksAsync([FromServices] IGetTasksHandler handler, CancellationToken cancellationToken)
-    {
-        if (handler is null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
-
-        return InvokeGetTasksAsync(handler, cancellationToken);
-    }
-
-    private static async Task<ActionResult> InvokeGetTasksAsync([FromServices] IGetTasksHandler handler, CancellationToken cancellationToken)
-    {
-        return await handler.ExecuteAsync(cancellationToken);
-    }
+    public async Task<ActionResult> GetTasks(
+        [FromServices] IGetTasksHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(cancellationToken);
 }

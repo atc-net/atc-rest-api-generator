@@ -23,15 +23,10 @@ public class UsersController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(List<User>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
-    public Task<ActionResult> GetUsersAsync([FromServices] IGetUsersHandler handler, CancellationToken cancellationToken)
-    {
-        if (handler is null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
-
-        return InvokeGetUsersAsync(handler, cancellationToken);
-    }
+    public async Task<ActionResult> GetUsers(
+        [FromServices] IGetUsersHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(cancellationToken);
 
     /// <summary>
     /// Description: Create a new user.
@@ -42,15 +37,11 @@ public class UsersController : ControllerBase
     [ProducesResponseType(typeof(string), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
-    public Task<ActionResult> PostUserAsync(PostUserParameters parameters, [FromServices] IPostUserHandler handler, CancellationToken cancellationToken)
-    {
-        if (handler is null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
-
-        return InvokePostUserAsync(parameters, handler, cancellationToken);
-    }
+    public async Task<ActionResult> PostUser(
+        PostUserParameters parameters,
+        [FromServices] IPostUserHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(parameters, cancellationToken);
 
     /// <summary>
     /// Description: Get user by id.
@@ -61,15 +52,11 @@ public class UsersController : ControllerBase
     [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
-    public Task<ActionResult> GetUserByIdAsync(GetUserByIdParameters parameters, [FromServices] IGetUserByIdHandler handler, CancellationToken cancellationToken)
-    {
-        if (handler is null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
-
-        return InvokeGetUserByIdAsync(parameters, handler, cancellationToken);
-    }
+    public async Task<ActionResult> GetUserById(
+        GetUserByIdParameters parameters,
+        [FromServices] IGetUserByIdHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(parameters, cancellationToken);
 
     /// <summary>
     /// Description: Update user by id.
@@ -81,15 +68,11 @@ public class UsersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
-    public Task<ActionResult> UpdateUserByIdAsync(UpdateUserByIdParameters parameters, [FromServices] IUpdateUserByIdHandler handler, CancellationToken cancellationToken)
-    {
-        if (handler is null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
-
-        return InvokeUpdateUserByIdAsync(parameters, handler, cancellationToken);
-    }
+    public async Task<ActionResult> UpdateUserById(
+        UpdateUserByIdParameters parameters,
+        [FromServices] IUpdateUserByIdHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(parameters, cancellationToken);
 
     /// <summary>
     /// Description: Delete user by id.
@@ -100,15 +83,11 @@ public class UsersController : ControllerBase
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
-    public Task<ActionResult> DeleteUserByIdAsync(DeleteUserByIdParameters parameters, [FromServices] IDeleteUserByIdHandler handler, CancellationToken cancellationToken)
-    {
-        if (handler is null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
-
-        return InvokeDeleteUserByIdAsync(parameters, handler, cancellationToken);
-    }
+    public async Task<ActionResult> DeleteUserById(
+        DeleteUserByIdParameters parameters,
+        [FromServices] IDeleteUserByIdHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(parameters, cancellationToken);
 
     /// <summary>
     /// Description: Update gender on a user.
@@ -120,15 +99,11 @@ public class UsersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
-    public Task<ActionResult> UpdateMyTestGenderAsync(UpdateMyTestGenderParameters parameters, [FromServices] IUpdateMyTestGenderHandler handler, CancellationToken cancellationToken)
-    {
-        if (handler is null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
-
-        return InvokeUpdateMyTestGenderAsync(parameters, handler, cancellationToken);
-    }
+    public async Task<ActionResult> UpdateMyTestGender(
+        UpdateMyTestGenderParameters parameters,
+        [FromServices] IUpdateMyTestGenderHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(parameters, cancellationToken);
 
     /// <summary>
     /// Description: Get user by email.
@@ -140,48 +115,9 @@ public class UsersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
-    public Task<ActionResult> GetUserByEmailAsync(GetUserByEmailParameters parameters, [FromServices] IGetUserByEmailHandler handler, CancellationToken cancellationToken)
-    {
-        if (handler is null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
-
-        return InvokeGetUserByEmailAsync(parameters, handler, cancellationToken);
-    }
-
-    private static async Task<ActionResult> InvokeGetUsersAsync([FromServices] IGetUsersHandler handler, CancellationToken cancellationToken)
-    {
-        return await handler.ExecuteAsync(cancellationToken);
-    }
-
-    private static async Task<ActionResult> InvokePostUserAsync(PostUserParameters parameters, IPostUserHandler handler, CancellationToken cancellationToken)
-    {
-        return await handler.ExecuteAsync(parameters, cancellationToken);
-    }
-
-    private static async Task<ActionResult> InvokeGetUserByIdAsync(GetUserByIdParameters parameters, IGetUserByIdHandler handler, CancellationToken cancellationToken)
-    {
-        return await handler.ExecuteAsync(parameters, cancellationToken);
-    }
-
-    private static async Task<ActionResult> InvokeUpdateUserByIdAsync(UpdateUserByIdParameters parameters, IUpdateUserByIdHandler handler, CancellationToken cancellationToken)
-    {
-        return await handler.ExecuteAsync(parameters, cancellationToken);
-    }
-
-    private static async Task<ActionResult> InvokeDeleteUserByIdAsync(DeleteUserByIdParameters parameters, IDeleteUserByIdHandler handler, CancellationToken cancellationToken)
-    {
-        return await handler.ExecuteAsync(parameters, cancellationToken);
-    }
-
-    private static async Task<ActionResult> InvokeUpdateMyTestGenderAsync(UpdateMyTestGenderParameters parameters, IUpdateMyTestGenderHandler handler, CancellationToken cancellationToken)
-    {
-        return await handler.ExecuteAsync(parameters, cancellationToken);
-    }
-
-    private static async Task<ActionResult> InvokeGetUserByEmailAsync(GetUserByEmailParameters parameters, IGetUserByEmailHandler handler, CancellationToken cancellationToken)
-    {
-        return await handler.ExecuteAsync(parameters, cancellationToken);
-    }
+    public async Task<ActionResult> GetUserByEmail(
+        GetUserByEmailParameters parameters,
+        [FromServices] IGetUserByEmailHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(parameters, cancellationToken);
 }

@@ -1,10 +1,6 @@
-// ReSharper disable ReturnTypeCanBeEnumerable.Global
-// ReSharper disable UseDeconstruction
-// ReSharper disable SwitchStatementHandlesSomeKnownEnumValuesWithDefault
-// ReSharper disable once CheckNamespace
-namespace Microsoft.OpenApi.Models;
+namespace Atc.Rest.ApiGenerator.OpenApi.Extensions;
 
-internal static class OpenApiResponsesExtensions
+public static class OpenApiResponsesExtensions
 {
     public static List<string> GetProducesResponseAttributeParts(
         this OpenApiResponses responses,
@@ -62,7 +58,7 @@ internal static class OpenApiResponsesExtensions
             var modelName = responses.GetModelNameForStatusCode(httpStatusCode);
 
             var isShared = apiOperationSchemaMappings.IsShared(modelName);
-            modelName = OpenApiDocumentSchemaModelNameHelper.EnsureModelNameWithNamespaceIfNeeded(projectName, contractArea, modelName, isShared, isClient);
+            modelName = OpenApiDocumentSchemaModelNameResolver.EnsureModelNameWithNamespaceIfNeeded(projectName, contractArea, modelName, isShared, isClient);
 
             var useProblemDetails = responses.IsSchemaTypeProblemDetailsForStatusCode(httpStatusCode);
             if (!useProblemDetails &&

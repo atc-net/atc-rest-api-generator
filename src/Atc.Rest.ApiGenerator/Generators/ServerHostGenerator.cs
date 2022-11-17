@@ -1145,10 +1145,11 @@ public class ServerHostGenerator
             ? $"{projectOptions.ProjectName}"
             : $"{projectOptions.ProjectName}.{projectOptions.ClientFolderName}";
 
-        var contentGeneratorServerSwaggerDocOptionsParameters = new ContentGeneratorServerSwaggerDocOptionsParameters(
-            projectOptions.ApiGeneratorVersion,
-            fullNamespace,
-            projectOptions.Document.ToSwaggerDocOptionsParameters());
+        var contentGeneratorServerSwaggerDocOptionsParameters = ContentGeneratorServerSwaggerDocOptionsParameterFactory
+            .Create(
+                projectOptions.ApiGeneratorVersion,
+                fullNamespace,
+                projectOptions.Document.ToSwaggerDocOptionsParameters());
 
         var contentGenerator = new ContentGeneratorServerSwaggerDocOptions(
             new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),

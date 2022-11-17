@@ -22,15 +22,10 @@ public class PaginationController : ControllerBase
     /// </summary>
     [HttpGet("list/int")]
     [ProducesResponseType(typeof(Pagination<int>), StatusCodes.Status200OK)]
-    public Task<ActionResult> GetPaginatedListOfIntsAsync([FromServices] IGetPaginatedListOfIntsHandler handler, CancellationToken cancellationToken)
-    {
-        if (handler is null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
-
-        return InvokeGetPaginatedListOfIntsAsync(handler, cancellationToken);
-    }
+    public async Task<ActionResult> GetPaginatedListOfInts(
+        [FromServices] IGetPaginatedListOfIntsHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(cancellationToken);
 
     /// <summary>
     /// Description: Your GET endpoint.
@@ -39,23 +34,8 @@ public class PaginationController : ControllerBase
     /// </summary>
     [HttpGet("list/string")]
     [ProducesResponseType(typeof(Pagination<string>), StatusCodes.Status200OK)]
-    public Task<ActionResult> GetPaginatedListOfStringsAsync([FromServices] IGetPaginatedListOfStringsHandler handler, CancellationToken cancellationToken)
-    {
-        if (handler is null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
-
-        return InvokeGetPaginatedListOfStringsAsync(handler, cancellationToken);
-    }
-
-    private static async Task<ActionResult> InvokeGetPaginatedListOfIntsAsync([FromServices] IGetPaginatedListOfIntsHandler handler, CancellationToken cancellationToken)
-    {
-        return await handler.ExecuteAsync(cancellationToken);
-    }
-
-    private static async Task<ActionResult> InvokeGetPaginatedListOfStringsAsync([FromServices] IGetPaginatedListOfStringsHandler handler, CancellationToken cancellationToken)
-    {
-        return await handler.ExecuteAsync(cancellationToken);
-    }
+    public async Task<ActionResult> GetPaginatedListOfStrings(
+        [FromServices] IGetPaginatedListOfStringsHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(cancellationToken);
 }

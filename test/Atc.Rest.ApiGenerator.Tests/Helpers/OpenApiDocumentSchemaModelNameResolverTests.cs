@@ -1,6 +1,6 @@
 namespace Atc.Rest.ApiGenerator.Tests.Helpers;
 
-public class OpenApiDocumentSchemaModelNameHelperTests
+public class OpenApiDocumentSchemaModelNameResolverTests
 {
     [Theory]
     [InlineData("MyData", "MyData")]
@@ -11,5 +11,5 @@ public class OpenApiDocumentSchemaModelNameHelperTests
     [InlineData("MyData", "MtContract.MyData")]
     [InlineData("MyData", "List<MtContract.MyData>")]
     public void GetRawModelName(string expected, string input)
-        => Assert.Equal(expected, OpenApiDocumentSchemaModelNameHelper.GetRawModelName(input));
+        => Assert.Equal(expected, OpenApiDocumentSchemaModelNameResolver.GetRawModelName(input));
 }

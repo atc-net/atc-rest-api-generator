@@ -22,15 +22,10 @@ public class EventargsController : ControllerBase
     /// </summary>
     [HttpGet]
     [ProducesResponseType(typeof(List<Scenario2.Api.Generated.Contracts.Eventargs.EventArgs>), StatusCodes.Status200OK)]
-    public Task<ActionResult> GetEventArgsAsync([FromServices] IGetEventArgsHandler handler, CancellationToken cancellationToken)
-    {
-        if (handler is null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
-
-        return InvokeGetEventArgsAsync(handler, cancellationToken);
-    }
+    public async Task<ActionResult> GetEventArgs(
+        [FromServices] IGetEventArgsHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(cancellationToken);
 
     /// <summary>
     /// Description: Get EventArgs By Id.
@@ -40,23 +35,9 @@ public class EventargsController : ControllerBase
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(Scenario2.Api.Generated.Contracts.Eventargs.EventArgs), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    public Task<ActionResult> GetEventArgsByIdAsync(GetEventArgsByIdParameters parameters, [FromServices] IGetEventArgsByIdHandler handler, CancellationToken cancellationToken)
-    {
-        if (handler is null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
-
-        return InvokeGetEventArgsByIdAsync(parameters, handler, cancellationToken);
-    }
-
-    private static async Task<ActionResult> InvokeGetEventArgsAsync([FromServices] IGetEventArgsHandler handler, CancellationToken cancellationToken)
-    {
-        return await handler.ExecuteAsync(cancellationToken);
-    }
-
-    private static async Task<ActionResult> InvokeGetEventArgsByIdAsync(GetEventArgsByIdParameters parameters, IGetEventArgsByIdHandler handler, CancellationToken cancellationToken)
-    {
-        return await handler.ExecuteAsync(parameters, cancellationToken);
-    }
+    public async Task<ActionResult> GetEventArgsById(
+        GetEventArgsByIdParameters parameters,
+        [FromServices] IGetEventArgsByIdHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(parameters, cancellationToken);
 }

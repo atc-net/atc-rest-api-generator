@@ -23,18 +23,9 @@ public class AddressesController : ControllerBase
     [HttpGet("{postalCode}")]
     [ProducesResponseType(typeof(List<Address>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    public Task<ActionResult> GetAddressesByPostalCodesAsync(GetAddressesByPostalCodesParameters parameters, [FromServices] IGetAddressesByPostalCodesHandler handler, CancellationToken cancellationToken)
-    {
-        if (handler is null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
-
-        return InvokeGetAddressesByPostalCodesAsync(parameters, handler, cancellationToken);
-    }
-
-    private static async Task<ActionResult> InvokeGetAddressesByPostalCodesAsync(GetAddressesByPostalCodesParameters parameters, IGetAddressesByPostalCodesHandler handler, CancellationToken cancellationToken)
-    {
-        return await handler.ExecuteAsync(parameters, cancellationToken);
-    }
+    public async Task<ActionResult> GetAddressesByPostalCodes(
+        GetAddressesByPostalCodesParameters parameters,
+        [FromServices] IGetAddressesByPostalCodesHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(parameters, cancellationToken);
 }
