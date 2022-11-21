@@ -3,8 +3,15 @@ namespace Atc.Rest.ApiGenerator.CLI.Commands;
 public class GenerateServerDomainCommand : AsyncCommand<ServerDomainCommandSettings>
 {
     private readonly ILogger<GenerateServerDomainCommand> logger;
+    private readonly IOpenApiDocumentValidator openApiDocumentValidator;
 
-    public GenerateServerDomainCommand(ILogger<GenerateServerDomainCommand> logger) => this.logger = logger;
+    public GenerateServerDomainCommand(
+        ILogger<GenerateServerDomainCommand> logger,
+        IOpenApiDocumentValidator openApiDocumentValidator)
+    {
+        this.logger = logger;
+        this.openApiDocumentValidator = openApiDocumentValidator;
+    }
 
     public override Task<int> ExecuteAsync(
         CommandContext context,
@@ -51,10 +58,9 @@ public class GenerateServerDomainCommand : AsyncCommand<ServerDomainCommandSetti
 
         try
         {
-            if (!OpenApiDocumentHelper.Validate(
-                    logger,
-                    apiDocumentContainer,
-                    apiOptions.Validation))
+            if (!openApiDocumentValidator.IsValid(
+                    apiOptions.Validation,
+                    apiDocumentContainer))
             {
                 return ConsoleExitStatusCodes.Failure;
             }

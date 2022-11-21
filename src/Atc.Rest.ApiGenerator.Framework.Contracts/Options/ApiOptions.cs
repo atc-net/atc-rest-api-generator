@@ -1,4 +1,4 @@
-namespace Atc.Rest.ApiGenerator.Models.Options;
+namespace Atc.Rest.ApiGenerator.Framework.Contracts.Options;
 
 public class ApiOptions
 {

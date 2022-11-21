@@ -3,8 +3,15 @@ namespace Atc.Rest.ApiGenerator.CLI.Commands;
 public class ValidateSchemaCommand : AsyncCommand<BaseSchemaCommandSettings>
 {
     private readonly ILogger<ValidateSchemaCommand> logger;
+    private readonly IOpenApiDocumentValidator openApiDocumentValidator;
 
-    public ValidateSchemaCommand(ILogger<ValidateSchemaCommand> logger) => this.logger = logger;
+    public ValidateSchemaCommand(
+        ILogger<ValidateSchemaCommand> logger,
+        IOpenApiDocumentValidator openApiDocumentValidator)
+    {
+        this.logger = logger;
+        this.openApiDocumentValidator = openApiDocumentValidator;
+    }
 
     public override Task<int> ExecuteAsync(
         CommandContext context,
@@ -32,10 +39,9 @@ public class ValidateSchemaCommand : AsyncCommand<BaseSchemaCommandSettings>
 
         try
         {
-            if (!OpenApiDocumentHelper.Validate(
-                    logger,
-                    apiDocumentContainer,
-                    apiOptions.Validation))
+            if (!openApiDocumentValidator.IsValid(
+                    apiOptions.Validation,
+                    apiDocumentContainer))
             {
                 return ConsoleExitStatusCodes.Failure;
             }

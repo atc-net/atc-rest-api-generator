@@ -1,7 +1,4 @@
 // ReSharper disable ReturnTypeCanBeEnumerable.Global
-
-using Atc.Rest.ApiGenerator.OpenApi.Extractors;
-
 namespace Atc.Rest.ApiGenerator.Helpers;
 
 public static class GenerateHelper

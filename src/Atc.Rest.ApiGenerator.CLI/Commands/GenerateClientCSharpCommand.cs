@@ -4,13 +4,16 @@ public class GenerateClientCSharpCommand : AsyncCommand<ClientApiCommandSettings
 {
     private readonly ILogger<GenerateClientCSharpCommand> logger;
     private readonly IApiOperationExtractor apiOperationExtractor;
+    private readonly IOpenApiDocumentValidator openApiDocumentValidator;
 
     public GenerateClientCSharpCommand(
         ILogger<GenerateClientCSharpCommand> logger,
-        IApiOperationExtractor apiOperationExtractor)
+        IApiOperationExtractor apiOperationExtractor,
+        IOpenApiDocumentValidator openApiDocumentValidator)
     {
         this.logger = logger;
         this.apiOperationExtractor = apiOperationExtractor;
+        this.openApiDocumentValidator = openApiDocumentValidator;
     }
 
     public override Task<int> ExecuteAsync(
@@ -50,10 +53,9 @@ public class GenerateClientCSharpCommand : AsyncCommand<ClientApiCommandSettings
 
         try
         {
-            if (!OpenApiDocumentHelper.Validate(
-                    logger,
-                    apiDocumentContainer,
-                    apiOptions.Validation))
+            if (!openApiDocumentValidator.IsValid(
+                    apiOptions.Validation,
+                    apiDocumentContainer))
             {
                 return ConsoleExitStatusCodes.Failure;
             }

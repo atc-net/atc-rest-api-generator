@@ -4,13 +4,16 @@ public class GenerateServerHostCommand : AsyncCommand<ServerHostCommandSettings>
 {
     private readonly ILogger<GenerateServerHostCommand> logger;
     private readonly IApiOperationExtractor apiOperationExtractor;
+    private readonly IOpenApiDocumentValidator openApiDocumentValidator;
 
     public GenerateServerHostCommand(
         ILogger<GenerateServerHostCommand> logger,
-        IApiOperationExtractor apiOperationExtractor)
+        IApiOperationExtractor apiOperationExtractor,
+        IOpenApiDocumentValidator openApiDocumentValidator)
     {
         this.logger = logger;
         this.apiOperationExtractor = apiOperationExtractor;
+        this.openApiDocumentValidator = openApiDocumentValidator;
     }
 
     public override Task<int> ExecuteAsync(
@@ -58,10 +61,9 @@ public class GenerateServerHostCommand : AsyncCommand<ServerHostCommandSettings>
 
         try
         {
-            if (!OpenApiDocumentHelper.Validate(
-                    logger,
-                    apiDocumentContainer,
-                    apiOptions.Validation))
+            if (!openApiDocumentValidator.IsValid(
+                    apiOptions.Validation,
+                    apiDocumentContainer))
             {
                 return ConsoleExitStatusCodes.Failure;
             }

@@ -1,12 +1,12 @@
-namespace Atc.Rest.ApiGenerator.Helpers;
+namespace Atc.Rest.ApiGenerator.OpenApi.Factories;
 
-public static class LogItemHelper
+public class LogItemFactory : ILogItemFactory
 {
-    public static LogKeyValueItem Create(
+    public LogKeyValueItem Create(
         LogCategoryType logCategoryType,
         string ruleName,
         string description)
-        => LogItemFactory.Create(logCategoryType, ruleName, ExtractAreaFromRuleName(ruleName), description);
+        => Data.LogItemFactory.Create(logCategoryType, ruleName, ExtractAreaFromRuleName(ruleName), description);
 
     private static string ExtractAreaFromRuleName(
         string ruleName)

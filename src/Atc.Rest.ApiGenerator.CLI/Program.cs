@@ -48,6 +48,8 @@ public static class Program
 
         var serviceCollection = ServiceCollectionFactory.Create(consoleLoggerConfiguration);
 
+        serviceCollection.AddSingleton<ILogItemFactory, LogItemFactory>();
+        serviceCollection.AddSingleton<IOpenApiDocumentValidator, OpenApiDocumentValidator>();
         serviceCollection.AddSingleton<IApiOperationExtractor, ApiOperationExtractor>();
 
         var app = CommandAppFactory.CreateWithRootCommand<RootCommand>(serviceCollection);

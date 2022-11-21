@@ -1,4 +1,4 @@
-namespace Atc.Rest.ApiGenerator.OpenApi.Interfaces;
+namespace Atc.Rest.ApiGenerator.OpenApi.Extractors;
 
 public interface IApiOperationExtractor
 {

@@ -4,6 +4,11 @@ public static class ValidationRuleNameConstants
 {
     public const string OpenApiCore = "OR001";
 
+    public const string Security01 = "SR0101";
+    public const string Security02 = "SR0102";
+    public const string Security03 = "SR0103";
+    public const string Security04 = "SR0104";
+
     public const string Schema01 = "CR0101";
     public const string Schema02 = "CR0102";
     public const string Schema03 = "CR0103";
