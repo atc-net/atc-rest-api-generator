@@ -1,4 +1,4 @@
-namespace Atc.Rest.ApiGenerator;
+namespace Atc.Rest.ApiGenerator.OpenApi;
 
 public static class ValidationRuleNameConstants
 {

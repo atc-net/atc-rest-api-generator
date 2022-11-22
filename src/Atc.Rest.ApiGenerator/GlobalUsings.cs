@@ -30,6 +30,7 @@ global using Atc.Rest.ApiGenerator.Generators;
 global using Atc.Rest.ApiGenerator.Helpers;
 global using Atc.Rest.ApiGenerator.Helpers.XunitTest;
 global using Atc.Rest.ApiGenerator.Models;
+global using Atc.Rest.ApiGenerator.OpenApi;
 global using Atc.Rest.ApiGenerator.OpenApi.Extensions;
 global using Atc.Rest.ApiGenerator.OpenApi.Extractors;
 global using Atc.Rest.ApiGenerator.OpenApi.Models;
