@@ -2,6 +2,23 @@ namespace Atc.Rest.ApiGenerator.OpenApi.Extensions;
 
 public static class OpenApiExtensionExtensions
 {
+    public static bool? ExtractAuthenticationRequired(
+        this IDictionary<string, IOpenApiExtension> extensionsSection)
+    {
+        if (!extensionsSection.TryGetValue(SecurityExtensionNameConstants.AuthenticationRequired, out var extensions))
+        {
+            return null;
+        }
+
+        if (extensions is not OpenApiBoolean openApiBoolean)
+        {
+            return null;
+        }
+
+        return openApiBoolean.Value;
+
+    }
+
     public static IReadOnlyCollection<string> ExtractAuthorizationRoles(
         this IDictionary<string, IOpenApiExtension> extensionsSection)
         => extensionsSection.ExtractSecurityExtensions(SecurityExtensionNameConstants.AuthorizeRoles);
