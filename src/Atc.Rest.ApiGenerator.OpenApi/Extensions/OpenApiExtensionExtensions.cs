@@ -27,7 +27,12 @@ public static class OpenApiExtensionExtensions
 
         foreach (var extension in extensionsArray)
         {
-            if (extension is OpenApiString openApiString)
+            if (extension is not OpenApiString openApiString)
+            {
+                continue;
+            }
+
+            if (!securityExtensions.Contains(openApiString.Value, StringComparer.OrdinalIgnoreCase))
             {
                 securityExtensions.Add(openApiString.Value);
             }
