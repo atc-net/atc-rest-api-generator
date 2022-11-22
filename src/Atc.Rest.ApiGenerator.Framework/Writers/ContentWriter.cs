@@ -1,4 +1,5 @@
 // ReSharper disable SuggestBaseTypeForParameter
+
 namespace Atc.Rest.ApiGenerator.Framework.Writers;
 
 public class ContentWriter : IContentWriter
@@ -18,11 +19,6 @@ public class ContentWriter : IContentWriter
         string content,
         bool overrideIfExist = true)
     {
-        ArgumentNullException.ThrowIfNull(workingFolder);
-        ArgumentNullException.ThrowIfNull(file);
-        ArgumentNullException.ThrowIfNull(contentWriterArea);
-        ArgumentNullException.ThrowIfNull(content);
-
         if (file.Directory is not null &&
             !file.Directory.Exists)
         {
