@@ -4,6 +4,23 @@ namespace Atc.Rest.ApiGenerator.OpenApi.Extensions;
 
 public static class OpenApiDocumentExtensions
 {
+    public static bool HasAllPathsAuthenticationRequiredSet(
+        this OpenApiDocument openApiDocument,
+        string area)
+    {
+        foreach (var (_, apiPathData) in openApiDocument.GetPathsByBasePathSegmentName(area))
+        {
+            var apiPathAuthenticationRequired = apiPathData.Extensions.ExtractAuthenticationRequired();
+            if (apiPathAuthenticationRequired is null ||
+                !apiPathAuthenticationRequired.Value)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public static SwaggerDocOptionsParameters ToSwaggerDocOptionsParameters(
         this OpenApiDocument openApiDocument)
         => new(

@@ -28,7 +28,9 @@ public sealed class ContentGeneratorServerController : IContentGenerator
         sb.AppendLine("/// Endpoint definitions.");
         sb.AppendLine($"/// Area: {parameters.Area}.");
         sb.AppendLine("/// </summary>");
-        //// TODO: Authorize Attribute  [Authorize]
+
+        AppendControllerAuthorizationIfNeeded(sb);
+
         sb.AppendLine("[ApiController]");
         sb.AppendLine($"[Route(\"{parameters.RouteBase}\")]");
         sb.AppendLine(codeAttributeGenerator.Generate());
@@ -39,7 +41,7 @@ public sealed class ContentGeneratorServerController : IContentGenerator
         {
             var item = parameters.MethodParameters[i];
 
-            AppendMethodContent(sb, item);
+            AppendMethodContent(sb, parameters.UseAuthorization, item);
 
             if (i < parameters.MethodParameters.Count - 1)
             {
@@ -53,6 +55,7 @@ public sealed class ContentGeneratorServerController : IContentGenerator
 
     private void AppendMethodContent(
         StringBuilder sb,
+        bool controllerUsesAuthorization,
         ContentGeneratorServerControllerMethodParameters item)
     {
         sb.AppendLine(4, "/// <summary>");
@@ -60,7 +63,9 @@ public sealed class ContentGeneratorServerController : IContentGenerator
         sb.AppendLine(4, $"/// Operation: {item.Name}.");
         sb.AppendLine(4, $"/// Area: {parameters.Area}.");
         sb.AppendLine(4, "/// </summary>");
-        //// TODO: Authorize Attribute  [Authorize]
+
+        AppendMethodContentAuthorizationIfNeeded(sb, controllerUsesAuthorization, item);
+
         sb.AppendLine(4, string.IsNullOrEmpty(item.RouteSuffix)
             ? $"[Http{item.OperationTypeRepresentation}]"
             : $"[Http{item.OperationTypeRepresentation}(\"{item.RouteSuffix}\")]");
@@ -90,5 +95,101 @@ public sealed class ContentGeneratorServerController : IContentGenerator
         sb.AppendLine(8, !string.IsNullOrEmpty(item.ParameterTypeName)
             ? "=> await handler.ExecuteAsync(parameters, cancellationToken);"
             : "=> await handler.ExecuteAsync(cancellationToken);");
+    }
+
+    private void AppendControllerAuthorizationIfNeeded(
+        StringBuilder sb)
+    {
+        if (parameters.UseAuthorization)
+        {
+            sb.AppendLine("[Authorize]");
+        }
+    }
+
+    private static void AppendMethodContentAuthorizationIfNeeded(
+        StringBuilder sb,
+        bool controllerUsesAuthorization,
+        ContentGeneratorServerControllerMethodParameters item)
+    {
+        if (ShouldUseAuthorizeAttribute(controllerUsesAuthorization, item))
+        {
+            var authorizeLineBuilder = new StringBuilder();
+            var authRoles = string.Join(',', item.ApiPathAuthorizationRoles.Concat(item.ApiOperationAuthorizationRoles).Distinct(StringComparer.Ordinal).OrderBy(x => x));
+            var authSchemes = string.Join(',', item.ApiPathAuthenticationSchemes.Concat(item.ApiOperationAuthenticationSchemes).Distinct(StringComparer.Ordinal).OrderBy(x => x));
+
+            authorizeLineBuilder.Append(4, "[Authorize");
+
+            if (!string.IsNullOrEmpty(authRoles))
+            {
+                authorizeLineBuilder.Append($"(Roles = \"{authRoles}\"");
+            }
+
+            if (!string.IsNullOrEmpty(authSchemes))
+            {
+                authorizeLineBuilder.Append(string.IsNullOrEmpty(authRoles)
+                    ? $"(AuthenticationSchemes = \"{authSchemes}\""
+                    : $", AuthenticationSchemes = \"{authSchemes}\"");
+            }
+
+            if (!string.IsNullOrEmpty(authRoles) || !string.IsNullOrEmpty(authSchemes))
+            {
+                authorizeLineBuilder.Append(')');
+            }
+
+            authorizeLineBuilder.Append(']');
+            sb.AppendLine(authorizeLineBuilder.ToString());
+        }
+        else if (ShouldUseAllowAnonymousAttribute(item))
+        {
+            sb.AppendLine(4, "[AllowAnonymous]");
+        }
+    }
+
+    private static bool ShouldUseAuthorizeAttribute(
+        bool controllerUsesAuthorization,
+        ContentGeneratorServerControllerMethodParameters item)
+    {
+        var apiPathUseAuthorization = item.ApiPathUseAuthorization.HasValue &&
+                                      item.ApiPathUseAuthorization.Value;
+
+        var apiPathAnyRolesOrAuthenticationSchemes = item.ApiPathAuthorizationRoles.Any() ||
+                                                     item.ApiPathAuthenticationSchemes.Any();
+
+        var apiOperationUseAuthorizationIsSet = item.ApiOperationUseAuthorization.HasValue;
+        var apiOperationUseAuthorization = item.ApiOperationUseAuthorization.HasValue &&
+                                           item.ApiOperationUseAuthorization.Value;
+
+        var apiOperationAnyRolesOrAuthenticationSchemes = item.ApiOperationAuthorizationRoles.Any() ||
+                                                          item.ApiOperationAuthenticationSchemes.Any();
+
+        var result = controllerUsesAuthorization &&
+                     (apiPathUseAuthorization ||
+                      apiOperationUseAuthorization ||
+                      apiPathAnyRolesOrAuthenticationSchemes ||
+                      apiOperationAnyRolesOrAuthenticationSchemes);
+
+        if (result &&
+            apiOperationUseAuthorizationIsSet &&
+            !apiOperationUseAuthorization)
+        {
+            return false;
+        }
+
+        return result;
+    }
+
+    private static bool ShouldUseAllowAnonymousAttribute(
+        ContentGeneratorServerControllerMethodParameters item)
+    {
+        var apiPathUseAuthorizationIsSet = item.ApiPathUseAuthorization.HasValue;
+        var apiPathUseAuthorization = item.ApiPathUseAuthorization.HasValue &&
+                                      item.ApiPathUseAuthorization.Value;
+
+        var apiOperationUseAuthorizationIsSet = item.ApiOperationUseAuthorization.HasValue;
+        var apiOperationUseAuthorization = item.ApiOperationUseAuthorization.HasValue &&
+                                           item.ApiOperationUseAuthorization.Value;
+
+        return (apiPathUseAuthorizationIsSet && !apiPathUseAuthorization) ||
+               (apiOperationUseAuthorizationIsSet && !apiOperationUseAuthorization);
     }
 }

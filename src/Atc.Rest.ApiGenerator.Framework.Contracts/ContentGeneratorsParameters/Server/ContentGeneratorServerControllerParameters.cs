@@ -4,6 +4,7 @@ public record ContentGeneratorServerControllerParameters(
     string Namespace,
     string Area,
     string RouteBase,
+    bool UseAuthorization,
     List<ContentGeneratorServerControllerMethodParameters> MethodParameters);
 
 public record ContentGeneratorServerControllerMethodParameters(
@@ -14,4 +15,10 @@ public record ContentGeneratorServerControllerMethodParameters(
     string InterfaceName,
     string? ParameterTypeName,
     long? MultipartBodyLengthLimit,
-    List<string> ProducesResponseTypeRepresentations);
+    List<string> ProducesResponseTypeRepresentations,
+    bool? ApiPathUseAuthorization,
+    IEnumerable<string> ApiPathAuthorizationRoles,
+    IEnumerable<string> ApiPathAuthenticationSchemes,
+    bool? ApiOperationUseAuthorization,
+    IEnumerable<string> ApiOperationAuthorizationRoles,
+    IEnumerable<string> ApiOperationAuthenticationSchemes);

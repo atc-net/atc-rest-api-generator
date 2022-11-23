@@ -244,7 +244,6 @@ public class ServerApiGenerator
         }
         else
         {
-            // ApiProjectOptions.ApiOptions.Generator.UseAuthorization
             // New approach for server
             foreach (var area in projectOptions.BasePathSegmentNames)
             {
@@ -256,7 +255,8 @@ public class ServerApiGenerator
                         $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Endpoints}",
                         area,
                         GetRouteByArea(area),
-                        projectOptions.Document.GetPathsByBasePathSegmentName(area));
+                        projectOptions.Document,
+                        projectOptions.ApiOptions.Generator.UseAuthorization);
 
                 var contentGenerator = new ContentGeneratorServerController(
                     new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
@@ -290,7 +290,7 @@ public class ServerApiGenerator
         }
 
         var routeSuffix = key
-            .Split('/', StringSplitOptions.RemoveEmptyEntries)?
+            .Split('/', StringSplitOptions.RemoveEmptyEntries)
             .FirstOrDefault();
 
         return $"{projectOptions.RouteBase}/{routeSuffix}";

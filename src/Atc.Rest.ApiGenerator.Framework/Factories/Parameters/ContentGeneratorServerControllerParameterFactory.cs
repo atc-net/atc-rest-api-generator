@@ -1,5 +1,4 @@
 // ReSharper disable LoopCanBeConvertedToQuery
-
 namespace Atc.Rest.ApiGenerator.Framework.Factories.Parameters;
 
 public static class ContentGeneratorServerControllerParameterFactory
@@ -11,14 +10,23 @@ public static class ContentGeneratorServerControllerParameterFactory
         string @namespace,
         string area,
         string route,
-        IList<KeyValuePair<string, OpenApiPathItem>> apiPaths)
+        OpenApiDocument openApiDocument,
+        bool apiOptionsUseAuthorization)
     {
         var methodParameters = new List<ContentGeneratorServerControllerMethodParameters>();
 
-        foreach (var (apiPath, apiPathData) in apiPaths)
+        foreach (var (apiPath, apiPathData) in openApiDocument.GetPathsByBasePathSegmentName(area))
         {
+            var apiPathAuthenticationRequired = apiPathData.Extensions.ExtractAuthenticationRequired();
+            var apiPathAuthorizationRoles = apiPathData.Extensions.ExtractAuthorizationRoles();
+            var apiPathAuthenticationSchemes = apiPathData.Extensions.ExtractAuthenticationSchemes();
+
             foreach (var apiOperation in apiPathData.Operations)
             {
+                var apiOperationAuthenticationRequired = apiOperation.Value.Extensions.ExtractAuthenticationRequired();
+                var apiOperationAuthorizationRoles = apiOperation.Value.Extensions.ExtractAuthorizationRoles();
+                var apiOperationAuthenticationSchemes = apiOperation.Value.Extensions.ExtractAuthenticationSchemes();
+
                 var operationName = apiOperation.Value.GetOperationName();
 
                 methodParameters.Add(new ContentGeneratorServerControllerMethodParameters(
@@ -34,11 +42,22 @@ public static class ContentGeneratorServerControllerParameterFactory
                         apiOperation.Value,
                         area,
                         projectName,
-                        useProblemDetailsAsDefaultBody)));
+                        useProblemDetailsAsDefaultBody),
+                    apiPathAuthenticationRequired,
+                    apiPathAuthorizationRoles,
+                    apiPathAuthenticationSchemes,
+                    apiOperationAuthenticationRequired,
+                    apiOperationAuthorizationRoles,
+                    apiOperationAuthenticationSchemes));
             }
         }
 
-        return new ContentGeneratorServerControllerParameters(@namespace, area, route, methodParameters);
+        return new ContentGeneratorServerControllerParameters(
+            @namespace,
+            area,
+            route,
+            apiOptionsUseAuthorization || openApiDocument.HasAllPathsAuthenticationRequiredSet(area),
+            methodParameters);
     }
 
     private static string GetOperationSummaryDescription(
