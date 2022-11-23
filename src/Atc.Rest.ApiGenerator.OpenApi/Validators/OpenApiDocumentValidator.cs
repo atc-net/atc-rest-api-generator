@@ -106,7 +106,10 @@ public class OpenApiDocumentValidator : IOpenApiDocumentValidator
 
             foreach (var openApiOperation in apiDocumentPath.Value.Operations)
             {
-                ValidateOperationSecurity(openApiOperation, globalAuthorizeRoles, globalAuthenticationSchemes);
+                ValidateOperationSecurity(
+                    openApiOperation,
+                    globalAuthorizeRoles,
+                    globalAuthenticationSchemes);
             }
         }
     }
@@ -116,37 +119,72 @@ public class OpenApiDocumentValidator : IOpenApiDocumentValidator
         IReadOnlyCollection<string> globalAuthorizeRoles,
         IReadOnlyCollection<string> globalAuthenticationSchemes)
     {
-        if (apiDocumentPath.Value.Extensions.Any())
+        if (!apiDocumentPath.Value.Extensions.Any())
         {
-            var pathAuthorizeRoles = apiDocumentPath.Value.Extensions.ExtractAuthorizationRoles();
-            if (pathAuthorizeRoles.Any())
+            return;
+        }
+
+        var apiPathAuthenticationRequired = apiDocumentPath.Value.Extensions.ExtractAuthenticationRequired();
+        var apiPathAuthorizeRoles = apiDocumentPath.Value.Extensions.ExtractAuthorizationRoles();
+        var apiPathAuthenticationSchemes = apiDocumentPath.Value.Extensions.ExtractAuthenticationSchemes();
+
+        if (apiPathAuthenticationRequired is not null &&
+            !apiPathAuthenticationRequired.Value &&
+            (apiPathAuthorizeRoles.Any() || apiPathAuthenticationSchemes.Any()))
+        {
+            logItems.Add(
+                logItemFactory.Create(
+                    logCategory,
+                    ValidationRuleNameConstants.Security10,
+                    $"Path '{apiDocumentPath.Key}' has {SecurityExtensionNameConstants.AuthenticationRequired} set to {apiPathAuthenticationRequired} but have {SecurityExtensionNameConstants.AuthorizeRoles} and/or {SecurityExtensionNameConstants.AuthenticationSchemes} set."));
+        }
+
+        var pathAuthorizeRoles = apiDocumentPath.Value.Extensions.ExtractAuthorizationRoles();
+        if (pathAuthorizeRoles.Any())
+        {
+            foreach (var pathAuthorizeRole in pathAuthorizeRoles)
             {
-                foreach (var pathAuthorizeRole in pathAuthorizeRoles)
+                if (!globalAuthorizeRoles.Contains(pathAuthorizeRole, StringComparer.OrdinalIgnoreCase))
                 {
-                    if (!globalAuthorizeRoles.Contains(pathAuthorizeRole, StringComparer.OrdinalIgnoreCase))
-                    {
-                        logItems.Add(
-                            logItemFactory.Create(
-                                LogCategoryType.Error,
-                                ValidationRuleNameConstants.Security01,
-                                $"Path '{apiDocumentPath.Key}' has the role '{pathAuthorizeRole}' defined which is not defined in the global {SecurityExtensionNameConstants.AuthorizeRoles} section."));
-                    }
+                    logItems.Add(
+                        logItemFactory.Create(
+                            LogCategoryType.Error,
+                            ValidationRuleNameConstants.Security01,
+                            $"Path '{apiDocumentPath.Key}' has the role '{pathAuthorizeRole}' defined which is not defined in the global {SecurityExtensionNameConstants.AuthorizeRoles} section."));
+                }
+                else if (globalAuthorizeRoles.Contains(pathAuthorizeRole, StringComparer.OrdinalIgnoreCase) &&
+                         !globalAuthorizeRoles.Contains(pathAuthorizeRole, StringComparer.Ordinal))
+                {
+                    logItems.Add(
+                        logItemFactory.Create(
+                            logCategory,
+                            ValidationRuleNameConstants.Security08,
+                            $"Path '{apiDocumentPath.Key}' has the role '{pathAuthorizeRole}' defined, but is using incorrect casing, when compared with role in global {SecurityExtensionNameConstants.AuthorizeRoles} section."));
                 }
             }
+        }
 
-            var pathAuthenticationSchemes = apiDocumentPath.Value.Extensions.ExtractAuthenticationSchemes();
-            if (pathAuthenticationSchemes.Any())
+        var pathAuthenticationSchemes = apiDocumentPath.Value.Extensions.ExtractAuthenticationSchemes();
+        if (pathAuthenticationSchemes.Any())
+        {
+            foreach (var pathAuthenticationScheme in pathAuthenticationSchemes)
             {
-                foreach (var pathAuthenticationScheme in pathAuthenticationSchemes)
+                if (!globalAuthenticationSchemes.Contains(pathAuthenticationScheme, StringComparer.OrdinalIgnoreCase))
                 {
-                    if (!globalAuthenticationSchemes.Contains(pathAuthenticationScheme, StringComparer.OrdinalIgnoreCase))
-                    {
-                        logItems.Add(
-                            logItemFactory.Create(
-                                LogCategoryType.Error,
-                                ValidationRuleNameConstants.Security02,
-                                $"Path '{apiDocumentPath.Key}' has the authentication scheme '{pathAuthenticationScheme}' defined which is not defined in the global {SecurityExtensionNameConstants.AuthenticationSchemes} section."));
-                    }
+                    logItems.Add(
+                        logItemFactory.Create(
+                            LogCategoryType.Error,
+                            ValidationRuleNameConstants.Security02,
+                            $"Path '{apiDocumentPath.Key}' has the authentication scheme '{pathAuthenticationScheme}' defined which is not defined in the global {SecurityExtensionNameConstants.AuthenticationSchemes} section."));
+                }
+                else if (globalAuthenticationSchemes.Contains(pathAuthenticationScheme, StringComparer.OrdinalIgnoreCase) &&
+                         !globalAuthenticationSchemes.Contains(pathAuthenticationScheme, StringComparer.Ordinal))
+                {
+                    logItems.Add(
+                        logItemFactory.Create(
+                            logCategory,
+                            ValidationRuleNameConstants.Security09,
+                            $"Path '{apiDocumentPath.Key}' has the authentication scheme '{pathAuthenticationScheme}' defined, but is using incorrect casing, when compared with authentication scheme in global {SecurityExtensionNameConstants.AuthenticationSchemes} section."));
                 }
             }
         }
@@ -157,37 +195,72 @@ public class OpenApiDocumentValidator : IOpenApiDocumentValidator
         IReadOnlyCollection<string> globalAuthorizeRoles,
         IReadOnlyCollection<string> globalAuthenticationSchemes)
     {
-        if (openApiOperation.Value.Extensions.Any())
+        if (!openApiOperation.Value.Extensions.Any())
         {
-            var pathItemAuthorizeRoles = openApiOperation.Value.Extensions.ExtractAuthorizationRoles();
-            if (pathItemAuthorizeRoles.Any())
+            return;
+        }
+
+        var operationName = openApiOperation.Value.OperationId.EnsureFirstCharacterToUpper();
+
+        var apiOperationAuthenticationRequired = openApiOperation.Value.Extensions.ExtractAuthenticationRequired();
+        var apiOperationAuthorizeRoles = openApiOperation.Value.Extensions.ExtractAuthorizationRoles();
+        var apiOperationAuthenticationSchemes = openApiOperation.Value.Extensions.ExtractAuthenticationSchemes();
+
+        if (apiOperationAuthenticationRequired is not null &&
+            !apiOperationAuthenticationRequired.Value &&
+            (apiOperationAuthorizeRoles.Any() || apiOperationAuthenticationSchemes.Any()))
+        {
+            logItems.Add(
+                logItemFactory.Create(
+                    logCategory,
+                    ValidationRuleNameConstants.Security05,
+                    $"Operation '{operationName}' has {SecurityExtensionNameConstants.AuthenticationRequired} set to {apiOperationAuthenticationRequired} but have {SecurityExtensionNameConstants.AuthorizeRoles} and/or {SecurityExtensionNameConstants.AuthenticationSchemes} set."));
+        }
+
+        if (apiOperationAuthorizeRoles.Any())
+        {
+            foreach (var pathItemAuthorizeRole in apiOperationAuthorizeRoles)
             {
-                foreach (var pathItemAuthorizeRole in pathItemAuthorizeRoles)
+                if (!globalAuthorizeRoles.Contains(pathItemAuthorizeRole, StringComparer.OrdinalIgnoreCase))
                 {
-                    if (!globalAuthorizeRoles.Contains(pathItemAuthorizeRole, StringComparer.OrdinalIgnoreCase))
-                    {
-                        logItems.Add(
-                            logItemFactory.Create(
-                                LogCategoryType.Error,
-                                ValidationRuleNameConstants.Security03,
-                                $"Operation '{openApiOperation.Value.OperationId.EnsureFirstCharacterToUpper()}' has the role '{pathItemAuthorizeRole}' defined which is not defined in the global {SecurityExtensionNameConstants.AuthorizeRoles} section."));
-                    }
+                    logItems.Add(
+                        logItemFactory.Create(
+                            LogCategoryType.Error,
+                            ValidationRuleNameConstants.Security03,
+                            $"Operation '{operationName}' has the role '{pathItemAuthorizeRole}' defined which is not defined in the global {SecurityExtensionNameConstants.AuthorizeRoles} section."));
+                }
+                else if (globalAuthorizeRoles.Contains(pathItemAuthorizeRole, StringComparer.OrdinalIgnoreCase) &&
+                         !globalAuthorizeRoles.Contains(pathItemAuthorizeRole, StringComparer.Ordinal))
+                {
+                    logItems.Add(
+                        logItemFactory.Create(
+                            logCategory,
+                            ValidationRuleNameConstants.Security06,
+                            $"Operation '{operationName}' has the role '{pathItemAuthorizeRole}' defined, but is using incorrect casing, when compared with role in global {SecurityExtensionNameConstants.AuthorizeRoles} section."));
                 }
             }
+        }
 
-            var pathItemAuthenticationSchemes = openApiOperation.Value.Extensions.ExtractAuthenticationSchemes();
-            if (pathItemAuthenticationSchemes.Any())
+        if (apiOperationAuthenticationSchemes.Any())
+        {
+            foreach (var pathItemAuthenticationScheme in apiOperationAuthenticationSchemes)
             {
-                foreach (var pathItemAuthenticationScheme in pathItemAuthenticationSchemes)
+                if (!globalAuthenticationSchemes.Contains(pathItemAuthenticationScheme, StringComparer.OrdinalIgnoreCase))
                 {
-                    if (!globalAuthenticationSchemes.Contains(pathItemAuthenticationScheme, StringComparer.OrdinalIgnoreCase))
-                    {
-                        logItems.Add(
-                            logItemFactory.Create(
-                                LogCategoryType.Error,
-                                ValidationRuleNameConstants.Security04,
-                                $"Operation '{openApiOperation.Value.OperationId.EnsureFirstCharacterToUpper()}' has the authentication scheme '{pathItemAuthenticationScheme}' defined which is not defined in the global {SecurityExtensionNameConstants.AuthenticationSchemes} section."));
-                    }
+                    logItems.Add(
+                        logItemFactory.Create(
+                            LogCategoryType.Error,
+                            ValidationRuleNameConstants.Security04,
+                            $"Operation '{operationName}' has the authentication scheme '{pathItemAuthenticationScheme}' defined which is not defined in the global {SecurityExtensionNameConstants.AuthenticationSchemes} section."));
+                }
+                else if (globalAuthenticationSchemes.Contains(pathItemAuthenticationScheme, StringComparer.OrdinalIgnoreCase) &&
+                         !globalAuthenticationSchemes.Contains(pathItemAuthenticationScheme, StringComparer.Ordinal))
+                {
+                    logItems.Add(
+                        logItemFactory.Create(
+                            logCategory,
+                            ValidationRuleNameConstants.Security07,
+                            $"Operation '{operationName}' has the authentication scheme '{pathItemAuthenticationScheme}' defined, but is using incorrect casing, when compared with authentication scheme in global {SecurityExtensionNameConstants.AuthenticationSchemes} section."));
                 }
             }
         }

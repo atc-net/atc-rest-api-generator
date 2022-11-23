@@ -8,6 +8,12 @@ public static class ValidationRuleNameConstants
     public const string Security02 = "SR0102";
     public const string Security03 = "SR0103";
     public const string Security04 = "SR0104";
+    public const string Security05 = "SR0105";
+    public const string Security06 = "SR0106";
+    public const string Security07 = "SR0107";
+    public const string Security08 = "SR0108";
+    public const string Security09 = "SR0109";
+    public const string Security10 = "SR0110";
 
     public const string Schema01 = "CR0101";
     public const string Schema02 = "CR0102";
