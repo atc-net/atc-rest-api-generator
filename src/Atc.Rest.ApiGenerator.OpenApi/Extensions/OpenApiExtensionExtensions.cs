@@ -16,7 +16,6 @@ public static class OpenApiExtensionExtensions
         }
 
         return openApiBoolean.Value;
-
     }
 
     public static IReadOnlyCollection<string> ExtractAuthorizationRoles(
