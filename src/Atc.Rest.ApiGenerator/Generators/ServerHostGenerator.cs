@@ -232,201 +232,6 @@ public class ServerHostGenerator
             .WithBody(codeBody);
     }
 
-    private static MemberDeclarationSyntax CreateStartupPropertyPrivateOptions(
-        bool useRestExtended)
-    {
-        var optionTypeName = "RestApiOptions";
-        if (useRestExtended)
-        {
-            optionTypeName = "RestApiExtendedOptions";
-        }
-
-        return SyntaxFactory.FieldDeclaration(
-                SyntaxFactory.VariableDeclaration(
-                        SyntaxFactory.IdentifierName(optionTypeName))
-                    .WithVariables(
-                        SyntaxFactory.SingletonSeparatedList(
-                            SyntaxFactory.VariableDeclarator(
-                                SyntaxFactory.Identifier("restApiOptions")))))
-            .WithModifiers(SyntaxTokenListFactory.PrivateReadonlyKeyword());
-    }
-
-    private static MemberDeclarationSyntax CreateStartupConstructor(
-        bool useRestExtended)
-    {
-        var optionTypeName = "RestApiOptions";
-        if (useRestExtended)
-        {
-            optionTypeName = "RestApiExtendedOptions";
-        }
-
-        var codeBody = SyntaxFactory.Block(
-            SyntaxFactory.ExpressionStatement(
-                SyntaxFactory.AssignmentExpression(
-                    SyntaxKind.SimpleAssignmentExpression,
-                    SyntaxFactory.IdentifierName("Configuration"),
-                    SyntaxFactory.IdentifierName("configuration"))),
-            SyntaxFactory.ExpressionStatement(
-                SyntaxFactory.AssignmentExpression(
-                    SyntaxKind.SimpleAssignmentExpression,
-                    SyntaxFactory.IdentifierName("restApiOptions"),
-                    SyntaxFactory.ObjectCreationExpression(
-                            SyntaxFactory.IdentifierName(optionTypeName))
-                        .WithInitializer(
-                            SyntaxFactory.InitializerExpression(
-                                SyntaxKind.ObjectInitializerExpression)))),
-            SyntaxFactory.ExpressionStatement(
-                SyntaxFactory.InvocationExpression(
-                        SyntaxMemberAccessExpressionFactory.Create("AddAssemblyPairs", "restApiOptions"))
-                    .WithArgumentList(
-                        SyntaxFactory.ArgumentList(
-                            SyntaxFactory.SeparatedList<ArgumentSyntax>(
-                                new SyntaxNodeOrToken[]
-                                {
-                                    SyntaxFactory.Argument(
-                                        SyntaxFactory.InvocationExpression(
-                                                SyntaxMemberAccessExpressionFactory.Create("GetAssembly", "Assembly"))
-                                            .WithArgumentList(
-                                                SyntaxFactory.ArgumentList(
-                                                    SyntaxFactory.SingletonSeparatedList(
-                                                        SyntaxFactory.Argument(
-                                                            SyntaxFactory.TypeOfExpression(
-                                                                SyntaxFactory.IdentifierName("ApiRegistration"))))))),
-                                    SyntaxTokenFactory.Comma(),
-                                    SyntaxFactory.Argument(
-                                        SyntaxFactory.InvocationExpression(
-                                                SyntaxMemberAccessExpressionFactory.Create("GetAssembly", "Assembly"))
-                                            .WithArgumentList(
-                                                SyntaxFactory.ArgumentList(
-                                                    SyntaxFactory.SingletonSeparatedList(
-                                                        SyntaxFactory.Argument(
-                                                            SyntaxFactory.TypeOfExpression(
-                                                                SyntaxFactory.IdentifierName("DomainRegistration"))))))),
-                                })))));
-
-        return SyntaxFactory.MethodDeclaration(
-                SyntaxFactory.IdentifierName("Startup"),
-                SyntaxFactory.MissingToken(SyntaxKind.IdentifierToken))
-            .WithModifiers(SyntaxTokenListFactory.PublicKeyword())
-            .WithParameterList(
-                SyntaxFactory.ParameterList(
-                    SyntaxFactory.SingletonSeparatedList(
-                        SyntaxFactory.Parameter(SyntaxFactory.Identifier("configuration"))
-                            .WithType(SyntaxFactory.IdentifierName("IConfiguration")))))
-            .WithBody(codeBody);
-    }
-
-    private static MemberDeclarationSyntax CreateStartupPropertyPublicConfiguration()
-        => SyntaxFactory.PropertyDeclaration(
-                SyntaxFactory.IdentifierName("IConfiguration"),
-                SyntaxFactory.Identifier("Configuration"))
-            .WithModifiers(SyntaxFactory.TokenList(SyntaxTokenFactory.PublicKeyword()))
-            .WithAccessorList(
-                SyntaxFactory.AccessorList(
-                    SyntaxFactory.SingletonList(
-                        SyntaxFactory.AccessorDeclaration(
-                                SyntaxKind.GetAccessorDeclaration)
-                            .WithSemicolonToken(SyntaxTokenFactory.Semicolon()))));
-
-    private static MemberDeclarationSyntax CreateStartupConfigureServices(
-        bool useRestExtended)
-    {
-        ArgumentListSyntax argumentList;
-        BlockSyntax bodyBlock;
-        if (useRestExtended)
-        {
-            argumentList = SyntaxFactory.ArgumentList(
-                SyntaxFactory.SeparatedList<ArgumentSyntax>(
-                    new SyntaxNodeOrToken[]
-                    {
-                        SyntaxFactory.Argument(SyntaxFactory.IdentifierName("restApiOptions")),
-                        SyntaxTokenFactory.Comma(),
-                        SyntaxFactory.Argument(SyntaxFactory.IdentifierName("Configuration")),
-                    }));
-
-            bodyBlock = SyntaxFactory.Block(
-                SyntaxFactory.ExpressionStatement(
-                    SyntaxFactory.InvocationExpression(
-                        SyntaxFactory.MemberAccessExpression(
-                            SyntaxKind.SimpleMemberAccessExpression,
-                            SyntaxFactory.IdentifierName("services"),
-                            SyntaxFactory.GenericName(
-                                    SyntaxFactory.Identifier("ConfigureOptions"))
-                                .WithTypeArgumentList(
-                                    SyntaxFactory.TypeArgumentList(
-                                        SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
-                                            SyntaxFactory.IdentifierName("ConfigureSwaggerDocOptions"))))))),
-                SyntaxFactory.ExpressionStatement(
-                    SyntaxFactory.InvocationExpression(
-                            SyntaxFactory.MemberAccessExpression(
-                                SyntaxKind.SimpleMemberAccessExpression,
-                                SyntaxFactory.IdentifierName("services"),
-                                SyntaxFactory.GenericName(SyntaxFactory.Identifier("AddRestApi"))
-                                    .WithTypeArgumentList(
-                                        SyntaxFactory.TypeArgumentList(
-                                            SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
-                                                SyntaxFactory.IdentifierName("Startup"))))))
-                        .WithArgumentList(argumentList)));
-        }
-        else
-        {
-            argumentList = SyntaxFactory.ArgumentList(
-                SyntaxFactory.SingletonSeparatedList(
-                    SyntaxFactory.Argument(SyntaxFactory.IdentifierName("restApiOptions"))));
-
-            bodyBlock = SyntaxFactory.Block(
-                SyntaxFactory.ExpressionStatement(
-                    SyntaxFactory.InvocationExpression(
-                            SyntaxFactory.MemberAccessExpression(
-                                SyntaxKind.SimpleMemberAccessExpression,
-                                SyntaxFactory.IdentifierName("services"),
-                                SyntaxFactory.GenericName(SyntaxFactory.Identifier("AddRestApi"))
-                                    .WithTypeArgumentList(
-                                        SyntaxFactory.TypeArgumentList(
-                                            SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
-                                                SyntaxFactory.IdentifierName("Startup"))))))
-                        .WithArgumentList(argumentList)));
-        }
-
-        return SyntaxFactory.MethodDeclaration(
-                SyntaxFactory.PredefinedType(SyntaxTokenFactory.VoidKeyword()),
-                SyntaxFactory.Identifier("ConfigureServices"))
-            .WithModifiers(
-                SyntaxFactory.TokenList(SyntaxTokenFactory.PublicKeyword()))
-            .WithParameterList(
-                SyntaxFactory.ParameterList(
-                    SyntaxFactory.SingletonSeparatedList(
-                        SyntaxFactory.Parameter(SyntaxFactory.Identifier("services"))
-                            .WithType(SyntaxFactory.IdentifierName("IServiceCollection")))))
-            .WithBody(bodyBlock);
-    }
-
-    private static MemberDeclarationSyntax CreateStartupConfigure()
-        => SyntaxFactory.MethodDeclaration(
-                SyntaxFactory.PredefinedType(SyntaxTokenFactory.VoidKeyword()),
-                SyntaxFactory.Identifier("Configure"))
-            .WithModifiers(SyntaxTokenList.Create(SyntaxTokenFactory.PublicKeyword()))
-            .WithParameterList(
-                SyntaxFactory.ParameterList(
-                    SyntaxFactory.SeparatedList<ParameterSyntax>(
-                        new SyntaxNodeOrToken[]
-                        {
-                            SyntaxFactory.Parameter(SyntaxFactory.Identifier("app"))
-                                .WithType(SyntaxFactory.IdentifierName("IApplicationBuilder")),
-                            SyntaxTokenFactory.Comma(), SyntaxFactory.Parameter(SyntaxFactory.Identifier("env"))
-                                .WithType(SyntaxFactory.IdentifierName("IWebHostEnvironment")),
-                        })))
-            .WithBody(
-                SyntaxFactory.Block(
-                    SyntaxFactory.SingletonList<StatementSyntax>(
-                        SyntaxFactory.ExpressionStatement(
-                            SyntaxFactory.InvocationExpression(
-                                    SyntaxMemberAccessExpressionFactory.Create("ConfigureRestApi", "app"))
-                                .WithArgumentList(
-                                    SyntaxArgumentListFactory.CreateWithTwoArgumentItems(
-                                        SyntaxFactory.Argument(SyntaxFactory.IdentifierName("env")),
-                                        SyntaxFactory.Argument(SyntaxFactory.IdentifierName("restApiOptions"))))))));
-
     private static MemberDeclarationSyntax CreateWebApplicationFactoryConfigureWebHost()
         => SyntaxFactory.MethodDeclaration(
                 SyntaxFactory.PredefinedType(SyntaxTokenFactory.VoidKeyword()),
@@ -1054,59 +859,28 @@ public class ServerHostGenerator
 
     private void ScaffoldStartupFile()
     {
-        // Create compilationUnit
-        var compilationUnit = SyntaxFactory.CompilationUnit();
-
-        // Create a namespace
-        var @namespace = SyntaxProjectFactory.CreateNamespace(projectOptions, withAutoGen: false);
-
-        // Create class
-        var classDeclaration = SyntaxClassDeclarationFactory.Create("Startup");
-
-        // Create Member
-        var memberDeclarationPropertyPrivateOptions = CreateStartupPropertyPrivateOptions(projectOptions.UseRestExtended);
-        var memberDeclarationConstructor = CreateStartupConstructor(projectOptions.UseRestExtended);
-        var memberDeclarationPropertyPublicConfiguration = CreateStartupPropertyPublicConfiguration();
-        var memberDeclarationConfigureServices = CreateStartupConfigureServices(projectOptions.UseRestExtended);
-        var memberDeclarationConfigure = CreateStartupConfigure();
-
-        // Add member to class
-        classDeclaration = classDeclaration.AddMembers(memberDeclarationPropertyPrivateOptions);
-        classDeclaration = classDeclaration.AddMembers(memberDeclarationConstructor);
-        classDeclaration = classDeclaration.AddMembers(memberDeclarationPropertyPublicConfiguration);
-        classDeclaration = classDeclaration.AddMembers(memberDeclarationConfigureServices);
-        classDeclaration = classDeclaration.AddMembers(memberDeclarationConfigure);
-
-        // Add class to namespace
-        @namespace = @namespace.AddMembers(classDeclaration);
-
-        // Add namespace to compilationUnit
-        compilationUnit = compilationUnit.AddMembers(@namespace);
-
-        var codeAsString = compilationUnit
-            .NormalizeWhitespace()
-            .ToFullString()
-            .EnsureEnvironmentNewLines()
-            .FormatAutoPropertiesOnOneLine()
-            .FormatRemoveEmptyBracketsInitialize()
-            .FormatPublicPrivateLines()
-            .EnsureFileScopedNamespace();
-
         var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "Startup.cs"));
 
         if (file.Exists)
         {
             logger.LogTrace($"{EmojisConstants.FileNotUpdated}   {file.FullName} nothing to update");
+            return;
         }
-        else
-        {
-            var contentWriter = new ContentWriter(logger);
-            contentWriter.Write(
-                projectOptions.PathForSrcGenerate,
-                file,
-                ContentWriterArea.Src,
-                codeAsString);
-        }
+
+        //// TODO: Does it make sense to validate on clientfoldername here?!
+        var fullNamespace = string.IsNullOrEmpty(projectOptions.ClientFolderName)
+            ? $"{projectOptions.ProjectName}"
+            : $"{projectOptions.ProjectName}.{projectOptions.ClientFolderName}";
+
+        var contentGenerator = new ContentGeneratorServerStartup(
+            ContentGeneratorServerStartupParametersFactory.Create(fullNamespace));
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectOptions.PathForSrcGenerate,
+            file,
+            ContentWriterArea.Src,
+            contentGenerator.Generate());
     }
 
     private void ScaffoldWebConfig()
@@ -1141,6 +915,7 @@ public class ServerHostGenerator
 
     private void ScaffoldConfigureSwaggerDocOptions()
     {
+        // TODO: Does it make sense to validate on clientfoldername here?!
         var fullNamespace = string.IsNullOrEmpty(projectOptions.ClientFolderName)
             ? $"{projectOptions.ProjectName}"
             : $"{projectOptions.ProjectName}.{projectOptions.ClientFolderName}";
