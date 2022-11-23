@@ -1,6 +1,4 @@
-using Atc.Rest.ApiGenerator.Framework.Writers;
-
-namespace Atc.Rest.ApiGenerator.Framework.Interfaces;
+namespace Atc.Rest.ApiGenerator.Framework.Writers;
 
 public interface IContentWriter
 {

@@ -1,4 +1,4 @@
-namespace Atc.Rest.ApiGenerator.Framework.Interfaces;
+namespace Atc.Rest.ApiGenerator.Framework.ContentGenerators;
 
 public interface IContentGenerator
 {
