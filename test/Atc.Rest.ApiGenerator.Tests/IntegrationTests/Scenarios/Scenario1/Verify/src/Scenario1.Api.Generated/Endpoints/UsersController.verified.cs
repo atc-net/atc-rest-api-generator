@@ -8,7 +8,6 @@ namespace Scenario1.Api.Generated.Endpoints;
 
 /// <summary>
 /// Endpoint definitions.
-/// Area: Users.
 /// </summary>
 [ApiController]
 [Route("/api/v1/users")]
@@ -18,7 +17,6 @@ public class UsersController : ControllerBase
     /// <summary>
     /// Description: Get all users.
     /// Operation: GetUsers.
-    /// Area: Users.
     /// </summary>
     [HttpGet]
     [ProducesResponseType(typeof(List<User>), StatusCodes.Status200OK)]

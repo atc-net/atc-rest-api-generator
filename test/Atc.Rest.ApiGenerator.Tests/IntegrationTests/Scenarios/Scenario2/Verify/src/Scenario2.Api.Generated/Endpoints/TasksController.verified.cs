@@ -8,7 +8,6 @@ namespace Scenario2.Api.Generated.Endpoints;
 
 /// <summary>
 /// Endpoint definitions.
-/// Area: Tasks.
 /// </summary>
 [ApiController]
 [Route("/api/v1/tasks")]
@@ -18,7 +17,6 @@ public class TasksController : ControllerBase
     /// <summary>
     /// Description: Returns tasks.
     /// Operation: GetTasks.
-    /// Area: Tasks.
     /// </summary>
     [HttpGet]
     [ProducesResponseType(typeof(List<Scenario2.Api.Generated.Contracts.Tasks.Task>), StatusCodes.Status200OK)]

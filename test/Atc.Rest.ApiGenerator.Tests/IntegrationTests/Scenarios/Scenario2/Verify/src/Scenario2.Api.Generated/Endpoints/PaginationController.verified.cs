@@ -8,7 +8,6 @@ namespace Scenario2.Api.Generated.Endpoints;
 
 /// <summary>
 /// Endpoint definitions.
-/// Area: Pagination.
 /// </summary>
 [ApiController]
 [Route("/api/v1/pagination")]
@@ -18,7 +17,6 @@ public class PaginationController : ControllerBase
     /// <summary>
     /// Description: Your GET endpoint.
     /// Operation: GetPaginatedListOfInts.
-    /// Area: Pagination.
     /// </summary>
     [HttpGet("list/int")]
     [ProducesResponseType(typeof(Pagination<int>), StatusCodes.Status200OK)]
@@ -30,7 +28,6 @@ public class PaginationController : ControllerBase
     /// <summary>
     /// Description: Your GET endpoint.
     /// Operation: GetPaginatedListOfStrings.
-    /// Area: Pagination.
     /// </summary>
     [HttpGet("list/string")]
     [ProducesResponseType(typeof(Pagination<string>), StatusCodes.Status200OK)]

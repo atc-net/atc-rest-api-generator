@@ -8,7 +8,6 @@ namespace Scenario2.Api.Generated.Endpoints;
 
 /// <summary>
 /// Endpoint definitions.
-/// Area: Orders.
 /// </summary>
 [ApiController]
 [Route("/api/v1/orders")]
@@ -18,7 +17,6 @@ public class OrdersController : ControllerBase
     /// <summary>
     /// Description: Get orders.
     /// Operation: GetOrders.
-    /// Area: Orders.
     /// </summary>
     [HttpGet]
     [ProducesResponseType(typeof(Pagination<Order>), StatusCodes.Status200OK)]
@@ -33,7 +31,6 @@ public class OrdersController : ControllerBase
     /// <summary>
     /// Description: Get order by id.
     /// Operation: GetOrderById.
-    /// Area: Orders.
     /// </summary>
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(Order), StatusCodes.Status200OK)]
@@ -48,7 +45,6 @@ public class OrdersController : ControllerBase
     /// <summary>
     /// Description: Update part of order by id.
     /// Operation: PatchOrdersId.
-    /// Area: Orders.
     /// </summary>
     [HttpPatch("{id}")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]

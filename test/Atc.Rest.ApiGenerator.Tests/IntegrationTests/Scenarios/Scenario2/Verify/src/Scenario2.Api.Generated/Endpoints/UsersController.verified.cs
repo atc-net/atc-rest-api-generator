@@ -8,7 +8,6 @@ namespace Scenario2.Api.Generated.Endpoints;
 
 /// <summary>
 /// Endpoint definitions.
-/// Area: Users.
 /// </summary>
 [ApiController]
 [Route("/api/v1/users")]
@@ -18,7 +17,6 @@ public class UsersController : ControllerBase
     /// <summary>
     /// Description: Get all users.
     /// Operation: GetUsers.
-    /// Area: Users.
     /// </summary>
     [HttpGet]
     [ProducesResponseType(typeof(List<User>), StatusCodes.Status200OK)]
@@ -31,7 +29,6 @@ public class UsersController : ControllerBase
     /// <summary>
     /// Description: Create a new user.
     /// Operation: PostUser.
-    /// Area: Users.
     /// </summary>
     [HttpPost]
     [ProducesResponseType(typeof(string), StatusCodes.Status201Created)]
@@ -46,7 +43,6 @@ public class UsersController : ControllerBase
     /// <summary>
     /// Description: Get user by id.
     /// Operation: GetUserById.
-    /// Area: Users.
     /// </summary>
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
@@ -61,7 +57,6 @@ public class UsersController : ControllerBase
     /// <summary>
     /// Description: Update user by id.
     /// Operation: UpdateUserById.
-    /// Area: Users.
     /// </summary>
     [HttpPut("{id}")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
@@ -77,7 +72,6 @@ public class UsersController : ControllerBase
     /// <summary>
     /// Description: Delete user by id.
     /// Operation: DeleteUserById.
-    /// Area: Users.
     /// </summary>
     [HttpDelete("{id}")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
@@ -92,7 +86,6 @@ public class UsersController : ControllerBase
     /// <summary>
     /// Description: Update gender on a user.
     /// Operation: UpdateMyTestGender.
-    /// Area: Users.
     /// </summary>
     [HttpPut("{id}/gender")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
@@ -108,7 +101,6 @@ public class UsersController : ControllerBase
     /// <summary>
     /// Description: Get user by email.
     /// Operation: GetUserByEmail.
-    /// Area: Users.
     /// </summary>
     [HttpGet("email")]
     [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]

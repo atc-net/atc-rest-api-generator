@@ -8,7 +8,6 @@ namespace Scenario2.Api.Generated.Endpoints;
 
 /// <summary>
 /// Endpoint definitions.
-/// Area: RouteWithDash.
 /// </summary>
 [ApiController]
 [Route("/api/v1/route-with-dash")]
@@ -18,7 +17,6 @@ public class RouteWithDashController : ControllerBase
     /// <summary>
     /// Description: Your GET endpoint.
     /// Operation: GetRouteWithDash.
-    /// Area: RouteWithDash.
     /// </summary>
     [HttpGet]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]

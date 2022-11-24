@@ -8,7 +8,6 @@ namespace Scenario2.Api.Generated.Endpoints;
 
 /// <summary>
 /// Endpoint definitions.
-/// Area: Items.
 /// </summary>
 [ApiController]
 [Route("/api/v1/items")]
@@ -18,7 +17,6 @@ public class ItemsController : ControllerBase
     /// <summary>
     /// Description: Create a new item.
     /// Operation: CreateItem.
-    /// Area: Items.
     /// </summary>
     [HttpPost]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
@@ -32,7 +30,6 @@ public class ItemsController : ControllerBase
     /// <summary>
     /// Description: Updates an item.
     /// Operation: UpdateItem.
-    /// Area: Items.
     /// </summary>
     [HttpPut("{id}")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]

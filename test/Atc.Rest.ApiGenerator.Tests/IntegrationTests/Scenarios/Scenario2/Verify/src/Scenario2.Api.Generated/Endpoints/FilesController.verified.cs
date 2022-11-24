@@ -8,7 +8,6 @@ namespace Scenario2.Api.Generated.Endpoints;
 
 /// <summary>
 /// Endpoint definitions.
-/// Area: Files.
 /// </summary>
 [ApiController]
 [Route("/api/v1/files")]
@@ -18,7 +17,6 @@ public class FilesController : ControllerBase
     /// <summary>
     /// Description: Get File By Id.
     /// Operation: GetFileById.
-    /// Area: Files.
     /// </summary>
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(byte[]), StatusCodes.Status200OK)]
@@ -32,7 +30,6 @@ public class FilesController : ControllerBase
     /// <summary>
     /// Description: Upload multi files as form data.
     /// Operation: UploadMultiFilesAsFormData.
-    /// Area: Files.
     /// </summary>
     [HttpPost("form-data/multiFile")]
     [RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue)]
@@ -47,7 +44,6 @@ public class FilesController : ControllerBase
     /// <summary>
     /// Description: Upload a file as OctetStream.
     /// Operation: UploadSingleFileAsFormData.
-    /// Area: Files.
     /// </summary>
     [HttpPost("form-data/singleFile")]
     [RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue)]
@@ -62,7 +58,6 @@ public class FilesController : ControllerBase
     /// <summary>
     /// Description: Upload a file as FormData.
     /// Operation: UploadSingleObjectWithFileAsFormData.
-    /// Area: Files.
     /// </summary>
     [HttpPost("form-data/singleObject")]
     [RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue)]
@@ -77,7 +72,6 @@ public class FilesController : ControllerBase
     /// <summary>
     /// Description: Upload files as FormData.
     /// Operation: UploadSingleObjectWithFilesAsFormData.
-    /// Area: Files.
     /// </summary>
     [HttpPost("form-data/singleObjectMultiFile")]
     [RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue)]

@@ -8,7 +8,6 @@ namespace Scenario2.Api.Generated.Endpoints;
 
 /// <summary>
 /// Endpoint definitions.
-/// Area: List.
 /// </summary>
 [ApiController]
 [Route("/api/v1/list")]
@@ -18,7 +17,6 @@ public class ListController : ControllerBase
     /// <summary>
     /// Description: Your GET endpoint.
     /// Operation: GetListOfInts.
-    /// Area: List.
     /// </summary>
     [HttpGet("int")]
     [ProducesResponseType(typeof(List<int>), StatusCodes.Status200OK)]
@@ -30,7 +28,6 @@ public class ListController : ControllerBase
     /// <summary>
     /// Description: Your GET endpoint.
     /// Operation: GetListOfStrings.
-    /// Area: List.
     /// </summary>
     [HttpGet("string")]
     [ProducesResponseType(typeof(List<string>), StatusCodes.Status200OK)]

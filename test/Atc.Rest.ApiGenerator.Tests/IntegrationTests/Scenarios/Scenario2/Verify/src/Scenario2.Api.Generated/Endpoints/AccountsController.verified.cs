@@ -8,7 +8,6 @@ namespace Scenario2.Api.Generated.Endpoints;
 
 /// <summary>
 /// Endpoint definitions.
-/// Area: Accounts.
 /// </summary>
 [ApiController]
 [Route("/api/v1/accounts")]
@@ -18,7 +17,6 @@ public class AccountsController : ControllerBase
     /// <summary>
     /// Description: Update name of account.
     /// Operation: UpdateAccountName.
-    /// Area: Accounts.
     /// </summary>
     [HttpPut("{accountId}/name")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
@@ -32,7 +30,6 @@ public class AccountsController : ControllerBase
     /// <summary>
     /// Description: Set name of account.
     /// Operation: SetAccountName.
-    /// Area: Accounts.
     /// </summary>
     [HttpPost("{accountId}/name")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]

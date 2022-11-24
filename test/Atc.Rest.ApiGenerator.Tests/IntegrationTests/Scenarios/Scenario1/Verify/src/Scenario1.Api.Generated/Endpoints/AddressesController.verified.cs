@@ -8,7 +8,6 @@ namespace Scenario1.Api.Generated.Endpoints;
 
 /// <summary>
 /// Endpoint definitions.
-/// Area: Addresses.
 /// </summary>
 [ApiController]
 [Route("/api/v1/addresses")]
@@ -18,7 +17,6 @@ public class AddressesController : ControllerBase
     /// <summary>
     /// Description: Get addresses by postal code.
     /// Operation: GetAddressesByPostalCodes.
-    /// Area: Addresses.
     /// </summary>
     [HttpGet("{postalCode}")]
     [ProducesResponseType(typeof(List<Address>), StatusCodes.Status200OK)]

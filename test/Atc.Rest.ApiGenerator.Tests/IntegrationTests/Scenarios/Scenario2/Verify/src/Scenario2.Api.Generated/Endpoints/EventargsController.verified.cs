@@ -8,7 +8,6 @@ namespace Scenario2.Api.Generated.Endpoints;
 
 /// <summary>
 /// Endpoint definitions.
-/// Area: Eventargs.
 /// </summary>
 [ApiController]
 [Route("/api/v1/eventArgs")]
@@ -18,7 +17,6 @@ public class EventargsController : ControllerBase
     /// <summary>
     /// Description: Get EventArgs List.
     /// Operation: GetEventArgs.
-    /// Area: Eventargs.
     /// </summary>
     [HttpGet]
     [ProducesResponseType(typeof(List<Scenario2.Api.Generated.Contracts.Eventargs.EventArgs>), StatusCodes.Status200OK)]
@@ -30,7 +28,6 @@ public class EventargsController : ControllerBase
     /// <summary>
     /// Description: Get EventArgs By Id.
     /// Operation: GetEventArgsById.
-    /// Area: Eventargs.
     /// </summary>
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(Scenario2.Api.Generated.Contracts.Eventargs.EventArgs), StatusCodes.Status200OK)]
