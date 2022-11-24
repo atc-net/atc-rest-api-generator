@@ -9,6 +9,7 @@ namespace Scenario2.Api.Generated.Endpoints;
 /// <summary>
 /// Endpoint definitions.
 /// </summary>
+[Authorize]
 [ApiController]
 [Route("/api/v1/orders")]
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
@@ -18,6 +19,7 @@ public class OrdersController : ControllerBase
     /// Description: Get orders.
     /// Operation: GetOrders.
     /// </summary>
+    [Authorize]
     [HttpGet]
     [ProducesResponseType(typeof(Pagination<Order>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -32,6 +34,7 @@ public class OrdersController : ControllerBase
     /// Description: Get order by id.
     /// Operation: GetOrderById.
     /// </summary>
+    [AllowAnonymous]
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(Order), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -46,6 +49,7 @@ public class OrdersController : ControllerBase
     /// Description: Update part of order by id.
     /// Operation: PatchOrdersId.
     /// </summary>
+    [Authorize(Roles = "admin,operator")]
     [HttpPatch("{id}")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

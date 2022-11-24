@@ -9,6 +9,7 @@ namespace Scenario1.Api.Generated.Endpoints;
 /// <summary>
 /// Endpoint definitions.
 /// </summary>
+[Authorize]
 [ApiController]
 [Route("/api/v1/addresses")]
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
@@ -18,6 +19,7 @@ public class AddressesController : ControllerBase
     /// Description: Get addresses by postal code.
     /// Operation: GetAddressesByPostalCodes.
     /// </summary>
+    [Authorize(Roles = "operator")]
     [HttpGet("{postalCode}")]
     [ProducesResponseType(typeof(List<Address>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]

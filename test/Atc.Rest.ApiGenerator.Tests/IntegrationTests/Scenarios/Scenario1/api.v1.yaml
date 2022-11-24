@@ -8,8 +8,12 @@ info:
 servers:
   - url: /api/v1
     description: Api version 1.0
+x-authorize-roles:
+  - admin
+  - operator
 paths:
   /users:
+    x-authentication-required: true
     get:
       summary: Get all users
       description: Get all users
@@ -25,6 +29,8 @@ paths:
         '409':
           description: Conflict
   '/addresses/{postalCode}':
+    x-authentication-required: true
+    x-authorize-roles: [operator]
     get:
       summary: Get addresses by postal code
       description: Get addresses by postal code
@@ -117,4 +123,3 @@ components:
         - name
         - alpha2Code
         - alpha3Code
-

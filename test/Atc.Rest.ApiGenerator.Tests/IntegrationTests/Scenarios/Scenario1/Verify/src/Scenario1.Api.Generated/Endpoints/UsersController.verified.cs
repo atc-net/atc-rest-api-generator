@@ -9,6 +9,7 @@ namespace Scenario1.Api.Generated.Endpoints;
 /// <summary>
 /// Endpoint definitions.
 /// </summary>
+[Authorize]
 [ApiController]
 [Route("/api/v1/users")]
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
@@ -18,6 +19,7 @@ public class UsersController : ControllerBase
     /// Description: Get all users.
     /// Operation: GetUsers.
     /// </summary>
+    [Authorize]
     [HttpGet]
     [ProducesResponseType(typeof(List<User>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]

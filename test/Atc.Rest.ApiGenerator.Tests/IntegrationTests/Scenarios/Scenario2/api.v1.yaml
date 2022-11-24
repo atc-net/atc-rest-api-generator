@@ -8,8 +8,12 @@ info:
 servers:
   - url: /api/v1
     description: Api version 1.0
+x-authorize-roles:
+  - admin
+  - operator
 paths:
   /orders:
+    x-authentication-required: true
     get:
       tags:
         - Orders
@@ -34,12 +38,15 @@ paths:
         '404':
           description: Not Found
   '/orders/{id}':
+    x-authentication-required: true
+    x-authorize-roles: [operator]
     get:
       tags:
         - Orders
       summary: Get order by id
       description: Get order by id
       operationId: getOrderById
+      x-authentication-required: false
       parameters:
         - name: myEmail
           in: query
@@ -61,6 +68,7 @@ paths:
       summary: Update part of order by id
       description: Update part of order by id
       operationId: patchOrdersId
+      x-authorize-roles: [admin,operator]
       parameters:
         - name: myTestHeader
           in: header
