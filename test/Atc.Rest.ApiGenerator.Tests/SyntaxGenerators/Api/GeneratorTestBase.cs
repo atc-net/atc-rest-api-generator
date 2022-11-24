@@ -27,6 +27,7 @@ public abstract class GeneratorTestBase
         return settings;
     }
 
+    [SuppressMessage("Info Code Smell", "S4457:Split this method into two", Justification = "OK for now.")]
     protected static async Task<ApiProjectOptions> CreateApiProjectAsync(
         GeneratorTestInput testInput)
     {

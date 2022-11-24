@@ -1,5 +1,6 @@
 namespace Atc.Rest.ApiGenerator.CLI;
 
+[SuppressMessage("Info Code Smell", "S4457:Split this method into two", Justification = "OK for now.")]
 public static class ApiOptionsHelper
 {
     public static async Task<ApiOptions> CreateDefault(
