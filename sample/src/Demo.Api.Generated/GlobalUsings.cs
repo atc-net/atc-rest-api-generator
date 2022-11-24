@@ -21,5 +21,6 @@ global using Demo.Api.Generated.Contracts.RouteWithDash;
 global using Demo.Api.Generated.Contracts.Tasks;
 global using Demo.Api.Generated.Contracts.Users;
 
+global using Microsoft.AspNetCore.Authorization;
 global using Microsoft.AspNetCore.Http;
 global using Microsoft.AspNetCore.Mvc;
