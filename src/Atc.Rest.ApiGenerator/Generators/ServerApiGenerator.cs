@@ -372,7 +372,8 @@ public class ServerApiGenerator
             "Atc.Rest.Results",
         };
 
-        if (projectOptions.ApiOptions.Generator.UseAuthorization)
+        if (projectOptions.ApiOptions.Generator.UseAuthorization ||
+            projectOptions.Document.IsSpecificationUsingAuthorization())
         {
             requiredUsings.Add("Microsoft.AspNetCore.Authorization");
         }

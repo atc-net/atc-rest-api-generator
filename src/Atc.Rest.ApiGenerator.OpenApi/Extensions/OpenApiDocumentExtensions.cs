@@ -1,9 +1,33 @@
 // ReSharper disable InvertIf
-
+// ReSharper disable LoopCanBeConvertedToQuery
 namespace Atc.Rest.ApiGenerator.OpenApi.Extensions;
 
 public static class OpenApiDocumentExtensions
 {
+    public static bool IsSpecificationUsingAuthorization(
+        this OpenApiDocument openApiDocument)
+    {
+        foreach (var openApiPath in openApiDocument.Paths)
+        {
+            var apiPathAuthentication = openApiPath.Value.Extensions.ExtractAuthenticationRequired();
+            if (apiPathAuthentication is not null && apiPathAuthentication.Value)
+            {
+                return true;
+            }
+
+            foreach (var openApiOperation in openApiPath.Value.Operations)
+            {
+                var apiOperationAuthentication = openApiOperation.Value.Extensions.ExtractAuthenticationRequired();
+                if (apiOperationAuthentication is not null && apiOperationAuthentication.Value)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     public static bool HasAllPathsAuthenticationRequiredSet(
         this OpenApiDocument openApiDocument,
         string area)
