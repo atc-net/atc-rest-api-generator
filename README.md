@@ -311,6 +311,107 @@ flowchart TB;
 - The API-project is the layer with all the contracts, interfaces, result classes and endpoints. Project suffix: `.Api.Generated`.
 - The Domain-project is the layer where handlers can be implemented with necessary business logic. Project suffix: `.Domain`.
 
+## Security - supporting role-based security and custom authentication-schemes
+
+To support role-based security and custom authentication-schemes, support is implemented for 3 custom extension tags in OpenApi specifications.
+
+> x-authorize-roles (role array)
+>
+> x-authentication-schemes (auth-scheme array)
+>
+> x-authentication-required (true/false boolean)
+
+At the root level of the specification the available roles and auth-schemes possible to use in paths (controllers) / path-items (actions/methods) should be specified. These are used to validate against defined roles other places in the specification.
+
+### Roles and authentication-scheme validation
+
+When reading the OpenApi specification, a lot of validations are being run against these 3 custom extension tags. E.g. validating that any path/path-item does not have roles and/or auth-schemes defined, which are not defined globally in the specification. Other validations are also in place to ensure that the combination of the 3 new extensions "tags" are set correctly.
+
+### Logic for determining `[Authorize]` or `[AllowAnonymous]` attributes
+
+The 3 extension "tags" can be specified at path/path-item levels.
+
+The CLI command argument "--useAuthorization" is still taken into consideration when generating the [Authorize] attributes.
+
+If all path-items under a given path all have x-authentication-required set to true, and --useAuthorization is set to false, then a [Authorize] header will still be added to the generated controller class. Otherwise [Authorize(Roles=x,y,z)] and [AllowAnonymous] will be applied the necessary places on the actions/methods in the controller.
+
+Authentication-Schemes and Authorize-Roles defined at path/controller level is taken into consideration when generating [Authorize] attributes for path-item/action/method level.
+
+### Example
+
+> NOTE: Tags, parameters, responses, request-bodies, schemas etc. are removed for brevity, so the references in spec below are not valid - The specification is only illustrating the various places the 3 new extension tags can be applied.
+
+```yaml
+info:
+  title: DEMO API
+  description: DEMO API
+  version: v1
+  contact:
+    name: ATC
+  license:
+    name: MIT
+servers:
+  - url: /api/v1
+    description: Api version 1.0
+x-authorize-roles:
+  - api.execute.read
+  - api.execute.write
+  - admin
+  - operator
+x-authentication-schemes:
+  - OpenIddict.Validation.AspNetCore
+tags:
+  - name: DEMO
+    description: ''
+paths:
+  /data-templates:
+    x-authentication-required: true
+    x-authorize-roles: [operator]
+    x-authentication-schemes: [OpenIddict.Validation.AspNetCore]
+    get:
+      summary: Returns a list of the groups data templates
+      operationId: getDataTemplates
+      x-authorize-roles: [admin,operator]
+      x-authentication-schemes: [OpenIddict.Validation.AspNetCore]
+    post:
+      summary: Create a new data template
+      operationId: createDataTemplate
+      x-authentication-required: false
+  '/data-templates/{dataTemplateId}':
+    x-authentication-required: true
+    x-authorize-roles: [operator]
+    get:
+      summary: Returns a specific data template
+      operationId: getDataTemplateById
+      x-authentication-required: true
+      x-authorize-roles: [api.execute.read]
+    delete:
+      summary: Removes a specific data template
+      operationId: deleteDataTemplateById
+    put:
+      summary: Updates a specific data template
+      operationId: updateDataTemplateById
+  '/data-templates/{dataTemplateId}/tags':
+    post:
+      summary: Creates a new data template tag
+      operationId: createDataTemplateTag
+      x-authorize-roles: [api.execute.read]
+    delete:
+      summary: Deletes a data template tag
+      operationId: deleteDataTemplateTag
+      x-authentication-schemes: [OpenIddict.Validation.AspNetCore]
+  '/data-templates/{dataTemplateId}/tags/{dataTemplateTagId}':
+    x-authentication-required: false
+    put:
+      summary: Updates a specific data template tag
+      operationId: updateDataTemplateTagById
+components:
+  schemas: {}
+  requestBodies: {}
+  responses: {}
+  securitySchemes: {}
+```
+
 ## How to contribute
 
 [Contribution Guidelines](https://atc-net.github.io/introduction/about-atc#how-to-contribute)
