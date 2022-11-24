@@ -78,7 +78,7 @@ public static class OpenApiDocumentExtensions
         return names
             .Select(x => x.PascalCase(true))
             .OrderBy(x => x)
-            .ToList()!;
+            .ToList();
     }
 
     [SuppressMessage("Design", "CA1055:URI-like return values should not be strings", Justification = "OK.")]
