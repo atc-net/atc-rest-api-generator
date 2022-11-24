@@ -115,19 +115,19 @@
 
 #### GenerateServerApi
 >```csharp
->bool GenerateServerApi(ILogger logger, IApiOperationExtractor apiOperationExtractor, string projectPrefixName, DirectoryInfo outputPath, DirectoryInfo outputTestPath, Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument, ApiOptions apiOptions, bool useCodingRules)
+>bool GenerateServerApi(ILogger logger, IApiOperationExtractor apiOperationExtractor, string projectPrefixName, DirectoryInfo outputPath, DirectoryInfo outputTestPath, OpenApiDocumentContainer apiDocumentContainer, ApiOptions apiOptions, bool useCodingRules)
 >```
 #### GenerateServerCSharpClient
 >```csharp
->bool GenerateServerCSharpClient(ILogger logger, IApiOperationExtractor apiOperationExtractor, string projectPrefixName, string clientFolderName, DirectoryInfo outputPath, Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument, bool excludeEndpointGeneration, ApiOptions apiOptions, bool useCodingRules)
+>bool GenerateServerCSharpClient(ILogger logger, IApiOperationExtractor apiOperationExtractor, string projectPrefixName, string clientFolderName, DirectoryInfo outputPath, OpenApiDocumentContainer apiDocumentContainer, bool excludeEndpointGeneration, ApiOptions apiOptions, bool useCodingRules)
 >```
 #### GenerateServerDomain
 >```csharp
->bool GenerateServerDomain(ILogger logger, string projectPrefixName, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath, Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument, ApiOptions apiOptions, bool useCodingRules, DirectoryInfo apiPath)
+>bool GenerateServerDomain(ILogger logger, string projectPrefixName, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath, OpenApiDocumentContainer apiDocumentContainer, ApiOptions apiOptions, bool useCodingRules, DirectoryInfo apiPath)
 >```
 #### GenerateServerHost
 >```csharp
->bool GenerateServerHost(ILogger logger, IApiOperationExtractor apiOperationExtractor, string projectPrefixName, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath, Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument, ApiOptions apiOptions, bool usingCodingRules, DirectoryInfo apiPath, DirectoryInfo domainPath)
+>bool GenerateServerHost(ILogger logger, IApiOperationExtractor apiOperationExtractor, string projectPrefixName, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath, OpenApiDocumentContainer apiDocumentContainer, ApiOptions apiOptions, bool usingCodingRules, DirectoryInfo apiPath, DirectoryInfo domainPath)
 >```
 #### GenerateServerSln
 >```csharp
@@ -175,40 +175,6 @@
 
 <br />
 
-## HttpClientHelper
-
->```csharp
->public static class HttpClientHelper
->```
-
-### Static Methods
-
-#### DownloadToTempFile
->```csharp
->FileInfo DownloadToTempFile(ILogger logger, string apiDesignPath)
->```
-#### GetAsString
->```csharp
->string GetAsString(ILogger logger, string url, string displayName, CancellationToken cancellationToken = null)
->```
-
-<br />
-
-## LogItemHelper
-
->```csharp
->public static class LogItemHelper
->```
-
-### Static Methods
-
-#### Create
->```csharp
->LogKeyValueItem Create(LogCategoryType logCategoryType, string ruleName, string description)
->```
-
-<br />
-
 ## NugetPackageReferenceHelper
 
 >```csharp
@@ -236,33 +202,6 @@
 
 <br />
 
-## OpenApiDocumentHelper
-
->```csharp
->public static class OpenApiDocumentHelper
->```
-
-### Static Methods
-
-#### CombineAndGetApiDocument
->```csharp
->Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> CombineAndGetApiDocument(ILogger logger, string specificationPath)
->```
-#### GetBasePathSegmentNames
->```csharp
->List<string> GetBasePathSegmentNames(OpenApiDocument openApiDocument)
->```
-#### GetServerUrlBasePath
->```csharp
->string GetServerUrlBasePath(OpenApiDocument openApiDocument)
->```
-#### Validate
->```csharp
->bool Validate(ILogger logger, Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument, ApiOptionsValidation validationOptions)
->```
-
-<br />
-
 ## OpenApiDocumentSchemaModelNameHelper
 
 >```csharp
@@ -282,21 +221,6 @@
 #### EnsureTaskNameWithNamespaceIfNeeded
 >```csharp
 >string EnsureTaskNameWithNamespaceIfNeeded(ResponseTypeNameAndItemSchema contractReturnTypeNameAndSchema)
->```
-
-<br />
-
-## OpenApiDocumentValidationHelper
-
->```csharp
->public static class OpenApiDocumentValidationHelper
->```
-
-### Static Methods
-
-#### ValidateDocument
->```csharp
->bool ValidateDocument(ILogger logger, OpenApiDocument apiDocument, ApiOptionsValidation validationOptions)
 >```
 
 <br />
@@ -321,60 +245,4 @@
 >```csharp
 >void ScaffoldSlnFile(ILogger logger, FileInfo slnFile, string projectName, DirectoryInfo apiPath, DirectoryInfo domainPath, DirectoryInfo hostPath, DirectoryInfo domainTestPath = null, DirectoryInfo hostTestPath = null)
 >```
-
-<br />
-
-## ValidatePathsAndOperationsHelper
-
->```csharp
->public static class ValidatePathsAndOperationsHelper
->```
-
-### Static Methods
-
-#### ValidateGetOperations
->```csharp
->List<LogKeyValueItem> ValidateGetOperations(ApiOptionsValidation validationOptions, KeyValuePair<string, OpenApiPathItem> path)
->```
-><b>Summary:</b> Check for response types according to operation/global parameters.
->
-><b>Parameters:</b><br>
->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`validationOptions`&nbsp;&nbsp;-&nbsp;&nbsp;The validation options.<br />
->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`path`&nbsp;&nbsp;-&nbsp;&nbsp;The path.<br />
->
-><b>Returns:</b> List of possible validation errors
-#### ValidateGlobalParameters
->```csharp
->List<LogKeyValueItem> ValidateGlobalParameters(ApiOptionsValidation validationOptions, IEnumerable<string> globalPathParameterNames, KeyValuePair<string, OpenApiPathItem> path)
->```
-><b>Summary:</b> Check global parameters.
->
-><b>Parameters:</b><br>
->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`validationOptions`&nbsp;&nbsp;-&nbsp;&nbsp;The validation options.<br />
->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`globalPathParameterNames`&nbsp;&nbsp;-&nbsp;&nbsp;The global path parameter names.<br />
->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`path`&nbsp;&nbsp;-&nbsp;&nbsp;The path.<br />
->
-><b>Returns:</b> List of possible validation errors
-#### ValidateMissingOperationParameters
->```csharp
->List<LogKeyValueItem> ValidateMissingOperationParameters(ApiOptionsValidation validationOptions, KeyValuePair<string, OpenApiPathItem> path)
->```
-><b>Summary:</b> Check for operations that are not defining parameters, which are present in the path.key.
->
-><b>Parameters:</b><br>
->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`validationOptions`&nbsp;&nbsp;-&nbsp;&nbsp;The validation options.<br />
->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`path`&nbsp;&nbsp;-&nbsp;&nbsp;The path.<br />
->
-><b>Returns:</b> List of possible validation errors
-#### ValidateOperationsWithParametersNotPresentInPath
->```csharp
->List<LogKeyValueItem> ValidateOperationsWithParametersNotPresentInPath(ApiOptionsValidation validationOptions, KeyValuePair<string, OpenApiPathItem> path)
->```
-><b>Summary:</b> Check for operations with parameters, that are not present in the path.key.
->
-><b>Parameters:</b><br>
->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`validationOptions`&nbsp;&nbsp;-&nbsp;&nbsp;The validation options.<br />
->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`path`&nbsp;&nbsp;-&nbsp;&nbsp;The path.<br />
->
-><b>Returns:</b> List of possible validation errors
 <hr /><div style='text-align: right'><i>Generated by MarkdownCodeDoc version 1.2</i></div>
