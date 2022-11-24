@@ -26,7 +26,6 @@ public sealed class ContentGeneratorServerController : IContentGenerator
 
         sb.AppendLine("/// <summary>");
         sb.AppendLine("/// Endpoint definitions.");
-        sb.AppendLine($"/// Area: {parameters.Area}.");
         sb.AppendLine("/// </summary>");
 
         AppendControllerAuthorizationIfNeeded(sb);
@@ -61,7 +60,6 @@ public sealed class ContentGeneratorServerController : IContentGenerator
         sb.AppendLine(4, "/// <summary>");
         sb.AppendLine(4, $"/// Description: {item.Description}");
         sb.AppendLine(4, $"/// Operation: {item.Name}.");
-        sb.AppendLine(4, $"/// Area: {parameters.Area}.");
         sb.AppendLine(4, "/// </summary>");
 
         AppendMethodContentAuthorizationIfNeeded(sb, controllerUsesAuthorization, item);
