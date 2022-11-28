@@ -3,8 +3,15 @@ namespace Atc.Rest.ApiGenerator.CLI.Commands;
 public class GenerateServerDomainCommand : AsyncCommand<ServerDomainCommandSettings>
 {
     private readonly ILogger<GenerateServerDomainCommand> logger;
+    private readonly IOpenApiDocumentValidator openApiDocumentValidator;
 
-    public GenerateServerDomainCommand(ILogger<GenerateServerDomainCommand> logger) => this.logger = logger;
+    public GenerateServerDomainCommand(
+        ILogger<GenerateServerDomainCommand> logger,
+        IOpenApiDocumentValidator openApiDocumentValidator)
+    {
+        this.logger = logger;
+        this.openApiDocumentValidator = openApiDocumentValidator;
+    }
 
     public override Task<int> ExecuteAsync(
         CommandContext context,
@@ -31,7 +38,14 @@ public class GenerateServerDomainCommand : AsyncCommand<ServerDomainCommandSetti
         }
 
         var apiOptions = await ApiOptionsHelper.CreateDefault(settings);
-        var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(logger, settings.SpecificationPath);
+        var apiSpecificationContentReader = new ApiSpecificationContentReader();
+        var apiDocumentContainer = apiSpecificationContentReader.CombineAndGetApiDocumentContainer(logger, settings.SpecificationPath);
+        if (apiDocumentContainer.Exception is not null)
+        {
+            logger.LogError(apiDocumentContainer.Exception, $"{EmojisConstants.Error} Reading specification failed.");
+            return ConsoleExitStatusCodes.Failure;
+        }
+
         var shouldScaffoldCodingRules = CodingRulesHelper.ShouldScaffoldCodingRules(settings.OutputPath, settings.DisableCodingRules);
         var isUsingCodingRules = CodingRulesHelper.IsUsingCodingRules(settings.OutputPath, settings.DisableCodingRules);
 
@@ -44,10 +58,9 @@ public class GenerateServerDomainCommand : AsyncCommand<ServerDomainCommandSetti
 
         try
         {
-            if (!OpenApiDocumentHelper.Validate(
-                    logger,
-                    apiDocument,
-                    apiOptions.Validation))
+            if (!openApiDocumentValidator.IsValid(
+                    apiOptions.Validation,
+                    apiDocumentContainer))
             {
                 return ConsoleExitStatusCodes.Failure;
             }
@@ -57,7 +70,7 @@ public class GenerateServerDomainCommand : AsyncCommand<ServerDomainCommandSetti
                     settings.ProjectPrefixName,
                     new DirectoryInfo(settings.OutputPath),
                     outputTestPath,
-                    apiDocument,
+                    apiDocumentContainer,
                     apiOptions,
                     isUsingCodingRules,
                     new DirectoryInfo(settings.ApiPath)))

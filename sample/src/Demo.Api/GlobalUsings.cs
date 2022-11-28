@@ -1,4 +1,5 @@
-﻿global using System.IO;
+﻿global using System.CodeDom.Compiler;
+global using System.IO;
 global using System.Reflection;
 
 global using Atc.Rest.Extended.Options;

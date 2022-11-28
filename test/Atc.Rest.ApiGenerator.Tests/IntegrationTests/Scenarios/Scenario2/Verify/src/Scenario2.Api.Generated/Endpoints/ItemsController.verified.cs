@@ -8,8 +8,8 @@ namespace Scenario2.Api.Generated.Endpoints;
 
 /// <summary>
 /// Endpoint definitions.
-/// Area: Items.
 /// </summary>
+[Authorize]
 [ApiController]
 [Route("/api/v1/items")]
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
@@ -18,46 +18,30 @@ public class ItemsController : ControllerBase
     /// <summary>
     /// Description: Create a new item.
     /// Operation: CreateItem.
-    /// Area: Items.
     /// </summary>
     [HttpPost]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public Task<ActionResult> CreateItemAsync(CreateItemParameters parameters, [FromServices] ICreateItemHandler handler, CancellationToken cancellationToken)
-    {
-        if (handler is null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
-
-        return InvokeCreateItemAsync(parameters, handler, cancellationToken);
-    }
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<ActionResult> CreateItem(
+        CreateItemParameters parameters,
+        [FromServices] ICreateItemHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(parameters, cancellationToken);
 
     /// <summary>
     /// Description: Updates an item.
     /// Operation: UpdateItem.
-    /// Area: Items.
     /// </summary>
     [HttpPut("{id}")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public Task<ActionResult> UpdateItemAsync(UpdateItemParameters parameters, [FromServices] IUpdateItemHandler handler, CancellationToken cancellationToken)
-    {
-        if (handler is null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
-
-        return InvokeUpdateItemAsync(parameters, handler, cancellationToken);
-    }
-
-    private static async Task<ActionResult> InvokeCreateItemAsync(CreateItemParameters parameters, ICreateItemHandler handler, CancellationToken cancellationToken)
-    {
-        return await handler.ExecuteAsync(parameters, cancellationToken);
-    }
-
-    private static async Task<ActionResult> InvokeUpdateItemAsync(UpdateItemParameters parameters, IUpdateItemHandler handler, CancellationToken cancellationToken)
-    {
-        return await handler.ExecuteAsync(parameters, cancellationToken);
-    }
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<ActionResult> UpdateItem(
+        UpdateItemParameters parameters,
+        [FromServices] IUpdateItemHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(parameters, cancellationToken);
 }

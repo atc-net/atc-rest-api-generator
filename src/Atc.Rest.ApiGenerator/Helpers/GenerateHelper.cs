@@ -1,12 +1,9 @@
 // ReSharper disable ReturnTypeCanBeEnumerable.Global
-
-using Microsoft.Extensions.Logging.Abstractions;
-
 namespace Atc.Rest.ApiGenerator.Helpers;
 
 public static class GenerateHelper
 {
-    private static readonly Version AtcToolVersion = new(1, 1, 405, 0); // TODO: Fix version
+    private static readonly Version AtcApiGeneratorVersion = new(1, 1, 405, 0); // TODO: Fix version
 
     public static Version GetAtcVersion()
     {
@@ -29,7 +26,7 @@ public static class GenerateHelper
         return $"{atcVersion.Major}.{atcVersion.Minor}.{atcVersion.Build}.{atcVersion.Revision}";
     }
 
-    public static Version GetAtcToolVersion()
+    public static Version GetAtcApiGeneratorVersion()
     {
         var version = AtcApiNugetClientHelper.GetLatestVersionForPackageId(
             NullLogger.Instance,
@@ -40,46 +37,48 @@ public static class GenerateHelper
 
         return assemblyVersion.GreaterThan(version)
             ? assemblyVersion
-            : AtcToolVersion;
+            : AtcApiGeneratorVersion;
     }
 
-    public static string GetAtcToolVersionAsString3()
+    public static string GetAtcApiGeneratorVersionAsString3()
     {
-        var atcToolVersion = GetAtcToolVersion();
-        return $"{atcToolVersion.Major}.{atcToolVersion.Minor}.{atcToolVersion.Build}";
+        var atcApiGeneratorVersion = GetAtcApiGeneratorVersion();
+        return $"{atcApiGeneratorVersion.Major}.{atcApiGeneratorVersion.Minor}.{atcApiGeneratorVersion.Build}";
     }
 
-    public static string GetAtcToolVersionAsString4()
+    public static string GetAtcApiGeneratorVersionAsString4()
     {
-        var atcToolVersion = GetAtcToolVersion();
-        return $"{atcToolVersion.Major}.{atcToolVersion.Minor}.{atcToolVersion.Build}.{atcToolVersion.Revision}";
+        var atcApiGeneratorVersion = GetAtcApiGeneratorVersion();
+        return $"{atcApiGeneratorVersion.Major}.{atcApiGeneratorVersion.Minor}.{atcApiGeneratorVersion.Build}.{atcApiGeneratorVersion.Revision}";
     }
 
     public static bool GenerateServerApi(
         ILogger logger,
+        IApiOperationExtractor apiOperationExtractor,
         string projectPrefixName,
         DirectoryInfo outputPath,
         DirectoryInfo? outputTestPath,
-        Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument,
+        OpenApiDocumentContainer apiDocumentContainer,
         ApiOptions apiOptions,
         bool useCodingRules)
     {
         ArgumentNullException.ThrowIfNull(logger);
+        ArgumentNullException.ThrowIfNull(apiOperationExtractor);
         ArgumentNullException.ThrowIfNull(projectPrefixName);
         ArgumentNullException.ThrowIfNull(outputPath);
-        ArgumentNullException.ThrowIfNull(apiDocument);
+        ArgumentNullException.ThrowIfNull(apiDocumentContainer);
         ArgumentNullException.ThrowIfNull(apiOptions);
 
         var projectOptions = new ApiProjectOptions(
             outputPath,
             outputTestPath,
-            apiDocument.Item1,
-            apiDocument.Item3,
+            apiDocumentContainer.Document!,
+            apiDocumentContainer.DocFile,
             projectPrefixName,
             "Api.Generated",
             apiOptions,
             useCodingRules);
-        var serverApiGenerator = new ServerApiGenerator(logger, projectOptions);
+        var serverApiGenerator = new ServerApiGenerator(logger, apiOperationExtractor, projectOptions);
         return serverApiGenerator.Generate();
     }
 
@@ -88,7 +87,7 @@ public static class GenerateHelper
         string projectPrefixName,
         DirectoryInfo outputSourcePath,
         DirectoryInfo? outputTestPath,
-        Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument,
+        OpenApiDocumentContainer apiDocumentContainer,
         ApiOptions apiOptions,
         bool useCodingRules,
         DirectoryInfo apiPath)
@@ -96,15 +95,15 @@ public static class GenerateHelper
         ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(projectPrefixName);
         ArgumentNullException.ThrowIfNull(outputSourcePath);
-        ArgumentNullException.ThrowIfNull(apiDocument);
+        ArgumentNullException.ThrowIfNull(apiDocumentContainer);
         ArgumentNullException.ThrowIfNull(apiOptions);
         ArgumentNullException.ThrowIfNull(apiPath);
 
         var domainProjectOptions = new DomainProjectOptions(
             outputSourcePath,
             outputTestPath,
-            apiDocument.Item1,
-            apiDocument.Item3,
+            apiDocumentContainer.Document!,
+            apiDocumentContainer.DocFile,
             projectPrefixName,
             apiOptions,
             useCodingRules,
@@ -115,10 +114,11 @@ public static class GenerateHelper
 
     public static bool GenerateServerHost(
         ILogger logger,
+        IApiOperationExtractor apiOperationExtractor,
         string projectPrefixName,
         DirectoryInfo outputSourcePath,
         DirectoryInfo? outputTestPath,
-        Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument,
+        OpenApiDocumentContainer apiDocumentContainer,
         ApiOptions apiOptions,
         bool usingCodingRules,
         DirectoryInfo apiPath,
@@ -127,7 +127,7 @@ public static class GenerateHelper
         ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(projectPrefixName);
         ArgumentNullException.ThrowIfNull(outputSourcePath);
-        ArgumentNullException.ThrowIfNull(apiDocument);
+        ArgumentNullException.ThrowIfNull(apiDocumentContainer);
         ArgumentNullException.ThrowIfNull(apiOptions);
         ArgumentNullException.ThrowIfNull(apiPath);
         ArgumentNullException.ThrowIfNull(domainPath);
@@ -135,14 +135,14 @@ public static class GenerateHelper
         var hostProjectOptions = new HostProjectOptions(
             outputSourcePath,
             outputTestPath,
-            apiDocument.Item1,
-            apiDocument.Item3,
+            apiDocumentContainer.Document!,
+            apiDocumentContainer.DocFile,
             projectPrefixName,
             apiOptions,
             usingCodingRules,
             apiPath,
             domainPath);
-        var serverHostGenerator = new ServerHostGenerator(logger, hostProjectOptions);
+        var serverHostGenerator = new ServerHostGenerator(logger, apiOperationExtractor, hostProjectOptions);
         return serverHostGenerator.Generate();
     }
 
@@ -202,10 +202,11 @@ public static class GenerateHelper
 
     public static bool GenerateServerCSharpClient(
         ILogger logger,
+        IApiOperationExtractor apiOperationExtractor,
         string projectPrefixName,
         string? clientFolderName,
         DirectoryInfo outputPath,
-        Tuple<OpenApiDocument, OpenApiDiagnostic, FileInfo> apiDocument,
+        OpenApiDocumentContainer apiDocumentContainer,
         bool excludeEndpointGeneration,
         ApiOptions apiOptions,
         bool useCodingRules)
@@ -213,20 +214,20 @@ public static class GenerateHelper
         ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(projectPrefixName);
         ArgumentNullException.ThrowIfNull(outputPath);
-        ArgumentNullException.ThrowIfNull(apiDocument);
+        ArgumentNullException.ThrowIfNull(apiDocumentContainer);
         ArgumentNullException.ThrowIfNull(apiOptions);
 
         var clientCSharpApiProjectOptions = new ClientCSharpApiProjectOptions(
             outputPath,
             clientFolderName,
-            apiDocument.Item1,
-            apiDocument.Item3,
+            apiDocumentContainer.Document!,
+            apiDocumentContainer.DocFile,
             projectPrefixName,
             "ApiClient.Generated",
             excludeEndpointGeneration,
             apiOptions,
             useCodingRules);
-        var clientCSharpApiGenerator = new ClientCSharpApiGenerator(logger, clientCSharpApiProjectOptions);
+        var clientCSharpApiGenerator = new ClientCSharpApiGenerator(logger, apiOperationExtractor, clientCSharpApiProjectOptions);
         return clientCSharpApiGenerator.Generate();
     }
 }

@@ -1,5 +1,3 @@
-using Atc.Console.Spectre;
-
 // ReSharper disable ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
 // ReSharper disable ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
 namespace Atc.Rest.ApiGenerator.Generators;
@@ -7,14 +5,17 @@ namespace Atc.Rest.ApiGenerator.Generators;
 public class ClientCSharpApiGenerator
 {
     private readonly ILogger logger;
+    private readonly IApiOperationExtractor apiOperationExtractor;
     private readonly ClientCSharpApiProjectOptions projectOptions;
     private readonly ApiProjectOptions apiProjectOptions;
 
     public ClientCSharpApiGenerator(
         ILogger logger,
+        IApiOperationExtractor apiOperationExtractor,
         ClientCSharpApiProjectOptions projectOptions)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        this.apiOperationExtractor = apiOperationExtractor ?? throw new ArgumentNullException(nameof(apiOperationExtractor));
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
 
         apiProjectOptions = new ApiProjectOptions(
@@ -38,14 +39,13 @@ public class ClientCSharpApiGenerator
     {
         ScaffoldSrc();
 
-        var operationSchemaMappings = OpenApiOperationSchemaMapHelper.CollectMappings(projectOptions.Document);
+        var operationSchemaMappings = apiOperationExtractor.Extract(projectOptions.Document);
         GenerateContracts(operationSchemaMappings);
         if (!ExcludeEndpointGeneration)
         {
             GenerateEndpoints(operationSchemaMappings);
         }
 
-        PerformCleanup();
         GenerateSrcGlobalUsings();
 
         return true;
@@ -92,7 +92,7 @@ public class ClientCSharpApiGenerator
     }
 
     private void GenerateContracts(
-        List<ApiOperationSchemaMap> operationSchemaMappings)
+        IList<ApiOperation> operationSchemaMappings)
     {
         ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 
@@ -131,7 +131,7 @@ public class ClientCSharpApiGenerator
     }
 
     private void GenerateEndpoints(
-        List<ApiOperationSchemaMap> operationSchemaMappings)
+        IList<ApiOperation> operationSchemaMappings)
     {
         ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 
@@ -169,11 +169,6 @@ public class ClientCSharpApiGenerator
         }
     }
 
-    private static void PerformCleanup()
-    {
-        // TODO: Implement
-    }
-
     private void GenerateSrcGlobalUsings()
     {
         var requiredUsings = new List<string>
@@ -195,12 +190,9 @@ public class ClientCSharpApiGenerator
             $"{projectOptions.ProjectName}.Contracts",
         };
 
-        var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "GlobalUsings.cs"));
-        var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
-
         GlobalUsingsHelper.CreateOrUpdate(
             logger,
-            fileDisplayLocation,
+            ContentWriterArea.Src,
             projectOptions.PathForSrcGenerate,
             requiredUsings);
     }

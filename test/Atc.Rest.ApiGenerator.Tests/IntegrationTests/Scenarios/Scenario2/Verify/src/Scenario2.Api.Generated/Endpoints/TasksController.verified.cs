@@ -8,8 +8,8 @@ namespace Scenario2.Api.Generated.Endpoints;
 
 /// <summary>
 /// Endpoint definitions.
-/// Area: Tasks.
 /// </summary>
+[Authorize]
 [ApiController]
 [Route("/api/v1/tasks")]
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
@@ -18,22 +18,13 @@ public class TasksController : ControllerBase
     /// <summary>
     /// Description: Returns tasks.
     /// Operation: GetTasks.
-    /// Area: Tasks.
     /// </summary>
     [HttpGet]
     [ProducesResponseType(typeof(List<Scenario2.Api.Generated.Contracts.Tasks.Task>), StatusCodes.Status200OK)]
-    public Task<ActionResult> GetTasksAsync([FromServices] IGetTasksHandler handler, CancellationToken cancellationToken)
-    {
-        if (handler is null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
-
-        return InvokeGetTasksAsync(handler, cancellationToken);
-    }
-
-    private static async Task<ActionResult> InvokeGetTasksAsync([FromServices] IGetTasksHandler handler, CancellationToken cancellationToken)
-    {
-        return await handler.ExecuteAsync(cancellationToken);
-    }
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<ActionResult> GetTasks(
+        [FromServices] IGetTasksHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(cancellationToken);
 }

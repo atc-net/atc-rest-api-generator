@@ -8,8 +8,8 @@ namespace Scenario2.Api.Generated.Endpoints;
 
 /// <summary>
 /// Endpoint definitions.
-/// Area: Pagination.
 /// </summary>
+[Authorize]
 [ApiController]
 [Route("/api/v1/pagination")]
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
@@ -18,44 +18,26 @@ public class PaginationController : ControllerBase
     /// <summary>
     /// Description: Your GET endpoint.
     /// Operation: GetPaginatedListOfInts.
-    /// Area: Pagination.
     /// </summary>
     [HttpGet("list/int")]
     [ProducesResponseType(typeof(Pagination<int>), StatusCodes.Status200OK)]
-    public Task<ActionResult> GetPaginatedListOfIntsAsync([FromServices] IGetPaginatedListOfIntsHandler handler, CancellationToken cancellationToken)
-    {
-        if (handler is null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
-
-        return InvokeGetPaginatedListOfIntsAsync(handler, cancellationToken);
-    }
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<ActionResult> GetPaginatedListOfInts(
+        [FromServices] IGetPaginatedListOfIntsHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(cancellationToken);
 
     /// <summary>
     /// Description: Your GET endpoint.
     /// Operation: GetPaginatedListOfStrings.
-    /// Area: Pagination.
     /// </summary>
     [HttpGet("list/string")]
     [ProducesResponseType(typeof(Pagination<string>), StatusCodes.Status200OK)]
-    public Task<ActionResult> GetPaginatedListOfStringsAsync([FromServices] IGetPaginatedListOfStringsHandler handler, CancellationToken cancellationToken)
-    {
-        if (handler is null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
-
-        return InvokeGetPaginatedListOfStringsAsync(handler, cancellationToken);
-    }
-
-    private static async Task<ActionResult> InvokeGetPaginatedListOfIntsAsync([FromServices] IGetPaginatedListOfIntsHandler handler, CancellationToken cancellationToken)
-    {
-        return await handler.ExecuteAsync(cancellationToken);
-    }
-
-    private static async Task<ActionResult> InvokeGetPaginatedListOfStringsAsync([FromServices] IGetPaginatedListOfStringsHandler handler, CancellationToken cancellationToken)
-    {
-        return await handler.ExecuteAsync(cancellationToken);
-    }
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<ActionResult> GetPaginatedListOfStrings(
+        [FromServices] IGetPaginatedListOfStringsHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(cancellationToken);
 }

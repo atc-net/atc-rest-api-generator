@@ -3,8 +3,18 @@ namespace Atc.Rest.ApiGenerator.CLI.Commands;
 public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
 {
     private readonly ILogger<GenerateServerAllCommand> logger;
+    private readonly IApiOperationExtractor apiOperationExtractor;
+    private readonly IOpenApiDocumentValidator openApiDocumentValidator;
 
-    public GenerateServerAllCommand(ILogger<GenerateServerAllCommand> logger) => this.logger = logger;
+    public GenerateServerAllCommand(
+        ILogger<GenerateServerAllCommand> logger,
+        IApiOperationExtractor apiOperationExtractor,
+        IOpenApiDocumentValidator openApiDocumentValidator)
+    {
+        this.logger = logger;
+        this.apiOperationExtractor = apiOperationExtractor;
+        this.openApiDocumentValidator = openApiDocumentValidator;
+    }
 
     public override Task<int> ExecuteAsync(
         CommandContext context,
@@ -35,7 +45,14 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
         }
 
         var apiOptions = await ApiOptionsHelper.CreateDefault(settings);
-        var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(logger, settings.SpecificationPath);
+        var apiSpecificationContentReader = new ApiSpecificationContentReader();
+        var apiDocumentContainer = apiSpecificationContentReader.CombineAndGetApiDocumentContainer(logger, settings.SpecificationPath);
+        if (apiDocumentContainer.Exception is not null)
+        {
+            logger.LogError(apiDocumentContainer.Exception, $"{EmojisConstants.Error} Reading specification failed.");
+            return ConsoleExitStatusCodes.Failure;
+        }
+
         var shouldScaffoldCodingRules = CodingRulesHelper.ShouldScaffoldCodingRules(outputSlnPath, settings.DisableCodingRules);
         var isUsingCodingRules = CodingRulesHelper.IsUsingCodingRules(outputSlnPath, settings.DisableCodingRules);
 
@@ -48,20 +65,20 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
 
         try
         {
-            if (!OpenApiDocumentHelper.Validate(
-                    logger,
-                    apiDocument,
-                    apiOptions.Validation))
+            if (!openApiDocumentValidator.IsValid(
+                    apiOptions.Validation,
+                    apiDocumentContainer))
             {
                 return ConsoleExitStatusCodes.Failure;
             }
 
             if (!GenerateHelper.GenerateServerApi(
                     logger,
+                    apiOperationExtractor,
                     projectPrefixName,
                     outputSrcPath,
                     outputTestPath,
-                    apiDocument,
+                    apiDocumentContainer,
                     apiOptions,
                     isUsingCodingRules))
             {
@@ -73,7 +90,7 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
                     projectPrefixName,
                     outputSrcPath,
                     outputTestPath,
-                    apiDocument,
+                    apiDocumentContainer,
                     apiOptions,
                     isUsingCodingRules,
                     outputSrcPath))
@@ -83,10 +100,11 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
 
             if (!GenerateHelper.GenerateServerHost(
                     logger,
+                    apiOperationExtractor,
                     projectPrefixName,
                     outputSrcPath,
                     outputTestPath,
-                    apiDocument,
+                    apiDocumentContainer,
                     apiOptions,
                     isUsingCodingRules,
                     outputSrcPath,

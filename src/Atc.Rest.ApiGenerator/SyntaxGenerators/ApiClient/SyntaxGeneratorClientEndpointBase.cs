@@ -5,7 +5,7 @@ public abstract class SyntaxGeneratorClientEndpointBase
     protected SyntaxGeneratorClientEndpointBase(
         ILogger logger,
         ApiProjectOptions apiProjectOptions,
-        List<ApiOperationSchemaMap> operationSchemaMappings,
+        IList<ApiOperation> operationSchemaMappings,
         IList<OpenApiParameter> globalPathParameters,
         OperationType apiOperationType,
         OpenApiOperation apiOperation,
@@ -30,7 +30,7 @@ public abstract class SyntaxGeneratorClientEndpointBase
             useProblemDetailsAsDefaultResponseBody: false,
             includeEmptyResponseTypes: false,
             HasParametersOrRequestBody,
-            ApiProjectOptions.ApiOptions.Generator.UseAuthorization,
+            includeIfNotDefinedAuthorization: true,
             includeIfNotDefinedInternalServerError: true,
             isClient: true);
 
@@ -43,7 +43,7 @@ public abstract class SyntaxGeneratorClientEndpointBase
 
     public ApiProjectOptions ApiProjectOptions { get; }
 
-    public List<ApiOperationSchemaMap> OperationSchemaMappings { get; }
+    public IList<ApiOperation> OperationSchemaMappings { get; }
 
     public IList<OpenApiParameter> GlobalPathParameters { get; }
 

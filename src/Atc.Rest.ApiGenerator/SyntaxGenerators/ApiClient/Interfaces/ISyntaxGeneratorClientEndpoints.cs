@@ -4,7 +4,7 @@ public interface ISyntaxGeneratorClientEndpoints
 {
     ApiProjectOptions ApiProjectOptions { get; }
 
-    List<ApiOperationSchemaMap> OperationSchemaMappings { get; }
+    IList<ApiOperation> OperationSchemaMappings { get; }
 
     string FocusOnSegmentName { get; }
 

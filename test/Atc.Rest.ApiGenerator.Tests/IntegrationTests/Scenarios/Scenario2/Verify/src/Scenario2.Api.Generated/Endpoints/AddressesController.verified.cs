@@ -8,8 +8,8 @@ namespace Scenario2.Api.Generated.Endpoints;
 
 /// <summary>
 /// Endpoint definitions.
-/// Area: Addresses.
 /// </summary>
+[Authorize]
 [ApiController]
 [Route("/api/v1/addresses")]
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
@@ -18,23 +18,15 @@ public class AddressesController : ControllerBase
     /// <summary>
     /// Description: Get addresses by postal code.
     /// Operation: GetAddressesByPostalCodes.
-    /// Area: Addresses.
     /// </summary>
     [HttpGet("{postalCode}")]
     [ProducesResponseType(typeof(List<Address>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    public Task<ActionResult> GetAddressesByPostalCodesAsync(GetAddressesByPostalCodesParameters parameters, [FromServices] IGetAddressesByPostalCodesHandler handler, CancellationToken cancellationToken)
-    {
-        if (handler is null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
-
-        return InvokeGetAddressesByPostalCodesAsync(parameters, handler, cancellationToken);
-    }
-
-    private static async Task<ActionResult> InvokeGetAddressesByPostalCodesAsync(GetAddressesByPostalCodesParameters parameters, IGetAddressesByPostalCodesHandler handler, CancellationToken cancellationToken)
-    {
-        return await handler.ExecuteAsync(parameters, cancellationToken);
-    }
+    public async Task<ActionResult> GetAddressesByPostalCodes(
+        GetAddressesByPostalCodesParameters parameters,
+        [FromServices] IGetAddressesByPostalCodesHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(parameters, cancellationToken);
 }

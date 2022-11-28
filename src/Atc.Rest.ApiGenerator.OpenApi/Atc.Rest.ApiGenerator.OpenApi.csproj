@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Atc" Version="2.0.251" />
+    <PackageReference Include="Atc.OpenApi" Version="2.0.251" />
+    <PackageReference Include="Microsoft.OpenApi" Version="1.4.4" />
+    <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.4.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Atc.Rest.ApiGenerator.Framework.Contracts\Atc.Rest.ApiGenerator.Framework.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

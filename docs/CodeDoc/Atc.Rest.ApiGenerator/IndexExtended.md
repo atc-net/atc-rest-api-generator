@@ -14,66 +14,12 @@
      - string AreaEditorConfig
      - string AreaGenerateCode
      - string AreaGenerateTest
-     - string AreaValidation
      - string PackageReference
 - [AtcRestApiGeneratorAssemblyTypeInitializer](Atc.Rest.ApiGenerator.md#atcrestapigeneratorassemblytypeinitializer)
 - [Constants](Atc.Rest.ApiGenerator.md#constants)
   -  Static Fields
      - string GitHubPrefix
      - string GitRawContentUrl
-- [ValidationRuleNameConstants](Atc.Rest.ApiGenerator.md#validationrulenameconstants)
-  -  Static Fields
-     - string OpenApiCore
-     - string Operation01
-     - string Operation02
-     - string Operation03
-     - string Operation04
-     - string Operation05
-     - string Operation06
-     - string Operation07
-     - string Operation08
-     - string Operation09
-     - string Operation10
-     - string Operation11
-     - string Operation12
-     - string Operation13
-     - string Operation14
-     - string Operation15
-     - string Operation16
-     - string Operation17
-     - string Operation18
-     - string Path01
-     - string ProjectApiGenerated01
-     - string ProjectApiGenerated02
-     - string ProjectApiGenerated03
-     - string ProjectApiGenerated04
-     - string ProjectApiGenerated05
-     - string ProjectApiGenerated06
-     - string ProjectDomainGenerated01
-     - string ProjectDomainGenerated02
-     - string ProjectDomainGenerated03
-     - string ProjectDomainGenerated04
-     - string ProjectDomainGenerated05
-     - string ProjectDomainGenerated06
-     - string ProjectDomainGenerated07
-     - string ProjectDomainGenerated08
-     - string ProjectHostGenerated01
-     - string ProjectHostGenerated02
-     - string ProjectHostGenerated03
-     - string ProjectHostGenerated04
-     - string ProjectHostGenerated05
-     - string Schema01
-     - string Schema02
-     - string Schema03
-     - string Schema04
-     - string Schema05
-     - string Schema06
-     - string Schema07
-     - string Schema08
-     - string Schema09
-     - string Schema10
-     - string Schema11
-     - string Server01
 
 ## [Atc.Rest.ApiGenerator.Extensions](Atc.Rest.ApiGenerator.Extensions.md)
 
@@ -102,7 +48,7 @@
 
 - [ApiGeneratorHelper](Atc.Rest.ApiGenerator.Helpers.md#apigeneratorhelper)
   -  Static Methods
-     - CollectMissingContractModelFromOperationSchemaMappings(ILogger logger, ApiProjectOptions projectOptions, List&lt;ApiOperationSchemaMap&gt; operationSchemaMappings, List&lt;SyntaxGeneratorContractModel&gt; sgContractModels)
+     - CollectMissingContractModelFromOperationSchemaMappings(ILogger logger, ApiProjectOptions projectOptions, IList&lt;ApiOperation&gt; apiOperations, List&lt;SyntaxGeneratorContractModel&gt; sgContractModels)
 - [AtcApiNugetClientHelper](Atc.Rest.ApiGenerator.Helpers.md#atcapinugetclienthelper)
   -  Static Methods
      - GetLatestVersionForPackageId(ILogger logger, string packageId, CancellationToken cancellationToken = null)
@@ -124,70 +70,36 @@
      - Generate(ILogger logger, string outputSlnPath, DirectoryInfo outputSrcPath, DirectoryInfo outputTestPath)
 - [GenerateHelper](Atc.Rest.ApiGenerator.Helpers.md#generatehelper)
   -  Static Methods
-     - GenerateServerApi(ILogger logger, string projectPrefixName, DirectoryInfo outputPath, DirectoryInfo outputTestPath, Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, ApiOptions apiOptions, bool useCodingRules)
-     - GenerateServerCSharpClient(ILogger logger, string projectPrefixName, string clientFolderName, DirectoryInfo outputPath, Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, bool excludeEndpointGeneration, ApiOptions apiOptions, bool useCodingRules)
-     - GenerateServerDomain(ILogger logger, string projectPrefixName, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath, Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, ApiOptions apiOptions, bool useCodingRules, DirectoryInfo apiPath)
-     - GenerateServerHost(ILogger logger, string projectPrefixName, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath, Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, ApiOptions apiOptions, bool usingCodingRules, DirectoryInfo apiPath, DirectoryInfo domainPath)
+     - GenerateServerApi(ILogger logger, IApiOperationExtractor apiOperationExtractor, string projectPrefixName, DirectoryInfo outputPath, DirectoryInfo outputTestPath, OpenApiDocumentContainer apiDocumentContainer, ApiOptions apiOptions, bool useCodingRules)
+     - GenerateServerCSharpClient(ILogger logger, IApiOperationExtractor apiOperationExtractor, string projectPrefixName, string clientFolderName, DirectoryInfo outputPath, OpenApiDocumentContainer apiDocumentContainer, bool excludeEndpointGeneration, ApiOptions apiOptions, bool useCodingRules)
+     - GenerateServerDomain(ILogger logger, string projectPrefixName, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath, OpenApiDocumentContainer apiDocumentContainer, ApiOptions apiOptions, bool useCodingRules, DirectoryInfo apiPath)
+     - GenerateServerHost(ILogger logger, IApiOperationExtractor apiOperationExtractor, string projectPrefixName, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath, OpenApiDocumentContainer apiDocumentContainer, ApiOptions apiOptions, bool usingCodingRules, DirectoryInfo apiPath, DirectoryInfo domainPath)
      - GenerateServerSln(ILogger logger, string projectPrefixName, string outputSlnPath, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath)
-     - GetAtcToolVersion()
-     - GetAtcToolVersionAsString3()
-     - GetAtcToolVersionAsString4()
+     - GetAtcApiGeneratorVersion()
+     - GetAtcApiGeneratorVersionAsString3()
+     - GetAtcApiGeneratorVersionAsString4()
      - GetAtcVersion()
      - GetAtcVersionAsString3()
      - GetAtcVersionAsString4()
 - [GlobalUsingsHelper](Atc.Rest.ApiGenerator.Helpers.md#globalusingshelper)
   -  Static Methods
-     - CreateOrUpdate(ILogger logger, string fileDisplayLocation, DirectoryInfo directoryInfo, List&lt;string&gt; requiredUsings)
-- [HttpClientHelper](Atc.Rest.ApiGenerator.Helpers.md#httpclienthelper)
-  -  Static Methods
-     - DownloadToTempFile(ILogger logger, string apiDesignPath)
-     - GetAsString(ILogger logger, string url, string displayName, CancellationToken cancellationToken = null)
-- [LogItemHelper](Atc.Rest.ApiGenerator.Helpers.md#logitemhelper)
-  -  Static Methods
-     - Create(LogCategoryType logCategoryType, string ruleName, string description)
+     - CreateOrUpdate(ILogger logger, ContentWriterArea contentWriterArea, DirectoryInfo directoryInfo, List&lt;string&gt; requiredUsings)
 - [NugetPackageReferenceHelper](Atc.Rest.ApiGenerator.Helpers.md#nugetpackagereferencehelper)
   -  Static Methods
      - CreateForApiProject()
      - CreateForClientApiProject()
      - CreateForHostProject(bool useRestExtended)
      - CreateForTestProject(bool useMvc)
-- [OpenApiDocumentHelper](Atc.Rest.ApiGenerator.Helpers.md#openapidocumenthelper)
-  -  Static Methods
-     - CombineAndGetApiDocument(ILogger logger, string specificationPath)
-     - GetBasePathSegmentNames(OpenApiDocument openApiDocument)
-     - GetServerUrlBasePath(OpenApiDocument openApiDocument)
-     - Validate(ILogger logger, Tuple&lt;OpenApiDocument, OpenApiDiagnostic, FileInfo&gt; apiDocument, ApiOptionsValidation validationOptions)
 - [OpenApiDocumentSchemaModelNameHelper](Atc.Rest.ApiGenerator.Helpers.md#openapidocumentschemamodelnamehelper)
   -  Static Methods
      - ContainsModelNameTask(string modelName)
      - EnsureModelNameWithNamespaceIfNeeded(EndpointMethodMetadata endpointMethodMetadata, string modelName)
-     - EnsureModelNameWithNamespaceIfNeeded(string projectName, string segmentName, string modelName, bool isShared = False, bool isClient = False)
      - EnsureTaskNameWithNamespaceIfNeeded(ResponseTypeNameAndItemSchema contractReturnTypeNameAndSchema)
-     - GetRawModelName(string modelName)
-     - HasList(string typeName)
-     - HasSharedResponseContract(OpenApiDocument apiDocument, List&lt;ApiOperationSchemaMap&gt; operationSchemaMappings, string focusOnSegmentName)
-- [OpenApiDocumentValidationHelper](Atc.Rest.ApiGenerator.Helpers.md#openapidocumentvalidationhelper)
-  -  Static Methods
-     - ValidateDocument(ILogger logger, OpenApiDocument apiDocument, ApiOptionsValidation validationOptions)
-- [OpenApiOperationSchemaMapHelper](Atc.Rest.ApiGenerator.Helpers.md#openapioperationschemamaphelper)
-  -  Static Methods
-     - CollectMappings(OpenApiDocument apiDocument)
-     - GetSegmentName(string path)
 - [SolutionAndProjectHelper](Atc.Rest.ApiGenerator.Helpers.md#solutionandprojecthelper)
   -  Static Methods
      - EnsureLatestPackageReferencesVersionInProjFile(ILogger logger, FileInfo projectCsProjFile, string fileDisplayLocation, ProjectType projectType, bool isTestProject)
      - ScaffoldProjFile(ILogger logger, FileInfo projectCsProjFile, string fileDisplayLocation, ProjectType projectType, bool createAsWeb, bool createAsTestProject, string projectName, string targetFramework, IList&lt;string&gt; frameworkReferences, IList&lt;Tuple&lt;string, string, string&gt;&gt; packageReferences, IList&lt;FileInfo&gt; projectReferences, bool includeApiSpecification, bool usingCodingRules)
      - ScaffoldSlnFile(ILogger logger, FileInfo slnFile, string projectName, DirectoryInfo apiPath, DirectoryInfo domainPath, DirectoryInfo hostPath, DirectoryInfo domainTestPath = null, DirectoryInfo hostTestPath = null)
-- [TextFileHelper](Atc.Rest.ApiGenerator.Helpers.md#textfilehelper)
-  -  Static Methods
-     - Save(ILogger logger, FileInfo fileInfo, string fileDisplayLocation, string text, bool overrideIfExist = True)
-     - Save(ILogger logger, string file, string fileDisplayLocation, string text, bool overrideIfExist = True)
-- [ValidatePathsAndOperationsHelper](Atc.Rest.ApiGenerator.Helpers.md#validatepathsandoperationshelper)
-  -  Static Methods
-     - ValidateGetOperations(ApiOptionsValidation validationOptions, KeyValuePair&lt;string, OpenApiPathItem&gt; path)
-     - ValidateGlobalParameters(ApiOptionsValidation validationOptions, IEnumerable&lt;string&gt; globalPathParameterNames, KeyValuePair&lt;string, OpenApiPathItem&gt; path)
-     - ValidateMissingOperationParameters(ApiOptionsValidation validationOptions, KeyValuePair&lt;string, OpenApiPathItem&gt; path)
-     - ValidateOperationsWithParametersNotPresentInPath(ApiOptionsValidation validationOptions, KeyValuePair&lt;string, OpenApiPathItem&gt; path)
 
 ## [Atc.Rest.ApiGenerator.Helpers.XunitTest](Atc.Rest.ApiGenerator.Helpers.XunitTest.md)
 
@@ -208,7 +120,7 @@
      - AppendModelComplexProperty(int indentSpaces, StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata, KeyValuePair&lt;string, OpenApiSchema&gt; schemaProperty, string dataType, TrailingCharType trailingChar, int itemNumber, int maxItemsForList, int depthHierarchy, int maxDepthHierarchy, KeyValuePair&lt;KeyValuePair&lt;string, OpenApiSchema&gt;&gt; badPropertySchema, bool asJsonBody)
      - AppendVarDataEqualNewListOfModel(int indentSpaces, StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata, KeyValuePair&lt;string, OpenApiSchema&gt; schemaProperty, TrailingCharType trailingChar, int maxItemsForList, int depthHierarchy, int maxDepthHierarchy, KeyValuePair&lt;KeyValuePair&lt;string, OpenApiSchema&gt;&gt; badPropertySchema, bool asJsonBody)
      - AppendVarDataListSimpleType(int indentSpaces, StringBuilder sb, string simpleDataType, int maxItemsForList = 3)
-     - AppendVarDataModelOrListOfModel(int indentSpaces, StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata, OpenApiSchema schema, HttpStatusCode httpStatusCode, SchemaMapLocatedAreaType locatedAreaType, KeyValuePair&lt;KeyValuePair&lt;string, OpenApiSchema&gt;&gt; badPropertySchema = null, bool asJsonBody = False, int maxItemsForList = 3, int depthHierarchy = 0, int maxDepthHierarchy = 2)
+     - AppendVarDataModelOrListOfModel(int indentSpaces, StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata, OpenApiSchema schema, HttpStatusCode httpStatusCode, ApiSchemaMapLocatedAreaType locatedAreaType, KeyValuePair&lt;KeyValuePair&lt;string, OpenApiSchema&gt;&gt; badPropertySchema = null, bool asJsonBody = False, int maxItemsForList = 3, int depthHierarchy = 0, int maxDepthHierarchy = 2)
 - [GenerateXunitTestPartsHelper](Atc.Rest.ApiGenerator.Helpers.XunitTest.md#generatexunittestpartshelper)
   -  Static Methods
      - AppendModelSimpleProperty(int indentSpaces, StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata, KeyValuePair&lt;string, OpenApiSchema&gt; schemaProperty, string dataType, bool isRequired, string propertyValueGenerated, int countString, bool asJsonBody, int depthHierarchy, TrailingCharType trailingChar)
@@ -251,18 +163,6 @@
 
 ## [Atc.Rest.ApiGenerator.Models](Atc.Rest.ApiGenerator.Models.md)
 
-- [ApiOperationSchemaMap](Atc.Rest.ApiGenerator.Models.md#apioperationschemamap)
-  -  Properties
-     - LocatedArea
-     - OperationType
-     - ParentSchemaKey
-     - Path
-     - SchemaKey
-     - SegmentName
-  -  Methods
-     - Equals(object obj)
-     - GetHashCode()
-     - ToString()
 - [ApiProjectOptions](Atc.Rest.ApiGenerator.Models.md#apiprojectoptions)
   -  Properties
      - PathForContracts
@@ -270,6 +170,9 @@
      - PathForEndpoints
 - [BaseProjectOptions](Atc.Rest.ApiGenerator.Models.md#baseprojectoptions)
   -  Properties
+     - ApiGeneratorName
+     - ApiGeneratorNameAndVersion
+     - ApiGeneratorVersion
      - ApiOptions
      - BasePathSegmentNames
      - ClientFolderName
@@ -285,13 +188,13 @@
      - ProjectTestCsProj
      - ProjectTestCsProjDisplayLocation
      - RouteBase
-     - ToolName
-     - ToolNameAndVersion
-     - ToolVersion
      - UseNullableReferenceTypes
      - UsingCodingRules
 - [ClientCSharpApiProjectOptions](Atc.Rest.ApiGenerator.Models.md#clientcsharpapiprojectoptions)
   -  Properties
+     - ApiGeneratorName
+     - ApiGeneratorNameAndVersion
+     - ApiGeneratorVersion
      - ApiOptions
      - BasePathSegmentNames
      - ClientFolderName
@@ -303,9 +206,6 @@
      - ProjectName
      - ProjectSrcCsProj
      - ProjectSrcCsProjDisplayLocation
-     - ToolName
-     - ToolNameAndVersion
-     - ToolVersion
      - UseNullableReferenceTypes
      - UsingCodingRules
   -  Methods
@@ -354,7 +254,6 @@
      - HasContractParameterAnyParametersOrRequestBody()
      - HasContractParameterRequestBody()
      - HasContractReturnTypeAsComplex()
-     - HasContractReturnTypeAsComplexAndNotSharedModel()
      - HasContractReturnTypeAsComplexAsListOrPagination()
      - HasSharedModelOrEnumInContractParameterRequestBody()
      - HasSharedModelOrEnumInContractReturnType(bool includeProperties = True)
@@ -367,9 +266,6 @@
      - IsContractParameterRequestBodyUsingSystemNamespace()
      - IsContractReturnTypeUsingList()
      - IsContractReturnTypeUsingPagination()
-     - IsContractReturnTypeUsingString()
-     - IsContractReturnTypeUsingSystemCollectionGenericNamespace()
-     - IsContractReturnTypeUsingSystemNamespace()
      - IsContractReturnTypeUsingTaskName()
      - IsSharedModel(string modelName)
      - ToString()
@@ -383,31 +279,6 @@
   -  Methods
      - SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles(ILogger logger)
 - [ProjectType](Atc.Rest.ApiGenerator.Models.md#projecttype)
-- [SchemaMapLocatedAreaType](Atc.Rest.ApiGenerator.Models.md#schemamaplocatedareatype)
-
-## [Atc.Rest.ApiGenerator.Models.Options](Atc.Rest.ApiGenerator.Models.Options.md)
-
-- [ApiOptions](Atc.Rest.ApiGenerator.Models.Options.md#apioptions)
-  -  Properties
-     - Generator
-     - Validation
-- [ApiOptionsGenerator](Atc.Rest.ApiGenerator.Models.Options.md#apioptionsgenerator)
-  -  Properties
-     - Request
-     - Response
-     - UseAuthorization
-     - UseRestExtended
-- [ApiOptionsGeneratorRequest](Atc.Rest.ApiGenerator.Models.Options.md#apioptionsgeneratorrequest)
-- [ApiOptionsGeneratorResponse](Atc.Rest.ApiGenerator.Models.Options.md#apioptionsgeneratorresponse)
-  -  Properties
-     - UseProblemDetailsAsDefaultBody
-- [ApiOptionsValidation](Atc.Rest.ApiGenerator.Models.Options.md#apioptionsvalidation)
-  -  Properties
-     - ModelNameCasingStyle
-     - ModelPropertyNameCasingStyle
-     - OperationIdCasingStyle
-     - OperationIdValidation
-     - StrictMode
 
 ## [Atc.Rest.ApiGenerator.SyntaxGenerators](Atc.Rest.ApiGenerator.SyntaxGenerators.md)
 
@@ -531,9 +402,6 @@
      - ToCodeAsString()
      - ToFile()
      - ToFile(FileInfo file)
-- [SyntaxGeneratorSwaggerDocOptions](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorswaggerdocoptions)
-  -  Methods
-     - GenerateCode()
 
 ## [Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces.md)
 
@@ -702,8 +570,8 @@
 
 - [OpenApiSchemaExtensions](Microsoft.OpenApi.Models.md#openapischemaextensions)
   -  Static Methods
-     - HasAnySharedModel(this OpenApiSchema schema, List&lt;ApiOperationSchemaMap&gt; apiOperationSchemaMaps)
-     - HasAnySharedModelOrEnum(this OpenApiSchema schema, List&lt;ApiOperationSchemaMap&gt; apiOperationSchemaMaps, bool includeProperties = True)
+     - HasAnySharedModel(this OpenApiSchema schema, List&lt;ApiOperation&gt; apiOperationSchemaMaps)
+     - HasAnySharedModelOrEnum(this OpenApiSchema schema, IList&lt;ApiOperation&gt; apiOperationSchemaMaps, bool includeProperties = True)
 - [OperationTypeExtensions](Microsoft.OpenApi.Models.md#operationtypeextensions)
   -  Static Methods
      - IsRequestBodySupported(this OperationType operationType)

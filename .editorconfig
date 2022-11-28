@@ -2,7 +2,7 @@
 # Version: 1.0.9
 # Updated: 01-02-2022
 # Location: Root
-# Distribution: DotNet5
+# Distribution: DotNet6
 # Inspired by: https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/code-style-rule-options
 
 ##########################################
@@ -505,6 +505,7 @@ dotnet_diagnostic.S1135.severity = suggestion       # https://github.com/atc-net
 
 dotnet_diagnostic.MA0016.severity = suggestion	    # Prefer return collection abstraction instead of implementation - https://github.com/meziantou/Meziantou.Analyzer/blob/main/docs/Rules/MA0016.md
 dotnet_diagnostic.MA0051.severity = suggestion		# Method is too long - https://github.com/meziantou/Meziantou.Analyzer/blob/main/docs/Rules/MA0051.md
+dotnet_diagnostic.MA0098.severity = suggestion		# Use indexer instead of LINQ methods - https://github.com/meziantou/Meziantou.Analyzer/blob/main/docs/Rules/MA0098.md
 
 dotnet_diagnostic.CA1002.severity = suggestion		# Do not expose generic lists - https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1002
 dotnet_diagnostic.CA1054.severity = suggestion		# URI parameters should not be strings - https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1054
@@ -515,4 +516,5 @@ dotnet_diagnostic.CA2254.severity = suggestion		# Template should be a static ex
 dotnet_diagnostic.S1172.severity = none				# False positive
 dotnet_diagnostic.S3267.severity = none				# Loop should be simplified by calling Select(x => x.Value)) - We dont like this rule because of readability/maintainability
 
+dotnet_diagnostic.SA1118.Severity = none			# Parameter spans multiple lines
 dotnet_diagnostic.SA1414.Severity = none			# Tuple types in signatures should have element names

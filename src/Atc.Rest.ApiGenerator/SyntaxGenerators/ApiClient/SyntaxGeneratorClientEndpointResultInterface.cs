@@ -2,10 +2,12 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient;
 
 public class SyntaxGeneratorClientEndpointResultInterface : SyntaxGeneratorClientEndpointBase, ISyntaxCodeGenerator
 {
+    private readonly ILogger logger;
+
     public SyntaxGeneratorClientEndpointResultInterface(
         ILogger logger,
         ApiProjectOptions apiProjectOptions,
-        List<ApiOperationSchemaMap> operationSchemaMappings,
+        List<ApiOperation> operationSchemaMappings,
         IList<OpenApiParameter> globalPathParameters,
         OperationType apiOperationType,
         OpenApiOperation apiOperation,
@@ -23,6 +25,7 @@ public class SyntaxGeneratorClientEndpointResultInterface : SyntaxGeneratorClien
             urlPath,
             hasParametersOrRequestBody)
     {
+        this.logger = logger;
     }
 
     public CompilationUnitSyntax? Code { get; private set; }
@@ -45,7 +48,7 @@ public class SyntaxGeneratorClientEndpointResultInterface : SyntaxGeneratorClien
         // Create interface
         var interfaceDeclaration = SyntaxInterfaceDeclarationFactory.Create(InterfaceTypeName)
             .AddBaseListTypes(SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseTypeName(nameof(IEndpointResponse))))
-            .AddGeneratedCodeAttribute(ApiProjectOptions.ToolName, ApiProjectOptions.ToolVersion.ToString())
+            .AddGeneratedCodeAttribute(ApiProjectOptions.ApiGeneratorName, ApiProjectOptions.ApiGeneratorVersion.ToString())
             .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForResults(ApiOperation, FocusOnSegmentName));
 
         interfaceDeclaration = interfaceDeclaration.AddMembers(CreatePropertiesForIsStatusCode());
@@ -94,8 +97,12 @@ public class SyntaxGeneratorClientEndpointResultInterface : SyntaxGeneratorClien
     {
         ArgumentNullException.ThrowIfNull(file);
 
-        var fileDisplayLocation = file.FullName.Replace(ApiProjectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
-        TextFileHelper.Save(Logger, file.FullName, fileDisplayLocation, ToCodeAsString());
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            ApiProjectOptions.PathForSrcGenerate,
+            file,
+            ContentWriterArea.Src,
+            ToCodeAsString());
     }
 
     public override string ToString()
@@ -127,7 +134,7 @@ public class SyntaxGeneratorClientEndpointResultInterface : SyntaxGeneratorClien
             useProblemDetailsAsDefaultResponseBody: true,
             includeEmptyResponseTypes: false,
             HasParametersOrRequestBody,
-            ApiProjectOptions.ApiOptions.Generator.UseAuthorization,
+            includeIfNotDefinedAuthorization: true,
             includeIfNotDefinedInternalServerError: true,
             isClient: true);
 

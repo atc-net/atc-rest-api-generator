@@ -3,8 +3,18 @@ namespace Atc.Rest.ApiGenerator.CLI.Commands;
 public class GenerateServerHostCommand : AsyncCommand<ServerHostCommandSettings>
 {
     private readonly ILogger<GenerateServerHostCommand> logger;
+    private readonly IApiOperationExtractor apiOperationExtractor;
+    private readonly IOpenApiDocumentValidator openApiDocumentValidator;
 
-    public GenerateServerHostCommand(ILogger<GenerateServerHostCommand> logger) => this.logger = logger;
+    public GenerateServerHostCommand(
+        ILogger<GenerateServerHostCommand> logger,
+        IApiOperationExtractor apiOperationExtractor,
+        IOpenApiDocumentValidator openApiDocumentValidator)
+    {
+        this.logger = logger;
+        this.apiOperationExtractor = apiOperationExtractor;
+        this.openApiDocumentValidator = openApiDocumentValidator;
+    }
 
     public override Task<int> ExecuteAsync(
         CommandContext context,
@@ -31,7 +41,14 @@ public class GenerateServerHostCommand : AsyncCommand<ServerHostCommandSettings>
         }
 
         var apiOptions = await ApiOptionsHelper.CreateDefault(settings);
-        var apiDocument = OpenApiDocumentHelper.CombineAndGetApiDocument(logger, settings.SpecificationPath);
+        var apiSpecificationContentReader = new ApiSpecificationContentReader();
+        var apiDocumentContainer = apiSpecificationContentReader.CombineAndGetApiDocumentContainer(logger, settings.SpecificationPath);
+        if (apiDocumentContainer.Exception is not null)
+        {
+            logger.LogError(apiDocumentContainer.Exception, $"{EmojisConstants.Error} Reading specification failed.");
+            return ConsoleExitStatusCodes.Failure;
+        }
+
         var shouldScaffoldCodingRules = CodingRulesHelper.ShouldScaffoldCodingRules(settings.OutputPath, settings.DisableCodingRules);
         var isUsingCodingRules = CodingRulesHelper.IsUsingCodingRules(settings.OutputPath, settings.DisableCodingRules);
 
@@ -44,20 +61,20 @@ public class GenerateServerHostCommand : AsyncCommand<ServerHostCommandSettings>
 
         try
         {
-            if (!OpenApiDocumentHelper.Validate(
-                    logger,
-                    apiDocument,
-                    apiOptions.Validation))
+            if (!openApiDocumentValidator.IsValid(
+                    apiOptions.Validation,
+                    apiDocumentContainer))
             {
                 return ConsoleExitStatusCodes.Failure;
             }
 
             if (!GenerateHelper.GenerateServerHost(
                     logger,
+                    apiOperationExtractor,
                     settings.ProjectPrefixName,
                     new DirectoryInfo(settings.OutputPath),
                     outputTestPath,
-                    apiDocument,
+                    apiDocumentContainer,
                     apiOptions,
                     isUsingCodingRules,
                     new DirectoryInfo(settings.ApiPath),

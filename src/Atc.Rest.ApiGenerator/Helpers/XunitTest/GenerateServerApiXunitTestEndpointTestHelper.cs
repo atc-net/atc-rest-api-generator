@@ -5,8 +5,6 @@
 namespace Atc.Rest.ApiGenerator.Helpers.XunitTest;
 
 [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1118:Parameter should not span multiple lines", Justification = "OK.")]
-[SuppressMessage("Globalization", "CA1305:Specify IFormatProvider", Justification = "OK.")]
-[SuppressMessage("Usage", "MA0011:IFormatProvider is missing", Justification = "OK.")]
 public static class GenerateServerApiXunitTestEndpointTestHelper
 {
     public static void Generate(
@@ -20,7 +18,7 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
 
         var sb = new StringBuilder();
 
-        GenerateCodeHelper.AppendGeneratedCodeWarningComment(sb, hostProjectOptions.ToolNameAndVersion);
+        GenerateCodeHelper.AppendGeneratedCodeWarningComment(sb, hostProjectOptions.ApiGeneratorNameAndVersion);
         AppendNamespaceAndClassStart(sb, hostProjectOptions, endpointMethodMetadata);
         AppendConstructor(sb, endpointMethodMetadata);
         AppendTestMethod(sb, endpointMethodMetadata);
@@ -57,7 +55,7 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
         sb.AppendLine($"namespace {hostProjectOptions.ProjectName}.Tests.Endpoints.{endpointMethodMetadata.SegmentName}.Generated");
         sb.AppendLine("{");
 
-        GenerateCodeHelper.AppendGeneratedCodeAttribute(sb, hostProjectOptions.ToolName, hostProjectOptions.ToolVersion);
+        GenerateCodeHelper.AppendGeneratedCodeAttribute(sb, hostProjectOptions.ApiGeneratorName, hostProjectOptions.ApiGeneratorVersion);
         sb.AppendLine(4, "[Collection(\"Sequential-Endpoints\")]");
         sb.AppendLine(4, "[Trait(Traits.Category, Traits.Categories.Integration)]");
         sb.AppendLine(4, $"public class {endpointMethodMetadata.MethodName}Tests : WebApiControllerBaseTest");
@@ -114,8 +112,12 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
         var fileName = $"{endpointMethodMetadata.MethodName}Tests.cs";
         var file = new FileInfo(Path.Combine(pathC, fileName));
 
-        var fileDisplayLocation = file.FullName.Replace(hostProjectOptions.PathForTestGenerate.FullName, "test: ", StringComparison.Ordinal);
-        TextFileHelper.Save(logger, file, fileDisplayLocation, sb.ToString());
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            hostProjectOptions.PathForTestGenerate,
+            file,
+            ContentWriterArea.Test,
+            sb.ToString());
     }
 
     private static List<string> GetUsingStatements(
@@ -674,7 +676,7 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
             endpointMethodMetadata,
             schema,
             httpStatusCode,
-            SchemaMapLocatedAreaType.RequestBody);
+            ApiSchemaMapLocatedAreaType.RequestBody);
 
         return true;
     }
@@ -698,7 +700,7 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
             endpointMethodMetadata,
             schema,
             httpStatusCode,
-            SchemaMapLocatedAreaType.RequestBody,
+            ApiSchemaMapLocatedAreaType.RequestBody,
             badPropertySchema,
             asJsonBody: true);
     }

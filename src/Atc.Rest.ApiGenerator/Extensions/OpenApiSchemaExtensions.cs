@@ -6,7 +6,7 @@ public static class OpenApiSchemaExtensions
 {
     public static bool HasAnySharedModel(
         this OpenApiSchema schema,
-        List<ApiOperationSchemaMap> apiOperationSchemaMaps)
+        List<ApiOperation> apiOperationSchemaMaps)
     {
         ArgumentNullException.ThrowIfNull(schema);
 
@@ -27,7 +27,7 @@ public static class OpenApiSchemaExtensions
 
     public static bool HasAnySharedModelOrEnum(
         this OpenApiSchema schema,
-        List<ApiOperationSchemaMap> apiOperationSchemaMaps,
+        IList<ApiOperation> apiOperationSchemaMaps,
         bool includeProperties = true)
     {
         ArgumentNullException.ThrowIfNull(schema);

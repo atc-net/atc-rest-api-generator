@@ -10,7 +10,7 @@ public class SyntaxGeneratorContractModels : ISyntaxGeneratorContractModels
     public SyntaxGeneratorContractModels(
         ILogger logger,
         ApiProjectOptions apiProjectOptions,
-        List<ApiOperationSchemaMap> operationSchemaMappings,
+        IList<ApiOperation> operationSchemaMappings,
         string focusOnSegmentName)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -21,7 +21,7 @@ public class SyntaxGeneratorContractModels : ISyntaxGeneratorContractModels
 
     public ApiProjectOptions ApiProjectOptions { get; }
 
-    public List<ApiOperationSchemaMap> OperationSchemaMappings { get; }
+    public IList<ApiOperation> OperationSchemaMappings { get; }
 
     public string FocusOnSegmentName { get; }
 
@@ -29,21 +29,17 @@ public class SyntaxGeneratorContractModels : ISyntaxGeneratorContractModels
     {
         var list = new List<SyntaxGeneratorContractModel>();
 
-        var apiOperationSchemaMaps = OperationSchemaMappings
-            .Where(x => x.LocatedArea is SchemaMapLocatedAreaType.Response or SchemaMapLocatedAreaType.RequestBody &&
+        var apiOperations = OperationSchemaMappings
+            .Where(x => x.LocatedArea is ApiSchemaMapLocatedAreaType.Response or ApiSchemaMapLocatedAreaType.RequestBody &&
                         x.SegmentName.Equals(FocusOnSegmentName, StringComparison.OrdinalIgnoreCase))
             .ToList();
 
-        var schemaKeys = apiOperationSchemaMaps
-            .Select(x => x.SchemaKey)
-            .Distinct(StringComparer.Ordinal)
-            .OrderBy(x => x)
-            .ToList();
+        var apiOperationModels = GetDistinctApiOperationModels(apiOperations);
 
-        foreach (var schemaKey in schemaKeys)
+        foreach (var apiOperationModel in apiOperationModels)
         {
-            var apiSchema = ApiProjectOptions.Document.Components.Schemas.First(x => x.Key.Equals(schemaKey, StringComparison.OrdinalIgnoreCase));
-            if (apiSchema.Value.IsSchemaEnumOrPropertyEnum())
+            var apiSchema = ApiProjectOptions.Document.Components.Schemas.First(x => x.Key.Equals(apiOperationModel.Name, StringComparison.OrdinalIgnoreCase));
+            if (apiOperationModel.IsEnum)
             {
                 var syntaxGeneratorContractModel = new SyntaxGeneratorContractModel(logger, ApiProjectOptions, apiSchema.Key, apiSchema.Value, FocusOnSegmentName);
                 syntaxGeneratorContractModel.GenerateCode();
@@ -51,8 +47,7 @@ public class SyntaxGeneratorContractModels : ISyntaxGeneratorContractModels
             }
             else
             {
-                var isShared = OperationSchemaMappings.IsShared(schemaKey);
-                if (isShared)
+                if (apiOperationModel.IsShared)
                 {
                     var syntaxGeneratorContractModel = new SyntaxGeneratorContractModel(logger, ApiProjectOptions, apiSchema.Key, apiSchema.Value, "#");
                     syntaxGeneratorContractModel.GenerateCode();
@@ -68,5 +63,22 @@ public class SyntaxGeneratorContractModels : ISyntaxGeneratorContractModels
         }
 
         return list;
+    }
+
+    private static List<ApiOperationModel> GetDistinctApiOperationModels(
+        List<ApiOperation> apiOperations)
+    {
+        var result = new List<ApiOperationModel>();
+
+        foreach (var apiOperation in apiOperations)
+        {
+            var apiOperationModel = result.FirstOrDefault(x => x.Name.Equals(apiOperation.Model.Name, StringComparison.Ordinal));
+            if (apiOperationModel is null)
+            {
+                result.Add(apiOperation.Model);
+            }
+        }
+
+        return result;
     }
 }

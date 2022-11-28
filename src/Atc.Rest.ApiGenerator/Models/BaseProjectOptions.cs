@@ -31,11 +31,11 @@ public abstract class BaseProjectOptions
         Document = openApiDocument ?? throw new ArgumentNullException(nameof(openApiDocument));
         DocumentFile = openApiDocumentFile ?? throw new ArgumentNullException(nameof(openApiDocumentFile));
 
-        ToolName = "ApiGenerator";
-        ToolVersion = GenerateHelper.GetAtcToolVersion();
+        ApiGeneratorName = "ApiGenerator";
+        ApiGeneratorVersion = GenerateHelper.GetAtcApiGeneratorVersion();
         ApiOptions = apiOptions;
 
-        RouteBase = OpenApiDocumentHelper.GetServerUrlBasePath(openApiDocument);
+        RouteBase = openApiDocument.GetServerUrlBasePath();
         ProjectName = string.IsNullOrEmpty(projectSuffixName)
             ? projectPrefixName
                 .Replace(" ", ".", StringComparison.Ordinal)
@@ -62,18 +62,18 @@ public abstract class BaseProjectOptions
         IsForClient = forClient;
         ClientFolderName = clientFolderName;
 
-        BasePathSegmentNames = OpenApiDocumentHelper.GetBasePathSegmentNames(openApiDocument);
+        BasePathSegmentNames = openApiDocument.GetBasePathSegmentNames();
     }
 
     public bool UsingCodingRules { get; }
 
     public bool UseNullableReferenceTypes { get; } = true;
 
-    public string ToolName { get; }
+    public string ApiGeneratorName { get; }
 
-    public Version ToolVersion { get; }
+    public Version ApiGeneratorVersion { get; }
 
-    public string ToolNameAndVersion => $"{ToolName} {ToolVersion}";
+    public string ApiGeneratorNameAndVersion => $"{ApiGeneratorName} {ApiGeneratorVersion}";
 
     public ApiOptions ApiOptions { get; }
 

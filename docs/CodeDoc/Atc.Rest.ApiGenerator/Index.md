@@ -9,7 +9,6 @@
 - [AppEmojisConstants](Atc.Rest.ApiGenerator.md#appemojisconstants)
 - [AtcRestApiGeneratorAssemblyTypeInitializer](Atc.Rest.ApiGenerator.md#atcrestapigeneratorassemblytypeinitializer)
 - [Constants](Atc.Rest.ApiGenerator.md#constants)
-- [ValidationRuleNameConstants](Atc.Rest.ApiGenerator.md#validationrulenameconstants)
 
 ## [Atc.Rest.ApiGenerator.Extensions](Atc.Rest.ApiGenerator.Extensions.md)
 
@@ -30,16 +29,9 @@
 - [GenerateAtcCodingRulesHelper](Atc.Rest.ApiGenerator.Helpers.md#generateatccodingruleshelper)
 - [GenerateHelper](Atc.Rest.ApiGenerator.Helpers.md#generatehelper)
 - [GlobalUsingsHelper](Atc.Rest.ApiGenerator.Helpers.md#globalusingshelper)
-- [HttpClientHelper](Atc.Rest.ApiGenerator.Helpers.md#httpclienthelper)
-- [LogItemHelper](Atc.Rest.ApiGenerator.Helpers.md#logitemhelper)
 - [NugetPackageReferenceHelper](Atc.Rest.ApiGenerator.Helpers.md#nugetpackagereferencehelper)
-- [OpenApiDocumentHelper](Atc.Rest.ApiGenerator.Helpers.md#openapidocumenthelper)
 - [OpenApiDocumentSchemaModelNameHelper](Atc.Rest.ApiGenerator.Helpers.md#openapidocumentschemamodelnamehelper)
-- [OpenApiDocumentValidationHelper](Atc.Rest.ApiGenerator.Helpers.md#openapidocumentvalidationhelper)
-- [OpenApiOperationSchemaMapHelper](Atc.Rest.ApiGenerator.Helpers.md#openapioperationschemamaphelper)
 - [SolutionAndProjectHelper](Atc.Rest.ApiGenerator.Helpers.md#solutionandprojecthelper)
-- [TextFileHelper](Atc.Rest.ApiGenerator.Helpers.md#textfilehelper)
-- [ValidatePathsAndOperationsHelper](Atc.Rest.ApiGenerator.Helpers.md#validatepathsandoperationshelper)
 
 ## [Atc.Rest.ApiGenerator.Helpers.XunitTest](Atc.Rest.ApiGenerator.Helpers.XunitTest.md)
 
@@ -54,7 +46,6 @@
 
 ## [Atc.Rest.ApiGenerator.Models](Atc.Rest.ApiGenerator.Models.md)
 
-- [ApiOperationSchemaMap](Atc.Rest.ApiGenerator.Models.md#apioperationschemamap)
 - [ApiProjectOptions](Atc.Rest.ApiGenerator.Models.md#apiprojectoptions)
 - [BaseProjectOptions](Atc.Rest.ApiGenerator.Models.md#baseprojectoptions)
 - [ClientCSharpApiProjectOptions](Atc.Rest.ApiGenerator.Models.md#clientcsharpapiprojectoptions)
@@ -63,15 +54,6 @@
 - [EndpointMethodMetadata](Atc.Rest.ApiGenerator.Models.md#endpointmethodmetadata)
 - [HostProjectOptions](Atc.Rest.ApiGenerator.Models.md#hostprojectoptions)
 - [ProjectType](Atc.Rest.ApiGenerator.Models.md#projecttype)
-- [SchemaMapLocatedAreaType](Atc.Rest.ApiGenerator.Models.md#schemamaplocatedareatype)
-
-## [Atc.Rest.ApiGenerator.Models.Options](Atc.Rest.ApiGenerator.Models.Options.md)
-
-- [ApiOptions](Atc.Rest.ApiGenerator.Models.Options.md#apioptions)
-- [ApiOptionsGenerator](Atc.Rest.ApiGenerator.Models.Options.md#apioptionsgenerator)
-- [ApiOptionsGeneratorRequest](Atc.Rest.ApiGenerator.Models.Options.md#apioptionsgeneratorrequest)
-- [ApiOptionsGeneratorResponse](Atc.Rest.ApiGenerator.Models.Options.md#apioptionsgeneratorresponse)
-- [ApiOptionsValidation](Atc.Rest.ApiGenerator.Models.Options.md#apioptionsvalidation)
 
 ## [Atc.Rest.ApiGenerator.SyntaxGenerators](Atc.Rest.ApiGenerator.SyntaxGenerators.md)
 
@@ -90,7 +72,6 @@
 - [SyntaxGeneratorContractResult](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorcontractresult)
 - [SyntaxGeneratorContractResults](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorcontractresults)
 - [SyntaxGeneratorEndpointControllers](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorendpointcontrollers)
-- [SyntaxGeneratorSwaggerDocOptions](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorswaggerdocoptions)
 
 ## [Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces.md)
 

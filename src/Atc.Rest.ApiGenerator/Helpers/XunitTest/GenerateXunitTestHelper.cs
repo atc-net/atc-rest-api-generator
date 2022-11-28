@@ -50,7 +50,7 @@ public static class GenerateXunitTestHelper
         EndpointMethodMetadata endpointMethodMetadata,
         OpenApiSchema schema,
         HttpStatusCode httpStatusCode,
-        SchemaMapLocatedAreaType locatedAreaType,
+        ApiSchemaMapLocatedAreaType locatedAreaType,
         KeyValuePair<string, OpenApiSchema>? badPropertySchema = null,
         bool asJsonBody = false,
         int maxItemsForList = 3,
@@ -67,9 +67,9 @@ public static class GenerateXunitTestHelper
 
         switch (locatedAreaType)
         {
-            case SchemaMapLocatedAreaType.Parameter:
+            case ApiSchemaMapLocatedAreaType.Parameter:
                 break;
-            case SchemaMapLocatedAreaType.RequestBody:
+            case ApiSchemaMapLocatedAreaType.RequestBody:
                 if (schema.IsTypeArray())
                 {
                     var indentSpacesForData = indentSpaces;
@@ -141,7 +141,7 @@ public static class GenerateXunitTestHelper
                 }
 
                 break;
-            case SchemaMapLocatedAreaType.Response:
+            case ApiSchemaMapLocatedAreaType.Response:
                 var contractReturnTypeName = endpointMethodMetadata.ContractReturnTypeNames.First(x => x.StatusCode == httpStatusCode);
                 if (GenerateXunitTestPartsHelper.IsListKind(contractReturnTypeName.FullModelName))
                 {

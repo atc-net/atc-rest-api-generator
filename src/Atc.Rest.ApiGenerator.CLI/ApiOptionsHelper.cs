@@ -1,5 +1,6 @@
 namespace Atc.Rest.ApiGenerator.CLI;
 
+[SuppressMessage("Info Code Smell", "S4457:Split this method into two", Justification = "OK for now.")]
 public static class ApiOptionsHelper
 {
     public static async Task<ApiOptions> CreateDefault(
@@ -25,7 +26,6 @@ public static class ApiOptionsHelper
         var options = await CreateDefault(optionsPath);
 
         ApplyValidationOverrides(options, settings);
-        ApplyGeneratorOverrides(options, settings);
 
         return options;
     }
@@ -114,16 +114,6 @@ public static class ApiOptionsHelper
         if (settings.ModelPropertyNameCasingStyle.IsSet)
         {
             apiOptions.Validation.ModelPropertyNameCasingStyle = settings.ModelPropertyNameCasingStyle.Value;
-        }
-    }
-
-    private static void ApplyGeneratorOverrides(
-        ApiOptions apiOptions,
-        BaseConfigurationCommandSettings settings)
-    {
-        if (settings.UseAuthorization)
-        {
-            apiOptions.Generator.UseAuthorization = settings.UseAuthorization;
         }
     }
 }

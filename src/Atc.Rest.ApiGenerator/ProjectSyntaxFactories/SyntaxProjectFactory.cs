@@ -15,12 +15,11 @@ internal static class SyntaxProjectFactory
         if (withAutoGen)
         {
             return SyntaxFileScopedNamespaceDeclarationFactory.Create(
-                baseProjectOptions.ToolNameAndVersion,
+                baseProjectOptions.ApiGeneratorNameAndVersion,
                 fullNamespace);
         }
 
-        return SyntaxFileScopedNamespaceDeclarationFactory.Create(
-            fullNamespace);
+        return SyntaxFileScopedNamespaceDeclarationFactory.Create(fullNamespace);
     }
 
     public static FileScopedNamespaceDeclarationSyntax CreateNamespace(
@@ -46,7 +45,7 @@ internal static class SyntaxProjectFactory
         if (withAutoGen)
         {
             return SyntaxFileScopedNamespaceDeclarationFactory.Create(
-                baseProjectOptions.ToolNameAndVersion,
+                baseProjectOptions.ApiGeneratorNameAndVersion,
                 fullNamespace);
         }
 
@@ -78,7 +77,7 @@ internal static class SyntaxProjectFactory
         if (withAutoGen)
         {
             return SyntaxFileScopedNamespaceDeclarationFactory.Create(
-                baseProjectOptions.ToolNameAndVersion,
+                baseProjectOptions.ApiGeneratorNameAndVersion,
                 fullNamespace);
         }
 

@@ -1,5 +1,3 @@
-using Atc.Rest.ApiGenerator.Extensions;
-
 namespace Atc.Rest.ApiGenerator.Tests;
 
 public class CodeComplianceTests
@@ -26,11 +24,6 @@ public class CodeComplianceTests
         typeof(ServerHostGenerator),
         typeof(ApiGeneratorHelper),
         typeof(NugetPackageReferenceHelper),
-        typeof(TextFileHelper),
-        typeof(HttpClientHelper),
-        typeof(OpenApiDocumentHelper),
-        typeof(OpenApiDocumentValidationHelper),
-        typeof(OpenApiOperationSchemaMapHelper),
         typeof(SyntaxGeneratorContractInterface),
         typeof(SyntaxGeneratorContractInterfaces),
         typeof(SyntaxGeneratorContractModel),
@@ -50,7 +43,6 @@ public class CodeComplianceTests
         typeof(SyntaxGeneratorClientEndpointResultInterfaces),
         typeof(SyntaxGeneratorHandler),
         typeof(SyntaxGeneratorHandlers),
-        typeof(ValidatePathsAndOperationsHelper),
         typeof(DirectoryInfoHelper),
         typeof(GenerateXunitTestHelper),
         typeof(GenerateServerApiXunitTestEndpointHandlerStubHelper),
@@ -59,7 +51,6 @@ public class CodeComplianceTests
         typeof(GenerateServerDomainXunitTestHelper),
         typeof(ParameterCombinationHelper),
         typeof(OpenApiDocumentSchemaModelNameHelper),
-        typeof(SyntaxGeneratorSwaggerDocOptions),
         typeof(ListExtensions),
         typeof(GlobalUsingsHelper),
     };

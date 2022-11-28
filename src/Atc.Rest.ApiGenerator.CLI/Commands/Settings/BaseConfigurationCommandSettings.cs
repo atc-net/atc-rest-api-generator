@@ -30,10 +30,6 @@ public class BaseConfigurationCommandSettings : BaseCommandSettings
     [CasingStyleDescription(Default = CasingStyle.CamelCase, Prefix = "Set casingStyle for model property name")]
     public FlagValue<CasingStyle> ModelPropertyNameCasingStyle { get; init; } = new();
 
-    [CommandOption($"{ArgumentCommandConstants.LongConfigurationAuthorization}")]
-    [Description("Use authorization")]
-    public bool UseAuthorization { get; init; }
-
     public override ValidationResult Validate()
     {
         var validationResult = base.Validate();

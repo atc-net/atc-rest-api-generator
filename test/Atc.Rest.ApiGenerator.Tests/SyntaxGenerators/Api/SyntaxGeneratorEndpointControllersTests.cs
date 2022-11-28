@@ -15,7 +15,8 @@ public class SyntaxGeneratorEndpointControllersTests : SyntaxCodeGeneratorTestBa
         // Verify spec file supported for unit test
         Assert.Single(apiProject.BasePathSegmentNames);
         var segmentName = apiProject.BasePathSegmentNames.First();
-        var operationSchemaMappings = OpenApiOperationSchemaMapHelper.CollectMappings(apiProject.Document);
+        var extractor = new ApiOperationExtractor();
+        var operationSchemaMappings = extractor.Extract(apiProject.Document);
 
         // Construct SUT
         return new SyntaxGeneratorEndpointControllers(NullLogger.Instance, apiProject, operationSchemaMappings, segmentName);

@@ -11,7 +11,7 @@ public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointContro
     public SyntaxGeneratorEndpointControllers(
         ILogger logger,
         ApiProjectOptions apiProjectOptions,
-        List<ApiOperationSchemaMap> operationSchemaMappings,
+        IList<ApiOperation> operationSchemaMappings,
         string focusOnSegmentName)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -22,7 +22,7 @@ public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointContro
 
     private ApiProjectOptions ApiProjectOptions { get; }
 
-    private List<ApiOperationSchemaMap> OperationSchemaMappings { get; }
+    private IList<ApiOperation> OperationSchemaMappings { get; }
 
     public string FocusOnSegmentName { get; }
 
@@ -42,18 +42,15 @@ public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointContro
 
         // Create class
         var classDeclaration = SyntaxClassDeclarationFactory.Create(controllerTypeName);
-        if (ApiProjectOptions.ApiOptions.Generator.UseAuthorization)
-        {
-            classDeclaration =
-                classDeclaration.AddAttributeLists(
-                    SyntaxAttributeListFactory.Create(nameof(AuthorizeAttribute)));
-        }
+        classDeclaration =
+            classDeclaration.AddAttributeLists(
+                SyntaxAttributeListFactory.Create(nameof(AuthorizeAttribute)));
 
         classDeclaration = classDeclaration.AddAttributeLists(
                 SyntaxAttributeListFactory.Create(nameof(ApiControllerAttribute)),
                 SyntaxAttributeListFactory.CreateWithOneItemWithOneArgument(nameof(RouteAttribute), $"{ApiProjectOptions.RouteBase}/{GetRouteSegment()}"))
             .AddBaseListTypes(SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseTypeName(nameof(ControllerBase))))
-            .AddGeneratedCodeAttribute(ApiProjectOptions.ToolName, ApiProjectOptions.ToolVersion.ToString())
+            .AddGeneratedCodeAttribute(ApiProjectOptions.ApiGeneratorName, ApiProjectOptions.ApiGeneratorVersion.ToString())
             .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForEndpoints(FocusOnSegmentName));
 
         // Create Methods
@@ -126,8 +123,12 @@ public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointContro
     {
         ArgumentNullException.ThrowIfNull(file);
 
-        var fileDisplayLocation = file.FullName.Replace(ApiProjectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
-        TextFileHelper.Save(logger, file.FullName, fileDisplayLocation, ToCodeAsString());
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            ApiProjectOptions.PathForSrcGenerate,
+            file,
+            ContentWriterArea.Src,
+            ToCodeAsString());
     }
 
     public List<EndpointMethodMetadata> GetMetadataForMethods()
@@ -163,7 +164,7 @@ public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointContro
                     useProblemDetailsAsDefaultResponseBody: false,
                     includeEmptyResponseTypes: false,
                     hasGlobalParameters || apiOperation.Value.HasParametersOrRequestBody(),
-                    includeIfNotDefinedAuthorization: false,
+                    includeIfNotDefinedAuthorization: true,
                     includeIfNotDefinedInternalServerError: false,
                     isClient: false);
 
@@ -202,29 +203,6 @@ public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointContro
                ?? throw new NotSupportedException("SegmentName was not found in any route.");
     }
 
-    private bool HasSharedResponseContract()
-    {
-        foreach (var (_, value) in ApiProjectOptions.Document.GetPathsByBasePathSegmentName(FocusOnSegmentName))
-        {
-            foreach (var apiOperation in value.Operations)
-            {
-                if (apiOperation.Value.Responses is null)
-                {
-                    continue;
-                }
-
-                var responseModelName = apiOperation.Value.Responses.GetModelNameForStatusCode(HttpStatusCode.OK);
-                var isSharedResponseModel = !string.IsNullOrEmpty(responseModelName) && OperationSchemaMappings.IsShared(responseModelName);
-                if (isSharedResponseModel)
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
     private List<ResponseTypeNameAndItemSchema> GetResponseTypeNamesAndItemSchema(
         List<Tuple<HttpStatusCode, string>> responseTypeNames)
     {
@@ -237,10 +215,10 @@ public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointContro
             }
             else
             {
-                var rawModelName = OpenApiDocumentSchemaModelNameHelper.GetRawModelName(responseTypeName.Item2);
+                var rawModelName = OpenApiDocumentSchemaModelNameResolver.GetRawModelName(responseTypeName.Item2);
 
                 var isShared = OperationSchemaMappings.IsShared(rawModelName);
-                var fullModelName = OpenApiDocumentSchemaModelNameHelper.EnsureModelNameWithNamespaceIfNeeded(
+                var fullModelName = OpenApiDocumentSchemaModelNameResolver.EnsureModelNameWithNamespaceIfNeeded(
                     ApiProjectOptions.ProjectName,
                     FocusOnSegmentName,
                     responseTypeName.Item2,
@@ -304,7 +282,7 @@ public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointContro
             ApiProjectOptions.ProjectName,
             ApiProjectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
             apiOperation.Value.HasParametersOrRequestBody(),
-            includeIfNotDefinedAuthorization: false,
+            includeIfNotDefinedAuthorization: true,
             includeIfNotDefinedInternalServerError: false);
 
         return producesResponseAttributeParts

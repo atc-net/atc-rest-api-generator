@@ -3,8 +3,6 @@
 namespace Atc.Rest.ApiGenerator.Helpers.XunitTest;
 
 [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1118:Parameter should not span multiple lines", Justification = "OK.")]
-[SuppressMessage("Globalization", "CA1305:Specify IFormatProvider", Justification = "OK.")]
-[SuppressMessage("Usage", "MA0011:IFormatProvider is missing", Justification = "OK.")]
 public static class GenerateServerApiXunitTestEndpointHandlerStubHelper
 {
     public static void Generate(
@@ -18,24 +16,13 @@ public static class GenerateServerApiXunitTestEndpointHandlerStubHelper
 
         var sb = new StringBuilder();
 
-        GenerateCodeHelper.AppendGeneratedCodeWarningComment(sb, hostProjectOptions.ToolNameAndVersion);
+        GenerateCodeHelper.AppendGeneratedCodeWarningComment(sb, hostProjectOptions.ApiGeneratorNameAndVersion);
         AppendNamespaceAndClassStart(sb, hostProjectOptions, endpointMethodMetadata);
         AppendMethodExecuteAsyncStart(sb, endpointMethodMetadata);
         AppendMethodExecuteAsyncContent(sb, endpointMethodMetadata);
         AppendMethodExecuteAsyncEnd(sb);
         AppendNamespaceAndClassEnd(sb);
         SaveFile(logger, sb, hostProjectOptions, endpointMethodMetadata);
-    }
-
-    private static void AppendUsingStatements(
-        StringBuilder sb,
-        HostProjectOptions hostProjectOptions,
-        EndpointMethodMetadata endpointMethodMetadata)
-    {
-        foreach (var statement in GetUsingStatements(hostProjectOptions, endpointMethodMetadata))
-        {
-            sb.AppendLine($"using {statement};");
-        }
     }
 
     private static void AppendNamespaceAndClassStart(
@@ -46,7 +33,7 @@ public static class GenerateServerApiXunitTestEndpointHandlerStubHelper
         sb.AppendLine($"namespace {hostProjectOptions.ProjectName}.Tests.Endpoints.{endpointMethodMetadata.SegmentName}.Generated");
         sb.AppendLine("{");
 
-        GenerateCodeHelper.AppendGeneratedCodeAttribute(sb, hostProjectOptions.ToolName, hostProjectOptions.ToolVersion);
+        GenerateCodeHelper.AppendGeneratedCodeAttribute(sb, hostProjectOptions.ApiGeneratorName, hostProjectOptions.ApiGeneratorVersion);
         sb.AppendLine(4, $"public class {endpointMethodMetadata.MethodName}HandlerStub : {endpointMethodMetadata.ContractInterfaceHandlerTypeName}");
         sb.AppendLine(4, "{");
     }
@@ -132,7 +119,7 @@ public static class GenerateServerApiXunitTestEndpointHandlerStubHelper
                 break;
             default:
             {
-                var singleReturnTypeName = OpenApiDocumentSchemaModelNameHelper.GetRawModelName(returnTypeName);
+                var singleReturnTypeName = OpenApiDocumentSchemaModelNameResolver.GetRawModelName(returnTypeName);
                 var simpleTypePair = SimpleTypeHelper.BeautifySimpleTypeLookup.FirstOrDefault(x => x.Value == singleReturnTypeName);
 
                 if (simpleTypePair.Key is not null)
@@ -153,7 +140,7 @@ public static class GenerateServerApiXunitTestEndpointHandlerStubHelper
                         endpointMethodMetadata,
                         modelSchema,
                         httpStatusCode,
-                        SchemaMapLocatedAreaType.Response);
+                        ApiSchemaMapLocatedAreaType.Response);
                     sb.AppendLine();
                 }
 
@@ -230,51 +217,11 @@ public static class GenerateServerApiXunitTestEndpointHandlerStubHelper
         var fileName = $"{endpointMethodMetadata.ContractInterfaceHandlerTypeName.Substring(1)}Stub.cs";
         var file = new FileInfo(Path.Combine(pathC, fileName));
 
-        var fileDisplayLocation = file.FullName.Replace(hostProjectOptions.PathForTestGenerate.FullName, "test: ", StringComparison.Ordinal);
-        TextFileHelper.Save(logger, file, fileDisplayLocation, sb.ToString());
-    }
-
-    private static List<string> GetUsingStatements(
-        HostProjectOptions hostProjectOptions,
-        EndpointMethodMetadata endpointMethodMetadata)
-    {
-        var systemList = new List<string>
-        {
-            "System.CodeDom.Compiler",
-            "System.Threading",
-            "System.Threading.Tasks",
-        };
-
-        if (endpointMethodMetadata.IsContractReturnTypeUsingSystemNamespace())
-        {
-            systemList.Add("System");
-        }
-
-        if (endpointMethodMetadata.IsContractReturnTypeUsingSystemCollectionGenericNamespace())
-        {
-            systemList.Add("System.Collections.Generic");
-        }
-
-        var list = new List<string>();
-
-        if (endpointMethodMetadata.IsContractReturnTypeUsingPagination())
-        {
-            list.Add("Atc.Rest.Results");
-        }
-
-        if (!endpointMethodMetadata.IsContractReturnTypeUsingString() &&
-            (endpointMethodMetadata.HasSharedModelOrEnumInContractParameterRequestBody() ||
-             endpointMethodMetadata.HasSharedModelOrEnumInContractReturnType()))
-        {
-            list.Add($"{hostProjectOptions.ProjectName}.Generated.Contracts");
-        }
-
-        list.Add($"{hostProjectOptions.ProjectName}.Generated.Contracts.{endpointMethodMetadata.SegmentName}");
-
-        return systemList
-            .OrderBy(x => x)
-            .Concat(list
-                .OrderBy(x => x))
-            .ToList();
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            hostProjectOptions.PathForTestGenerate,
+            file,
+            ContentWriterArea.Test,
+            sb.ToString());
     }
 }

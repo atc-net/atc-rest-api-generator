@@ -14,10 +14,15 @@ global using Atc.Helpers;
 global using Atc.Rest.ApiGenerator.CLI.Commands;
 global using Atc.Rest.ApiGenerator.CLI.Commands.Settings;
 global using Atc.Rest.ApiGenerator.CLI.Extensions;
+global using Atc.Rest.ApiGenerator.Framework.Contracts.Options;
+global using Atc.Rest.ApiGenerator.Framework.Readers;
 global using Atc.Rest.ApiGenerator.Helpers;
-global using Atc.Rest.ApiGenerator.Models.Options;
+global using Atc.Rest.ApiGenerator.OpenApi.Extractors;
+global using Atc.Rest.ApiGenerator.OpenApi.Factories;
+global using Atc.Rest.ApiGenerator.OpenApi.Validators;
 
 global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Logging;
 
 global using Spectre.Console;

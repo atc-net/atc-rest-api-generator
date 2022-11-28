@@ -1,4 +1,4 @@
-﻿global using System;
+global using System;
 global using System.CodeDom.Compiler;
 global using System.Collections.Generic;
 global using System.IO;
@@ -32,3 +32,5 @@ global using Microsoft.AspNetCore.Mvc.Testing;
 global using Microsoft.AspNetCore.TestHost;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
+
+global using Xunit;

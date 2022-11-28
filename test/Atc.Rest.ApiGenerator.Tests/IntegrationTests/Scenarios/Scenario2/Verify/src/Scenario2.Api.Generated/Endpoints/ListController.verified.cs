@@ -8,8 +8,8 @@ namespace Scenario2.Api.Generated.Endpoints;
 
 /// <summary>
 /// Endpoint definitions.
-/// Area: List.
 /// </summary>
+[Authorize]
 [ApiController]
 [Route("/api/v1/list")]
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
@@ -18,44 +18,26 @@ public class ListController : ControllerBase
     /// <summary>
     /// Description: Your GET endpoint.
     /// Operation: GetListOfInts.
-    /// Area: List.
     /// </summary>
     [HttpGet("int")]
     [ProducesResponseType(typeof(List<int>), StatusCodes.Status200OK)]
-    public Task<ActionResult> GetListOfIntsAsync([FromServices] IGetListOfIntsHandler handler, CancellationToken cancellationToken)
-    {
-        if (handler is null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
-
-        return InvokeGetListOfIntsAsync(handler, cancellationToken);
-    }
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<ActionResult> GetListOfInts(
+        [FromServices] IGetListOfIntsHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(cancellationToken);
 
     /// <summary>
     /// Description: Your GET endpoint.
     /// Operation: GetListOfStrings.
-    /// Area: List.
     /// </summary>
     [HttpGet("string")]
     [ProducesResponseType(typeof(List<string>), StatusCodes.Status200OK)]
-    public Task<ActionResult> GetListOfStringsAsync([FromServices] IGetListOfStringsHandler handler, CancellationToken cancellationToken)
-    {
-        if (handler is null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
-
-        return InvokeGetListOfStringsAsync(handler, cancellationToken);
-    }
-
-    private static async Task<ActionResult> InvokeGetListOfIntsAsync([FromServices] IGetListOfIntsHandler handler, CancellationToken cancellationToken)
-    {
-        return await handler.ExecuteAsync(cancellationToken);
-    }
-
-    private static async Task<ActionResult> InvokeGetListOfStringsAsync([FromServices] IGetListOfStringsHandler handler, CancellationToken cancellationToken)
-    {
-        return await handler.ExecuteAsync(cancellationToken);
-    }
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<ActionResult> GetListOfStrings(
+        [FromServices] IGetListOfStringsHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(cancellationToken);
 }

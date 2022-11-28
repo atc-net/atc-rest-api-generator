@@ -16,7 +16,7 @@ public class EndpointMethodMetadata
         List<ResponseTypeNameAndItemSchema> contractReturnTypeNames,
         SyntaxGeneratorContractParameter? sgContractParameter,
         IDictionary<string, OpenApiSchema> componentsSchemas,
-        List<ApiOperationSchemaMap> apiOperationSchemaMappings)
+        IList<ApiOperation> apiOperationSchemaMappings)
     {
         UseNullableReferenceTypes = useNullableReferenceTypes;
         ProjectName = projectName;
@@ -57,7 +57,7 @@ public class EndpointMethodMetadata
 
     public IDictionary<string, OpenApiSchema> ComponentsSchemas { get; }
 
-    public List<ApiOperationSchemaMap> OperationSchemaMappings { get; }
+    public IList<ApiOperation> OperationSchemaMappings { get; }
 
     public bool IsSharedModel(
         string modelName)
@@ -76,39 +76,6 @@ public class EndpointMethodMetadata
         return !string.IsNullOrEmpty(returnType) &&
                returnType.StartsWith(Microsoft.OpenApi.Models.NameConstants.List, StringComparison.Ordinal);
     }
-
-    public bool IsContractReturnTypeUsingSystemCollectionGenericNamespace()
-    {
-        if (IsContractReturnTypeUsingList())
-        {
-            return true;
-        }
-
-        var responseType = ContractReturnTypeNames.FirstOrDefault(x => x.StatusCode == HttpStatusCode.OK);
-        if (responseType is null)
-        {
-            return false;
-        }
-
-        return (responseType.Schema is not null &&
-                responseType.Schema.HasAnyPropertiesFormatTypeFromSystemCollectionGenericNamespace(ComponentsSchemas)) ||
-               responseType.FullModelName.StartsWith(Microsoft.OpenApi.Models.NameConstants.Pagination, StringComparison.Ordinal);
-    }
-
-    public bool IsContractReturnTypeUsingString()
-    {
-        var responseType = ContractReturnTypeNames.FirstOrDefault(x => x.StatusCode is HttpStatusCode.OK or HttpStatusCode.Created);
-
-        return responseType is not null &&
-               OpenApiDataTypeConstants.String.Equals(responseType.FullModelName, StringComparison.Ordinal);
-    }
-
-    public bool IsContractReturnTypeUsingSystemNamespace()
-        => ContractReturnTypeNames
-            .Where(x => x.Schema is not null &&
-                        x.Schema.IsObjectReferenceTypeDeclared())
-            .Any(x => x.Schema is not null &&
-                      x.Schema.HasAnyPropertiesFormatTypeFromSystemNamespace(ComponentsSchemas));
 
     public bool IsContractReturnTypeUsingTaskName()
     {
@@ -218,20 +185,6 @@ public class EndpointMethodMetadata
         }
 
         return HasContractParameterRequestBody();
-    }
-
-    public bool HasContractReturnTypeAsComplexAndNotSharedModel()
-    {
-        var returnType = ContractReturnTypeNames.FirstOrDefault(x => x.StatusCode == HttpStatusCode.OK);
-        if (returnType is null ||
-            string.IsNullOrEmpty(returnType.FullModelName) ||
-            returnType.Schema?.Type != OpenApiDataTypeConstants.Object)
-        {
-            return false;
-        }
-
-        var rawModelName = OpenApiDocumentSchemaModelNameHelper.GetRawModelName(returnType.FullModelName);
-        return !OperationSchemaMappings.IsShared(rawModelName);
     }
 
     public bool HasContractReturnTypeAsComplex()

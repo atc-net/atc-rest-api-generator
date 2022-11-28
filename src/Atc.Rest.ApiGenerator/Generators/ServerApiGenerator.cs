@@ -1,5 +1,3 @@
-using Atc.Console.Spectre;
-
 // ReSharper disable ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
 // ReSharper disable SuggestBaseTypeForParameter
 // ReSharper disable ReplaceSubstringWithRangeIndexer
@@ -10,13 +8,16 @@ namespace Atc.Rest.ApiGenerator.Generators;
 public class ServerApiGenerator
 {
     private readonly ILogger logger;
+    private readonly IApiOperationExtractor apiOperationExtractor;
     private readonly ApiProjectOptions projectOptions;
 
     public ServerApiGenerator(
         ILogger logger,
+        IApiOperationExtractor apiOperationExtractor,
         ApiProjectOptions projectOptions)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        this.apiOperationExtractor = apiOperationExtractor ?? throw new ArgumentNullException(nameof(apiOperationExtractor));
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
     }
 
@@ -34,11 +35,10 @@ public class ServerApiGenerator
 
         CopyApiSpecification();
 
-        var operationSchemaMappings = OpenApiOperationSchemaMapHelper.CollectMappings(projectOptions.Document);
+        var operationSchemaMappings = apiOperationExtractor.Extract(projectOptions.Document);
 
         GenerateContracts(operationSchemaMappings);
         GenerateEndpoints(operationSchemaMappings);
-        PerformCleanup();
         GenerateSrcGlobalUsings();
 
         return true;
@@ -61,18 +61,17 @@ public class ServerApiGenerator
 
         var lines = File.ReadLines(apiGeneratedFile).ToList();
 
-        const string toolName = "ApiGenerator";
-        var newVersion = GenerateHelper.GetAtcToolVersion();
+        var newVersion = GenerateHelper.GetAtcApiGeneratorVersion();
 
         foreach (var line in lines)
         {
-            var indexOfToolName = line.IndexOf(toolName, StringComparison.Ordinal);
-            if (indexOfToolName == -1)
+            var indexOfApiGeneratorName = line.IndexOf(projectOptions.ApiGeneratorName, StringComparison.Ordinal);
+            if (indexOfApiGeneratorName == -1)
             {
                 continue;
             }
 
-            var oldVersion = line.Substring(indexOfToolName + toolName.Length);
+            var oldVersion = line.Substring(indexOfApiGeneratorName + projectOptions.ApiGeneratorName.Length);
             if (oldVersion.EndsWith('.'))
             {
                 oldVersion = oldVersion.Substring(0, oldVersion.Length - 1);
@@ -168,7 +167,7 @@ public class ServerApiGenerator
     }
 
     private void GenerateContracts(
-        List<ApiOperationSchemaMap> operationSchemaMappings)
+        IList<ApiOperation> operationSchemaMappings)
     {
         ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 
@@ -223,27 +222,77 @@ public class ServerApiGenerator
     }
 
     private void GenerateEndpoints(
-        List<ApiOperationSchemaMap> operationSchemaMappings)
+        IList<ApiOperation> operationSchemaMappings)
     {
         ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 
-        var sgEndpoints = new List<SyntaxGeneratorEndpointControllers>();
-        foreach (var segmentName in projectOptions.BasePathSegmentNames)
+        if (projectOptions.IsForClient)
         {
-            var generator = new SyntaxGeneratorEndpointControllers(logger, projectOptions, operationSchemaMappings, segmentName);
-            generator.GenerateCode();
-            sgEndpoints.Add(generator);
-        }
+            // TODO: This is the old approach only generating for ApiClient now - consolidate later with new ContentGenerator
+            var sgEndpoints = new List<SyntaxGeneratorEndpointControllers>();
+            foreach (var segmentName in projectOptions.BasePathSegmentNames)
+            {
+                var generator = new SyntaxGeneratorEndpointControllers(logger, projectOptions, operationSchemaMappings, segmentName);
+                generator.GenerateCode();
+                sgEndpoints.Add(generator);
+            }
 
-        foreach (var sg in sgEndpoints)
+            foreach (var sg in sgEndpoints)
+            {
+                sg.ToFile();
+            }
+        }
+        else
         {
-            sg.ToFile();
+            // New approach for server
+            foreach (var area in projectOptions.BasePathSegmentNames)
+            {
+                var contentGeneratorServerControllerParameters = ContentGeneratorServerControllerParameterFactory
+                    .Create(
+                        operationSchemaMappings,
+                        projectOptions.ProjectName,
+                        projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
+                        $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Endpoints}",
+                        area,
+                        GetRouteByArea(area),
+                        projectOptions.Document);
+
+                var contentGenerator = new ContentGeneratorServerController(
+                    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                    contentGeneratorServerControllerParameters);
+
+                var content = contentGenerator.Generate();
+
+                // TODO: Move responsibility of generating the file object
+                var controllerName = area.EnsureFirstCharacterToUpper() + ContentGeneratorConstants.Controller;
+                var fileAsString = DirectoryInfoHelper.GetCsFileNameForEndpoints(projectOptions.PathForEndpoints, controllerName);
+                var file = new FileInfo(fileAsString);
+
+                var contentWriter = new ContentWriter(logger);
+                contentWriter.Write(
+                    projectOptions.PathForSrcGenerate,
+                    file,
+                    ContentWriterArea.Src,
+                    content);
+            }
         }
     }
 
-    private static void PerformCleanup()
+    private string GetRouteByArea(
+        string area)
     {
-        // TODO: Implement
+        var (key, _) = projectOptions.Document.Paths.FirstOrDefault(x => x.IsPathStartingSegmentName(area));
+        if (key is null)
+        {
+            throw new NotSupportedException("Area was not found in any route.");
+        }
+
+        var routeSuffix = key
+            .Split('/', StringSplitOptions.RemoveEmptyEntries)
+            .FirstOrDefault();
+
+        return $"{projectOptions.RouteBase}/{routeSuffix}";
     }
 
     private void ScaffoldBasicFileApiGenerated()
@@ -256,7 +305,7 @@ public class ServerApiGenerator
 
         // Create class
         var classDeclaration = SyntaxClassDeclarationFactory.Create("ApiRegistration")
-            .AddGeneratedCodeAttribute(projectOptions.ToolName, projectOptions.ToolVersion.ToString());
+            .AddGeneratedCodeAttribute(projectOptions.ApiGeneratorName, projectOptions.ApiGeneratorVersion.ToString());
 
         // Add class to namespace
         @namespace = @namespace.AddMembers(classDeclaration);
@@ -271,8 +320,13 @@ public class ServerApiGenerator
             .EnsureFileScopedNamespace();
 
         var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "ApiRegistration.cs"));
-        var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
-        TextFileHelper.Save(logger, file, fileDisplayLocation, codeAsString);
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectOptions.PathForSrcGenerate,
+            file,
+            ContentWriterArea.Src,
+            codeAsString);
     }
 
     private void DeleteLegacyScaffoldBasicFileResultFactory()
@@ -312,15 +366,11 @@ public class ServerApiGenerator
             "System.Net",
             "System.Threading",
             "System.Threading.Tasks",
+            "Microsoft.AspNetCore.Authorization",
             "Microsoft.AspNetCore.Http",
             "Microsoft.AspNetCore.Mvc",
             "Atc.Rest.Results",
         };
-
-        if (projectOptions.ApiOptions.Generator.UseAuthorization)
-        {
-            requiredUsings.Add("Microsoft.AspNetCore.Authorization");
-        }
 
         requiredUsings.Add($"{projectOptions.ProjectName}.Contracts");
         foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
@@ -328,12 +378,9 @@ public class ServerApiGenerator
             requiredUsings.Add($"{projectOptions.ProjectName}.Contracts.{basePathSegmentName}");
         }
 
-        var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "GlobalUsings.cs"));
-        var fileDisplayLocation = file.FullName.Replace(projectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
-
         GlobalUsingsHelper.CreateOrUpdate(
             logger,
-            fileDisplayLocation,
+            ContentWriterArea.Src,
             projectOptions.PathForSrcGenerate,
             requiredUsings);
     }

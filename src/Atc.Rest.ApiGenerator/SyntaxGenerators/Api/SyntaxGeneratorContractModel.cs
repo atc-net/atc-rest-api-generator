@@ -120,8 +120,12 @@ public class SyntaxGeneratorContractModel : ISyntaxSchemaCodeGenerator
     {
         ArgumentNullException.ThrowIfNull(file);
 
-        var fileDisplayLocation = file.FullName.Replace(ApiProjectOptions.PathForSrcGenerate.FullName, "src: ", StringComparison.Ordinal);
-        TextFileHelper.Save(logger, file.FullName, fileDisplayLocation, ToCodeAsString());
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            ApiProjectOptions.PathForSrcGenerate,
+            file,
+            ContentWriterArea.Src,
+            ToCodeAsString());
     }
 
     public override string ToString()
@@ -157,7 +161,7 @@ public class SyntaxGeneratorContractModel : ISyntaxSchemaCodeGenerator
 
         // Create class
         var classDeclaration = SyntaxClassDeclarationFactory.Create(ApiSchemaKey.EnsureFirstCharacterToUpper())
-            .AddGeneratedCodeAttribute(ApiProjectOptions.ToolName, ApiProjectOptions.ToolVersion.ToString())
+            .AddGeneratedCodeAttribute(ApiProjectOptions.ApiGeneratorName, ApiProjectOptions.ApiGeneratorVersion.ToString())
             .WithLeadingTrivia(SyntaxDocumentationFactory.Create(ApiSchema));
 
         var hasAnyPropertiesAsArrayWithFormatTypeBinary = ApiSchema.HasAnyPropertiesAsArrayWithFormatTypeBinary();

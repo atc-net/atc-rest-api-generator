@@ -8,8 +8,8 @@ namespace Scenario2.Api.Generated.Endpoints;
 
 /// <summary>
 /// Endpoint definitions.
-/// Area: Orders.
 /// </summary>
+[Authorize]
 [ApiController]
 [Route("/api/v1/orders")]
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
@@ -18,74 +18,51 @@ public class OrdersController : ControllerBase
     /// <summary>
     /// Description: Get orders.
     /// Operation: GetOrders.
-    /// Area: Orders.
     /// </summary>
+    [Authorize]
     [HttpGet]
     [ProducesResponseType(typeof(Pagination<Order>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    public Task<ActionResult> GetOrdersAsync(GetOrdersParameters parameters, [FromServices] IGetOrdersHandler handler, CancellationToken cancellationToken)
-    {
-        if (handler is null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
-
-        return InvokeGetOrdersAsync(parameters, handler, cancellationToken);
-    }
+    public async Task<ActionResult> GetOrders(
+        GetOrdersParameters parameters,
+        [FromServices] IGetOrdersHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(parameters, cancellationToken);
 
     /// <summary>
     /// Description: Get order by id.
     /// Operation: GetOrderById.
-    /// Area: Orders.
     /// </summary>
+    [AllowAnonymous]
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(Order), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    public Task<ActionResult> GetOrderByIdAsync(GetOrderByIdParameters parameters, [FromServices] IGetOrderByIdHandler handler, CancellationToken cancellationToken)
-    {
-        if (handler is null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
-
-        return InvokeGetOrderByIdAsync(parameters, handler, cancellationToken);
-    }
+    public async Task<ActionResult> GetOrderById(
+        GetOrderByIdParameters parameters,
+        [FromServices] IGetOrderByIdHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(parameters, cancellationToken);
 
     /// <summary>
     /// Description: Update part of order by id.
     /// Operation: PatchOrdersId.
-    /// Area: Orders.
     /// </summary>
+    [Authorize(Roles = "admin,operator")]
     [HttpPatch("{id}")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status502BadGateway)]
-    public Task<ActionResult> PatchOrdersIdAsync(PatchOrdersIdParameters parameters, [FromServices] IPatchOrdersIdHandler handler, CancellationToken cancellationToken)
-    {
-        if (handler is null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
-
-        return InvokePatchOrdersIdAsync(parameters, handler, cancellationToken);
-    }
-
-    private static async Task<ActionResult> InvokeGetOrdersAsync(GetOrdersParameters parameters, IGetOrdersHandler handler, CancellationToken cancellationToken)
-    {
-        return await handler.ExecuteAsync(parameters, cancellationToken);
-    }
-
-    private static async Task<ActionResult> InvokeGetOrderByIdAsync(GetOrderByIdParameters parameters, IGetOrderByIdHandler handler, CancellationToken cancellationToken)
-    {
-        return await handler.ExecuteAsync(parameters, cancellationToken);
-    }
-
-    private static async Task<ActionResult> InvokePatchOrdersIdAsync(PatchOrdersIdParameters parameters, IPatchOrdersIdHandler handler, CancellationToken cancellationToken)
-    {
-        return await handler.ExecuteAsync(parameters, cancellationToken);
-    }
+    public async Task<ActionResult> PatchOrdersId(
+        PatchOrdersIdParameters parameters,
+        [FromServices] IPatchOrdersIdHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(parameters, cancellationToken);
 }

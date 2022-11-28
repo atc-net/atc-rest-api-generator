@@ -2,7 +2,7 @@
 # Version: 1.0.9
 # Updated: 01-02-2022
 # Location: src
-# Distribution: DotNet5
+# Distribution: DotNet6
 # Inspired by: https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/code-style-rule-options
 
 ##########################################
@@ -45,5 +45,9 @@
 ##########################################
 # Custom - Code Analyzers Rules
 ##########################################
+dotnet_diagnostic.CA1305.severity = none         # Specify IFormatProvider
 
-dotnet_diagnostic.S3358.severity = none         # for now..
+dotnet_diagnostic.MA0011.severity = none         # IFormatProvider is missing
+dotnet_diagnostic.MA0051.severity = none         # Method is too long
+
+dotnet_diagnostic.S3358.severity = none          # for now..
