@@ -19,6 +19,10 @@ public class ContentWriter : IContentWriter
         string content,
         bool overrideIfExist = true)
     {
+        ArgumentNullException.ThrowIfNull(workingFolder);
+        ArgumentNullException.ThrowIfNull(file);
+        ArgumentNullException.ThrowIfNull(content);
+
         if (file.Directory is not null &&
             !file.Directory.Exists)
         {
