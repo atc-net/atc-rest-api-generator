@@ -2,8 +2,6 @@ namespace Atc.Rest.ApiGenerator.Framework.Contracts.Options;
 
 public class ApiOptionsGenerator
 {
-    public bool UseAuthorization { get; set; }
-
     public bool UseRestExtended { get; set; } = true;
 
     public ApiOptionsGeneratorRequest Request { get; set; } = new();

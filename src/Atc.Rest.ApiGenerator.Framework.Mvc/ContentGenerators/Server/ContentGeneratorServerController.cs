@@ -27,9 +27,7 @@ public sealed class ContentGeneratorServerController : IContentGenerator
         sb.AppendLine("/// <summary>");
         sb.AppendLine("/// Endpoint definitions.");
         sb.AppendLine("/// </summary>");
-
-        AppendControllerAuthorizationIfNeeded(sb);
-
+        sb.AppendLine("[Authorize]");
         sb.AppendLine("[ApiController]");
         sb.AppendLine($"[Route(\"{parameters.RouteBase}\")]");
         sb.AppendLine(codeAttributeGenerator.Generate());
@@ -40,7 +38,7 @@ public sealed class ContentGeneratorServerController : IContentGenerator
         {
             var item = parameters.MethodParameters[i];
 
-            AppendMethodContent(sb, parameters.UseAuthorization, item);
+            AppendMethodContent(sb, item);
 
             if (i < parameters.MethodParameters.Count - 1)
             {
@@ -52,9 +50,8 @@ public sealed class ContentGeneratorServerController : IContentGenerator
         return sb.ToString();
     }
 
-    private void AppendMethodContent(
+    private static void AppendMethodContent(
         StringBuilder sb,
-        bool controllerUsesAuthorization,
         ContentGeneratorServerControllerMethodParameters item)
     {
         sb.AppendLine(4, "/// <summary>");
@@ -62,7 +59,7 @@ public sealed class ContentGeneratorServerController : IContentGenerator
         sb.AppendLine(4, $"/// Operation: {item.Name}.");
         sb.AppendLine(4, "/// </summary>");
 
-        AppendMethodContentAuthorizationIfNeeded(sb, controllerUsesAuthorization, item);
+        AppendMethodContentAuthorizationIfNeeded(sb, item);
 
         sb.AppendLine(4, string.IsNullOrEmpty(item.RouteSuffix)
             ? $"[Http{item.OperationTypeRepresentation}]"
@@ -95,21 +92,11 @@ public sealed class ContentGeneratorServerController : IContentGenerator
             : "=> await handler.ExecuteAsync(cancellationToken);");
     }
 
-    private void AppendControllerAuthorizationIfNeeded(
-        StringBuilder sb)
-    {
-        if (parameters.UseAuthorization)
-        {
-            sb.AppendLine("[Authorize]");
-        }
-    }
-
     private static void AppendMethodContentAuthorizationIfNeeded(
         StringBuilder sb,
-        bool controllerUsesAuthorization,
         ContentGeneratorServerControllerMethodParameters item)
     {
-        if (ShouldUseAuthorizeAttribute(controllerUsesAuthorization, item))
+        if (ShouldUseAuthorizeAttribute(item))
         {
             var authorizeLineBuilder = new StringBuilder();
             var authRoles = string.Join(',', item.ApiPathAuthorizationRoles.Concat(item.ApiOperationAuthorizationRoles).Distinct(StringComparer.Ordinal).OrderBy(x => x));
@@ -144,7 +131,6 @@ public sealed class ContentGeneratorServerController : IContentGenerator
     }
 
     private static bool ShouldUseAuthorizeAttribute(
-        bool controllerUsesAuthorization,
         ContentGeneratorServerControllerMethodParameters item)
     {
         var apiPathUseAuthorization = item.ApiPathUseAuthorization.HasValue &&
@@ -160,11 +146,10 @@ public sealed class ContentGeneratorServerController : IContentGenerator
         var apiOperationAnyRolesOrAuthenticationSchemes = item.ApiOperationAuthorizationRoles.Any() ||
                                                           item.ApiOperationAuthenticationSchemes.Any();
 
-        var result = controllerUsesAuthorization &&
-                     (apiPathUseAuthorization ||
-                      apiOperationUseAuthorization ||
-                      apiPathAnyRolesOrAuthenticationSchemes ||
-                      apiOperationAnyRolesOrAuthenticationSchemes);
+        var result = apiPathUseAuthorization ||
+                     apiOperationUseAuthorization ||
+                     apiPathAnyRolesOrAuthenticationSchemes ||
+                     apiOperationAnyRolesOrAuthenticationSchemes;
 
         if (result &&
             apiOperationUseAuthorizationIsSet &&

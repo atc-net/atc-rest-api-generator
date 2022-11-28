@@ -4,7 +4,6 @@ public record ContentGeneratorServerControllerParameters(
     string Namespace,
     string Area,
     string RouteBase,
-    bool UseAuthorization,
     List<ContentGeneratorServerControllerMethodParameters> MethodParameters);
 
 public record ContentGeneratorServerControllerMethodParameters(

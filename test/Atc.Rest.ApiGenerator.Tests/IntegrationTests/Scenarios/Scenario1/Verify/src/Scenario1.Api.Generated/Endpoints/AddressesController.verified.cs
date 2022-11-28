@@ -22,6 +22,8 @@ public class AddressesController : ControllerBase
     [Authorize(Roles = "operator")]
     [HttpGet("{postalCode}")]
     [ProducesResponseType(typeof(List<Address>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     public async Task<ActionResult> GetAddressesByPostalCodes(
         GetAddressesByPostalCodesParameters parameters,

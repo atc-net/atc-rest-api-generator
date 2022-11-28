@@ -10,7 +10,6 @@ public static class ArgumentCommandConstants
     public const string ShortConfigurationSpecificationPath = "-s";
     public const string LongConfigurationSpecificationPath = "--specificationPath";
     public const string LongConfigurationOptionsPath = "--optionsPath";
-    public const string LongConfigurationAuthorization = "--useAuthorization";
 
     public const string LongConfigurationValidateStrictMode = "--validate-strictMode";
     public const string LongConfigurationValidateOperationIdValidation = "--validate-operationIdValidation";

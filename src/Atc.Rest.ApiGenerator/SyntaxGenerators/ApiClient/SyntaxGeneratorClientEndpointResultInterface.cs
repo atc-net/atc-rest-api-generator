@@ -134,7 +134,7 @@ public class SyntaxGeneratorClientEndpointResultInterface : SyntaxGeneratorClien
             useProblemDetailsAsDefaultResponseBody: true,
             includeEmptyResponseTypes: false,
             HasParametersOrRequestBody,
-            ApiProjectOptions.ApiOptions.Generator.UseAuthorization,
+            includeIfNotDefinedAuthorization: true,
             includeIfNotDefinedInternalServerError: true,
             isClient: true);
 

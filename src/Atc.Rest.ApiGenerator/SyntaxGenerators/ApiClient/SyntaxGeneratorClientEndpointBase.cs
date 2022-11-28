@@ -30,7 +30,7 @@ public abstract class SyntaxGeneratorClientEndpointBase
             useProblemDetailsAsDefaultResponseBody: false,
             includeEmptyResponseTypes: false,
             HasParametersOrRequestBody,
-            ApiProjectOptions.ApiOptions.Generator.UseAuthorization,
+            includeIfNotDefinedAuthorization: true,
             includeIfNotDefinedInternalServerError: true,
             isClient: true);
 

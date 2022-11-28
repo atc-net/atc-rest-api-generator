@@ -9,6 +9,7 @@ namespace Scenario2.Api.Generated.Endpoints;
 /// <summary>
 /// Endpoint definitions.
 /// </summary>
+[Authorize]
 [ApiController]
 [Route("/api/v1/eventArgs")]
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
@@ -20,6 +21,8 @@ public class EventargsController : ControllerBase
     /// </summary>
     [HttpGet]
     [ProducesResponseType(typeof(List<Scenario2.Api.Generated.Contracts.Eventargs.EventArgs>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult> GetEventArgs(
         [FromServices] IGetEventArgsHandler handler,
         CancellationToken cancellationToken)
@@ -31,6 +34,8 @@ public class EventargsController : ControllerBase
     /// </summary>
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(Scenario2.Api.Generated.Contracts.Eventargs.EventArgs), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     public async Task<ActionResult> GetEventArgsById(
         GetEventArgsByIdParameters parameters,

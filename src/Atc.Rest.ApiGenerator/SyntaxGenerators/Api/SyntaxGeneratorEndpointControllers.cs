@@ -42,12 +42,9 @@ public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointContro
 
         // Create class
         var classDeclaration = SyntaxClassDeclarationFactory.Create(controllerTypeName);
-        if (ApiProjectOptions.ApiOptions.Generator.UseAuthorization)
-        {
-            classDeclaration =
-                classDeclaration.AddAttributeLists(
-                    SyntaxAttributeListFactory.Create(nameof(AuthorizeAttribute)));
-        }
+        classDeclaration =
+            classDeclaration.AddAttributeLists(
+                SyntaxAttributeListFactory.Create(nameof(AuthorizeAttribute)));
 
         classDeclaration = classDeclaration.AddAttributeLists(
                 SyntaxAttributeListFactory.Create(nameof(ApiControllerAttribute)),
@@ -167,7 +164,7 @@ public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointContro
                     useProblemDetailsAsDefaultResponseBody: false,
                     includeEmptyResponseTypes: false,
                     hasGlobalParameters || apiOperation.Value.HasParametersOrRequestBody(),
-                    includeIfNotDefinedAuthorization: false,
+                    includeIfNotDefinedAuthorization: true,
                     includeIfNotDefinedInternalServerError: false,
                     isClient: false);
 
@@ -285,7 +282,7 @@ public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointContro
             ApiProjectOptions.ProjectName,
             ApiProjectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
             apiOperation.Value.HasParametersOrRequestBody(),
-            includeIfNotDefinedAuthorization: false,
+            includeIfNotDefinedAuthorization: true,
             includeIfNotDefinedInternalServerError: false);
 
         return producesResponseAttributeParts

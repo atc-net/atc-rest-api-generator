@@ -9,6 +9,7 @@ namespace Scenario2.Api.Generated.Endpoints;
 /// <summary>
 /// Endpoint definitions.
 /// </summary>
+[Authorize]
 [ApiController]
 [Route("/api/v1/pagination")]
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
@@ -20,6 +21,8 @@ public class PaginationController : ControllerBase
     /// </summary>
     [HttpGet("list/int")]
     [ProducesResponseType(typeof(Pagination<int>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult> GetPaginatedListOfInts(
         [FromServices] IGetPaginatedListOfIntsHandler handler,
         CancellationToken cancellationToken)
@@ -31,6 +34,8 @@ public class PaginationController : ControllerBase
     /// </summary>
     [HttpGet("list/string")]
     [ProducesResponseType(typeof(Pagination<string>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult> GetPaginatedListOfStrings(
         [FromServices] IGetPaginatedListOfStringsHandler handler,
         CancellationToken cancellationToken)

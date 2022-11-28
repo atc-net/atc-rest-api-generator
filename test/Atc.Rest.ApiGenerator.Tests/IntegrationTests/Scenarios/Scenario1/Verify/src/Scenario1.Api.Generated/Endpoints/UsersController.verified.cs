@@ -22,6 +22,8 @@ public class UsersController : ControllerBase
     [Authorize]
     [HttpGet]
     [ProducesResponseType(typeof(List<User>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
     public async Task<ActionResult> GetUsers(
         [FromServices] IGetUsersHandler handler,

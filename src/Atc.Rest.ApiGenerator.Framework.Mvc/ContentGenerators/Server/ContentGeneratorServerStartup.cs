@@ -26,6 +26,7 @@ public class ContentGeneratorServerStartup : IContentGenerator
         sb.AppendLine(8, "Configuration = configuration;");
         sb.AppendLine(8, "restApiOptions = new RestApiExtendedOptions");
         sb.AppendLine(8, "{");
+        sb.AppendLine(12, "// TODO: Remove/out-comment/set to false this for production scenarios!");
         sb.AppendLine(12, "AllowAnonymousAccessForDevelopment = true,");
         sb.AppendLine(8, "};");
         sb.AppendLine();

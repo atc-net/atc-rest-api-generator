@@ -9,6 +9,7 @@ namespace Scenario2.Api.Generated.Endpoints;
 /// <summary>
 /// Endpoint definitions.
 /// </summary>
+[Authorize]
 [ApiController]
 [Route("/api/v1/accounts")]
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
@@ -21,6 +22,8 @@ public class AccountsController : ControllerBase
     [HttpPut("{accountId}/name")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult> UpdateAccountName(
         UpdateAccountNameParameters parameters,
         [FromServices] IUpdateAccountNameHandler handler,
@@ -34,6 +37,8 @@ public class AccountsController : ControllerBase
     [HttpPost("{accountId}/name")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult> SetAccountName(
         SetAccountNameParameters parameters,
         [FromServices] ISetAccountNameHandler handler,

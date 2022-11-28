@@ -18,6 +18,7 @@
 * atc-rest-api-generator options-file create command
  * Api-Options file
     Generator->UseNullableReferenceTypes has been removed (default in c# 10)
+* CLI command argument '--useAuthorization' has been deprecated, in favor of custom extension flags in API specification. See section below. '[Autuhorize]' attribute is now set by default on controller level.
  ```
 
 ## Projects in the repository
@@ -331,9 +332,7 @@ When reading the OpenApi specification, a lot of validations are being run again
 
 The 3 extension "tags" can be specified at path/path-item levels.
 
-The CLI command argument "--useAuthorization" is still taken into consideration when generating the [Authorize] attributes.
-
-If all path-items under a given path all have x-authentication-required set to true, and --useAuthorization is set to false, then a [Authorize] header will still be added to the generated controller class. Otherwise [Authorize(Roles=x,y,z)] and [AllowAnonymous] will be applied the necessary places on the actions/methods in the controller.
+If all path-items (operations) under a given path all have x-authentication-required set to true, then a [Authorize] header will still be added to the generated controller class. Otherwise [Authorize(Roles=x,y,z)] and [AllowAnonymous] will be applied the necessary places on the actions/methods in the controller.
 
 Authentication-Schemes and Authorize-Roles defined at path/controller level is taken into consideration when generating [Authorize] attributes for path-item/action/method level.
 

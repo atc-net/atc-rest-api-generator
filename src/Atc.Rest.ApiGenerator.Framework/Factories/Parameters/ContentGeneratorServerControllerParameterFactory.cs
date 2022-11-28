@@ -1,4 +1,5 @@
 // ReSharper disable LoopCanBeConvertedToQuery
+// ReSharper disable ReplaceWithSingleAssignment.True
 namespace Atc.Rest.ApiGenerator.Framework.Factories.Parameters;
 
 public static class ContentGeneratorServerControllerParameterFactory
@@ -10,8 +11,7 @@ public static class ContentGeneratorServerControllerParameterFactory
         string @namespace,
         string area,
         string route,
-        OpenApiDocument openApiDocument,
-        bool apiOptionsUseAuthorization)
+        OpenApiDocument openApiDocument)
     {
         var methodParameters = new List<ContentGeneratorServerControllerMethodParameters>();
 
@@ -42,7 +42,8 @@ public static class ContentGeneratorServerControllerParameterFactory
                         apiOperation.Value,
                         area,
                         projectName,
-                        useProblemDetailsAsDefaultBody),
+                        useProblemDetailsAsDefaultBody,
+                        ShouldUseAuthorization(apiPathAuthenticationRequired, apiOperationAuthenticationRequired)),
                     apiPathAuthenticationRequired,
                     apiPathAuthorizationRoles,
                     apiPathAuthenticationSchemes,
@@ -56,7 +57,6 @@ public static class ContentGeneratorServerControllerParameterFactory
             @namespace,
             area,
             route,
-            apiOptionsUseAuthorization || openApiDocument.HasAllPathsAuthenticationRequiredSet(area),
             methodParameters);
     }
 
@@ -132,13 +132,33 @@ public static class ContentGeneratorServerControllerParameterFactory
         OpenApiOperation apiOperation,
         string area,
         string projectName,
-        bool useProblemDetailsAsDefaultBody)
+        bool useProblemDetailsAsDefaultBody,
+        bool shouldUseAuthorization)
         => apiOperation.Responses.GetProducesResponseAttributeParts(
             operationSchemaMappings,
             area,
             projectName,
             useProblemDetailsAsDefaultBody,
             apiOperation.HasParametersOrRequestBody(),
-            includeIfNotDefinedAuthorization: false,
+            shouldUseAuthorization,
             includeIfNotDefinedInternalServerError: false);
+
+    private static bool ShouldUseAuthorization(
+        bool? apiPathAuthenticationRequired,
+        bool? apiOperationAuthenticationRequired)
+    {
+        var shouldUseAuthorization = true;
+
+        if (apiPathAuthenticationRequired.HasValue && !apiPathAuthenticationRequired.Value)
+        {
+            shouldUseAuthorization = false;
+        }
+
+        if (shouldUseAuthorization && apiOperationAuthenticationRequired.HasValue && !apiOperationAuthenticationRequired.Value)
+        {
+            shouldUseAuthorization = false;
+        }
+
+        return shouldUseAuthorization;
+    }
 }

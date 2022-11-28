@@ -1,6 +1,5 @@
 {
 	"Generator": {
-		"UseAuthorization": false,
 		"UseRestExtended": true,
 		"Request": {
 		},

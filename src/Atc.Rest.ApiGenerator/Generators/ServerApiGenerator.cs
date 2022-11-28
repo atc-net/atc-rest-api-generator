@@ -255,8 +255,7 @@ public class ServerApiGenerator
                         $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Endpoints}",
                         area,
                         GetRouteByArea(area),
-                        projectOptions.Document,
-                        projectOptions.ApiOptions.Generator.UseAuthorization);
+                        projectOptions.Document);
 
                 var contentGenerator = new ContentGeneratorServerController(
                     new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
@@ -367,16 +366,11 @@ public class ServerApiGenerator
             "System.Net",
             "System.Threading",
             "System.Threading.Tasks",
+            "Microsoft.AspNetCore.Authorization",
             "Microsoft.AspNetCore.Http",
             "Microsoft.AspNetCore.Mvc",
             "Atc.Rest.Results",
         };
-
-        if (projectOptions.ApiOptions.Generator.UseAuthorization ||
-            projectOptions.Document.IsSpecificationUsingAuthorization())
-        {
-            requiredUsings.Add("Microsoft.AspNetCore.Authorization");
-        }
 
         requiredUsings.Add($"{projectOptions.ProjectName}.Contracts");
         foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
