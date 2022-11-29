@@ -247,7 +247,7 @@ public class ServerApiGenerator
             // New approach for server
             foreach (var area in projectOptions.BasePathSegmentNames)
             {
-                var contentGeneratorServerControllerParameters = ContentGeneratorServerControllerParameterFactory
+                var contentGeneratorServerControllerParameters = ContentGeneratorServerControllerParametersFactory
                     .Create(
                         operationSchemaMappings,
                         projectOptions.ProjectName,

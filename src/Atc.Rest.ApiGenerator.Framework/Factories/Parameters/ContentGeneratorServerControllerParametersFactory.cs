@@ -2,7 +2,7 @@
 // ReSharper disable ReplaceWithSingleAssignment.True
 namespace Atc.Rest.ApiGenerator.Framework.Factories.Parameters;
 
-public static class ContentGeneratorServerControllerParameterFactory
+public static class ContentGeneratorServerControllerParametersFactory
 {
     public static ContentGeneratorServerControllerParameters Create(
         IList<ApiOperation> operationSchemaMappings,
@@ -32,7 +32,7 @@ public static class ContentGeneratorServerControllerParameterFactory
                 methodParameters.Add(new ContentGeneratorServerControllerMethodParameters(
                     OperationTypeRepresentation: apiOperation.Key.ToString(),
                     Name: operationName,
-                    Description: GetOperationSummaryDescription(apiOperation.Value),
+                    Description: apiOperation.Value.GetOperationSummaryDescription(),
                     RouteSuffix: GetRouteSuffix(apiPath),
                     InterfaceName: $"I{operationName}{ContentGeneratorConstants.Handler}",
                     ParameterTypeName: GetParameterTypeName(operationName, apiPathData, apiOperation.Value),
@@ -58,29 +58,6 @@ public static class ContentGeneratorServerControllerParameterFactory
             area,
             route,
             methodParameters);
-    }
-
-    private static string GetOperationSummaryDescription(
-        OpenApiOperation apiOperation)
-    {
-        var result = apiOperation.Summary;
-
-        if (string.IsNullOrEmpty(result))
-        {
-            result = apiOperation.Description;
-        }
-
-        if (string.IsNullOrEmpty(result))
-        {
-            return "Undefined description.";
-        }
-
-        if (!result.EndsWith('.'))
-        {
-            result += ".";
-        }
-
-        return result;
     }
 
     private static string? GetRouteSuffix(
