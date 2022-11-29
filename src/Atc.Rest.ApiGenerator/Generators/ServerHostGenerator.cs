@@ -867,7 +867,7 @@ public class ServerHostGenerator
             return;
         }
 
-        //// TODO: Does it make sense to validate on clientfoldername here?!
+        // TODO: Refactor
         var fullNamespace = string.IsNullOrEmpty(projectOptions.ClientFolderName)
             ? $"{projectOptions.ProjectName}"
             : $"{projectOptions.ProjectName}.{projectOptions.ClientFolderName}";
@@ -915,14 +915,13 @@ public class ServerHostGenerator
 
     private void ScaffoldConfigureSwaggerDocOptions()
     {
-        // TODO: Does it make sense to validate on clientfoldername here?!
+        // TODO: Refactor
         var fullNamespace = string.IsNullOrEmpty(projectOptions.ClientFolderName)
             ? $"{projectOptions.ProjectName}"
             : $"{projectOptions.ProjectName}.{projectOptions.ClientFolderName}";
 
         var contentGeneratorServerSwaggerDocOptionsParameters = ContentGeneratorServerSwaggerDocOptionsParameterFactory
             .Create(
-                projectOptions.ApiGeneratorVersion,
                 fullNamespace,
                 projectOptions.Document.ToSwaggerDocOptionsParameters());
 

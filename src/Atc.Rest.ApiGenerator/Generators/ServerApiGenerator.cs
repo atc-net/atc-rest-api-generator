@@ -174,9 +174,11 @@ public class ServerApiGenerator
         var sgContractModels = new List<SyntaxGeneratorContractModel>();
         var sgContractParameters = new List<SyntaxGeneratorContractParameter>();
         var sgContractResults = new List<SyntaxGeneratorContractResult>();
-        var sgContractInterfaces = new List<SyntaxGeneratorContractInterface>();
+
         foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
         {
+            var apiGroupName = basePathSegmentName.EnsureFirstCharacterToUpper();
+
             var generatorModels = new SyntaxGeneratorContractModels(logger, projectOptions, operationSchemaMappings, basePathSegmentName);
             var generatedModels = generatorModels.GenerateSyntaxTrees();
             sgContractModels.AddRange(generatedModels);
@@ -189,9 +191,7 @@ public class ServerApiGenerator
             var generatedResults = generatorResults.GenerateSyntaxTrees();
             sgContractResults.AddRange(generatedResults);
 
-            var generatorInterfaces = new SyntaxGeneratorContractInterfaces(logger, projectOptions, basePathSegmentName);
-            var generatedInterfaces = generatorInterfaces.GenerateSyntaxTrees();
-            sgContractInterfaces.AddRange(generatedInterfaces);
+            GenerateInterfaces(projectOptions.Document, apiGroupName);
         }
 
         ApiGeneratorHelper.CollectMissingContractModelFromOperationSchemaMappings(
@@ -214,10 +214,62 @@ public class ServerApiGenerator
         {
             sg.ToFile();
         }
+    }
 
-        foreach (var sg in sgContractInterfaces)
+    private void GenerateInterfaces(
+        OpenApiDocument document,
+        string apiGroupName)
+    {
+        // TODO: Refactor
+        string fullNamespace;
+        if (projectOptions.IsForClient)
         {
-            sg.ToFile();
+            fullNamespace = string.IsNullOrEmpty(projectOptions.ClientFolderName)
+                ? $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}"
+                : $"{projectOptions.ProjectName}.{projectOptions.ClientFolderName}.{ContentGeneratorConstants.Contracts}";
+        }
+        else
+        {
+            fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
+        }
+
+        foreach (var openApiPath in document.Paths)
+        {
+            if (!openApiPath.IsPathStartingSegmentName(apiGroupName))
+            {
+                continue;
+            }
+
+            foreach (var openApiOperation in openApiPath.Value.Operations)
+            {
+                // Generate
+                var interfaceParameters = ContentGeneratorServerHandlerInterfaceParametersFactory.Create(
+                    fullNamespace,
+                    apiGroupName,
+                    openApiPath.Value,
+                    openApiOperation.Value);
+
+                var contentGeneratorInterface = new ContentGeneratorServerHandlerInterface(
+                    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                    interfaceParameters);
+
+                var interfaceContent = contentGeneratorInterface.Generate();
+
+                // Write
+                var file = new FileInfo(DirectoryInfoHelper.GetCsFileNameForContract(
+                    projectOptions.PathForContracts,
+                    apiGroupName,
+                    ContentGeneratorConstants.Interfaces,
+                    interfaceParameters.InterfaceName));
+
+                var contentWriter = new ContentWriter(logger);
+                contentWriter.Write(
+                    projectOptions.PathForSrcGenerate,
+                    file,
+                    ContentWriterArea.Src,
+                    interfaceContent);
+            }
         }
     }
 
