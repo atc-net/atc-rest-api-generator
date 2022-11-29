@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Items;
 /// Domain Interface for RequestHandler.
 /// Description: Create a new item.
 /// Operation: CreateItem.
-/// Area: Items.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface ICreateItemHandler
@@ -20,5 +19,7 @@ public interface ICreateItemHandler
     /// </summary>
     /// <param name="parameters">The parameters.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<CreateItemResult> ExecuteAsync(CreateItemParameters parameters, CancellationToken cancellationToken = default);
+    Task<CreateItemResult> ExecuteAsync(
+        CreateItemParameters parameters,
+        CancellationToken cancellationToken = default);
 }

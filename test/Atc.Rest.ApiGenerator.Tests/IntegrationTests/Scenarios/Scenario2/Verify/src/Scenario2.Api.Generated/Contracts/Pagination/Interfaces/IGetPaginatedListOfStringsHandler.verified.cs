@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Pagination;
 /// Domain Interface for RequestHandler.
 /// Description: Your GET endpoint.
 /// Operation: GetPaginatedListOfStrings.
-/// Area: Pagination.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface IGetPaginatedListOfStringsHandler
@@ -19,5 +18,6 @@ public interface IGetPaginatedListOfStringsHandler
     /// Execute method.
     /// </summary>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<GetPaginatedListOfStringsResult> ExecuteAsync(CancellationToken cancellationToken = default);
+    Task<GetPaginatedListOfStringsResult> ExecuteAsync(
+        CancellationToken cancellationToken = default);
 }

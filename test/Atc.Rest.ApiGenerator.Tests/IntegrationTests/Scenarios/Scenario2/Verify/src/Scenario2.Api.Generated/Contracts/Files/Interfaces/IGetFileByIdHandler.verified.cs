@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Files;
 /// Domain Interface for RequestHandler.
 /// Description: Get File By Id.
 /// Operation: GetFileById.
-/// Area: Files.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface IGetFileByIdHandler
@@ -20,5 +19,7 @@ public interface IGetFileByIdHandler
     /// </summary>
     /// <param name="parameters">The parameters.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<GetFileByIdResult> ExecuteAsync(GetFileByIdParameters parameters, CancellationToken cancellationToken = default);
+    Task<GetFileByIdResult> ExecuteAsync(
+        GetFileByIdParameters parameters,
+        CancellationToken cancellationToken = default);
 }

@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Orders;
 /// Domain Interface for RequestHandler.
 /// Description: Update part of order by id.
 /// Operation: PatchOrdersId.
-/// Area: Orders.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface IPatchOrdersIdHandler
@@ -20,5 +19,7 @@ public interface IPatchOrdersIdHandler
     /// </summary>
     /// <param name="parameters">The parameters.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<PatchOrdersIdResult> ExecuteAsync(PatchOrdersIdParameters parameters, CancellationToken cancellationToken = default);
+    Task<PatchOrdersIdResult> ExecuteAsync(
+        PatchOrdersIdParameters parameters,
+        CancellationToken cancellationToken = default);
 }

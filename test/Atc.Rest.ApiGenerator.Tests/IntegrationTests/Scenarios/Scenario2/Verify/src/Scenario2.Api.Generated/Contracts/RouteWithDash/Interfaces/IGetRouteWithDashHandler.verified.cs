@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.RouteWithDash;
 /// Domain Interface for RequestHandler.
 /// Description: Your GET endpoint.
 /// Operation: GetRouteWithDash.
-/// Area: RouteWithDash.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface IGetRouteWithDashHandler
@@ -19,5 +18,6 @@ public interface IGetRouteWithDashHandler
     /// Execute method.
     /// </summary>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<GetRouteWithDashResult> ExecuteAsync(CancellationToken cancellationToken = default);
+    Task<GetRouteWithDashResult> ExecuteAsync(
+        CancellationToken cancellationToken = default);
 }

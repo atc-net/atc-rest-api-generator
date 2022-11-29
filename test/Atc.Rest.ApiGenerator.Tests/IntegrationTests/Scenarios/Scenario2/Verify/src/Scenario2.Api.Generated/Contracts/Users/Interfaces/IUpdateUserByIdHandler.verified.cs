@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Users;
 /// Domain Interface for RequestHandler.
 /// Description: Update user by id.
 /// Operation: UpdateUserById.
-/// Area: Users.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface IUpdateUserByIdHandler
@@ -20,5 +19,7 @@ public interface IUpdateUserByIdHandler
     /// </summary>
     /// <param name="parameters">The parameters.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<UpdateUserByIdResult> ExecuteAsync(UpdateUserByIdParameters parameters, CancellationToken cancellationToken = default);
+    Task<UpdateUserByIdResult> ExecuteAsync(
+        UpdateUserByIdParameters parameters,
+        CancellationToken cancellationToken = default);
 }

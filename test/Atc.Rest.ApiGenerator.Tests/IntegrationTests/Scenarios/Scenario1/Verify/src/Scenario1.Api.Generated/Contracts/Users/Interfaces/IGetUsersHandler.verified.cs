@@ -10,7 +10,6 @@ namespace Scenario1.Api.Generated.Contracts.Users;
 /// Domain Interface for RequestHandler.
 /// Description: Get all users.
 /// Operation: GetUsers.
-/// Area: Users.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface IGetUsersHandler
@@ -19,5 +18,6 @@ public interface IGetUsersHandler
     /// Execute method.
     /// </summary>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<GetUsersResult> ExecuteAsync(CancellationToken cancellationToken = default);
+    Task<GetUsersResult> ExecuteAsync(
+        CancellationToken cancellationToken = default);
 }

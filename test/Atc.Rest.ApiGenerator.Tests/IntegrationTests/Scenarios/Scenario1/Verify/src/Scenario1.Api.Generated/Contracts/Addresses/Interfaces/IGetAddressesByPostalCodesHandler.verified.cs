@@ -10,7 +10,6 @@ namespace Scenario1.Api.Generated.Contracts.Addresses;
 /// Domain Interface for RequestHandler.
 /// Description: Get addresses by postal code.
 /// Operation: GetAddressesByPostalCodes.
-/// Area: Addresses.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface IGetAddressesByPostalCodesHandler
@@ -20,5 +19,7 @@ public interface IGetAddressesByPostalCodesHandler
     /// </summary>
     /// <param name="parameters">The parameters.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<GetAddressesByPostalCodesResult> ExecuteAsync(GetAddressesByPostalCodesParameters parameters, CancellationToken cancellationToken = default);
+    Task<GetAddressesByPostalCodesResult> ExecuteAsync(
+        GetAddressesByPostalCodesParameters parameters,
+        CancellationToken cancellationToken = default);
 }
