@@ -1,7 +1,6 @@
 namespace Atc.Rest.ApiGenerator.Framework.Contracts.ContentGeneratorsParameters.Server;
 
 public record ContentGeneratorServerSwaggerDocOptionsParameters(
-    Version ApiGeneratorVersion,
     string Namespace,
     SwaggerDocOptionsParameters SwaggerDocOptions);
 
