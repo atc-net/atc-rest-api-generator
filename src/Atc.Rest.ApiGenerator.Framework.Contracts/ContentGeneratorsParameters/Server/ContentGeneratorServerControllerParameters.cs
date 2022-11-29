@@ -2,7 +2,7 @@ namespace Atc.Rest.ApiGenerator.Framework.Contracts.ContentGeneratorsParameters.
 
 public record ContentGeneratorServerControllerParameters(
     string Namespace,
-    string Area,
+    string ApiGroupName,
     string RouteBase,
     List<ContentGeneratorServerControllerMethodParameters> MethodParameters);
 
