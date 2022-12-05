@@ -2,7 +2,6 @@ namespace Atc.Rest.ApiGenerator.Framework.Contracts.ContentGeneratorsParameters.
 
 public record ContentGeneratorServerHandlerInterfaceParameters(
     string Namespace,
-    string ApiGroupName,
     string OperationName,
     string Description,
     string InterfaceName,

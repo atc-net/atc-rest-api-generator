@@ -5,9 +5,7 @@ public static class ContentGeneratorServerSwaggerDocOptionsParameterFactory
     public static ContentGeneratorServerSwaggerDocOptionsParameters Create(
         string @namespace,
         SwaggerDocOptionsParameters swaggerDocOptions)
-    {
-        return new ContentGeneratorServerSwaggerDocOptionsParameters(
+        => new(
             @namespace,
             swaggerDocOptions);
-    }
 }

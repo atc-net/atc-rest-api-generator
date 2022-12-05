@@ -9,6 +9,31 @@ public static class Program
     {
         ArgumentNullException.ThrowIfNull(args);
 
+        ////args = new[]
+        ////{
+        ////    "generate", "server", "all",
+        ////    "-p", "SletMig",
+        ////    "-s", @"C:\Temp\sletmig\api.v1.yaml",
+        ////    ////"-s", @"C:\Code\atc-net\atc-rest-api-generator\sample\Demo.ApiDesign\SingleFileVersion\api.v1.yaml",
+        ////    "--outputSlnPath", @"C:\Temp\sletmig\crap",
+        ////    "--outputSrcPath", @"C:\Temp\sletmig\crap\src",
+        ////    "--outputTestPath", @"C:\Temp\sletmig\crap\test",
+        ////    "--optionsPath", @"C:\Temp\sletmig\DelegateApiGeneratorOptions.json",
+        ////    "-v",
+        ////};
+
+        args = new[]
+        {
+            "generate", "server", "all",
+            "-p", "Demo",
+            "-s", @"C:\Code\atc-net\atc-rest-api-generator\sample\Demo.ApiDesign\SingleFileVersion\api.v1.yaml",
+            "--outputSlnPath", @"C:\Code\atc-net\atc-rest-api-generator\sample\",
+            "--outputSrcPath", @"C:\Code\atc-net\atc-rest-api-generator\sample\src",
+            "--outputTestPath", @"C:\Code\atc-net\atc-rest-api-generator\sample\test",
+            "--optionsPath", @"C:\Code\atc-net\atc-rest-api-generator\sample\Demo.ApiDesign\DemoApiGeneratorOptions.json",
+            "-v",
+        };
+
         args = SetOutputPathFromDotArgumentIfNeeded(args);
         args = SetHelpArgumentIfNeeded(args);
 

@@ -4,7 +4,6 @@ public static class ContentGeneratorServerHandlerInterfaceParametersFactory
 {
     public static ContentGeneratorServerHandlerInterfaceParameters Create(
         string @namespace,
-        string apiGroupName,
         OpenApiPathItem openApiPath,
         OpenApiOperation openApiOperation)
     {
@@ -13,7 +12,6 @@ public static class ContentGeneratorServerHandlerInterfaceParametersFactory
         return openApiPath.HasParameters() || openApiOperation.HasParametersOrRequestBody()
             ? new ContentGeneratorServerHandlerInterfaceParameters(
                 @namespace,
-                apiGroupName,
                 operationName,
                 openApiOperation.GetOperationSummaryDescription(),
                 InterfaceName: $"I{operationName}{ContentGeneratorConstants.Handler}",
@@ -21,7 +19,6 @@ public static class ContentGeneratorServerHandlerInterfaceParametersFactory
                 ParameterName: $"{operationName}{ContentGeneratorConstants.Parameters}")
             : new ContentGeneratorServerHandlerInterfaceParameters(
                 @namespace,
-                apiGroupName,
                 operationName,
                 openApiOperation.GetOperationSummaryDescription(),
                 InterfaceName: $"I{operationName}{ContentGeneratorConstants.Handler}",

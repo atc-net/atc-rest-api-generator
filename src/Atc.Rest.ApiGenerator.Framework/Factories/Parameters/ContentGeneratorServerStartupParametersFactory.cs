@@ -4,8 +4,5 @@ public static class ContentGeneratorServerStartupParametersFactory
 {
     public static ContentGeneratorServerStartupParameters Create(
         string @namespace)
-    {
-        return new ContentGeneratorServerStartupParameters(
-            @namespace);
-    }
+        => new(@namespace);
 }

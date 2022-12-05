@@ -9,4 +9,5 @@ public static class ContentGeneratorConstants
     public const string Interfaces = "Interfaces";
     public const string Parameters = "Parameters";
     public const string Result = "Result";
+    public const string Results = "Results";
 }

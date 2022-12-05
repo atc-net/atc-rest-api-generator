@@ -3,6 +3,8 @@
 // ReSharper disable ReplaceSubstringWithRangeIndexer
 // ReSharper disable ReturnTypeCanBeEnumerable.Local
 // ReSharper disable UseObjectOrCollectionInitializer
+using System.Reflection.Metadata;
+
 namespace Atc.Rest.ApiGenerator.Generators;
 
 public class ServerApiGenerator
@@ -173,7 +175,6 @@ public class ServerApiGenerator
 
         var sgContractModels = new List<SyntaxGeneratorContractModel>();
         var sgContractParameters = new List<SyntaxGeneratorContractParameter>();
-        var sgContractResults = new List<SyntaxGeneratorContractResult>();
 
         foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
         {
@@ -187,10 +188,7 @@ public class ServerApiGenerator
             var generatedParameters = generatorParameters.GenerateSyntaxTrees();
             sgContractParameters.AddRange(generatedParameters);
 
-            var generatorResults = new SyntaxGeneratorContractResults(logger, projectOptions, basePathSegmentName);
-            var generatedResults = generatorResults.GenerateSyntaxTrees();
-            sgContractResults.AddRange(generatedResults);
-
+            GenerateResults(projectOptions.Document, apiGroupName);
             GenerateInterfaces(projectOptions.Document, apiGroupName);
         }
 
@@ -209,10 +207,61 @@ public class ServerApiGenerator
         {
             sg.ToFile();
         }
+    }
 
-        foreach (var sg in sgContractResults)
+    private void GenerateResults(
+        OpenApiDocument document,
+        string apiGroupName)
+    {
+        // TODO: Refactor
+        string fullNamespace;
+        if (projectOptions.IsForClient)
         {
-            sg.ToFile();
+            fullNamespace = string.IsNullOrEmpty(projectOptions.ClientFolderName)
+                ? $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}"
+                : $"{projectOptions.ProjectName}.{projectOptions.ClientFolderName}.{ContentGeneratorConstants.Contracts}";
+        }
+        else
+        {
+            fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
+        }
+
+        foreach (var openApiPath in document.Paths)
+        {
+            if (!openApiPath.IsPathStartingSegmentName(apiGroupName))
+            {
+                continue;
+            }
+
+            foreach (var openApiOperation in openApiPath.Value.Operations)
+            {
+                // Generate
+                var resultParameters = ContentGeneratorServerResultParametersFactory.Create(
+                    fullNamespace,
+                    openApiOperation.Value,
+                    projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody);
+
+                var contentGeneratorResult = new ContentGeneratorServerResult(
+                    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                    resultParameters);
+
+                var resultContent = contentGeneratorResult.Generate();
+
+                // Write
+                var file = new FileInfo(DirectoryInfoHelper.GetCsFileNameForContract(
+                    projectOptions.PathForContracts,
+                    apiGroupName,
+                    ContentGeneratorConstants.Results,
+                    resultParameters.ResultName));
+
+                var contentWriter = new ContentWriter(logger);
+                contentWriter.Write(
+                    projectOptions.PathForSrcGenerate,
+                    file,
+                    ContentWriterArea.Src,
+                    resultContent);
+            }
         }
     }
 
@@ -245,7 +294,6 @@ public class ServerApiGenerator
                 // Generate
                 var interfaceParameters = ContentGeneratorServerHandlerInterfaceParametersFactory.Create(
                     fullNamespace,
-                    apiGroupName,
                     openApiPath.Value,
                     openApiOperation.Value);
 

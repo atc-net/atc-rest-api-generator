@@ -31,7 +31,6 @@ public class CodeComplianceTests
         typeof(SyntaxGeneratorContractParameter),
         typeof(SyntaxGeneratorContractParameters),
         typeof(SyntaxGeneratorContractResult),
-        typeof(SyntaxGeneratorContractResults),
         typeof(SyntaxGeneratorClientEndpoint),
         typeof(SyntaxGeneratorClientEndpoints),
         typeof(SyntaxGeneratorEndpointControllers),
