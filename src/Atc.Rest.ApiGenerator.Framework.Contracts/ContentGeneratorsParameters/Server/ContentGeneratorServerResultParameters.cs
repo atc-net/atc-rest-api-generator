@@ -6,13 +6,17 @@ public record ContentGeneratorServerResultParameters(
     string Description,
     string ResultName,
     List<ContentGeneratorServerResultMethodParameters> MethodParameters,
-    List<ContentGeneratorServerResultImplicitOperatorParameters> ImplicitOperatorParameters);
+    ContentGeneratorServerResultImplicitOperatorParameters? ImplicitOperatorParameters);
 
 public record ContentGeneratorServerResultMethodParameters(
     HttpStatusCode HttpStatusCode,
     SchemaType SchemaType,
     bool UsesProblemDetails,
     string? ModelName,
-    bool? UsesBinaryResponse);
+    bool? UsesBinaryResponse,
+    string? SimpleDataTypeName);
 
-public record ContentGeneratorServerResultImplicitOperatorParameters();
+public record ContentGeneratorServerResultImplicitOperatorParameters(
+    SchemaType SchemaType,
+    string? ModelName,
+    string? SimpleDataTypeName);

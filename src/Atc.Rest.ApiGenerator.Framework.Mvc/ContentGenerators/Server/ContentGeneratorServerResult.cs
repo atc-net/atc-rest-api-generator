@@ -1,4 +1,6 @@
 // ReSharper disable SwitchStatementHandlesSomeKnownEnumValuesWithDefault
+// ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
+// ReSharper disable ConvertIfStatementToReturnStatement
 namespace Atc.Rest.ApiGenerator.Framework.Mvc.ContentGenerators.Server;
 
 public class ContentGeneratorServerResult : IContentGenerator
@@ -47,13 +49,10 @@ public class ContentGeneratorServerResult : IContentGenerator
             }
         }
 
-        // Implicit versions
-        /*
-            /// <summary>
-            /// Performs an implicit conversion from CreateIotEdgeDeviceMappingByLocationIdResult to ActionResult.
-            /// </summary>
-            public static implicit operator CreateIotEdgeDeviceMappingByLocationIdResult(LocationIotEdgeDeviceMapping response) => Ok(response);
-        */
+        if (parameters.ImplicitOperatorParameters is not null)
+        {
+            AppendImplicitOperatorContent(sb, parameters);
+        }
 
         sb.AppendLine("}");
 
@@ -69,7 +68,7 @@ public class ContentGeneratorServerResult : IContentGenerator
 
         if (methodParameter.HttpStatusCode == HttpStatusCode.OK)
         {
-            AppendMethodContentStatusCodeOk(sb, methodParameter);
+            AppendMethodContentStatusCodeOk(sb, methodParameter, resultName);
             return;
         }
 
@@ -83,128 +82,125 @@ public class ContentGeneratorServerResult : IContentGenerator
         }
     }
 
+    private static void AppendImplicitOperatorContent(
+        StringBuilder sb,
+        ContentGeneratorServerResultParameters parameters)
+    {
+        sb.AppendLine();
+        sb.AppendLine(4, "/// <summary>");
+        sb.AppendLine(4, $"/// Performs an implicit conversion from {parameters.ResultName} to ActionResult.");
+        sb.AppendLine(4, "/// </summary>");
+
+        if (string.IsNullOrEmpty(parameters.ImplicitOperatorParameters!.ModelName))
+        {
+            switch (parameters.ImplicitOperatorParameters.SchemaType)
+            {
+                case SchemaType.None:
+                    sb.AppendLine(4, $"public static implicit operator {parameters.ResultName}(string response)");
+                    break;
+                case SchemaType.SimpleType:
+                    sb.AppendLine(4, $"public static implicit operator {parameters.ResultName}({parameters.ImplicitOperatorParameters.SimpleDataTypeName} response)");
+                    break;
+                case SchemaType.SimpleTypeList:
+                    sb.AppendLine(4, $"public static implicit operator {parameters.ResultName}(List<{parameters.ImplicitOperatorParameters.SimpleDataTypeName}> response)");
+                    break;
+                case SchemaType.SimpleTypePagedList:
+                    sb.AppendLine(4, $"public static implicit operator {parameters.ResultName}(Pagination<{parameters.ImplicitOperatorParameters.SimpleDataTypeName}> response)");
+                    break;
+                default:
+                    sb.AppendLine("//// TODO: This is unexpected when we do not have a model-name!"); // TODO: Remove eventually
+                    break;
+            }
+        }
+        else
+        {
+            switch (parameters.ImplicitOperatorParameters.SchemaType)
+            {
+                case SchemaType.ComplexType:
+                    sb.AppendLine(4, $"public static implicit operator {parameters.ResultName}({parameters.ImplicitOperatorParameters.ModelName} response)");
+                    break;
+                case SchemaType.ComplexTypeList:
+                    sb.AppendLine(4, $"public static implicit operator {parameters.ResultName}(List<{parameters.ImplicitOperatorParameters.ModelName}> response)");
+                    break;
+                case SchemaType.ComplexTypePagedList:
+                    sb.AppendLine(4, $"public static implicit operator {parameters.ResultName}(Pagination<{parameters.ImplicitOperatorParameters.ModelName}> response)");
+                    break;
+                default:
+                    sb.AppendLine("//// TODO: This is unexpected when we have a model-name!"); // TODO: Remove eventually
+                    break;
+            }
+        }
+
+        sb.AppendLine(8, "=> Ok(response);");
+    }
+
     private static void AppendMethodContentStatusCodeOk(
         StringBuilder sb,
-        ContentGeneratorServerResultMethodParameters methodParameter)
+        ContentGeneratorServerResultMethodParameters methodParameter,
+        string resultName)
     {
-        ////case HttpStatusCode.OK:
-        ////    var useBinaryResponse = ApiOperation.Responses.IsSchemaUsingBinaryFormatForOkResponse();
-        ////    if (useBinaryResponse)
-        ////    {
-        ////        methodDeclaration = CreateTypeRequestFileContentResult(className, httpStatusCode.ToNormalizedString());
-        ////    }
-        ////    else
-        ////    {
-        ////        var isPagination = ApiOperation.Responses.IsSchemaTypePaginationForStatusCode(httpStatusCode);
-        ////        if (useProblemDetails)
-        ////        {
-        ////            if (string.IsNullOrEmpty(modelName))
-        ////            {
-        ////                if (schema is not null &&
-        ////                    (schema.IsSimpleDataType() ||
-        ////                     schema.IsTypeArrayOrPagination()))
-        ////                {
-        ////                    if (schema.IsSimpleDataType())
-        ////                    {
-        ////                        methodDeclaration = CreateTypeRequestObjectResult(className,
-        ////                            httpStatusCode.ToNormalizedString(), schema.GetDataType(), "response", isList,
-        ////                            isPagination);
-        ////                    }
-        ////                    else if (schema.IsTypeArray() &&
-        ////                             schema.HasItemsWithSimpleDataType())
-        ////                    {
-        ////                        methodDeclaration = CreateTypeRequestObjectResult(className,
-        ////                            httpStatusCode.ToNormalizedString(), schema.GetSimpleDataTypeFromArray(),
-        ////                            "response", isList, isPagination);
-        ////                    }
-        ////                    else if (schema.IsTypePagination() &&
-        ////                             schema.HasPaginationItemsWithSimpleDataType())
-        ////                    {
-        ////                        methodDeclaration = CreateTypeRequestObjectResult(className,
-        ////                            httpStatusCode.ToNormalizedString(), schema.GetSimpleDataTypeFromPagination(),
-        ////                            "response", isList, isPagination);
-        ////                    }
-        ////                    else
-        ////                    {
-        ////                        // This should not happen
-        ////                        methodDeclaration = CreateTypeRequestObjectResult(className,
-        ////                            httpStatusCode.ToNormalizedString(), "UnexpectedDataType");
-        ////                    }
-        ////                }
-        ////                else
-        ////                {
-        ////                    methodDeclaration =
-        ////                        CreateTypeRequestWithSpecifiedResultFactoryMethodWithMessageAllowNull(
-        ////                            "CreateContentResult", className, httpStatusCode);
-        ////                    HasCreateContentResult = true;
-        ////                }
-        ////            }
-        ////            else
-        ////            {
-        ////                methodDeclaration = CreateTypeRequestObjectResult(className,
-        ////                    httpStatusCode.ToNormalizedString(), modelName, "response", isList, isPagination);
-        ////            }
-        ////        }
-        ////        else
-        ////        {
-        ////            if (string.IsNullOrEmpty(modelName))
-        ////            {
-        ////                if (schema is not null &&
-        ////                    (schema.IsSimpleDataType() ||
-        ////                     schema.IsTypeArrayOrPagination()))
-        ////                {
-        ////                    if (schema.IsSimpleDataType())
-        ////                    {
-        ////                        methodDeclaration = CreateTypeRequestObjectResult(className,
-        ////                            httpStatusCode.ToNormalizedString(), schema.GetDataType(), "response", isList,
-        ////                            isPagination);
-        ////                    }
-        ////                    else if (schema.IsTypeArray() &&
-        ////                             schema.HasItemsWithSimpleDataType())
-        ////                    {
-        ////                        methodDeclaration = CreateTypeRequestObjectResult(className,
-        ////                            httpStatusCode.ToNormalizedString(), schema.GetSimpleDataTypeFromArray(),
-        ////                            "response", isList, isPagination);
-        ////                    }
-        ////                    else if (schema.IsTypePagination() &&
-        ////                             schema.HasPaginationItemsWithSimpleDataType())
-        ////                    {
-        ////                        methodDeclaration = CreateTypeRequestObjectResult(className,
-        ////                            httpStatusCode.ToNormalizedString(), schema.GetSimpleDataTypeFromPagination(),
-        ////                            "response", isList, isPagination);
-        ////                    }
-        ////                    else
-        ////                    {
-        ////                        // This should not happen
-        ////                        methodDeclaration = CreateTypeRequestObjectResult(className,
-        ////                            httpStatusCode.ToNormalizedString(), "UnexpectedDataType");
-        ////                    }
-        ////                }
-        ////                else if (schema is not null &&
-        ////                         schema.IsTypeArray())
-        ////                {
-        ////                    methodDeclaration = CreateTypeRequestObjectResult(
-        ////                        className,
-        ////                        httpStatusCode.ToNormalizedString(),
-        ////                        schema.Items.GetDataType(),
-        ////                        "response",
-        ////                        isList,
-        ////                        isPagination);
-        ////                }
-        ////                else
-        ////                {
-        ////                    methodDeclaration =
-        ////                        CreateTypeRequestWithMessageAllowNull(className, httpStatusCode,
-        ////                            nameof(OkObjectResult));
-        ////                }
-        ////            }
-        ////            else
-        ////            {
-        ////                methodDeclaration = CreateTypeRequestObjectResult(className,
-        ////                    httpStatusCode.ToNormalizedString(), modelName, "response", isList, isPagination);
-        ////            }
-        ////        }
-        ////    }
+        if (methodParameter.UsesBinaryResponse.HasValue &&
+            methodParameter.UsesBinaryResponse.Value)
+        {
+            AppendMethodContentStatusCodeOkForBinary(sb, resultName);
+        }
+        else
+        {
+            if (string.IsNullOrEmpty(methodParameter.ModelName))
+            {
+                switch (methodParameter.SchemaType)
+                {
+                    case SchemaType.None:
+                        sb.AppendLine(4, $"public static {resultName} Ok(string? message = null)");
+                        sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResult)}(HttpStatusCode.OK, message));");
+                        break;
+                    case SchemaType.SimpleType:
+                        sb.AppendLine(4, $"public static {resultName} Ok({methodParameter.SimpleDataTypeName} response)");
+                        sb.AppendLine(8, $"=> new {resultName}(new OkObjectResult(response));");
+                        break;
+                    case SchemaType.SimpleTypeList:
+                        sb.AppendLine(4, $"public static {resultName} Ok(IEnumerable<{methodParameter.SimpleDataTypeName}> response)");
+                        sb.AppendLine(8, $"=> new {resultName}(new OkObjectResult(response ?? Enumerable.Empty<{methodParameter.SimpleDataTypeName}>()));");
+                        break;
+                    case SchemaType.SimpleTypePagedList:
+                        sb.AppendLine(4, $"public static {resultName} Ok(Pagination<{methodParameter.SimpleDataTypeName}> response)");
+                        sb.AppendLine(8, $"=> new {resultName}(new OkObjectResult(response));");
+                        break;
+                    default:
+                        sb.AppendLine("//// TODO: This is unexpected when we do not have a model-name!"); // TODO: Remove eventually
+                        break;
+                }
+            }
+            else
+            {
+                switch (methodParameter.SchemaType)
+                {
+                    case SchemaType.ComplexType:
+                        sb.AppendLine(4, $"public static {resultName} Ok({methodParameter.ModelName} response)");
+                        sb.AppendLine(8, $"=> new {resultName}(new OkObjectResult(response));");
+                        break;
+                    case SchemaType.ComplexTypeList:
+                        sb.AppendLine(4, $"public static {resultName} Ok(IEnumerable<{methodParameter.ModelName}> response)");
+                        sb.AppendLine(8, $"=> new {resultName}(new OkObjectResult(response ?? Enumerable.Empty<{methodParameter.ModelName}>()));");
+                        break;
+                    case SchemaType.ComplexTypePagedList:
+                        sb.AppendLine(4, $"public static {resultName} Ok(Pagination<{methodParameter.ModelName}> response)");
+                        sb.AppendLine(8, $"=> new {resultName}(new OkObjectResult(response));");
+                        break;
+                    default:
+                        sb.AppendLine("//// TODO: This is unexpected when we have a model-name!"); // TODO: Remove eventually
+                        break;
+                }
+            }
+        }
+    }
+
+    private static void AppendMethodContentStatusCodeOkForBinary(
+        StringBuilder sb,
+        string resultName)
+    {
+        sb.AppendLine(4, $"public static {resultName} Ok(byte[] bytes, string fileName)");
+        sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateFileContentResult)}(bytes, fileName));");
     }
 
     private static void AppendMethodContentWithProblemDetails(

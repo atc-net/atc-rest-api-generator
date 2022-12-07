@@ -4,7 +4,10 @@ public enum SchemaType
 {
     Unknown,
     None,
-    Single,
-    List,
-    PagedList,
+    ComplexType,
+    ComplexTypeList,
+    ComplexTypePagedList,
+    SimpleType,
+    SimpleTypeList,
+    SimpleTypePagedList,
 }
