@@ -1,3 +1,4 @@
+// ReSharper disable SwitchStatementHandlesSomeKnownEnumValuesWithDefault
 namespace Atc.Rest.ApiGenerator.Framework.Mvc.ContentGenerators.Server;
 
 public class ContentGeneratorServerResult : IContentGenerator
@@ -66,12 +67,11 @@ public class ContentGeneratorServerResult : IContentGenerator
     {
         AppendMethodSummary(sb, methodParameter.HttpStatusCode);
 
-        // TODO: Implement
-        ////if (methodParameter.HttpStatusCode == HttpStatusCode.OK)
-        ////{
-        ////    AppendMethodContentStatusCodeOk(sb, methodParameter);
-        ////    return;
-        ////}
+        if (methodParameter.HttpStatusCode == HttpStatusCode.OK)
+        {
+            AppendMethodContentStatusCodeOk(sb, methodParameter);
+            return;
+        }
 
         if (methodParameter.UsesProblemDetails)
         {
@@ -81,77 +81,6 @@ public class ContentGeneratorServerResult : IContentGenerator
         {
             AppendMethodContentWithoutProblemDetails(sb, methodParameter, resultName);
         }
-
-        //switch (methodParameter.HttpStatusCode)
-        //{
-        //    case HttpStatusCode.Created:
-                //methodDeclaration = useProblemDetails
-                //    ? CreateTypeRequestWithSpecifiedResultFactoryMethod("CreateContentResult", className, httpStatusCode)
-                //    : CreateStatusCodeResult(className, httpStatusCode);
-                ////break;
-            ////case HttpStatusCode.Accepted:
-            ////    methodDeclaration = useProblemDetails
-            ////        ? CreateTypeRequestWithSpecifiedResultFactoryMethod("CreateContentResultWithProblemDetails", className,
-            ////            httpStatusCode)
-            ////        : CreateTypeRequest(className, httpStatusCode, nameof(AcceptedResult));
-            ////    break;
-            ////case HttpStatusCode.NoContent:
-            ////    methodDeclaration = useProblemDetails
-            ////        ? CreateTypeRequestWithSpecifiedResultFactoryMethod("CreateContentResultWithProblemDetails", className,
-            ////            httpStatusCode)
-            ////        : CreateTypeRequest(className, httpStatusCode, nameof(NoContentResult));
-            ////    break;
-            ////case HttpStatusCode.NotModified:
-            ////    methodDeclaration = useProblemDetails
-            ////        ? CreateTypeRequestWithSpecifiedResultFactoryMethod("CreateContentResultWithProblemDetails", className,
-            ////            httpStatusCode)
-            ////        : CreateStatusCodeResult(className, httpStatusCode);
-            ////    break;
-            ////case HttpStatusCode.BadRequest:
-            ////    methodDeclaration = useProblemDetails
-            ////        ? CreateTypeRequestWithSpecifiedResultFactoryMethodWithMessageAllowNull(
-            ////            "CreateContentResultWithValidationProblemDetails", className, httpStatusCode)
-            ////        : CreateTypeRequestWithMessage(className, httpStatusCode, nameof(BadRequestObjectResult));
-            ////    break;
-            ////case HttpStatusCode.Unauthorized:
-            ////    methodDeclaration = useProblemDetails
-            ////        ? CreateTypeRequestWithSpecifiedResultFactoryMethod("CreateContentResultWithProblemDetails", className,
-            ////            httpStatusCode)
-            ////        : CreateTypeRequest(className, httpStatusCode, nameof(UnauthorizedResult));
-            ////    break;
-            ////case HttpStatusCode.Forbidden:
-            ////    methodDeclaration = useProblemDetails
-            ////        ? CreateTypeRequestWithSpecifiedResultFactoryMethod("CreateContentResultWithProblemDetails", className,
-            ////            httpStatusCode)
-            ////        : CreateStatusCodeResult(className, httpStatusCode);
-            ////    break;
-            ////case HttpStatusCode.NotFound:
-            ////    methodDeclaration = useProblemDetails
-            ////        ? CreateTypeRequestWithSpecifiedResultFactoryMethodWithMessageAllowNull(
-            ////            "CreateContentResultWithProblemDetails", className, httpStatusCode)
-            ////        : CreateTypeRequestWithMessageAllowNull(className, httpStatusCode, nameof(NotFoundObjectResult));
-            ////    break;
-            ////case HttpStatusCode.Conflict:
-            ////    methodDeclaration = useProblemDetails
-            ////        ? CreateTypeRequestWithSpecifiedResultFactoryMethodWithMessageAllowNull(
-            ////            "CreateContentResultWithProblemDetails", className, httpStatusCode, "error", false)
-            ////        : CreateTypeRequestWithMessageAllowNull(className, httpStatusCode, nameof(ConflictObjectResult),
-            ////            "error");
-            ////    break;
-            ////case HttpStatusCode.MethodNotAllowed:
-            ////case HttpStatusCode.InternalServerError:
-            ////case HttpStatusCode.NotImplemented:
-            ////case HttpStatusCode.BadGateway:
-            ////case HttpStatusCode.ServiceUnavailable:
-            ////case HttpStatusCode.GatewayTimeout:
-            ////    methodDeclaration = useProblemDetails
-            ////        ? CreateTypeRequestWithSpecifiedResultFactoryMethodWithMessageAllowNull(
-            ////            "CreateContentResultWithProblemDetails", className, httpStatusCode)
-            ////        : CreateTypeRequestWithObject(className, httpStatusCode, nameof(ContentResult));
-            ////    break;
-            ////default:
-            ////    throw new NotImplementedException("Method: " + nameof(httpStatusCode) + " " + httpStatusCode);
-        //}
     }
 
     private static void AppendMethodContentStatusCodeOk(
@@ -286,32 +215,40 @@ public class ContentGeneratorServerResult : IContentGenerator
         switch (methodParameter.HttpStatusCode)
         {
             case HttpStatusCode.Created:
-                sb.AppendLine(4, $"public static {resultName} Created() => new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResult)}(HttpStatusCode.Created, null));");
+                sb.AppendLine(4, $"public static {resultName} Created()");
+                sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResult)}(HttpStatusCode.Created, null));");
                 break;
             case HttpStatusCode.Accepted:
-                sb.AppendLine($"// TODO: Implement this WithProblemDetails {methodParameter.HttpStatusCode}.");
+                sb.AppendLine(4, $"public static {resultName} Accepted()");
+                sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResultWithProblemDetails)}(HttpStatusCode.Accepted, null));");
                 break;
             case HttpStatusCode.NoContent:
-                sb.AppendLine($"// TODO: Implement this WithProblemDetails {methodParameter.HttpStatusCode}.");
+                sb.AppendLine(4, $"public static {resultName} NoContent()");
+                sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResultWithProblemDetails)}(HttpStatusCode.NoContent, null));");
                 break;
             case HttpStatusCode.NotModified:
-                sb.AppendLine($"// TODO: Implement this WithProblemDetails {methodParameter.HttpStatusCode}.");
+                sb.AppendLine(4, $"public static {resultName} NotModified()");
+                sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResultWithProblemDetails)}(HttpStatusCode.NotModified, null));");
                 break;
             case HttpStatusCode.BadRequest:
-                sb.AppendLine($"// TODO: Implement this WithProblemDetails {methodParameter.HttpStatusCode}.");
+                sb.AppendLine(4, $"public static {resultName} BadRequest(string? message = null)");
+                sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResultWithValidationProblemDetails)}(HttpStatusCode.BadRequest, message));");
                 break;
             case HttpStatusCode.Unauthorized:
-                sb.AppendLine($"// TODO: Implement this WithProblemDetails {methodParameter.HttpStatusCode}.");
+                sb.AppendLine(4, $"public static {resultName} Unauthorized()");
+                sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResultWithProblemDetails)}(HttpStatusCode.Unauthorized, null));");
                 break;
             case HttpStatusCode.Forbidden:
-                sb.AppendLine($"// TODO: Implement this WithProblemDetails {methodParameter.HttpStatusCode}.");
+                sb.AppendLine(4, $"public static {resultName} Forbidden()");
+                sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResultWithProblemDetails)}(HttpStatusCode.Forbidden, null));");
                 break;
             case HttpStatusCode.NotFound:
-                sb.AppendLine($"// TODO: Implement this WithProblemDetails {methodParameter.HttpStatusCode}.");
-                // public static GetOrdersResult NotFound(string? message = null) => new GetOrdersResult(ResultFactory.CreateContentResultWithProblemDetails(HttpStatusCode.NotFound, message));
+                sb.AppendLine(4, $"public static {resultName} NotFound(string? message = null)");
+                sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResultWithProblemDetails)}(HttpStatusCode.NotFound, message));");
                 break;
             case HttpStatusCode.Conflict:
-                sb.AppendLine($"// TODO: Implement this WithProblemDetails {methodParameter.HttpStatusCode}.");
+                sb.AppendLine(4, $"public static {resultName} Conflict(object? error = null)");
+                sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResultWithProblemDetails)}(HttpStatusCode.Conflict, error));");
                 break;
             case HttpStatusCode.MethodNotAllowed:
             case HttpStatusCode.InternalServerError:
@@ -319,10 +256,11 @@ public class ContentGeneratorServerResult : IContentGenerator
             case HttpStatusCode.BadGateway:
             case HttpStatusCode.ServiceUnavailable:
             case HttpStatusCode.GatewayTimeout:
-                sb.AppendLine($"// TODO: Implement this WithProblemDetails {methodParameter.HttpStatusCode}.");
+                sb.AppendLine(4, $"public static {resultName} {methodParameter.HttpStatusCode}(string? message = null)");
+                sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResultWithProblemDetails)}(HttpStatusCode.{methodParameter.HttpStatusCode}, message));");
                 break;
             default:
-                sb.AppendLine($"// TODO: Implement this WithProblemDetails {methodParameter.HttpStatusCode}.");
+                sb.AppendLine($"// TODO: Not Implemented with WithProblemDetails for {methodParameter.HttpStatusCode}.");
                 break;
         }
     }
@@ -335,31 +273,40 @@ public class ContentGeneratorServerResult : IContentGenerator
         switch (methodParameter.HttpStatusCode)
         {
             case HttpStatusCode.Created:
-                sb.AppendLine(4, $"public static {resultName} Created(string? message = null) => new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResult)}(HttpStatusCode.Created, message))");
+                sb.AppendLine(4, $"public static {resultName} Created()");
+                sb.AppendLine(8, $"=> new {resultName}(new StatusCodeResult(StatusCodes.Status201Created));");
                 break;
             case HttpStatusCode.Accepted:
-                sb.AppendLine($"// TODO: Implement this WithoutProblemDetails {methodParameter.HttpStatusCode}.");
+                sb.AppendLine(4, $"public static {resultName} Accepted()");
+                sb.AppendLine(8, $"=> new {resultName}(new AcceptedResult());");
                 break;
             case HttpStatusCode.NoContent:
-                sb.AppendLine($"// TODO: Implement this WithoutProblemDetails {methodParameter.HttpStatusCode}.");
+                sb.AppendLine(4, $"public static {resultName} NoContent()");
+                sb.AppendLine(8, $"=> new {resultName}(new NoContentResult());");
                 break;
             case HttpStatusCode.NotModified:
-                sb.AppendLine($"// TODO: Implement this WithoutProblemDetails {methodParameter.HttpStatusCode}.");
+                sb.AppendLine(4, $"public static {resultName} NotModified()");
+                sb.AppendLine(8, $"=> new {resultName}(new StatusCodeResult(StatusCodes.Status304NotModified));");
                 break;
             case HttpStatusCode.BadRequest:
-                sb.AppendLine($"// TODO: Implement this WithoutProblemDetails {methodParameter.HttpStatusCode}.");
+                sb.AppendLine(4, $"public static {resultName} BadRequest(string? message = null)");
+                sb.AppendLine(8, $"=> new {resultName}(new BadRequestObjectResult(message));");
                 break;
             case HttpStatusCode.Unauthorized:
-                sb.AppendLine($"// TODO: Implement this WithoutProblemDetails {methodParameter.HttpStatusCode}.");
+                sb.AppendLine(4, $"public static {resultName} Unauthorized()");
+                sb.AppendLine(8, $"=> new {resultName}(new UnauthorizedResult());");
                 break;
             case HttpStatusCode.Forbidden:
-                sb.AppendLine($"// TODO: Implement this WithoutProblemDetails {methodParameter.HttpStatusCode}.");
+                sb.AppendLine(4, $"public static {resultName} Forbidden()");
+                sb.AppendLine(8, $"=> new {resultName}(new StatusCodeResult(StatusCodes.Status403Forbidden));");
                 break;
             case HttpStatusCode.NotFound:
-                sb.AppendLine($"// TODO: Implement this WithoutProblemDetails {methodParameter.HttpStatusCode}.");
+                sb.AppendLine(4, $"public static {resultName} NotFound(string? message = null)");
+                sb.AppendLine(8, $"=> new {resultName}(new NotFoundObjectResult(message));");
                 break;
             case HttpStatusCode.Conflict:
-                sb.AppendLine($"// TODO: Implement this WithoutProblemDetails {methodParameter.HttpStatusCode}.");
+                sb.AppendLine(4, $"public static {resultName} Conflict(string? error = null)");
+                sb.AppendLine(8, $"=> new {resultName}(new ConflictObjectResult(error));");
                 break;
             case HttpStatusCode.MethodNotAllowed:
             case HttpStatusCode.InternalServerError:
@@ -367,10 +314,11 @@ public class ContentGeneratorServerResult : IContentGenerator
             case HttpStatusCode.BadGateway:
             case HttpStatusCode.ServiceUnavailable:
             case HttpStatusCode.GatewayTimeout:
-                sb.AppendLine($"// TODO: Implement this WithoutProblemDetails {methodParameter.HttpStatusCode}.");
+                sb.AppendLine(4, $"public static {resultName} {methodParameter.HttpStatusCode}(string? message = null)");
+                sb.AppendLine(8, $"=> new {resultName}(new ContentResult {{ StatusCode = (int)HttpStatusCode.{methodParameter.HttpStatusCode}, Content = message }} );");
                 break;
             default:
-                sb.AppendLine($"// TODO: Implement this WithoutProblemDetails {methodParameter.HttpStatusCode}.");
+                sb.AppendLine($"// TODO: Not Implemented with WithoutProblemDetails for {methodParameter.HttpStatusCode}.");
                 break;
         }
     }
