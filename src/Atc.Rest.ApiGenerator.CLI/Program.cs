@@ -8,7 +8,7 @@ public static class Program
         string[] args)
     {
         ArgumentNullException.ThrowIfNull(args);
-        
+
         args = SetOutputPathFromDotArgumentIfNeeded(args);
         args = SetHelpArgumentIfNeeded(args);
 
