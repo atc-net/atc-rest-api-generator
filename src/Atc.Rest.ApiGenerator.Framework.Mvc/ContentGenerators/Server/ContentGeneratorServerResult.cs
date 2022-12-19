@@ -152,7 +152,8 @@ public class ContentGeneratorServerResult : IContentGenerator
                 {
                     case SchemaType.None:
                         sb.AppendLine(4, $"public static {resultName} Ok(string? message = null)");
-                        sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResult)}(HttpStatusCode.OK, message));");
+                        ////sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResult)}(HttpStatusCode.OK, message));");
+                        sb.AppendLine(8, $"=> new {resultName}(new OkObjectResult(message));");
                         break;
                     case SchemaType.SimpleType:
                         sb.AppendLine(4, $"public static {resultName} Ok({methodParameter.SimpleDataTypeName} response)");
@@ -227,7 +228,7 @@ public class ContentGeneratorServerResult : IContentGenerator
                 sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResultWithProblemDetails)}(HttpStatusCode.NotModified, null));");
                 break;
             case HttpStatusCode.BadRequest:
-                sb.AppendLine(4, $"public static {resultName} BadRequest(string? message = null)");
+                sb.AppendLine(4, $"public static {resultName} BadRequest(string message)");
                 sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResultWithValidationProblemDetails)}(HttpStatusCode.BadRequest, message));");
                 break;
             case HttpStatusCode.Unauthorized:
@@ -285,7 +286,7 @@ public class ContentGeneratorServerResult : IContentGenerator
                 sb.AppendLine(8, $"=> new {resultName}(new StatusCodeResult(StatusCodes.Status304NotModified));");
                 break;
             case HttpStatusCode.BadRequest:
-                sb.AppendLine(4, $"public static {resultName} BadRequest(string? message = null)");
+                sb.AppendLine(4, $"public static {resultName} BadRequest(string message)");
                 sb.AppendLine(8, $"=> new {resultName}(new BadRequestObjectResult(message));");
                 break;
             case HttpStatusCode.Unauthorized:
