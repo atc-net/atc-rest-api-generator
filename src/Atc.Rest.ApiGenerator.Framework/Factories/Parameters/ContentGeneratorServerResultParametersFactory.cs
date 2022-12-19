@@ -9,6 +9,8 @@ public static class ContentGeneratorServerResultParametersFactory
         OpenApiOperation openApiOperation,
         bool useProblemDetailsAsDefaultBody)
     {
+        ArgumentNullException.ThrowIfNull(openApiOperation);
+
         var operationName = openApiOperation.GetOperationName();
         var httpStatusCodes = openApiOperation.Responses.GetHttpStatusCodes();
 
