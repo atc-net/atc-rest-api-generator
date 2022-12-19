@@ -415,7 +415,7 @@ public class ServerHostGenerator
 
     private static MemberDeclarationSyntax CreateWebApiControllerBaseTestJsonSerializerOptions()
         => SyntaxFactory.FieldDeclaration(
-                SyntaxFactory.VariableDeclaration(SyntaxFactory.IdentifierName("JsonSerializerOptions"))
+                SyntaxFactory.VariableDeclaration(SyntaxFactory.IdentifierName("JsonSerializerOptions?"))
                     .WithVariables(
                         SyntaxFactory.SingletonSeparatedList(
                             SyntaxFactory.VariableDeclarator(SyntaxFactory.Identifier("JsonSerializerOptions")))))
@@ -657,7 +657,9 @@ public class ServerHostGenerator
                                                                             SyntaxFactory.IdentifierName("Length"))),
                                                                     SyntaxTokenFactory.Comma(),
                                                                     SyntaxFactory.Argument(
-                                                                        SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)),
+                                                                        SyntaxFactory.LiteralExpression(
+                                                                            SyntaxKind.StringLiteralExpression,
+                                                                            SyntaxFactory.Literal("dummy"))),
                                                                     SyntaxTokenFactory.Comma(),
                                                                     SyntaxFactory.Argument(
                                                                         SyntaxFactory.LiteralExpression(
@@ -1123,6 +1125,7 @@ public class ServerHostGenerator
             "System.CodeDom.Compiler",
             "System.Collections.Generic",
             "System.IO",
+            "System.Net",
             "System.Net.Http",
             "System.Text",
             "System.Text.Json",
@@ -1131,14 +1134,30 @@ public class ServerHostGenerator
             "Microsoft.Extensions.Configuration",
             "Xunit",
             "System.Reflection",
+            "System.Threading",
+            "System.Threading.Tasks",
+            "System",
             "Atc.Rest.Options",
             "Microsoft.AspNetCore.Hosting",
             "Microsoft.AspNetCore.Mvc.Testing",
             "Microsoft.AspNetCore.TestHost",
             "Microsoft.Extensions.Configuration",
             "Microsoft.Extensions.DependencyInjection",
+            "Atc.Rest.Results",
+            "Atc.XUnit",
             $"{projectOptions.ProjectName}.Generated",
+            $"{projectOptions.ProjectName}.Generated.Contracts",
         };
+
+        foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
+        {
+            if (basePathSegmentName.Equals("Tasks", StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            requiredUsings.Add($"{projectOptions.ProjectName}.Generated.Contracts.{basePathSegmentName}");
+        }
 
         GlobalUsingsHelper.CreateOrUpdate(
             logger,

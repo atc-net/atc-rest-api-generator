@@ -17,12 +17,27 @@ public static class GenerateServerApiXunitTestEndpointHandlerStubHelper
         var sb = new StringBuilder();
 
         GenerateCodeHelper.AppendGeneratedCodeWarningComment(sb, hostProjectOptions.ApiGeneratorNameAndVersion);
+        AppendLocalUsings(sb, hostProjectOptions, endpointMethodMetadata);
         AppendNamespaceAndClassStart(sb, hostProjectOptions, endpointMethodMetadata);
         AppendMethodExecuteAsyncStart(sb, endpointMethodMetadata);
         AppendMethodExecuteAsyncContent(sb, endpointMethodMetadata);
         AppendMethodExecuteAsyncEnd(sb);
         AppendNamespaceAndClassEnd(sb);
         SaveFile(logger, sb, hostProjectOptions, endpointMethodMetadata);
+    }
+
+    private static void AppendLocalUsings(
+        StringBuilder sb,
+        HostProjectOptions hostProjectOptions,
+        EndpointMethodMetadata endpointMethodMetadata)
+    {
+        if (!"Tasks".Equals(endpointMethodMetadata.SegmentName, StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        sb.AppendLine($"using {hostProjectOptions.ProjectName}.Generated.Contracts.{endpointMethodMetadata.SegmentName};");
+        sb.AppendLine();
     }
 
     private static void AppendNamespaceAndClassStart(
