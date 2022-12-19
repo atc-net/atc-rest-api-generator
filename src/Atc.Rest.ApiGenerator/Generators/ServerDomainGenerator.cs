@@ -146,6 +146,7 @@ public class ServerDomainGenerator
                 projectOptions.ProjectTestCsProjDisplayLocation,
                 ProjectType.ServerDomain,
                 isTestProject: true);
+
             if (!hasUpdates)
             {
                 logger.LogDebug($"{EmojisConstants.FileNotUpdated}   No updates for csproj");
