@@ -69,8 +69,6 @@
 - [SyntaxGeneratorContractModels](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorcontractmodels)
 - [SyntaxGeneratorContractParameter](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorcontractparameter)
 - [SyntaxGeneratorContractParameters](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorcontractparameters)
-- [SyntaxGeneratorContractResult](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorcontractresult)
-- [SyntaxGeneratorContractResults](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorcontractresults)
 - [SyntaxGeneratorEndpointControllers](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorendpointcontrollers)
 
 ## [Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces.md)
@@ -79,7 +77,6 @@
 - [ISyntaxGeneratorContractInterfaces](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces.md#isyntaxgeneratorcontractinterfaces)
 - [ISyntaxGeneratorContractModels](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces.md#isyntaxgeneratorcontractmodels)
 - [ISyntaxGeneratorContractParameters](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces.md#isyntaxgeneratorcontractparameters)
-- [ISyntaxGeneratorContractResults](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces.md#isyntaxgeneratorcontractresults)
 - [ISyntaxGeneratorEndpointControllers](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces.md#isyntaxgeneratorendpointcontrollers)
 - [ISyntaxOperationCodeGenerator](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces.md#isyntaxoperationcodegenerator)
 

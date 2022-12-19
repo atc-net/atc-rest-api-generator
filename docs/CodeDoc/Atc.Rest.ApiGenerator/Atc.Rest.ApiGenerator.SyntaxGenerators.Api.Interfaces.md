@@ -77,21 +77,6 @@
 
 <br />
 
-## ISyntaxGeneratorContractResults
-
->```csharp
->public interface ISyntaxGeneratorContractResults : ISyntaxGeneratorContract
->```
-
-### Methods
-
-#### GenerateSyntaxTrees
->```csharp
->List<SyntaxGeneratorContractResult> GenerateSyntaxTrees()
->```
-
-<br />
-
 ## ISyntaxGeneratorEndpointControllers
 
 >```csharp
