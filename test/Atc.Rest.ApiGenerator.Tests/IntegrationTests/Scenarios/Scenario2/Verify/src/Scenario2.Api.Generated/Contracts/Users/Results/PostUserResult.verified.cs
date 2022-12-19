@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Users;
 /// Results for operation request.
 /// Description: Create a new user.
 /// Operation: PostUser.
-/// Area: Users.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class PostUserResult : ResultBase
@@ -20,15 +19,18 @@ public class PostUserResult : ResultBase
     /// <summary>
     /// 201 - Created response.
     /// </summary>
-    public static PostUserResult Created() => new PostUserResult(new StatusCodeResult(StatusCodes.Status201Created));
+    public static PostUserResult Created()
+        => new PostUserResult(new StatusCodeResult(StatusCodes.Status201Created));
 
     /// <summary>
     /// 400 - BadRequest response.
     /// </summary>
-    public static PostUserResult BadRequest(string message) => new PostUserResult(new BadRequestObjectResult(message));
+    public static PostUserResult BadRequest(string message)
+        => new PostUserResult(new BadRequestObjectResult(message));
 
     /// <summary>
     /// 409 - Conflict response.
     /// </summary>
-    public static PostUserResult Conflict(string? error = null) => new PostUserResult(new ConflictObjectResult(error));
+    public static PostUserResult Conflict(string? error = null)
+        => new PostUserResult(new ConflictObjectResult(error));
 }

@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Users;
 /// Results for operation request.
 /// Description: Delete user by id.
 /// Operation: DeleteUserById.
-/// Area: Users.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class DeleteUserByIdResult : ResultBase
@@ -20,20 +19,24 @@ public class DeleteUserByIdResult : ResultBase
     /// <summary>
     /// 200 - Ok response.
     /// </summary>
-    public static DeleteUserByIdResult Ok(string? message = null) => new DeleteUserByIdResult(new OkObjectResult(message));
+    public static DeleteUserByIdResult Ok(string? message = null)
+        => new DeleteUserByIdResult(new OkObjectResult(message));
 
     /// <summary>
     /// 404 - NotFound response.
     /// </summary>
-    public static DeleteUserByIdResult NotFound(string? message = null) => new DeleteUserByIdResult(new NotFoundObjectResult(message));
+    public static DeleteUserByIdResult NotFound(string? message = null)
+        => new DeleteUserByIdResult(new NotFoundObjectResult(message));
 
     /// <summary>
     /// 409 - Conflict response.
     /// </summary>
-    public static DeleteUserByIdResult Conflict(string? error = null) => new DeleteUserByIdResult(new ConflictObjectResult(error));
+    public static DeleteUserByIdResult Conflict(string? error = null)
+        => new DeleteUserByIdResult(new ConflictObjectResult(error));
 
     /// <summary>
     /// Performs an implicit conversion from DeleteUserByIdResult to ActionResult.
     /// </summary>
-    public static implicit operator DeleteUserByIdResult(string response) => Ok(response);
+    public static implicit operator DeleteUserByIdResult(string response)
+        => Ok(response);
 }

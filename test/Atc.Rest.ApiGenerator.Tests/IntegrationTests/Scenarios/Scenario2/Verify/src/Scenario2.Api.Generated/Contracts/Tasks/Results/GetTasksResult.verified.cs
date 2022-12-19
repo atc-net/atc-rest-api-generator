@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Tasks;
 /// Results for operation request.
 /// Description: Returns tasks.
 /// Operation: GetTasks.
-/// Area: Tasks.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class GetTasksResult : ResultBase
@@ -20,10 +19,12 @@ public class GetTasksResult : ResultBase
     /// <summary>
     /// 200 - Ok response.
     /// </summary>
-    public static GetTasksResult Ok(IEnumerable<Task> response) => new GetTasksResult(new OkObjectResult(response ?? Enumerable.Empty<Task>()));
+    public static GetTasksResult Ok(IEnumerable<Task> response)
+        => new GetTasksResult(new OkObjectResult(response ?? Enumerable.Empty<Task>()));
 
     /// <summary>
     /// Performs an implicit conversion from GetTasksResult to ActionResult.
     /// </summary>
-    public static implicit operator GetTasksResult(List<Task> response) => Ok(response);
+    public static implicit operator GetTasksResult(List<Task> response)
+        => Ok(response);
 }

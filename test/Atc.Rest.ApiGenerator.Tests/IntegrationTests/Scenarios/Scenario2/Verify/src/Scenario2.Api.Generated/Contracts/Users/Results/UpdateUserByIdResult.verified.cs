@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Users;
 /// Results for operation request.
 /// Description: Update user by id.
 /// Operation: UpdateUserById.
-/// Area: Users.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class UpdateUserByIdResult : ResultBase
@@ -20,25 +19,30 @@ public class UpdateUserByIdResult : ResultBase
     /// <summary>
     /// 200 - Ok response.
     /// </summary>
-    public static UpdateUserByIdResult Ok(string? message = null) => new UpdateUserByIdResult(new OkObjectResult(message));
+    public static UpdateUserByIdResult Ok(string? message = null)
+        => new UpdateUserByIdResult(new OkObjectResult(message));
 
     /// <summary>
     /// 400 - BadRequest response.
     /// </summary>
-    public static UpdateUserByIdResult BadRequest(string message) => new UpdateUserByIdResult(new BadRequestObjectResult(message));
+    public static UpdateUserByIdResult BadRequest(string message)
+        => new UpdateUserByIdResult(new BadRequestObjectResult(message));
 
     /// <summary>
     /// 404 - NotFound response.
     /// </summary>
-    public static UpdateUserByIdResult NotFound(string? message = null) => new UpdateUserByIdResult(new NotFoundObjectResult(message));
+    public static UpdateUserByIdResult NotFound(string? message = null)
+        => new UpdateUserByIdResult(new NotFoundObjectResult(message));
 
     /// <summary>
     /// 409 - Conflict response.
     /// </summary>
-    public static UpdateUserByIdResult Conflict(string? error = null) => new UpdateUserByIdResult(new ConflictObjectResult(error));
+    public static UpdateUserByIdResult Conflict(string? error = null)
+        => new UpdateUserByIdResult(new ConflictObjectResult(error));
 
     /// <summary>
     /// Performs an implicit conversion from UpdateUserByIdResult to ActionResult.
     /// </summary>
-    public static implicit operator UpdateUserByIdResult(string response) => Ok(response);
+    public static implicit operator UpdateUserByIdResult(string response)
+        => Ok(response);
 }

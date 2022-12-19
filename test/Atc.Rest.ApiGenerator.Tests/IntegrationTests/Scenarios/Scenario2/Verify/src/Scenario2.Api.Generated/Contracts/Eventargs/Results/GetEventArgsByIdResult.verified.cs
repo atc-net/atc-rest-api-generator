@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Eventargs;
 /// Results for operation request.
 /// Description: Get EventArgs By Id.
 /// Operation: GetEventArgsById.
-/// Area: Eventargs.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class GetEventArgsByIdResult : ResultBase
@@ -20,15 +19,18 @@ public class GetEventArgsByIdResult : ResultBase
     /// <summary>
     /// 200 - Ok response.
     /// </summary>
-    public static GetEventArgsByIdResult Ok(EventArgs response) => new GetEventArgsByIdResult(new OkObjectResult(response));
+    public static GetEventArgsByIdResult Ok(EventArgs response)
+        => new GetEventArgsByIdResult(new OkObjectResult(response));
 
     /// <summary>
     /// 404 - NotFound response.
     /// </summary>
-    public static GetEventArgsByIdResult NotFound(string? message = null) => new GetEventArgsByIdResult(new NotFoundObjectResult(message));
+    public static GetEventArgsByIdResult NotFound(string? message = null)
+        => new GetEventArgsByIdResult(new NotFoundObjectResult(message));
 
     /// <summary>
     /// Performs an implicit conversion from GetEventArgsByIdResult to ActionResult.
     /// </summary>
-    public static implicit operator GetEventArgsByIdResult(EventArgs response) => Ok(response);
+    public static implicit operator GetEventArgsByIdResult(EventArgs response)
+        => Ok(response);
 }

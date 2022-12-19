@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Users;
 /// Results for operation request.
 /// Description: Update gender on a user.
 /// Operation: UpdateMyTestGender.
-/// Area: Users.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class UpdateMyTestGenderResult : ResultBase
@@ -20,25 +19,30 @@ public class UpdateMyTestGenderResult : ResultBase
     /// <summary>
     /// 200 - Ok response.
     /// </summary>
-    public static UpdateMyTestGenderResult Ok(string? message = null) => new UpdateMyTestGenderResult(new OkObjectResult(message));
+    public static UpdateMyTestGenderResult Ok(string? message = null)
+        => new UpdateMyTestGenderResult(new OkObjectResult(message));
 
     /// <summary>
     /// 400 - BadRequest response.
     /// </summary>
-    public static UpdateMyTestGenderResult BadRequest(string message) => new UpdateMyTestGenderResult(new BadRequestObjectResult(message));
+    public static UpdateMyTestGenderResult BadRequest(string message)
+        => new UpdateMyTestGenderResult(new BadRequestObjectResult(message));
 
     /// <summary>
     /// 404 - NotFound response.
     /// </summary>
-    public static UpdateMyTestGenderResult NotFound(string? message = null) => new UpdateMyTestGenderResult(new NotFoundObjectResult(message));
+    public static UpdateMyTestGenderResult NotFound(string? message = null)
+        => new UpdateMyTestGenderResult(new NotFoundObjectResult(message));
 
     /// <summary>
     /// 409 - Conflict response.
     /// </summary>
-    public static UpdateMyTestGenderResult Conflict(string? error = null) => new UpdateMyTestGenderResult(new ConflictObjectResult(error));
+    public static UpdateMyTestGenderResult Conflict(string? error = null)
+        => new UpdateMyTestGenderResult(new ConflictObjectResult(error));
 
     /// <summary>
     /// Performs an implicit conversion from UpdateMyTestGenderResult to ActionResult.
     /// </summary>
-    public static implicit operator UpdateMyTestGenderResult(string response) => Ok(response);
+    public static implicit operator UpdateMyTestGenderResult(string response)
+        => Ok(response);
 }

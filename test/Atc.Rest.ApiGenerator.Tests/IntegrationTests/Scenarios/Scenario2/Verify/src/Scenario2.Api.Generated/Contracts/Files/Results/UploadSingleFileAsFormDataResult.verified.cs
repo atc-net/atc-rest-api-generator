@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Files;
 /// Results for operation request.
 /// Description: Upload a file as OctetStream.
 /// Operation: UploadSingleFileAsFormData.
-/// Area: Files.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class UploadSingleFileAsFormDataResult : ResultBase
@@ -20,10 +19,12 @@ public class UploadSingleFileAsFormDataResult : ResultBase
     /// <summary>
     /// 200 - Ok response.
     /// </summary>
-    public static UploadSingleFileAsFormDataResult Ok(string? message = null) => new UploadSingleFileAsFormDataResult(new OkObjectResult(message));
+    public static UploadSingleFileAsFormDataResult Ok(string? message = null)
+        => new UploadSingleFileAsFormDataResult(new OkObjectResult(message));
 
     /// <summary>
     /// Performs an implicit conversion from UploadSingleFileAsFormDataResult to ActionResult.
     /// </summary>
-    public static implicit operator UploadSingleFileAsFormDataResult(string response) => Ok(response);
+    public static implicit operator UploadSingleFileAsFormDataResult(string response)
+        => Ok(response);
 }

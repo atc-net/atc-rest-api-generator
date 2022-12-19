@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Users;
 /// Results for operation request.
 /// Description: Get user by id.
 /// Operation: GetUserById.
-/// Area: Users.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class GetUserByIdResult : ResultBase
@@ -20,20 +19,24 @@ public class GetUserByIdResult : ResultBase
     /// <summary>
     /// 200 - Ok response.
     /// </summary>
-    public static GetUserByIdResult Ok(User response) => new GetUserByIdResult(new OkObjectResult(response));
+    public static GetUserByIdResult Ok(User response)
+        => new GetUserByIdResult(new OkObjectResult(response));
 
     /// <summary>
     /// 404 - NotFound response.
     /// </summary>
-    public static GetUserByIdResult NotFound(string? message = null) => new GetUserByIdResult(new NotFoundObjectResult(message));
+    public static GetUserByIdResult NotFound(string? message = null)
+        => new GetUserByIdResult(new NotFoundObjectResult(message));
 
     /// <summary>
     /// 409 - Conflict response.
     /// </summary>
-    public static GetUserByIdResult Conflict(string? error = null) => new GetUserByIdResult(new ConflictObjectResult(error));
+    public static GetUserByIdResult Conflict(string? error = null)
+        => new GetUserByIdResult(new ConflictObjectResult(error));
 
     /// <summary>
     /// Performs an implicit conversion from GetUserByIdResult to ActionResult.
     /// </summary>
-    public static implicit operator GetUserByIdResult(User response) => Ok(response);
+    public static implicit operator GetUserByIdResult(User response)
+        => Ok(response);
 }

@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Items;
 /// Results for operation request.
 /// Description: Updates an item.
 /// Operation: UpdateItem.
-/// Area: Items.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class UpdateItemResult : ResultBase
@@ -20,10 +19,12 @@ public class UpdateItemResult : ResultBase
     /// <summary>
     /// 200 - Ok response.
     /// </summary>
-    public static UpdateItemResult Ok(string? message = null) => new UpdateItemResult(new OkObjectResult(message));
+    public static UpdateItemResult Ok(string? message = null)
+        => new UpdateItemResult(new OkObjectResult(message));
 
     /// <summary>
     /// Performs an implicit conversion from UpdateItemResult to ActionResult.
     /// </summary>
-    public static implicit operator UpdateItemResult(string response) => Ok(response);
+    public static implicit operator UpdateItemResult(string response)
+        => Ok(response);
 }

@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Files;
 /// Results for operation request.
 /// Description: Upload files as FormData.
 /// Operation: UploadSingleObjectWithFilesAsFormData.
-/// Area: Files.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class UploadSingleObjectWithFilesAsFormDataResult : ResultBase
@@ -20,15 +19,18 @@ public class UploadSingleObjectWithFilesAsFormDataResult : ResultBase
     /// <summary>
     /// 200 - Ok response.
     /// </summary>
-    public static UploadSingleObjectWithFilesAsFormDataResult Ok(string? message = null) => new UploadSingleObjectWithFilesAsFormDataResult(new OkObjectResult(message));
+    public static UploadSingleObjectWithFilesAsFormDataResult Ok(string? message = null)
+        => new UploadSingleObjectWithFilesAsFormDataResult(new OkObjectResult(message));
 
     /// <summary>
     /// 400 - BadRequest response.
     /// </summary>
-    public static UploadSingleObjectWithFilesAsFormDataResult BadRequest(string message) => new UploadSingleObjectWithFilesAsFormDataResult(new BadRequestObjectResult(message));
+    public static UploadSingleObjectWithFilesAsFormDataResult BadRequest(string message)
+        => new UploadSingleObjectWithFilesAsFormDataResult(new BadRequestObjectResult(message));
 
     /// <summary>
     /// Performs an implicit conversion from UploadSingleObjectWithFilesAsFormDataResult to ActionResult.
     /// </summary>
-    public static implicit operator UploadSingleObjectWithFilesAsFormDataResult(string response) => Ok(response);
+    public static implicit operator UploadSingleObjectWithFilesAsFormDataResult(string response)
+        => Ok(response);
 }

@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.RouteWithDash;
 /// Results for operation request.
 /// Description: Your GET endpoint.
 /// Operation: GetRouteWithDash.
-/// Area: RouteWithDash.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class GetRouteWithDashResult : ResultBase
@@ -20,10 +19,12 @@ public class GetRouteWithDashResult : ResultBase
     /// <summary>
     /// 200 - Ok response.
     /// </summary>
-    public static GetRouteWithDashResult Ok(string? message = null) => new GetRouteWithDashResult(new OkObjectResult(message));
+    public static GetRouteWithDashResult Ok(string? message = null)
+        => new GetRouteWithDashResult(new OkObjectResult(message));
 
     /// <summary>
     /// Performs an implicit conversion from GetRouteWithDashResult to ActionResult.
     /// </summary>
-    public static implicit operator GetRouteWithDashResult(string response) => Ok(response);
+    public static implicit operator GetRouteWithDashResult(string response)
+        => Ok(response);
 }

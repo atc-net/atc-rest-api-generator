@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Users;
 /// Results for operation request.
 /// Description: Get user by email.
 /// Operation: GetUserByEmail.
-/// Area: Users.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class GetUserByEmailResult : ResultBase
@@ -20,25 +19,30 @@ public class GetUserByEmailResult : ResultBase
     /// <summary>
     /// 200 - Ok response.
     /// </summary>
-    public static GetUserByEmailResult Ok(User response) => new GetUserByEmailResult(new OkObjectResult(response));
+    public static GetUserByEmailResult Ok(User response)
+        => new GetUserByEmailResult(new OkObjectResult(response));
 
     /// <summary>
     /// 400 - BadRequest response.
     /// </summary>
-    public static GetUserByEmailResult BadRequest(string message) => new GetUserByEmailResult(new BadRequestObjectResult(message));
+    public static GetUserByEmailResult BadRequest(string message)
+        => new GetUserByEmailResult(new BadRequestObjectResult(message));
 
     /// <summary>
     /// 404 - NotFound response.
     /// </summary>
-    public static GetUserByEmailResult NotFound(string? message = null) => new GetUserByEmailResult(new NotFoundObjectResult(message));
+    public static GetUserByEmailResult NotFound(string? message = null)
+        => new GetUserByEmailResult(new NotFoundObjectResult(message));
 
     /// <summary>
     /// 409 - Conflict response.
     /// </summary>
-    public static GetUserByEmailResult Conflict(string? error = null) => new GetUserByEmailResult(new ConflictObjectResult(error));
+    public static GetUserByEmailResult Conflict(string? error = null)
+        => new GetUserByEmailResult(new ConflictObjectResult(error));
 
     /// <summary>
     /// Performs an implicit conversion from GetUserByEmailResult to ActionResult.
     /// </summary>
-    public static implicit operator GetUserByEmailResult(User response) => Ok(response);
+    public static implicit operator GetUserByEmailResult(User response)
+        => Ok(response);
 }
