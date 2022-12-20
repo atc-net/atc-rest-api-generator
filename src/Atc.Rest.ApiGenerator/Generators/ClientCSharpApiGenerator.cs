@@ -184,7 +184,6 @@ public class ClientCSharpApiGenerator
             "System.Threading.Tasks",
             "Atc.Rest.Client",
             "Atc.Rest.Client.Builder",
-            "Atc.Rest.Results",
             "Microsoft.AspNetCore.Mvc",
             "Microsoft.AspNetCore.Http",
             $"{projectOptions.ProjectName}.Contracts",

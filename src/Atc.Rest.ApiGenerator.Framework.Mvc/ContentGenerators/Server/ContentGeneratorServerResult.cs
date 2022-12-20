@@ -26,11 +26,7 @@ public class ContentGeneratorServerResult : IContentGenerator
         sb.Append(codeHeaderGenerator.Generate());
         sb.AppendLine($"namespace {parameters.Namespace};");
         sb.AppendLine();
-        sb.AppendLine("/// <summary>");
-        sb.AppendLine("/// Results for operation request.");
-        sb.AppendLine($"/// Description: {parameters.Description}");
-        sb.AppendLine($"/// Operation: {parameters.OperationName}.");
-        sb.AppendLine("/// </summary>");
+        AppendClassSummery(sb, parameters);
         sb.AppendLine(codeAttributeGenerator.Generate());
         sb.AppendLine($"public class {parameters.ResultName} : {nameof(Results.ResultBase)}");
         sb.AppendLine("{");
@@ -59,53 +55,77 @@ public class ContentGeneratorServerResult : IContentGenerator
         return sb.ToString();
     }
 
+    private static void AppendClassSummery(
+        StringBuilder sb,
+        ContentGeneratorServerResultParameters item)
+    {
+        sb.AppendLine("/// <summary>");
+        sb.AppendLine("/// Results for operation request.");
+        if (!ContentGeneratorConstants.UndefinedDescription.Equals(item.Description, StringComparison.Ordinal))
+        {
+            sb.AppendLine($"/// Description: {item.Description}");
+        }
+
+        sb.AppendLine($"/// Operation: {item.OperationName}.");
+        sb.AppendLine("/// </summary>");
+    }
+
+    private static void AppendMethodSummary(
+        StringBuilder sb,
+        HttpStatusCode httpStatusCode)
+    {
+        sb.AppendLine(4, "/// <summary>");
+        sb.AppendLine(4, $"/// {(int)httpStatusCode} - {httpStatusCode.ToNormalizedString()} response.");
+        sb.AppendLine(4, "/// </summary>");
+    }
+
     private static void AppendMethodContent(
         StringBuilder sb,
-        ContentGeneratorServerResultMethodParameters methodParameter,
+        ContentGeneratorServerResultMethodParameters item,
         string resultName)
     {
-        AppendMethodSummary(sb, methodParameter.HttpStatusCode);
+        AppendMethodSummary(sb, item.HttpStatusCode);
 
-        if (methodParameter.HttpStatusCode == HttpStatusCode.OK)
+        if (item.HttpStatusCode == HttpStatusCode.OK)
         {
-            AppendMethodContentStatusCodeOk(sb, methodParameter, resultName);
+            AppendMethodContentStatusCodeOk(sb, item, resultName);
             return;
         }
 
-        if (methodParameter.UsesProblemDetails)
+        if (item.UsesProblemDetails)
         {
-            AppendMethodContentWithProblemDetails(sb, methodParameter, resultName);
+            AppendMethodContentWithProblemDetails(sb, item, resultName);
         }
         else
         {
-            AppendMethodContentWithoutProblemDetails(sb, methodParameter, resultName);
+            AppendMethodContentWithoutProblemDetails(sb, item, resultName);
         }
     }
 
     private static void AppendImplicitOperatorContent(
         StringBuilder sb,
-        ContentGeneratorServerResultParameters parameters)
+        ContentGeneratorServerResultParameters item)
     {
         sb.AppendLine();
         sb.AppendLine(4, "/// <summary>");
-        sb.AppendLine(4, $"/// Performs an implicit conversion from {parameters.ResultName} to ActionResult.");
+        sb.AppendLine(4, $"/// Performs an implicit conversion from {item.ResultName} to ActionResult.");
         sb.AppendLine(4, "/// </summary>");
 
-        if (string.IsNullOrEmpty(parameters.ImplicitOperatorParameters!.ModelName))
+        if (string.IsNullOrEmpty(item.ImplicitOperatorParameters!.ModelName))
         {
-            switch (parameters.ImplicitOperatorParameters.SchemaType)
+            switch (item.ImplicitOperatorParameters.SchemaType)
             {
                 case SchemaType.None:
-                    sb.AppendLine(4, $"public static implicit operator {parameters.ResultName}(string response)");
+                    sb.AppendLine(4, $"public static implicit operator {item.ResultName}(string response)");
                     break;
                 case SchemaType.SimpleType:
-                    sb.AppendLine(4, $"public static implicit operator {parameters.ResultName}({parameters.ImplicitOperatorParameters.SimpleDataTypeName} response)");
+                    sb.AppendLine(4, $"public static implicit operator {item.ResultName}({item.ImplicitOperatorParameters.SimpleDataTypeName} response)");
                     break;
                 case SchemaType.SimpleTypeList:
-                    sb.AppendLine(4, $"public static implicit operator {parameters.ResultName}(List<{parameters.ImplicitOperatorParameters.SimpleDataTypeName}> response)");
+                    sb.AppendLine(4, $"public static implicit operator {item.ResultName}(List<{item.ImplicitOperatorParameters.SimpleDataTypeName}> response)");
                     break;
                 case SchemaType.SimpleTypePagedList:
-                    sb.AppendLine(4, $"public static implicit operator {parameters.ResultName}(Pagination<{parameters.ImplicitOperatorParameters.SimpleDataTypeName}> response)");
+                    sb.AppendLine(4, $"public static implicit operator {item.ResultName}(Pagination<{item.ImplicitOperatorParameters.SimpleDataTypeName}> response)");
                     break;
                 default:
                     sb.AppendLine("//// TODO: This is unexpected when we do not have a model-name!"); // TODO: Remove eventually
@@ -114,16 +134,16 @@ public class ContentGeneratorServerResult : IContentGenerator
         }
         else
         {
-            switch (parameters.ImplicitOperatorParameters.SchemaType)
+            switch (item.ImplicitOperatorParameters.SchemaType)
             {
                 case SchemaType.ComplexType:
-                    sb.AppendLine(4, $"public static implicit operator {parameters.ResultName}({parameters.ImplicitOperatorParameters.ModelName} response)");
+                    sb.AppendLine(4, $"public static implicit operator {item.ResultName}({item.ImplicitOperatorParameters.ModelName} response)");
                     break;
                 case SchemaType.ComplexTypeList:
-                    sb.AppendLine(4, $"public static implicit operator {parameters.ResultName}(List<{parameters.ImplicitOperatorParameters.ModelName}> response)");
+                    sb.AppendLine(4, $"public static implicit operator {item.ResultName}(List<{item.ImplicitOperatorParameters.ModelName}> response)");
                     break;
                 case SchemaType.ComplexTypePagedList:
-                    sb.AppendLine(4, $"public static implicit operator {parameters.ResultName}(Pagination<{parameters.ImplicitOperatorParameters.ModelName}> response)");
+                    sb.AppendLine(4, $"public static implicit operator {item.ResultName}(Pagination<{item.ImplicitOperatorParameters.ModelName}> response)");
                     break;
                 default:
                     sb.AppendLine("//// TODO: This is unexpected when we have a model-name!"); // TODO: Remove eventually
@@ -136,19 +156,19 @@ public class ContentGeneratorServerResult : IContentGenerator
 
     private static void AppendMethodContentStatusCodeOk(
         StringBuilder sb,
-        ContentGeneratorServerResultMethodParameters methodParameter,
+        ContentGeneratorServerResultMethodParameters item,
         string resultName)
     {
-        if (methodParameter.UsesBinaryResponse.HasValue &&
-            methodParameter.UsesBinaryResponse.Value)
+        if (item.UsesBinaryResponse.HasValue &&
+            item.UsesBinaryResponse.Value)
         {
             AppendMethodContentStatusCodeOkForBinary(sb, resultName);
         }
         else
         {
-            if (string.IsNullOrEmpty(methodParameter.ModelName))
+            if (string.IsNullOrEmpty(item.ModelName))
             {
-                switch (methodParameter.SchemaType)
+                switch (item.SchemaType)
                 {
                     case SchemaType.None:
                         sb.AppendLine(4, $"public static {resultName} Ok(string? message = null)");
@@ -156,15 +176,15 @@ public class ContentGeneratorServerResult : IContentGenerator
                         sb.AppendLine(8, $"=> new {resultName}(new OkObjectResult(message));");
                         break;
                     case SchemaType.SimpleType:
-                        sb.AppendLine(4, $"public static {resultName} Ok({methodParameter.SimpleDataTypeName} response)");
+                        sb.AppendLine(4, $"public static {resultName} Ok({item.SimpleDataTypeName} response)");
                         sb.AppendLine(8, $"=> new {resultName}(new OkObjectResult(response));");
                         break;
                     case SchemaType.SimpleTypeList:
-                        sb.AppendLine(4, $"public static {resultName} Ok(IEnumerable<{methodParameter.SimpleDataTypeName}> response)");
-                        sb.AppendLine(8, $"=> new {resultName}(new OkObjectResult(response ?? Enumerable.Empty<{methodParameter.SimpleDataTypeName}>()));");
+                        sb.AppendLine(4, $"public static {resultName} Ok(IEnumerable<{item.SimpleDataTypeName}> response)");
+                        sb.AppendLine(8, $"=> new {resultName}(new OkObjectResult(response ?? Enumerable.Empty<{item.SimpleDataTypeName}>()));");
                         break;
                     case SchemaType.SimpleTypePagedList:
-                        sb.AppendLine(4, $"public static {resultName} Ok(Pagination<{methodParameter.SimpleDataTypeName}> response)");
+                        sb.AppendLine(4, $"public static {resultName} Ok(Pagination<{item.SimpleDataTypeName}> response)");
                         sb.AppendLine(8, $"=> new {resultName}(new OkObjectResult(response));");
                         break;
                     default:
@@ -174,18 +194,18 @@ public class ContentGeneratorServerResult : IContentGenerator
             }
             else
             {
-                switch (methodParameter.SchemaType)
+                switch (item.SchemaType)
                 {
                     case SchemaType.ComplexType:
-                        sb.AppendLine(4, $"public static {resultName} Ok({methodParameter.ModelName} response)");
+                        sb.AppendLine(4, $"public static {resultName} Ok({item.ModelName} response)");
                         sb.AppendLine(8, $"=> new {resultName}(new OkObjectResult(response));");
                         break;
                     case SchemaType.ComplexTypeList:
-                        sb.AppendLine(4, $"public static {resultName} Ok(IEnumerable<{methodParameter.ModelName}> response)");
-                        sb.AppendLine(8, $"=> new {resultName}(new OkObjectResult(response ?? Enumerable.Empty<{methodParameter.ModelName}>()));");
+                        sb.AppendLine(4, $"public static {resultName} Ok(IEnumerable<{item.ModelName}> response)");
+                        sb.AppendLine(8, $"=> new {resultName}(new OkObjectResult(response ?? Enumerable.Empty<{item.ModelName}>()));");
                         break;
                     case SchemaType.ComplexTypePagedList:
-                        sb.AppendLine(4, $"public static {resultName} Ok(Pagination<{methodParameter.ModelName}> response)");
+                        sb.AppendLine(4, $"public static {resultName} Ok(Pagination<{item.ModelName}> response)");
                         sb.AppendLine(8, $"=> new {resultName}(new OkObjectResult(response));");
                         break;
                     default:
@@ -206,10 +226,10 @@ public class ContentGeneratorServerResult : IContentGenerator
 
     private static void AppendMethodContentWithProblemDetails(
         StringBuilder sb,
-        ContentGeneratorServerResultMethodParameters methodParameter,
+        ContentGeneratorServerResultMethodParameters item,
         string resultName)
     {
-        switch (methodParameter.HttpStatusCode)
+        switch (item.HttpStatusCode)
         {
             case HttpStatusCode.Created:
                 sb.AppendLine(4, $"public static {resultName} Created()");
@@ -253,21 +273,21 @@ public class ContentGeneratorServerResult : IContentGenerator
             case HttpStatusCode.BadGateway:
             case HttpStatusCode.ServiceUnavailable:
             case HttpStatusCode.GatewayTimeout:
-                sb.AppendLine(4, $"public static {resultName} {methodParameter.HttpStatusCode}(string? message = null)");
-                sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResultWithProblemDetails)}(HttpStatusCode.{methodParameter.HttpStatusCode}, message));");
+                sb.AppendLine(4, $"public static {resultName} {item.HttpStatusCode}(string? message = null)");
+                sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResultWithProblemDetails)}(HttpStatusCode.{item.HttpStatusCode}, message));");
                 break;
             default:
-                sb.AppendLine($"// TODO: Not Implemented with WithProblemDetails for {methodParameter.HttpStatusCode}.");
+                sb.AppendLine($"// TODO: Not Implemented with WithProblemDetails for {item.HttpStatusCode}.");
                 break;
         }
     }
 
     private static void AppendMethodContentWithoutProblemDetails(
         StringBuilder sb,
-        ContentGeneratorServerResultMethodParameters methodParameter,
+        ContentGeneratorServerResultMethodParameters item,
         string resultName)
     {
-        switch (methodParameter.HttpStatusCode)
+        switch (item.HttpStatusCode)
         {
             case HttpStatusCode.Created:
                 sb.AppendLine(4, $"public static {resultName} Created()");
@@ -311,21 +331,12 @@ public class ContentGeneratorServerResult : IContentGenerator
             case HttpStatusCode.BadGateway:
             case HttpStatusCode.ServiceUnavailable:
             case HttpStatusCode.GatewayTimeout:
-                sb.AppendLine(4, $"public static {resultName} {methodParameter.HttpStatusCode}(string? message = null)");
-                sb.AppendLine(8, $"=> new {resultName}(new ContentResult {{ StatusCode = (int)HttpStatusCode.{methodParameter.HttpStatusCode}, Content = message }} );");
+                sb.AppendLine(4, $"public static {resultName} {item.HttpStatusCode}(string? message = null)");
+                sb.AppendLine(8, $"=> new {resultName}(new ContentResult {{ StatusCode = (int)HttpStatusCode.{item.HttpStatusCode}, Content = message }} );");
                 break;
             default:
-                sb.AppendLine($"// TODO: Not Implemented with WithoutProblemDetails for {methodParameter.HttpStatusCode}.");
+                sb.AppendLine($"// TODO: Not Implemented with WithoutProblemDetails for {item.HttpStatusCode}.");
                 break;
         }
-    }
-
-    private static void AppendMethodSummary(
-        StringBuilder sb,
-        HttpStatusCode httpStatusCode)
-    {
-        sb.AppendLine(4, "/// <summary>");
-        sb.AppendLine(4, $"/// {(int)httpStatusCode} - {httpStatusCode.ToNormalizedString()} response.");
-        sb.AppendLine(4, "/// </summary>");
     }
 }

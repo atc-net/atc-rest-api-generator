@@ -3,8 +3,6 @@
 // ReSharper disable ReplaceSubstringWithRangeIndexer
 // ReSharper disable ReturnTypeCanBeEnumerable.Local
 // ReSharper disable UseObjectOrCollectionInitializer
-using System.Reflection.Metadata;
-
 namespace Atc.Rest.ApiGenerator.Generators;
 
 public class ServerApiGenerator
@@ -174,7 +172,6 @@ public class ServerApiGenerator
         ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 
         var sgContractModels = new List<SyntaxGeneratorContractModel>();
-        var sgContractParameters = new List<SyntaxGeneratorContractParameter>();
 
         foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
         {
@@ -184,10 +181,7 @@ public class ServerApiGenerator
             var generatedModels = generatorModels.GenerateSyntaxTrees();
             sgContractModels.AddRange(generatedModels);
 
-            var generatorParameters = new SyntaxGeneratorContractParameters(logger, projectOptions, basePathSegmentName);
-            var generatedParameters = generatorParameters.GenerateSyntaxTrees();
-            sgContractParameters.AddRange(generatedParameters);
-
+            GenerateParameters(projectOptions.Document, apiGroupName);
             GenerateResults(projectOptions.Document, apiGroupName);
             GenerateInterfaces(projectOptions.Document, apiGroupName);
         }
@@ -202,10 +196,66 @@ public class ServerApiGenerator
         {
             sg.ToFile();
         }
+    }
 
-        foreach (var sg in sgContractParameters)
+    private void GenerateParameters(
+        OpenApiDocument document,
+        string apiGroupName)
+    {
+        // TODO: Refactor
+        string fullNamespace;
+        if (projectOptions.IsForClient)
         {
-            sg.ToFile();
+            fullNamespace = string.IsNullOrEmpty(projectOptions.ClientFolderName)
+                ? $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}"
+                : $"{projectOptions.ProjectName}.{projectOptions.ClientFolderName}.{ContentGeneratorConstants.Contracts}";
+        }
+        else
+        {
+            fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
+        }
+
+        foreach (var openApiPath in document.Paths)
+        {
+            if (!openApiPath.IsPathStartingSegmentName(apiGroupName))
+            {
+                continue;
+            }
+
+            foreach (var openApiOperation in openApiPath.Value.Operations)
+            {
+                if (!openApiPath.Value.HasParameters() && !openApiOperation.Value.HasParametersOrRequestBody())
+                {
+                    continue;
+                }
+
+                // Generate
+                var parameterParameters = ContentGeneratorServerHandlerParameterParametersFactory.Create(
+                    fullNamespace,
+                    openApiOperation.Value,
+                    openApiPath.Value.Parameters);
+
+                var contentGeneratorParameter = new ContentGeneratorServerHandlerParameter(
+                    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                    parameterParameters);
+
+                var parameterContent = contentGeneratorParameter.Generate();
+
+                // Write
+                var file = new FileInfo(DirectoryInfoHelper.GetCsFileNameForContract(
+                    projectOptions.PathForContracts,
+                    apiGroupName,
+                    ContentGeneratorConstants.Parameters,
+                    parameterParameters.ParameterName));
+
+                var contentWriter = new ContentWriter(logger);
+                contentWriter.Write(
+                    projectOptions.PathForSrcGenerate,
+                    file,
+                    ContentWriterArea.Src,
+                    parameterContent);
+            }
         }
     }
 
@@ -347,15 +397,14 @@ public class ServerApiGenerator
             // New approach for server
             foreach (var area in projectOptions.BasePathSegmentNames)
             {
-                var contentGeneratorServerControllerParameters = ContentGeneratorServerControllerParametersFactory
-                    .Create(
-                        operationSchemaMappings,
-                        projectOptions.ProjectName,
-                        projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
-                        $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Endpoints}",
-                        area,
-                        GetRouteByArea(area),
-                        projectOptions.Document);
+                var contentGeneratorServerControllerParameters = ContentGeneratorServerControllerParametersFactory.Create(
+                    operationSchemaMappings,
+                    projectOptions.ProjectName,
+                    projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
+                    $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Endpoints}",
+                    area,
+                    GetRouteByArea(area),
+                    projectOptions.Document);
 
                 var contentGenerator = new ContentGeneratorServerController(
                     new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),

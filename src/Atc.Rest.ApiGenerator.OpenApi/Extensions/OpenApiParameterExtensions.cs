@@ -1,16 +1,11 @@
 namespace Atc.Rest.ApiGenerator.OpenApi.Extensions;
 
-public static class OpenApiOperationExtensions
+public static class OpenApiParameterExtensions
 {
     public static string GetOperationSummaryDescription(
-        this OpenApiOperation apiOperation)
+        this OpenApiParameter apiOperation)
     {
-        var result = apiOperation.Summary;
-
-        if (string.IsNullOrEmpty(result))
-        {
-            result = apiOperation.Description;
-        }
+        var result = apiOperation.Description;
 
         if (string.IsNullOrEmpty(result))
         {

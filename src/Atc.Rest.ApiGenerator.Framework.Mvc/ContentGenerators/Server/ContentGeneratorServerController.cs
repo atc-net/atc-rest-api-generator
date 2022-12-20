@@ -23,10 +23,7 @@ public sealed class ContentGeneratorServerController : IContentGenerator
         sb.Append(codeHeaderGenerator.Generate());
         sb.AppendLine($"namespace {parameters.Namespace};");
         sb.AppendLine();
-
-        sb.AppendLine("/// <summary>");
-        sb.AppendLine("/// Endpoint definitions.");
-        sb.AppendLine("/// </summary>");
+        AppendClassSummery(sb);
         sb.AppendLine("[Authorize]");
         sb.AppendLine("[ApiController]");
         sb.AppendLine($"[Route(\"{parameters.RouteBase}\")]");
@@ -50,7 +47,15 @@ public sealed class ContentGeneratorServerController : IContentGenerator
         return sb.ToString();
     }
 
-    private static void AppendMethodContent(
+    private static void AppendClassSummery(
+        StringBuilder sb)
+    {
+        sb.AppendLine("/// <summary>");
+        sb.AppendLine("/// Endpoint definitions.");
+        sb.AppendLine("/// </summary>");
+    }
+
+    private static void AppendMethodSummery(
         StringBuilder sb,
         ContentGeneratorServerControllerMethodParameters item)
     {
@@ -58,6 +63,13 @@ public sealed class ContentGeneratorServerController : IContentGenerator
         sb.AppendLine(4, $"/// Description: {item.Description}");
         sb.AppendLine(4, $"/// Operation: {item.Name}.");
         sb.AppendLine(4, "/// </summary>");
+    }
+
+    private static void AppendMethodContent(
+        StringBuilder sb,
+        ContentGeneratorServerControllerMethodParameters item)
+    {
+        AppendMethodSummery(sb, item);
 
         AppendMethodContentAuthorizationIfNeeded(sb, item);
 
