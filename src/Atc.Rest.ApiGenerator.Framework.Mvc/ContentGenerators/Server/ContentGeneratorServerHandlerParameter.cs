@@ -1,5 +1,6 @@
 // ReSharper disable StringLiteralTypo
 // ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
+// ReSharper disable ConvertIfStatementToConditionalTernaryExpression
 namespace Atc.Rest.ApiGenerator.Framework.Mvc.ContentGenerators.Server;
 
 public class ContentGeneratorServerHandlerParameter : IContentGenerator
@@ -32,7 +33,9 @@ public class ContentGeneratorServerHandlerParameter : IContentGenerator
 
         foreach (var parameter in parameters.Parameters)
         {
-            AppendPropertyContent(sb, parameter);
+            AppendPropertySummery(sb, parameter.Description);
+            AppendPropertyAttributes(sb, parameter);
+            AppendPropertyBody(sb, parameter);
 
             sb.AppendLine();
         }
@@ -69,12 +72,10 @@ public class ContentGeneratorServerHandlerParameter : IContentGenerator
         sb.AppendLine(4, "/// </summary>");
     }
 
-    private static void AppendPropertyContent(
+    private static void AppendPropertyAttributes(
         StringBuilder sb,
         ContentGeneratorServerParameterParametersProperty item)
     {
-        AppendPropertySummery(sb, item.Description);
-
         switch (item.ParameterLocationType)
         {
             case ParameterLocationType.Query:
@@ -84,17 +85,55 @@ public class ContentGeneratorServerHandlerParameter : IContentGenerator
                 sb.AppendLine(4, $"[From{item.ParameterLocationType}(Name = \"{item.Name}\")]");
                 break;
             case ParameterLocationType.Body:
+            case ParameterLocationType.Form:
                 sb.AppendLine(4, $"[From{item.ParameterLocationType}]");
                 break;
+        }
+
+        foreach (var additionalValidationAttribute in item.AdditionalValidationAttributes)
+        {
+            switch (additionalValidationAttribute)
+            {
+                case EmailAddressAttribute:
+                    sb.AppendLine(4, "[EmailAddress]");
+                    break;
+                case RegularExpressionAttribute regularExpressionAttribute:
+                    sb.AppendLine(4, $"[RegularExpression(\"{regularExpressionAttribute.Pattern}\")]");
+                    break;
+                case StringLengthAttribute stringLengthAttribute:
+                    sb.AppendLine(4, $"[StringLength({stringLengthAttribute.MaximumLength})]");
+                    break;
+                case MinLengthAttribute minLengthAttribute:
+                    sb.AppendLine(4, $"[MinLength({minLengthAttribute.Length})]");
+                    break;
+                case MaxLengthAttribute maxLengthAttribute:
+                    sb.AppendLine(4, $"[MaxLength({maxLengthAttribute.Length})]");
+                    break;
+            }
         }
 
         if (item.IsRequired)
         {
             sb.AppendLine(4, "[Required]");
         }
+    }
 
+    private static void AppendPropertyBody(
+        StringBuilder sb,
+        ContentGeneratorServerParameterParametersProperty item)
+    {
         sb.Append(4, "public ");
+        if (item.UseListForDataType)
+        {
+            sb.Append("List<");
+        }
+
         sb.Append(item.DataType);
+        if (item.UseListForDataType)
+        {
+            sb.Append('>');
+        }
+
         if (item.IsNullable)
         {
             sb.Append('?');
@@ -102,18 +141,49 @@ public class ContentGeneratorServerHandlerParameter : IContentGenerator
 
         sb.Append(' ');
         sb.Append(item.ParameterName);
-        sb.AppendLine(" { get; set; }");
+
+        if (item.UseListForDataType)
+        {
+            sb.AppendLine($" {{ get; set; }} = new List<{item.DataType}>();");
+        }
+        else
+        {
+            if (string.IsNullOrEmpty(item.DefaultValueInitializer))
+            {
+                sb.AppendLine(" { get; set; }");
+            }
+            else
+            {
+                sb.AppendLine($" {{ get; set; }} = {item.DefaultValueInitializer};");
+            }
+        }
     }
 
     private static void AppendMethodToStringContent(
         StringBuilder sb,
-        IReadOnlyList<ContentGeneratorServerParameterParametersProperty> items)
+        IList<ContentGeneratorServerParameterParametersProperty> items)
     {
         var sbToStringContent = new StringBuilder();
         for (var i = 0; i < items.Count; i++)
         {
-            var parameterName = items[i].ParameterName;
-            sbToStringContent.Append($"{{nameof({parameterName})}}: {{{parameterName}}}");
+            var parameter = items[i];
+            var parameterName = parameter.ParameterName;
+            if (parameter.UseListForDataType)
+            {
+                sbToStringContent.Append($"{{nameof({parameterName})}}.Count: {{{parameterName}?.Count ?? 0}}");
+            }
+            else
+            {
+                if (parameter.IsSimpleType)
+                {
+                    sbToStringContent.Append($"{{nameof({parameterName})}}: {{{parameterName}}}");
+                }
+                else
+                {
+                    sbToStringContent.Append($"{{nameof({parameterName})}}: ({{{parameterName}}})");
+                }
+            }
+
             if (i != items.Count - 1)
             {
                 sbToStringContent.Append(", ");
@@ -122,6 +192,6 @@ public class ContentGeneratorServerHandlerParameter : IContentGenerator
 
         sb.AppendLine(4, "/// <inheritdoc />");
         sb.AppendLine(4, "public override string ToString()");
-        sb.AppendLine(7, $"=> $\"{sbToStringContent}\";");
+        sb.AppendLine(8, $"=> $\"{sbToStringContent}\";");
     }
 }

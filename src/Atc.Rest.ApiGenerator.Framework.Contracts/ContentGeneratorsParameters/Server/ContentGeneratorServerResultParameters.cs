@@ -5,7 +5,7 @@ public record ContentGeneratorServerResultParameters(
     string OperationName,
     string Description,
     string ResultName,
-    List<ContentGeneratorServerResultMethodParameters> MethodParameters,
+    IList<ContentGeneratorServerResultMethodParameters> MethodParameters,
     ContentGeneratorServerResultImplicitOperatorParameters? ImplicitOperatorParameters);
 
 public record ContentGeneratorServerResultMethodParameters(

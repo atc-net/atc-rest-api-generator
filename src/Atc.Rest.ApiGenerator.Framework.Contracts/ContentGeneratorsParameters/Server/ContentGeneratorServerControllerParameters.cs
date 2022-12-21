@@ -4,7 +4,7 @@ public record ContentGeneratorServerControllerParameters(
     string Namespace,
     string ApiGroupName,
     string RouteBase,
-    List<ContentGeneratorServerControllerMethodParameters> MethodParameters);
+    IList<ContentGeneratorServerControllerMethodParameters> MethodParameters);
 
 public record ContentGeneratorServerControllerMethodParameters(
     string OperationTypeRepresentation,

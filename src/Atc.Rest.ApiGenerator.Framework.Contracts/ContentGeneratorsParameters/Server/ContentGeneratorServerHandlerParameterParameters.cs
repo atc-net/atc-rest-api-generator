@@ -5,7 +5,7 @@ public record ContentGeneratorServerHandlerParameterParameters(
     string OperationName,
     string Description,
     string ParameterName,
-    List<ContentGeneratorServerParameterParametersProperty> Parameters);
+    IList<ContentGeneratorServerParameterParametersProperty> Parameters);
 
 public record ContentGeneratorServerParameterParametersProperty(
     string Name,
@@ -13,5 +13,9 @@ public record ContentGeneratorServerParameterParametersProperty(
     string Description,
     ParameterLocationType ParameterLocationType,
     string DataType,
+    bool IsSimpleType,
+    bool UseListForDataType,
     bool IsNullable,
-    bool IsRequired);
+    bool IsRequired,
+    IList<ValidationAttribute> AdditionalValidationAttributes,
+    string? DefaultValueInitializer);
