@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Eventargs;
 /// Parameters for operation request.
 /// Description: Get EventArgs By Id.
 /// Operation: GetEventArgsById.
-/// Area: Eventargs.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class GetEventArgsByIdParameters
@@ -22,11 +21,7 @@ public class GetEventArgsByIdParameters
     [Required]
     public string Id { get; set; }
 
-    /// <summary>
-    /// Converts to string.
-    /// </summary>
+    /// <inheritdoc />
     public override string ToString()
-    {
-        return $"{nameof(Id)}: {Id}";
-    }
+        => $"{nameof(Id)}: {Id}";
 }

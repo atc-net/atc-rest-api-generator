@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Users;
 /// Parameters for operation request.
 /// Description: Get user by email.
 /// Operation: GetUserByEmail.
-/// Area: Users.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class GetUserByEmailParameters
@@ -23,11 +22,7 @@ public class GetUserByEmailParameters
     [Required]
     public string Email { get; set; }
 
-    /// <summary>
-    /// Converts to string.
-    /// </summary>
+    /// <inheritdoc />
     public override string ToString()
-    {
-        return $"{nameof(Email)}: {Email}";
-    }
+        => $"{nameof(Email)}: {Email}";
 }

@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Users;
 /// Parameters for operation request.
 /// Description: Update user by id.
 /// Operation: UpdateUserById.
-/// Area: Users.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class UpdateUserByIdParameters
@@ -29,11 +28,7 @@ public class UpdateUserByIdParameters
     [Required]
     public UpdateUserRequest Request { get; set; }
 
-    /// <summary>
-    /// Converts to string.
-    /// </summary>
+    /// <inheritdoc />
     public override string ToString()
-    {
-        return $"{nameof(Id)}: {Id}, {nameof(Request)}: ({Request})";
-    }
+        => $"{nameof(Id)}: {Id}, {nameof(Request)}: ({Request})";
 }

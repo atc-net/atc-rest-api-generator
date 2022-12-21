@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Users;
 /// Parameters for operation request.
 /// Description: Delete user by id.
 /// Operation: DeleteUserById.
-/// Area: Users.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class DeleteUserByIdParameters
@@ -22,11 +21,7 @@ public class DeleteUserByIdParameters
     [Required]
     public Guid Id { get; set; }
 
-    /// <summary>
-    /// Converts to string.
-    /// </summary>
+    /// <inheritdoc />
     public override string ToString()
-    {
-        return $"{nameof(Id)}: {Id}";
-    }
+        => $"{nameof(Id)}: {Id}";
 }

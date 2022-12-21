@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Orders;
 /// Parameters for operation request.
 /// Description: Get orders.
 /// Operation: GetOrders.
-/// Area: Orders.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class GetOrdersParameters
@@ -46,11 +45,7 @@ public class GetOrdersParameters
     [FromQuery(Name = "continuationToken")]
     public string? ContinuationToken { get; set; }
 
-    /// <summary>
-    /// Converts to string.
-    /// </summary>
+    /// <inheritdoc />
     public override string ToString()
-    {
-        return $"{nameof(PageSize)}: {PageSize}, {nameof(PageIndex)}: {PageIndex}, {nameof(QueryString)}: {QueryString}, {nameof(QueryStringArray)}.Count: {QueryStringArray?.Count ?? 0}, {nameof(ContinuationToken)}: {ContinuationToken}";
-    }
+        => $"{nameof(PageSize)}: {PageSize}, {nameof(PageIndex)}: {PageIndex}, {nameof(QueryString)}: {QueryString}, {nameof(QueryStringArray)}.Count: {QueryStringArray?.Count ?? 0}, {nameof(ContinuationToken)}: {ContinuationToken}";
 }

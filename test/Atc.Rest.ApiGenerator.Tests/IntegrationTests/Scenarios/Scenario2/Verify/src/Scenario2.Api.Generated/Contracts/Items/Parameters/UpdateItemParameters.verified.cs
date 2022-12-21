@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Items;
 /// Parameters for operation request.
 /// Description: Updates an item.
 /// Operation: UpdateItem.
-/// Area: Items.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class UpdateItemParameters
@@ -26,11 +25,7 @@ public class UpdateItemParameters
     [Required]
     public UpdateItemRequest Request { get; set; }
 
-    /// <summary>
-    /// Converts to string.
-    /// </summary>
+    /// <inheritdoc />
     public override string ToString()
-    {
-        return $"{nameof(Id)}: {Id}, {nameof(Request)}: ({Request})";
-    }
+        => $"{nameof(Id)}: {Id}, {nameof(Request)}: ({Request})";
 }

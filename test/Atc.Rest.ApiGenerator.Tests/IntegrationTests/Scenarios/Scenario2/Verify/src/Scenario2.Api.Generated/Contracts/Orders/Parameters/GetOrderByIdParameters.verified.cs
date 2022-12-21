@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Orders;
 /// Parameters for operation request.
 /// Description: Get order by id.
 /// Operation: GetOrderById.
-/// Area: Orders.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class GetOrderByIdParameters
@@ -29,11 +28,7 @@ public class GetOrderByIdParameters
     [EmailAddress]
     public string? MyEmail { get; set; }
 
-    /// <summary>
-    /// Converts to string.
-    /// </summary>
+    /// <inheritdoc />
     public override string ToString()
-    {
-        return $"{nameof(Id)}: {Id}, {nameof(MyEmail)}: {MyEmail}";
-    }
+        => $"{nameof(Id)}: {Id}, {nameof(MyEmail)}: {MyEmail}";
 }

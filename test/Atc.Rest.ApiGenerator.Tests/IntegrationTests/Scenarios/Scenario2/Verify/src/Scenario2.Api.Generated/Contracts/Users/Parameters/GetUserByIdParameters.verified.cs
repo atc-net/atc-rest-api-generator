@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Users;
 /// Parameters for operation request.
 /// Description: Get user by id.
 /// Operation: GetUserById.
-/// Area: Users.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class GetUserByIdParameters
@@ -22,11 +21,7 @@ public class GetUserByIdParameters
     [Required]
     public Guid Id { get; set; }
 
-    /// <summary>
-    /// Converts to string.
-    /// </summary>
+    /// <inheritdoc />
     public override string ToString()
-    {
-        return $"{nameof(Id)}: {Id}";
-    }
+        => $"{nameof(Id)}: {Id}";
 }
