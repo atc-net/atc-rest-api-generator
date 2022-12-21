@@ -36,4 +36,9 @@ public enum ParameterLocationType
     /// Parameters that are appended to the body.
     /// </summary>
     Body,
+
+    /// <summary>
+    /// Parameters that are appended to the body as form.
+    /// </summary>
+    Form,
 }
