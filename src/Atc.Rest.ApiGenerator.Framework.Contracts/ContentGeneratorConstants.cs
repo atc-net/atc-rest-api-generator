@@ -10,6 +10,6 @@ public static class ContentGeneratorConstants
     public const string Parameters = "Parameters";
     public const string Result = "Result";
     public const string Results = "Results";
-
+    public const string Request = "Request";
     public const string UndefinedDescription = "Undefined description.";
 }
