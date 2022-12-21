@@ -1,6 +1,8 @@
 global using System.Collections.Concurrent;
+global using System.ComponentModel.DataAnnotations;
 global using System.Diagnostics;
 global using System.Diagnostics.CodeAnalysis;
+global using System.Globalization;
 global using System.Net;
 global using System.Text;
 
@@ -17,5 +19,6 @@ global using Atc.Rest.ApiGenerator.OpenApi.Models;
 global using Atc.Rest.ApiGenerator.OpenApi.Readers;
 
 global using Microsoft.Extensions.Logging;
+global using Microsoft.OpenApi.Any;
 global using Microsoft.OpenApi.Models;
 global using Microsoft.OpenApi.Readers;
