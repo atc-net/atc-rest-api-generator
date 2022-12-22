@@ -141,7 +141,7 @@ public static class ContentGeneratorServerHandlerModelParametersFactory
     private static IList<ValidationAttribute> GetAdditionalValidationAttributes(
         OpenApiSchema openApiSchema)
     {
-        var validationAttributesExtractor = new ValidationAttributesExtractor();
-        return validationAttributesExtractor.Extract(openApiSchema);
+        var validationAttributeExtractor = new ValidationAttributeExtractor();
+        return validationAttributeExtractor.Extract(openApiSchema);
     }
 }

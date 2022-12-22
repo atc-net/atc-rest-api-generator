@@ -1,6 +1,6 @@
 namespace Atc.Rest.ApiGenerator.OpenApi.Extractors;
 
-public sealed class ValidationAttributesExtractor : IValidationAttributesExtractor
+public sealed class ValidationAttributeExtractor : IValidationAttributeExtractor
 {
     public IList<ValidationAttribute> Extract(
         OpenApiSchema openApiSchema)
