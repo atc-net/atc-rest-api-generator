@@ -8,6 +8,7 @@ public static class CodeDocumentationTagsFactory
         return new CodeDocumentationTags(
             summery,
             Parameters: null,
+            Remark: null,
             Example: null,
             Exception: null,
             Return: null);
