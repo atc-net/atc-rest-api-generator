@@ -17,11 +17,7 @@ public class UpdateTestGenderRequest
     /// </summary>
     public GenderType Gender { get; set; }
 
-    /// <summary>
-    /// Converts to string.
-    /// </summary>
+    /// <inheritdoc />
     public override string ToString()
-    {
-        return $"{nameof(Gender)}: ({Gender})";
-    }
+        => $"{nameof(Gender)}: {Gender}";
 }

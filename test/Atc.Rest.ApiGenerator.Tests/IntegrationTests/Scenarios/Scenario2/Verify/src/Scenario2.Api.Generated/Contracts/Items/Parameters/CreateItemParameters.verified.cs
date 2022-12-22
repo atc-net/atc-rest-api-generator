@@ -14,6 +14,9 @@ namespace Scenario2.Api.Generated.Contracts.Items;
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class CreateItemParameters
 {
+    /// <summary>
+    /// CreateItemRequest.
+    /// </summary>
     [FromBody]
     [Required]
     public CreateItemRequest Request { get; set; }

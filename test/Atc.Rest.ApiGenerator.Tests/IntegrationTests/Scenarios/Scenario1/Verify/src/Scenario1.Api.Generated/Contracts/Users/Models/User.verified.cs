@@ -18,21 +18,9 @@ public class User
 
     public string LastName { get; set; }
 
-    /// <summary>
-    /// Undefined description.
-    /// </summary>
-    /// <remarks>
-    /// Email validation being enforced.
-    /// </remarks>
     [EmailAddress]
     public string Email { get; set; }
 
-    /// <summary>
-    /// Undefined description.
-    /// </summary>
-    /// <remarks>
-    /// Url validation being enforced.
-    /// </remarks>
     [Uri]
     public Uri Homepage { get; set; }
 
@@ -46,11 +34,7 @@ public class User
     /// </summary>
     public Address CompanyAddress { get; set; }
 
-    /// <summary>
-    /// Converts to string.
-    /// </summary>
+    /// <inheritdoc />
     public override string ToString()
-    {
-        return $"{nameof(Id)}: {Id}, {nameof(FirstName)}: {FirstName}, {nameof(LastName)}: {LastName}, {nameof(Email)}: {Email}, {nameof(Homepage)}: {Homepage}, {nameof(HomeAddress)}: ({HomeAddress}), {nameof(CompanyAddress)}: ({CompanyAddress})";
-    }
+        => $"{nameof(Id)}: {Id}, {nameof(FirstName)}: {FirstName}, {nameof(LastName)}: {LastName}, {nameof(Email)}: {Email}, {nameof(Homepage)}: ({Homepage}), {nameof(HomeAddress)}: ({HomeAddress}), {nameof(CompanyAddress)}: ({CompanyAddress})";
 }

@@ -16,4 +16,8 @@ public class Tasks
     /// A list of Task.
     /// </summary>
     public List<Task> TaskList { get; set; } = new List<Task>();
+
+    /// <inheritdoc />
+    public override string ToString()
+        => $"{nameof(TaskList)}.Count: {TaskList?.Count ?? 0}";
 }

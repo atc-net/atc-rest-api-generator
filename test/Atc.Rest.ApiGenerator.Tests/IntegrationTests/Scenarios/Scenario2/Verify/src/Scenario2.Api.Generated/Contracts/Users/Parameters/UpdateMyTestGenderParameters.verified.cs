@@ -27,6 +27,9 @@ public class UpdateMyTestGenderParameters
     [FromQuery(Name = "genderParam")]
     public GenderType? GenderParam { get; set; }
 
+    /// <summary>
+    /// Update test-gender Request.
+    /// </summary>
     [FromBody]
     [Required]
     public UpdateTestGenderRequest Request { get; set; }

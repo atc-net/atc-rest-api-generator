@@ -16,12 +16,6 @@ public class UpdateUserRequest
 
     public string LastName { get; set; }
 
-    /// <summary>
-    /// Undefined description.
-    /// </summary>
-    /// <remarks>
-    /// Email validation being enforced.
-    /// </remarks>
     [EmailAddress]
     public string Email { get; set; }
 
@@ -30,11 +24,7 @@ public class UpdateUserRequest
     /// </summary>
     public GenderType Gender { get; set; }
 
-    /// <summary>
-    /// Converts to string.
-    /// </summary>
+    /// <inheritdoc />
     public override string ToString()
-    {
-        return $"{nameof(FirstName)}: {FirstName}, {nameof(LastName)}: {LastName}, {nameof(Email)}: {Email}, {nameof(Gender)}: ({Gender})";
-    }
+        => $"{nameof(FirstName)}: {FirstName}, {nameof(LastName)}: {LastName}, {nameof(Email)}: {Email}, {nameof(Gender)}: {Gender}";
 }

@@ -14,6 +14,9 @@ namespace Scenario2.Api.Generated.Contracts.Files;
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class UploadSingleObjectWithFileAsFormDataParameters
 {
+    /// <summary>
+    /// FileAsFormDataRequest.
+    /// </summary>
     [FromForm]
     [Required]
     public FileAsFormDataRequest Request { get; set; }

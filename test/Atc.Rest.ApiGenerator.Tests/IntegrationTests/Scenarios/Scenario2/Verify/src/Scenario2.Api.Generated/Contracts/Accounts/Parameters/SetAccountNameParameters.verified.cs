@@ -21,6 +21,9 @@ public class SetAccountNameParameters
     [Required]
     public Guid AccountId { get; set; }
 
+    /// <summary>
+    /// UpdateAccountRequest.
+    /// </summary>
     [FromBody]
     [Required]
     public UpdateAccountRequest Request { get; set; }

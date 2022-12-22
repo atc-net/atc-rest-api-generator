@@ -12,21 +12,11 @@ namespace Scenario2.Api.Generated.Contracts.Orders;
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class UpdateOrderRequest
 {
-    /// <summary>
-    /// Undefined description.
-    /// </summary>
-    /// <remarks>
-    /// Email validation being enforced.
-    /// </remarks>
     [Required]
     [EmailAddress]
     public string MyEmail { get; set; }
 
-    /// <summary>
-    /// Converts to string.
-    /// </summary>
+    /// <inheritdoc />
     public override string ToString()
-    {
-        return $"{nameof(MyEmail)}: {MyEmail}";
-    }
+        => $"{nameof(MyEmail)}: {MyEmail}";
 }

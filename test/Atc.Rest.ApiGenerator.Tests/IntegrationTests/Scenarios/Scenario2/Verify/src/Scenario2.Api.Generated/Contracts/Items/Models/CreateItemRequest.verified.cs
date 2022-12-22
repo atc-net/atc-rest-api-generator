@@ -18,14 +18,13 @@ public class CreateItemRequest
     [Required]
     public Item Item { get; set; }
 
+    /// <summary>
+    /// A list of Item.
+    /// </summary>
     [Required]
     public List<Item> MyItems { get; set; }
 
-    /// <summary>
-    /// Converts to string.
-    /// </summary>
+    /// <inheritdoc />
     public override string ToString()
-    {
-        return $"{nameof(Item)}: ({Item}), {nameof(MyItems)}.Count: {MyItems?.Count ?? 0}";
-    }
+        => $"{nameof(Item)}: ({Item}), {nameof(MyItems)}.Count: {MyItems?.Count ?? 0}";
 }

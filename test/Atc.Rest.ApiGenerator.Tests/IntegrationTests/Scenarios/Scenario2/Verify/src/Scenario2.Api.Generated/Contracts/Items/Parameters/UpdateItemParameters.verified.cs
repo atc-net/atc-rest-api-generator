@@ -21,6 +21,9 @@ public class UpdateItemParameters
     [Required]
     public Guid Id { get; set; }
 
+    /// <summary>
+    /// UpdateItemRequest.
+    /// </summary>
     [FromBody]
     [Required]
     public UpdateItemRequest Request { get; set; }

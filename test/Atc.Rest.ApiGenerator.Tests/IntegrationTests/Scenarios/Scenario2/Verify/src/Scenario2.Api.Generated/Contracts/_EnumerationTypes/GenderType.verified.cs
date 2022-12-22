@@ -6,11 +6,11 @@
 //------------------------------------------------------------------------------
 namespace Scenario2.Api.Generated.Contracts;
 
-[SuppressMessage("Maintainability Rules", "SA1413:Use trailing comma in multi-line initializers", Justification = "OK.")]
+[GeneratedCode("ApiGenerator", "x.x.x.x")]
 public enum GenderType
 {
     None,
     NonBinary,
     Male,
-    Female
+    Female,
 }

@@ -19,12 +19,14 @@ public class GetOrdersParameters
     /// </summary>
     [FromQuery(Name = "pageSize")]
     [Required]
+    [Range(1, 100)]
     public int PageSize { get; set; } = 10;
 
     /// <summary>
     /// The number of items to skip before starting to collect the result set.
     /// </summary>
     [FromQuery(Name = "pageIndex")]
+    [Range(0, 2147483647)]
     public int PageIndex { get; set; } = 0;
 
     /// <summary>

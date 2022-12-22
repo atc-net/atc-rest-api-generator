@@ -17,11 +17,7 @@ public class FilesAsFormDataRequest
     /// </summary>
     public List<IFormFile> Files { get; set; } = new List<IFormFile>();
 
-    /// <summary>
-    /// Converts to string.
-    /// </summary>
+    /// <inheritdoc />
     public override string ToString()
-    {
-        return $"{nameof(Files)}.Count: {Files?.Count ?? 0}";
-    }
+        => $"{nameof(Files)}.Count: {Files?.Count ?? 0}";
 }

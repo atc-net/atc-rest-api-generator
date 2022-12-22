@@ -18,8 +18,8 @@ public class GetUserByEmailParameters
     /// The email of the user to retrieve.
     /// </summary>
     [FromQuery(Name = "email")]
-    [EmailAddress]
     [Required]
+    [EmailAddress]
     public string Email { get; set; }
 
     /// <inheritdoc />

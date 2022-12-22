@@ -26,11 +26,7 @@ public class Address
     /// </summary>
     public Country MyCountry { get; set; }
 
-    /// <summary>
-    /// Converts to string.
-    /// </summary>
+    /// <inheritdoc />
     public override string ToString()
-    {
-        return $"{nameof(StreetName)}: {StreetName}, {nameof(StreetNumber)}: {StreetNumber}, {nameof(PostalCode)}: {PostalCode}, {nameof(CityName)}: {CityName}, {nameof(MyCountry)}: ({MyCountry})";
-    }
+        => $"{nameof(StreetName)}: {StreetName}, {nameof(StreetNumber)}: {StreetNumber}, {nameof(PostalCode)}: {PostalCode}, {nameof(CityName)}: {CityName}, {nameof(MyCountry)}: ({MyCountry})";
 }

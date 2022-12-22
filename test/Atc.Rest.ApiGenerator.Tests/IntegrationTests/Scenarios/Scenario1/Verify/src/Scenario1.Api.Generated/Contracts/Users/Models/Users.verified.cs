@@ -16,4 +16,8 @@ public class Users
     /// A list of User.
     /// </summary>
     public List<User> UserList { get; set; } = new List<User>();
+
+    /// <inheritdoc />
+    public override string ToString()
+        => $"{nameof(UserList)}.Count: {UserList?.Count ?? 0}";
 }

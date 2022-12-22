@@ -10,10 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Orders;
 /// A single order.
 /// Hallo description with multiline and no ending dot.
 /// </summary>
-/// <example>
-/// id: 123
-/// name: Hallo world.
-/// </example>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class Order
 {
@@ -23,12 +19,6 @@ public class Order
 
     public DateTimeOffset MyTime { get; set; }
 
-    /// <summary>
-    /// Undefined description.
-    /// </summary>
-    /// <remarks>
-    /// Email validation being enforced.
-    /// </remarks>
     [EmailAddress]
     public string MyEmail { get; set; } = "a@a.com";
 
@@ -50,18 +40,9 @@ public class Order
     /// <summary>
     /// This is the good uri :-).
     /// </summary>
-    /// <remarks>
-    /// Url validation being enforced.
-    /// </remarks>
     [Uri]
     public Uri MyUri { get; set; }
 
-    /// <summary>
-    /// Undefined description.
-    /// </summary>
-    /// <remarks>
-    /// This string should be base64-encoded.
-    /// </remarks>
     public string MyByte { get; set; }
 
     /// <summary>
@@ -77,11 +58,7 @@ public class Order
     /// </summary>
     public Address DeliveryAddress { get; set; }
 
-    /// <summary>
-    /// Converts to string.
-    /// </summary>
+    /// <inheritdoc />
     public override string ToString()
-    {
-        return $"{nameof(Id)}: {Id}, {nameof(Description)}: {Description}, {nameof(MyTime)}: {MyTime}, {nameof(MyEmail)}: {MyEmail}, {nameof(MyNullableDateTime)}: {MyNullableDateTime}, {nameof(MyDateTime)}: {MyDateTime}, {nameof(MyNumber)}: {MyNumber}, {nameof(MyInteger)}: {MyInteger}, {nameof(MyBool)}: {MyBool}, {nameof(MyUri)}: {MyUri}, {nameof(MyByte)}: {MyByte}, {nameof(MyStringList)}.Count: {MyStringList?.Count ?? 0}, {nameof(MyLong)}: {MyLong}, {nameof(DeliveryAddress)}: ({DeliveryAddress})";
-    }
+        => $"{nameof(Id)}: {Id}, {nameof(Description)}: {Description}, {nameof(MyTime)}: ({MyTime}), {nameof(MyEmail)}: {MyEmail}, {nameof(MyNullableDateTime)}: ({MyNullableDateTime}), {nameof(MyDateTime)}: ({MyDateTime}), {nameof(MyNumber)}: {MyNumber}, {nameof(MyInteger)}: {MyInteger}, {nameof(MyBool)}: {MyBool}, {nameof(MyUri)}: ({MyUri}), {nameof(MyByte)}: {MyByte}, {nameof(MyStringList)}.Count: {MyStringList?.Count ?? 0}, {nameof(MyLong)}: {MyLong}, {nameof(DeliveryAddress)}: ({DeliveryAddress})";
 }
