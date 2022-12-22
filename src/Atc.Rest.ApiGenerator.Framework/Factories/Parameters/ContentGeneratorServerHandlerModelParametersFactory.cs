@@ -1,6 +1,4 @@
 // ReSharper disable MergeIntoPattern
-using System.ComponentModel.DataAnnotations;
-
 namespace Atc.Rest.ApiGenerator.Framework.Factories.Parameters;
 
 public static class ContentGeneratorServerHandlerModelParametersFactory
