@@ -22,6 +22,6 @@ public static class OpenApiOperationExtensions
             result += ".";
         }
 
-        return result;
+        return result.Replace("\n", "\n/// ", StringComparison.Ordinal);
     }
 }

@@ -1,4 +1,5 @@
 // ReSharper disable InvertIf
+
 namespace Atc.Rest.ApiGenerator.OpenApi.Extensions;
 
 public static class OpenApiSchemaExtensions
@@ -58,10 +59,15 @@ public static class OpenApiSchemaExtensions
         return parameterLocationType;
     }
 
-    public static string GetRequestBodySummaryDescription(
+    public static string GetSummaryDescription(
         this OpenApiSchema apiSchema)
     {
         var result = apiSchema.Description;
+
+        if (string.IsNullOrEmpty(result))
+        {
+            result = apiSchema.Title;
+        }
 
         if (string.IsNullOrEmpty(result))
         {
@@ -73,6 +79,6 @@ public static class OpenApiSchemaExtensions
             result += ".";
         }
 
-        return result;
+        return result.Replace("\n", "\n/// ", StringComparison.Ordinal);
     }
 }

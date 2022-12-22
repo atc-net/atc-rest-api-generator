@@ -1,18 +1,17 @@
-// ReSharper disable StringLiteralTypo
-// ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
 // ReSharper disable ConvertIfStatementToConditionalTernaryExpression
+// ReSharper disable StringLiteralTypo
 namespace Atc.Rest.ApiGenerator.Framework.Mvc.ContentGenerators.Server;
 
-public class ContentGeneratorServerHandlerParameter : IContentGenerator
+public class ContentGeneratorServerHandlerModel : IContentGenerator
 {
     private readonly GeneratedCodeHeaderGenerator codeHeaderGenerator;
     private readonly GeneratedCodeAttributeGenerator codeAttributeGenerator;
-    private readonly ContentGeneratorServerHandlerParameterParameters parameters;
+    private readonly ContentGeneratorServerHandlerModelParameters parameters;
 
-    public ContentGeneratorServerHandlerParameter(
+    public ContentGeneratorServerHandlerModel(
         GeneratedCodeHeaderGenerator codeHeaderGenerator,
         GeneratedCodeAttributeGenerator codeAttributeGenerator,
-        ContentGeneratorServerHandlerParameterParameters parameters)
+        ContentGeneratorServerHandlerModelParameters parameters)
     {
         this.codeHeaderGenerator = codeHeaderGenerator;
         this.codeAttributeGenerator = codeAttributeGenerator;
@@ -26,9 +25,9 @@ public class ContentGeneratorServerHandlerParameter : IContentGenerator
         sb.Append(codeHeaderGenerator.Generate());
         sb.AppendLine($"namespace {parameters.Namespace};");
         sb.AppendLine();
-        AppendClassSummery(sb, parameters);
+        AppendClassSummery(sb, parameters.Description);
         sb.AppendLine(codeAttributeGenerator.Generate());
-        sb.AppendLine($"public class {parameters.ParameterName}");
+        sb.AppendLine($"public class {parameters.ModelName}");
         sb.AppendLine("{");
 
         foreach (var parameter in parameters.PropertyParameters)
@@ -49,12 +48,23 @@ public class ContentGeneratorServerHandlerParameter : IContentGenerator
 
     private static void AppendClassSummery(
         StringBuilder sb,
-        ContentGeneratorServerHandlerParameterParameters item)
+        string description)
     {
+        if (string.IsNullOrEmpty(description))
+        {
+            return;
+        }
+
         sb.AppendLine("/// <summary>");
-        sb.AppendLine("/// Parameters for operation request.");
-        sb.AppendLine($"/// Description: {item.Description}");
-        sb.AppendLine($"/// Operation: {item.OperationName}.");
+        if (description.EndsWith('.'))
+        {
+            sb.AppendLine($"/// {description}");
+        }
+        else
+        {
+            sb.AppendLine($"/// {description}.");
+        }
+
         sb.AppendLine("/// </summary>");
     }
 
@@ -62,34 +72,21 @@ public class ContentGeneratorServerHandlerParameter : IContentGenerator
         StringBuilder sb,
         string description)
     {
-        if (ContentGeneratorConstants.UndefinedDescription.Equals(description, StringComparison.Ordinal))
+        if (string.IsNullOrEmpty(description) ||
+            ContentGeneratorConstants.UndefinedDescription.Equals(description, StringComparison.Ordinal))
         {
             return;
         }
 
         sb.AppendLine(4, "/// <summary>");
-        sb.AppendLine(4, $"/// {description}");
+        sb.AppendLine(4, $"/// {description.Replace("\n", "\n/// ", StringComparison.Ordinal)}");
         sb.AppendLine(4, "/// </summary>");
     }
 
     private static void AppendPropertyAttributes(
         StringBuilder sb,
-        ContentGeneratorServerParameterParametersProperty item)
+        ContentGeneratorServerHandlerModelParametersProperty item)
     {
-        switch (item.ParameterLocationType)
-        {
-            case ParameterLocationType.Query:
-            case ParameterLocationType.Header:
-            case ParameterLocationType.Route:
-            case ParameterLocationType.Cookie:
-                sb.AppendLine(4, $"[From{item.ParameterLocationType}(Name = \"{item.Name}\")]");
-                break;
-            case ParameterLocationType.Body:
-            case ParameterLocationType.Form:
-                sb.AppendLine(4, $"[From{item.ParameterLocationType}]");
-                break;
-        }
-
         if (item.IsRequired)
         {
             sb.AppendLine(4, "[Required]");
@@ -126,7 +123,7 @@ public class ContentGeneratorServerHandlerParameter : IContentGenerator
 
     private static void AppendPropertyBody(
         StringBuilder sb,
-        ContentGeneratorServerParameterParametersProperty item)
+        ContentGeneratorServerHandlerModelParametersProperty item)
     {
         sb.Append(4, "public ");
         if (item.UseListForDataType)
@@ -148,26 +145,19 @@ public class ContentGeneratorServerHandlerParameter : IContentGenerator
         sb.Append(' ');
         sb.Append(item.ParameterName);
 
-        if (item.UseListForDataType)
+        if (string.IsNullOrEmpty(item.DefaultValueInitializer))
         {
-            sb.AppendLine($" {{ get; set; }} = new List<{item.DataType}>();");
+            sb.AppendLine(" { get; set; }");
         }
         else
         {
-            if (string.IsNullOrEmpty(item.DefaultValueInitializer))
-            {
-                sb.AppendLine(" { get; set; }");
-            }
-            else
-            {
-                sb.AppendLine($" {{ get; set; }} = {item.DefaultValueInitializer};");
-            }
+            sb.AppendLine($" {{ get; set; }} = {item.DefaultValueInitializer};");
         }
     }
 
     private static void AppendMethodToStringContent(
         StringBuilder sb,
-        IList<ContentGeneratorServerParameterParametersProperty> items)
+        IList<ContentGeneratorServerHandlerModelParametersProperty> items)
     {
         var sbToStringContent = new StringBuilder();
         for (var i = 0; i < items.Count; i++)

@@ -171,31 +171,124 @@ public class ServerApiGenerator
     {
         ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 
-        var sgContractModels = new List<SyntaxGeneratorContractModel>();
-
         foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
         {
             var apiGroupName = basePathSegmentName.EnsureFirstCharacterToUpper();
 
-            var generatorModels = new SyntaxGeneratorContractModels(logger, projectOptions, operationSchemaMappings, basePathSegmentName);
-            var generatedModels = generatorModels.GenerateSyntaxTrees();
-            sgContractModels.AddRange(generatedModels);
-
+            GenerateModels(projectOptions.Document, apiGroupName, operationSchemaMappings);
             GenerateParameters(projectOptions.Document, apiGroupName);
             GenerateResults(projectOptions.Document, apiGroupName);
             GenerateInterfaces(projectOptions.Document, apiGroupName);
         }
+    }
 
-        ApiGeneratorHelper.CollectMissingContractModelFromOperationSchemaMappings(
-            logger,
-            projectOptions,
-            operationSchemaMappings,
-            sgContractModels);
+    private void GenerateModels(
+        OpenApiDocument document,
+        string apiGroupName,
+        IEnumerable<ApiOperation> operationSchemaMappings)
+    {
+        var apiOperations = operationSchemaMappings
+            .Where(x => x.LocatedArea is ApiSchemaMapLocatedAreaType.Response or ApiSchemaMapLocatedAreaType.RequestBody &&
+                        x.SegmentName.Equals(apiGroupName, StringComparison.OrdinalIgnoreCase))
+            .ToList();
 
-        foreach (var sg in sgContractModels)
+        var apiOperationModels = GetDistinctApiOperationModels(apiOperations);
+
+        foreach (var apiOperationModel in apiOperationModels)
         {
-            sg.ToFile();
+            var apiSchema = document.Components.Schemas.First(x => x.Key.Equals(apiOperationModel.Name, StringComparison.OrdinalIgnoreCase));
+
+            var modelName = apiSchema.Key.EnsureFirstCharacterToUpper();
+
+            if (apiOperationModel.IsEnum)
+            {
+                GenerateEnumerationType(modelName, apiSchema.Value.GetEnumSchema().Item2);
+            }
+            else
+            {
+                GenerateModel(modelName, apiSchema.Value, apiGroupName, apiOperationModel.IsShared);
+            }
         }
+    }
+
+    private void GenerateEnumerationType(
+        string enumerationName,
+        OpenApiSchema openApiSchemaEnumeration)
+    {
+        var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}";
+
+        // Generate
+        var enumerationParameters = ContentGeneratorServerHandlerEnumerationParametersFactory.Create(
+            fullNamespace,
+            enumerationName,
+            openApiSchemaEnumeration.Enum);
+
+        var contentGeneratorEnum = new ContentGeneratorServerHandlerEnumeration(
+            new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+            new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+            enumerationParameters);
+
+        var enumContent = contentGeneratorEnum.Generate();
+
+        // Write
+        var file = new FileInfo(DirectoryInfoHelper.GetCsFileNameForContractEnumTypes(
+            projectOptions.PathForContracts,
+            enumerationName));
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectOptions.PathForSrcGenerate,
+            file,
+            ContentWriterArea.Src,
+            enumContent);
+    }
+
+    private void GenerateModel(
+        string modelName,
+        OpenApiSchema apiSchemaModel,
+        string apiGroupName,
+        bool isSharedContract)
+    {
+        var fullNamespace = isSharedContract
+            ? $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}"
+            : $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
+
+        // Generate
+        var modelParameters = ContentGeneratorServerHandlerModelParametersFactory.Create(
+            fullNamespace,
+            modelName,
+            apiSchemaModel);
+
+        var contentGeneratorModel = new ContentGeneratorServerHandlerModel(
+            new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+            new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+            modelParameters);
+
+        var modelContent = contentGeneratorModel.Generate();
+
+        // Write
+        FileInfo file;
+        if (isSharedContract)
+        {
+            file = new FileInfo(DirectoryInfoHelper.GetCsFileNameForContractShared(
+                projectOptions.PathForContractsShared,
+                modelName));
+        }
+        else
+        {
+            file = new FileInfo(DirectoryInfoHelper.GetCsFileNameForContract(
+                projectOptions.PathForContracts,
+                apiGroupName,
+                NameConstants.ContractModels,
+                modelName));
+        }
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectOptions.PathForSrcGenerate,
+            file,
+            ContentWriterArea.Src,
+            modelContent);
     }
 
     private void GenerateParameters(
@@ -426,6 +519,23 @@ public class ServerApiGenerator
                     content);
             }
         }
+    }
+
+    private static List<ApiOperationModel> GetDistinctApiOperationModels(
+        List<ApiOperation> apiOperations)
+    {
+        var result = new List<ApiOperationModel>();
+
+        foreach (var apiOperation in apiOperations)
+        {
+            var apiOperationModel = result.FirstOrDefault(x => x.Name.Equals(apiOperation.Model.Name, StringComparison.Ordinal));
+            if (apiOperationModel is null)
+            {
+                result.Add(apiOperation.Model);
+            }
+        }
+
+        return result;
     }
 
     private string GetRouteByArea(

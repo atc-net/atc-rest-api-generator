@@ -17,6 +17,6 @@ public static class OpenApiParameterExtensions
             result += ".";
         }
 
-        return result;
+        return result.Replace("\n", "\n/// ", StringComparison.Ordinal);
     }
 }

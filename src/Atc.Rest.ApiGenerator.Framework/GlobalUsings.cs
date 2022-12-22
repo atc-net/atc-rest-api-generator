@@ -15,6 +15,7 @@ global using Atc.Rest.ApiGenerator.Framework.Readers;
 global using Atc.Rest.ApiGenerator.Framework.ToRefactor;
 global using Atc.Rest.ApiGenerator.Framework.Writers;
 global using Atc.Rest.ApiGenerator.OpenApi.Extensions;
+global using Atc.Rest.ApiGenerator.OpenApi.Extractors;
 global using Atc.Rest.ApiGenerator.OpenApi.Models;
 global using Atc.Rest.ApiGenerator.OpenApi.Readers;
 
