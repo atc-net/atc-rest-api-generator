@@ -3,6 +3,7 @@ namespace Atc.Rest.ApiGenerator.Framework.Contracts.ContentGeneratorsParameters.
 public record ContentGeneratorServerHandlerEnumerationParameters(
     string Namespace,
     string EnumerationName,
+    CodeDocumentationTags DocumentationTags,
     bool UseFlagAttribute,
     IList<ContentGeneratorServerEnumerationParametersValue> ValueParameters);
 

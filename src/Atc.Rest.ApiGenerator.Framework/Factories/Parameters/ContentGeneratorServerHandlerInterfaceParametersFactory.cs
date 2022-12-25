@@ -13,14 +13,14 @@ public static class ContentGeneratorServerHandlerInterfaceParametersFactory
             ? new ContentGeneratorServerHandlerInterfaceParameters(
                 @namespace,
                 operationName,
-                openApiOperation.GetOperationSummaryDescription(),
+                openApiOperation.ExtractDocumentationTagsForInterface(),
                 InterfaceName: $"I{operationName}{ContentGeneratorConstants.Handler}",
                 ResultName: $"{operationName}{ContentGeneratorConstants.Result}",
                 ParameterName: $"{operationName}{ContentGeneratorConstants.Parameters}")
             : new ContentGeneratorServerHandlerInterfaceParameters(
                 @namespace,
                 operationName,
-                openApiOperation.GetOperationSummaryDescription(),
+                openApiOperation.ExtractDocumentationTagsForInterface(),
                 InterfaceName: $"I{operationName}{ContentGeneratorConstants.Handler}",
                 ResultName: $"{operationName}{ContentGeneratorConstants.Result}",
                 ParameterName: string.Empty);

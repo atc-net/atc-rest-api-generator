@@ -73,7 +73,7 @@ public static class ContentGeneratorServerResultParametersFactory
         return new ContentGeneratorServerResultParameters(
             @namespace,
             operationName,
-            openApiOperation.GetOperationSummaryDescription(),
+            openApiOperation.ExtractDocumentationTagsForResult(),
             $"{operationName}{ContentGeneratorConstants.Result}",
             methodParameters,
             implicitOperatorParameters);

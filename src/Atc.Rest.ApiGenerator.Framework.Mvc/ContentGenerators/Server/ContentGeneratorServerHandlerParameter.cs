@@ -7,15 +7,18 @@ public class ContentGeneratorServerHandlerParameter : IContentGenerator
 {
     private readonly GeneratedCodeHeaderGenerator codeHeaderGenerator;
     private readonly GeneratedCodeAttributeGenerator codeAttributeGenerator;
+    private readonly CodeDocumentationTagsGenerator codeDocumentationTagsGenerator;
     private readonly ContentGeneratorServerHandlerParameterParameters parameters;
 
     public ContentGeneratorServerHandlerParameter(
         GeneratedCodeHeaderGenerator codeHeaderGenerator,
         GeneratedCodeAttributeGenerator codeAttributeGenerator,
+        CodeDocumentationTagsGenerator codeDocumentationTagsGenerator,
         ContentGeneratorServerHandlerParameterParameters parameters)
     {
         this.codeHeaderGenerator = codeHeaderGenerator;
         this.codeAttributeGenerator = codeAttributeGenerator;
+        this.codeDocumentationTagsGenerator = codeDocumentationTagsGenerator;
         this.parameters = parameters;
     }
 
@@ -26,14 +29,18 @@ public class ContentGeneratorServerHandlerParameter : IContentGenerator
         sb.Append(codeHeaderGenerator.Generate());
         sb.AppendLine($"namespace {parameters.Namespace};");
         sb.AppendLine();
-        AppendClassSummery(sb, parameters);
+        sb.Append(codeDocumentationTagsGenerator.GenerateTags(0, parameters.DocumentationTags));
         sb.AppendLine(codeAttributeGenerator.Generate());
         sb.AppendLine($"public class {parameters.ParameterName}");
         sb.AppendLine("{");
 
         foreach (var parameter in parameters.PropertyParameters)
         {
-            AppendPropertySummery(sb, parameter.Description);
+            if (codeDocumentationTagsGenerator.ShouldGenerateTags(parameter.DocumentationTags))
+            {
+                sb.Append(codeDocumentationTagsGenerator.GenerateTags(4, parameter.DocumentationTags));
+            }
+
             AppendPropertyAttributes(sb, parameter);
             AppendPropertyBody(sb, parameter);
 
@@ -45,31 +52,6 @@ public class ContentGeneratorServerHandlerParameter : IContentGenerator
         sb.AppendLine("}");
 
         return sb.ToString();
-    }
-
-    private static void AppendClassSummery(
-        StringBuilder sb,
-        ContentGeneratorServerHandlerParameterParameters item)
-    {
-        sb.AppendLine("/// <summary>");
-        sb.AppendLine("/// Parameters for operation request.");
-        sb.AppendLine($"/// Description: {item.Description}");
-        sb.AppendLine($"/// Operation: {item.OperationName}.");
-        sb.AppendLine("/// </summary>");
-    }
-
-    private static void AppendPropertySummery(
-        StringBuilder sb,
-        string description)
-    {
-        if (ContentGeneratorConstants.UndefinedDescription.Equals(description, StringComparison.Ordinal))
-        {
-            return;
-        }
-
-        sb.AppendLine(4, "/// <summary>");
-        sb.AppendLine(4, $"/// {description}");
-        sb.AppendLine(4, "/// </summary>");
     }
 
     private static void AppendPropertyAttributes(

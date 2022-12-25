@@ -7,15 +7,18 @@ public class ContentGeneratorServerResult : IContentGenerator
 {
     private readonly GeneratedCodeHeaderGenerator codeHeaderGenerator;
     private readonly GeneratedCodeAttributeGenerator codeAttributeGenerator;
+    private readonly CodeDocumentationTagsGenerator codeDocumentationTagsGenerator;
     private readonly ContentGeneratorServerResultParameters parameters;
 
     public ContentGeneratorServerResult(
         GeneratedCodeHeaderGenerator codeHeaderGenerator,
         GeneratedCodeAttributeGenerator codeAttributeGenerator,
+        CodeDocumentationTagsGenerator codeDocumentationTagsGenerator,
         ContentGeneratorServerResultParameters parameters)
     {
         this.codeHeaderGenerator = codeHeaderGenerator;
         this.codeAttributeGenerator = codeAttributeGenerator;
+        this.codeDocumentationTagsGenerator = codeDocumentationTagsGenerator;
         this.parameters = parameters;
     }
 
@@ -26,7 +29,7 @@ public class ContentGeneratorServerResult : IContentGenerator
         sb.Append(codeHeaderGenerator.Generate());
         sb.AppendLine($"namespace {parameters.Namespace};");
         sb.AppendLine();
-        AppendClassSummery(sb, parameters);
+        sb.Append(codeDocumentationTagsGenerator.GenerateTags(0, parameters.DocumentationTags));
         sb.AppendLine(codeAttributeGenerator.Generate());
         sb.AppendLine($"public class {parameters.ResultName} : {nameof(Results.ResultBase)}");
         sb.AppendLine("{");
@@ -55,36 +58,12 @@ public class ContentGeneratorServerResult : IContentGenerator
         return sb.ToString();
     }
 
-    private static void AppendClassSummery(
-        StringBuilder sb,
-        ContentGeneratorServerResultParameters item)
-    {
-        sb.AppendLine("/// <summary>");
-        sb.AppendLine("/// Results for operation request.");
-        if (!ContentGeneratorConstants.UndefinedDescription.Equals(item.Description, StringComparison.Ordinal))
-        {
-            sb.AppendLine($"/// Description: {item.Description}");
-        }
-
-        sb.AppendLine($"/// Operation: {item.OperationName}.");
-        sb.AppendLine("/// </summary>");
-    }
-
-    private static void AppendMethodSummary(
-        StringBuilder sb,
-        HttpStatusCode httpStatusCode)
-    {
-        sb.AppendLine(4, "/// <summary>");
-        sb.AppendLine(4, $"/// {(int)httpStatusCode} - {httpStatusCode.ToNormalizedString()} response.");
-        sb.AppendLine(4, "/// </summary>");
-    }
-
-    private static void AppendMethodContent(
+    private void AppendMethodContent(
         StringBuilder sb,
         ContentGeneratorServerResultMethodParameters item,
         string resultName)
     {
-        AppendMethodSummary(sb, item.HttpStatusCode);
+        sb.Append(codeDocumentationTagsGenerator.GenerateResultMethodSummary(4, item.HttpStatusCode));
 
         if (item.HttpStatusCode == HttpStatusCode.OK)
         {

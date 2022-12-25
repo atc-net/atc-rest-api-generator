@@ -4,15 +4,18 @@ public class ContentGeneratorServerHandlerInterface : IContentGenerator
 {
     private readonly GeneratedCodeHeaderGenerator codeHeaderGenerator;
     private readonly GeneratedCodeAttributeGenerator codeAttributeGenerator;
+    private readonly CodeDocumentationTagsGenerator codeDocumentationTagsGenerator;
     private readonly ContentGeneratorServerHandlerInterfaceParameters parameters;
 
     public ContentGeneratorServerHandlerInterface(
         GeneratedCodeHeaderGenerator codeHeaderGenerator,
         GeneratedCodeAttributeGenerator codeAttributeGenerator,
+        CodeDocumentationTagsGenerator codeDocumentationTagsGenerator,
         ContentGeneratorServerHandlerInterfaceParameters parameters)
     {
         this.codeHeaderGenerator = codeHeaderGenerator;
         this.codeAttributeGenerator = codeAttributeGenerator;
+        this.codeDocumentationTagsGenerator = codeDocumentationTagsGenerator;
         this.parameters = parameters;
     }
 
@@ -23,26 +26,12 @@ public class ContentGeneratorServerHandlerInterface : IContentGenerator
         sb.Append(codeHeaderGenerator.Generate());
         sb.AppendLine($"namespace {parameters.Namespace};");
         sb.AppendLine();
-        sb.AppendLine("/// <summary>");
-        sb.AppendLine("/// Domain Interface for RequestHandler.");
-        sb.AppendLine($"/// Description: {parameters.Description}");
-        sb.AppendLine($"/// Operation: {parameters.OperationName}.");
-        sb.AppendLine("/// </summary>");
+        sb.Append(codeDocumentationTagsGenerator.GenerateTags(0, parameters.DocumentationTags));
         sb.AppendLine(codeAttributeGenerator.Generate());
         sb.AppendLine($"public interface {parameters.InterfaceName}");
         sb.AppendLine("{");
-        sb.AppendLine(4, "/// <summary>");
-        sb.AppendLine(4, "/// Execute method.");
-        sb.AppendLine(4, "/// </summary>");
-
-        if (!string.IsNullOrEmpty(parameters.ParameterName))
-        {
-            sb.AppendLine(4, "/// <param name=\"parameters\">The parameters.</param>");
-        }
-
-        sb.AppendLine(4, "/// <param name=\"cancellationToken\">The cancellation token.</param>");
+        sb.Append(codeDocumentationTagsGenerator.GenerateHandlerMethodTags(4, parameters.ParameterName));
         sb.AppendLine(4, $"Task<{parameters.ResultName}> ExecuteAsync(");
-
         if (!string.IsNullOrEmpty(parameters.ParameterName))
         {
             sb.AppendLine(8, $"{parameters.ParameterName} parameters,");

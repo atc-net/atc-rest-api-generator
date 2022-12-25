@@ -1,9 +1,12 @@
 // ReSharper disable InvertIf
-
 namespace Atc.Rest.ApiGenerator.OpenApi.Extensions;
 
 public static class OpenApiSchemaExtensions
 {
+    public static string? GetDefaultValueAsString(
+        this OpenApiSchema apiSchema)
+        => apiSchema.Default.GetDefaultValueAsString();
+
     public static bool IsModelOfTypeArray(
         this OpenApiSchema apiSchema,
         IDictionary<string, OpenApiSchema> modelSchemas)
@@ -59,26 +62,55 @@ public static class OpenApiSchemaExtensions
         return parameterLocationType;
     }
 
-    public static string GetSummaryDescription(
+    public static CodeDocumentationTags ExtractDocumentationTags(
+        this OpenApiSchema apiSchema,
+        string? defaultSummary = null)
+    {
+        return new CodeDocumentationTags(
+            Summary: apiSchema.ExtractDocumentationTagSummary(defaultSummary),
+            Parameters: null,
+            Remark: apiSchema.ExtractDocumentationTagRemark(),
+            Example: null,
+            Exception: null,
+            Return: null);
+    }
+
+    public static string ExtractDocumentationTagSummary(
+        this OpenApiSchema apiSchema,
+        string? defaultSummary = null)
+    {
+        var summery = ContentGeneratorConstants.UndefinedDescription;
+
+        if (!string.IsNullOrEmpty(apiSchema.Description))
+        {
+            summery = apiSchema.Description;
+        }
+        else if (!string.IsNullOrEmpty(apiSchema.Title))
+        {
+            summery = apiSchema.Title;
+        }
+        else if (!string.IsNullOrEmpty(defaultSummary))
+        {
+            summery = defaultSummary;
+        }
+
+        return summery.EnsureEndsWithDot();
+    }
+
+    public static string? ExtractDocumentationTagRemark(
         this OpenApiSchema apiSchema)
     {
-        var result = apiSchema.Description;
-
-        if (string.IsNullOrEmpty(result))
+        if (apiSchema.Format is null)
         {
-            result = apiSchema.Title;
+            return null;
         }
 
-        if (string.IsNullOrEmpty(result))
+        return apiSchema.Format switch
         {
-            return ContentGeneratorConstants.UndefinedDescription;
-        }
-
-        if (!result.EndsWith('.'))
-        {
-            result += ".";
-        }
-
-        return result.Replace("\n", "\n/// ", StringComparison.Ordinal);
+            OpenApiFormatTypeConstants.Byte => "This string should be base64-encoded.",
+            OpenApiFormatTypeConstants.Email => "Email validation being enforced.",
+            OpenApiFormatTypeConstants.Uri => "Url validation being enforced.",
+            _ => null,
+        };
     }
 }

@@ -18,10 +18,18 @@ public static class ContentGeneratorServerHandlerModelParametersFactory
         {
             var childModelName = apiSchemaModel.Items.Title.EnsureFirstCharacterToUpper();
 
+            var documentationTags = new CodeDocumentationTags(
+                Summary: $"A list of {childModelName}.",
+                Parameters: null,
+                Remark: null,
+                Example: null,
+                Exception: null,
+                Return: null);
+
             parameters.Add(new ContentGeneratorServerHandlerModelParametersProperty(
                 "#",
                 childModelName + "List",
-                $"A list of {childModelName}.",
+                documentationTags,
                 childModelName,
                 IsSimpleType: false,
                 UseListForDataType: true,
@@ -47,7 +55,7 @@ public static class ContentGeneratorServerHandlerModelParametersFactory
                     : openApiParameter.IsSimpleDataType() || openApiParameter.IsSchemaEnumOrPropertyEnum() || openApiParameter.IsFormatTypeBinary();
 
                 string? dataTypeForList = null;
-                string description;
+                string? description = null;
                 if (hasAnyPropertiesAsArrayWithFormatTypeBinary)
                 {
                     description = "A list of File(s).";
@@ -64,10 +72,8 @@ public static class ContentGeneratorServerHandlerModelParametersFactory
                         dataTypeForList = dataType;
                     }
                 }
-                else
-                {
-                    description = openApiParameter.GetSummaryDescription();
-                }
+
+                var documentationTags = openApiParameter.ExtractDocumentationTags(description);
 
                 if (dataTypeForList is null &&
                     openApiParameter.Default is null &&
@@ -80,7 +86,7 @@ public static class ContentGeneratorServerHandlerModelParametersFactory
                 parameters.Add(new ContentGeneratorServerHandlerModelParametersProperty(
                     apiSchema.Key,
                     apiSchema.Key.EnsureFirstCharacterToUpper(),
-                    description,
+                    documentationTags,
                     dataType,
                     isSimpleType,
                     useListForDataType,
@@ -94,7 +100,7 @@ public static class ContentGeneratorServerHandlerModelParametersFactory
         return new ContentGeneratorServerHandlerModelParameters(
             @namespace,
             modelName,
-            apiSchemaModel.GetSummaryDescription(),
+            apiSchemaModel.ExtractDocumentationTags($"{modelName}."),
             parameters);
     }
 
@@ -121,19 +127,7 @@ public static class ContentGeneratorServerHandlerModelParametersFactory
             return $"new List<{dataTypeForList}>()";
         }
 
-        if (initializer is null)
-        {
-            return null;
-        }
-
-        return initializer switch
-        {
-            OpenApiInteger apiInteger => apiInteger.Value.ToString(),
-            OpenApiString apiString => string.IsNullOrEmpty(apiString.Value) ? "string.Empty" : $"\"{apiString.Value}\"",
-            OpenApiBoolean apiBoolean when apiBoolean.Value => "true",
-            OpenApiBoolean apiBoolean when !apiBoolean.Value => "false",
-            _ => throw new NotImplementedException("Property initializer: " + initializer.GetType()),
-        };
+        return initializer.GetDefaultValueAsString();
     }
 
     private static IList<ValidationAttribute> GetAdditionalValidationAttributes(

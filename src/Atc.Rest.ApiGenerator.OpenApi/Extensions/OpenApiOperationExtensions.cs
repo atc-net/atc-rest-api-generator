@@ -2,26 +2,49 @@ namespace Atc.Rest.ApiGenerator.OpenApi.Extensions;
 
 public static class OpenApiOperationExtensions
 {
-    public static string GetOperationSummaryDescription(
+    public static CodeDocumentationTags ExtractDocumentationTagsForInterface(
         this OpenApiOperation apiOperation)
+        => apiOperation.ExtractDocumentationTags("Domain Interface for RequestHandler.");
+
+    public static CodeDocumentationTags ExtractDocumentationTagsForParameters(
+        this OpenApiOperation apiOperation)
+        => apiOperation.ExtractDocumentationTags("Parameters for operation request.");
+
+    public static CodeDocumentationTags ExtractDocumentationTagsForResult(
+        this OpenApiOperation apiOperation)
+        => apiOperation.ExtractDocumentationTags("Results for operation request.");
+
+    public static CodeDocumentationTags ExtractDocumentationTags(
+        this OpenApiOperation apiOperation,
+        string? firstSummaryLine = null)
     {
-        var result = apiOperation.Summary;
+        var summary = ContentGeneratorConstants.UndefinedDescription;
 
-        if (string.IsNullOrEmpty(result))
+        if (!string.IsNullOrEmpty(apiOperation.Summary))
         {
-            result = apiOperation.Description;
+            summary = apiOperation.Summary;
+        }
+        else if (!string.IsNullOrEmpty(apiOperation.Description))
+        {
+            summary = apiOperation.Description;
         }
 
-        if (string.IsNullOrEmpty(result))
+        var sbSummary = new StringBuilder();
+
+        if (!string.IsNullOrEmpty(firstSummaryLine))
         {
-            return ContentGeneratorConstants.UndefinedDescription;
+            sbSummary.AppendLine(firstSummaryLine);
         }
 
-        if (!result.EndsWith('.'))
-        {
-            result += ".";
-        }
+        sbSummary.AppendLine($"Description: {summary.EnsureEndsWithDot()}");
+        sbSummary.AppendLine($"Operation: {apiOperation.GetOperationName()}.");
 
-        return result.Replace("\n", "\n/// ", StringComparison.Ordinal);
+        return new CodeDocumentationTags(
+            sbSummary.ToString(),
+            Parameters: null,
+            Remark: null,
+            Example: null,
+            Exception: null,
+            Return: null);
     }
 }

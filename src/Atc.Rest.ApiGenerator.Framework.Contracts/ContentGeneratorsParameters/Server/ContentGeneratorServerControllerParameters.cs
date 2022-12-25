@@ -9,7 +9,7 @@ public record ContentGeneratorServerControllerParameters(
 public record ContentGeneratorServerControllerMethodParameters(
     string OperationTypeRepresentation,
     string Name,
-    string Description,
+    CodeDocumentationTags DocumentationTags,
     string? RouteSuffix,
     string InterfaceName,
     string? ParameterTypeName,

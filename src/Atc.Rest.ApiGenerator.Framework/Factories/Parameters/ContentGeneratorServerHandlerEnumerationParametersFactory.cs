@@ -12,9 +12,18 @@ public static class ContentGeneratorServerHandlerEnumerationParametersFactory
         var useFlag = AnalyzeForUseFlagAttribute(apiSchemaEnums);
         var enumerationValues = GetContentGeneratorServerEnumerationParametersValues(apiSchemaEnums);
 
+        var documentationTags = new CodeDocumentationTags(
+            Summary: $"Enumeration: {enumerationName}.",
+            Parameters: null,
+            Remark: null,
+            Example: null,
+            Exception: null,
+            Return: null);
+
         return new ContentGeneratorServerHandlerEnumerationParameters(
             @namespace,
             enumerationName,
+            documentationTags,
             useFlag,
             enumerationValues);
     }

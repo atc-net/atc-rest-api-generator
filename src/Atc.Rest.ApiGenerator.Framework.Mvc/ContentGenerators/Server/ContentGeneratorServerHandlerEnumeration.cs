@@ -4,15 +4,18 @@ public class ContentGeneratorServerHandlerEnumeration : IContentGenerator
 {
     private readonly GeneratedCodeHeaderGenerator codeHeaderGenerator;
     private readonly GeneratedCodeAttributeGenerator codeAttributeGenerator;
+    private readonly CodeDocumentationTagsGenerator codeDocumentationTagsGenerator;
     private readonly ContentGeneratorServerHandlerEnumerationParameters parameters;
 
     public ContentGeneratorServerHandlerEnumeration(
         GeneratedCodeHeaderGenerator codeHeaderGenerator,
         GeneratedCodeAttributeGenerator codeAttributeGenerator,
+        CodeDocumentationTagsGenerator codeDocumentationTagsGenerator,
         ContentGeneratorServerHandlerEnumerationParameters parameters)
     {
         this.codeHeaderGenerator = codeHeaderGenerator;
         this.codeAttributeGenerator = codeAttributeGenerator;
+        this.codeDocumentationTagsGenerator = codeDocumentationTagsGenerator;
         this.parameters = parameters;
     }
 
@@ -23,6 +26,11 @@ public class ContentGeneratorServerHandlerEnumeration : IContentGenerator
         sb.Append(codeHeaderGenerator.Generate());
         sb.AppendLine($"namespace {parameters.Namespace};");
         sb.AppendLine();
+        if (codeDocumentationTagsGenerator.ShouldGenerateTags(parameters.DocumentationTags))
+        {
+            sb.Append(codeDocumentationTagsGenerator.GenerateTags(0, parameters.DocumentationTags));
+        }
+
         sb.AppendLine(codeAttributeGenerator.Generate());
         if (parameters.UseFlagAttribute)
         {

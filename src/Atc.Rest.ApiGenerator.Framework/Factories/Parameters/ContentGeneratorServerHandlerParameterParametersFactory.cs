@@ -24,7 +24,7 @@ public static class ContentGeneratorServerHandlerParameterParametersFactory
         return new ContentGeneratorServerHandlerParameterParameters(
             @namespace,
             operationName,
-            openApiOperation.GetOperationSummaryDescription(),
+            openApiOperation.ExtractDocumentationTagsForParameters(),
             ParameterName: $"{operationName}{ContentGeneratorConstants.Parameters}",
             parameters);
     }
@@ -48,7 +48,7 @@ public static class ContentGeneratorServerHandlerParameterParametersFactory
             parameters.Add(new ContentGeneratorServerParameterParametersProperty(
                 openApiParameter.Name,
                 openApiParameter.Name.EnsureFirstCharacterToUpper(),
-                openApiParameter.GetOperationSummaryDescription(),
+                openApiParameter.ExtractDocumentationTags(),
                 ConvertToParameterLocationType(openApiParameter.In),
                 dataType,
                 isSimpleType,
@@ -56,7 +56,7 @@ public static class ContentGeneratorServerHandlerParameterParametersFactory
                 GetIsNullable(openApiParameter, useListForDataType),
                 openApiParameter.Required,
                 GetAdditionalValidationAttributes(openApiParameter),
-                GetDefaultValue(openApiParameter.Schema.Default)));
+                openApiParameter.Schema.GetDefaultValueAsString()));
         }
     }
 
@@ -73,24 +73,6 @@ public static class ContentGeneratorServerHandlerParameterParametersFactory
         };
 
         return isNullable;
-    }
-
-    private static string? GetDefaultValue(
-        IOpenApiAny? initializer)
-    {
-        if (initializer is null)
-        {
-            return null;
-        }
-
-        return initializer switch
-        {
-            OpenApiInteger apiInteger => apiInteger.Value.ToString(),
-            OpenApiString apiString => string.IsNullOrEmpty(apiString.Value) ? "string.Empty" : $"\"{apiString.Value}\"",
-            OpenApiBoolean apiBoolean when apiBoolean.Value => "true",
-            OpenApiBoolean apiBoolean when !apiBoolean.Value => "false",
-            _ => throw new NotImplementedException("Property initializer: " + initializer.GetType()),
-        };
     }
 
     private static void AppendParametersFromBody(
@@ -128,7 +110,7 @@ public static class ContentGeneratorServerHandlerParameterParametersFactory
         parameters.Add(new ContentGeneratorServerParameterParametersProperty(
             string.Empty,
             ContentGeneratorConstants.Request,
-            requestSchema.GetSummaryDescription(),
+            requestSchema.ExtractDocumentationTags(),
             requestSchema.GetParameterLocationType(),
             requestBodyType,
             IsSimpleType: false,

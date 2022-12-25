@@ -3,14 +3,14 @@ namespace Atc.Rest.ApiGenerator.Framework.Contracts.ContentGeneratorsParameters.
 public record ContentGeneratorServerHandlerParameterParameters(
     string Namespace,
     string OperationName,
-    string Description,
+    CodeDocumentationTags DocumentationTags,
     string ParameterName,
     IList<ContentGeneratorServerParameterParametersProperty> PropertyParameters);
 
 public record ContentGeneratorServerParameterParametersProperty(
     string Name,
     string ParameterName,
-    string Description,
+    CodeDocumentationTags DocumentationTags,
     ParameterLocationType ParameterLocationType,
     string DataType,
     bool IsSimpleType,

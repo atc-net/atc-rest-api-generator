@@ -3,7 +3,7 @@ namespace Atc.Rest.ApiGenerator.Framework.Contracts.ContentGeneratorsParameters.
 public record ContentGeneratorServerResultParameters(
     string Namespace,
     string OperationName,
-    string Description,
+    CodeDocumentationTags DocumentationTags,
     string ResultName,
     IList<ContentGeneratorServerResultMethodParameters> MethodParameters,
     ContentGeneratorServerResultImplicitOperatorParameters? ImplicitOperatorParameters);

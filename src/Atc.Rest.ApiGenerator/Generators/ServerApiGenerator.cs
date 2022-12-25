@@ -226,6 +226,7 @@ public class ServerApiGenerator
         var contentGeneratorEnum = new ContentGeneratorServerHandlerEnumeration(
             new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
             new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+            new CodeDocumentationTagsGenerator(),
             enumerationParameters);
 
         var enumContent = contentGeneratorEnum.Generate();
@@ -262,6 +263,7 @@ public class ServerApiGenerator
         var contentGeneratorModel = new ContentGeneratorServerHandlerModel(
             new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
             new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+            new CodeDocumentationTagsGenerator(),
             modelParameters);
 
         var modelContent = contentGeneratorModel.Generate();
@@ -331,6 +333,7 @@ public class ServerApiGenerator
                 var contentGeneratorParameter = new ContentGeneratorServerHandlerParameter(
                     new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
                     new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                    new CodeDocumentationTagsGenerator(),
                     parameterParameters);
 
                 var parameterContent = contentGeneratorParameter.Generate();
@@ -387,6 +390,7 @@ public class ServerApiGenerator
                 var contentGeneratorResult = new ContentGeneratorServerResult(
                     new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
                     new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                    new CodeDocumentationTagsGenerator(),
                     resultParameters);
 
                 var resultContent = contentGeneratorResult.Generate();
@@ -443,6 +447,7 @@ public class ServerApiGenerator
                 var contentGeneratorInterface = new ContentGeneratorServerHandlerInterface(
                     new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
                     new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                    new CodeDocumentationTagsGenerator(),
                     interfaceParameters);
 
                 var interfaceContent = contentGeneratorInterface.Generate();
@@ -502,6 +507,7 @@ public class ServerApiGenerator
                 var contentGenerator = new ContentGeneratorServerController(
                     new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
                     new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                    new CodeDocumentationTagsGenerator(),
                     contentGeneratorServerControllerParameters);
 
                 var content = contentGenerator.Generate();

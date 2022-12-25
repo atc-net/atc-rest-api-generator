@@ -32,7 +32,7 @@ public static class ContentGeneratorServerControllerParametersFactory
                 methodParameters.Add(new ContentGeneratorServerControllerMethodParameters(
                     OperationTypeRepresentation: apiOperation.Key.ToString(),
                     Name: operationName,
-                    Description: apiOperation.Value.GetOperationSummaryDescription(),
+                    DocumentationTags: apiOperation.Value.ExtractDocumentationTags(),
                     RouteSuffix: GetRouteSuffix(apiPath),
                     InterfaceName: $"I{operationName}{ContentGeneratorConstants.Handler}",
                     ParameterTypeName: GetParameterTypeName(operationName, apiPathData, apiOperation.Value),
