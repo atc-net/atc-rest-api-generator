@@ -6,6 +6,9 @@
 //------------------------------------------------------------------------------
 namespace Scenario2.Api.Generated.Contracts;
 
+/// <summary>
+/// Enumeration: GenderType.
+/// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public enum GenderType
 {

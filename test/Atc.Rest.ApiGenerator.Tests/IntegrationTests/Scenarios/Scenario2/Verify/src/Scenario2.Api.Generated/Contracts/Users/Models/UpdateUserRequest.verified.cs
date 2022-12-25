@@ -16,6 +16,12 @@ public class UpdateUserRequest
 
     public string LastName { get; set; }
 
+    /// <summary>
+    /// Undefined description.
+    /// </summary>
+    /// <remarks>
+    /// Email validation being enforced.
+    /// </remarks>
     [EmailAddress]
     public string Email { get; set; }
 

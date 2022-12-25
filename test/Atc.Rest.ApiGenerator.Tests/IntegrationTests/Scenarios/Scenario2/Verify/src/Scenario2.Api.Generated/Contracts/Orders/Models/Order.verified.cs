@@ -19,6 +19,12 @@ public class Order
 
     public DateTimeOffset MyTime { get; set; }
 
+    /// <summary>
+    /// Undefined description.
+    /// </summary>
+    /// <remarks>
+    /// Email validation being enforced.
+    /// </remarks>
     [EmailAddress]
     public string MyEmail { get; set; } = "a@a.com";
 
@@ -40,9 +46,18 @@ public class Order
     /// <summary>
     /// This is the good uri :-).
     /// </summary>
+    /// <remarks>
+    /// Url validation being enforced.
+    /// </remarks>
     [Uri]
     public Uri MyUri { get; set; }
 
+    /// <summary>
+    /// Undefined description.
+    /// </summary>
+    /// <remarks>
+    /// This string should be base64-encoded.
+    /// </remarks>
     public string MyByte { get; set; }
 
     /// <summary>

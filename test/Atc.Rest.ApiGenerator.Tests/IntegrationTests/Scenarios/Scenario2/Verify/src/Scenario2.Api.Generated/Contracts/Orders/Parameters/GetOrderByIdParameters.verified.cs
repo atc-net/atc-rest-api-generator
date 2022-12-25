@@ -24,6 +24,9 @@ public class GetOrderByIdParameters
     /// <summary>
     /// The email for filter orders to retrieve.
     /// </summary>
+    /// <remarks>
+    /// Email validation being enforced.
+    /// </remarks>
     [FromQuery(Name = "myEmail")]
     [EmailAddress]
     public string? MyEmail { get; set; }

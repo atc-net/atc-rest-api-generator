@@ -6,6 +6,9 @@
 //------------------------------------------------------------------------------
 namespace Scenario2.Api.Generated.Contracts;
 
+/// <summary>
+/// Enumeration: ColorType.
+/// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 [Flags]
 public enum ColorType

@@ -23,10 +23,22 @@ public class CreateUserRequest
     [Required]
     public DateTimeOffset MyDateTime { get; set; }
 
+    /// <summary>
+    /// Undefined description.
+    /// </summary>
+    /// <remarks>
+    /// Email validation being enforced.
+    /// </remarks>
     [Required]
     [EmailAddress]
     public string Email { get; set; }
 
+    /// <summary>
+    /// Undefined description.
+    /// </summary>
+    /// <remarks>
+    /// Url validation being enforced.
+    /// </remarks>
     [Uri]
     public Uri Homepage { get; set; }
 

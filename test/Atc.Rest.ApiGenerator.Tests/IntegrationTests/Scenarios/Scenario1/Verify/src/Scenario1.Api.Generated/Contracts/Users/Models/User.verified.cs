@@ -18,9 +18,21 @@ public class User
 
     public string LastName { get; set; }
 
+    /// <summary>
+    /// Undefined description.
+    /// </summary>
+    /// <remarks>
+    /// Email validation being enforced.
+    /// </remarks>
     [EmailAddress]
     public string Email { get; set; }
 
+    /// <summary>
+    /// Undefined description.
+    /// </summary>
+    /// <remarks>
+    /// Url validation being enforced.
+    /// </remarks>
     [Uri]
     public Uri Homepage { get; set; }
 

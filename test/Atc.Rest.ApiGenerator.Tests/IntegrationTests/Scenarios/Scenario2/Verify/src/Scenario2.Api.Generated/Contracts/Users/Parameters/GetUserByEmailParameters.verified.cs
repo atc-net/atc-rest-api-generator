@@ -17,6 +17,9 @@ public class GetUserByEmailParameters
     /// <summary>
     /// The email of the user to retrieve.
     /// </summary>
+    /// <remarks>
+    /// Email validation being enforced.
+    /// </remarks>
     [FromQuery(Name = "email")]
     [Required]
     [EmailAddress]
