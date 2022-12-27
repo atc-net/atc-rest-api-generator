@@ -29,7 +29,11 @@ public class ContentGeneratorServerResult : IContentGenerator
         sb.Append(codeHeaderGenerator.Generate());
         sb.AppendLine($"namespace {parameters.Namespace};");
         sb.AppendLine();
-        sb.Append(codeDocumentationTagsGenerator.GenerateTags(0, parameters.DocumentationTags));
+        if (codeDocumentationTagsGenerator.ShouldGenerateTags(parameters.DocumentationTags))
+        {
+            sb.Append(codeDocumentationTagsGenerator.GenerateTags(0, parameters.DocumentationTags));
+        }
+
         sb.AppendLine(codeAttributeGenerator.Generate());
         sb.AppendLine($"public class {parameters.ResultName} : {nameof(Results.ResultBase)}");
         sb.AppendLine("{");
@@ -63,7 +67,10 @@ public class ContentGeneratorServerResult : IContentGenerator
         ContentGeneratorServerResultMethodParameters item,
         string resultName)
     {
-        sb.Append(codeDocumentationTagsGenerator.GenerateResultMethodSummary(4, item.HttpStatusCode));
+        if (codeDocumentationTagsGenerator.ShouldGenerateTags(item.DocumentationTags))
+        {
+            sb.Append(codeDocumentationTagsGenerator.GenerateTags(4, item.DocumentationTags));
+        }
 
         if (item.HttpStatusCode == HttpStatusCode.OK)
         {

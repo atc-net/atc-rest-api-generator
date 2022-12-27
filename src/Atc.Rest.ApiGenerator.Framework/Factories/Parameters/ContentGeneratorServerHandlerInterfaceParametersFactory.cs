@@ -9,20 +9,57 @@ public static class ContentGeneratorServerHandlerInterfaceParametersFactory
     {
         var operationName = openApiOperation.GetOperationName();
 
-        return openApiPath.HasParameters() || openApiOperation.HasParametersOrRequestBody()
-            ? new ContentGeneratorServerHandlerInterfaceParameters(
+        if (openApiPath.HasParameters() ||
+            openApiOperation.HasParametersOrRequestBody())
+        {
+            var docParameters = new Dictionary<string, string>(StringComparer.Ordinal)
+            {
+                { "parameters", "The parameters." },
+                { "cancellationToken", "The cancellation token." },
+            };
+
+            var documentationTagsForMethod = new CodeDocumentationTags(
+                summary: "Execute method.",
+                parameters: docParameters,
+                remark: null,
+                code: null,
+                example: null,
+                exceptions: null,
+                @return: null);
+
+            return new ContentGeneratorServerHandlerInterfaceParameters(
                 @namespace,
                 operationName,
                 openApiOperation.ExtractDocumentationTagsForInterface(),
                 InterfaceName: $"I{operationName}{ContentGeneratorConstants.Handler}",
                 ResultName: $"{operationName}{ContentGeneratorConstants.Result}",
-                ParameterName: $"{operationName}{ContentGeneratorConstants.Parameters}")
-            : new ContentGeneratorServerHandlerInterfaceParameters(
+                ParameterName: $"{operationName}{ContentGeneratorConstants.Parameters}",
+                documentationTagsForMethod);
+        }
+        else
+        {
+            var docParameters = new Dictionary<string, string>(StringComparer.Ordinal)
+            {
+                { "cancellationToken", "The cancellation token." },
+            };
+
+            var documentationTagsForMethod = new CodeDocumentationTags(
+                summary: "Execute method.",
+                parameters: docParameters,
+                remark: null,
+                code: null,
+                example: null,
+                exceptions: null,
+                @return: null);
+
+            return new ContentGeneratorServerHandlerInterfaceParameters(
                 @namespace,
                 operationName,
                 openApiOperation.ExtractDocumentationTagsForInterface(),
                 InterfaceName: $"I{operationName}{ContentGeneratorConstants.Handler}",
                 ResultName: $"{operationName}{ContentGeneratorConstants.Result}",
-                ParameterName: string.Empty);
+                ParameterName: string.Empty,
+                documentationTagsForMethod);
+        }
     }
 }

@@ -6,12 +6,13 @@ public static class OpenApiParameterExtensions
         this OpenApiParameter apiParameter)
     {
         return new CodeDocumentationTags(
-            Summary: apiParameter.ExtractDocumentationTagSummary(),
-            Parameters: null,
-            Remark: apiParameter.ExtractDocumentationTagRemark(),
-            Example: null,
-            Exception: null,
-            Return: null);
+            summary: apiParameter.ExtractDocumentationTagSummary(),
+            parameters: null,
+            remark: apiParameter.ExtractDocumentationTagRemark(),
+            code: null,
+            example: null,
+            exceptions: null,
+            @return: null);
     }
 
     public static string ExtractDocumentationTagSummary(

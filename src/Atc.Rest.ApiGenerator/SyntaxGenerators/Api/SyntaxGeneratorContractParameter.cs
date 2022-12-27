@@ -218,10 +218,10 @@ public class SyntaxGeneratorContractParameter : ISyntaxOperationCodeGenerator
         var parameterName = ApiOperation.GetOperationName() + NameConstants.ContractParameters;
 
         var file = IsForClient
-            ? DirectoryInfoHelper.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, NameConstants.ClientRequestParameters, parameterName)
+            ? Helpers.DirectoryInfoHelper.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, NameConstants.ClientRequestParameters, parameterName)
             : UseOwnFolder
-                ? DirectoryInfoHelper.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, NameConstants.ContractParameters, parameterName)
-                : DirectoryInfoHelper.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, parameterName);
+                ? Helpers.DirectoryInfoHelper.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, NameConstants.ContractParameters, parameterName)
+                : Helpers.DirectoryInfoHelper.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, parameterName);
 
         ToFile(new FileInfo(file));
     }

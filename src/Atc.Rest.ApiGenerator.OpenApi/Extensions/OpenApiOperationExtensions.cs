@@ -39,12 +39,6 @@ public static class OpenApiOperationExtensions
         sbSummary.AppendLine($"Description: {summary.EnsureEndsWithDot()}");
         sbSummary.AppendLine($"Operation: {apiOperation.GetOperationName()}.");
 
-        return new CodeDocumentationTags(
-            sbSummary.ToString(),
-            Parameters: null,
-            Remark: null,
-            Example: null,
-            Exception: null,
-            Return: null);
+        return new CodeDocumentationTags(sbSummary.ToString());
     }
 }

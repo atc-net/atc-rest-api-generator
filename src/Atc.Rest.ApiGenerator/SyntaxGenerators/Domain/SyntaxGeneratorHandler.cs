@@ -98,7 +98,7 @@ public class SyntaxGeneratorHandler
     public FileInfo GetFilePath()
     {
         var area = FocusOnSegmentName.EnsureFirstCharacterToUpper();
-        var file = DirectoryInfoHelper.GetCsFileNameForHandler(DomainProjectOptions.PathForSrcHandlers!, area, HandlerTypeName);
+        var file = Helpers.DirectoryInfoHelper.GetCsFileNameForHandler(DomainProjectOptions.PathForSrcHandlers!, area, HandlerTypeName);
         return new FileInfo(file);
     }
 

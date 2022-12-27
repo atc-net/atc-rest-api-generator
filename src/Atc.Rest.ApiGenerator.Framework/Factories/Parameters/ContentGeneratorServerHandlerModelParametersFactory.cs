@@ -18,13 +18,7 @@ public static class ContentGeneratorServerHandlerModelParametersFactory
         {
             var childModelName = apiSchemaModel.Items.Title.EnsureFirstCharacterToUpper();
 
-            var documentationTags = new CodeDocumentationTags(
-                Summary: $"A list of {childModelName}.",
-                Parameters: null,
-                Remark: null,
-                Example: null,
-                Exception: null,
-                Return: null);
+            var documentationTags = new CodeDocumentationTags($"A list of {childModelName}.");
 
             parameters.Add(new ContentGeneratorServerHandlerModelParametersProperty(
                 "#",

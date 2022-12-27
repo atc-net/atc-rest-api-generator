@@ -13,6 +13,7 @@ public record ContentGeneratorServerResultMethodParameters(
     SchemaType SchemaType,
     bool UsesProblemDetails,
     string? ModelName,
+    CodeDocumentationTags DocumentationTags,
     bool? UsesBinaryResponse,
     string? SimpleDataTypeName);
 

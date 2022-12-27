@@ -93,7 +93,7 @@ public class SyntaxGeneratorClientEndpointResult : SyntaxGeneratorClientEndpoint
     {
         var area = FocusOnSegmentName.EnsureFirstCharacterToUpper();
         var endpointName = ApiOperation.GetOperationName() + NameConstants.EndpointResult;
-        var file = DirectoryInfoHelper.GetCsFileNameForContract(ApiProjectOptions.PathForEndpoints, area, endpointName);
+        var file = Helpers.DirectoryInfoHelper.GetCsFileNameForContract(ApiProjectOptions.PathForEndpoints, area, endpointName);
         ToFile(new FileInfo(file));
     }
 

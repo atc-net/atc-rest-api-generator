@@ -48,11 +48,14 @@ public static class ContentGeneratorServerResultParametersFactory
                 modelNameForImplicitOperator = modelNameForStatusCode;
             }
 
+            var documentationTags = new CodeDocumentationTags($"{(int)httpStatusCode} - {httpStatusCode.ToNormalizedString()} response.");
+
             methodParameters.Add(new ContentGeneratorServerResultMethodParameters(
                 httpStatusCode,
                 schemaType,
                 UsesProblemDetails: useProblemDetails,
                 ModelName: modelNameForStatusCode,
+                documentationTags,
                 UsesBinaryResponse: httpStatusCode == HttpStatusCode.OK
                     ? openApiOperation.Responses.IsSchemaUsingBinaryFormatForOkResponse()
                     : null,
@@ -80,7 +83,7 @@ public static class ContentGeneratorServerResultParametersFactory
     }
 
     private static bool ShouldAppendImplicitOperatorContent(
-        List<HttpStatusCode> httpStatusCodes,
+        ICollection<HttpStatusCode> httpStatusCodes,
         string? modelName,
         bool isSchemaUsingBinaryFormatForOkResponse)
     {

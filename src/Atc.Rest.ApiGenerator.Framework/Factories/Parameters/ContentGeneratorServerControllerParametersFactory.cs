@@ -53,10 +53,13 @@ public static class ContentGeneratorServerControllerParametersFactory
             }
         }
 
+        var documentationTags = new CodeDocumentationTags("Endpoint definitions.");
+
         return new ContentGeneratorServerControllerParameters(
             @namespace,
             area,
             route,
+            documentationTags,
             methodParameters);
     }
 

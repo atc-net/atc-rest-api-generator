@@ -5,7 +5,7 @@ global using System.Diagnostics.CodeAnalysis;
 global using System.Globalization;
 global using System.Net;
 global using System.Text;
-
+global using Atc.CodeDocumentation.CodeComment;
 global using Atc.Helpers;
 global using Atc.Rest.ApiGenerator.Framework.Contracts;
 global using Atc.Rest.ApiGenerator.Framework.Contracts.ContentGeneratorsParameters;

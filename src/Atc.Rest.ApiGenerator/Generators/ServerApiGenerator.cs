@@ -232,7 +232,7 @@ public class ServerApiGenerator
         var enumContent = contentGeneratorEnum.Generate();
 
         // Write
-        var file = new FileInfo(DirectoryInfoHelper.GetCsFileNameForContractEnumTypes(
+        var file = new FileInfo(Helpers.DirectoryInfoHelper.GetCsFileNameForContractEnumTypes(
             projectOptions.PathForContracts,
             enumerationName));
 
@@ -272,13 +272,13 @@ public class ServerApiGenerator
         FileInfo file;
         if (isSharedContract)
         {
-            file = new FileInfo(DirectoryInfoHelper.GetCsFileNameForContractShared(
+            file = new FileInfo(Helpers.DirectoryInfoHelper.GetCsFileNameForContractShared(
                 projectOptions.PathForContractsShared,
                 modelName));
         }
         else
         {
-            file = new FileInfo(DirectoryInfoHelper.GetCsFileNameForContract(
+            file = new FileInfo(Helpers.DirectoryInfoHelper.GetCsFileNameForContract(
                 projectOptions.PathForContracts,
                 apiGroupName,
                 NameConstants.ContractModels,
@@ -339,7 +339,7 @@ public class ServerApiGenerator
                 var parameterContent = contentGeneratorParameter.Generate();
 
                 // Write
-                var file = new FileInfo(DirectoryInfoHelper.GetCsFileNameForContract(
+                var file = new FileInfo(Helpers.DirectoryInfoHelper.GetCsFileNameForContract(
                     projectOptions.PathForContracts,
                     apiGroupName,
                     ContentGeneratorConstants.Parameters,
@@ -396,7 +396,7 @@ public class ServerApiGenerator
                 var resultContent = contentGeneratorResult.Generate();
 
                 // Write
-                var file = new FileInfo(DirectoryInfoHelper.GetCsFileNameForContract(
+                var file = new FileInfo(Helpers.DirectoryInfoHelper.GetCsFileNameForContract(
                     projectOptions.PathForContracts,
                     apiGroupName,
                     ContentGeneratorConstants.Results,
@@ -453,7 +453,7 @@ public class ServerApiGenerator
                 var interfaceContent = contentGeneratorInterface.Generate();
 
                 // Write
-                var file = new FileInfo(DirectoryInfoHelper.GetCsFileNameForContract(
+                var file = new FileInfo(Helpers.DirectoryInfoHelper.GetCsFileNameForContract(
                     projectOptions.PathForContracts,
                     apiGroupName,
                     ContentGeneratorConstants.Interfaces,
@@ -514,7 +514,7 @@ public class ServerApiGenerator
 
                 // TODO: Move responsibility of generating the file object
                 var controllerName = area.EnsureFirstCharacterToUpper() + ContentGeneratorConstants.Controller;
-                var fileAsString = DirectoryInfoHelper.GetCsFileNameForEndpoints(projectOptions.PathForEndpoints, controllerName);
+                var fileAsString = Helpers.DirectoryInfoHelper.GetCsFileNameForEndpoints(projectOptions.PathForEndpoints, controllerName);
                 var file = new FileInfo(fileAsString);
 
                 var contentWriter = new ContentWriter(logger);

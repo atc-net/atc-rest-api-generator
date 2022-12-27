@@ -3,7 +3,8 @@ namespace Atc.Rest.ApiGenerator.Framework.Contracts.ContentGeneratorsParameters.
 public record ContentGeneratorServerHandlerInterfaceParameters(
     string Namespace,
     string OperationName,
-    CodeDocumentationTags DocumentationTags,
+    CodeDocumentationTags DocumentationTagsForClass,
     string InterfaceName,
     string ResultName,
-    string? ParameterName);
+    string? ParameterName,
+    CodeDocumentationTags DocumentationTagsForMethod);

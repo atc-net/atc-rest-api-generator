@@ -67,12 +67,13 @@ public static class OpenApiSchemaExtensions
         string? defaultSummary = null)
     {
         return new CodeDocumentationTags(
-            Summary: apiSchema.ExtractDocumentationTagSummary(defaultSummary),
-            Parameters: null,
-            Remark: apiSchema.ExtractDocumentationTagRemark(),
-            Example: null,
-            Exception: null,
-            Return: null);
+            summary: apiSchema.ExtractDocumentationTagSummary(defaultSummary),
+            parameters: null,
+            remark: apiSchema.ExtractDocumentationTagRemark(),
+            code: null,
+            example: null,
+            exceptions: null,
+            @return: null);
     }
 
     public static string ExtractDocumentationTagSummary(

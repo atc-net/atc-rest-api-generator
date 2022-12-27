@@ -26,11 +26,19 @@ public class ContentGeneratorServerHandlerInterface : IContentGenerator
         sb.Append(codeHeaderGenerator.Generate());
         sb.AppendLine($"namespace {parameters.Namespace};");
         sb.AppendLine();
-        sb.Append(codeDocumentationTagsGenerator.GenerateTags(0, parameters.DocumentationTags));
+        if (codeDocumentationTagsGenerator.ShouldGenerateTags(parameters.DocumentationTagsForClass))
+        {
+            sb.Append(codeDocumentationTagsGenerator.GenerateTags(0, parameters.DocumentationTagsForClass));
+        }
+
         sb.AppendLine(codeAttributeGenerator.Generate());
         sb.AppendLine($"public interface {parameters.InterfaceName}");
         sb.AppendLine("{");
-        sb.Append(codeDocumentationTagsGenerator.GenerateHandlerMethodTags(4, parameters.ParameterName));
+        if (codeDocumentationTagsGenerator.ShouldGenerateTags(parameters.DocumentationTagsForMethod))
+        {
+            sb.Append(codeDocumentationTagsGenerator.GenerateTags(4, parameters.DocumentationTagsForMethod));
+        }
+
         sb.AppendLine(4, $"Task<{parameters.ResultName}> ExecuteAsync(");
         if (!string.IsNullOrEmpty(parameters.ParameterName))
         {
