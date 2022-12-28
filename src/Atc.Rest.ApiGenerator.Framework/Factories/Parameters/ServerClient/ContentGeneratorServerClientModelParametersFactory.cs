@@ -1,16 +1,16 @@
 // ReSharper disable MergeIntoPattern
-namespace Atc.Rest.ApiGenerator.Framework.Factories.Parameters;
+namespace Atc.Rest.ApiGenerator.Framework.Factories.Parameters.ServerClient;
 
-public static class ContentGeneratorServerModelParametersFactory
+public static class ContentGeneratorServerClientModelParametersFactory
 {
-    public static ContentGeneratorServerModelParameters Create(
+    public static ContentGeneratorServerClientModelParameters Create(
         string @namespace,
         string modelName,
         OpenApiSchema apiSchemaModel)
     {
         ArgumentNullException.ThrowIfNull(apiSchemaModel);
 
-        var parameters = new List<ContentGeneratorServerModelParametersProperty>();
+        var parameters = new List<ContentGeneratorServerClientModelParametersProperty>();
 
         var hasAnyPropertiesAsArrayWithFormatTypeBinary = apiSchemaModel.HasAnyPropertiesAsArrayWithFormatTypeBinary();
 
@@ -20,7 +20,7 @@ public static class ContentGeneratorServerModelParametersFactory
 
             var documentationTags = new CodeDocumentationTags($"A list of {childModelName}.");
 
-            parameters.Add(new ContentGeneratorServerModelParametersProperty(
+            parameters.Add(new ContentGeneratorServerClientModelParametersProperty(
                 "#",
                 childModelName + "List",
                 documentationTags,
@@ -77,7 +77,7 @@ public static class ContentGeneratorServerModelParametersFactory
                     dataTypeForList = dataType;
                 }
 
-                parameters.Add(new ContentGeneratorServerModelParametersProperty(
+                parameters.Add(new ContentGeneratorServerClientModelParametersProperty(
                     apiSchema.Key,
                     apiSchema.Key.EnsureFirstCharacterToUpper(),
                     documentationTags,
@@ -91,7 +91,7 @@ public static class ContentGeneratorServerModelParametersFactory
             }
         }
 
-        return new ContentGeneratorServerModelParameters(
+        return new ContentGeneratorServerClientModelParameters(
             @namespace,
             modelName,
             apiSchemaModel.ExtractDocumentationTags($"{modelName}."),

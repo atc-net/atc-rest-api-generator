@@ -1,17 +1,19 @@
-namespace Atc.Rest.ApiGenerator.Framework.Mvc.ContentGenerators.Server;
+using Atc.Rest.ApiGenerator.Framework.Contracts.ContentGeneratorsParameters.ServerClient;
 
-public class ContentGeneratorServerEnumeration : IContentGenerator
+namespace Atc.Rest.ApiGenerator.Framework.Mvc.ContentGenerators.ServerClient;
+
+public class ContentGeneratorServerClientEnumeration : IContentGenerator
 {
     private readonly GeneratedCodeHeaderGenerator codeHeaderGenerator;
     private readonly GeneratedCodeAttributeGenerator codeAttributeGenerator;
     private readonly CodeDocumentationTagsGenerator codeDocumentationTagsGenerator;
-    private readonly ContentGeneratorServerEnumerationParameters parameters;
+    private readonly ContentGeneratorServerClientEnumerationParameters parameters;
 
-    public ContentGeneratorServerEnumeration(
+    public ContentGeneratorServerClientEnumeration(
         GeneratedCodeHeaderGenerator codeHeaderGenerator,
         GeneratedCodeAttributeGenerator codeAttributeGenerator,
         CodeDocumentationTagsGenerator codeDocumentationTagsGenerator,
-        ContentGeneratorServerEnumerationParameters parameters)
+        ContentGeneratorServerClientEnumerationParameters parameters)
     {
         this.codeHeaderGenerator = codeHeaderGenerator;
         this.codeAttributeGenerator = codeAttributeGenerator;

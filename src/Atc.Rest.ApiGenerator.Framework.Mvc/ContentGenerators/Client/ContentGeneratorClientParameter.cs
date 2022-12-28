@@ -1,19 +1,20 @@
-// ReSharper disable ConvertIfStatementToConditionalTernaryExpression
 // ReSharper disable StringLiteralTypo
-namespace Atc.Rest.ApiGenerator.Framework.Mvc.ContentGenerators.Server;
+// ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
+// ReSharper disable ConvertIfStatementToConditionalTernaryExpression
+namespace Atc.Rest.ApiGenerator.Framework.Mvc.ContentGenerators.Client;
 
-public class ContentGeneratorServerModel : IContentGenerator
+public class ContentGeneratorClientParameter : IContentGenerator
 {
     private readonly GeneratedCodeHeaderGenerator codeHeaderGenerator;
     private readonly GeneratedCodeAttributeGenerator codeAttributeGenerator;
     private readonly CodeDocumentationTagsGenerator codeDocumentationTagsGenerator;
-    private readonly ContentGeneratorServerModelParameters parameters;
+    private readonly ContentGeneratorClientParameterParameters parameters;
 
-    public ContentGeneratorServerModel(
+    public ContentGeneratorClientParameter(
         GeneratedCodeHeaderGenerator codeHeaderGenerator,
         GeneratedCodeAttributeGenerator codeAttributeGenerator,
         CodeDocumentationTagsGenerator codeDocumentationTagsGenerator,
-        ContentGeneratorServerModelParameters parameters)
+        ContentGeneratorClientParameterParameters parameters)
     {
         this.codeHeaderGenerator = codeHeaderGenerator;
         this.codeAttributeGenerator = codeAttributeGenerator;
@@ -34,7 +35,7 @@ public class ContentGeneratorServerModel : IContentGenerator
         }
 
         sb.AppendLine(codeAttributeGenerator.Generate());
-        sb.AppendLine($"public class {parameters.ModelName}");
+        sb.AppendLine($"public class {parameters.ParameterName}");
         sb.AppendLine("{");
 
         foreach (var parameter in parameters.PropertyParameters)
@@ -59,7 +60,7 @@ public class ContentGeneratorServerModel : IContentGenerator
 
     private static void AppendPropertyAttributes(
         StringBuilder sb,
-        ContentGeneratorServerModelParametersProperty item)
+        ContentGeneratorClientParameterParametersProperty item)
     {
         if (item.IsRequired)
         {
@@ -97,7 +98,7 @@ public class ContentGeneratorServerModel : IContentGenerator
 
     private static void AppendPropertyBody(
         StringBuilder sb,
-        ContentGeneratorServerModelParametersProperty item)
+        ContentGeneratorClientParameterParametersProperty item)
     {
         sb.Append(4, "public ");
         if (item.UseListForDataType)
@@ -119,19 +120,26 @@ public class ContentGeneratorServerModel : IContentGenerator
         sb.Append(' ');
         sb.Append(item.ParameterName);
 
-        if (string.IsNullOrEmpty(item.DefaultValueInitializer))
+        if (item.UseListForDataType)
         {
-            sb.AppendLine(" { get; set; }");
+            sb.AppendLine($" {{ get; set; }} = new List<{item.DataType}>();");
         }
         else
         {
-            sb.AppendLine($" {{ get; set; }} = {item.DefaultValueInitializer};");
+            if (string.IsNullOrEmpty(item.DefaultValueInitializer))
+            {
+                sb.AppendLine(" { get; set; }");
+            }
+            else
+            {
+                sb.AppendLine($" {{ get; set; }} = {item.DefaultValueInitializer};");
+            }
         }
     }
 
     private static void AppendMethodToStringContent(
         StringBuilder sb,
-        IList<ContentGeneratorServerModelParametersProperty> items)
+        IList<ContentGeneratorClientParameterParametersProperty> items)
     {
         var sbToStringContent = new StringBuilder();
         for (var i = 0; i < items.Count; i++)

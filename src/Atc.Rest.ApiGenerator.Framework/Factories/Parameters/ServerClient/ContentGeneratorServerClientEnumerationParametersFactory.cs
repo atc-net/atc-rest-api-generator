@@ -1,8 +1,8 @@
-namespace Atc.Rest.ApiGenerator.Framework.Factories.Parameters;
+namespace Atc.Rest.ApiGenerator.Framework.Factories.Parameters.ServerClient;
 
-public static class ContentGeneratorServerEnumerationParametersFactory
+public static class ContentGeneratorServerClientEnumerationParametersFactory
 {
-    public static ContentGeneratorServerEnumerationParameters Create(
+    public static ContentGeneratorServerClientEnumerationParameters Create(
         string @namespace,
         string enumerationName,
         IList<IOpenApiAny> apiSchemaEnums)
@@ -14,7 +14,7 @@ public static class ContentGeneratorServerEnumerationParametersFactory
 
         var documentationTags = new CodeDocumentationTags($"Enumeration: {enumerationName}.");
 
-        return new ContentGeneratorServerEnumerationParameters(
+        return new ContentGeneratorServerClientEnumerationParameters(
             @namespace,
             enumerationName,
             documentationTags,

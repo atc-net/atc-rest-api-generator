@@ -218,12 +218,12 @@ public class ServerApiGenerator
         var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}";
 
         // Generate
-        var enumerationParameters = ContentGeneratorServerEnumerationParametersFactory.Create(
+        var enumerationParameters = ContentGeneratorServerClientEnumerationParametersFactory.Create(
             fullNamespace,
             enumerationName,
             openApiSchemaEnumeration.Enum);
 
-        var contentGeneratorEnum = new ContentGeneratorServerEnumeration(
+        var contentGeneratorEnum = new ContentGeneratorServerClientEnumeration(
             new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
             new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
             new CodeDocumentationTagsGenerator(),
@@ -232,9 +232,10 @@ public class ServerApiGenerator
         var enumContent = contentGeneratorEnum.Generate();
 
         // Write
-        var file = new FileInfo(Helpers.DirectoryInfoHelper.GetCsFileNameForContractEnumTypes(
-            projectOptions.PathForContracts,
-            enumerationName));
+        var file = new FileInfo(
+            Helpers.DirectoryInfoHelper.GetCsFileNameForContractEnumTypes(
+                projectOptions.PathForContracts,
+                enumerationName));
 
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
@@ -255,12 +256,12 @@ public class ServerApiGenerator
             : $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
 
         // Generate
-        var modelParameters = ContentGeneratorServerModelParametersFactory.Create(
+        var modelParameters = ContentGeneratorServerClientModelParametersFactory.Create(
             fullNamespace,
             modelName,
             apiSchemaModel);
 
-        var contentGeneratorModel = new ContentGeneratorServerModel(
+        var contentGeneratorModel = new ContentGeneratorServerClientModel(
             new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
             new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
             new CodeDocumentationTagsGenerator(),
@@ -272,17 +273,19 @@ public class ServerApiGenerator
         FileInfo file;
         if (isSharedContract)
         {
-            file = new FileInfo(Helpers.DirectoryInfoHelper.GetCsFileNameForContractShared(
-                projectOptions.PathForContractsShared,
-                modelName));
+            file = new FileInfo(
+                Helpers.DirectoryInfoHelper.GetCsFileNameForContractShared(
+                    projectOptions.PathForContractsShared,
+                    modelName));
         }
         else
         {
-            file = new FileInfo(Helpers.DirectoryInfoHelper.GetCsFileNameForContract(
-                projectOptions.PathForContracts,
-                apiGroupName,
-                NameConstants.ContractModels,
-                modelName));
+            file = new FileInfo(
+                Helpers.DirectoryInfoHelper.GetCsFileNameForContract(
+                    projectOptions.PathForContracts,
+                    apiGroupName,
+                    NameConstants.ContractModels,
+                    modelName));
         }
 
         var contentWriter = new ContentWriter(logger);
@@ -297,18 +300,7 @@ public class ServerApiGenerator
         OpenApiDocument document,
         string apiGroupName)
     {
-        // TODO: Refactor
-        string fullNamespace;
-        if (projectOptions.IsForClient)
-        {
-            fullNamespace = string.IsNullOrEmpty(projectOptions.ClientFolderName)
-                ? $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}"
-                : $"{projectOptions.ProjectName}.{projectOptions.ClientFolderName}.{ContentGeneratorConstants.Contracts}";
-        }
-        else
-        {
-            fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
-        }
+        var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
 
         foreach (var openApiPath in document.Paths)
         {
@@ -339,11 +331,12 @@ public class ServerApiGenerator
                 var parameterContent = contentGeneratorParameter.Generate();
 
                 // Write
-                var file = new FileInfo(Helpers.DirectoryInfoHelper.GetCsFileNameForContract(
-                    projectOptions.PathForContracts,
-                    apiGroupName,
-                    ContentGeneratorConstants.Parameters,
-                    parameterParameters.ParameterName));
+                var file = new FileInfo(
+                    Helpers.DirectoryInfoHelper.GetCsFileNameForContract(
+                        projectOptions.PathForContracts,
+                        apiGroupName,
+                        ContentGeneratorConstants.Parameters,
+                        parameterParameters.ParameterName));
 
                 var contentWriter = new ContentWriter(logger);
                 contentWriter.Write(
@@ -396,11 +389,12 @@ public class ServerApiGenerator
                 var resultContent = contentGeneratorResult.Generate();
 
                 // Write
-                var file = new FileInfo(Helpers.DirectoryInfoHelper.GetCsFileNameForContract(
-                    projectOptions.PathForContracts,
-                    apiGroupName,
-                    ContentGeneratorConstants.Results,
-                    resultParameters.ResultName));
+                var file = new FileInfo(
+                    Helpers.DirectoryInfoHelper.GetCsFileNameForContract(
+                        projectOptions.PathForContracts,
+                        apiGroupName,
+                        ContentGeneratorConstants.Results,
+                        resultParameters.ResultName));
 
                 var contentWriter = new ContentWriter(logger);
                 contentWriter.Write(
@@ -453,11 +447,12 @@ public class ServerApiGenerator
                 var interfaceContent = contentGeneratorInterface.Generate();
 
                 // Write
-                var file = new FileInfo(Helpers.DirectoryInfoHelper.GetCsFileNameForContract(
-                    projectOptions.PathForContracts,
-                    apiGroupName,
-                    ContentGeneratorConstants.Interfaces,
-                    interfaceParameters.InterfaceName));
+                var file = new FileInfo(
+                    Helpers.DirectoryInfoHelper.GetCsFileNameForContract(
+                        projectOptions.PathForContracts,
+                        apiGroupName,
+                        ContentGeneratorConstants.Interfaces,
+                        interfaceParameters.InterfaceName));
 
                 var contentWriter = new ContentWriter(logger);
                 contentWriter.Write(
@@ -474,56 +469,36 @@ public class ServerApiGenerator
     {
         ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 
-        if (projectOptions.IsForClient)
+        foreach (var area in projectOptions.BasePathSegmentNames)
         {
-            // TODO: This is the old approach only generating for ApiClient now - consolidate later with new ContentGenerator
-            var sgEndpoints = new List<SyntaxGeneratorEndpointControllers>();
-            foreach (var segmentName in projectOptions.BasePathSegmentNames)
-            {
-                var generator = new SyntaxGeneratorEndpointControllers(logger, projectOptions, operationSchemaMappings, segmentName);
-                generator.GenerateCode();
-                sgEndpoints.Add(generator);
-            }
+            var contentGeneratorServerControllerParameters = ContentGeneratorServerControllerParametersFactory.Create(
+                operationSchemaMappings,
+                projectOptions.ProjectName,
+                projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
+                $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Endpoints}",
+                area,
+                GetRouteByArea(area),
+                projectOptions.Document);
 
-            foreach (var sg in sgEndpoints)
-            {
-                sg.ToFile();
-            }
-        }
-        else
-        {
-            // New approach for server
-            foreach (var area in projectOptions.BasePathSegmentNames)
-            {
-                var contentGeneratorServerControllerParameters = ContentGeneratorServerControllerParametersFactory.Create(
-                    operationSchemaMappings,
-                    projectOptions.ProjectName,
-                    projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
-                    $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Endpoints}",
-                    area,
-                    GetRouteByArea(area),
-                    projectOptions.Document);
+            var contentGenerator = new ContentGeneratorServerController(
+                new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                new CodeDocumentationTagsGenerator(),
+                contentGeneratorServerControllerParameters);
 
-                var contentGenerator = new ContentGeneratorServerController(
-                    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-                    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-                    new CodeDocumentationTagsGenerator(),
-                    contentGeneratorServerControllerParameters);
+            var content = contentGenerator.Generate();
 
-                var content = contentGenerator.Generate();
+            // TODO: Move responsibility of generating the file object
+            var controllerName = area.EnsureFirstCharacterToUpper() + ContentGeneratorConstants.Controller;
+            var fileAsString = Helpers.DirectoryInfoHelper.GetCsFileNameForEndpoints(projectOptions.PathForEndpoints, controllerName);
+            var file = new FileInfo(fileAsString);
 
-                // TODO: Move responsibility of generating the file object
-                var controllerName = area.EnsureFirstCharacterToUpper() + ContentGeneratorConstants.Controller;
-                var fileAsString = Helpers.DirectoryInfoHelper.GetCsFileNameForEndpoints(projectOptions.PathForEndpoints, controllerName);
-                var file = new FileInfo(fileAsString);
-
-                var contentWriter = new ContentWriter(logger);
-                contentWriter.Write(
-                    projectOptions.PathForSrcGenerate,
-                    file,
-                    ContentWriterArea.Src,
-                    content);
-            }
+            var contentWriter = new ContentWriter(logger);
+            contentWriter.Write(
+                projectOptions.PathForSrcGenerate,
+                file,
+                ContentWriterArea.Src,
+                content);
         }
     }
 

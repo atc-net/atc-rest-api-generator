@@ -91,10 +91,11 @@ public class ServerDomainGenerator
         var handlerContent = contentGeneratorHandler.Generate();
 
         // Write
-        var file = new FileInfo(Helpers.DirectoryInfoHelper.GetCsFileNameForHandler(
-            projectOptions.PathForSrcHandlers!,
-            apiGroupName,
-            handlerParameters.HandlerName));
+        var file = new FileInfo(
+            Helpers.DirectoryInfoHelper.GetCsFileNameForHandler(
+                projectOptions.PathForSrcHandlers!,
+                apiGroupName,
+                handlerParameters.HandlerName));
 
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
