@@ -218,12 +218,12 @@ public class ServerApiGenerator
         var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}";
 
         // Generate
-        var enumerationParameters = ContentGeneratorServerHandlerEnumerationParametersFactory.Create(
+        var enumerationParameters = ContentGeneratorServerEnumerationParametersFactory.Create(
             fullNamespace,
             enumerationName,
             openApiSchemaEnumeration.Enum);
 
-        var contentGeneratorEnum = new ContentGeneratorServerHandlerEnumeration(
+        var contentGeneratorEnum = new ContentGeneratorServerEnumeration(
             new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
             new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
             new CodeDocumentationTagsGenerator(),
@@ -255,12 +255,12 @@ public class ServerApiGenerator
             : $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
 
         // Generate
-        var modelParameters = ContentGeneratorServerHandlerModelParametersFactory.Create(
+        var modelParameters = ContentGeneratorServerModelParametersFactory.Create(
             fullNamespace,
             modelName,
             apiSchemaModel);
 
-        var contentGeneratorModel = new ContentGeneratorServerHandlerModel(
+        var contentGeneratorModel = new ContentGeneratorServerModel(
             new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
             new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
             new CodeDocumentationTagsGenerator(),
@@ -325,12 +325,12 @@ public class ServerApiGenerator
                 }
 
                 // Generate
-                var parameterParameters = ContentGeneratorServerHandlerParameterParametersFactory.Create(
+                var parameterParameters = ContentGeneratorServerParameterParametersFactory.Create(
                     fullNamespace,
                     openApiOperation.Value,
                     openApiPath.Value.Parameters);
 
-                var contentGeneratorParameter = new ContentGeneratorServerHandlerParameter(
+                var contentGeneratorParameter = new ContentGeneratorServerParameter(
                     new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
                     new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
                     new CodeDocumentationTagsGenerator(),

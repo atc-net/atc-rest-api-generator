@@ -4,12 +4,12 @@ namespace Scenario2.Domain.Handlers.Eventargs;
 /// Handler for operation request.
 /// Description: Get EventArgs List.
 /// Operation: GetEventArgs.
-/// Area: Eventargs.
 /// </summary>
 public class GetEventArgsHandler : IGetEventArgsHandler
 {
-    public Task<GetEventArgsResult> ExecuteAsync(CancellationToken cancellationToken = default)
+    public Task<GetEventArgsResult> ExecuteAsync(
+        CancellationToken cancellationToken = default)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException("Add logic here for GetEventArgsHandler");
     }
 }

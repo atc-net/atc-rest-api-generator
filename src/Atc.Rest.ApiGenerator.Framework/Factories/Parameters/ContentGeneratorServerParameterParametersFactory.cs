@@ -3,9 +3,9 @@
 // ReSharper disable MergeIntoPattern
 namespace Atc.Rest.ApiGenerator.Framework.Factories.Parameters;
 
-public static class ContentGeneratorServerHandlerParameterParametersFactory
+public static class ContentGeneratorServerParameterParametersFactory
 {
-    public static ContentGeneratorServerHandlerParameterParameters Create(
+    public static ContentGeneratorServerParameterParameters Create(
         string @namespace,
         OpenApiOperation openApiOperation,
         IList<OpenApiParameter> globalPathParameters)
@@ -21,7 +21,7 @@ public static class ContentGeneratorServerHandlerParameterParametersFactory
         AppendParameters(parameters, openApiOperation.Parameters);
         AppendParametersFromBody(parameters, openApiOperation.RequestBody);
 
-        return new ContentGeneratorServerHandlerParameterParameters(
+        return new ContentGeneratorServerParameterParameters(
             @namespace,
             operationName,
             openApiOperation.ExtractDocumentationTagsForParameters(),

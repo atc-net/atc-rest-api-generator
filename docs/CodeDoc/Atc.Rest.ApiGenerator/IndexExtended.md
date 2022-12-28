@@ -30,8 +30,6 @@
 ## [Atc.Rest.ApiGenerator.Generators](Atc.Rest.ApiGenerator.Generators.md)
 
 - [ClientCSharpApiGenerator](Atc.Rest.ApiGenerator.Generators.md#clientcsharpapigenerator)
-  -  Properties
-     - ExcludeEndpointGeneration
   -  Methods
      - Generate()
 - [ServerApiGenerator](Atc.Rest.ApiGenerator.Generators.md#serverapigenerator)
@@ -111,8 +109,8 @@
      - Generate(ILogger logger, HostProjectOptions hostProjectOptions, EndpointMethodMetadata endpointMethodMetadata)
 - [GenerateServerDomainXunitTestHelper](Atc.Rest.ApiGenerator.Helpers.XunitTest.md#generateserverdomainxunittesthelper)
   -  Static Methods
-     - GenerateCustomTests(ILogger logger, DomainProjectOptions domainProjectOptions, SyntaxGeneratorHandler sgHandler)
-     - GenerateGeneratedTests(ILogger logger, DomainProjectOptions domainProjectOptions, SyntaxGeneratorHandler sgHandler)
+     - GenerateCustomTests(ILogger logger, DomainProjectOptions domainProjectOptions, string apiGroupName, string handlerName)
+     - GenerateGeneratedTests(ILogger logger, DomainProjectOptions domainProjectOptions, string apiGroupName, string handlerName, bool hasParametersOrRequestBody)
 - [GenerateXunitTestHelper](Atc.Rest.ApiGenerator.Helpers.XunitTest.md#generatexunittesthelper)
   -  Static Methods
      - AppendDataEqualNewListOfModel(int indentSpaces, StringBuilder sb, EndpointMethodMetadata endpointMethodMetadata, KeyValuePair&lt;string, OpenApiSchema&gt; schemaProperty, TrailingCharType trailingChar, int maxItemsForList, int depthHierarchy, int maxDepthHierarchy, KeyValuePair&lt;KeyValuePair&lt;string, OpenApiSchema&gt;&gt; badPropertySchema, bool asJsonBody)
@@ -506,40 +504,6 @@
      - ApiProjectOptions
      - FocusOnSegmentName
      - OperationSchemaMappings
-  -  Methods
-     - GenerateSyntaxTrees()
-
-## [Atc.Rest.ApiGenerator.SyntaxGenerators.Domain](Atc.Rest.ApiGenerator.SyntaxGenerators.Domain.md)
-
-- [ISyntaxGeneratorHandlers](Atc.Rest.ApiGenerator.SyntaxGenerators.Domain.md#isyntaxgeneratorhandlers)
-  -  Properties
-     - DomainProjectOptions
-     - FocusOnSegmentName
-  -  Methods
-     - GenerateSyntaxTrees()
-- [SyntaxGeneratorHandler](Atc.Rest.ApiGenerator.SyntaxGenerators.Domain.md#syntaxgeneratorhandler)
-  -  Properties
-     - ApiOperation
-     - ApiOperationType
-     - Code
-     - DomainProjectOptions
-     - FocusOnSegmentName
-     - HandlerTypeName
-     - HasParametersOrRequestBody
-     - InterfaceTypeName
-     - ParameterTypeName
-     - ResultTypeName
-  -  Methods
-     - GenerateCode()
-     - GetFilePath()
-     - ToCodeAsString()
-     - ToFile()
-     - ToFile(FileInfo file)
-     - ToString()
-- [SyntaxGeneratorHandlers](Atc.Rest.ApiGenerator.SyntaxGenerators.Domain.md#syntaxgeneratorhandlers)
-  -  Properties
-     - DomainProjectOptions
-     - FocusOnSegmentName
   -  Methods
      - GenerateSyntaxTrees()
 

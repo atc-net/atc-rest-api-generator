@@ -21,7 +21,6 @@ global using Atc.Rest.ApiGenerator.SyntaxGenerators;
 global using Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
 global using Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces;
 global using Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient;
-global using Atc.Rest.ApiGenerator.SyntaxGenerators.Domain;
 global using Atc.Rest.ApiGenerator.Tests.XUnitTestTypes.CodeGenerator;
 global using Atc.XUnit;
 

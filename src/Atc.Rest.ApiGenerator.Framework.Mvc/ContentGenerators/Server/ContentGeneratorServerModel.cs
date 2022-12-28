@@ -2,18 +2,18 @@
 // ReSharper disable StringLiteralTypo
 namespace Atc.Rest.ApiGenerator.Framework.Mvc.ContentGenerators.Server;
 
-public class ContentGeneratorServerHandlerModel : IContentGenerator
+public class ContentGeneratorServerModel : IContentGenerator
 {
     private readonly GeneratedCodeHeaderGenerator codeHeaderGenerator;
     private readonly GeneratedCodeAttributeGenerator codeAttributeGenerator;
     private readonly CodeDocumentationTagsGenerator codeDocumentationTagsGenerator;
-    private readonly ContentGeneratorServerHandlerModelParameters parameters;
+    private readonly ContentGeneratorServerModelParameters parameters;
 
-    public ContentGeneratorServerHandlerModel(
+    public ContentGeneratorServerModel(
         GeneratedCodeHeaderGenerator codeHeaderGenerator,
         GeneratedCodeAttributeGenerator codeAttributeGenerator,
         CodeDocumentationTagsGenerator codeDocumentationTagsGenerator,
-        ContentGeneratorServerHandlerModelParameters parameters)
+        ContentGeneratorServerModelParameters parameters)
     {
         this.codeHeaderGenerator = codeHeaderGenerator;
         this.codeAttributeGenerator = codeAttributeGenerator;
@@ -59,7 +59,7 @@ public class ContentGeneratorServerHandlerModel : IContentGenerator
 
     private static void AppendPropertyAttributes(
         StringBuilder sb,
-        ContentGeneratorServerHandlerModelParametersProperty item)
+        ContentGeneratorServerModelParametersProperty item)
     {
         if (item.IsRequired)
         {
@@ -97,7 +97,7 @@ public class ContentGeneratorServerHandlerModel : IContentGenerator
 
     private static void AppendPropertyBody(
         StringBuilder sb,
-        ContentGeneratorServerHandlerModelParametersProperty item)
+        ContentGeneratorServerModelParametersProperty item)
     {
         sb.Append(4, "public ");
         if (item.UseListForDataType)
@@ -131,7 +131,7 @@ public class ContentGeneratorServerHandlerModel : IContentGenerator
 
     private static void AppendMethodToStringContent(
         StringBuilder sb,
-        IList<ContentGeneratorServerHandlerModelParametersProperty> items)
+        IList<ContentGeneratorServerModelParametersProperty> items)
     {
         var sbToStringContent = new StringBuilder();
         for (var i = 0; i < items.Count; i++)

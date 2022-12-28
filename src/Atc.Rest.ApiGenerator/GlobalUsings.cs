@@ -42,12 +42,10 @@ global using Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
 global using Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces;
 global using Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient;
 global using Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.Interfaces;
-global using Atc.Rest.ApiGenerator.SyntaxGenerators.Domain;
 global using Atc.Rest.Client;
 global using Atc.Rest.Client.Builder;
 
 global using Microsoft.AspNetCore.Authorization;
-global using Microsoft.AspNetCore.Http;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.CodeAnalysis;
 global using Microsoft.CodeAnalysis.CSharp;

@@ -1,16 +1,16 @@
 // ReSharper disable MergeIntoPattern
 namespace Atc.Rest.ApiGenerator.Framework.Factories.Parameters;
 
-public static class ContentGeneratorServerHandlerModelParametersFactory
+public static class ContentGeneratorServerModelParametersFactory
 {
-    public static ContentGeneratorServerHandlerModelParameters Create(
+    public static ContentGeneratorServerModelParameters Create(
         string @namespace,
         string modelName,
         OpenApiSchema apiSchemaModel)
     {
         ArgumentNullException.ThrowIfNull(apiSchemaModel);
 
-        var parameters = new List<ContentGeneratorServerHandlerModelParametersProperty>();
+        var parameters = new List<ContentGeneratorServerModelParametersProperty>();
 
         var hasAnyPropertiesAsArrayWithFormatTypeBinary = apiSchemaModel.HasAnyPropertiesAsArrayWithFormatTypeBinary();
 
@@ -20,7 +20,7 @@ public static class ContentGeneratorServerHandlerModelParametersFactory
 
             var documentationTags = new CodeDocumentationTags($"A list of {childModelName}.");
 
-            parameters.Add(new ContentGeneratorServerHandlerModelParametersProperty(
+            parameters.Add(new ContentGeneratorServerModelParametersProperty(
                 "#",
                 childModelName + "List",
                 documentationTags,
@@ -77,7 +77,7 @@ public static class ContentGeneratorServerHandlerModelParametersFactory
                     dataTypeForList = dataType;
                 }
 
-                parameters.Add(new ContentGeneratorServerHandlerModelParametersProperty(
+                parameters.Add(new ContentGeneratorServerModelParametersProperty(
                     apiSchema.Key,
                     apiSchema.Key.EnsureFirstCharacterToUpper(),
                     documentationTags,
@@ -91,7 +91,7 @@ public static class ContentGeneratorServerHandlerModelParametersFactory
             }
         }
 
-        return new ContentGeneratorServerHandlerModelParameters(
+        return new ContentGeneratorServerModelParameters(
             @namespace,
             modelName,
             apiSchemaModel.ExtractDocumentationTags($"{modelName}."),

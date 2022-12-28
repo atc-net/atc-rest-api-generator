@@ -6,6 +6,7 @@ public static class ContentGeneratorConstants
     public const string Controller = "Controller";
     public const string Endpoints = "Endpoints";
     public const string Handler = "Handler";
+    public const string Handlers = "Handlers";
     public const string Interfaces = "Interfaces";
     public const string Parameters = "Parameters";
     public const string Result = "Result";

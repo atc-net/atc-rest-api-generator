@@ -96,12 +96,6 @@
 
 - [ISyntaxGeneratorClientEndpoints](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.Interfaces.md#isyntaxgeneratorclientendpoints)
 
-## [Atc.Rest.ApiGenerator.SyntaxGenerators.Domain](Atc.Rest.ApiGenerator.SyntaxGenerators.Domain.md)
-
-- [ISyntaxGeneratorHandlers](Atc.Rest.ApiGenerator.SyntaxGenerators.Domain.md#isyntaxgeneratorhandlers)
-- [SyntaxGeneratorHandler](Atc.Rest.ApiGenerator.SyntaxGenerators.Domain.md#syntaxgeneratorhandler)
-- [SyntaxGeneratorHandlers](Atc.Rest.ApiGenerator.SyntaxGenerators.Domain.md#syntaxgeneratorhandlers)
-
 ## [Microsoft.OpenApi.Models](Microsoft.OpenApi.Models.md)
 
 - [OpenApiSchemaExtensions](Microsoft.OpenApi.Models.md#openapischemaextensions)

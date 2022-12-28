@@ -39,8 +39,6 @@ public class CodeComplianceTests
         typeof(SyntaxGeneratorClientEndpointResults),
         typeof(SyntaxGeneratorClientEndpointResultInterface),
         typeof(SyntaxGeneratorClientEndpointResultInterfaces),
-        typeof(SyntaxGeneratorHandler),
-        typeof(SyntaxGeneratorHandlers),
         typeof(ApiGenerator.Helpers.DirectoryInfoHelper),
         typeof(GenerateXunitTestHelper),
         typeof(GenerateServerApiXunitTestEndpointHandlerStubHelper),

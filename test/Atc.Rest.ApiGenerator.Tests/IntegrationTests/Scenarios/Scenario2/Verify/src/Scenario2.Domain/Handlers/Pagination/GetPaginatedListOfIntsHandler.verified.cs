@@ -4,12 +4,12 @@ namespace Scenario2.Domain.Handlers.Pagination;
 /// Handler for operation request.
 /// Description: Your GET endpoint.
 /// Operation: GetPaginatedListOfInts.
-/// Area: Pagination.
 /// </summary>
 public class GetPaginatedListOfIntsHandler : IGetPaginatedListOfIntsHandler
 {
-    public Task<GetPaginatedListOfIntsResult> ExecuteAsync(CancellationToken cancellationToken = default)
+    public Task<GetPaginatedListOfIntsResult> ExecuteAsync(
+        CancellationToken cancellationToken = default)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException("Add logic here for GetPaginatedListOfIntsHandler");
     }
 }

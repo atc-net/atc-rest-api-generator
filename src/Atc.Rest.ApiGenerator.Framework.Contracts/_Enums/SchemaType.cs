@@ -1,4 +1,5 @@
-namespace Atc.Rest.ApiGenerator.Framework.Contracts.ContentGeneratorsParameters.Server;
+// ReSharper disable CheckNamespace
+namespace Atc.Rest.ApiGenerator.Framework.Contracts;
 
 public enum SchemaType
 {

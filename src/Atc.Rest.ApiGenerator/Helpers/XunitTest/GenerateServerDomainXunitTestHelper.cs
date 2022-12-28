@@ -5,16 +5,16 @@ public static class GenerateServerDomainXunitTestHelper
     public static void GenerateGeneratedTests(
         ILogger logger,
         DomainProjectOptions domainProjectOptions,
-        SyntaxGeneratorHandler sgHandler)
+        string apiGroupName,
+        string handlerName,
+        bool hasParametersOrRequestBody)
     {
         ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(domainProjectOptions);
-        ArgumentNullException.ThrowIfNull(sgHandler);
 
-        var area = sgHandler.FocusOnSegmentName.EnsureFirstCharacterToUpper();
-        var nsTest = $"{domainProjectOptions.ProjectName}.Tests.{NameConstants.Handlers}.{area}.Generated";
+        var nsTest = $"{domainProjectOptions.ProjectName}.Tests.{NameConstants.Handlers}.{apiGroupName}.Generated";
 
-        var srcSyntaxNodeRoot = ReadCsFile(domainProjectOptions, sgHandler.FocusOnSegmentName, sgHandler);
+        var srcSyntaxNodeRoot = ReadCsFile(domainProjectOptions, apiGroupName, handlerName);
         var usedInterfacesInConstructor = GetUsedInterfacesInConstructor(srcSyntaxNodeRoot);
 
         var sb = new StringBuilder();
@@ -23,20 +23,20 @@ public static class GenerateServerDomainXunitTestHelper
         sb.AppendLine($"namespace {nsTest}");
         sb.AppendLine("{");
         GenerateCodeHelper.AppendGeneratedCodeAttribute(sb, domainProjectOptions.ApiGeneratorName, domainProjectOptions.ApiGeneratorVersion);
-        sb.AppendLine(4, $"public class {sgHandler.HandlerTypeName}GeneratedTests");
+        sb.AppendLine(4, $"public class {handlerName}GeneratedTests");
         sb.AppendLine(4, "{");
-        AppendInstantiateConstructor(sb, sgHandler, usedInterfacesInConstructor);
-        if (sgHandler.HasParametersOrRequestBody)
+        AppendInstantiateConstructor(sb, handlerName, usedInterfacesInConstructor);
+        if (hasParametersOrRequestBody)
         {
             sb.AppendLine();
-            AppendParameterArgumentNullCheck(sb, sgHandler, usedInterfacesInConstructor);
+            AppendParameterArgumentNullCheck(sb, handlerName, usedInterfacesInConstructor);
         }
 
         sb.AppendLine(4, "}");
         sb.AppendLine("}");
 
-        var pathGenerated = Path.Combine(Path.Combine(domainProjectOptions.PathForTestHandlers!.FullName, area), "Generated");
-        var fileGenerated = new FileInfo(Path.Combine(pathGenerated, $"{sgHandler.HandlerTypeName}GeneratedTests.cs"));
+        var pathGenerated = Path.Combine(Path.Combine(domainProjectOptions.PathForTestHandlers!.FullName, apiGroupName), "Generated");
+        var fileGenerated = new FileInfo(Path.Combine(pathGenerated, $"{handlerName}GeneratedTests.cs"));
 
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
@@ -49,20 +49,19 @@ public static class GenerateServerDomainXunitTestHelper
     public static void GenerateCustomTests(
         ILogger logger,
         DomainProjectOptions domainProjectOptions,
-        SyntaxGeneratorHandler sgHandler)
+        string apiGroupName,
+        string handlerName)
     {
         ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(domainProjectOptions);
-        ArgumentNullException.ThrowIfNull(sgHandler);
 
-        var area = sgHandler.FocusOnSegmentName.EnsureFirstCharacterToUpper();
-        var nsTest = $"{domainProjectOptions.ProjectName}.Tests.{NameConstants.Handlers}.{area}";
+        var nsTest = $"{domainProjectOptions.ProjectName}.Tests.{NameConstants.Handlers}.{apiGroupName}";
 
         var sb = new StringBuilder();
 
         sb.AppendLine($"namespace {nsTest}");
         sb.AppendLine("{");
-        sb.AppendLine(4, $"public class {sgHandler.HandlerTypeName}Tests");
+        sb.AppendLine(4, $"public class {handlerName}Tests");
         sb.AppendLine(4, "{");
         sb.AppendLine(8, "[Fact(Skip=\"Change this to a real test\")]");
         sb.AppendLine(8, "public void Sample()");
@@ -76,8 +75,8 @@ public static class GenerateServerDomainXunitTestHelper
         sb.AppendLine(4, "}");
         sb.AppendLine("}");
 
-        var pathCustom = Path.Combine(domainProjectOptions.PathForTestHandlers!.FullName, area);
-        var fileCustom = new FileInfo(Path.Combine(pathCustom, $"{sgHandler.HandlerTypeName}Tests.cs"));
+        var pathCustom = Path.Combine(domainProjectOptions.PathForTestHandlers!.FullName, apiGroupName);
+        var fileCustom = new FileInfo(Path.Combine(pathCustom, $"{handlerName}Tests.cs"));
 
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
@@ -90,7 +89,7 @@ public static class GenerateServerDomainXunitTestHelper
 
     private static void AppendInstantiateConstructor(
         StringBuilder sb,
-        SyntaxGeneratorHandler sgHandler,
+        string handlerName,
         List<Tuple<string, string>> usedInterfacesInConstructor)
     {
         sb.AppendLine(8, "[Fact]");
@@ -111,11 +110,11 @@ public static class GenerateServerDomainXunitTestHelper
         if (usedInterfacesInConstructor.Count > 0)
         {
             var parameters = string.Join(", ", usedInterfacesInConstructor.Select(x => x.Item2));
-            sb.AppendLine(12, $"var actual = new {sgHandler.HandlerTypeName}({parameters});");
+            sb.AppendLine(12, $"var actual = new {handlerName}({parameters});");
         }
         else
         {
-            sb.AppendLine(12, $"var actual = new {sgHandler.HandlerTypeName}();");
+            sb.AppendLine(12, $"var actual = new {handlerName}();");
         }
 
         sb.AppendLine();
@@ -126,7 +125,7 @@ public static class GenerateServerDomainXunitTestHelper
 
     private static void AppendParameterArgumentNullCheck(
         StringBuilder sb,
-        SyntaxGeneratorHandler sgHandler,
+        string handlerName,
         List<Tuple<string, string>> usedInterfacesInConstructor)
     {
         sb.AppendLine(8, "[Fact]");
@@ -143,11 +142,11 @@ public static class GenerateServerDomainXunitTestHelper
             sb.AppendLine();
 
             var parameters = string.Join(", ", usedInterfacesInConstructor.Select(x => x.Item2));
-            sb.AppendLine(12, $"var sut = new {sgHandler.HandlerTypeName}({parameters});");
+            sb.AppendLine(12, $"var sut = new {handlerName}({parameters});");
         }
         else
         {
-            sb.AppendLine(12, $"var sut = new {sgHandler.HandlerTypeName}();");
+            sb.AppendLine(12, $"var sut = new {handlerName}();");
         }
 
         sb.AppendLine();
@@ -159,9 +158,9 @@ public static class GenerateServerDomainXunitTestHelper
     private static SyntaxNode ReadCsFile(
         DomainProjectOptions domainProjectOptions,
         string area,
-        SyntaxGeneratorHandler sgHandler)
+        string handlerName)
     {
-        var csSrcFile = DirectoryInfoHelper.GetCsFileNameForHandler(domainProjectOptions.PathForSrcHandlers!, area, sgHandler.HandlerTypeName);
+        var csSrcFile = DirectoryInfoHelper.GetCsFileNameForHandler(domainProjectOptions.PathForSrcHandlers!, area, handlerName);
         var csSrcCode = File.ReadAllText(csSrcFile);
         var tree = CSharpSyntaxTree.ParseText(csSrcCode);
         return tree.GetRoot();

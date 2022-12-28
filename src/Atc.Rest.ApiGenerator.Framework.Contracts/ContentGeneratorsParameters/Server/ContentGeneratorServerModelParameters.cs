@@ -1,12 +1,12 @@
 namespace Atc.Rest.ApiGenerator.Framework.Contracts.ContentGeneratorsParameters.Server;
 
-public record ContentGeneratorServerHandlerModelParameters(
+public record ContentGeneratorServerModelParameters(
     string Namespace,
     string ModelName,
     CodeDocumentationTags DocumentationTags,
-    IList<ContentGeneratorServerHandlerModelParametersProperty> PropertyParameters);
+    IList<ContentGeneratorServerModelParametersProperty> PropertyParameters);
 
-public record ContentGeneratorServerHandlerModelParametersProperty(
+public record ContentGeneratorServerModelParametersProperty(
     string Name,
     string ParameterName,
     CodeDocumentationTags DocumentationTags,

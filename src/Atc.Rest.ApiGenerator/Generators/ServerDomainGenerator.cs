@@ -2,6 +2,7 @@
 // ReSharper disable InvertIf
 // ReSharper disable SuggestBaseTypeForParameter
 // ReSharper disable ReturnTypeCanBeEnumerable.Local
+// ReSharper disable ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
 namespace Atc.Rest.ApiGenerator.Generators;
 
 public class ServerDomainGenerator
@@ -27,14 +28,19 @@ public class ServerDomainGenerator
         }
 
         ScaffoldSrc();
-        GenerateSrcHandlers(projectOptions, out var sgHandlers);
+
+        GenerateSrcHandlers(projectOptions.Document);
+
         GenerateSrcGlobalUsings();
 
         if (projectOptions.PathForTestGenerate is not null)
         {
             logger.LogInformation($"{AppEmojisConstants.AreaGenerateTest} Working on server domain unit-test generation ({projectOptions.ProjectName}.Tests)");
+
             ScaffoldTest();
-            GenerateTestHandlers(projectOptions, sgHandlers);
+
+            GenerateTestHandlers(projectOptions.Document);
+
             GenerateTestGlobalUsings();
         }
 
@@ -42,43 +48,102 @@ public class ServerDomainGenerator
     }
 
     private void GenerateSrcHandlers(
-        DomainProjectOptions domainProjectOptions,
-        out List<SyntaxGeneratorHandler> sgHandlers)
+        OpenApiDocument document)
     {
-        ArgumentNullException.ThrowIfNull(domainProjectOptions);
+        ArgumentNullException.ThrowIfNull(projectOptions);
 
-        sgHandlers = new List<SyntaxGeneratorHandler>();
-        foreach (var basePathSegmentName in domainProjectOptions.BasePathSegmentNames)
+        foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
         {
-            var generatorHandlers = new SyntaxGeneratorHandlers(logger, domainProjectOptions, basePathSegmentName);
-            var generatedHandlers = generatorHandlers.GenerateSyntaxTrees();
-            sgHandlers.AddRange(generatedHandlers);
-        }
+            var apiGroupName = basePathSegmentName.EnsureFirstCharacterToUpper();
 
-        foreach (var sg in sgHandlers)
-        {
-            if (!sg.GetFilePath().Exists)
+            foreach (var urlPath in document.Paths)
             {
-                sg.ToFile();
+                if (!urlPath.IsPathStartingSegmentName(apiGroupName))
+                {
+                    continue;
+                }
+
+                foreach (var openApiOperation in urlPath.Value.Operations)
+                {
+                    GenerateSrcHandler(apiGroupName, urlPath.Value, openApiOperation.Value);
+                }
             }
         }
     }
 
-    private void GenerateTestHandlers(
-        DomainProjectOptions domainProjectOptions,
-        List<SyntaxGeneratorHandler> sgHandlers)
+    private void GenerateSrcHandler(
+        string apiGroupName,
+        OpenApiPathItem apiPath,
+        OpenApiOperation apiOperation)
     {
-        ArgumentNullException.ThrowIfNull(domainProjectOptions);
-        ArgumentNullException.ThrowIfNull(sgHandlers);
+        var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Handlers}.{apiGroupName}";
 
-        if (domainProjectOptions.PathForTestHandlers is not null)
+        // Generate
+        var handlerParameters = ContentGeneratorServerHandlerParametersFactory.Create(
+            fullNamespace,
+            apiPath,
+            apiOperation);
+
+        var contentGeneratorHandler = new ContentGeneratorServerHandler(
+            new CodeDocumentationTagsGenerator(),
+            handlerParameters);
+
+        var handlerContent = contentGeneratorHandler.Generate();
+
+        // Write
+        var file = new FileInfo(Helpers.DirectoryInfoHelper.GetCsFileNameForHandler(
+            projectOptions.PathForSrcHandlers!,
+            apiGroupName,
+            handlerParameters.HandlerName));
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectOptions.PathForSrcGenerate,
+            file,
+            ContentWriterArea.Src,
+            handlerContent,
+            overrideIfExist: false);
+    }
+
+    private void GenerateTestHandlers(
+        OpenApiDocument document)
+    {
+        ArgumentNullException.ThrowIfNull(projectOptions);
+
+        foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
         {
-            foreach (var sgHandler in sgHandlers)
+            var apiGroupName = basePathSegmentName.EnsureFirstCharacterToUpper();
+
+            foreach (var urlPath in document.Paths)
             {
-                GenerateServerDomainXunitTestHelper.GenerateGeneratedTests(logger, domainProjectOptions, sgHandler);
-                GenerateServerDomainXunitTestHelper.GenerateCustomTests(logger, domainProjectOptions, sgHandler);
+                if (!urlPath.IsPathStartingSegmentName(apiGroupName))
+                {
+                    continue;
+                }
+
+                foreach (var openApiOperation in urlPath.Value.Operations)
+                {
+                    GenerateTestHandler(apiGroupName, urlPath.Value, openApiOperation.Value);
+                }
             }
         }
+    }
+
+    private void GenerateTestHandler(
+        string apiGroupName,
+        OpenApiPathItem apiPath,
+        OpenApiOperation apiOperation)
+    {
+        // TODO: Rewrite:
+
+        var operationName = apiOperation.GetOperationName();
+        var handlerName = $"{operationName}{ContentGeneratorConstants.Handler}";
+
+        var hasParametersOrRequestBody = apiPath.HasParameters() ||
+                                         apiOperation.HasParametersOrRequestBody();
+
+        GenerateServerDomainXunitTestHelper.GenerateGeneratedTests(logger, projectOptions, apiGroupName, handlerName, hasParametersOrRequestBody);
+        GenerateServerDomainXunitTestHelper.GenerateCustomTests(logger, projectOptions, apiGroupName, handlerName);
     }
 
     private void ScaffoldSrc()
@@ -221,6 +286,7 @@ public class ServerDomainGenerator
     {
         var requiredUsings = new List<string>
         {
+            "System",
             "System.CodeDom.Compiler",
             "System.Threading",
             "System.Threading.Tasks",

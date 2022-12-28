@@ -1,6 +1,6 @@
 namespace Atc.Rest.ApiGenerator.Framework.Contracts.ContentGeneratorsParameters.Server;
 
-public record ContentGeneratorServerHandlerEnumerationParameters(
+public record ContentGeneratorServerEnumerationParameters(
     string Namespace,
     string EnumerationName,
     CodeDocumentationTags DocumentationTags,
