@@ -59,7 +59,6 @@ public static class ContentGeneratorClientParameterParametersFactory
                     GetAdditionalValidationAttributes(openApiParameter),
                     openApiParameter.Schema.GetDefaultValueAsString()));
             }
-
         }
     }
 
