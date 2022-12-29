@@ -136,8 +136,6 @@ public class ServerApiGenerator
                 usingCodingRules: projectOptions.UsingCodingRules);
 
             ScaffoldBasicFileApiGenerated();
-            DeleteLegacyScaffoldBasicFileResultFactory();
-            DeleteLegacyScaffoldBasicFilePagination();
         }
     }
 
@@ -567,30 +565,6 @@ public class ServerApiGenerator
             file,
             ContentWriterArea.Src,
             codeAsString);
-    }
-
-    private void DeleteLegacyScaffoldBasicFileResultFactory()
-    {
-        var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "ResultFactory.cs"));
-        if (file.Exists)
-        {
-            File.Delete(file.FullName);
-        }
-    }
-
-    private void DeleteLegacyScaffoldBasicFilePagination()
-    {
-        var (key, _) = projectOptions.Document.Components.Schemas.FirstOrDefault(x => x.Key.Equals(Microsoft.OpenApi.Models.NameConstants.Pagination, StringComparison.OrdinalIgnoreCase));
-        if (key is null)
-        {
-            return;
-        }
-
-        var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, $"{Microsoft.OpenApi.Models.NameConstants.Pagination}.cs"));
-        if (file.Exists)
-        {
-            File.Delete(file.FullName);
-        }
     }
 
     private void GenerateSrcGlobalUsings()
