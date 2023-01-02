@@ -4,7 +4,9 @@ public static class ContentGeneratorConstants
 {
     public const string Contracts = "Contracts";
     public const string Controller = "Controller";
+    public const string Endpoint = "Endpoint";
     public const string Endpoints = "Endpoints";
+    public const string EndpointResult = $"{Endpoint}{Result}";
     public const string Handler = "Handler";
     public const string Handlers = "Handlers";
     public const string Interfaces = "Interfaces";

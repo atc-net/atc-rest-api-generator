@@ -1,8 +1,6 @@
-using Atc.Rest.ApiGenerator.Framework.Contracts.ContentGeneratorsParameters.ServerClient;
-
 namespace Atc.Rest.ApiGenerator.Framework.Mvc.ContentGenerators.ServerClient;
 
-public class ContentGeneratorServerClientEnumeration : IContentGenerator
+public sealed class ContentGeneratorServerClientEnumeration : IContentGenerator
 {
     private readonly GeneratedCodeHeaderGenerator codeHeaderGenerator;
     private readonly GeneratedCodeAttributeGenerator codeAttributeGenerator;

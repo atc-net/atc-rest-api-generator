@@ -1,8 +1,8 @@
-namespace Atc.Rest.ApiGenerator.Framework.Factories.Parameters.Server;
+namespace Atc.Rest.ApiGenerator.Framework.Factories.Parameters.Client;
 
-public static class ContentGeneratorServerHandlerInterfaceParametersFactory
+public static class ContentGeneratorClientEndpointInterfaceParametersFactory
 {
-    public static ContentGeneratorServerHandlerInterfaceParameters Create(
+    public static ContentGeneratorClientEndpointInterfaceParameters Create(
         string @namespace,
         OpenApiPathItem openApiPath,
         OpenApiOperation openApiOperation)
@@ -27,12 +27,12 @@ public static class ContentGeneratorServerHandlerInterfaceParametersFactory
                 exceptions: null,
                 @return: null);
 
-            return new ContentGeneratorServerHandlerInterfaceParameters(
+            return new ContentGeneratorClientEndpointInterfaceParameters(
                 @namespace,
                 operationName,
-                openApiOperation.ExtractDocumentationTagsForHandlerInterface(),
-                InterfaceName: $"I{operationName}{ContentGeneratorConstants.Handler}",
-                ResultName: $"{operationName}{ContentGeneratorConstants.Result}",
+                openApiOperation.ExtractDocumentationTagsForEndpointInterface(),
+                InterfaceName: $"I{operationName}{ContentGeneratorConstants.Endpoint}",
+                ResultName: $"{operationName}{ContentGeneratorConstants.EndpointResult}",
                 ParameterName: $"{operationName}{ContentGeneratorConstants.Parameters}",
                 documentationTagsForMethod);
         }
@@ -52,12 +52,12 @@ public static class ContentGeneratorServerHandlerInterfaceParametersFactory
                 exceptions: null,
                 @return: null);
 
-            return new ContentGeneratorServerHandlerInterfaceParameters(
+            return new ContentGeneratorClientEndpointInterfaceParameters(
                 @namespace,
                 operationName,
-                openApiOperation.ExtractDocumentationTagsForHandlerInterface(),
-                InterfaceName: $"I{operationName}{ContentGeneratorConstants.Handler}",
-                ResultName: $"{operationName}{ContentGeneratorConstants.Result}",
+                openApiOperation.ExtractDocumentationTagsForEndpointInterface(),
+                InterfaceName: $"I{operationName}{ContentGeneratorConstants.Endpoint}",
+                ResultName: $"{operationName}{ContentGeneratorConstants.EndpointResult}",
                 ParameterName: string.Empty,
                 documentationTagsForMethod);
         }

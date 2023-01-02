@@ -1,6 +1,6 @@
 namespace Atc.Rest.ApiGenerator.Framework.Mvc.ContentGenerators.Server;
 
-public class ContentGeneratorServerAppSettingsIntegrationTest : IContentGenerator
+public sealed class ContentGeneratorServerAppSettingsIntegrationTest : IContentGenerator
 {
     public string Generate()
     {

@@ -1,6 +1,6 @@
 namespace Atc.Rest.ApiGenerator.Framework.Mvc.ContentGenerators.Server;
 
-public class ContentGeneratorServerWebConfig : IContentGenerator
+public sealed class ContentGeneratorServerWebConfig : IContentGenerator
 {
     public string Generate()
     {

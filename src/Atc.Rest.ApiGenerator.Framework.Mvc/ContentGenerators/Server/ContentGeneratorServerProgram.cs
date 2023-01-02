@@ -1,6 +1,6 @@
 namespace Atc.Rest.ApiGenerator.Framework.Mvc.ContentGenerators.Server;
 
-public class ContentGeneratorServerProgram : IContentGenerator
+public sealed class ContentGeneratorServerProgram : IContentGenerator
 {
     private readonly ContentGeneratorServerProgramParameters parameters;
 

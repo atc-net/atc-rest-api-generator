@@ -31,8 +31,6 @@ public class CodeComplianceTests
         typeof(SyntaxGeneratorClientEndpoint),
         typeof(SyntaxGeneratorClientEndpoints),
         typeof(SyntaxGeneratorEndpointControllers),
-        typeof(SyntaxGeneratorClientEndpointInterface),
-        typeof(SyntaxGeneratorClientEndpointInterfaces),
         typeof(SyntaxGeneratorClientEndpointResult),
         typeof(SyntaxGeneratorClientEndpointResults),
         typeof(SyntaxGeneratorClientEndpointResultInterface),

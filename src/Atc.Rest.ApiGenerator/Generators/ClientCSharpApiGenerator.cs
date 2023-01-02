@@ -299,29 +299,24 @@ public class ClientCSharpApiGenerator
         ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 
         var sgEndpointResults = new List<SyntaxGeneratorClientEndpointResult>();
-        var sgEndpointInterfaces = new List<SyntaxGeneratorClientEndpointInterface>();
         var sgEndpoints = new List<SyntaxGeneratorClientEndpoint>();
+
         foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
         {
+            var apiGroupName = basePathSegmentName.EnsureFirstCharacterToUpper();
+
             var generatorEndpointResults = new SyntaxGeneratorClientEndpointResults(logger, apiProjectOptions, operationSchemaMappings, basePathSegmentName);
             var generatedEndpointResults = generatorEndpointResults.GenerateSyntaxTrees();
             sgEndpointResults.AddRange(generatedEndpointResults);
 
-            var generatorEndpointInterfaces = new SyntaxGeneratorClientEndpointInterfaces(logger, apiProjectOptions, operationSchemaMappings, basePathSegmentName);
-            var generatedEndpointInterfaces = generatorEndpointInterfaces.GenerateSyntaxTrees();
-            sgEndpointInterfaces.AddRange(generatedEndpointInterfaces);
-
             var generatorEndpoints = new SyntaxGeneratorClientEndpoints(logger, apiProjectOptions, operationSchemaMappings, basePathSegmentName);
             var generatedEndpoints = generatorEndpoints.GenerateSyntaxTrees();
             sgEndpoints.AddRange(generatedEndpoints);
+
+            GenerateInterfaces(projectOptions.Document, apiGroupName);
         }
 
         foreach (var sg in sgEndpointResults)
-        {
-            sg.ToFile();
-        }
-
-        foreach (var sg in sgEndpointInterfaces)
         {
             sg.ToFile();
         }
@@ -374,5 +369,54 @@ public class ClientCSharpApiGenerator
            ContentWriterArea.Src,
            projectOptions.PathForSrcGenerate,
            requiredUsings);
+    }
+
+    private void GenerateInterfaces(
+        OpenApiDocument document,
+        string apiGroupName)
+    {
+        var fullNamespace = string.IsNullOrEmpty(projectOptions.ClientFolderName)
+                ? $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Endpoints}"
+                : $"{projectOptions.ProjectName}.{projectOptions.ClientFolderName}.{ContentGeneratorConstants.Endpoints}";
+
+        foreach (var openApiPath in document.Paths)
+        {
+            if (!openApiPath.IsPathStartingSegmentName(apiGroupName))
+            {
+                continue;
+            }
+
+            foreach (var openApiOperation in openApiPath.Value.Operations)
+            {
+                // Generate
+                var interfaceParameters = ContentGeneratorClientEndpointInterfaceParametersFactory.Create(
+                    fullNamespace,
+                    openApiPath.Value,
+                    openApiOperation.Value);
+
+                var contentGeneratorInterface = new ContentGeneratorClientEndpointInterface(
+                    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                    new CodeDocumentationTagsGenerator(),
+                    interfaceParameters);
+
+                var interfaceContent = contentGeneratorInterface.Generate();
+
+                // Write
+                var file = new FileInfo(
+                    Helpers.DirectoryInfoHelper.GetCsFileNameForContract(
+                        apiProjectOptions.PathForEndpoints,
+                        apiGroupName,
+                        ContentGeneratorConstants.Interfaces,
+                        interfaceParameters.InterfaceName));
+
+                var contentWriter = new ContentWriter(logger);
+                contentWriter.Write(
+                    projectOptions.PathForSrcGenerate,
+                    file,
+                    ContentWriterArea.Src,
+                    interfaceContent);
+            }
+        }
     }
 }

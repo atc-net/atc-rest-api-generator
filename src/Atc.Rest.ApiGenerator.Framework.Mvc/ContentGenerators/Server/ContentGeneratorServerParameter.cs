@@ -3,7 +3,7 @@
 // ReSharper disable ConvertIfStatementToConditionalTernaryExpression
 namespace Atc.Rest.ApiGenerator.Framework.Mvc.ContentGenerators.Server;
 
-public class ContentGeneratorServerParameter : IContentGenerator
+public sealed class ContentGeneratorServerParameter : IContentGenerator
 {
     private readonly GeneratedCodeHeaderGenerator codeHeaderGenerator;
     private readonly GeneratedCodeAttributeGenerator codeAttributeGenerator;

@@ -408,18 +408,7 @@ public class ServerApiGenerator
         OpenApiDocument document,
         string apiGroupName)
     {
-        // TODO: Refactor
-        string fullNamespace;
-        if (projectOptions.IsForClient)
-        {
-            fullNamespace = string.IsNullOrEmpty(projectOptions.ClientFolderName)
-                ? $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}"
-                : $"{projectOptions.ProjectName}.{projectOptions.ClientFolderName}.{ContentGeneratorConstants.Contracts}";
-        }
-        else
-        {
-            fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
-        }
+        var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
 
         foreach (var openApiPath in document.Paths)
         {

@@ -2,7 +2,11 @@ namespace Atc.Rest.ApiGenerator.OpenApi.Extensions;
 
 public static class OpenApiOperationExtensions
 {
-    public static CodeDocumentationTags ExtractDocumentationTagsForInterface(
+    public static CodeDocumentationTags ExtractDocumentationTagsForEndpointInterface(
+        this OpenApiOperation apiOperation)
+        => apiOperation.ExtractDocumentationTags("Interface for Client Endpoint.");
+
+    public static CodeDocumentationTags ExtractDocumentationTagsForHandlerInterface(
         this OpenApiOperation apiOperation)
         => apiOperation.ExtractDocumentationTags("Domain Interface for RequestHandler.");
 

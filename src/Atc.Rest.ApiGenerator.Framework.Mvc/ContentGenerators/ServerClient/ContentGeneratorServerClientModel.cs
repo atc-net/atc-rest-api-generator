@@ -1,10 +1,8 @@
 // ReSharper disable ConvertIfStatementToConditionalTernaryExpression
 // ReSharper disable StringLiteralTypo
-using Atc.Rest.ApiGenerator.Framework.Contracts.ContentGeneratorsParameters.ServerClient;
-
 namespace Atc.Rest.ApiGenerator.Framework.Mvc.ContentGenerators.ServerClient;
 
-public class ContentGeneratorServerClientModel : IContentGenerator
+public sealed class ContentGeneratorServerClientModel : IContentGenerator
 {
     private readonly GeneratedCodeHeaderGenerator codeHeaderGenerator;
     private readonly GeneratedCodeAttributeGenerator codeAttributeGenerator;

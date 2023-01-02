@@ -3,7 +3,7 @@
 // ReSharper disable ConvertIfStatementToReturnStatement
 namespace Atc.Rest.ApiGenerator.Framework.Mvc.ContentGenerators.Server;
 
-public class ContentGeneratorServerResult : IContentGenerator
+public sealed class ContentGeneratorServerResult : IContentGenerator
 {
     private readonly GeneratedCodeHeaderGenerator codeHeaderGenerator;
     private readonly GeneratedCodeAttributeGenerator codeAttributeGenerator;
