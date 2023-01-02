@@ -22,10 +22,10 @@ public static class ContentGeneratorServerClientEnumerationParametersFactory
             enumerationValues);
     }
 
-    private static List<ContentGeneratorServerEnumerationParametersValue> GetContentGeneratorServerEnumerationParametersValues(
+    private static List<ContentGeneratorServerClientEnumerationParametersValue> GetContentGeneratorServerEnumerationParametersValues(
         IEnumerable<IOpenApiAny> apiSchemaEnums)
     {
-        var result = new List<ContentGeneratorServerEnumerationParametersValue>();
+        var result = new List<ContentGeneratorServerClientEnumerationParametersValue>();
 
         foreach (var item in apiSchemaEnums)
         {
@@ -40,12 +40,12 @@ public static class ContentGeneratorServerClientEnumerationParametersFactory
             switch (sa.Length)
             {
                 case 1:
-                    result.Add(new ContentGeneratorServerEnumerationParametersValue(
+                    result.Add(new ContentGeneratorServerClientEnumerationParametersValue(
                         Name: sa[0].Trim(),
                         Value: null));
                     break;
                 case 2:
-                    result.Add(new ContentGeneratorServerEnumerationParametersValue(
+                    result.Add(new ContentGeneratorServerClientEnumerationParametersValue(
                         Name: sa[0].Trim(),
                         Value: int.Parse(sa[1].Trim(), NumberStyles.Integer, GlobalizationConstants.EnglishCultureInfo)));
                     break;

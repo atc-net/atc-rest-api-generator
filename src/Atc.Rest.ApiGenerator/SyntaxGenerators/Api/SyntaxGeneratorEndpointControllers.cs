@@ -35,45 +35,6 @@ public class SyntaxGeneratorEndpointControllers
         return true;
     }
 
-    public string ToCodeAsString()
-    {
-        if (Code is null)
-        {
-            GenerateCode();
-        }
-
-        if (Code is null)
-        {
-            return $"Syntax generate problem for endpoints-controller for: {FocusOnSegmentName}";
-        }
-
-        return Code
-            .NormalizeWhitespace()
-            .ToFullString()
-            .EnsureEnvironmentNewLines()
-            .EnsureFileScopedNamespace();
-    }
-
-    public void ToFile()
-    {
-        var controllerName = FocusOnSegmentName.EnsureFirstCharacterToUpper() + "Controller";
-        var file = Helpers.DirectoryInfoHelper.GetCsFileNameForEndpoints(ApiProjectOptions.PathForEndpoints, controllerName);
-        ToFile(new FileInfo(file));
-    }
-
-    public void ToFile(
-        FileInfo file)
-    {
-        ArgumentNullException.ThrowIfNull(file);
-
-        var contentWriter = new ContentWriter(logger);
-        contentWriter.Write(
-            ApiProjectOptions.PathForSrcGenerate,
-            file,
-            ContentWriterArea.Src,
-            ToCodeAsString());
-    }
-
     public List<EndpointMethodMetadata> GetMetadataForMethods()
     {
         var list = new List<EndpointMethodMetadata>();

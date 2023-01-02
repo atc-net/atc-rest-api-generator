@@ -158,7 +158,6 @@ public class ContentGeneratorServerResult : IContentGenerator
                 {
                     case SchemaType.None:
                         sb.AppendLine(4, $"public static {resultName} Ok(string? message = null)");
-                        ////sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResult)}(HttpStatusCode.OK, message));");
                         sb.AppendLine(8, $"=> new {resultName}(new OkObjectResult(message));");
                         break;
                     case SchemaType.SimpleType:

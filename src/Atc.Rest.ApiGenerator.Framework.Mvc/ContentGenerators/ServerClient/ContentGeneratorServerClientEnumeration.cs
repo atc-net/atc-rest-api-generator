@@ -34,7 +34,7 @@ public class ContentGeneratorServerClientEnumeration : IContentGenerator
         }
 
         sb.AppendLine(codeAttributeGenerator.Generate());
-        if (parameters.UseFlagAttribute)
+        if (parameters.UseFlagsAttribute)
         {
             sb.AppendLine("[Flags]");
         }

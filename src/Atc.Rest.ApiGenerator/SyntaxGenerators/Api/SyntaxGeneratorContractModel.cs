@@ -53,65 +53,6 @@ public class SyntaxGeneratorContractModel
         return true;
     }
 
-    public string ToCodeAsString()
-    {
-        if (Code is null)
-        {
-            GenerateCode();
-        }
-
-        if (Code is null)
-        {
-            return $"Syntax generate problem for contract-model for schema: {ApiSchemaKey}";
-        }
-
-        return Code
-            .NormalizeWhitespace()
-            .ToFullString()
-            .EnsureEnvironmentNewLines()
-            .FormatAutoPropertiesOnOneLine()
-            .FormatPublicPrivateLines()
-            .FormatDoubleLines()
-            .EnsureFileScopedNamespace();
-    }
-
-    public void ToFile()
-    {
-        var area = FocusOnSegmentName.EnsureFirstCharacterToUpper();
-        var modelName = ApiSchemaKey.EnsureFirstCharacterToUpper();
-
-        if (IsForClient &&
-            modelName.EndsWith(NameConstants.Request, StringComparison.Ordinal))
-        {
-            var clientFile = Helpers.DirectoryInfoHelper.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, NameConstants.ClientRequestParameters, modelName);
-            ToFile(new FileInfo(clientFile));
-            return;
-        }
-
-        var file = IsEnum
-            ? Helpers.DirectoryInfoHelper.GetCsFileNameForContractEnumTypes(ApiProjectOptions.PathForContracts, modelName)
-            : IsSharedContract
-                ? Helpers.DirectoryInfoHelper.GetCsFileNameForContractShared(ApiProjectOptions.PathForContractsShared, modelName)
-                : UseOwnFolder
-                    ? Helpers.DirectoryInfoHelper.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, NameConstants.ContractModels, modelName)
-                    : Helpers.DirectoryInfoHelper.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, modelName);
-
-        ToFile(new FileInfo(file));
-    }
-
-    public void ToFile(
-        FileInfo file)
-    {
-        ArgumentNullException.ThrowIfNull(file);
-
-        var contentWriter = new ContentWriter(logger);
-        contentWriter.Write(
-            ApiProjectOptions.PathForSrcGenerate,
-            file,
-            ContentWriterArea.Src,
-            ToCodeAsString());
-    }
-
     public override string ToString()
         => $"{nameof(ApiSchemaKey)}: {ApiSchemaKey}, SegmentName: {FocusOnSegmentName}, IsShared: {IsSharedContract}, {nameof(IsEnum)}: {IsEnum}";
 }

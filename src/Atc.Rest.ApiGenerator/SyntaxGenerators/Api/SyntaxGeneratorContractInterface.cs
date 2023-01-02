@@ -43,46 +43,6 @@ public class SyntaxGeneratorContractInterface
         return true;
     }
 
-    public string ToCodeAsString()
-    {
-        if (Code is null)
-        {
-            GenerateCode();
-        }
-
-        if (Code is null)
-        {
-            return $"Syntax generate problem for contract-interface for apiOperation: {ApiOperation}";
-        }
-
-        return Code
-            .NormalizeWhitespace()
-            .ToFullString()
-            .EnsureEnvironmentNewLines()
-            .EnsureFileScopedNamespace();
-    }
-
-    public void ToFile()
-    {
-        var area = FocusOnSegmentName.EnsureFirstCharacterToUpper();
-        var interfaceName = "I" + ApiOperation.GetOperationName() + NameConstants.ContractHandler;
-        var file = Helpers.DirectoryInfoHelper.GetCsFileNameForContract(ApiProjectOptions.PathForContracts, area, NameConstants.ContractInterfaces, interfaceName);
-        ToFile(new FileInfo(file));
-    }
-
-    public void ToFile(
-        FileInfo file)
-    {
-        ArgumentNullException.ThrowIfNull(file);
-
-        var contentWriter = new ContentWriter(logger);
-        contentWriter.Write(
-            ApiProjectOptions.PathForSrcGenerate,
-            file,
-            ContentWriterArea.Src,
-            ToCodeAsString());
-    }
-
     public override string ToString()
         => $"OperationType: {ApiOperationType}, OperationName: {ApiOperation.GetOperationName()}, SegmentName: {FocusOnSegmentName}";
 }

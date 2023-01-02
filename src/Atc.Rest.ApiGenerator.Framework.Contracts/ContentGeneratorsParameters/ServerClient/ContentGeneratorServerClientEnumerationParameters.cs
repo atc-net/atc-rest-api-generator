@@ -4,9 +4,9 @@ public record ContentGeneratorServerClientEnumerationParameters(
     string Namespace,
     string EnumerationName,
     CodeDocumentationTags DocumentationTags,
-    bool UseFlagAttribute,
-    IList<ContentGeneratorServerEnumerationParametersValue> ValueParameters);
+    bool UseFlagsAttribute,
+    IList<ContentGeneratorServerClientEnumerationParametersValue> ValueParameters);
 
-public record ContentGeneratorServerEnumerationParametersValue(
+public record ContentGeneratorServerClientEnumerationParametersValue(
     string Name,
     int? Value);
