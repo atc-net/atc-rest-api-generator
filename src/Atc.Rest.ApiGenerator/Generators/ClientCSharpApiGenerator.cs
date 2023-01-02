@@ -42,7 +42,7 @@ public class ClientCSharpApiGenerator
         GenerateContracts(operationSchemaMappings);
         if (!projectOptions.ExcludeEndpointGeneration)
         {
-            GenerateEndpoints(operationSchemaMappings);
+            GenerateClientEndpoints(operationSchemaMappings);
         }
 
         GenerateSrcGlobalUsings();
@@ -293,13 +293,12 @@ public class ClientCSharpApiGenerator
             parameterContent);
     }
 
-    private void GenerateEndpoints(
+    private void GenerateClientEndpoints(
         IList<ApiOperation> operationSchemaMappings)
     {
         ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 
         var sgEndpointResults = new List<SyntaxGeneratorClientEndpointResult>();
-        var sgEndpoints = new List<SyntaxGeneratorClientEndpoint>();
 
         foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
         {
@@ -309,19 +308,11 @@ public class ClientCSharpApiGenerator
             var generatedEndpointResults = generatorEndpointResults.GenerateSyntaxTrees();
             sgEndpointResults.AddRange(generatedEndpointResults);
 
-            var generatorEndpoints = new SyntaxGeneratorClientEndpoints(logger, apiProjectOptions, operationSchemaMappings, basePathSegmentName);
-            var generatedEndpoints = generatorEndpoints.GenerateSyntaxTrees();
-            sgEndpoints.AddRange(generatedEndpoints);
-
             GenerateInterfaces(projectOptions.Document, apiGroupName);
+            GenerateEndpoints(projectOptions.Document, apiGroupName);
         }
 
         foreach (var sg in sgEndpointResults)
-        {
-            sg.ToFile();
-        }
-
-        foreach (var sg in sgEndpoints)
         {
             sg.ToFile();
         }
@@ -416,6 +407,57 @@ public class ClientCSharpApiGenerator
                     file,
                     ContentWriterArea.Src,
                     interfaceContent);
+            }
+        }
+    }
+
+    private void GenerateEndpoints(
+        OpenApiDocument document,
+        string apiGroupName)
+    {
+        var fullNamespace = string.IsNullOrEmpty(projectOptions.ClientFolderName)
+            ? $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Endpoints}"
+            : $"{projectOptions.ProjectName}.{projectOptions.ClientFolderName}.{ContentGeneratorConstants.Endpoints}";
+
+        foreach (var openApiPath in document.Paths)
+        {
+            if (!openApiPath.IsPathStartingSegmentName(apiGroupName))
+            {
+                continue;
+            }
+
+            foreach (var openApiOperation in openApiPath.Value.Operations)
+            {
+                // Generate
+                var endpointParameters = ContentGeneratorClientEndpointParametersFactory.Create(
+                    fullNamespace,
+                    openApiPath.Value,
+                    openApiOperation.Key,
+                    openApiOperation.Value,
+                    $"{apiProjectOptions.ProjectPrefixName}-ApiClient",
+                    $"{apiProjectOptions.RouteBase}{openApiPath.Key}");
+
+                var contentGeneratorEndpoint = new ContentGeneratorClientEndpoint(
+                    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                    new CodeDocumentationTagsGenerator(),
+                    endpointParameters);
+
+                var endpointContent = contentGeneratorEndpoint.Generate();
+
+                // Write
+                var file = new FileInfo(
+                    Helpers.DirectoryInfoHelper.GetCsFileNameForContract(
+                        apiProjectOptions.PathForEndpoints,
+                        apiGroupName,
+                        endpointParameters.EndpointName));
+
+                var contentWriter = new ContentWriter(logger);
+                contentWriter.Write(
+                    projectOptions.PathForSrcGenerate,
+                    file,
+                    ContentWriterArea.Src,
+                    endpointContent);
             }
         }
     }
