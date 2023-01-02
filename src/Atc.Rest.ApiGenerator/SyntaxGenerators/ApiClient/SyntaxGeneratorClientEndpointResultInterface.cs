@@ -48,8 +48,7 @@ public class SyntaxGeneratorClientEndpointResultInterface : SyntaxGeneratorClien
         // Create interface
         var interfaceDeclaration = SyntaxInterfaceDeclarationFactory.Create(InterfaceTypeName)
             .AddBaseListTypes(SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseTypeName(nameof(IEndpointResponse))))
-            .AddGeneratedCodeAttribute(ApiProjectOptions.ApiGeneratorName, ApiProjectOptions.ApiGeneratorVersion.ToString())
-            .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForResults(ApiOperation, FocusOnSegmentName));
+            .AddGeneratedCodeAttribute(ApiProjectOptions.ApiGeneratorName, ApiProjectOptions.ApiGeneratorVersion.ToString());
 
         interfaceDeclaration = interfaceDeclaration.AddMembers(CreatePropertiesForIsStatusCode());
         interfaceDeclaration = interfaceDeclaration.AddMembers(CreatePropertiesForStatusCodeContent());

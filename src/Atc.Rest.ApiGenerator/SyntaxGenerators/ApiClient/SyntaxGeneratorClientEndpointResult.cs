@@ -51,8 +51,7 @@ public class SyntaxGeneratorClientEndpointResult : SyntaxGeneratorClientEndpoint
 
         // Create class
         var classDeclaration = SyntaxClassDeclarationFactory.CreateWithInheritClassType(EndpointTypeName, "EndpointResponse")
-            .AddGeneratedCodeAttribute(ApiProjectOptions.ApiGeneratorName, ApiProjectOptions.ApiGeneratorVersion.ToString())
-            .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForResults(ApiOperation, FocusOnSegmentName));
+            .AddGeneratedCodeAttribute(ApiProjectOptions.ApiGeneratorName, ApiProjectOptions.ApiGeneratorVersion.ToString());
 
         classDeclaration = classDeclaration.AddMembers(CreateConstructor());
         classDeclaration = classDeclaration.AddMembers(CreatePropertiesForIsStatusCode());

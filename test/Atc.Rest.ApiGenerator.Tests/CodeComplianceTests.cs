@@ -25,7 +25,6 @@ public class CodeComplianceTests
         typeof(ApiGeneratorHelper),
         typeof(NugetPackageReferenceHelper),
         typeof(SyntaxGeneratorContractInterface),
-        typeof(SyntaxGeneratorContractInterfaces),
         typeof(SyntaxGeneratorContractModel),
         typeof(SyntaxGeneratorContractModels),
         typeof(SyntaxGeneratorContractParameter),

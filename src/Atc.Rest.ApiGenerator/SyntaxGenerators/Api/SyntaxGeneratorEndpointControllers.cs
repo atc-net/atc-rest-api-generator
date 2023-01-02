@@ -4,7 +4,7 @@
 // ReSharper disable UseDeconstruction
 namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
 
-public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointControllers
+public class SyntaxGeneratorEndpointControllers
 {
     private readonly ILogger logger;
 
@@ -30,64 +30,7 @@ public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointContro
 
     public bool GenerateCode()
     {
-        var controllerTypeName = FocusOnSegmentName.EnsureFirstCharacterToUpper() + "Controller";
-
-        // Create compilationUnit
         var compilationUnit = SyntaxFactory.CompilationUnit();
-
-        // Create a namespace
-        var @namespace = SyntaxProjectFactory.CreateNamespace(
-            ApiProjectOptions,
-            NameConstants.Endpoints);
-
-        // Create class
-        var classDeclaration = SyntaxClassDeclarationFactory.Create(controllerTypeName);
-        classDeclaration =
-            classDeclaration.AddAttributeLists(
-                SyntaxAttributeListFactory.Create(nameof(AuthorizeAttribute)));
-
-        classDeclaration = classDeclaration.AddAttributeLists(
-                SyntaxAttributeListFactory.Create(nameof(ApiControllerAttribute)),
-                SyntaxAttributeListFactory.CreateWithOneItemWithOneArgument(nameof(RouteAttribute), $"{ApiProjectOptions.RouteBase}/{GetRouteSegment()}"))
-            .AddBaseListTypes(SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseTypeName(nameof(ControllerBase))))
-            .AddGeneratedCodeAttribute(ApiProjectOptions.ApiGeneratorName, ApiProjectOptions.ApiGeneratorVersion.ToString())
-            .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForEndpoints(FocusOnSegmentName));
-
-        // Create Methods
-        var usedApiOperations = new List<OpenApiOperation>();
-        foreach (var (key, value) in ApiProjectOptions.Document.GetPathsByBasePathSegmentName(FocusOnSegmentName))
-        {
-            var hasRouteParameters = value.HasParameters();
-            foreach (var apiOperation in value.Operations)
-            {
-                var methodDeclaration = CreateMembersForEndpoints(apiOperation, key, FocusOnSegmentName, hasRouteParameters)
-                    .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForEndpointMethods(apiOperation, FocusOnSegmentName));
-                classDeclaration = classDeclaration.AddMembers(methodDeclaration);
-
-                usedApiOperations.Add(apiOperation.Value);
-            }
-        }
-
-        // Create private part for methods
-        foreach (var (_, value) in ApiProjectOptions.Document.GetPathsByBasePathSegmentName(FocusOnSegmentName))
-        {
-            var hasRouteParameters = value.HasParameters();
-            foreach (var apiOperation in value.Operations)
-            {
-                var methodDeclaration = CreateMembersForEndpointsPrivateHelper(apiOperation, hasRouteParameters);
-                classDeclaration = classDeclaration.AddMembers(methodDeclaration);
-
-                usedApiOperations.Add(apiOperation.Value);
-            }
-        }
-
-        // Add the class to the namespace.
-        @namespace = @namespace.AddMembers(classDeclaration);
-
-        // Add namespace to compilationUnit
-        compilationUnit = compilationUnit.AddMembers(@namespace);
-
-        // Set code property
         Code = compilationUnit;
         return true;
     }
@@ -233,91 +176,6 @@ public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointContro
         return list;
     }
 
-    private MethodDeclarationSyntax CreateMembersForEndpoints(
-        KeyValuePair<OperationType, OpenApiOperation> apiOperation,
-        string urlPath,
-        string area,
-        bool hasRouteParameters)
-    {
-        var operationName = apiOperation.Value.GetOperationName();
-        var interfaceName = "I" + operationName + NameConstants.ContractHandler;
-        var methodName = operationName + "Async";
-        var helperMethodName = $"Invoke{operationName}Async";
-        var parameterTypeName = operationName + NameConstants.ContractParameters;
-
-        // Create method # use CreateParameterList & CreateCodeBlockReturnStatement
-        var methodDeclaration = SyntaxFactory.MethodDeclaration(
-                SyntaxFactory.GenericName(SyntaxFactory.Identifier(nameof(Task)))
-                    .WithTypeArgumentList(SyntaxTypeArgumentListFactory.CreateWithOneItem(nameof(ActionResult))),
-                SyntaxFactory.Identifier(methodName))
-            .AddModifiers(SyntaxTokenFactory.PublicKeyword())
-            .WithParameterList(CreateParameterList(apiOperation.Value.HasParametersOrRequestBody() || hasRouteParameters, parameterTypeName, interfaceName, true))
-            .WithBody(
-                SyntaxFactory.Block(
-                    SyntaxIfStatementFactory.CreateParameterArgumentNullCheck("handler", false),
-                    CreateCodeBlockReturnStatement(helperMethodName, apiOperation.Value.HasParametersOrRequestBody() || hasRouteParameters)));
-
-        // Create and add Http-method-attribute
-        var httpAttributeRoutePart = GetHttpAttributeRoutePart(urlPath);
-        methodDeclaration = string.IsNullOrEmpty(httpAttributeRoutePart)
-            ? methodDeclaration.AddAttributeLists(
-                SyntaxAttributeListFactory.Create($"Http{apiOperation.Key}"))
-            : methodDeclaration.AddAttributeLists(
-                SyntaxAttributeListFactory.CreateWithOneItemWithOneArgument(
-                    $"Http{apiOperation.Key}",
-                    httpAttributeRoutePart));
-
-        // Create and add RequestFormLimits-attribute
-        if (apiOperation.Value.HasRequestBodyWithAnythingAsFormatTypeBinary())
-        {
-            methodDeclaration = methodDeclaration.AddAttributeLists(
-                SyntaxAttributeListFactory.Create(
-                    "RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue)"));
-        }
-
-        // Create and add producesResponseTypes-attributes
-        var producesResponseAttributeParts = apiOperation.Value.Responses.GetProducesResponseAttributeParts(
-            OperationSchemaMappings,
-            area,
-            ApiProjectOptions.ProjectName,
-            ApiProjectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
-            apiOperation.Value.HasParametersOrRequestBody(),
-            includeIfNotDefinedAuthorization: true,
-            includeIfNotDefinedInternalServerError: false);
-
-        return producesResponseAttributeParts
-            .Aggregate(
-                methodDeclaration,
-                (current, producesResponseAttributePart) => current.AddAttributeLists(
-                    SyntaxAttributeListFactory.Create(producesResponseAttributePart)));
-    }
-
-    private static MethodDeclarationSyntax CreateMembersForEndpointsPrivateHelper(
-        KeyValuePair<OperationType, OpenApiOperation> apiOperation,
-        bool hasRouteParameters)
-    {
-        var operationName = apiOperation.Value.GetOperationName();
-        var interfaceName = "I" + operationName + NameConstants.ContractHandler;
-        var methodName = $"Invoke{operationName}Async";
-        var parameterTypeName = operationName + NameConstants.ContractParameters;
-        var hasParametersOrRequestBody = apiOperation.Value.HasParametersOrRequestBody() || hasRouteParameters;
-
-        // Create method # use CreateParameterList & CreateCodeBlockReturnStatement
-        var methodDeclaration = SyntaxFactory.MethodDeclaration(
-                SyntaxFactory.GenericName(SyntaxFactory.Identifier(nameof(Task)))
-                    .WithTypeArgumentList(SyntaxTypeArgumentListFactory.CreateWithOneItem(nameof(ActionResult))),
-                SyntaxFactory.Identifier(methodName))
-            .AddModifiers(SyntaxTokenFactory.PrivateKeyword())
-            .AddModifiers(SyntaxTokenFactory.StaticKeyword())
-            .AddModifiers(SyntaxTokenFactory.AsyncKeyword())
-            .WithParameterList(CreateParameterList(hasParametersOrRequestBody, parameterTypeName, interfaceName, false))
-            .WithBody(
-                SyntaxFactory.Block(
-                    CreateCodeBlockReturnStatementForHelper(hasParametersOrRequestBody)));
-
-        return methodDeclaration;
-    }
-
     private static string GetHttpAttributeRoutePart(
         string urlPath)
     {
@@ -339,107 +197,5 @@ public class SyntaxGeneratorEndpointControllers : ISyntaxGeneratorEndpointContro
         }
 
         return sb.ToString();
-    }
-
-    private static ParameterListSyntax CreateParameterList(
-        bool hasParametersOrRequestBody,
-        string parameterTypeName,
-        string interfaceName,
-        bool useFromServicesAttributeOnInterface)
-    {
-        ParameterListSyntax parameterList;
-        if (hasParametersOrRequestBody)
-        {
-            if (useFromServicesAttributeOnInterface)
-            {
-                parameterList = SyntaxFactory.ParameterList(
-                    SyntaxFactory.SeparatedList<ParameterSyntax>(
-                        new SyntaxNodeOrToken[]
-                        {
-                            SyntaxParameterFactory.Create(parameterTypeName, "parameters"),
-                            SyntaxTokenFactory.Comma(),
-                            SyntaxParameterFactory.CreateWithAttribute(nameof(FromServicesAttribute), interfaceName, "handler"),
-                            SyntaxTokenFactory.Comma(),
-                            SyntaxParameterFactory.Create(nameof(CancellationToken), nameof(CancellationToken).EnsureFirstCharacterToLower()),
-                        }));
-            }
-            else
-            {
-                parameterList = SyntaxFactory.ParameterList(
-                    SyntaxFactory.SeparatedList<ParameterSyntax>(
-                        new SyntaxNodeOrToken[]
-                        {
-                            SyntaxParameterFactory.Create(parameterTypeName, "parameters"),
-                            SyntaxTokenFactory.Comma(),
-                            SyntaxParameterFactory.Create(interfaceName, "handler"),
-                            SyntaxTokenFactory.Comma(),
-                            SyntaxParameterFactory.Create(nameof(CancellationToken), nameof(CancellationToken).EnsureFirstCharacterToLower()),
-                        }));
-            }
-        }
-        else
-        {
-            parameterList = SyntaxFactory.ParameterList(
-                SyntaxFactory.SeparatedList<ParameterSyntax>(
-                    new SyntaxNodeOrToken[]
-                    {
-                        SyntaxParameterFactory.CreateWithAttribute(nameof(FromServicesAttribute), interfaceName, "handler"),
-                        SyntaxTokenFactory.Comma(),
-                        SyntaxParameterFactory.Create(nameof(CancellationToken), nameof(CancellationToken).EnsureFirstCharacterToLower()),
-                    }));
-        }
-
-        return parameterList;
-    }
-
-    private static ReturnStatementSyntax CreateCodeBlockReturnStatement(
-        string helperMethodName,
-        bool hasParameters)
-    {
-        var arguments = hasParameters
-            ? new SyntaxNodeOrToken[]
-            {
-                SyntaxArgumentFactory.Create("parameters"),
-                SyntaxTokenFactory.Comma(),
-                SyntaxArgumentFactory.Create("handler"),
-                SyntaxTokenFactory.Comma(),
-                SyntaxArgumentFactory.Create(nameof(CancellationToken).EnsureFirstCharacterToLower()),
-            }
-            : new SyntaxNodeOrToken[]
-            {
-                SyntaxArgumentFactory.Create("handler"),
-                SyntaxTokenFactory.Comma(),
-                SyntaxArgumentFactory.Create(nameof(CancellationToken).EnsureFirstCharacterToLower()),
-            };
-
-        return SyntaxFactory.ReturnStatement(
-            SyntaxFactory.InvocationExpression(SyntaxFactory.IdentifierName(helperMethodName))
-                .WithArgumentList(
-                    SyntaxFactory.ArgumentList(
-                        SyntaxFactory.SeparatedList<ArgumentSyntax>(arguments))));
-    }
-
-    private static ReturnStatementSyntax CreateCodeBlockReturnStatementForHelper(
-        bool hasParameters)
-    {
-        var arguments = hasParameters
-            ? new SyntaxNodeOrToken[]
-            {
-                SyntaxArgumentFactory.Create("parameters"),
-                SyntaxTokenFactory.Comma(),
-                SyntaxArgumentFactory.Create(nameof(CancellationToken).EnsureFirstCharacterToLower()),
-            }
-            : new SyntaxNodeOrToken[]
-            {
-                SyntaxArgumentFactory.Create(nameof(CancellationToken).EnsureFirstCharacterToLower()),
-            };
-
-        return SyntaxFactory.ReturnStatement(
-            SyntaxFactory.AwaitExpression(
-                SyntaxFactory.InvocationExpression(
-                        SyntaxMemberAccessExpressionFactory.Create("ExecuteAsync", "handler"))
-                    .WithArgumentList(
-                        SyntaxFactory.ArgumentList(
-                            SyntaxFactory.SeparatedList<ArgumentSyntax>(arguments)))));
     }
 }

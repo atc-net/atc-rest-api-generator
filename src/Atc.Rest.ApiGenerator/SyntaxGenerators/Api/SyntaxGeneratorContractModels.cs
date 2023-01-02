@@ -3,7 +3,7 @@
 // ReSharper disable LoopCanBeConvertedToQuery
 namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
 
-public class SyntaxGeneratorContractModels : ISyntaxGeneratorContractModels
+public class SyntaxGeneratorContractModels
 {
     private readonly ILogger logger;
 

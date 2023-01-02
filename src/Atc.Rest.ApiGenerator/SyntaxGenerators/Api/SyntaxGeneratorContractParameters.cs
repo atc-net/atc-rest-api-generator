@@ -2,7 +2,7 @@
 // ReSharper disable UseDeconstruction
 namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
 
-public class SyntaxGeneratorContractParameters : ISyntaxGeneratorContractParameters
+public class SyntaxGeneratorContractParameters
 {
     private readonly ILogger logger;
 

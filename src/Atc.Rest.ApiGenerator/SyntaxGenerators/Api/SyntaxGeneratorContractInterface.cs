@@ -1,6 +1,6 @@
 namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
 
-public class SyntaxGeneratorContractInterface : ISyntaxOperationCodeGenerator
+public class SyntaxGeneratorContractInterface
 {
     private readonly ILogger logger;
 
@@ -38,38 +38,7 @@ public class SyntaxGeneratorContractInterface : ISyntaxOperationCodeGenerator
 
     public bool GenerateCode()
     {
-        var interfaceTypeName = "I" + ApiOperation.GetOperationName() + NameConstants.ContractHandler;
-        var parameterTypeName = ApiOperation.GetOperationName() + NameConstants.ContractParameters;
-        var resultTypeName = ApiOperation.GetOperationName() + NameConstants.ContractResult;
-
-        // Create compilationUnit
         var compilationUnit = SyntaxFactory.CompilationUnit();
-
-        // Create a namespace
-        var @namespace = SyntaxProjectFactory.CreateNamespace(
-            ApiProjectOptions,
-            NameConstants.Contracts,
-            FocusOnSegmentName);
-
-        // Create interface
-        var interfaceDeclaration = SyntaxInterfaceDeclarationFactory.Create(interfaceTypeName)
-            .AddGeneratedCodeAttribute(ApiProjectOptions.ApiGeneratorName, ApiProjectOptions.ApiGeneratorVersion.ToString())
-            .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForInterface(ApiOperation, FocusOnSegmentName));
-
-        // Create interface-method
-        var methodDeclaration = SyntaxMethodDeclarationFactory.CreateInterfaceMethod(parameterTypeName, resultTypeName, HasParametersOrRequestBody)
-            .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForInterfaceMethod(GlobalPathParameters.Any() || ApiOperation.HasParametersOrRequestBody()));
-
-        // Add interface-method to interface
-        interfaceDeclaration = interfaceDeclaration.AddMembers(methodDeclaration);
-
-        // Add the interface to the namespace.
-        @namespace = @namespace.AddMembers(interfaceDeclaration);
-
-        // Add namespace to compilationUnit
-        compilationUnit = compilationUnit.AddMembers(@namespace);
-
-        // Set code property
         Code = compilationUnit;
         return true;
     }

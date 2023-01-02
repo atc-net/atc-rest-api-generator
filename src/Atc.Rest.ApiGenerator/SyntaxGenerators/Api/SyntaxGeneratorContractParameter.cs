@@ -1,7 +1,7 @@
 // ReSharper disable LoopCanBeConvertedToQuery
 namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
 
-public class SyntaxGeneratorContractParameter : ISyntaxOperationCodeGenerator
+public class SyntaxGeneratorContractParameter
 {
     private readonly ILogger logger;
 
@@ -42,150 +42,7 @@ public class SyntaxGeneratorContractParameter : ISyntaxOperationCodeGenerator
 
     public bool GenerateCode()
     {
-        var parameterTypeName = ApiOperation.GetOperationName() + NameConstants.ContractParameters;
-
-        // Create compilationUnit
         var compilationUnit = SyntaxFactory.CompilationUnit();
-
-        // Create a namespace
-        var @namespace = SyntaxProjectFactory.CreateNamespace(
-            ApiProjectOptions,
-            NameConstants.Contracts,
-            FocusOnSegmentName);
-
-        // Create class
-        var classDeclaration = SyntaxClassDeclarationFactory.Create(parameterTypeName)
-            .AddGeneratedCodeAttribute(ApiProjectOptions.ApiGeneratorName, ApiProjectOptions.ApiGeneratorVersion.ToString())
-            .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForParameters(ApiOperation, FocusOnSegmentName));
-
-        // Add properties to the class
-        if (GlobalPathParameters.Any())
-        {
-            foreach (var parameter in GlobalPathParameters)
-            {
-                var propertyDeclaration = SyntaxPropertyDeclarationFactory.CreateAuto(
-                        parameter,
-                        ApiProjectOptions.UseNullableReferenceTypes,
-                        ApiProjectOptions.IsForClient)
-                    .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForParameter(parameter));
-                classDeclaration = classDeclaration.AddMembers(propertyDeclaration);
-            }
-        }
-
-        if (ApiOperation.Parameters is not null)
-        {
-            foreach (var parameter in ApiOperation.Parameters)
-            {
-                var propertyDeclaration = SyntaxPropertyDeclarationFactory.CreateAuto(
-                        parameter,
-                        ApiProjectOptions.UseNullableReferenceTypes,
-                        ApiProjectOptions.IsForClient)
-                    .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForParameter(parameter));
-                classDeclaration = classDeclaration.AddMembers(propertyDeclaration);
-            }
-        }
-
-        var requestSchema = ApiOperation.RequestBody?.Content?.GetSchemaByFirstMediaType();
-
-        if (ApiOperation.RequestBody is not null &&
-            requestSchema is not null)
-        {
-            var isFormatTypeOfBinary = requestSchema.IsFormatTypeBinary();
-            var isItemsOfFormatTypeBinary = requestSchema.HasItemsWithFormatTypeBinary();
-
-            var requestBodyType = "string?";
-            if (requestSchema.Reference is not null)
-            {
-                requestBodyType = requestSchema.Reference.Id.EnsureFirstCharacterToUpper();
-            }
-            else if (isFormatTypeOfBinary)
-            {
-                requestBodyType = "IFormFile";
-            }
-            else if (isItemsOfFormatTypeBinary)
-            {
-                requestBodyType = "IFormFile";
-            }
-            else if (requestSchema.Items is not null)
-            {
-                requestBodyType = requestSchema.Items.Reference.Id.EnsureFirstCharacterToUpper();
-            }
-
-            PropertyDeclarationSyntax propertyDeclaration;
-            if (requestSchema.IsTypeArray())
-            {
-                if (ApiProjectOptions.IsForClient)
-                {
-                    propertyDeclaration = SyntaxPropertyDeclarationFactory.CreateListAuto(requestBodyType, NameConstants.Request)
-                        .AddValidationAttribute(new RequiredAttribute())
-                        .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForParameter(ApiOperation.RequestBody));
-                }
-                else
-                {
-                    propertyDeclaration = SyntaxPropertyDeclarationFactory.CreateListAuto(requestBodyType, NameConstants.Request);
-
-                    propertyDeclaration = requestSchema.HasItemsWithFormatTypeBinary()
-                        ? propertyDeclaration.AddFromFormAttribute()
-                        : propertyDeclaration.AddFromBodyAttribute();
-
-                    propertyDeclaration = propertyDeclaration
-                        .AddValidationAttribute(new RequiredAttribute())
-                        .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForParameter(ApiOperation.RequestBody));
-                }
-            }
-            else
-            {
-                if (ApiProjectOptions.IsForClient)
-                {
-                    propertyDeclaration = SyntaxPropertyDeclarationFactory.CreateAuto(
-                            parameterLocation: null,
-                            isNullable: false,
-                            isRequired: true,
-                            requestBodyType,
-                            NameConstants.Request,
-                            ApiProjectOptions.UseNullableReferenceTypes,
-                            initializer: null)
-                        .AddValidationAttribute(new RequiredAttribute())
-                        .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForParameter(ApiOperation.RequestBody));
-                }
-                else
-                {
-                    propertyDeclaration = SyntaxPropertyDeclarationFactory.CreateAuto(
-                        parameterLocation: null,
-                        isNullable: false,
-                        isRequired: true,
-                        requestBodyType,
-                        NameConstants.Request,
-                        ApiProjectOptions.UseNullableReferenceTypes,
-                        initializer: null);
-
-                    propertyDeclaration = requestSchema.HasAnyPropertiesWithFormatTypeBinary() || requestSchema.HasAnyPropertiesAsArrayWithFormatTypeBinary()
-                        ? propertyDeclaration.AddFromFormAttribute()
-                        : propertyDeclaration.AddFromBodyAttribute();
-
-                    propertyDeclaration = propertyDeclaration
-                        .AddValidationAttribute(new RequiredAttribute())
-                        .WithLeadingTrivia(SyntaxDocumentationFactory.CreateForParameter(ApiOperation.RequestBody));
-                }
-            }
-
-            classDeclaration = classDeclaration.AddMembers(propertyDeclaration);
-        }
-
-        var methodDeclaration = SyntaxMethodDeclarationFactory.CreateToStringMethod(GlobalPathParameters, ApiOperation.Parameters, ApiOperation.RequestBody);
-        if (methodDeclaration is not null)
-        {
-            methodDeclaration = methodDeclaration.WithLeadingTrivia(SyntaxDocumentationFactory.CreateForOverrideToString());
-            classDeclaration = classDeclaration.AddMembers(methodDeclaration);
-        }
-
-        // Add the class to the namespace.
-        @namespace = @namespace.AddMembers(classDeclaration);
-
-        // Add namespace to compilationUnit
-        compilationUnit = compilationUnit.AddMembers(@namespace);
-
-        // Set code property
         Code = compilationUnit;
         return true;
     }
