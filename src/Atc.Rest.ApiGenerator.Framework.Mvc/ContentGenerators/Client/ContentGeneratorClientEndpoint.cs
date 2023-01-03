@@ -35,7 +35,6 @@ public class ContentGeneratorClientEndpoint : IContentGenerator
         sb.AppendLine(codeAttributeGenerator.Generate());
         sb.AppendLine($"public class {parameters.EndpointName} : {parameters.InterfaceName}");
         sb.AppendLine("{");
-
         sb.AppendLine(4, "private readonly IHttpClientFactory factory;");
         sb.AppendLine(4, "private readonly IHttpMessageFactory httpMessageFactory;");
         sb.AppendLine();
@@ -47,7 +46,6 @@ public class ContentGeneratorClientEndpoint : IContentGenerator
         sb.AppendLine(8, "this.httpMessageFactory = httpMessageFactory;");
         sb.AppendLine(4, "}");
         sb.AppendLine();
-
         sb.AppendLine(4, $"public async Task<{parameters.ResultName}> ExecuteAsync(");
         if (parameters.ParameterName is not null)
         {
