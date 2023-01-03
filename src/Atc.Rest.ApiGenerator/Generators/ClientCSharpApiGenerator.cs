@@ -309,7 +309,11 @@ public class ClientCSharpApiGenerator
             sgEndpointResults.AddRange(generatedEndpointResults);
 
             GenerateInterfaces(projectOptions.Document, apiGroupName);
-            GenerateEndpoints(projectOptions.Document, apiGroupName);
+            GenerateEndpoints(
+                projectOptions.Document,
+                apiGroupName,
+                apiProjectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
+                apiProjectOptions.ProjectName);
         }
 
         foreach (var sg in sgEndpointResults)
@@ -413,7 +417,9 @@ public class ClientCSharpApiGenerator
 
     private void GenerateEndpoints(
         OpenApiDocument document,
-        string apiGroupName)
+        string apiGroupName,
+        bool useProblemDetailsAsDefaultResponseBody,
+        string projectName)
     {
         var fullNamespace = string.IsNullOrEmpty(projectOptions.ClientFolderName)
             ? $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Endpoints}"
@@ -430,6 +436,9 @@ public class ClientCSharpApiGenerator
             {
                 // Generate
                 var endpointParameters = ContentGeneratorClientEndpointParametersFactory.Create(
+                    useProblemDetailsAsDefaultResponseBody,
+                    projectName,
+                    apiGroupName,
                     fullNamespace,
                     openApiPath.Value,
                     openApiOperation.Key,

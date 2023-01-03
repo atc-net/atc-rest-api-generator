@@ -3,6 +3,9 @@ namespace Atc.Rest.ApiGenerator.Framework.Factories.Parameters.Client;
 public static class ContentGeneratorClientEndpointParametersFactory
 {
     public static ContentGeneratorClientEndpointParameters Create(
+        bool useProblemDetailsAsDefaultResponseBody,
+        string projectName,
+        string apiGroupName,
         string @namespace,
         OpenApiPathItem openApiPath,
         OperationType httpMethod,
@@ -20,6 +23,15 @@ public static class ContentGeneratorClientEndpointParametersFactory
         AppendParametersFromBody(parameters, openApiOperation.RequestBody);
 
         var operationName = openApiOperation.GetOperationName();
+        var modelSchema = openApiOperation.Responses.GetSchemaForStatusCode(HttpStatusCode.OK);
+        var successResponseName = GetSuccessResponseName(projectName, apiGroupName, modelSchema);
+        var useListForDataType = modelSchema?.IsTypeArray() ?? false;
+
+        var errorResponses = GetErrorResponses(
+            useProblemDetailsAsDefaultResponseBody,
+            openApiOperation,
+            parameters.Any());
+
         if (openApiPath.HasParameters() ||
             openApiOperation.HasParametersOrRequestBody())
         {
@@ -34,6 +46,9 @@ public static class ContentGeneratorClientEndpointParametersFactory
                 InterfaceName: $"I{operationName}{ContentGeneratorConstants.Endpoint}",
                 ResultName: $"{operationName}{ContentGeneratorConstants.EndpointResult}",
                 ParameterName: $"{operationName}{ContentGeneratorConstants.Parameters}",
+                SuccessResponseName: successResponseName,
+                UseListForModel: useListForDataType,
+                ErrorResponses: errorResponses,
                 parameters);
         }
 
@@ -48,6 +63,9 @@ public static class ContentGeneratorClientEndpointParametersFactory
             InterfaceName: $"I{operationName}{ContentGeneratorConstants.Endpoint}",
             ResultName: $"{operationName}{ContentGeneratorConstants.EndpointResult}",
             ParameterName: null,
+            SuccessResponseName: successResponseName,
+            UseListForModel: useListForDataType,
+            ErrorResponses: errorResponses,
             Parameters: null);
     }
 
@@ -57,30 +75,12 @@ public static class ContentGeneratorClientEndpointParametersFactory
     {
         foreach (var openApiParameter in openApiParameters)
         {
-            var useListForDataType = openApiParameter.Schema.IsTypeArray();
-
-            var dataType = useListForDataType
-                ? openApiParameter.Schema.Items.GetDataType()
-                : openApiParameter.Schema.GetDataType();
-
-            var isSimpleType = useListForDataType
-                ? openApiParameter.Schema.Items.IsSimpleDataType() || openApiParameter.Schema.Items.IsSchemaEnumOrPropertyEnum() || openApiParameter.Schema.Items.IsFormatTypeBinary()
-                : openApiParameter.Schema.IsSimpleDataType() || openApiParameter.Schema.IsSchemaEnumOrPropertyEnum() || openApiParameter.Schema.IsFormatTypeBinary();
-
             if (parameters.FirstOrDefault(x => x.Name == openApiParameter.Name) is null)
             {
                 parameters.Add(new ContentGeneratorClientEndpointParametersParameters(
                     openApiParameter.Name,
                     openApiParameter.Name.EnsureFirstCharacterToUpper(),
-                    openApiParameter.ExtractDocumentationTags(),
-                    ConvertToParameterLocationType(openApiParameter.In),
-                    dataType,
-                    isSimpleType,
-                    useListForDataType,
-                    GetIsNullable(openApiParameter, useListForDataType),
-                    openApiParameter.Required,
-                    GetAdditionalValidationAttributes(openApiParameter),
-                    openApiParameter.Schema.GetDefaultValueAsString()));
+                    ConvertToParameterLocationType(openApiParameter.In)));
             }
         }
     }
@@ -96,54 +96,10 @@ public static class ContentGeneratorClientEndpointParametersFactory
             return;
         }
 
-        var isFormatTypeOfBinary = requestSchema.IsFormatTypeBinary();
-        var isItemsOfFormatTypeBinary = requestSchema.HasItemsWithFormatTypeBinary();
-
-        var requestBodyType = "string?";
-        if (requestSchema.Reference is not null)
-        {
-            requestBodyType = requestSchema.Reference.Id.EnsureFirstCharacterToUpper();
-        }
-        else if (isFormatTypeOfBinary)
-        {
-            requestBodyType = "IFormFile";
-        }
-        else if (isItemsOfFormatTypeBinary)
-        {
-            requestBodyType = "IFormFile";
-        }
-        else if (requestSchema.Items is not null)
-        {
-            requestBodyType = requestSchema.Items.Reference.Id.EnsureFirstCharacterToUpper();
-        }
-
         parameters.Add(new ContentGeneratorClientEndpointParametersParameters(
             string.Empty,
             ContentGeneratorConstants.Request,
-            requestSchema.ExtractDocumentationTags(),
-            requestSchema.GetParameterLocationType(),
-            requestBodyType,
-            IsSimpleType: false,
-            UseListForDataType: requestSchema.IsTypeArray(),
-            IsNullable: false,
-            IsRequired: true,
-            AdditionalValidationAttributes: new List<ValidationAttribute>(),
-            DefaultValueInitializer: null));
-    }
-
-    private static bool GetIsNullable(
-        OpenApiParameter openApiParameter,
-        bool useListForDataType)
-    {
-        var isNullable = openApiParameter.Schema.Nullable;
-        isNullable = isNullable switch
-        {
-            true when useListForDataType => false,
-            false when openApiParameter.Schema.IsSchemaEnumOrPropertyEnum() => true,
-            _ => isNullable,
-        };
-
-        return isNullable;
+            requestSchema.GetParameterLocationType()));
     }
 
     private static ParameterLocationType ConvertToParameterLocationType(
@@ -158,10 +114,92 @@ public static class ContentGeneratorClientEndpointParametersFactory
             _ => throw new SwitchCaseDefaultException(openApiParameterLocation),
         };
 
-    private static IList<ValidationAttribute> GetAdditionalValidationAttributes(
-        OpenApiParameter openApiParameter)
+    private static string GetSuccessResponseName(
+        string projectName,
+        string apiGroupName,
+        OpenApiSchema? modelSchema)
     {
-        var validationAttributeExtractor = new ValidationAttributeExtractor();
-        return validationAttributeExtractor.Extract(openApiParameter.Schema);
+        var modelName = "string";
+        if (modelSchema is null)
+        {
+            return modelName;
+        }
+
+        var tmpModelName = modelSchema.GetModelName();
+        if (string.IsNullOrEmpty(tmpModelName))
+        {
+            modelName = modelSchema.GetDataType();
+        }
+        else
+        {
+            modelName = OpenApiDocumentSchemaModelNameResolver.EnsureModelNameWithNamespaceIfNeeded(
+                projectName,
+                apiGroupName,
+                tmpModelName,
+                isShared: false,
+                isClient: true);
+        }
+
+        return modelName;
+    }
+
+    private static List<ContentGeneratorClientEndpointErrorResponsesParameters> GetErrorResponses(
+        bool useProblemDetailsAsDefaultResponseBody,
+        OpenApiOperation openApiOperation,
+        bool hasParameters)
+    {
+        var httpStatusCodes = openApiOperation.Responses
+            .GetHttpStatusCodes()
+            .Where(x => x.IsClientOrServerError())
+            .ToList();
+
+        if (hasParameters &&
+            !httpStatusCodes.Contains(HttpStatusCode.BadRequest))
+        {
+            httpStatusCodes.Add(HttpStatusCode.BadRequest);
+        }
+
+        if (!httpStatusCodes.Contains(HttpStatusCode.Unauthorized))
+        {
+            httpStatusCodes.Add(HttpStatusCode.Unauthorized);
+        }
+
+        if (!httpStatusCodes.Contains(HttpStatusCode.Forbidden))
+        {
+            httpStatusCodes.Add(HttpStatusCode.Forbidden);
+        }
+
+        if (!httpStatusCodes.Contains(HttpStatusCode.InternalServerError))
+        {
+            httpStatusCodes.Add(HttpStatusCode.InternalServerError);
+        }
+
+        var errorResponses = new List<ContentGeneratorClientEndpointErrorResponsesParameters>();
+        foreach (var httpStatusCode in httpStatusCodes.OrderBy(x => x))
+        {
+            if (useProblemDetailsAsDefaultResponseBody)
+            {
+                if (httpStatusCode == HttpStatusCode.BadRequest)
+                {
+                    errorResponses.Add(
+                        new ContentGeneratorClientEndpointErrorResponsesParameters(
+                            "ValidationProblemDetails",
+                            httpStatusCode));
+                }
+                else
+                {
+                    errorResponses.Add(
+                        new ContentGeneratorClientEndpointErrorResponsesParameters(
+                            "ProblemDetails",
+                            httpStatusCode));
+                }
+            }
+            else
+            {
+                // TODO: Add with dataType
+            }
+        }
+
+        return errorResponses;
     }
 }

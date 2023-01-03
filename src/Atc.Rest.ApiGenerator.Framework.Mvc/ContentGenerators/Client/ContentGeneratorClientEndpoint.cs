@@ -88,16 +88,17 @@ public class ContentGeneratorClientEndpoint : IContentGenerator
         sb.AppendLine(8, "using var response = await client.SendAsync(requestMessage, cancellationToken);");
         sb.AppendLine();
         sb.AppendLine(8, "var responseBuilder = httpMessageFactory.FromResponse(response);");
+        sb.AppendLine(
+            8,
+            parameters.UseListForModel
+                ? $"responseBuilder.AddSuccessResponse<List<{parameters.SuccessResponseName}>>(HttpStatusCode.OK);"
+                : $"responseBuilder.AddSuccessResponse<{parameters.SuccessResponseName}>(HttpStatusCode.OK);");
 
-        /*
-responseBuilder.AddSuccessResponse<DataTemplate>(HttpStatusCode.OK);
-responseBuilder.AddErrorResponse<ValidationProblemDetails>(HttpStatusCode.BadRequest);
-responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.Unauthorized);
-responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.Forbidden);
-responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.NotFound);
-responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.Conflict);
-responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.InternalServerError);
- */
+        foreach (var item in parameters.ErrorResponses)
+        {
+            sb.AppendLine(8, $"responseBuilder.AddErrorResponse<{item.ResponseType}>(HttpStatusCode.{item.StatusCode});");
+        }
+
         sb.AppendLine();
         sb.AppendLine(8, $"return await responseBuilder.BuildResponseAsync(x => new {parameters.ResultName}(x), cancellationToken);");
         sb.AppendLine(4, "}");

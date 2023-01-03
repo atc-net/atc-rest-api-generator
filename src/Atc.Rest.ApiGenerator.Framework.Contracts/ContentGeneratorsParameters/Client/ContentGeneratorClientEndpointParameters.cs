@@ -11,17 +11,16 @@ public record ContentGeneratorClientEndpointParameters(
     string InterfaceName,
     string ResultName,
     string? ParameterName,
+    string? SuccessResponseName,
+    bool UseListForModel,
+    IList<ContentGeneratorClientEndpointErrorResponsesParameters> ErrorResponses,
     IList<ContentGeneratorClientEndpointParametersParameters>? Parameters);
+
+public record ContentGeneratorClientEndpointErrorResponsesParameters(
+    string ResponseType,
+    HttpStatusCode StatusCode);
 
 public record ContentGeneratorClientEndpointParametersParameters(
     string Name,
     string ParameterName,
-    CodeDocumentationTags DocumentationTags,
-    ParameterLocationType ParameterLocationType,
-    string DataType,
-    bool IsSimpleType,
-    bool UseListForDataType,
-    bool IsNullable,
-    bool IsRequired,
-    IList<ValidationAttribute> AdditionalValidationAttributes,
-    string? DefaultValueInitializer);
+    ParameterLocationType ParameterLocationType);
