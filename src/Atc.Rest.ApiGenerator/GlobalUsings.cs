@@ -41,7 +41,6 @@ global using Atc.Rest.ApiGenerator.OpenApi.Models;
 global using Atc.Rest.ApiGenerator.ProjectSyntaxFactories;
 global using Atc.Rest.ApiGenerator.SyntaxGenerators;
 global using Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
-global using Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient;
 
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.CodeAnalysis;

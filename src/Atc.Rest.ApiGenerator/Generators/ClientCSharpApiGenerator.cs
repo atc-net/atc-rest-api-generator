@@ -298,27 +298,25 @@ public class ClientCSharpApiGenerator
     {
         ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 
-        var sgEndpointResults = new List<SyntaxGeneratorClientEndpointResult>();
-
         foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
         {
             var apiGroupName = basePathSegmentName.EnsureFirstCharacterToUpper();
 
-            var generatorEndpointResults = new SyntaxGeneratorClientEndpointResults(logger, apiProjectOptions, operationSchemaMappings, basePathSegmentName);
-            var generatedEndpointResults = generatorEndpointResults.GenerateSyntaxTrees();
-            sgEndpointResults.AddRange(generatedEndpointResults);
+            GenerateInterfaces(
+                projectOptions.Document,
+                apiGroupName);
 
-            GenerateInterfaces(projectOptions.Document, apiGroupName);
             GenerateEndpoints(
                 projectOptions.Document,
                 apiGroupName,
                 apiProjectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
                 apiProjectOptions.ProjectName);
-        }
 
-        foreach (var sg in sgEndpointResults)
-        {
-            sg.ToFile();
+            GenerateEndpointResults(
+                projectOptions.Document,
+                apiGroupName,
+                apiProjectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
+                apiProjectOptions.ProjectName);
         }
     }
 
@@ -461,6 +459,61 @@ public class ClientCSharpApiGenerator
                         apiProjectOptions.PathForEndpoints,
                         apiGroupName,
                         endpointParameters.EndpointName));
+
+                var contentWriter = new ContentWriter(logger);
+                contentWriter.Write(
+                    projectOptions.PathForSrcGenerate,
+                    file,
+                    ContentWriterArea.Src,
+                    endpointContent);
+            }
+        }
+    }
+
+    private void GenerateEndpointResults(
+        OpenApiDocument document,
+        string apiGroupName,
+        bool useProblemDetailsAsDefaultResponseBody,
+        string projectName)
+    {
+        var fullNamespace = string.IsNullOrEmpty(projectOptions.ClientFolderName)
+            ? $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Endpoints}"
+            : $"{projectOptions.ProjectName}.{projectOptions.ClientFolderName}.{ContentGeneratorConstants.Endpoints}";
+
+        foreach (var openApiPath in document.Paths)
+        {
+            if (!openApiPath.IsPathStartingSegmentName(apiGroupName))
+            {
+                continue;
+            }
+
+            foreach (var openApiOperation in openApiPath.Value.Operations)
+            {
+                // Generate
+                var endpointResultParameters = ContentGeneratorClientEndpointResultParametersFactory.Create(
+                    useProblemDetailsAsDefaultResponseBody,
+                    projectName,
+                    apiGroupName,
+                    fullNamespace,
+                    openApiPath.Value,
+                    openApiOperation.Key,
+                    openApiOperation.Value,
+                    $"{apiProjectOptions.RouteBase}{openApiPath.Key}");
+
+                var contentGeneratorEndpointResult = new ContentGeneratorClientEndpointResult(
+                    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                    new CodeDocumentationTagsGenerator(),
+                    endpointResultParameters);
+
+                var endpointContent = contentGeneratorEndpointResult.Generate();
+
+                // Write
+                var file = new FileInfo(
+                    Helpers.DirectoryInfoHelper.GetCsFileNameForContract(
+                        apiProjectOptions.PathForEndpoints,
+                        apiGroupName,
+                        endpointResultParameters.EndpointResultName));
 
                 var contentWriter = new ContentWriter(logger);
                 contentWriter.Write(

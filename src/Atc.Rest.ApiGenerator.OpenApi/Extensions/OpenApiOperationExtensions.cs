@@ -10,6 +10,10 @@ public static class OpenApiOperationExtensions
         this OpenApiOperation apiOperation)
         => apiOperation.ExtractDocumentationTags("Client Endpoint.");
 
+    public static CodeDocumentationTags ExtractDocumentationTagsForEndpointResult(
+        this OpenApiOperation apiOperation)
+        => apiOperation.ExtractDocumentationTags("Client Endpoint result.");
+
     public static CodeDocumentationTags ExtractDocumentationTagsForHandlerInterface(
         this OpenApiOperation apiOperation)
         => apiOperation.ExtractDocumentationTags("Domain Interface for RequestHandler.");

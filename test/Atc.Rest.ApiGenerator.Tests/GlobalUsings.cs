@@ -14,7 +14,6 @@ global using Atc.Rest.ApiGenerator.Helpers;
 global using Atc.Rest.ApiGenerator.Helpers.XunitTest;
 global using Atc.Rest.ApiGenerator.Models;
 global using Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
-global using Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient;
 global using Atc.Rest.ApiGenerator.Tests.XUnitTestTypes.CodeGenerator;
 global using Atc.XUnit;
 
