@@ -62,21 +62,25 @@ public class ContentGeneratorClientEndpoint : IContentGenerator
         {
             foreach (var item in parameters.Parameters)
             {
-                if (item.ParameterLocationType == ParameterLocationType.Body)
+                switch (item.ParameterLocationType)
                 {
-                    sb.AppendLine(8, $"requestBuilder.WithBody(parameters.Request);");
-                }
-                else
-                {
-                    var methodName = item.ParameterLocationType switch
-                    {
-                        ParameterLocationType.Query => "WithQueryParameter",
-                        ParameterLocationType.Header => "WithHeaderParameter",
-                        ParameterLocationType.Route => "WithPathParameter",
-                        _ => throw new SwitchCaseDefaultException(item.ParameterLocationType),
-                    };
-
-                    sb.AppendLine(8, $"requestBuilder.{methodName}(\"{item.Name}\", parameters.{item.ParameterName});");
+                    case ParameterLocationType.Query:
+                        sb.AppendLine(8, $"requestBuilder.WithQueryParameter(\"{item.Name}\", parameters.{item.ParameterName});");
+                        break;
+                    case ParameterLocationType.Header:
+                        sb.AppendLine(8, $"requestBuilder.WithHeaderParameter(\"{item.Name}\", parameters.{item.ParameterName});");
+                        break;
+                    case ParameterLocationType.Route:
+                        sb.AppendLine(8, $"requestBuilder.WithPathParameter(\"{item.Name}\", parameters.{item.ParameterName});");
+                        break;
+                    case ParameterLocationType.Body:
+                        sb.AppendLine(8, "requestBuilder.WithBody(parameters.Request);");
+                        break;
+                    case ParameterLocationType.Form:
+                        sb.AppendLine(8, "// TODO: Imp. With-Form");
+                        break;
+                    default:
+                        throw new SwitchCaseDefaultException(item.ParameterLocationType);
                 }
             }
         }
