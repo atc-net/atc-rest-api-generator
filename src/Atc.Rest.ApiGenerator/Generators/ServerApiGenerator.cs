@@ -524,27 +524,16 @@ public class ServerApiGenerator
 
     private void ScaffoldBasicFileApiGenerated()
     {
-        // Create compilationUnit
-        var compilationUnit = SyntaxFactory.CompilationUnit();
+        var contentParameters = ContentGeneratorServerRegistrationParametersFactory.Create(
+            projectOptions.ProjectName,
+            "Api");
 
-        // Create a namespace
-        var @namespace = SyntaxProjectFactory.CreateNamespace(projectOptions);
+        var contentGenerator = new ContentGeneratorServerRegistration(
+            new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+            new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+            contentParameters);
 
-        // Create class
-        var classDeclaration = SyntaxClassDeclarationFactory.Create("ApiRegistration")
-            .AddGeneratedCodeAttribute(projectOptions.ApiGeneratorName, projectOptions.ApiGeneratorVersion.ToString());
-
-        // Add class to namespace
-        @namespace = @namespace.AddMembers(classDeclaration);
-
-        // Add namespace to compilationUnit
-        compilationUnit = compilationUnit.AddMembers(@namespace);
-
-        var codeAsString = compilationUnit
-            .NormalizeWhitespace()
-            .ToFullString()
-            .EnsureEnvironmentNewLines()
-            .EnsureFileScopedNamespace();
+        var content = contentGenerator.Generate();
 
         var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "ApiRegistration.cs"));
 
@@ -553,7 +542,7 @@ public class ServerApiGenerator
             projectOptions.PathForSrcGenerate,
             file,
             ContentWriterArea.Src,
-            codeAsString);
+            content);
     }
 
     private void GenerateSrcGlobalUsings()
