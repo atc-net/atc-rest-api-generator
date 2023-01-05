@@ -135,7 +135,9 @@ public static class ContentGeneratorClientEndpointParametersFactory
             modelName = OpenApiDocumentSchemaModelNameResolver.EnsureModelNameWithNamespaceIfNeeded(
                 projectName,
                 apiGroupName,
-                tmpModelName);
+                tmpModelName,
+                isShared: false,
+                isClient: true);
         }
 
         return modelName;
@@ -175,26 +177,40 @@ public static class ContentGeneratorClientEndpointParametersFactory
         var errorResponses = new List<ContentGeneratorClientEndpointErrorResponsesParameters>();
         foreach (var httpStatusCode in httpStatusCodes.OrderBy(x => x))
         {
-            if (useProblemDetailsAsDefaultResponseBody)
+            if (httpStatusCode == HttpStatusCode.BadRequest)
             {
-                if (httpStatusCode == HttpStatusCode.BadRequest)
-                {
-                    errorResponses.Add(
-                        new ContentGeneratorClientEndpointErrorResponsesParameters(
-                            "ValidationProblemDetails",
-                            httpStatusCode));
-                }
-                else
+                errorResponses.Add(
+                    new ContentGeneratorClientEndpointErrorResponsesParameters(
+                        "ValidationProblemDetails",
+                        httpStatusCode));
+            }
+            else
+            {
+
+                if (useProblemDetailsAsDefaultResponseBody)
                 {
                     errorResponses.Add(
                         new ContentGeneratorClientEndpointErrorResponsesParameters(
                             "ProblemDetails",
                             httpStatusCode));
                 }
-            }
-            else
-            {
-                // TODO: Add with dataType
+                else
+                {
+                    if (httpStatusCode == HttpStatusCode.InternalServerError)
+                    {
+                        errorResponses.Add(
+                            new ContentGeneratorClientEndpointErrorResponsesParameters(
+                                "string",
+                                httpStatusCode));
+                    }
+                    else
+                    {
+                        errorResponses.Add(
+                            new ContentGeneratorClientEndpointErrorResponsesParameters(
+                                string.Empty,
+                                httpStatusCode));
+                    }
+                }
             }
         }
 

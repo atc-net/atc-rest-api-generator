@@ -161,9 +161,7 @@ public static class OpenApiResponsesExtensions
         if (includeIfNotDefinedValidation &&
             result.All(x => x.Item1 != HttpStatusCode.BadRequest))
         {
-            result.Add(useProblemDetailsAsDefaultResponseBody
-                ? Tuple.Create(HttpStatusCode.BadRequest, "ValidationProblemDetails")
-                : Tuple.Create(HttpStatusCode.BadRequest, string.Empty));
+            result.Add(Tuple.Create(HttpStatusCode.BadRequest, "ValidationProblemDetails"));
         }
 
         if (includeIfNotDefinedAuthorization)

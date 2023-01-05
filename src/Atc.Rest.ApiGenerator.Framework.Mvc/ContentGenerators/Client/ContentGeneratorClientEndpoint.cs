@@ -98,7 +98,11 @@ public class ContentGeneratorClientEndpoint : IContentGenerator
 
         foreach (var item in parameters.ErrorResponses)
         {
-            sb.AppendLine(8, $"responseBuilder.AddErrorResponse<{item.ResponseType}>(HttpStatusCode.{item.StatusCode});");
+            sb.AppendLine(
+                8,
+                string.IsNullOrEmpty(item.ResponseType)
+                    ? $"responseBuilder.AddErrorResponse(HttpStatusCode.{item.StatusCode});"
+                    : $"responseBuilder.AddErrorResponse<{item.ResponseType}>(HttpStatusCode.{item.StatusCode});");
         }
 
         sb.AppendLine();
