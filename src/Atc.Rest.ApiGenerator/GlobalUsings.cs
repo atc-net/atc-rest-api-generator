@@ -1,15 +1,11 @@
 global using System.Collections.Concurrent;
-global using System.ComponentModel.DataAnnotations;
 global using System.Diagnostics;
 global using System.Diagnostics.CodeAnalysis;
-global using System.Globalization;
 global using System.Net;
 global using System.Runtime.CompilerServices;
 global using System.Text;
 global using System.Text.RegularExpressions;
 
-global using Atc.CodeAnalysis.CSharp;
-global using Atc.CodeAnalysis.CSharp.SyntaxFactories;
 global using Atc.CodeDocumentation.CodeComment;
 global using Atc.Console.Spectre;
 global using Atc.DotNet;
@@ -18,6 +14,7 @@ global using Atc.Rest.ApiGenerator.Extensions;
 global using Atc.Rest.ApiGenerator.Framework.ContentGenerators;
 global using Atc.Rest.ApiGenerator.Framework.Contracts;
 global using Atc.Rest.ApiGenerator.Framework.Contracts.ContentGeneratorsParameters;
+global using Atc.Rest.ApiGenerator.Framework.Contracts.ContentGeneratorsParameters.Server;
 global using Atc.Rest.ApiGenerator.Framework.Contracts.Extensions;
 global using Atc.Rest.ApiGenerator.Framework.Contracts.Models;
 global using Atc.Rest.ApiGenerator.Framework.Contracts.Options;
@@ -41,7 +38,6 @@ global using Atc.Rest.ApiGenerator.OpenApi.Models;
 global using Atc.Rest.ApiGenerator.SyntaxGenerators;
 global using Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
 
-global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.CodeAnalysis;
 global using Microsoft.CodeAnalysis.CSharp;
 global using Microsoft.CodeAnalysis.CSharp.Syntax;

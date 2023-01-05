@@ -214,21 +214,40 @@ public class ServerHostGenerator
             projectOptions.UsingCodingRules);
 
         var operationSchemaMappings = apiOperationExtractor.Extract(projectOptions.Document);
-        var sgEndpointControllers = new List<SyntaxGeneratorEndpointControllers>();
-        foreach (var segmentName in projectOptions.BasePathSegmentNames)
-        {
-            var generator = new SyntaxGeneratorEndpointControllers(logger, apiProjectOptions, operationSchemaMappings, segmentName);
-            generator.GenerateCode();
-            sgEndpointControllers.Add(generator);
-        }
 
-        foreach (var sgEndpointController in sgEndpointControllers)
+        foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
         {
-            var metadataForMethods = sgEndpointController.GetMetadataForMethods();
-            foreach (var endpointMethodMetadata in metadataForMethods)
+            var apiGroupName = basePathSegmentName.EnsureFirstCharacterToUpper();
+
+            var generator = new SyntaxGeneratorEndpointControllers(apiProjectOptions, operationSchemaMappings, apiGroupName);
+            generator.GenerateCode();
+
+            var controllerParameters = ContentGeneratorServerControllerParametersFactory.Create(
+                operationSchemaMappings,
+                projectOptions.ProjectName,
+                projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
+                $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Endpoints}",
+                basePathSegmentName,
+                GetRouteByArea(basePathSegmentName),
+                projectOptions.Document);
+
+            var metadataForMethods = generator.GetMetadataForMethods();
+            for (var i = 0; i < metadataForMethods.Count; i++)
             {
-                GenerateServerApiXunitTestEndpointHandlerStubHelper.Generate(logger, projectOptions, endpointMethodMetadata);
-                GenerateServerApiXunitTestEndpointTestHelper.Generate(logger, projectOptions, endpointMethodMetadata);
+                var endpointMethodMetadata = metadataForMethods[i];
+                var contentGeneratorServerControllerMethodParameters = controllerParameters.MethodParameters[i];
+
+                GenerateServerApiXunitTestEndpointHandlerStubHelper.Generate(
+                    logger,
+                    projectOptions,
+                    endpointMethodMetadata,
+                    apiGroupName,
+                    contentGeneratorServerControllerMethodParameters);
+
+                GenerateServerApiXunitTestEndpointTestHelper.Generate(
+                    logger,
+                    projectOptions,
+                    endpointMethodMetadata);
             }
         }
     }
@@ -460,5 +479,21 @@ public class ServerHostGenerator
             ContentWriterArea.Test,
             projectOptions.PathForTestGenerate!,
             requiredUsings);
+    }
+
+    private string GetRouteByArea(
+        string area)
+    {
+        var (key, _) = projectOptions.Document.Paths.FirstOrDefault(x => x.IsPathStartingSegmentName(area));
+        if (key is null)
+        {
+            throw new NotSupportedException("Area was not found in any route.");
+        }
+
+        var routeSuffix = key
+            .Split('/', StringSplitOptions.RemoveEmptyEntries)
+            .FirstOrDefault();
+
+        return $"{projectOptions.RouteBase}/{routeSuffix}";
     }
 }

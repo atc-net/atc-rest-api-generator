@@ -346,7 +346,7 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
             return;
         }
 
-        var schema = endpointMethodMetadata.ContractParameter?.ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
+        var schema = endpointMethodMetadata.ApiOperation?.RequestBody?.Content.GetSchemaByFirstMediaType();
         if (schema is null)
         {
             return;
@@ -664,7 +664,7 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
         EndpointMethodMetadata endpointMethodMetadata,
         HttpStatusCode httpStatusCode)
     {
-        var schema = endpointMethodMetadata.ContractParameter?.ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
+        var schema = endpointMethodMetadata.ApiOperation?.RequestBody?.Content.GetSchemaByFirstMediaType();
         if (schema is null)
         {
             return false;
@@ -688,7 +688,7 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
         HttpStatusCode httpStatusCode,
         KeyValuePair<string, OpenApiSchema> badPropertySchema)
     {
-        var schema = endpointMethodMetadata.ContractParameter?.ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
+        var schema = endpointMethodMetadata.ApiOperation?.RequestBody?.Content.GetSchemaByFirstMediaType();
         if (schema is null)
         {
             return;
@@ -741,7 +741,7 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
         bool useForBadRequest)
     {
         var route = endpointMethodMetadata.Route;
-        if (endpointMethodMetadata.ContractParameter is null)
+        if (endpointMethodMetadata.ApiOperation is null)
         {
             return route;
         }
@@ -803,7 +803,7 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
         bool useForBadRequest)
     {
         var route = endpointMethodMetadata.Route;
-        if (endpointMethodMetadata.ContractParameter is null)
+        if (endpointMethodMetadata.ApiOperation is null)
         {
             return route;
         }

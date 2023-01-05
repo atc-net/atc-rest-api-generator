@@ -495,6 +495,7 @@ public class ClientCSharpApiGenerator
                     projectName,
                     apiGroupName,
                     fullNamespace,
+                    projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
                     openApiPath.Value,
                     openApiOperation.Key,
                     openApiOperation.Value,

@@ -5,6 +5,7 @@ public record ContentGeneratorServerControllerParameters(
     string ApiGroupName,
     string RouteBase,
     CodeDocumentationTags DocumentationTags,
+    string ControllerName,
     IList<ContentGeneratorServerControllerMethodParameters> MethodParameters);
 
 public record ContentGeneratorServerControllerMethodParameters(

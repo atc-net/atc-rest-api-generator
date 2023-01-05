@@ -262,7 +262,10 @@ public class ServerDomainGenerator
 
         var content = contentGenerator.Generate();
 
-        var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "DomainRegistration.cs"));
+        var file = new FileInfo(
+            Path.Combine(
+                projectOptions.PathForSrcGenerate.FullName,
+                "DomainRegistration.cs"));
 
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(

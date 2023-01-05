@@ -456,29 +456,29 @@ public class ServerApiGenerator
     {
         ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 
-        foreach (var area in projectOptions.BasePathSegmentNames)
+        foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
         {
-            var contentGeneratorServerControllerParameters = ContentGeneratorServerControllerParametersFactory.Create(
+            var controllerParameters = ContentGeneratorServerControllerParametersFactory.Create(
                 operationSchemaMappings,
                 projectOptions.ProjectName,
                 projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
                 $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Endpoints}",
-                area,
-                GetRouteByArea(area),
+                basePathSegmentName,
+                GetRouteByArea(basePathSegmentName),
                 projectOptions.Document);
 
             var contentGenerator = new ContentGeneratorServerController(
                 new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
                 new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
                 new CodeDocumentationTagsGenerator(),
-                contentGeneratorServerControllerParameters);
+                controllerParameters);
 
             var content = contentGenerator.Generate();
 
-            // TODO: Move responsibility of generating the file object
-            var controllerName = area.EnsureFirstCharacterToUpper() + ContentGeneratorConstants.Controller;
-            var fileAsString = Helpers.DirectoryInfoHelper.GetCsFileNameForEndpoints(projectOptions.PathForEndpoints, controllerName);
-            var file = new FileInfo(fileAsString);
+            var file = new FileInfo(
+                Helpers.DirectoryInfoHelper.GetCsFileNameForEndpoints(
+                    projectOptions.PathForEndpoints,
+                    controllerParameters.ControllerName));
 
             var contentWriter = new ContentWriter(logger);
             contentWriter.Write(

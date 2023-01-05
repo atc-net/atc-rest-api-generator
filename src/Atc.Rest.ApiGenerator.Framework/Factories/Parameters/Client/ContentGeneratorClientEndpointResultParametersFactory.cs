@@ -7,6 +7,7 @@ public static class ContentGeneratorClientEndpointResultParametersFactory
         string projectName,
         string apiGroupName,
         string @namespace,
+        bool useProblemDetailsAsDefaultBody,
         OpenApiPathItem openApiPath,
         OperationType httpMethod,
         OpenApiOperation openApiOperation,
@@ -41,6 +42,7 @@ public static class ContentGeneratorClientEndpointResultParametersFactory
                 EndpointResultName: $"{operationName}{ContentGeneratorConstants.EndpointResult}",
                 InheritClassName: ContentGeneratorConstants.EndpointResponse,
                 SuccessResponseName: successResponseName,
+                UseProblemDetailsAsDefaultBody: useProblemDetailsAsDefaultBody,
                 UseListForModel: useListForDataType,
                 ErrorResponses: errorResponses,
                 parameters);
@@ -53,6 +55,7 @@ public static class ContentGeneratorClientEndpointResultParametersFactory
             EndpointResultName: $"{operationName}{ContentGeneratorConstants.EndpointResult}",
             InheritClassName: ContentGeneratorConstants.EndpointResponse,
             SuccessResponseName: successResponseName,
+            UseProblemDetailsAsDefaultBody: useProblemDetailsAsDefaultBody,
             UseListForModel: useListForDataType,
             ErrorResponses: errorResponses,
             Parameters: null);

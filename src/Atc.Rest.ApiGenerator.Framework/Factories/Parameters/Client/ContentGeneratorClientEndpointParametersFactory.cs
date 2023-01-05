@@ -135,9 +135,7 @@ public static class ContentGeneratorClientEndpointParametersFactory
             modelName = OpenApiDocumentSchemaModelNameResolver.EnsureModelNameWithNamespaceIfNeeded(
                 projectName,
                 apiGroupName,
-                tmpModelName,
-                isShared: false,
-                isClient: true);
+                tmpModelName);
         }
 
         return modelName;

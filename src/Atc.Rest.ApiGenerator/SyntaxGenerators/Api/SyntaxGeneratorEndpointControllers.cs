@@ -6,25 +6,21 @@ namespace Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
 
 public class SyntaxGeneratorEndpointControllers
 {
-    private readonly ILogger logger;
-
     public SyntaxGeneratorEndpointControllers(
-        ILogger logger,
         ApiProjectOptions apiProjectOptions,
         IList<ApiOperation> operationSchemaMappings,
-        string focusOnSegmentName)
+        string apiGroupName)
     {
-        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         ApiProjectOptions = apiProjectOptions ?? throw new ArgumentNullException(nameof(apiProjectOptions));
         OperationSchemaMappings = operationSchemaMappings ?? throw new ArgumentNullException(nameof(operationSchemaMappings));
-        FocusOnSegmentName = focusOnSegmentName ?? throw new ArgumentNullException(nameof(focusOnSegmentName));
+        ApiGroupName = apiGroupName ?? throw new ArgumentNullException(nameof(apiGroupName));
     }
 
     private ApiProjectOptions ApiProjectOptions { get; }
 
     private IList<ApiOperation> OperationSchemaMappings { get; }
 
-    public string FocusOnSegmentName { get; }
+    public string ApiGroupName { get; }
 
     public CompilationUnitSyntax? Code { get; private set; }
 
@@ -38,9 +34,9 @@ public class SyntaxGeneratorEndpointControllers
     public List<EndpointMethodMetadata> GetMetadataForMethods()
     {
         var list = new List<EndpointMethodMetadata>();
-        foreach (var (key, value) in ApiProjectOptions.Document.GetPathsByBasePathSegmentName(FocusOnSegmentName))
+        foreach (var (key, value) in ApiProjectOptions.Document.GetPathsByBasePathSegmentName(ApiGroupName))
         {
-            var generatorParameters = new SyntaxGeneratorContractParameters(logger, ApiProjectOptions, FocusOnSegmentName);
+            var generatorParameters = new SyntaxGeneratorContractParameters(ApiProjectOptions, ApiGroupName);
             var generatedParameters = generatorParameters.GenerateSyntaxTrees();
             var hasGlobalParameters = value.HasParameters();
 
@@ -63,21 +59,20 @@ public class SyntaxGeneratorEndpointControllers
 
                 var responseTypes = apiOperation.Value.Responses.GetResponseTypes(
                     OperationSchemaMappings,
-                    FocusOnSegmentName,
+                    ApiGroupName,
                     ApiProjectOptions.ProjectName,
                     useProblemDetailsAsDefaultResponseBody: false,
                     includeEmptyResponseTypes: false,
                     hasGlobalParameters || apiOperation.Value.HasParametersOrRequestBody(),
                     includeIfNotDefinedAuthorization: true,
-                    includeIfNotDefinedInternalServerError: false,
-                    isClient: false);
+                    includeIfNotDefinedInternalServerError: false);
 
                 var responseTypeNamesAndItemSchema = GetResponseTypeNamesAndItemSchema(responseTypes);
 
                 var endpointMethodMetadata = new EndpointMethodMetadata(
                     ApiProjectOptions.UseNullableReferenceTypes,
                     ApiProjectOptions.ProjectName,
-                    FocusOnSegmentName,
+                    ApiGroupName,
                     $"{ApiProjectOptions.RouteBase}{routePart}",
                     apiOperation.Key,
                     operationName,
@@ -85,7 +80,8 @@ public class SyntaxGeneratorEndpointControllers
                     contractParameterTypeName,
                     operationName + NameConstants.ContractResult,
                     responseTypeNamesAndItemSchema,
-                    sgContractParameter,
+                    sgContractParameter?.ApiOperation,
+                    sgContractParameter?.GlobalPathParameters,
                     ApiProjectOptions.Document.Components.Schemas,
                     OperationSchemaMappings);
 
@@ -99,7 +95,7 @@ public class SyntaxGeneratorEndpointControllers
     private string GetRouteSegment()
     {
         var (key, _) = ApiProjectOptions.Document.Paths
-            .FirstOrDefault(x => x.IsPathStartingSegmentName(FocusOnSegmentName));
+            .FirstOrDefault(x => x.IsPathStartingSegmentName(ApiGroupName));
 
         return key?
                    .Split('/', StringSplitOptions.RemoveEmptyEntries)?
@@ -124,10 +120,9 @@ public class SyntaxGeneratorEndpointControllers
                 var isShared = OperationSchemaMappings.IsShared(rawModelName);
                 var fullModelName = OpenApiDocumentSchemaModelNameResolver.EnsureModelNameWithNamespaceIfNeeded(
                     ApiProjectOptions.ProjectName,
-                    FocusOnSegmentName,
+                    ApiGroupName,
                     responseTypeName.Item2,
-                    isShared,
-                    isClient: false);
+                    isShared);
 
                 var schema = ApiProjectOptions.Document.Components.Schemas.FirstOrDefault(x => x.Key.Equals(rawModelName, StringComparison.OrdinalIgnoreCase));
                 list.Add(new ResponseTypeNameAndItemSchema(responseTypeName.Item1, fullModelName, schema.Value));

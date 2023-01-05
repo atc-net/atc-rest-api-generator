@@ -7,6 +7,7 @@ public record ContentGeneratorClientEndpointResultParameters(
     string EndpointResultName,
     string InheritClassName,
     string? SuccessResponseName,
+    bool UseProblemDetailsAsDefaultBody,
     bool UseListForModel,
     IList<ContentGeneratorClientEndpointResultErrorResponsesParameters> ErrorResponses,
     IList<ContentGeneratorClientEndpointResultParametersParameters>? Parameters);

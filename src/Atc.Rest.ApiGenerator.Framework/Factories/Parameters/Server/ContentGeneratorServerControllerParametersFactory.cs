@@ -9,13 +9,13 @@ public static class ContentGeneratorServerControllerParametersFactory
         string projectName,
         bool useProblemDetailsAsDefaultBody,
         string @namespace,
-        string area,
+        string apiGroupName,
         string route,
         OpenApiDocument openApiDocument)
     {
         var methodParameters = new List<ContentGeneratorServerControllerMethodParameters>();
 
-        foreach (var (apiPath, apiPathData) in openApiDocument.GetPathsByBasePathSegmentName(area))
+        foreach (var (apiPath, apiPathData) in openApiDocument.GetPathsByBasePathSegmentName(apiGroupName))
         {
             var apiPathAuthenticationRequired = apiPathData.Extensions.ExtractAuthenticationRequired();
             var apiPathAuthorizationRoles = apiPathData.Extensions.ExtractAuthorizationRoles();
@@ -40,7 +40,7 @@ public static class ContentGeneratorServerControllerParametersFactory
                     ProducesResponseTypeRepresentations: GetProducesResponseTypeRepresentations(
                         operationSchemaMappings,
                         apiOperation.Value,
-                        area,
+                        apiGroupName,
                         projectName,
                         useProblemDetailsAsDefaultBody,
                         ShouldUseAuthorization(apiPathAuthenticationRequired, apiOperationAuthenticationRequired)),
@@ -56,10 +56,11 @@ public static class ContentGeneratorServerControllerParametersFactory
         var documentationTags = new CodeDocumentationTags("Endpoint definitions.");
 
         return new ContentGeneratorServerControllerParameters(
-            @namespace,
-            area,
+            Namespace: @namespace,
+            ApiGroupName: apiGroupName,
             route,
             documentationTags,
+            ControllerName: $"{apiGroupName}{ContentGeneratorConstants.Controller}",
             methodParameters);
     }
 
@@ -110,13 +111,13 @@ public static class ContentGeneratorServerControllerParametersFactory
     private static List<string> GetProducesResponseTypeRepresentations(
         IList<ApiOperation> operationSchemaMappings,
         OpenApiOperation apiOperation,
-        string area,
+        string apiGroupName,
         string projectName,
         bool useProblemDetailsAsDefaultBody,
         bool shouldUseAuthorization)
         => apiOperation.Responses.GetProducesResponseAttributeParts(
             operationSchemaMappings,
-            area,
+            apiGroupName,
             projectName,
             useProblemDetailsAsDefaultBody,
             apiOperation.HasParametersOrRequestBody(),

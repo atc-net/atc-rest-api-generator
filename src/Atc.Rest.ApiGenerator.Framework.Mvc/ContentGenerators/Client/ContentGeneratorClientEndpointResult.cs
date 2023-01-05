@@ -63,10 +63,19 @@ public class ContentGeneratorClientEndpointResult : IContentGenerator
         sb.AppendLine(12, ": throw new InvalidOperationException(\"Content is not the expected type - please use the IsOk property first.\");");
         foreach (var item in parameters.ErrorResponses)
         {
-            // TODO: Fix If->ProblemDetails
             sb.AppendLine();
-            sb.AppendLine(4, $"public ProblemDetails {item.StatusCode.ToNormalizedString()}Content");
-            sb.AppendLine(8, $"=> Is{item.StatusCode.ToNormalizedString()} && ContentObject is ProblemDetails result");
+            if (parameters.UseProblemDetailsAsDefaultBody)
+            {
+                sb.AppendLine(4, $"public ProblemDetails {item.StatusCode.ToNormalizedString()}Content");
+                sb.AppendLine(8, $"=> Is{item.StatusCode.ToNormalizedString()} && ContentObject is ProblemDetails result");
+            }
+            else
+            {
+                // TODO: Fix DataType 
+                sb.AppendLine(4, $"public [TODO: DataType] {item.StatusCode.ToNormalizedString()}Content");
+                sb.AppendLine(8, $"=> Is{item.StatusCode.ToNormalizedString()} && ContentObject is [TODO: DataType] result");
+            }
+
             sb.AppendLine(12, "? result");
             sb.AppendLine(12, $": throw new InvalidOperationException(\"Content is not the expected type - please use the Is{item.StatusCode.ToNormalizedString()} property first.\");");
         }

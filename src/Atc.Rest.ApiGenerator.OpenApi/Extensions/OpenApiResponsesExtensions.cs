@@ -5,7 +5,7 @@ public static class OpenApiResponsesExtensions
     public static List<string> GetProducesResponseAttributeParts(
         this OpenApiResponses responses,
         IList<ApiOperation> apiOperationSchemaMappings,
-        string contractArea,
+        string apiGroupName,
         string projectName,
         bool useProblemDetailsAsDefaultResponseBody,
         bool includeIfNotDefinedValidation,
@@ -15,14 +15,13 @@ public static class OpenApiResponsesExtensions
         var responseTypes = GetResponseTypes(
             responses,
             apiOperationSchemaMappings,
-            contractArea,
+            apiGroupName,
             projectName,
             useProblemDetailsAsDefaultResponseBody,
             includeEmptyResponseTypes: true,
             includeIfNotDefinedValidation,
             includeIfNotDefinedAuthorization,
-            includeIfNotDefinedInternalServerError,
-            isClient: false);
+            includeIfNotDefinedInternalServerError);
 
         return responseTypes
             .OrderBy(x => x.Item1)
@@ -35,14 +34,13 @@ public static class OpenApiResponsesExtensions
     public static List<Tuple<HttpStatusCode, string>> GetResponseTypes(
         this OpenApiResponses responses,
         IList<ApiOperation> apiOperationSchemaMappings,
-        string contractArea,
+        string apiGroupName,
         string projectName,
         bool useProblemDetailsAsDefaultResponseBody,
         bool includeEmptyResponseTypes,
         bool includeIfNotDefinedValidation,
         bool includeIfNotDefinedAuthorization,
-        bool includeIfNotDefinedInternalServerError,
-        bool isClient)
+        bool includeIfNotDefinedInternalServerError)
     {
         var result = new List<Tuple<HttpStatusCode, string>>();
         foreach (var response in responses.OrderBy(x => x.Key))
@@ -58,7 +56,7 @@ public static class OpenApiResponsesExtensions
             var modelName = responses.GetModelNameForStatusCode(httpStatusCode);
 
             var isShared = apiOperationSchemaMappings.IsShared(modelName);
-            modelName = OpenApiDocumentSchemaModelNameResolver.EnsureModelNameWithNamespaceIfNeeded(projectName, contractArea, modelName, isShared, isClient);
+            modelName = OpenApiDocumentSchemaModelNameResolver.EnsureModelNameWithNamespaceIfNeeded(projectName, apiGroupName, modelName, isShared);
 
             var useProblemDetails = responses.IsSchemaTypeProblemDetailsForStatusCode(httpStatusCode);
             if (!useProblemDetails &&
