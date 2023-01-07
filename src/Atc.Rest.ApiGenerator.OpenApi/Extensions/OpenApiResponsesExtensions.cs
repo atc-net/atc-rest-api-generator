@@ -128,9 +128,7 @@ public static class OpenApiResponsesExtensions
                         : null;
                     break;
                 case HttpStatusCode.BadRequest:
-                    typeResponseName = useProblemDetails
-                        ? "ValidationProblemDetails"
-                        : null;
+                    typeResponseName = "ValidationProblemDetails";
                     break;
                 case HttpStatusCode.NotFound:
                 case HttpStatusCode.MethodNotAllowed:

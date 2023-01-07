@@ -1,20 +1,19 @@
 namespace Atc.Rest.ApiGenerator.Framework.Factories.Parameters.Client;
 
-public static class ContentGeneratorClientEndpointResultParametersFactory
+public static class ContentGeneratorClientEndpointResultInterfaceParametersFactory
 {
-    public static ContentGeneratorClientEndpointResultParameters Create(
+    public static ContentGeneratorClientEndpointResultInterfaceParameters Create(
         bool useProblemDetailsAsDefaultResponseBody,
         string projectName,
         string apiGroupName,
         string @namespace,
-        bool useProblemDetailsAsDefaultBody,
         OpenApiPathItem openApiPath,
         OpenApiOperation openApiOperation)
     {
         ArgumentNullException.ThrowIfNull(openApiPath);
         ArgumentNullException.ThrowIfNull(openApiOperation);
 
-        var parameters = new List<ContentGeneratorClientEndpointResultParametersParameters>();
+        var parameters = new List<ContentGeneratorClientEndpointResultInterfaceParametersParameters>();
 
         AppendParameters(parameters, openApiPath.Parameters);
         AppendParameters(parameters, openApiOperation.Parameters);
@@ -30,46 +29,27 @@ public static class ContentGeneratorClientEndpointResultParametersFactory
             openApiOperation,
             parameters.Any());
 
-        if (openApiPath.HasParameters() ||
-            openApiOperation.HasParametersOrRequestBody())
-        {
-            return new ContentGeneratorClientEndpointResultParameters(
-                Namespace: @namespace,
-                OperationName: operationName,
-                DocumentationTagsForClass: openApiOperation.ExtractDocumentationTagsForEndpointResult(),
-                EndpointResultName: $"{operationName}{ContentGeneratorConstants.EndpointResult}",
-                EndpointResultInterfaceName: $"I{operationName}{ContentGeneratorConstants.EndpointResult}",
-                InheritClassName: ContentGeneratorConstants.EndpointResponse,
-                SuccessResponseName: successResponseName,
-                UseProblemDetailsAsDefaultBody: useProblemDetailsAsDefaultBody,
-                UseListForModel: useListForDataType,
-                ErrorResponses: errorResponses,
-                parameters);
-        }
-
-        return new ContentGeneratorClientEndpointResultParameters(
+        return new ContentGeneratorClientEndpointResultInterfaceParameters(
             Namespace: @namespace,
             OperationName: operationName,
-            DocumentationTagsForClass: openApiOperation.ExtractDocumentationTagsForEndpointResult(),
-            EndpointResultName: $"{operationName}{ContentGeneratorConstants.EndpointResult}",
-            EndpointResultInterfaceName: $"I{operationName}{ContentGeneratorConstants.EndpointResult}",
-            InheritClassName: ContentGeneratorConstants.EndpointResponse,
+            DocumentationTagsForClass: openApiOperation.ExtractDocumentationTagsForEndpointResultInterface(),
+            InterfaceName: $"I{operationName}{ContentGeneratorConstants.EndpointResult}",
+            InheritInterfaceName: "IEndpointResponse",
             SuccessResponseName: successResponseName,
-            UseProblemDetailsAsDefaultBody: useProblemDetailsAsDefaultBody,
+            UseProblemDetailsAsDefaultBody: useProblemDetailsAsDefaultResponseBody,
             UseListForModel: useListForDataType,
-            ErrorResponses: errorResponses,
-            Parameters: null);
+            ErrorResponses: errorResponses);
     }
 
     private static void AppendParameters(
-        ICollection<ContentGeneratorClientEndpointResultParametersParameters> parameters,
+        ICollection<ContentGeneratorClientEndpointResultInterfaceParametersParameters> parameters,
         IEnumerable<OpenApiParameter> openApiParameters)
     {
         foreach (var openApiParameter in openApiParameters)
         {
             if (parameters.FirstOrDefault(x => x.Name == openApiParameter.Name) is null)
             {
-                parameters.Add(new ContentGeneratorClientEndpointResultParametersParameters(
+                parameters.Add(new ContentGeneratorClientEndpointResultInterfaceParametersParameters(
                     openApiParameter.Name,
                     openApiParameter.Name.EnsureFirstCharacterToUpper(),
                     ConvertToParameterLocationType(openApiParameter.In)));
@@ -78,7 +58,7 @@ public static class ContentGeneratorClientEndpointResultParametersFactory
     }
 
     private static void AppendParametersFromBody(
-        ICollection<ContentGeneratorClientEndpointResultParametersParameters> parameters,
+        ICollection<ContentGeneratorClientEndpointResultInterfaceParametersParameters> parameters,
         OpenApiRequestBody? requestBody)
     {
         var requestSchema = requestBody?.Content?.GetSchemaByFirstMediaType();
@@ -88,7 +68,7 @@ public static class ContentGeneratorClientEndpointResultParametersFactory
             return;
         }
 
-        parameters.Add(new ContentGeneratorClientEndpointResultParametersParameters(
+        parameters.Add(new ContentGeneratorClientEndpointResultInterfaceParametersParameters(
             string.Empty,
             ContentGeneratorConstants.Request,
             requestSchema.GetParameterLocationType()));
@@ -135,7 +115,7 @@ public static class ContentGeneratorClientEndpointResultParametersFactory
         return modelName;
     }
 
-    private static List<ContentGeneratorClientEndpointResultErrorResponsesParameters> GetErrorResponses(
+    private static List<ContentGeneratorClientEndpointResultInterfaceErrorResponsesParameters> GetErrorResponses(
         bool useProblemDetailsAsDefaultResponseBody,
         OpenApiOperation openApiOperation,
         bool hasParameters)
@@ -166,13 +146,13 @@ public static class ContentGeneratorClientEndpointResultParametersFactory
             httpStatusCodes.Add(HttpStatusCode.InternalServerError);
         }
 
-        var errorResponses = new List<ContentGeneratorClientEndpointResultErrorResponsesParameters>();
+        var errorResponses = new List<ContentGeneratorClientEndpointResultInterfaceErrorResponsesParameters>();
         foreach (var httpStatusCode in httpStatusCodes.OrderBy(x => x))
         {
             if (httpStatusCode == HttpStatusCode.BadRequest)
             {
                 errorResponses.Add(
-                    new ContentGeneratorClientEndpointResultErrorResponsesParameters(
+                    new ContentGeneratorClientEndpointResultInterfaceErrorResponsesParameters(
                         "ValidationProblemDetails",
                         httpStatusCode));
             }
@@ -181,7 +161,7 @@ public static class ContentGeneratorClientEndpointResultParametersFactory
                 if (useProblemDetailsAsDefaultResponseBody)
                 {
                     errorResponses.Add(
-                        new ContentGeneratorClientEndpointResultErrorResponsesParameters(
+                        new ContentGeneratorClientEndpointResultInterfaceErrorResponsesParameters(
                             "ProblemDetails",
                             httpStatusCode));
                 }
@@ -194,14 +174,14 @@ public static class ContentGeneratorClientEndpointResultParametersFactory
                         httpStatusCode == HttpStatusCode.Forbidden)
                     {
                         errorResponses.Add(
-                            new ContentGeneratorClientEndpointResultErrorResponsesParameters(
+                            new ContentGeneratorClientEndpointResultInterfaceErrorResponsesParameters(
                                 string.Empty,
                                 httpStatusCode));
                     }
                     else
                     {
                         errorResponses.Add(
-                            new ContentGeneratorClientEndpointResultErrorResponsesParameters(
+                            new ContentGeneratorClientEndpointResultInterfaceErrorResponsesParameters(
                                 "string",
                                 httpStatusCode));
                     }

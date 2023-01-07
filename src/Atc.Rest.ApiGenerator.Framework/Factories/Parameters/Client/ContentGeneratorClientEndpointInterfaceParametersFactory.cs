@@ -28,9 +28,9 @@ public static class ContentGeneratorClientEndpointInterfaceParametersFactory
                 @return: null);
 
             return new ContentGeneratorClientEndpointInterfaceParameters(
-                @namespace,
-                operationName,
-                openApiOperation.ExtractDocumentationTagsForEndpointInterface(),
+                Namespace: @namespace,
+                OperationName: operationName,
+                DocumentationTagsForClass: openApiOperation.ExtractDocumentationTagsForEndpointInterface(),
                 InterfaceName: $"I{operationName}{ContentGeneratorConstants.Endpoint}",
                 ResultName: $"{operationName}{ContentGeneratorConstants.EndpointResult}",
                 ParameterName: $"{operationName}{ContentGeneratorConstants.Parameters}",

@@ -5,6 +5,7 @@ public record ContentGeneratorClientEndpointResultParameters(
     string OperationName,
     CodeDocumentationTags DocumentationTagsForClass,
     string EndpointResultName,
+    string EndpointResultInterfaceName,
     string InheritClassName,
     string? SuccessResponseName,
     bool UseProblemDetailsAsDefaultBody,

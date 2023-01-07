@@ -33,7 +33,7 @@ public class ContentGeneratorClientEndpointResult : IContentGenerator
         }
 
         sb.AppendLine(codeAttributeGenerator.Generate());
-        sb.AppendLine($"public class {parameters.EndpointResultName} : {parameters.InheritClassName}");
+        sb.AppendLine($"public class {parameters.EndpointResultName} : {parameters.InheritClassName}, {parameters.EndpointResultInterfaceName}");
         sb.AppendLine("{");
         sb.AppendLine(4, $"public {parameters.EndpointResultName}(EndpointResponse response)");
         sb.AppendLine(4, ": base(response)");
@@ -49,6 +49,7 @@ public class ContentGeneratorClientEndpointResult : IContentGenerator
             sb.AppendLine(8, $"=> StatusCode == HttpStatusCode.{item.StatusCode};");
         }
 
+        sb.AppendLine();
         sb.AppendLine(
             4,
             parameters.UseListForModel
@@ -63,21 +64,40 @@ public class ContentGeneratorClientEndpointResult : IContentGenerator
         sb.AppendLine(12, ": throw new InvalidOperationException(\"Content is not the expected type - please use the IsOk property first.\");");
         foreach (var item in parameters.ErrorResponses)
         {
-            sb.AppendLine();
-            if (parameters.UseProblemDetailsAsDefaultBody)
+            if (item.StatusCode == HttpStatusCode.BadRequest)
             {
-                sb.AppendLine(4, $"public ProblemDetails {item.StatusCode.ToNormalizedString()}Content");
-                sb.AppendLine(8, $"=> Is{item.StatusCode.ToNormalizedString()} && ContentObject is ProblemDetails result");
+                sb.AppendLine();
+                sb.AppendLine(4, $"public ValidationProblemDetails {item.StatusCode.ToNormalizedString()}Content");
+                sb.AppendLine(8, $"=> Is{item.StatusCode.ToNormalizedString()} && ContentObject is ValidationProblemDetails result");
+                sb.AppendLine(12, "? result");
+                sb.AppendLine(12, $": throw new InvalidOperationException(\"Content is not the expected type - please use the Is{item.StatusCode.ToNormalizedString()} property first.\");");
             }
             else
             {
-                // TODO: Fix DataType 
-                sb.AppendLine(4, $"public [TODO: DataType] {item.StatusCode.ToNormalizedString()}Content");
-                sb.AppendLine(8, $"=> Is{item.StatusCode.ToNormalizedString()} && ContentObject is [TODO: DataType] result");
+                if (parameters.UseProblemDetailsAsDefaultBody)
+                {
+                    sb.AppendLine();
+                    sb.AppendLine(4, $"public ProblemDetails {item.StatusCode.ToNormalizedString()}Content");
+                    sb.AppendLine(8, $"=> Is{item.StatusCode.ToNormalizedString()} && ContentObject is ProblemDetails result");
+                    sb.AppendLine(12, "? result");
+                    sb.AppendLine(12, $": throw new InvalidOperationException(\"Content is not the expected type - please use the Is{item.StatusCode.ToNormalizedString()} property first.\");");
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(item.ResponseType))
+                    {
+                        // Skip
+                    }
+                    else
+                    {
+                        sb.AppendLine();
+                        sb.AppendLine(4, $"public string {item.StatusCode.ToNormalizedString()}Content");
+                        sb.AppendLine(8, $"=> Is{item.StatusCode.ToNormalizedString()} && ContentObject is string result");
+                        sb.AppendLine(12, "? result");
+                        sb.AppendLine(12, $": throw new InvalidOperationException(\"Content is not the expected type - please use the Is{item.StatusCode.ToNormalizedString()} property first.\");");
+                    }
+                }
             }
-
-            sb.AppendLine(12, "? result");
-            sb.AppendLine(12, $": throw new InvalidOperationException(\"Content is not the expected type - please use the Is{item.StatusCode.ToNormalizedString()} property first.\");");
         }
 
         sb.AppendLine("}");

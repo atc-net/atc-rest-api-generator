@@ -302,21 +302,21 @@ public class ClientCSharpApiGenerator
         {
             var apiGroupName = basePathSegmentName.EnsureFirstCharacterToUpper();
 
-            GenerateInterfaces(
+            GenerateEndpointInterfaces(
                 projectOptions.Document,
                 apiGroupName);
 
             GenerateEndpoints(
                 projectOptions.Document,
-                apiGroupName,
-                apiProjectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
-                apiProjectOptions.ProjectName);
+                apiGroupName);
+
+            GenerateEndpointResultInterfaces(
+                projectOptions.Document,
+                apiGroupName);
 
             GenerateEndpointResults(
                 projectOptions.Document,
-                apiGroupName,
-                apiProjectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
-                apiProjectOptions.ProjectName);
+                apiGroupName);
         }
     }
 
@@ -365,7 +365,7 @@ public class ClientCSharpApiGenerator
            requiredUsings);
     }
 
-    private void GenerateInterfaces(
+    private void GenerateEndpointInterfaces(
         OpenApiDocument document,
         string apiGroupName)
     {
@@ -416,9 +416,7 @@ public class ClientCSharpApiGenerator
 
     private void GenerateEndpoints(
         OpenApiDocument document,
-        string apiGroupName,
-        bool useProblemDetailsAsDefaultResponseBody,
-        string projectName)
+        string apiGroupName)
     {
         var fullNamespace = string.IsNullOrEmpty(projectOptions.ClientFolderName)
             ? $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Endpoints}"
@@ -435,8 +433,8 @@ public class ClientCSharpApiGenerator
             {
                 // Generate
                 var endpointParameters = ContentGeneratorClientEndpointParametersFactory.Create(
-                    useProblemDetailsAsDefaultResponseBody,
-                    projectName,
+                    apiProjectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
+                    projectOptions.ProjectName,
                     apiGroupName,
                     fullNamespace,
                     openApiPath.Value,
@@ -470,11 +468,61 @@ public class ClientCSharpApiGenerator
         }
     }
 
+    private void GenerateEndpointResultInterfaces(
+        OpenApiDocument document,
+        string apiGroupName)
+    {
+        var fullNamespace = string.IsNullOrEmpty(projectOptions.ClientFolderName)
+            ? $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Endpoints}"
+            : $"{projectOptions.ProjectName}.{projectOptions.ClientFolderName}.{ContentGeneratorConstants.Endpoints}";
+
+        foreach (var openApiPath in document.Paths)
+        {
+            if (!openApiPath.IsPathStartingSegmentName(apiGroupName))
+            {
+                continue;
+            }
+
+            foreach (var openApiOperation in openApiPath.Value.Operations)
+            {
+                // Generate
+                var endpointResultInterfaceParameters = ContentGeneratorClientEndpointResultInterfaceParametersFactory.Create(
+                    apiProjectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
+                    apiGroupName,
+                    projectOptions.ProjectName,
+                    fullNamespace,
+                    openApiPath.Value,
+                    openApiOperation.Value);
+
+                var contentGeneratorEndpointResult = new ContentGeneratorClientEndpointResultInterface(
+                    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                    new CodeDocumentationTagsGenerator(),
+                    endpointResultInterfaceParameters);
+
+                var endpointContent = contentGeneratorEndpointResult.Generate();
+
+                // Write
+                var file = new FileInfo(
+                    Helpers.DirectoryInfoHelper.GetCsFileNameForContract(
+                        apiProjectOptions.PathForEndpoints,
+                        apiGroupName,
+                        ContentGeneratorConstants.Interfaces,
+                        endpointResultInterfaceParameters.InterfaceName));
+
+                var contentWriter = new ContentWriter(logger);
+                contentWriter.Write(
+                    projectOptions.PathForSrcGenerate,
+                    file,
+                    ContentWriterArea.Src,
+                    endpointContent);
+            }
+        }
+    }
+
     private void GenerateEndpointResults(
         OpenApiDocument document,
-        string apiGroupName,
-        bool useProblemDetailsAsDefaultResponseBody,
-        string projectName)
+        string apiGroupName)
     {
         var fullNamespace = string.IsNullOrEmpty(projectOptions.ClientFolderName)
             ? $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Endpoints}"
@@ -491,15 +539,13 @@ public class ClientCSharpApiGenerator
             {
                 // Generate
                 var endpointResultParameters = ContentGeneratorClientEndpointResultParametersFactory.Create(
-                    useProblemDetailsAsDefaultResponseBody,
-                    projectName,
+                    apiProjectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
+                    projectOptions.ProjectName,
                     apiGroupName,
                     fullNamespace,
                     projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
                     openApiPath.Value,
-                    openApiOperation.Key,
-                    openApiOperation.Value,
-                    $"{apiProjectOptions.RouteBase}{openApiPath.Key}");
+                    openApiOperation.Value);
 
                 var contentGeneratorEndpointResult = new ContentGeneratorClientEndpointResult(
                     new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
