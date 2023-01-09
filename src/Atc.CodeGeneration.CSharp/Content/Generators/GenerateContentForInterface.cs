@@ -1,4 +1,4 @@
-﻿// ReSharper disable ConvertIfStatementToConditionalTernaryExpression
+// ReSharper disable ConvertIfStatementToConditionalTernaryExpression
 namespace Atc.CodeGeneration.CSharp.Content.Generators;
 
 public class GenerateContentForInterface : IContentGenerator
@@ -24,7 +24,7 @@ public class GenerateContentForInterface : IContentGenerator
                 parameters.HeaderContent,
                 parameters.Namespace,
                 parameters.DocumentationTags,
-                parameters.InterfaceAttributes));
+                parameters.Attributes));
 
         sb.Append($"{parameters.AccessModifier.ToStringLowerCase()} ");
         if (string.IsNullOrEmpty(parameters.InheritedInterfaceTypeName))

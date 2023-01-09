@@ -60,7 +60,7 @@ public class ContentGeneratorClientEndpointResultInterface : IContentGenerator
                 if (parameters.UseProblemDetailsAsDefaultBody)
                 {
                     sb.AppendLine();
-                    sb.AppendLine(4,$"ProblemDetails {item.StatusCode.ToNormalizedString()}Content {{ get; }}");
+                    sb.AppendLine(4, $"ProblemDetails {item.StatusCode.ToNormalizedString()}Content {{ get; }}");
                 }
                 else
                 {

@@ -186,7 +186,6 @@ public static class ContentGeneratorClientEndpointParametersFactory
             }
             else
             {
-
                 if (useProblemDetailsAsDefaultResponseBody)
                 {
                     errorResponses.Add(

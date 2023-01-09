@@ -250,7 +250,11 @@ public class EndpointMethodMetadata
         }
 
         list.AddRange(ApiOperation.Parameters.GetAllFromRoute());
-        list.AddRange(GlobalPathParameters.GetAllFromRoute());
+        if (GlobalPathParameters is not null)
+        {
+            list.AddRange(GlobalPathParameters.GetAllFromRoute());
+        }
+
         return list;
     }
 
