@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Users;
 /// Parameters for operation request.
 /// Description: Update gender on a user.
 /// Operation: UpdateMyTestGender.
-/// Area: Users.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class UpdateMyTestGenderParameters
@@ -28,15 +27,14 @@ public class UpdateMyTestGenderParameters
     [FromQuery(Name = "genderParam")]
     public GenderType? GenderParam { get; set; }
 
+    /// <summary>
+    /// Update test-gender Request.
+    /// </summary>
     [FromBody]
     [Required]
     public UpdateTestGenderRequest Request { get; set; }
 
-    /// <summary>
-    /// Converts to string.
-    /// </summary>
+    /// <inheritdoc />
     public override string ToString()
-    {
-        return $"{nameof(Id)}: {Id}, {nameof(GenderParam)}: ({GenderParam}), {nameof(Request)}: ({Request})";
-    }
+        => $"{nameof(Id)}: {Id}, {nameof(GenderParam)}: {GenderParam}, {nameof(Request)}: ({Request})";
 }

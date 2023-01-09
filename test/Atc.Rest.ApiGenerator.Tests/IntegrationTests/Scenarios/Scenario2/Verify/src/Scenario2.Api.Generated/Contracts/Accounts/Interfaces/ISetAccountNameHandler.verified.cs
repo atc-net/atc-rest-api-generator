@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Accounts;
 /// Domain Interface for RequestHandler.
 /// Description: Set name of account.
 /// Operation: SetAccountName.
-/// Area: Accounts.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface ISetAccountNameHandler
@@ -20,5 +19,7 @@ public interface ISetAccountNameHandler
     /// </summary>
     /// <param name="parameters">The parameters.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<SetAccountNameResult> ExecuteAsync(SetAccountNameParameters parameters, CancellationToken cancellationToken = default);
+    Task<SetAccountNameResult> ExecuteAsync(
+        SetAccountNameParameters parameters,
+        CancellationToken cancellationToken = default);
 }

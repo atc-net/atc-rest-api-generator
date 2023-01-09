@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Accounts;
 /// Parameters for operation request.
 /// Description: Update name of account.
 /// Operation: UpdateAccountName.
-/// Area: Accounts.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class UpdateAccountNameParameters
@@ -28,11 +27,7 @@ public class UpdateAccountNameParameters
     [FromHeader(Name = "name")]
     public string Name { get; set; }
 
-    /// <summary>
-    /// Converts to string.
-    /// </summary>
+    /// <inheritdoc />
     public override string ToString()
-    {
-        return $"{nameof(AccountId)}: {AccountId}, {nameof(Name)}: {Name}";
-    }
+        => $"{nameof(AccountId)}: {AccountId}, {nameof(Name)}: {Name}";
 }

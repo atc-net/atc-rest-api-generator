@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Files;
 /// Domain Interface for RequestHandler.
 /// Description: Upload multi files as form data.
 /// Operation: UploadMultiFilesAsFormData.
-/// Area: Files.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface IUploadMultiFilesAsFormDataHandler
@@ -20,5 +19,7 @@ public interface IUploadMultiFilesAsFormDataHandler
     /// </summary>
     /// <param name="parameters">The parameters.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<UploadMultiFilesAsFormDataResult> ExecuteAsync(UploadMultiFilesAsFormDataParameters parameters, CancellationToken cancellationToken = default);
+    Task<UploadMultiFilesAsFormDataResult> ExecuteAsync(
+        UploadMultiFilesAsFormDataParameters parameters,
+        CancellationToken cancellationToken = default);
 }

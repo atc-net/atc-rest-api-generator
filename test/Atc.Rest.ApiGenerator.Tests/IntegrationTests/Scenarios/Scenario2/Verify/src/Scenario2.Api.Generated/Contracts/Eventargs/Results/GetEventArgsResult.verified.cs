@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Eventargs;
 /// Results for operation request.
 /// Description: Get EventArgs List.
 /// Operation: GetEventArgs.
-/// Area: Eventargs.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class GetEventArgsResult : ResultBase
@@ -20,10 +19,12 @@ public class GetEventArgsResult : ResultBase
     /// <summary>
     /// 200 - Ok response.
     /// </summary>
-    public static GetEventArgsResult Ok(IEnumerable<EventArgs> response) => new GetEventArgsResult(new OkObjectResult(response ?? Enumerable.Empty<EventArgs>()));
+    public static GetEventArgsResult Ok(IEnumerable<EventArgs> response)
+        => new GetEventArgsResult(new OkObjectResult(response ?? Enumerable.Empty<EventArgs>()));
 
     /// <summary>
     /// Performs an implicit conversion from GetEventArgsResult to ActionResult.
     /// </summary>
-    public static implicit operator GetEventArgsResult(List<EventArgs> response) => Ok(response);
+    public static implicit operator GetEventArgsResult(List<EventArgs> response)
+        => Ok(response);
 }

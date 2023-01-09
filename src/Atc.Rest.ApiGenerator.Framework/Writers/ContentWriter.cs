@@ -2,7 +2,7 @@
 
 namespace Atc.Rest.ApiGenerator.Framework.Writers;
 
-public class ContentWriter : IContentWriter
+public sealed class ContentWriter : IContentWriter
 {
     private readonly ILogger logger;
 

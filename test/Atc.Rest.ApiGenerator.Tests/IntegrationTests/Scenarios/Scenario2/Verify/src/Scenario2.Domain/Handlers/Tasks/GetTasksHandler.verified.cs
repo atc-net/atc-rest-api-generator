@@ -4,12 +4,12 @@ namespace Scenario2.Domain.Handlers.Tasks;
 /// Handler for operation request.
 /// Description: Returns tasks.
 /// Operation: GetTasks.
-/// Area: Tasks.
 /// </summary>
 public class GetTasksHandler : IGetTasksHandler
 {
-    public Task<GetTasksResult> ExecuteAsync(CancellationToken cancellationToken = default)
+    public Task<GetTasksResult> ExecuteAsync(
+        CancellationToken cancellationToken = default)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException("Add logic here for GetTasksHandler");
     }
 }

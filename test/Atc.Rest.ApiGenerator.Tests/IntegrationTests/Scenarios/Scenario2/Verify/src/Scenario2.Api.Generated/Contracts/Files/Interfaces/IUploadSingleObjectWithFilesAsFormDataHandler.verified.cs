@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Files;
 /// Domain Interface for RequestHandler.
 /// Description: Upload files as FormData.
 /// Operation: UploadSingleObjectWithFilesAsFormData.
-/// Area: Files.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface IUploadSingleObjectWithFilesAsFormDataHandler
@@ -20,5 +19,7 @@ public interface IUploadSingleObjectWithFilesAsFormDataHandler
     /// </summary>
     /// <param name="parameters">The parameters.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<UploadSingleObjectWithFilesAsFormDataResult> ExecuteAsync(UploadSingleObjectWithFilesAsFormDataParameters parameters, CancellationToken cancellationToken = default);
+    Task<UploadSingleObjectWithFilesAsFormDataResult> ExecuteAsync(
+        UploadSingleObjectWithFilesAsFormDataParameters parameters,
+        CancellationToken cancellationToken = default);
 }

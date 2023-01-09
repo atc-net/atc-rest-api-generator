@@ -14,7 +14,8 @@ public class EndpointMethodMetadata
         string? contractParameterTypeName,
         string? contractResultTypeName,
         List<ResponseTypeNameAndItemSchema> contractReturnTypeNames,
-        SyntaxGeneratorContractParameter? sgContractParameter,
+        OpenApiOperation? apiOperation,
+        IList<OpenApiParameter>? globalPathParameters,
         IDictionary<string, OpenApiSchema> componentsSchemas,
         IList<ApiOperation> apiOperationSchemaMappings)
     {
@@ -28,7 +29,10 @@ public class EndpointMethodMetadata
         ContractParameterTypeName = contractParameterTypeName;
         ContractResultTypeName = contractResultTypeName;
         ContractReturnTypeNames = contractReturnTypeNames;
-        ContractParameter = sgContractParameter;
+
+        ApiOperation = apiOperation;
+        GlobalPathParameters = globalPathParameters;
+
         ComponentsSchemas = componentsSchemas;
         OperationSchemaMappings = apiOperationSchemaMappings;
     }
@@ -53,7 +57,9 @@ public class EndpointMethodMetadata
 
     public List<ResponseTypeNameAndItemSchema> ContractReturnTypeNames { get; }
 
-    public SyntaxGeneratorContractParameter? ContractParameter { get; }
+    public OpenApiOperation? ApiOperation { get; }
+
+    public IList<OpenApiParameter>? GlobalPathParameters { get; }
 
     public IDictionary<string, OpenApiSchema> ComponentsSchemas { get; }
 
@@ -92,7 +98,7 @@ public class EndpointMethodMetadata
 
     public bool IsContractParameterRequestBodyUsed()
     {
-        var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
+        var schema = ApiOperation?.RequestBody?.Content.GetSchemaByFirstMediaType();
         return schema is not null;
     }
 
@@ -103,7 +109,7 @@ public class EndpointMethodMetadata
             return false;
         }
 
-        var pair = ContractParameter?.ApiOperation.RequestBody?.Content.First();
+        var pair = ApiOperation?.RequestBody?.Content.First();
         return "multipart/form-data".Equals(pair!.Value.Key, StringComparison.Ordinal);
     }
 
@@ -114,7 +120,7 @@ public class EndpointMethodMetadata
             return false;
         }
 
-        var pair = ContractParameter?.ApiOperation.RequestBody?.Content.First();
+        var pair = ApiOperation?.RequestBody?.Content.First();
         return !pair?.Value?.Schema.HasAnyPropertiesWithFormatTypeBinary() ?? true;
     }
 
@@ -125,13 +131,13 @@ public class EndpointMethodMetadata
             return false;
         }
 
-        var pair = ContractParameter?.ApiOperation.RequestBody?.Content.First();
+        var pair = ApiOperation?.RequestBody?.Content.First();
         return "application/octet-stream".Equals(pair!.Value.Key, StringComparison.Ordinal);
     }
 
     public bool IsContractParameterRequestBodyUsingSystemCollectionGenericNamespace()
     {
-        var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
+        var schema = ApiOperation?.RequestBody?.Content.GetSchemaByFirstMediaType();
         return schema is not null &&
                (schema.IsArrayReferenceTypeDeclared() ||
                 schema.HasAnyPropertiesFormatTypeFromSystemCollectionGenericNamespace(ComponentsSchemas) ||
@@ -140,14 +146,14 @@ public class EndpointMethodMetadata
 
     public bool IsContractParameterRequestBodyUsingSystemNamespace()
     {
-        var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
+        var schema = ApiOperation?.RequestBody?.Content.GetSchemaByFirstMediaType();
         return schema is not null &&
                schema.HasAnyPropertiesFormatTypeFromSystemNamespace(ComponentsSchemas);
     }
 
     public bool IsContractParameterRequestBodyUsingStringBuilder()
     {
-        var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
+        var schema = ApiOperation?.RequestBody?.Content.GetSchemaByFirstMediaType();
         if (schema is null)
         {
             return false;
@@ -171,13 +177,13 @@ public class EndpointMethodMetadata
 
     public bool HasContractParameterRequestBody()
     {
-        var openApiSchema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
+        var openApiSchema = ApiOperation?.RequestBody?.Content.GetSchemaByFirstMediaType();
         return openApiSchema is not null;
     }
 
     public bool HasContractParameterAnyParametersOrRequestBody()
     {
-        var apiOperationParameters = ContractParameter?.ApiOperation.Parameters;
+        var apiOperationParameters = ApiOperation?.Parameters;
         if (apiOperationParameters is not null &&
             apiOperationParameters.Any())
         {
@@ -211,7 +217,7 @@ public class EndpointMethodMetadata
 
     public bool HasSharedModelOrEnumInContractParameterRequestBody()
     {
-        var schema = ContractParameter?.ApiOperation.RequestBody?.Content.GetSchemaByFirstMediaType();
+        var schema = ApiOperation?.RequestBody?.Content.GetSchemaByFirstMediaType();
         return schema is not null &&
                schema.HasAnySharedModelOrEnum(OperationSchemaMappings);
     }
@@ -238,20 +244,24 @@ public class EndpointMethodMetadata
     public List<OpenApiParameter> GetRouteParameters()
     {
         var list = new List<OpenApiParameter>();
-        if (ContractParameter is null)
+        if (ApiOperation is null)
         {
             return list;
         }
 
-        list.AddRange(ContractParameter.ApiOperation.Parameters.GetAllFromRoute());
-        list.AddRange(ContractParameter.GlobalPathParameters.GetAllFromRoute());
+        list.AddRange(ApiOperation.Parameters.GetAllFromRoute());
+        if (GlobalPathParameters is not null)
+        {
+            list.AddRange(GlobalPathParameters.GetAllFromRoute());
+        }
+
         return list;
     }
 
     public List<OpenApiParameter> GetHeaderParameters()
-        => ContractParameter is null
+        => ApiOperation is null
             ? new List<OpenApiParameter>()
-            : ContractParameter.ApiOperation.Parameters.GetAllFromHeader();
+            : ApiOperation.Parameters.GetAllFromHeader();
 
     public List<OpenApiParameter> GetHeaderRequiredParameters()
         => GetHeaderParameters()
@@ -259,9 +269,9 @@ public class EndpointMethodMetadata
             .ToList();
 
     public List<OpenApiParameter> GetQueryParameters()
-        => ContractParameter is null
+        => ApiOperation is null
             ? new List<OpenApiParameter>()
-            : ContractParameter.ApiOperation.Parameters.GetAllFromQuery();
+            : ApiOperation.Parameters.GetAllFromQuery();
 
     public List<OpenApiParameter> GetQueryRequiredParameters()
         => GetQueryParameters()
@@ -297,8 +307,7 @@ public class EndpointMethodMetadata
     }
 
     public OpenApiSchema? GetRequestBodySchema()
-        => ContractParameter?
-            .ApiOperation
+        => ApiOperation?
             .RequestBody?
             .Content
             .GetSchemaByFirstMediaType();
@@ -332,21 +341,21 @@ public class EndpointMethodMetadata
             return true;
         }
 
-        if (ContractParameter is not null)
+        if (ApiOperation is not null)
         {
-            if (ContractParameter.ApiOperation.GetOperationName().Contains(value, StringComparison.OrdinalIgnoreCase))
+            if (ApiOperation.GetOperationName().Contains(value, StringComparison.OrdinalIgnoreCase))
             {
                 return true;
             }
 
-            var requestModelName = ContractParameter.ApiOperation.GetModelSchemaFromRequest()?.GetModelName();
+            var requestModelName = ApiOperation.GetModelSchemaFromRequest()?.GetModelName();
             if (requestModelName is not null &&
                 requestModelName.Contains(value, StringComparison.OrdinalIgnoreCase))
             {
                 return true;
             }
 
-            var responseModelName = ContractParameter.ApiOperation.GetModelSchemaFromResponse()?.GetModelName();
+            var responseModelName = ApiOperation.GetModelSchemaFromResponse()?.GetModelName();
             if (responseModelName is not null &&
                 responseModelName.Contains(value, StringComparison.OrdinalIgnoreCase))
             {

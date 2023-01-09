@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Files;
 /// Results for operation request.
 /// Description: Get File By Id.
 /// Operation: GetFileById.
-/// Area: Files.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class GetFileByIdResult : ResultBase
@@ -20,10 +19,12 @@ public class GetFileByIdResult : ResultBase
     /// <summary>
     /// 200 - Ok response.
     /// </summary>
-    public static GetFileByIdResult Ok(byte[] bytes, string fileName) => new GetFileByIdResult(ResultFactory.CreateFileContentResult(bytes, fileName));
+    public static GetFileByIdResult Ok(byte[] bytes, string fileName)
+        => new GetFileByIdResult(ResultFactory.CreateFileContentResult(bytes, fileName));
 
     /// <summary>
     /// 404 - NotFound response.
     /// </summary>
-    public static GetFileByIdResult NotFound(string? message = null) => new GetFileByIdResult(new NotFoundObjectResult(message));
+    public static GetFileByIdResult NotFound(string? message = null)
+        => new GetFileByIdResult(new NotFoundObjectResult(message));
 }

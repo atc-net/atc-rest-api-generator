@@ -16,11 +16,7 @@ public class EventArgs
 
     public string EventName { get; set; }
 
-    /// <summary>
-    /// Converts to string.
-    /// </summary>
+    /// <inheritdoc />
     public override string ToString()
-    {
-        return $"{nameof(Id)}: {Id}, {nameof(EventName)}: {EventName}";
-    }
+        => $"{nameof(Id)}: {Id}, {nameof(EventName)}: {EventName}";
 }

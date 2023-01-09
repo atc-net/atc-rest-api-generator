@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.List;
 /// Results for operation request.
 /// Description: Your GET endpoint.
 /// Operation: GetListOfStrings.
-/// Area: List.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class GetListOfStringsResult : ResultBase
@@ -20,10 +19,12 @@ public class GetListOfStringsResult : ResultBase
     /// <summary>
     /// 200 - Ok response.
     /// </summary>
-    public static GetListOfStringsResult Ok(IEnumerable<string> response) => new GetListOfStringsResult(new OkObjectResult(response ?? Enumerable.Empty<string>()));
+    public static GetListOfStringsResult Ok(IEnumerable<string> response)
+        => new GetListOfStringsResult(new OkObjectResult(response ?? Enumerable.Empty<string>()));
 
     /// <summary>
     /// Performs an implicit conversion from GetListOfStringsResult to ActionResult.
     /// </summary>
-    public static implicit operator GetListOfStringsResult(List<string> response) => Ok(response);
+    public static implicit operator GetListOfStringsResult(List<string> response)
+        => Ok(response);
 }

@@ -20,11 +20,7 @@ public class FileAsFormDataRequest
     [Required]
     public List<string> Items { get; set; }
 
-    /// <summary>
-    /// Converts to string.
-    /// </summary>
+    /// <inheritdoc />
     public override string ToString()
-    {
-        return $"{nameof(ItemName)}: {ItemName}, {nameof(File)}: {File}, {nameof(Items)}.Count: {Items?.Count ?? 0}";
-    }
+        => $"{nameof(ItemName)}: {ItemName}, {nameof(File)}: {File}, {nameof(Items)}.Count: {Items?.Count ?? 0}";
 }

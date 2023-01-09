@@ -18,11 +18,7 @@ public class UpdateItemRequest
     [Required]
     public Item Item { get; set; }
 
-    /// <summary>
-    /// Converts to string.
-    /// </summary>
+    /// <inheritdoc />
     public override string ToString()
-    {
-        return $"{nameof(Item)}: ({Item})";
-    }
+        => $"{nameof(Item)}: ({Item})";
 }

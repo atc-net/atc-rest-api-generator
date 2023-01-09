@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Addresses;
 /// Parameters for operation request.
 /// Description: Get addresses by postal code.
 /// Operation: GetAddressesByPostalCodes.
-/// Area: Addresses.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class GetAddressesByPostalCodesParameters
@@ -22,11 +21,7 @@ public class GetAddressesByPostalCodesParameters
     [Required]
     public string PostalCode { get; set; }
 
-    /// <summary>
-    /// Converts to string.
-    /// </summary>
+    /// <inheritdoc />
     public override string ToString()
-    {
-        return $"{nameof(PostalCode)}: {PostalCode}";
-    }
+        => $"{nameof(PostalCode)}: {PostalCode}";
 }

@@ -1,28 +1,38 @@
-namespace Demo.Api
+﻿namespace Demo.Api;
+
+public class Startup
 {
-    public class Startup
+    private readonly RestApiExtendedOptions restApiOptions;
+
+    public Startup(
+        IConfiguration configuration)
     {
-        private readonly RestApiExtendedOptions restApiOptions;
-
-        public Startup(IConfiguration configuration)
+        Configuration = configuration;
+        restApiOptions = new RestApiExtendedOptions
         {
-            Configuration = configuration;
-            restApiOptions = new RestApiExtendedOptions();
-            restApiOptions.AddAssemblyPairs(Assembly.GetAssembly(typeof(ApiRegistration)), Assembly.GetAssembly(typeof(DomainRegistration)));
-        }
+            // TODO: Remove/out-comment/set to false this for production scenarios!
+            AllowAnonymousAccessForDevelopment = true,
+        };
 
-        public IConfiguration Configuration { get; }
+        restApiOptions.AddAssemblyPairs(
+            Assembly.GetAssembly(typeof(ApiRegistration)),
+            Assembly.GetAssembly(typeof(DomainRegistration)));
+    }
 
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.ConfigureOptions<ConfigureSwaggerDocOptions>();
+    public IConfiguration Configuration { get; }
 
-            services.AddRestApi<Startup>(restApiOptions, Configuration);
-        }
+    public void ConfigureServices(
+        IServiceCollection services)
+    {
+        services.ConfigureOptions<ConfigureSwaggerDocOptions>();
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            app.ConfigureRestApi(env, restApiOptions);
-        }
+        services.AddRestApi<Startup>(restApiOptions, Configuration);
+    }
+
+    public void Configure(
+        IApplicationBuilder app,
+        IWebHostEnvironment env)
+    {
+        app.ConfigureRestApi(env, restApiOptions);
     }
 }

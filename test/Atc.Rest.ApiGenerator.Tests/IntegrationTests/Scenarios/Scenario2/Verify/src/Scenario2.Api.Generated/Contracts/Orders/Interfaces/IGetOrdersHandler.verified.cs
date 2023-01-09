@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Orders;
 /// Domain Interface for RequestHandler.
 /// Description: Get orders.
 /// Operation: GetOrders.
-/// Area: Orders.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface IGetOrdersHandler
@@ -20,5 +19,7 @@ public interface IGetOrdersHandler
     /// </summary>
     /// <param name="parameters">The parameters.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<GetOrdersResult> ExecuteAsync(GetOrdersParameters parameters, CancellationToken cancellationToken = default);
+    Task<GetOrdersResult> ExecuteAsync(
+        GetOrdersParameters parameters,
+        CancellationToken cancellationToken = default);
 }

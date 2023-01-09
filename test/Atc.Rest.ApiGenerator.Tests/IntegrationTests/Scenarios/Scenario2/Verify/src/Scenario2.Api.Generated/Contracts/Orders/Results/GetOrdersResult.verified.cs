@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Orders;
 /// Results for operation request.
 /// Description: Get orders.
 /// Operation: GetOrders.
-/// Area: Orders.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class GetOrdersResult : ResultBase
@@ -20,15 +19,18 @@ public class GetOrdersResult : ResultBase
     /// <summary>
     /// 200 - Ok response.
     /// </summary>
-    public static GetOrdersResult Ok(Pagination<Order> response) => new GetOrdersResult(new OkObjectResult(response));
+    public static GetOrdersResult Ok(Pagination<Order> response)
+        => new GetOrdersResult(new OkObjectResult(response));
 
     /// <summary>
     /// 404 - NotFound response.
     /// </summary>
-    public static GetOrdersResult NotFound(string? message = null) => new GetOrdersResult(new NotFoundObjectResult(message));
+    public static GetOrdersResult NotFound(string? message = null)
+        => new GetOrdersResult(new NotFoundObjectResult(message));
 
     /// <summary>
     /// Performs an implicit conversion from GetOrdersResult to ActionResult.
     /// </summary>
-    public static implicit operator GetOrdersResult(Pagination<Order> response) => Ok(response);
+    public static implicit operator GetOrdersResult(Pagination<Order> response)
+        => Ok(response);
 }

@@ -22,11 +22,7 @@ public class UpdateOrderRequest
     [EmailAddress]
     public string MyEmail { get; set; }
 
-    /// <summary>
-    /// Converts to string.
-    /// </summary>
+    /// <inheritdoc />
     public override string ToString()
-    {
-        return $"{nameof(MyEmail)}: {MyEmail}";
-    }
+        => $"{nameof(MyEmail)}: {MyEmail}";
 }

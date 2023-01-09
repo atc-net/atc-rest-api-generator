@@ -4,12 +4,12 @@ namespace Scenario2.Domain.Handlers.List;
 /// Handler for operation request.
 /// Description: Your GET endpoint.
 /// Operation: GetListOfStrings.
-/// Area: List.
 /// </summary>
 public class GetListOfStringsHandler : IGetListOfStringsHandler
 {
-    public Task<GetListOfStringsResult> ExecuteAsync(CancellationToken cancellationToken = default)
+    public Task<GetListOfStringsResult> ExecuteAsync(
+        CancellationToken cancellationToken = default)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException("Add logic here for GetListOfStringsHandler");
     }
 }

@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Files;
 /// Parameters for operation request.
 /// Description: Upload multi files as form data.
 /// Operation: UploadMultiFilesAsFormData.
-/// Area: Files.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class UploadMultiFilesAsFormDataParameters
@@ -19,11 +18,7 @@ public class UploadMultiFilesAsFormDataParameters
     [Required]
     public List<IFormFile> Request { get; set; } = new List<IFormFile>();
 
-    /// <summary>
-    /// Converts to string.
-    /// </summary>
+    /// <inheritdoc />
     public override string ToString()
-    {
-        return $"{nameof(Request)}.Count: {Request?.Count ?? 0}";
-    }
+        => $"{nameof(Request)}.Count: {Request?.Count ?? 0}";
 }

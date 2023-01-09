@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Accounts;
 /// Results for operation request.
 /// Description: Set name of account.
 /// Operation: SetAccountName.
-/// Area: Accounts.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class SetAccountNameResult : ResultBase
@@ -20,10 +19,12 @@ public class SetAccountNameResult : ResultBase
     /// <summary>
     /// 200 - Ok response.
     /// </summary>
-    public static SetAccountNameResult Ok(string? message = null) => new SetAccountNameResult(new OkObjectResult(message));
+    public static SetAccountNameResult Ok(string? message = null)
+        => new SetAccountNameResult(new OkObjectResult(message));
 
     /// <summary>
     /// Performs an implicit conversion from SetAccountNameResult to ActionResult.
     /// </summary>
-    public static implicit operator SetAccountNameResult(string response) => Ok(response);
+    public static implicit operator SetAccountNameResult(string response)
+        => Ok(response);
 }

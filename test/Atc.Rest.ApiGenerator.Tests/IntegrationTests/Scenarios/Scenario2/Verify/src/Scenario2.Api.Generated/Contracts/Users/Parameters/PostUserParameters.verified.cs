@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Users;
 /// Parameters for operation request.
 /// Description: Create a new user.
 /// Operation: PostUser.
-/// Area: Users.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class PostUserParameters
@@ -22,11 +21,7 @@ public class PostUserParameters
     [Required]
     public CreateUserRequest Request { get; set; }
 
-    /// <summary>
-    /// Converts to string.
-    /// </summary>
+    /// <inheritdoc />
     public override string ToString()
-    {
-        return $"{nameof(Request)}: ({Request})";
-    }
+        => $"{nameof(Request)}: ({Request})";
 }

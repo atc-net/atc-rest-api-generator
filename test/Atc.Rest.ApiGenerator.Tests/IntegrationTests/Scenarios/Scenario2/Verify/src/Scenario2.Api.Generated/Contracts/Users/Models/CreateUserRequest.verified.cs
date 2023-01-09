@@ -48,16 +48,9 @@ public class CreateUserRequest
     [Required]
     public GenderType Gender { get; set; }
 
-    /// <summary>
-    /// Address.
-    /// </summary>
     public Address? MyNullableAddress { get; set; }
 
-    /// <summary>
-    /// Converts to string.
-    /// </summary>
+    /// <inheritdoc />
     public override string ToString()
-    {
-        return $"{nameof(FirstName)}: {FirstName}, {nameof(LastName)}: {LastName}, {nameof(MyNullableDateTime)}: {MyNullableDateTime}, {nameof(MyDateTime)}: {MyDateTime}, {nameof(Email)}: {Email}, {nameof(Homepage)}: {Homepage}, {nameof(Gender)}: ({Gender}), {nameof(MyNullableAddress)}: ({MyNullableAddress})";
-    }
+        => $"{nameof(FirstName)}: {FirstName}, {nameof(LastName)}: {LastName}, {nameof(MyNullableDateTime)}: ({MyNullableDateTime}), {nameof(MyDateTime)}: ({MyDateTime}), {nameof(Email)}: {Email}, {nameof(Homepage)}: ({Homepage}), {nameof(Gender)}: {Gender}, {nameof(MyNullableAddress)}: ({MyNullableAddress})";
 }

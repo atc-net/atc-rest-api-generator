@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Users;
 /// Domain Interface for RequestHandler.
 /// Description: Delete user by id.
 /// Operation: DeleteUserById.
-/// Area: Users.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface IDeleteUserByIdHandler
@@ -20,5 +19,7 @@ public interface IDeleteUserByIdHandler
     /// </summary>
     /// <param name="parameters">The parameters.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<DeleteUserByIdResult> ExecuteAsync(DeleteUserByIdParameters parameters, CancellationToken cancellationToken = default);
+    Task<DeleteUserByIdResult> ExecuteAsync(
+        DeleteUserByIdParameters parameters,
+        CancellationToken cancellationToken = default);
 }

@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Eventargs;
 /// Domain Interface for RequestHandler.
 /// Description: Get EventArgs List.
 /// Operation: GetEventArgs.
-/// Area: Eventargs.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface IGetEventArgsHandler
@@ -19,5 +18,6 @@ public interface IGetEventArgsHandler
     /// Execute method.
     /// </summary>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<GetEventArgsResult> ExecuteAsync(CancellationToken cancellationToken = default);
+    Task<GetEventArgsResult> ExecuteAsync(
+        CancellationToken cancellationToken = default);
 }

@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Tasks;
 /// Domain Interface for RequestHandler.
 /// Description: Returns tasks.
 /// Operation: GetTasks.
-/// Area: Tasks.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface IGetTasksHandler
@@ -19,5 +18,6 @@ public interface IGetTasksHandler
     /// Execute method.
     /// </summary>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<GetTasksResult> ExecuteAsync(CancellationToken cancellationToken = default);
+    Task<GetTasksResult> ExecuteAsync(
+        CancellationToken cancellationToken = default);
 }

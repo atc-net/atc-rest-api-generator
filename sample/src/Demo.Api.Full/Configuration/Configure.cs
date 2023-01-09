@@ -1,10 +1,9 @@
-﻿using Demo.Api.Generated.Contracts.Orders;
+using Demo.Api.Generated.Contracts.Orders;
 using Demo.Api.Generated.Contracts.Users;
 using Demo.Domain.Handlers.Orders;
 using Demo.Domain.Handlers.Users;
 using Demo.Domain.Validators.Users;
 using FluentValidation;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Demo.Api.Full.Configuration
 {

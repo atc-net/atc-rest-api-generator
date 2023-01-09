@@ -14,11 +14,7 @@ public class UpdateAccountRequest
 {
     public string Name { get; set; }
 
-    /// <summary>
-    /// Converts to string.
-    /// </summary>
+    /// <inheritdoc />
     public override string ToString()
-    {
-        return $"{nameof(Name)}: {Name}";
-    }
+        => $"{nameof(Name)}: {Name}";
 }

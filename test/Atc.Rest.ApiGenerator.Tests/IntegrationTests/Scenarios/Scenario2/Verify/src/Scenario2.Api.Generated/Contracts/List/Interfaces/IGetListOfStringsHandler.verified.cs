@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.List;
 /// Domain Interface for RequestHandler.
 /// Description: Your GET endpoint.
 /// Operation: GetListOfStrings.
-/// Area: List.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface IGetListOfStringsHandler
@@ -19,5 +18,6 @@ public interface IGetListOfStringsHandler
     /// Execute method.
     /// </summary>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<GetListOfStringsResult> ExecuteAsync(CancellationToken cancellationToken = default);
+    Task<GetListOfStringsResult> ExecuteAsync(
+        CancellationToken cancellationToken = default);
 }

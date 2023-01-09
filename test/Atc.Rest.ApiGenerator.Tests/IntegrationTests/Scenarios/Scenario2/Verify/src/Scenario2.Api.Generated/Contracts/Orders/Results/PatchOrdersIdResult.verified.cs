@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Orders;
 /// Results for operation request.
 /// Description: Update part of order by id.
 /// Operation: PatchOrdersId.
-/// Area: Orders.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class PatchOrdersIdResult : ResultBase
@@ -20,25 +19,30 @@ public class PatchOrdersIdResult : ResultBase
     /// <summary>
     /// 200 - Ok response.
     /// </summary>
-    public static PatchOrdersIdResult Ok(string? message = null) => new PatchOrdersIdResult(new OkObjectResult(message));
+    public static PatchOrdersIdResult Ok(string? message = null)
+        => new PatchOrdersIdResult(new OkObjectResult(message));
 
     /// <summary>
     /// 404 - NotFound response.
     /// </summary>
-    public static PatchOrdersIdResult NotFound(string? message = null) => new PatchOrdersIdResult(new NotFoundObjectResult(message));
+    public static PatchOrdersIdResult NotFound(string? message = null)
+        => new PatchOrdersIdResult(new NotFoundObjectResult(message));
 
     /// <summary>
     /// 409 - Conflict response.
     /// </summary>
-    public static PatchOrdersIdResult Conflict(string? error = null) => new PatchOrdersIdResult(new ConflictObjectResult(error));
+    public static PatchOrdersIdResult Conflict(string? error = null)
+        => new PatchOrdersIdResult(new ConflictObjectResult(error));
 
     /// <summary>
     /// 502 - BadGateway response.
     /// </summary>
-    public static PatchOrdersIdResult BadGateway(string? message = null) => new PatchOrdersIdResult(ResultFactory.CreateContentResultWithProblemDetails(HttpStatusCode.BadGateway, message));
+    public static PatchOrdersIdResult BadGateway(string? message = null)
+        => new PatchOrdersIdResult(ResultFactory.CreateContentResultWithProblemDetails(HttpStatusCode.BadGateway, message));
 
     /// <summary>
     /// Performs an implicit conversion from PatchOrdersIdResult to ActionResult.
     /// </summary>
-    public static implicit operator PatchOrdersIdResult(string response) => Ok(response);
+    public static implicit operator PatchOrdersIdResult(string response)
+        => Ok(response);
 }

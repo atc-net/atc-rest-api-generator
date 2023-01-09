@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Orders;
 /// Parameters for operation request.
 /// Description: Update part of order by id.
 /// Operation: PatchOrdersId.
-/// Area: Orders.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class PatchOrdersIdParameters
@@ -50,11 +49,7 @@ public class PatchOrdersIdParameters
     [Required]
     public UpdateOrderRequest Request { get; set; }
 
-    /// <summary>
-    /// Converts to string.
-    /// </summary>
+    /// <inheritdoc />
     public override string ToString()
-    {
-        return $"{nameof(Id)}: {Id}, {nameof(MyTestHeader)}: {MyTestHeader}, {nameof(MyTestHeaderBool)}: {MyTestHeaderBool}, {nameof(MyTestHeaderInt)}: {MyTestHeaderInt}, {nameof(Request)}: ({Request})";
-    }
+        => $"{nameof(Id)}: {Id}, {nameof(MyTestHeader)}: {MyTestHeader}, {nameof(MyTestHeaderBool)}: {MyTestHeaderBool}, {nameof(MyTestHeaderInt)}: {MyTestHeaderInt}, {nameof(Request)}: ({Request})";
 }

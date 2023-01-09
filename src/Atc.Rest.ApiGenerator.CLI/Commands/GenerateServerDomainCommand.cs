@@ -7,6 +7,7 @@ public class GenerateServerDomainCommand : AsyncCommand<ServerDomainCommandSetti
 
     public GenerateServerDomainCommand(
         ILogger<GenerateServerDomainCommand> logger,
+        IApiOperationExtractor apiOperationExtractor,
         IOpenApiDocumentValidator openApiDocumentValidator)
     {
         this.logger = logger;

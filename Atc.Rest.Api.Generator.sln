@@ -54,15 +54,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Rest.ApiGenerator.Frame
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Rest.ApiGenerator.Framework", "src\Atc.Rest.ApiGenerator.Framework\Atc.Rest.ApiGenerator.Framework.csproj", "{2D69D9AA-19E2-469D-BCA4-ED972721E005}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Atc.Rest.ApiGenerator.Framework.Mvc.Tests", "test\Atc.Rest.ApiGenerator.Framework.Mvc.Tests\Atc.Rest.ApiGenerator.Framework.Mvc.Tests.csproj", "{108216D7-4552-4397-AC5A-5C3346D65BFB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Rest.ApiGenerator.Framework.Mvc.Tests", "test\Atc.Rest.ApiGenerator.Framework.Mvc.Tests\Atc.Rest.ApiGenerator.Framework.Mvc.Tests.csproj", "{108216D7-4552-4397-AC5A-5C3346D65BFB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Atc.Rest.ApiGenerator.Framework.Contracts", "src\Atc.Rest.ApiGenerator.Framework.Contracts\Atc.Rest.ApiGenerator.Framework.Contracts.csproj", "{DEA4D5EC-DD8A-48D6-B859-55D95F46CC06}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Rest.ApiGenerator.Framework.Contracts", "src\Atc.Rest.ApiGenerator.Framework.Contracts\Atc.Rest.ApiGenerator.Framework.Contracts.csproj", "{DEA4D5EC-DD8A-48D6-B859-55D95F46CC06}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Atc.Rest.ApiGenerator.OpenApi", "src\Atc.Rest.ApiGenerator.OpenApi\Atc.Rest.ApiGenerator.OpenApi.csproj", "{EE12FAB6-FEA2-4819-ABAF-B38319325F35}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Rest.ApiGenerator.OpenApi", "src\Atc.Rest.ApiGenerator.OpenApi\Atc.Rest.ApiGenerator.OpenApi.csproj", "{EE12FAB6-FEA2-4819-ABAF-B38319325F35}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Atc.Rest.ApiGenerator.OpenApi.Tests", "test\Atc.Rest.ApiGenerator.OpenApi.Tests\Atc.Rest.ApiGenerator.OpenApi.Tests.csproj", "{4562D01B-E184-489C-904B-C9E39BA17E6E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Rest.ApiGenerator.OpenApi.Tests", "test\Atc.Rest.ApiGenerator.OpenApi.Tests\Atc.Rest.ApiGenerator.OpenApi.Tests.csproj", "{4562D01B-E184-489C-904B-C9E39BA17E6E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Atc.Rest.ApiGenerator.Framework.Tests", "test\Atc.Rest.ApiGenerator.Framework.Tests\Atc.Rest.ApiGenerator.Framework.Tests.csproj", "{B8194FFD-8C4D-46AA-B1FA-A3EE195AF0FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Rest.ApiGenerator.Framework.Tests", "test\Atc.Rest.ApiGenerator.Framework.Tests\Atc.Rest.ApiGenerator.Framework.Tests.csproj", "{B8194FFD-8C4D-46AA-B1FA-A3EE195AF0FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Atc.CodeGeneration.CSharp", "src\Atc.CodeGeneration.CSharp\Atc.CodeGeneration.CSharp.csproj", "{9A87BAA2-F521-45B1-AF93-9BC642FD8C76}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -138,6 +140,10 @@ Global
 		{B8194FFD-8C4D-46AA-B1FA-A3EE195AF0FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B8194FFD-8C4D-46AA-B1FA-A3EE195AF0FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B8194FFD-8C4D-46AA-B1FA-A3EE195AF0FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A87BAA2-F521-45B1-AF93-9BC642FD8C76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A87BAA2-F521-45B1-AF93-9BC642FD8C76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A87BAA2-F521-45B1-AF93-9BC642FD8C76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A87BAA2-F521-45B1-AF93-9BC642FD8C76}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -164,6 +170,7 @@ Global
 		{EE12FAB6-FEA2-4819-ABAF-B38319325F35} = {A4F3156B-9E74-4710-ADBC-4628DF389F68}
 		{4562D01B-E184-489C-904B-C9E39BA17E6E} = {F39DCB66-0A9F-47BA-A916-301EC83F26EA}
 		{B8194FFD-8C4D-46AA-B1FA-A3EE195AF0FD} = {F39DCB66-0A9F-47BA-A916-301EC83F26EA}
+		{9A87BAA2-F521-45B1-AF93-9BC642FD8C76} = {A4F3156B-9E74-4710-ADBC-4628DF389F68}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DFD408B5-CCB3-4B3A-9E3B-DC85C74256B1}

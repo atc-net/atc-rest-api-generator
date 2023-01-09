@@ -7,21 +7,6 @@
 
 <br />
 
-## ApiGeneratorHelper
-
->```csharp
->public static class ApiGeneratorHelper
->```
-
-### Static Methods
-
-#### CollectMissingContractModelFromOperationSchemaMappings
->```csharp
->void CollectMissingContractModelFromOperationSchemaMappings(ILogger logger, ApiProjectOptions projectOptions, IList<ApiOperation> apiOperations, List<SyntaxGeneratorContractModel> sgContractModels)
->```
-
-<br />
-
 ## AtcApiNugetClientHelper
 
 >```csharp

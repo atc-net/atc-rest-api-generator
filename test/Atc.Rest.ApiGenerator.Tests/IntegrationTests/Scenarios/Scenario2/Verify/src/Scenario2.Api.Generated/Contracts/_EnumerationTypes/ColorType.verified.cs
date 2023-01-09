@@ -6,7 +6,10 @@
 //------------------------------------------------------------------------------
 namespace Scenario2.Api.Generated.Contracts;
 
-[SuppressMessage("Maintainability Rules", "SA1413:Use trailing comma in multi-line initializers", Justification = "OK.")]
+/// <summary>
+/// Enumeration: ColorType.
+/// </summary>
+[GeneratedCode("ApiGenerator", "x.x.x.x")]
 [Flags]
 public enum ColorType
 {
@@ -14,5 +17,5 @@ public enum ColorType
     Black = 1,
     White = 2,
     Yellow = 4,
-    Red = 8
+    Red = 8,
 }

@@ -44,7 +44,6 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
                 $"--outputSlnPath {outputPath} " +
                 $"--outputSrcPath {Path.Combine(outputPath, "src")} " +
                 $"--outputTestPath {Path.Combine(outputPath, "test")} " +
-                "--disableCodingRules " +
                 "-v");
 
             Assert.True(cliExecutionResult.IsSuccessful);

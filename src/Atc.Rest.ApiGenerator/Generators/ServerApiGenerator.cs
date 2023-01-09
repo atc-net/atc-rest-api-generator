@@ -136,8 +136,6 @@ public class ServerApiGenerator
                 usingCodingRules: projectOptions.UsingCodingRules);
 
             ScaffoldBasicFileApiGenerated();
-            DeleteLegacyScaffoldBasicFileResultFactory();
-            DeleteLegacyScaffoldBasicFilePagination();
         }
     }
 
@@ -171,53 +169,274 @@ public class ServerApiGenerator
     {
         ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 
-        var sgContractModels = new List<SyntaxGeneratorContractModel>();
-        var sgContractParameters = new List<SyntaxGeneratorContractParameter>();
-        var sgContractResults = new List<SyntaxGeneratorContractResult>();
-        var sgContractInterfaces = new List<SyntaxGeneratorContractInterface>();
         foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
         {
-            var generatorModels = new SyntaxGeneratorContractModels(logger, projectOptions, operationSchemaMappings, basePathSegmentName);
-            var generatedModels = generatorModels.GenerateSyntaxTrees();
-            sgContractModels.AddRange(generatedModels);
+            var apiGroupName = basePathSegmentName.EnsureFirstCharacterToUpper();
 
-            var generatorParameters = new SyntaxGeneratorContractParameters(logger, projectOptions, basePathSegmentName);
-            var generatedParameters = generatorParameters.GenerateSyntaxTrees();
-            sgContractParameters.AddRange(generatedParameters);
+            GenerateModels(projectOptions.Document, apiGroupName, operationSchemaMappings);
+            GenerateParameters(projectOptions.Document, apiGroupName);
+            GenerateResults(projectOptions.Document, apiGroupName);
+            GenerateInterfaces(projectOptions.Document, apiGroupName);
+        }
+    }
 
-            var generatorResults = new SyntaxGeneratorContractResults(logger, projectOptions, basePathSegmentName);
-            var generatedResults = generatorResults.GenerateSyntaxTrees();
-            sgContractResults.AddRange(generatedResults);
+    private void GenerateModels(
+        OpenApiDocument document,
+        string apiGroupName,
+        IEnumerable<ApiOperation> operationSchemaMappings)
+    {
+        var apiOperations = operationSchemaMappings
+            .Where(x => x.LocatedArea is ApiSchemaMapLocatedAreaType.Response or ApiSchemaMapLocatedAreaType.RequestBody &&
+                        x.SegmentName.Equals(apiGroupName, StringComparison.OrdinalIgnoreCase))
+            .ToList();
 
-            var generatorInterfaces = new SyntaxGeneratorContractInterfaces(logger, projectOptions, basePathSegmentName);
-            var generatedInterfaces = generatorInterfaces.GenerateSyntaxTrees();
-            sgContractInterfaces.AddRange(generatedInterfaces);
+        var apiOperationModels = GetDistinctApiOperationModels(apiOperations);
+
+        foreach (var apiOperationModel in apiOperationModels)
+        {
+            var apiSchema = document.Components.Schemas.First(x => x.Key.Equals(apiOperationModel.Name, StringComparison.OrdinalIgnoreCase));
+
+            var modelName = apiSchema.Key.EnsureFirstCharacterToUpper();
+
+            if (apiOperationModel.IsEnum)
+            {
+                GenerateEnumerationType(modelName, apiSchema.Value.GetEnumSchema().Item2);
+            }
+            else
+            {
+                GenerateModel(modelName, apiSchema.Value, apiGroupName, apiOperationModel.IsShared);
+            }
+        }
+    }
+
+    private void GenerateEnumerationType(
+        string enumerationName,
+        OpenApiSchema openApiSchemaEnumeration)
+    {
+        var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}";
+
+        // Generate
+        var enumerationParameters = ContentGeneratorServerClientEnumerationParametersFactory.Create(
+            fullNamespace,
+            enumerationName,
+            openApiSchemaEnumeration.Enum);
+
+        var contentGeneratorEnum = new ContentGeneratorServerClientEnumeration(
+            new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+            new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+            new CodeDocumentationTagsGenerator(),
+            enumerationParameters);
+
+        var enumContent = contentGeneratorEnum.Generate();
+
+        // Write
+        var file = new FileInfo(
+            Helpers.DirectoryInfoHelper.GetCsFileNameForContractEnumTypes(
+                projectOptions.PathForContracts,
+                enumerationName));
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectOptions.PathForSrcGenerate,
+            file,
+            ContentWriterArea.Src,
+            enumContent);
+    }
+
+    private void GenerateModel(
+        string modelName,
+        OpenApiSchema apiSchemaModel,
+        string apiGroupName,
+        bool isSharedContract)
+    {
+        var fullNamespace = isSharedContract
+            ? $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}"
+            : $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
+
+        // Generate
+        var modelParameters = ContentGeneratorServerClientModelParametersFactory.Create(
+            fullNamespace,
+            modelName,
+            apiSchemaModel);
+
+        var contentGeneratorModel = new ContentGeneratorServerClientModel(
+            new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+            new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+            new CodeDocumentationTagsGenerator(),
+            modelParameters);
+
+        var modelContent = contentGeneratorModel.Generate();
+
+        // Write
+        FileInfo file;
+        if (isSharedContract)
+        {
+            file = new FileInfo(
+                Helpers.DirectoryInfoHelper.GetCsFileNameForContractShared(
+                    projectOptions.PathForContractsShared,
+                    modelName));
+        }
+        else
+        {
+            file = new FileInfo(
+                Helpers.DirectoryInfoHelper.GetCsFileNameForContract(
+                    projectOptions.PathForContracts,
+                    apiGroupName,
+                    NameConstants.ContractModels,
+                    modelName));
         }
 
-        ApiGeneratorHelper.CollectMissingContractModelFromOperationSchemaMappings(
-            logger,
-            projectOptions,
-            operationSchemaMappings,
-            sgContractModels);
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectOptions.PathForSrcGenerate,
+            file,
+            ContentWriterArea.Src,
+            modelContent);
+    }
 
-        foreach (var sg in sgContractModels)
+    private void GenerateParameters(
+        OpenApiDocument document,
+        string apiGroupName)
+    {
+        var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
+
+        foreach (var openApiPath in document.Paths)
         {
-            sg.ToFile();
+            if (!openApiPath.IsPathStartingSegmentName(apiGroupName))
+            {
+                continue;
+            }
+
+            foreach (var openApiOperation in openApiPath.Value.Operations)
+            {
+                if (!openApiPath.Value.HasParameters() && !openApiOperation.Value.HasParametersOrRequestBody())
+                {
+                    continue;
+                }
+
+                // Generate
+                var parameterParameters = ContentGeneratorServerParameterParametersFactory.Create(
+                    fullNamespace,
+                    openApiOperation.Value,
+                    openApiPath.Value.Parameters);
+
+                var contentGeneratorParameter = new ContentGeneratorServerParameter(
+                    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                    new CodeDocumentationTagsGenerator(),
+                    parameterParameters);
+
+                var parameterContent = contentGeneratorParameter.Generate();
+
+                // Write
+                var file = new FileInfo(
+                    Helpers.DirectoryInfoHelper.GetCsFileNameForContract(
+                        projectOptions.PathForContracts,
+                        apiGroupName,
+                        ContentGeneratorConstants.Parameters,
+                        parameterParameters.ParameterName));
+
+                var contentWriter = new ContentWriter(logger);
+                contentWriter.Write(
+                    projectOptions.PathForSrcGenerate,
+                    file,
+                    ContentWriterArea.Src,
+                    parameterContent);
+            }
         }
+    }
 
-        foreach (var sg in sgContractParameters)
+    private void GenerateResults(
+        OpenApiDocument document,
+        string apiGroupName)
+    {
+        var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
+
+        foreach (var openApiPath in document.Paths)
         {
-            sg.ToFile();
+            if (!openApiPath.IsPathStartingSegmentName(apiGroupName))
+            {
+                continue;
+            }
+
+            foreach (var openApiOperation in openApiPath.Value.Operations)
+            {
+                // Generate
+                var resultParameters = ContentGeneratorServerResultParametersFactory.Create(
+                    fullNamespace,
+                    openApiOperation.Value,
+                    projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody);
+
+                var contentGeneratorResult = new ContentGeneratorServerResult(
+                    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                    new CodeDocumentationTagsGenerator(),
+                    resultParameters);
+
+                var resultContent = contentGeneratorResult.Generate();
+
+                // Write
+                var file = new FileInfo(
+                    Helpers.DirectoryInfoHelper.GetCsFileNameForContract(
+                        projectOptions.PathForContracts,
+                        apiGroupName,
+                        ContentGeneratorConstants.Results,
+                        resultParameters.ResultName));
+
+                var contentWriter = new ContentWriter(logger);
+                contentWriter.Write(
+                    projectOptions.PathForSrcGenerate,
+                    file,
+                    ContentWriterArea.Src,
+                    resultContent);
+            }
         }
+    }
 
-        foreach (var sg in sgContractResults)
-        {
-            sg.ToFile();
-        }
+    private void GenerateInterfaces(
+        OpenApiDocument document,
+        string apiGroupName)
+    {
+        var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
 
-        foreach (var sg in sgContractInterfaces)
+        foreach (var openApiPath in document.Paths)
         {
-            sg.ToFile();
+            if (!openApiPath.IsPathStartingSegmentName(apiGroupName))
+            {
+                continue;
+            }
+
+            foreach (var openApiOperation in openApiPath.Value.Operations)
+            {
+                // Generate
+                var interfaceParameters = ContentGeneratorServerHandlerInterfaceParametersFactory.Create(
+                    fullNamespace,
+                    openApiPath.Value,
+                    openApiOperation.Value);
+
+                var contentGeneratorInterface = new ContentGeneratorServerHandlerInterface(
+                    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                    new CodeDocumentationTagsGenerator(),
+                    interfaceParameters);
+
+                var interfaceContent = contentGeneratorInterface.Generate();
+
+                // Write
+                var file = new FileInfo(
+                    Helpers.DirectoryInfoHelper.GetCsFileNameForContract(
+                        projectOptions.PathForContracts,
+                        apiGroupName,
+                        ContentGeneratorConstants.Interfaces,
+                        interfaceParameters.InterfaceName));
+
+                var contentWriter = new ContentWriter(logger);
+                contentWriter.Write(
+                    projectOptions.PathForSrcGenerate,
+                    file,
+                    ContentWriterArea.Src,
+                    interfaceContent);
+            }
         }
     }
 
@@ -226,57 +445,54 @@ public class ServerApiGenerator
     {
         ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 
-        if (projectOptions.IsForClient)
+        foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
         {
-            // TODO: This is the old approach only generating for ApiClient now - consolidate later with new ContentGenerator
-            var sgEndpoints = new List<SyntaxGeneratorEndpointControllers>();
-            foreach (var segmentName in projectOptions.BasePathSegmentNames)
-            {
-                var generator = new SyntaxGeneratorEndpointControllers(logger, projectOptions, operationSchemaMappings, segmentName);
-                generator.GenerateCode();
-                sgEndpoints.Add(generator);
-            }
+            var controllerParameters = ContentGeneratorServerControllerParametersFactory.Create(
+                operationSchemaMappings,
+                projectOptions.ProjectName,
+                projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
+                $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Endpoints}",
+                basePathSegmentName,
+                GetRouteByArea(basePathSegmentName),
+                projectOptions.Document);
 
-            foreach (var sg in sgEndpoints)
+            var contentGenerator = new ContentGeneratorServerController(
+                new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                new CodeDocumentationTagsGenerator(),
+                controllerParameters);
+
+            var content = contentGenerator.Generate();
+
+            var file = new FileInfo(
+                Helpers.DirectoryInfoHelper.GetCsFileNameForEndpoints(
+                    projectOptions.PathForEndpoints,
+                    controllerParameters.ControllerName));
+
+            var contentWriter = new ContentWriter(logger);
+            contentWriter.Write(
+                projectOptions.PathForSrcGenerate,
+                file,
+                ContentWriterArea.Src,
+                content);
+        }
+    }
+
+    private static List<ApiOperationModel> GetDistinctApiOperationModels(
+        List<ApiOperation> apiOperations)
+    {
+        var result = new List<ApiOperationModel>();
+
+        foreach (var apiOperation in apiOperations)
+        {
+            var apiOperationModel = result.FirstOrDefault(x => x.Name.Equals(apiOperation.Model.Name, StringComparison.Ordinal));
+            if (apiOperationModel is null)
             {
-                sg.ToFile();
+                result.Add(apiOperation.Model);
             }
         }
-        else
-        {
-            // New approach for server
-            foreach (var area in projectOptions.BasePathSegmentNames)
-            {
-                var contentGeneratorServerControllerParameters = ContentGeneratorServerControllerParameterFactory
-                    .Create(
-                        operationSchemaMappings,
-                        projectOptions.ProjectName,
-                        projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
-                        $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Endpoints}",
-                        area,
-                        GetRouteByArea(area),
-                        projectOptions.Document);
 
-                var contentGenerator = new ContentGeneratorServerController(
-                    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-                    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-                    contentGeneratorServerControllerParameters);
-
-                var content = contentGenerator.Generate();
-
-                // TODO: Move responsibility of generating the file object
-                var controllerName = area.EnsureFirstCharacterToUpper() + ContentGeneratorConstants.Controller;
-                var fileAsString = DirectoryInfoHelper.GetCsFileNameForEndpoints(projectOptions.PathForEndpoints, controllerName);
-                var file = new FileInfo(fileAsString);
-
-                var contentWriter = new ContentWriter(logger);
-                contentWriter.Write(
-                    projectOptions.PathForSrcGenerate,
-                    file,
-                    ContentWriterArea.Src,
-                    content);
-            }
-        }
+        return result;
     }
 
     private string GetRouteByArea(
@@ -297,27 +513,16 @@ public class ServerApiGenerator
 
     private void ScaffoldBasicFileApiGenerated()
     {
-        // Create compilationUnit
-        var compilationUnit = SyntaxFactory.CompilationUnit();
+        var contentParameters = ContentGeneratorServerRegistrationParametersFactory.Create(
+            projectOptions.ProjectName,
+            "Api");
 
-        // Create a namespace
-        var @namespace = SyntaxProjectFactory.CreateNamespace(projectOptions);
+        var contentGenerator = new ContentGeneratorServerRegistration(
+            new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+            new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+            contentParameters);
 
-        // Create class
-        var classDeclaration = SyntaxClassDeclarationFactory.Create("ApiRegistration")
-            .AddGeneratedCodeAttribute(projectOptions.ApiGeneratorName, projectOptions.ApiGeneratorVersion.ToString());
-
-        // Add class to namespace
-        @namespace = @namespace.AddMembers(classDeclaration);
-
-        // Add namespace to compilationUnit
-        compilationUnit = compilationUnit.AddMembers(@namespace);
-
-        var codeAsString = compilationUnit
-            .NormalizeWhitespace()
-            .ToFullString()
-            .EnsureEnvironmentNewLines()
-            .EnsureFileScopedNamespace();
+        var content = contentGenerator.Generate();
 
         var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "ApiRegistration.cs"));
 
@@ -326,31 +531,7 @@ public class ServerApiGenerator
             projectOptions.PathForSrcGenerate,
             file,
             ContentWriterArea.Src,
-            codeAsString);
-    }
-
-    private void DeleteLegacyScaffoldBasicFileResultFactory()
-    {
-        var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "ResultFactory.cs"));
-        if (file.Exists)
-        {
-            File.Delete(file.FullName);
-        }
-    }
-
-    private void DeleteLegacyScaffoldBasicFilePagination()
-    {
-        var (key, _) = projectOptions.Document.Components.Schemas.FirstOrDefault(x => x.Key.Equals(Microsoft.OpenApi.Models.NameConstants.Pagination, StringComparison.OrdinalIgnoreCase));
-        if (key is null)
-        {
-            return;
-        }
-
-        var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, $"{Microsoft.OpenApi.Models.NameConstants.Pagination}.cs"));
-        if (file.Exists)
-        {
-            File.Delete(file.FullName);
-        }
+            content);
     }
 
     private void GenerateSrcGlobalUsings()

@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Users;
 /// Domain Interface for RequestHandler.
 /// Description: Get user by email.
 /// Operation: GetUserByEmail.
-/// Area: Users.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface IGetUserByEmailHandler
@@ -20,5 +19,7 @@ public interface IGetUserByEmailHandler
     /// </summary>
     /// <param name="parameters">The parameters.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<GetUserByEmailResult> ExecuteAsync(GetUserByEmailParameters parameters, CancellationToken cancellationToken = default);
+    Task<GetUserByEmailResult> ExecuteAsync(
+        GetUserByEmailParameters parameters,
+        CancellationToken cancellationToken = default);
 }

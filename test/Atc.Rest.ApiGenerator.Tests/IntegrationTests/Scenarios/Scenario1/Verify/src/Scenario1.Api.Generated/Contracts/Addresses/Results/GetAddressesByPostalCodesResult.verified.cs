@@ -10,7 +10,6 @@ namespace Scenario1.Api.Generated.Contracts.Addresses;
 /// Results for operation request.
 /// Description: Get addresses by postal code.
 /// Operation: GetAddressesByPostalCodes.
-/// Area: Addresses.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class GetAddressesByPostalCodesResult : ResultBase
@@ -20,15 +19,18 @@ public class GetAddressesByPostalCodesResult : ResultBase
     /// <summary>
     /// 200 - Ok response.
     /// </summary>
-    public static GetAddressesByPostalCodesResult Ok(IEnumerable<Address> response) => new GetAddressesByPostalCodesResult(new OkObjectResult(response ?? Enumerable.Empty<Address>()));
+    public static GetAddressesByPostalCodesResult Ok(IEnumerable<Address> response)
+        => new GetAddressesByPostalCodesResult(new OkObjectResult(response ?? Enumerable.Empty<Address>()));
 
     /// <summary>
     /// 404 - NotFound response.
     /// </summary>
-    public static GetAddressesByPostalCodesResult NotFound(string? message = null) => new GetAddressesByPostalCodesResult(new NotFoundObjectResult(message));
+    public static GetAddressesByPostalCodesResult NotFound(string? message = null)
+        => new GetAddressesByPostalCodesResult(new NotFoundObjectResult(message));
 
     /// <summary>
     /// Performs an implicit conversion from GetAddressesByPostalCodesResult to ActionResult.
     /// </summary>
-    public static implicit operator GetAddressesByPostalCodesResult(List<Address> response) => Ok(response);
+    public static implicit operator GetAddressesByPostalCodesResult(List<Address> response)
+        => Ok(response);
 }

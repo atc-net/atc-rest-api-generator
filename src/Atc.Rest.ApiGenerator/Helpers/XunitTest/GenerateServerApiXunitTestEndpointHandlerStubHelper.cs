@@ -8,57 +8,83 @@ public static class GenerateServerApiXunitTestEndpointHandlerStubHelper
     public static void Generate(
         ILogger logger,
         HostProjectOptions hostProjectOptions,
-        EndpointMethodMetadata endpointMethodMetadata)
+        EndpointMethodMetadata endpointMethodMetadata,
+        string apiGroupName,
+        ContentGeneratorServerControllerMethodParameters methodParameters)
     {
         ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(hostProjectOptions);
         ArgumentNullException.ThrowIfNull(endpointMethodMetadata);
+        ArgumentNullException.ThrowIfNull(methodParameters);
 
         var sb = new StringBuilder();
 
         GenerateCodeHelper.AppendGeneratedCodeWarningComment(sb, hostProjectOptions.ApiGeneratorNameAndVersion);
-        AppendNamespaceAndClassStart(sb, hostProjectOptions, endpointMethodMetadata);
-        AppendMethodExecuteAsyncStart(sb, endpointMethodMetadata);
-        AppendMethodExecuteAsyncContent(sb, endpointMethodMetadata);
+        AppendNamespaceAndClassStart(sb, hostProjectOptions, apiGroupName, methodParameters);
+        AppendMethodExecuteAsyncStart(sb, hostProjectOptions, apiGroupName, methodParameters);
+        AppendMethodExecuteAsyncContent(sb, hostProjectOptions, endpointMethodMetadata, apiGroupName, methodParameters);
         AppendMethodExecuteAsyncEnd(sb);
         AppendNamespaceAndClassEnd(sb);
-        SaveFile(logger, sb, hostProjectOptions, endpointMethodMetadata);
+        SaveFile(logger, sb, hostProjectOptions, apiGroupName, methodParameters);
     }
 
     private static void AppendNamespaceAndClassStart(
         StringBuilder sb,
         HostProjectOptions hostProjectOptions,
-        EndpointMethodMetadata endpointMethodMetadata)
+        string apiGroupName,
+        ContentGeneratorServerControllerMethodParameters methodParameters)
     {
-        sb.AppendLine($"namespace {hostProjectOptions.ProjectName}.Tests.Endpoints.{endpointMethodMetadata.SegmentName}.Generated");
+        sb.AppendLine($"namespace {hostProjectOptions.ProjectName}.Tests.Endpoints.{apiGroupName}.Generated");
         sb.AppendLine("{");
 
         GenerateCodeHelper.AppendGeneratedCodeAttribute(sb, hostProjectOptions.ApiGeneratorName, hostProjectOptions.ApiGeneratorVersion);
-        sb.AppendLine(4, $"public class {endpointMethodMetadata.MethodName}HandlerStub : {endpointMethodMetadata.ContractInterfaceHandlerTypeName}");
+        sb.AppendLine(
+            4,
+            "Tasks".Equals(apiGroupName, StringComparison.OrdinalIgnoreCase)
+                ? $"public class {methodParameters.Name}HandlerStub : {hostProjectOptions.ProjectName}.Generated.Contracts.{apiGroupName}.{methodParameters.InterfaceName}"
+                : $"public class {methodParameters.Name}HandlerStub : {methodParameters.InterfaceName}");
+
         sb.AppendLine(4, "{");
     }
 
     private static void AppendMethodExecuteAsyncStart(
         StringBuilder sb,
-        EndpointMethodMetadata endpointMethodMetadata)
+        HostProjectOptions hostProjectOptions,
+        string apiGroupName,
+        ContentGeneratorServerControllerMethodParameters methodParameters)
     {
-        sb.AppendLine(8, endpointMethodMetadata.ContractParameterTypeName is null
-            ? $"public Task<{endpointMethodMetadata.ContractResultTypeName}> ExecuteAsync(CancellationToken cancellationToken = default)"
-            : $"public Task<{endpointMethodMetadata.ContractResultTypeName}> ExecuteAsync({endpointMethodMetadata.ContractParameterTypeName} parameters, CancellationToken cancellationToken = default)");
+        var contractResultTypeName = methodParameters.Name + "Result";
+
+        if ("Tasks".Equals(apiGroupName, StringComparison.OrdinalIgnoreCase))
+        {
+            sb.AppendLine(8, methodParameters.ParameterTypeName is null
+                ? $"public Task<{hostProjectOptions.ProjectName}.Generated.Contracts.{apiGroupName}.{contractResultTypeName}> ExecuteAsync(CancellationToken cancellationToken = default)"
+                : $"public Task<{hostProjectOptions.ProjectName}.Generated.Contracts.{apiGroupName}.{contractResultTypeName}> ExecuteAsync({methodParameters.ParameterTypeName} parameters, CancellationToken cancellationToken = default)");
+        }
+        else
+        {
+            sb.AppendLine(8, methodParameters.ParameterTypeName is null
+                ? $"public Task<{contractResultTypeName}> ExecuteAsync(CancellationToken cancellationToken = default)"
+                : $"public Task<{contractResultTypeName}> ExecuteAsync({methodParameters.ParameterTypeName} parameters, CancellationToken cancellationToken = default)");
+        }
+
         sb.AppendLine(8, "{");
     }
 
     private static void AppendMethodExecuteAsyncContent(
         StringBuilder sb,
-        EndpointMethodMetadata endpointMethodMetadata)
+        HostProjectOptions hostProjectOptions,
+        EndpointMethodMetadata endpointMethodMetadata,
+        string apiGroupName,
+        ContentGeneratorServerControllerMethodParameters methodParameters)
     {
         if (endpointMethodMetadata.ContractReturnTypeNames.Find(x => x.StatusCode == HttpStatusCode.OK) is not null)
         {
-            AppendContentForExecuteAsynchronous(sb, endpointMethodMetadata, HttpStatusCode.OK);
+            AppendContentForExecuteAsynchronous(sb, hostProjectOptions, endpointMethodMetadata, apiGroupName, methodParameters, HttpStatusCode.OK);
         }
         else if (endpointMethodMetadata.ContractReturnTypeNames.Find(x => x.StatusCode == HttpStatusCode.Created) is not null)
         {
-            AppendContentForExecuteAsynchronous(sb, endpointMethodMetadata, HttpStatusCode.Created);
+            AppendContentForExecuteAsynchronous(sb, hostProjectOptions, endpointMethodMetadata, apiGroupName, methodParameters, HttpStatusCode.Created);
         }
         else
         {
@@ -68,11 +94,20 @@ public static class GenerateServerApiXunitTestEndpointHandlerStubHelper
 
     private static void AppendContentForExecuteAsynchronous(
         StringBuilder sb,
+        HostProjectOptions hostProjectOptions,
         EndpointMethodMetadata endpointMethodMetadata,
+        string apiGroupName,
+        ContentGeneratorServerControllerMethodParameters methodParameters,
         HttpStatusCode httpStatusCode)
     {
         var contractReturnTypeName = endpointMethodMetadata.ContractReturnTypeNames.First(x => x.StatusCode == httpStatusCode);
         var returnTypeName = contractReturnTypeName.FullModelName;
+
+        var contractResultTypeName = methodParameters.Name + "Result";
+        if ("Tasks".Equals(apiGroupName, StringComparison.OrdinalIgnoreCase))
+        {
+            contractResultTypeName = $"{hostProjectOptions.ProjectName}.Generated.Contracts.{apiGroupName}.{contractResultTypeName}";
+        }
 
         switch (returnTypeName)
         {
@@ -80,42 +115,42 @@ public static class GenerateServerApiXunitTestEndpointHandlerStubHelper
                 sb.AppendLine(
                     12,
                     httpStatusCode == HttpStatusCode.Created
-                        ? $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName)}.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}());"
-                        : $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName)}.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}(\"Hallo world\"));");
+                        ? $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName)}.FromResult({contractResultTypeName}.{httpStatusCode.ToNormalizedString()}());"
+                        : $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName)}.FromResult({contractResultTypeName}.{httpStatusCode.ToNormalizedString()}(\"Hallo world\"));");
                 break;
             case "bool":
                 sb.AppendLine(
                     12,
                     httpStatusCode == HttpStatusCode.Created
-                        ? $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName)}.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}());"
-                        : $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName)}.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}(true));");
+                        ? $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName)}.FromResult({contractResultTypeName}.{httpStatusCode.ToNormalizedString()}());"
+                        : $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName)}.FromResult({contractResultTypeName}.{httpStatusCode.ToNormalizedString()}(true));");
                 break;
             case "int":
             case "long":
                 sb.AppendLine(
                     12,
                     httpStatusCode == HttpStatusCode.Created
-                        ? $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName)}.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}());"
-                        : $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName)}.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}(42));");
+                        ? $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName)}.FromResult({contractResultTypeName}.{httpStatusCode.ToNormalizedString()}());"
+                        : $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName)}.FromResult({contractResultTypeName}.{httpStatusCode.ToNormalizedString()}(42));");
                 break;
             case "float":
             case "double":
                 sb.AppendLine(
                     12,
                     httpStatusCode == HttpStatusCode.Created
-                        ? $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName)}.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}());"
-                        : $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName)}.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}(42.2));");
+                        ? $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName)}.FromResult({contractResultTypeName}.{httpStatusCode.ToNormalizedString()}());"
+                        : $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName)}.FromResult({contractResultTypeName}.{httpStatusCode.ToNormalizedString()}(42.2));");
                 break;
             case "Guid":
                 sb.AppendLine(
                     12,
                     httpStatusCode == HttpStatusCode.Created
-                        ? $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName)}.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}());"
-                        : $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName)}.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}(System.Guid.NewGuid()));");
+                        ? $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName)}.FromResult({contractResultTypeName}.{httpStatusCode.ToNormalizedString()}());"
+                        : $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName)}.FromResult({contractResultTypeName}.{httpStatusCode.ToNormalizedString()}(System.Guid.NewGuid()));");
                 break;
             case "byte[]":
                 sb.AppendLine(12, "var bytes = System.Text.Encoding.UTF8.GetBytes(\"Hello World\");");
-                sb.AppendLine(12, $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName)}.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}(bytes, \"dummy.txt\"));");
+                sb.AppendLine(12, $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName)}.FromResult({contractResultTypeName}.{httpStatusCode.ToNormalizedString()}(bytes, \"dummy.txt\"));");
                 break;
             default:
             {
@@ -149,9 +184,9 @@ public static class GenerateServerApiXunitTestEndpointHandlerStubHelper
                 {
                     if (returnTypeName.StartsWith(Microsoft.OpenApi.Models.NameConstants.Pagination, StringComparison.Ordinal))
                     {
-                        if (endpointMethodMetadata.ContractParameter is not null)
+                        if (endpointMethodMetadata.ApiOperation is not null)
                         {
-                            var queryParameters = endpointMethodMetadata.ContractParameter.ApiOperation.Parameters.GetAllFromQuery();
+                            var queryParameters = endpointMethodMetadata.ApiOperation.Parameters.GetAllFromQuery();
                             var sPageSize = "10";
                             if (queryParameters.Find(x => x.Name.Equals("PageSize", StringComparison.OrdinalIgnoreCase)) is not null)
                             {
@@ -177,16 +212,16 @@ public static class GenerateServerApiXunitTestEndpointHandlerStubHelper
                             sb.AppendLine(12, $"var paginationData = new {contractReturnTypeName.FullModelName}(data, 10, null, null);");
                         }
 
-                        sb.AppendLine(12, $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName)}.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}(paginationData));");
+                        sb.AppendLine(12, $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName)}.FromResult({contractResultTypeName}.{httpStatusCode.ToNormalizedString()}(paginationData));");
                     }
                     else
                     {
-                        sb.AppendLine(12, $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName)}.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}(data));");
+                        sb.AppendLine(12, $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName)}.FromResult({contractResultTypeName}.{httpStatusCode.ToNormalizedString()}(data));");
                     }
                 }
                 else
                 {
-                    sb.AppendLine(12, $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName)}.FromResult({endpointMethodMetadata.ContractResultTypeName}.{httpStatusCode.ToNormalizedString()}(data));");
+                    sb.AppendLine(12, $"return {OpenApiDocumentSchemaModelNameHelper.EnsureTaskNameWithNamespaceIfNeeded(contractReturnTypeName)}.FromResult({contractResultTypeName}.{httpStatusCode.ToNormalizedString()}(data));");
                 }
 
                 break;
@@ -209,12 +244,13 @@ public static class GenerateServerApiXunitTestEndpointHandlerStubHelper
         ILogger logger,
         StringBuilder sb,
         HostProjectOptions hostProjectOptions,
-        EndpointMethodMetadata endpointMethodMetadata)
+        string apiGroupName,
+        ContentGeneratorServerControllerMethodParameters methodParameters)
     {
         var pathA = Path.Combine(hostProjectOptions.PathForTestGenerate!.FullName, "Endpoints");
-        var pathB = Path.Combine(pathA, endpointMethodMetadata.SegmentName);
+        var pathB = Path.Combine(pathA, apiGroupName);
         var pathC = Path.Combine(pathB, "Generated");
-        var fileName = $"{endpointMethodMetadata.ContractInterfaceHandlerTypeName.Substring(1)}Stub.cs";
+        var fileName = $"{methodParameters.InterfaceName.Substring(1)}Stub.cs";
         var file = new FileInfo(Path.Combine(pathC, fileName));
 
         var contentWriter = new ContentWriter(logger);

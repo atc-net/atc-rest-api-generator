@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Items;
 /// Domain Interface for RequestHandler.
 /// Description: Updates an item.
 /// Operation: UpdateItem.
-/// Area: Items.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface IUpdateItemHandler
@@ -20,5 +19,7 @@ public interface IUpdateItemHandler
     /// </summary>
     /// <param name="parameters">The parameters.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<UpdateItemResult> ExecuteAsync(UpdateItemParameters parameters, CancellationToken cancellationToken = default);
+    Task<UpdateItemResult> ExecuteAsync(
+        UpdateItemParameters parameters,
+        CancellationToken cancellationToken = default);
 }

@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Users;
 /// Domain Interface for RequestHandler.
 /// Description: Update gender on a user.
 /// Operation: UpdateMyTestGender.
-/// Area: Users.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface IUpdateMyTestGenderHandler
@@ -20,5 +19,7 @@ public interface IUpdateMyTestGenderHandler
     /// </summary>
     /// <param name="parameters">The parameters.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<UpdateMyTestGenderResult> ExecuteAsync(UpdateMyTestGenderParameters parameters, CancellationToken cancellationToken = default);
+    Task<UpdateMyTestGenderResult> ExecuteAsync(
+        UpdateMyTestGenderParameters parameters,
+        CancellationToken cancellationToken = default);
 }

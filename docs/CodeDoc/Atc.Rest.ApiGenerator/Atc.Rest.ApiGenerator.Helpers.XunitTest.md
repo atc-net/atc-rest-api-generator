@@ -17,7 +17,7 @@
 
 #### Generate
 >```csharp
->void Generate(ILogger logger, HostProjectOptions hostProjectOptions, EndpointMethodMetadata endpointMethodMetadata)
+>void Generate(ILogger logger, HostProjectOptions hostProjectOptions, EndpointMethodMetadata endpointMethodMetadata, string apiGroupName, ContentGeneratorServerControllerMethodParameters methodParameters)
 >```
 
 <br />
@@ -47,11 +47,11 @@
 
 #### GenerateCustomTests
 >```csharp
->void GenerateCustomTests(ILogger logger, DomainProjectOptions domainProjectOptions, SyntaxGeneratorHandler sgHandler)
+>void GenerateCustomTests(ILogger logger, DomainProjectOptions domainProjectOptions, string apiGroupName, string handlerName)
 >```
 #### GenerateGeneratedTests
 >```csharp
->void GenerateGeneratedTests(ILogger logger, DomainProjectOptions domainProjectOptions, SyntaxGeneratorHandler sgHandler)
+>void GenerateGeneratedTests(ILogger logger, DomainProjectOptions domainProjectOptions, string apiGroupName, string handlerName, bool hasParametersOrRequestBody)
 >```
 
 <br />

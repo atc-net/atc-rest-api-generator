@@ -10,20 +10,18 @@ namespace Scenario2.Api.Generated.Contracts.Files;
 /// Parameters for operation request.
 /// Description: Upload a file as FormData.
 /// Operation: UploadSingleObjectWithFileAsFormData.
-/// Area: Files.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class UploadSingleObjectWithFileAsFormDataParameters
 {
+    /// <summary>
+    /// FileAsFormDataRequest.
+    /// </summary>
     [FromForm]
     [Required]
     public FileAsFormDataRequest Request { get; set; }
 
-    /// <summary>
-    /// Converts to string.
-    /// </summary>
+    /// <inheritdoc />
     public override string ToString()
-    {
-        return $"{nameof(Request)}: ({Request})";
-    }
+        => $"{nameof(Request)}: ({Request})";
 }

@@ -383,6 +383,13 @@ public static class SolutionAndProjectHelper
             sb.AppendLine("EndProject");
         }
 
+        if (hostTestPath is not null)
+        {
+            var hostTestPrefixPath = GetProjectReference(slnFile, hostTestPath, projectName);
+            sb.AppendLine($"Project(\"{{9A19103F-16F7-4668-BE54-9A1E7A4F7556}}\") = \"{projectName}.Api.Tests\", \"{hostTestPrefixPath}{projectName}.Api.Tests\\{projectName}.Api.Tests.csproj\", \"{{{hostTestId}}}\"");
+            sb.AppendLine("EndProject");
+        }
+
         sb.AppendLine("Global");
         sb.AppendLine("\tGlobalSection(SolutionConfigurationPlatforms) = preSolution");
         sb.AppendLine("\t\tDebug|Any CPU = Debug|Any CPU");

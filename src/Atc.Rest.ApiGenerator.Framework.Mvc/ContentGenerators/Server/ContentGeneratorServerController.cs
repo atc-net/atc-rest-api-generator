@@ -4,15 +4,18 @@ public sealed class ContentGeneratorServerController : IContentGenerator
 {
     private readonly GeneratedCodeHeaderGenerator codeHeaderGenerator;
     private readonly GeneratedCodeAttributeGenerator codeAttributeGenerator;
+    private readonly CodeDocumentationTagsGenerator codeDocumentationTagsGenerator;
     private readonly ContentGeneratorServerControllerParameters parameters;
 
     public ContentGeneratorServerController(
         GeneratedCodeHeaderGenerator codeHeaderGenerator,
         GeneratedCodeAttributeGenerator codeAttributeGenerator,
+        CodeDocumentationTagsGenerator codeDocumentationTagsGenerator,
         ContentGeneratorServerControllerParameters parameters)
     {
         this.codeHeaderGenerator = codeHeaderGenerator;
         this.codeAttributeGenerator = codeAttributeGenerator;
+        this.codeDocumentationTagsGenerator = codeDocumentationTagsGenerator;
         this.parameters = parameters;
     }
 
@@ -23,15 +26,16 @@ public sealed class ContentGeneratorServerController : IContentGenerator
         sb.Append(codeHeaderGenerator.Generate());
         sb.AppendLine($"namespace {parameters.Namespace};");
         sb.AppendLine();
+        if (codeDocumentationTagsGenerator.ShouldGenerateTags(parameters.DocumentationTags))
+        {
+            sb.Append(codeDocumentationTagsGenerator.GenerateTags(0, parameters.DocumentationTags));
+        }
 
-        sb.AppendLine("/// <summary>");
-        sb.AppendLine("/// Endpoint definitions.");
-        sb.AppendLine("/// </summary>");
         sb.AppendLine("[Authorize]");
         sb.AppendLine("[ApiController]");
         sb.AppendLine($"[Route(\"{parameters.RouteBase}\")]");
         sb.AppendLine(codeAttributeGenerator.Generate());
-        sb.AppendLine($"public class {parameters.Area}Controller : ControllerBase");
+        sb.AppendLine($"public class {parameters.ApiGroupName}Controller : ControllerBase");
         sb.AppendLine("{");
 
         for (var i = 0; i < parameters.MethodParameters.Count; i++)
@@ -47,17 +51,18 @@ public sealed class ContentGeneratorServerController : IContentGenerator
         }
 
         sb.AppendLine("}");
+
         return sb.ToString();
     }
 
-    private static void AppendMethodContent(
+    private void AppendMethodContent(
         StringBuilder sb,
         ContentGeneratorServerControllerMethodParameters item)
     {
-        sb.AppendLine(4, "/// <summary>");
-        sb.AppendLine(4, $"/// Description: {item.Description}");
-        sb.AppendLine(4, $"/// Operation: {item.Name}.");
-        sb.AppendLine(4, "/// </summary>");
+        if (codeDocumentationTagsGenerator.ShouldGenerateTags(item.DocumentationTags))
+        {
+            sb.Append(codeDocumentationTagsGenerator.GenerateTags(4, item.DocumentationTags));
+        }
 
         AppendMethodContentAuthorizationIfNeeded(sb, item);
 

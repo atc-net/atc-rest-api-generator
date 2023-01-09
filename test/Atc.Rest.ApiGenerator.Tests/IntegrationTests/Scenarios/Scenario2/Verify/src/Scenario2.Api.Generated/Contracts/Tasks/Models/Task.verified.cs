@@ -16,11 +16,7 @@ public class Task
 
     public string Name { get; set; }
 
-    /// <summary>
-    /// Converts to string.
-    /// </summary>
+    /// <inheritdoc />
     public override string ToString()
-    {
-        return $"{nameof(Id)}: {Id}, {nameof(Name)}: {Name}";
-    }
+        => $"{nameof(Id)}: {Id}, {nameof(Name)}: {Name}";
 }

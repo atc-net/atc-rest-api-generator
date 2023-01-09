@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Files;
 /// Results for operation request.
 /// Description: Upload multi files as form data.
 /// Operation: UploadMultiFilesAsFormData.
-/// Area: Files.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class UploadMultiFilesAsFormDataResult : ResultBase
@@ -20,10 +19,12 @@ public class UploadMultiFilesAsFormDataResult : ResultBase
     /// <summary>
     /// 200 - Ok response.
     /// </summary>
-    public static UploadMultiFilesAsFormDataResult Ok(string? message = null) => new UploadMultiFilesAsFormDataResult(new OkObjectResult(message));
+    public static UploadMultiFilesAsFormDataResult Ok(string? message = null)
+        => new UploadMultiFilesAsFormDataResult(new OkObjectResult(message));
 
     /// <summary>
     /// Performs an implicit conversion from UploadMultiFilesAsFormDataResult to ActionResult.
     /// </summary>
-    public static implicit operator UploadMultiFilesAsFormDataResult(string response) => Ok(response);
+    public static implicit operator UploadMultiFilesAsFormDataResult(string response)
+        => Ok(response);
 }

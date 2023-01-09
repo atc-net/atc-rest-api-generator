@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Orders;
 /// Parameters for operation request.
 /// Description: Get orders.
 /// Operation: GetOrders.
-/// Area: Orders.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class GetOrdersParameters
@@ -20,12 +19,14 @@ public class GetOrdersParameters
     /// </summary>
     [FromQuery(Name = "pageSize")]
     [Required]
+    [Range(1, 100)]
     public int PageSize { get; set; } = 10;
 
     /// <summary>
     /// The number of items to skip before starting to collect the result set.
     /// </summary>
     [FromQuery(Name = "pageIndex")]
+    [Range(0, 2147483647)]
     public int PageIndex { get; set; } = 0;
 
     /// <summary>
@@ -46,11 +47,7 @@ public class GetOrdersParameters
     [FromQuery(Name = "continuationToken")]
     public string? ContinuationToken { get; set; }
 
-    /// <summary>
-    /// Converts to string.
-    /// </summary>
+    /// <inheritdoc />
     public override string ToString()
-    {
-        return $"{nameof(PageSize)}: {PageSize}, {nameof(PageIndex)}: {PageIndex}, {nameof(QueryString)}: {QueryString}, {nameof(QueryStringArray)}.Count: {QueryStringArray?.Count ?? 0}, {nameof(ContinuationToken)}: {ContinuationToken}";
-    }
+        => $"{nameof(PageSize)}: {PageSize}, {nameof(PageIndex)}: {PageIndex}, {nameof(QueryString)}: {QueryString}, {nameof(QueryStringArray)}.Count: {QueryStringArray?.Count ?? 0}, {nameof(ContinuationToken)}: {ContinuationToken}";
 }

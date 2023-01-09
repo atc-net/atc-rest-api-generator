@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Files;
 /// Domain Interface for RequestHandler.
 /// Description: Upload a file as OctetStream.
 /// Operation: UploadSingleFileAsFormData.
-/// Area: Files.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface IUploadSingleFileAsFormDataHandler
@@ -20,5 +19,7 @@ public interface IUploadSingleFileAsFormDataHandler
     /// </summary>
     /// <param name="parameters">The parameters.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<UploadSingleFileAsFormDataResult> ExecuteAsync(UploadSingleFileAsFormDataParameters parameters, CancellationToken cancellationToken = default);
+    Task<UploadSingleFileAsFormDataResult> ExecuteAsync(
+        UploadSingleFileAsFormDataParameters parameters,
+        CancellationToken cancellationToken = default);
 }

@@ -10,20 +10,18 @@ namespace Scenario2.Api.Generated.Contracts.Items;
 /// Parameters for operation request.
 /// Description: Create a new item.
 /// Operation: CreateItem.
-/// Area: Items.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class CreateItemParameters
 {
+    /// <summary>
+    /// CreateItemRequest.
+    /// </summary>
     [FromBody]
     [Required]
     public CreateItemRequest Request { get; set; }
 
-    /// <summary>
-    /// Converts to string.
-    /// </summary>
+    /// <inheritdoc />
     public override string ToString()
-    {
-        return $"{nameof(Request)}: ({Request})";
-    }
+        => $"{nameof(Request)}: ({Request})";
 }

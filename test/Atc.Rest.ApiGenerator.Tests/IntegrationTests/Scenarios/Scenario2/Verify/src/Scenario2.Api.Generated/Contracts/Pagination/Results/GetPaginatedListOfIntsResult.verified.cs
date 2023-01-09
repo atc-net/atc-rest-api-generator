@@ -10,7 +10,6 @@ namespace Scenario2.Api.Generated.Contracts.Pagination;
 /// Results for operation request.
 /// Description: Your GET endpoint.
 /// Operation: GetPaginatedListOfInts.
-/// Area: Pagination.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class GetPaginatedListOfIntsResult : ResultBase
@@ -20,10 +19,12 @@ public class GetPaginatedListOfIntsResult : ResultBase
     /// <summary>
     /// 200 - Ok response.
     /// </summary>
-    public static GetPaginatedListOfIntsResult Ok(Pagination<int> response) => new GetPaginatedListOfIntsResult(new OkObjectResult(response));
+    public static GetPaginatedListOfIntsResult Ok(Pagination<int> response)
+        => new GetPaginatedListOfIntsResult(new OkObjectResult(response));
 
     /// <summary>
     /// Performs an implicit conversion from GetPaginatedListOfIntsResult to ActionResult.
     /// </summary>
-    public static implicit operator GetPaginatedListOfIntsResult(Pagination<int> response) => Ok(response);
+    public static implicit operator GetPaginatedListOfIntsResult(Pagination<int> response)
+        => Ok(response);
 }
