@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Atc" Version="2.0.280" />
+    <PackageReference Include="Atc.CodeDocumentation" Version="2.0.280" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Content\Factories\" />
+  </ItemGroup>
+
+</Project>
