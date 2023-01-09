@@ -39,6 +39,11 @@ public static class ContentGeneratorServerResultParametersFactory
             var simpleDataTypeName = GetSimpleDataTypeName(schemaType, openApiOperation, httpStatusCode);
             if (httpStatusCode is HttpStatusCode.OK or HttpStatusCode.Created && !string.IsNullOrEmpty(simpleDataTypeName))
             {
+                if ("Object".Equals(simpleDataTypeName, StringComparison.Ordinal))
+                {
+                    simpleDataTypeName = "object";
+                }
+
                 simpleDataTypeNameForImplicitOperator = simpleDataTypeName;
             }
 

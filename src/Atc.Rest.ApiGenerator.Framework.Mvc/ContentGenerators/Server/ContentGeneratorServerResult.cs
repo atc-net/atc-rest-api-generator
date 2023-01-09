@@ -92,12 +92,23 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
         StringBuilder sb,
         ContentGeneratorServerResultParameters item)
     {
+        if (item.ImplicitOperatorParameters is null)
+        {
+            return;
+        }
+
+        if (item.ImplicitOperatorParameters.SchemaType == SchemaType.SimpleType &&
+            "object".Equals(item.ImplicitOperatorParameters.SimpleDataTypeName, StringComparison.Ordinal))
+        {
+            return;
+        }
+
         sb.AppendLine();
         sb.AppendLine(4, "/// <summary>");
         sb.AppendLine(4, $"/// Performs an implicit conversion from {item.ResultName} to ActionResult.");
         sb.AppendLine(4, "/// </summary>");
 
-        if (string.IsNullOrEmpty(item.ImplicitOperatorParameters!.ModelName))
+        if (string.IsNullOrEmpty(item.ImplicitOperatorParameters.ModelName))
         {
             switch (item.ImplicitOperatorParameters.SchemaType)
             {

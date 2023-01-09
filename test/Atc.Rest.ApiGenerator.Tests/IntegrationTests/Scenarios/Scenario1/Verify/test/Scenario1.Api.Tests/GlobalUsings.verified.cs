@@ -15,6 +15,8 @@ global using Atc.Rest.Options;
 global using Atc.Rest.Results;
 global using Atc.XUnit;
 
+global using FluentAssertions;
+
 global using Microsoft.AspNetCore.Hosting;
 global using Microsoft.AspNetCore.Http;
 global using Microsoft.AspNetCore.Mvc.Testing;

@@ -405,6 +405,7 @@ public class ServerHostGenerator
     {
         var requiredUsings = new List<string>
         {
+            "System",
             "System.CodeDom.Compiler",
             "System.Reflection",
             "System.IO",
@@ -453,6 +454,7 @@ public class ServerHostGenerator
             "System.Threading.Tasks",
             "System",
             "Atc.Rest.Options",
+            "FluentAssertions",
             "Microsoft.AspNetCore.Hosting",
             "Microsoft.AspNetCore.Mvc.Testing",
             "Microsoft.AspNetCore.TestHost",
