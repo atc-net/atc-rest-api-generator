@@ -276,6 +276,10 @@
 
 ### Properties
 
+#### ApiOperation
+>```csharp
+>ApiOperation
+>```
 #### ComponentsSchemas
 >```csharp
 >ComponentsSchemas
@@ -283,10 +287,6 @@
 #### ContractInterfaceHandlerTypeName
 >```csharp
 >ContractInterfaceHandlerTypeName
->```
-#### ContractParameter
->```csharp
->ContractParameter
 >```
 #### ContractParameterTypeName
 >```csharp
@@ -299,6 +299,10 @@
 #### ContractReturnTypeNames
 >```csharp
 >ContractReturnTypeNames
+>```
+#### GlobalPathParameters
+>```csharp
+>GlobalPathParameters
 >```
 #### HttpOperation
 >```csharp

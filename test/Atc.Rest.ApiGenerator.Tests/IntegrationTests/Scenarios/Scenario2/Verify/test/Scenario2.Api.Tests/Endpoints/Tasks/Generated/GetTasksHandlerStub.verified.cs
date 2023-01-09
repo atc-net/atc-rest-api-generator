@@ -4,14 +4,12 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-using Scenario2.Api.Generated.Contracts.Tasks;
-
 namespace Scenario2.Api.Tests.Endpoints.Tasks.Generated
 {
     [GeneratedCode("ApiGenerator", "x.x.x.x")]
-    public class GetTasksHandlerStub : IGetTasksHandler
+    public class GetTasksHandlerStub : Scenario2.Api.Generated.Contracts.Tasks.IGetTasksHandler
     {
-        public Task<GetTasksResult> ExecuteAsync(CancellationToken cancellationToken = default)
+        public Task<Scenario2.Api.Generated.Contracts.Tasks.GetTasksResult> ExecuteAsync(CancellationToken cancellationToken = default)
         {
             var data = new List<Scenario2.Api.Generated.Contracts.Tasks.Task>
             {
@@ -32,7 +30,7 @@ namespace Scenario2.Api.Tests.Endpoints.Tasks.Generated
                 },
             };
 
-            return System.Threading.Tasks.Task.FromResult(GetTasksResult.Ok(data));
+            return System.Threading.Tasks.Task.FromResult(Scenario2.Api.Generated.Contracts.Tasks.GetTasksResult.Ok(data));
         }
     }
 }

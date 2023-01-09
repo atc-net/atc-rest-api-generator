@@ -17,7 +17,7 @@
 
 #### Generate
 >```csharp
->void Generate(ILogger logger, HostProjectOptions hostProjectOptions, EndpointMethodMetadata endpointMethodMetadata)
+>void Generate(ILogger logger, HostProjectOptions hostProjectOptions, EndpointMethodMetadata endpointMethodMetadata, string apiGroupName, ContentGeneratorServerControllerMethodParameters methodParameters)
 >```
 
 <br />

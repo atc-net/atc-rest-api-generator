@@ -37,7 +37,7 @@ public class FilesController : ControllerBase
     [HttpPost("form-data/multiFile")]
     [RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue)]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult> UploadMultiFilesAsFormData(
@@ -53,7 +53,7 @@ public class FilesController : ControllerBase
     [HttpPost("form-data/singleFile")]
     [RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue)]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult> UploadSingleFileAsFormData(
@@ -69,7 +69,7 @@ public class FilesController : ControllerBase
     [HttpPost("form-data/singleObject")]
     [RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue)]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult> UploadSingleObjectWithFileAsFormData(
@@ -85,7 +85,7 @@ public class FilesController : ControllerBase
     [HttpPost("form-data/singleObjectMultiFile")]
     [RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue)]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult> UploadSingleObjectWithFilesAsFormData(

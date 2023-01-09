@@ -7,62 +7,6 @@
 
 <br />
 
-## ISyntaxCodeGenerator
-
->```csharp
->public interface ISyntaxCodeGenerator
->```
-
-### Properties
-
-#### Code
->```csharp
->Code
->```
-#### FocusOnSegmentName
->```csharp
->FocusOnSegmentName
->```
-### Methods
-
-#### GenerateCode
->```csharp
->bool GenerateCode()
->```
-#### ToCodeAsString
->```csharp
->string ToCodeAsString()
->```
-#### ToFile
->```csharp
->void ToFile()
->```
-#### ToFile
->```csharp
->void ToFile(FileInfo file)
->```
-
-<br />
-
-## ISyntaxSchemaCodeGenerator
-
->```csharp
->public interface ISyntaxSchemaCodeGenerator : ISyntaxCodeGenerator
->```
-
-### Properties
-
-#### ApiSchema
->```csharp
->ApiSchema
->```
-#### ApiSchemaKey
->```csharp
->ApiSchemaKey
->```
-
-<br />
-
 ## ResponseTypeNameAndItemSchema
 
 >```csharp

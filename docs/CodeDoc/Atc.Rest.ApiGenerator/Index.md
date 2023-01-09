@@ -23,7 +23,6 @@
 
 ## [Atc.Rest.ApiGenerator.Helpers](Atc.Rest.ApiGenerator.Helpers.md)
 
-- [ApiGeneratorHelper](Atc.Rest.ApiGenerator.Helpers.md#apigeneratorhelper)
 - [AtcApiNugetClientHelper](Atc.Rest.ApiGenerator.Helpers.md#atcapinugetclienthelper)
 - [DirectoryInfoHelper](Atc.Rest.ApiGenerator.Helpers.md#directoryinfohelper)
 - [GenerateAtcCodingRulesHelper](Atc.Rest.ApiGenerator.Helpers.md#generateatccodingruleshelper)
@@ -57,44 +56,13 @@
 
 ## [Atc.Rest.ApiGenerator.SyntaxGenerators](Atc.Rest.ApiGenerator.SyntaxGenerators.md)
 
-- [ISyntaxCodeGenerator](Atc.Rest.ApiGenerator.SyntaxGenerators.md#isyntaxcodegenerator)
-- [ISyntaxSchemaCodeGenerator](Atc.Rest.ApiGenerator.SyntaxGenerators.md#isyntaxschemacodegenerator)
 - [ResponseTypeNameAndItemSchema](Atc.Rest.ApiGenerator.SyntaxGenerators.md#responsetypenameanditemschema)
 
 ## [Atc.Rest.ApiGenerator.SyntaxGenerators.Api](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md)
 
-- [SyntaxGeneratorContractInterface](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorcontractinterface)
-- [SyntaxGeneratorContractInterfaces](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorcontractinterfaces)
-- [SyntaxGeneratorContractModel](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorcontractmodel)
-- [SyntaxGeneratorContractModels](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorcontractmodels)
 - [SyntaxGeneratorContractParameter](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorcontractparameter)
 - [SyntaxGeneratorContractParameters](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorcontractparameters)
 - [SyntaxGeneratorEndpointControllers](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorendpointcontrollers)
-
-## [Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces.md)
-
-- [ISyntaxGeneratorContract](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces.md#isyntaxgeneratorcontract)
-- [ISyntaxGeneratorContractInterfaces](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces.md#isyntaxgeneratorcontractinterfaces)
-- [ISyntaxGeneratorContractModels](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces.md#isyntaxgeneratorcontractmodels)
-- [ISyntaxGeneratorContractParameters](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces.md#isyntaxgeneratorcontractparameters)
-- [ISyntaxGeneratorEndpointControllers](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces.md#isyntaxgeneratorendpointcontrollers)
-- [ISyntaxOperationCodeGenerator](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.Interfaces.md#isyntaxoperationcodegenerator)
-
-## [Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md)
-
-- [SyntaxGeneratorClientEndpoint](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md#syntaxgeneratorclientendpoint)
-- [SyntaxGeneratorClientEndpointBase](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md#syntaxgeneratorclientendpointbase)
-- [SyntaxGeneratorClientEndpointInterface](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md#syntaxgeneratorclientendpointinterface)
-- [SyntaxGeneratorClientEndpointInterfaces](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md#syntaxgeneratorclientendpointinterfaces)
-- [SyntaxGeneratorClientEndpointResult](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md#syntaxgeneratorclientendpointresult)
-- [SyntaxGeneratorClientEndpointResultInterface](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md#syntaxgeneratorclientendpointresultinterface)
-- [SyntaxGeneratorClientEndpointResultInterfaces](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md#syntaxgeneratorclientendpointresultinterfaces)
-- [SyntaxGeneratorClientEndpointResults](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md#syntaxgeneratorclientendpointresults)
-- [SyntaxGeneratorClientEndpoints](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.md#syntaxgeneratorclientendpoints)
-
-## [Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.Interfaces](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.Interfaces.md)
-
-- [ISyntaxGeneratorClientEndpoints](Atc.Rest.ApiGenerator.SyntaxGenerators.ApiClient.Interfaces.md#isyntaxgeneratorclientendpoints)
 
 ## [Microsoft.OpenApi.Models](Microsoft.OpenApi.Models.md)
 
