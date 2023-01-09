@@ -26,7 +26,7 @@ public class GenerateContentForInterface : IContentGenerator
                 parameters.DocumentationTags,
                 parameters.Attributes));
 
-        sb.Append($"{parameters.AccessModifier.ToStringLowerCase()} ");
+        sb.Append($"{parameters.AccessModifier.ToStringLowerCase()} interface ");
         if (string.IsNullOrEmpty(parameters.InheritedInterfaceTypeName))
         {
             sb.AppendLine($"{parameters.InterfaceTypeName}");
@@ -69,7 +69,7 @@ public class GenerateContentForInterface : IContentGenerator
             }
         }
 
-        sb.AppendLine("}");
+        sb.Append('}');
 
         return sb.ToString();
     }

@@ -46,10 +46,11 @@ public record ClassParameters(
 public record EnumParameters(
     string? HeaderContent,
     string Namespace,
+    CodeDocumentationTags? DocumentationTags,
+    IList<AttributeParameters>? Attributes,
     AccessModifiers AccessModifier,
     string EnumTypeName,
     bool UseFlag,
-    CodeDocumentationTags? DocumentationTags,
     IList<EnumValueParameters> Values)
     : BaseParameters(
         HeaderContent,
@@ -69,6 +70,7 @@ public record PropertyParameters(
     string? ReturnGenericTypeName,
     string ReturnTypeName,
     string Name,
+    string? DefaultValue,
     bool UseAutoProperty,
     bool UseSet,
     bool UseGet,
@@ -87,7 +89,7 @@ public record MethodParameters(
     string? Content);
 
 public record EnumValueParameters(
-    string Name,
+    CodeDocumentationTags? DocumentationTags,
     AttributeParameters? DescriptionAttribute,
-    int? Value,
-    CodeDocumentationTags? DocumentationTags);
+    string Name,
+    int? Value);

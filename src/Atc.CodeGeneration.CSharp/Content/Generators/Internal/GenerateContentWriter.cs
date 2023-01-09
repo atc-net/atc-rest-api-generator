@@ -1,4 +1,4 @@
-﻿// ReSharper disable ConvertIfStatementToConditionalTernaryExpression
+// ReSharper disable ConvertIfStatementToConditionalTernaryExpression
 // ReSharper disable InvertIf
 namespace Atc.CodeGeneration.CSharp.Content.Generators.Internal;
 
@@ -22,7 +22,7 @@ public class GenerateContentWriter
 
         if (!string.IsNullOrEmpty(headerContent))
         {
-            sb.Append(headerContent);
+            sb.AppendLine(headerContent);
         }
 
         sb.AppendLine($"namespace {@namespace};");
@@ -192,29 +192,38 @@ public class GenerateContentWriter
             for (var i = 0; i < parameters.Parameters.Count; i++)
             {
                 var item = parameters.Parameters[i];
-                if (i == parameters.Parameters.Count - 1)
+                var useCommaForEndChar = i != parameters.Parameters.Count - 1;
+
+                if (string.IsNullOrEmpty(item.ReturnGenericTypeName))
                 {
-                    if (string.IsNullOrEmpty(item.ReturnGenericTypeName))
-                    {
-                        sb.AppendLine(8, $"{item.ReturnGenericTypeName}<{item.ReturnTypeName}> {item.Name})");
-                    }
-                    else
-                    {
-                        sb.AppendLine(8, $"{item.ReturnTypeName} {item.Name})");
-                    }
+                    sb.Append(8, $"{item.ReturnTypeName} {item.Name}");
                 }
                 else
                 {
-                    if (string.IsNullOrEmpty(item.ReturnGenericTypeName))
-                    {
-                        sb.AppendLine(8, $"{item.ReturnGenericTypeName}<{item.ReturnTypeName}> {item.Name},");
-                    }
-                    else
-                    {
-                        sb.AppendLine(8, $"{item.ReturnTypeName} {item.Name},");
-                    }
+                    sb.Append(8, $"{item.ReturnGenericTypeName}<{item.ReturnTypeName}> {item.Name}");
                 }
 
+                if (!string.IsNullOrEmpty(item.DefaultValue))
+                {
+                    sb.Append($" = {item.DefaultValue}");
+                }
+
+                if (useCommaForEndChar)
+                {
+                    sb.AppendLine(",");
+                }
+                else
+                {
+                    sb.Append(')');
+                }
+            }
+
+            if (parameters.AccessModifier == AccessModifiers.None)
+            {
+                sb.AppendLine(";");
+            }
+            else
+            {
                 if (string.IsNullOrEmpty(parameters.Content))
                 {
                     sb.AppendLine(4, "{");
