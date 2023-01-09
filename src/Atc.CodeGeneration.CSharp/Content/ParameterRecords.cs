@@ -34,6 +34,7 @@ public record ClassParameters(
     string? InheritedClassTypeName,
     string? InheritedGenericClassTypeName,
     string? InheritedInterfaceTypeName,
+    IList<ConstructorParameters>? Constructors,
     IList<PropertyParameters>? Properties,
     IList<MethodParameters>? Methods)
     : BaseParameters(
@@ -63,23 +64,49 @@ public record AttributeParameters(
     string Name,
     string? Content);
 
+public record ParameterBaseParameters(
+    string TypeName,
+    string Name,
+    string? DefaultValue);
+
+public record ConstructorParameterBaseParameters(
+    string? GenericTypeName,
+    string TypeName,
+    string Name,
+    string? DefaultValue,
+    bool PassToInheritedClass,
+    bool CreateAsPrivateReadonlyMember);
+
+public record ConstructorParameters(
+    CodeDocumentationTags? DocumentationTags,
+    AccessModifiers AccessModifier,
+    string? GenericTypeName,
+    string TypeName,
+    string? InheritedClassTypeName,
+    IList<ConstructorParameterBaseParameters>? Parameters);
+
 public record PropertyParameters(
     CodeDocumentationTags? DocumentationTags,
     IList<AttributeParameters>? Attributes,
     AccessModifiers AccessModifier,
-    string? ReturnGenericTypeName,
-    string ReturnTypeName,
+    string? GenericTypeName,
+    string TypeName,
     string Name,
     string? DefaultValue,
     bool UseAutoProperty,
     bool UseGet,
     bool UseSet,
     bool UseExpressionBody,
-    string? Content);
+    string? Content)
+    : ParameterBaseParameters(
+        TypeName,
+        Name,
+        DefaultValue);
 
 public record MethodParameters(
     CodeDocumentationTags? DocumentationTags,
     IList<AttributeParameters>? Attributes,
+    bool UseAsyncKeyword,
     AccessModifiers AccessModifier,
     string ReturnTypeName,
     string? ReturnGenericTypeName,
