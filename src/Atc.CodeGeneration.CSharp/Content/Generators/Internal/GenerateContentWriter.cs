@@ -220,7 +220,7 @@ public class GenerateContentWriter
 
             if (parameters.AccessModifier == AccessModifiers.None)
             {
-                sb.AppendLine(";");
+                sb.Append(";");
             }
             else
             {
