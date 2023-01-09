@@ -72,8 +72,8 @@ public record PropertyParameters(
     string Name,
     string? DefaultValue,
     bool UseAutoProperty,
-    bool UseSet,
     bool UseGet,
+    bool UseSet,
     bool UseExpressionBody,
     string? Content);
 

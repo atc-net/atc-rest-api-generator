@@ -48,7 +48,7 @@ public class GenerateContentForInterface : IContentGenerator
                     sb.AppendLine();
                 }
 
-                sb.Append(contentWriter.GenerateProperty(propertyParameters));
+                sb.AppendLine(contentWriter.GenerateProperty(propertyParameters));
 
                 isFirstEntry = false;
             }
@@ -63,7 +63,7 @@ public class GenerateContentForInterface : IContentGenerator
                     sb.AppendLine();
                 }
 
-                sb.Append(contentWriter.GenerateMethode(methodParameters));
+                sb.AppendLine(contentWriter.GenerateMethode(methodParameters));
 
                 isFirstEntry = false;
             }
