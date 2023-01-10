@@ -26,7 +26,7 @@ public class GenerateContentForInterface : IContentGenerator
                 parameters.DocumentationTags,
                 parameters.Attributes));
 
-        sb.Append($"{parameters.AccessModifier.ToStringLowerCase()} interface ");
+        sb.Append($"{parameters.AccessModifier.GetDescription()} interface ");
         if (string.IsNullOrEmpty(parameters.InheritedInterfaceTypeName))
         {
             sb.AppendLine($"{parameters.InterfaceTypeName}");

@@ -36,7 +36,8 @@ public record ClassParameters(
     string? InheritedInterfaceTypeName,
     IList<ConstructorParameters>? Constructors,
     IList<PropertyParameters>? Properties,
-    IList<MethodParameters>? Methods)
+    IList<MethodParameters>? Methods,
+    bool GenerateToStringMethode)
     : BaseParameters(
         HeaderContent,
         Namespace,
@@ -51,7 +52,7 @@ public record EnumParameters(
     IList<AttributeParameters>? Attributes,
     AccessModifiers AccessModifier,
     string EnumTypeName,
-    bool UseFlag,
+    bool UseFlags,
     IList<EnumValueParameters> Values)
     : BaseParameters(
         HeaderContent,
@@ -65,6 +66,8 @@ public record AttributeParameters(
     string? Content);
 
 public record ParameterBaseParameters(
+    IList<AttributeParameters>? Attributes,
+    string? GenericTypeName,
     string TypeName,
     string Name,
     string? DefaultValue);
@@ -75,7 +78,8 @@ public record ConstructorParameterBaseParameters(
     string Name,
     string? DefaultValue,
     bool PassToInheritedClass,
-    bool CreateAsPrivateReadonlyMember);
+    bool CreateAsPrivateReadonlyMember,
+    bool CreateAaOneLiner);
 
 public record ConstructorParameters(
     CodeDocumentationTags? DocumentationTags,
@@ -99,6 +103,8 @@ public record PropertyParameters(
     bool UseExpressionBody,
     string? Content)
     : ParameterBaseParameters(
+        Attributes,
+        GenericTypeName,
         TypeName,
         Name,
         DefaultValue);
@@ -106,12 +112,11 @@ public record PropertyParameters(
 public record MethodParameters(
     CodeDocumentationTags? DocumentationTags,
     IList<AttributeParameters>? Attributes,
-    bool UseAsyncKeyword,
     AccessModifiers AccessModifier,
-    string ReturnTypeName,
     string? ReturnGenericTypeName,
+    string? ReturnTypeName,
     string Name,
-    IList<PropertyParameters>? Parameters,
+    IList<ParameterBaseParameters>? Parameters,
     bool UseExpressionBody,
     string? Content);
 

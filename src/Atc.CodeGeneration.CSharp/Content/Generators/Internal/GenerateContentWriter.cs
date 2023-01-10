@@ -1,5 +1,6 @@
 // ReSharper disable ConvertIfStatementToConditionalTernaryExpression
 // ReSharper disable InvertIf
+// ReSharper disable StringLiteralTypo
 namespace Atc.CodeGeneration.CSharp.Content.Generators.Internal;
 
 public class GenerateContentWriter
@@ -57,7 +58,7 @@ public class GenerateContentWriter
 
         var sb = new StringBuilder();
 
-        sb.Append(4, $"{parameters.AccessModifier.ToStringLowerCase()} ");
+        sb.Append(4, $"{parameters.AccessModifier.GetDescription()} ");
         if (string.IsNullOrEmpty(parameters.GenericTypeName))
         {
             sb.Append($"{parameters.TypeName}(");
@@ -72,7 +73,14 @@ public class GenerateContentWriter
             if (parameters.Parameters.Count(x => x.PassToInheritedClass) == 1)
             {
                 var firstParameterParameters = parameters.Parameters.First();
-                sb.AppendLine($"{firstParameterParameters.TypeName} {firstParameterParameters.Name})");
+                if (firstParameterParameters.CreateAaOneLiner)
+                {
+                    sb.Append($"{firstParameterParameters.TypeName} {firstParameterParameters.Name})");
+                }
+                else
+                {
+                    sb.AppendLine($"{firstParameterParameters.TypeName} {firstParameterParameters.Name})");
+                }
             }
             else
             {
@@ -84,6 +92,7 @@ public class GenerateContentWriter
                     AppendInputParameter(
                         sb,
                         8,
+                        attributes: null,
                         item.GenericTypeName,
                         item.TypeName,
                         item.Name,
@@ -108,9 +117,16 @@ public class GenerateContentWriter
                 parameters.Parameters.Count(x => x.PassToInheritedClass) == 1)
             {
                 var firstParameterParameters = parameters.Parameters.First();
-                sb.AppendLine(8, $": {parameters.InheritedClassTypeName}({firstParameterParameters.Name})");
-                sb.AppendLine(4, "{");
-                sb.Append("    }");
+                if (firstParameterParameters.CreateAaOneLiner)
+                {
+                    sb.Append($" : {parameters.InheritedClassTypeName}({firstParameterParameters.Name}) {{ }}");
+                }
+                else
+                {
+                    sb.AppendLine(8, $": {parameters.InheritedClassTypeName}({firstParameterParameters.Name})");
+                    sb.AppendLine(4, "{");
+                    sb.Append("    }");
+                }
             }
             else
             {
@@ -163,11 +179,11 @@ public class GenerateContentWriter
             {
                 if (string.IsNullOrEmpty(item.Content))
                 {
-                    sb.AppendLine($"[{item.Name}]");
+                    sb.AppendLine(4, $"[{item.Name}]");
                 }
                 else
                 {
-                    sb.AppendLine($"[{item.Name}({item.Content})]");
+                    sb.AppendLine(4, $"[{item.Name}({item.Content})]");
                 }
             }
         }
@@ -175,7 +191,7 @@ public class GenerateContentWriter
         sb.Append("    ");
         if (parameters.AccessModifier != AccessModifiers.None)
         {
-            sb.Append($"{parameters.AccessModifier.ToStringLowerCase()} ");
+            sb.Append($"{parameters.AccessModifier.GetDescription()} ");
         }
 
         if (string.IsNullOrEmpty(parameters.GenericTypeName))
@@ -274,11 +290,11 @@ public class GenerateContentWriter
             {
                 if (string.IsNullOrEmpty(item.Content))
                 {
-                    sb.AppendLine($"[{item.Name}]");
+                    sb.AppendLine(4, $"[{item.Name}]");
                 }
                 else
                 {
-                    sb.AppendLine($"[{item.Name}({item.Content})]");
+                    sb.AppendLine(4, $"[{item.Name}({item.Content})]");
                 }
             }
         }
@@ -286,34 +302,44 @@ public class GenerateContentWriter
         sb.Append("    ");
         if (parameters.AccessModifier != AccessModifiers.None)
         {
-            sb.Append($"{parameters.AccessModifier.ToStringLowerCase()} ");
-            if (parameters.UseAsyncKeyword)
-            {
-                sb.Append("async ");
-            }
+            sb.Append($"{parameters.AccessModifier.GetDescription()} ");
         }
 
-        if (string.IsNullOrEmpty(parameters.ReturnGenericTypeName))
+        if (!string.IsNullOrEmpty(parameters.ReturnTypeName))
         {
-            sb.Append($"{parameters.ReturnTypeName} ");
-        }
-        else
-        {
-            sb.Append($"{parameters.ReturnGenericTypeName}<{parameters.ReturnTypeName}> ");
+            if (string.IsNullOrEmpty(parameters.ReturnGenericTypeName))
+            {
+                sb.Append($"{parameters.ReturnTypeName} ");
+            }
+            else
+            {
+                sb.Append($"{parameters.ReturnGenericTypeName}<{parameters.ReturnTypeName}> ");
+            }
         }
 
         sb.Append(parameters.Name);
         if (parameters.Parameters is not null &&
             parameters.Parameters.Any())
         {
-            sb.AppendLine("(");
+            var indentSpaces = 0;
+            if (parameters.Parameters.Count == 1)
+            {
+                sb.Append('(');
+            }
+            else
+            {
+                sb.AppendLine("(");
+                indentSpaces = 8;
+            }
+
             for (var i = 0; i < parameters.Parameters.Count; i++)
             {
                 var item = parameters.Parameters[i];
                 var useCommaForEndChar = i != parameters.Parameters.Count - 1;
                 AppendInputParameter(
                     sb,
-                    8,
+                    indentSpaces,
+                    item.Attributes,
                     item.GenericTypeName,
                     item.TypeName,
                     item.Name,
@@ -335,10 +361,21 @@ public class GenerateContentWriter
                 }
                 else
                 {
-                    sb.AppendLine();
-                    sb.AppendLine(4, "{");
-                    AppendContent(sb, 8, parameters.Content);
-                    sb.Append(4, "}");
+                    if (parameters.UseExpressionBody)
+                    {
+                        sb.AppendLine();
+                        sb.Append(8, "=> ");
+                        AppendContent(sb, 0, parameters.Content);
+                        sb.Append(';');
+                    }
+                    else
+                    {
+                        sb.AppendLine();
+                        sb.AppendLine(4, "{");
+                        AppendContent(sb, 8, parameters.Content);
+                        sb.AppendLine();
+                        sb.Append(4, "}");
+                    }
                 }
             }
         }
@@ -358,6 +395,31 @@ public class GenerateContentWriter
         return sb.ToString();
     }
 
+    public string GenerateMethodeToString(
+        IList<PropertyParameters> parameters)
+    {
+        ArgumentNullException.ThrowIfNull(parameters);
+
+        var sb = new StringBuilder();
+
+        sb.AppendLine(4, "/// <inheritdoc />");
+        sb.AppendLine(4, "public override string ToString()");
+        sb.Append(8, "=> $\"");
+        for (var i = 0; i < parameters.Count; i++)
+        {
+            var parametersProperty = parameters[i];
+            sb.Append($"{{nameof({parametersProperty.Name})}}: {{{parametersProperty.Name}}}");
+            if (i != parameters.Count - 1)
+            {
+                sb.Append(", ");
+            }
+        }
+
+        sb.Append("\";");
+
+        return sb.ToString();
+    }
+
     private static void AppendContent(
         StringBuilder sb,
         int indentSpaces,
@@ -367,15 +429,23 @@ public class GenerateContentWriter
             .EnsureEnvironmentNewLines()
             .Split(Environment.NewLine);
 
-        foreach (var line in lines)
+        for (var i = 0; i < lines.Length; i++)
         {
+            var line = lines[i];
             if (string.IsNullOrEmpty(line))
             {
                 sb.AppendLine();
             }
             else
             {
-                sb.AppendLine(indentSpaces, line);
+                if (i == lines.Length - 1)
+                {
+                    sb.Append(indentSpaces, line);
+                }
+                else
+                {
+                    sb.AppendLine(indentSpaces, line);
+                }
             }
         }
     }
@@ -383,12 +453,19 @@ public class GenerateContentWriter
     private static void AppendInputParameter(
         StringBuilder sb,
         int indentSpaces,
+        IList<AttributeParameters>? attributes,
         string? genericTypeName,
         string typeName,
         string name,
         string? defaultValue,
         bool useCommaForEndChar)
     {
+        if (attributes is not null && attributes.Count == 1)
+        {
+            sb.Append(indentSpaces, $"[{attributes[0].Name}]");
+            indentSpaces = 1;
+        }
+
         if (string.IsNullOrEmpty(genericTypeName))
         {
             sb.Append(indentSpaces, $"{typeName} {name}");

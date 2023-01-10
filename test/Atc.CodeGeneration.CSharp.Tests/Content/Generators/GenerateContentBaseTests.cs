@@ -9,10 +9,7 @@ public abstract class GenerateContentBaseTests
 // the code is regenerated.
 //------------------------------------------------------------------------------";
 
-    protected readonly ICodeDocumentationTagsGenerator codeDocumentationTagsGenerator;
+    public ICodeDocumentationTagsGenerator CodeDocumentationTagsGenerator { get; } = new CodeDocumentationTagsGenerator();
 
-    protected GenerateContentBaseTests()
-    {
-        codeDocumentationTagsGenerator = new CodeDocumentationTagsGenerator();
-    }
+    public IList<AttributeParameters> AttributesWithGeneratedCode { get; } = AttributesParametersFactory.Create("GeneratedCode", "\"ApiGenerator\", \"X.X.X.X\"");
 }

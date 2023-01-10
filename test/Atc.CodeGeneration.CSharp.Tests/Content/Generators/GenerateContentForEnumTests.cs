@@ -30,30 +30,23 @@ public enum ColorType
         var documentationTags = new CodeDocumentationTags(
             "Enumeration: ColorType.");
 
-        var attributes = new List<AttributeParameters>
-        {
-            new("GeneratedCode", "\"ApiGenerator\", \"X.X.X.X\""),
-        };
-
-        var enumParameters = new EnumParameters(
-            HeaderContent: HeaderContent,
-            Namespace: "Demo.Api.Generated.Contracts",
-            DocumentationTags: documentationTags,
-            Attributes: attributes,
-            AccessModifier: AccessModifiers.Public,
-            EnumTypeName: "ColorType",
-            UseFlag: true,
-            new List<EnumValueParameters>
+        var enumParameters = EnumParametersFactory.Create(
+            headerContent: HeaderContent,
+            @namespace: "Demo.Api.Generated.Contracts",
+            documentationTags: documentationTags,
+            attributes: AttributesWithGeneratedCode,
+            enumTypeName: "ColorType",
+            enumNameValues: new Dictionary<string, int>(StringComparer.Ordinal)
             {
-                new(null, null, "None", 0),
-                new(null, null, "Black", 1),
-                new(null, null, "White", 2),
-                new(null, null, "Yellow", 4),
-                new(null, null, "Red", 8),
+                { "None", 0 },
+                { "Black", 1 },
+                { "White", 2 },
+                { "Yellow", 4 },
+                { "Red", 8 },
             });
 
         var sut = new GenerateContentForEnum(
-            codeDocumentationTagsGenerator,
+            CodeDocumentationTagsGenerator,
             enumParameters);
 
         var generatedCode = sut.Generate();
@@ -88,29 +81,22 @@ public enum GenderType
         var documentationTags = new CodeDocumentationTags(
             "Enumeration: GenderType.");
 
-        var attributes = new List<AttributeParameters>
-        {
-            new("GeneratedCode", "\"ApiGenerator\", \"X.X.X.X\""),
-        };
-
-        var enumParameters = new EnumParameters(
-            HeaderContent: HeaderContent,
-            Namespace: "Demo.Api.Generated.Contracts",
-            DocumentationTags: documentationTags,
-            Attributes: attributes,
-            AccessModifier: AccessModifiers.Public,
-            EnumTypeName: "GenderType",
-            UseFlag: false,
-            new List<EnumValueParameters>
+        var enumParameters = EnumParametersFactory.Create(
+            headerContent: HeaderContent,
+            @namespace: "Demo.Api.Generated.Contracts",
+            documentationTags: documentationTags,
+            attributes: AttributesWithGeneratedCode,
+            enumTypeName: "GenderType",
+            enumNames: new[]
             {
-                new(null, null, "None", null),
-                new(null, null, "NonBinary", null),
-                new(null, null, "Male", null),
-                new(null, null, "Female", null),
+                "None",
+                "NonBinary",
+                "Male",
+                "Female",
             });
 
         var sut = new GenerateContentForEnum(
-            codeDocumentationTagsGenerator,
+            CodeDocumentationTagsGenerator,
             enumParameters);
 
         var generatedCode = sut.Generate();

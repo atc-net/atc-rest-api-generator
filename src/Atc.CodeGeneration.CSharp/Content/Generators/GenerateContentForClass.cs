@@ -1,3 +1,4 @@
+// ReSharper disable MergeIntoPattern
 namespace Atc.CodeGeneration.CSharp.Content.Generators;
 
 public class GenerateContentForClass : IContentGenerator
@@ -25,7 +26,7 @@ public class GenerateContentForClass : IContentGenerator
                 parameters.DocumentationTags,
                 parameters.Attributes));
 
-        sb.Append($"{parameters.AccessModifier.ToStringLowerCase()} class ");
+        sb.Append($"{parameters.AccessModifier.GetDescription()} class ");
         if (string.IsNullOrEmpty(parameters.InheritedClassTypeName) &&
             string.IsNullOrEmpty(parameters.InheritedInterfaceTypeName))
         {
@@ -102,6 +103,19 @@ public class GenerateContentForClass : IContentGenerator
 
                 isFirstEntry = false;
             }
+        }
+
+        if (parameters.GenerateToStringMethode &&
+            parameters.Properties is not null)
+        {
+            if (!isFirstEntry)
+            {
+                sb.AppendLine();
+            }
+
+            sb.AppendLine(contentWriter.GenerateMethodeToString(parameters.Properties));
+
+            isFirstEntry = false;
         }
 
         sb.Append('}');

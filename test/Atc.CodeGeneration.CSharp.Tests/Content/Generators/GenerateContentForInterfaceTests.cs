@@ -3,7 +3,7 @@ namespace Atc.CodeGeneration.CSharp.Tests.Content.Generators;
 public class GenerateContentForInterfaceTests : GenerateContentBaseTests
 {
     [Fact]
-    public void Scenario1()
+    public void Empty()
     {
         const string expectedCode =
             @"namespace App.MyNamespace;
@@ -24,7 +24,7 @@ public interface MyInterface
             Methods: null);
 
         var sut = new GenerateContentForInterface(
-            codeDocumentationTagsGenerator,
+            CodeDocumentationTagsGenerator,
             interfaceParameters);
 
         var generatedCode = sut.Generate();
@@ -34,7 +34,7 @@ public interface MyInterface
     }
 
     [Fact]
-    public void Scenario2()
+    public void EmptyWithInheritedInterface()
     {
         const string expectedCode =
             @"namespace App.MyNamespace;
@@ -55,7 +55,7 @@ public interface MyInterface : MyInterfaceBase
             Methods: null);
 
         var sut = new GenerateContentForInterface(
-            codeDocumentationTagsGenerator,
+            CodeDocumentationTagsGenerator,
             interfaceParameters);
 
         var generatedCode = sut.Generate();
@@ -97,11 +97,6 @@ public interface ISetAccountNameHandler
         var documentationTags = new CodeDocumentationTags(
             "Domain Interface for RequestHandler.\r\nDescription: Set name of account.\r\nOperation: SetAccountName.");
 
-        var attributes = new List<AttributeParameters>
-        {
-            new("GeneratedCode", "\"ApiGenerator\", \"X.X.X.X\""),
-        };
-
         var methodParameters = new List<MethodParameters>
         {
             new(
@@ -119,38 +114,23 @@ public interface ISetAccountNameHandler
                     @return: null),
                 Attributes: null,
                 AccessModifier: AccessModifiers.None,
-                UseAsyncKeyword: false,
                 ReturnTypeName: "SetAccountNameResult",
                 ReturnGenericTypeName: "Task",
                 Name: "ExecuteAsync",
-                Parameters: new List<PropertyParameters>
+                Parameters: new List<ParameterBaseParameters>
                 {
                     new(
-                        DocumentationTags: null,
                         Attributes: null,
-                        AccessModifier: AccessModifiers.None,
                         GenericTypeName: null,
                         TypeName: "SetAccountNameParameters",
                         Name: "parameters",
-                        DefaultValue: null,
-                        UseAutoProperty: false,
-                        UseSet: false,
-                        UseGet: false,
-                        UseExpressionBody: false,
-                        Content: null),
+                        DefaultValue: null),
                     new(
-                        DocumentationTags: null,
                         Attributes: null,
-                        AccessModifier: AccessModifiers.None,
                         GenericTypeName: null,
                         TypeName: "CancellationToken",
                         Name: "cancellationToken",
-                        DefaultValue: "default",
-                        UseAutoProperty: false,
-                        UseSet: false,
-                        UseGet: false,
-                        UseExpressionBody: false,
-                        Content: "default"),
+                        DefaultValue: "default"),
                 },
                 UseExpressionBody: false,
                 Content: null),
@@ -160,7 +140,7 @@ public interface ISetAccountNameHandler
             HeaderContent: HeaderContent,
             Namespace: "Demo.Api.Generated.Contracts.Accounts",
             DocumentationTags: documentationTags,
-            Attributes: attributes,
+            Attributes: AttributesWithGeneratedCode,
             AccessModifier: AccessModifiers.Public,
             InterfaceTypeName: "ISetAccountNameHandler",
             InheritedInterfaceTypeName: null,
@@ -168,7 +148,7 @@ public interface ISetAccountNameHandler
             Methods: methodParameters);
 
         var sut = new GenerateContentForInterface(
-            codeDocumentationTagsGenerator,
+            CodeDocumentationTagsGenerator,
             interfaceParameters);
 
         var generatedCode = sut.Generate();
@@ -210,11 +190,6 @@ public interface IUpdateAccountNameHandler
         var documentationTags = new CodeDocumentationTags(
             "Domain Interface for RequestHandler.\r\nDescription: Update name of account.\r\nOperation: UpdateAccountName.");
 
-        var attributes = new List<AttributeParameters>
-        {
-            new("GeneratedCode", "\"ApiGenerator\", \"X.X.X.X\""),
-        };
-
         var methodParameters = new List<MethodParameters>
         {
             new(
@@ -232,38 +207,23 @@ public interface IUpdateAccountNameHandler
                     @return: null),
                 Attributes: null,
                 AccessModifier: AccessModifiers.None,
-                UseAsyncKeyword: false,
                 ReturnTypeName: "UpdateAccountNameResult",
                 ReturnGenericTypeName: "Task",
                 Name: "ExecuteAsync",
-                Parameters: new List<PropertyParameters>
+                Parameters: new List<ParameterBaseParameters>
                 {
                     new(
-                        DocumentationTags: null,
                         Attributes: null,
-                        AccessModifier: AccessModifiers.None,
                         GenericTypeName: null,
                         TypeName: "UpdateAccountNameParameters",
                         Name: "parameters",
-                        DefaultValue: null,
-                        UseAutoProperty: false,
-                        UseSet: false,
-                        UseGet: false,
-                        UseExpressionBody: false,
-                        Content: null),
+                        DefaultValue: null),
                     new(
-                        DocumentationTags: null,
                         Attributes: null,
-                        AccessModifier: AccessModifiers.None,
                         GenericTypeName: null,
                         TypeName: "CancellationToken",
                         Name: "cancellationToken",
-                        DefaultValue: "default",
-                        UseAutoProperty: false,
-                        UseSet: false,
-                        UseGet: false,
-                        UseExpressionBody: false,
-                        Content: "default"),
+                        DefaultValue: "default"),
                 },
                 UseExpressionBody: false,
                 Content: null),
@@ -273,7 +233,7 @@ public interface IUpdateAccountNameHandler
             HeaderContent: HeaderContent,
             Namespace: "Demo.Api.Generated.Contracts.Accounts",
             DocumentationTags: documentationTags,
-            Attributes: attributes,
+            Attributes: AttributesWithGeneratedCode,
             AccessModifier: AccessModifiers.Public,
             InterfaceTypeName: "IUpdateAccountNameHandler",
             InheritedInterfaceTypeName: null,
@@ -281,7 +241,7 @@ public interface IUpdateAccountNameHandler
             Methods: methodParameters);
 
         var sut = new GenerateContentForInterface(
-            codeDocumentationTagsGenerator,
+            CodeDocumentationTagsGenerator,
             interfaceParameters);
 
         var generatedCode = sut.Generate();
@@ -291,7 +251,7 @@ public interface IUpdateAccountNameHandler
     }
 
     [Fact]
-    public void Scenario_Erut_CreateLocation_ForApiClientEndpoint()
+    public void Scenario_CreateLocation_ForApiClientEndpoint()
     {
         const string expectedCode =
             @"//------------------------------------------------------------------------------
@@ -300,7 +260,7 @@ public interface IUpdateAccountNameHandler
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace ERUT.ApiClient.Generated.Endpoints;
+namespace XXX.ApiClient.Generated.Endpoints;
 
 /// <summary>
 /// Interface for Client Endpoint.
@@ -323,11 +283,6 @@ public interface ICreateLocationEndpoint
         var documentationTags = new CodeDocumentationTags(
             "Interface for Client Endpoint.\r\nDescription: Create a new location.\r\nOperation: CreateLocation.");
 
-        var attributes = new List<AttributeParameters>
-        {
-            new("GeneratedCode", "\"ApiGenerator\", \"X.X.X.X\""),
-        };
-
         var methodParameters = new List<MethodParameters>
         {
             new(
@@ -345,38 +300,23 @@ public interface ICreateLocationEndpoint
                     @return: null),
                 Attributes: null,
                 AccessModifier: AccessModifiers.None,
-                UseAsyncKeyword: false,
                 ReturnTypeName: "CreateLocationEndpointResult",
                 ReturnGenericTypeName: "Task",
                 Name: "ExecuteAsync",
-                Parameters: new List<PropertyParameters>
+                Parameters: new List<ParameterBaseParameters>
                 {
                     new(
-                        DocumentationTags: null,
                         Attributes: null,
-                        AccessModifier: AccessModifiers.None,
                         GenericTypeName: null,
                         TypeName: "CreateLocationParameters",
                         Name: "parameters",
-                        DefaultValue: null,
-                        UseAutoProperty: false,
-                        UseSet: false,
-                        UseGet: false,
-                        UseExpressionBody: false,
-                        Content: null),
+                        DefaultValue: null),
                     new(
-                        DocumentationTags: null,
                         Attributes: null,
-                        AccessModifier: AccessModifiers.None,
                         GenericTypeName: null,
                         TypeName: "CancellationToken",
                         Name: "cancellationToken",
-                        DefaultValue: "default",
-                        UseAutoProperty: false,
-                        UseSet: false,
-                        UseGet: false,
-                        UseExpressionBody: false,
-                        Content: "default"),
+                        DefaultValue: "default"),
                 },
                 UseExpressionBody: false,
                 Content: null),
@@ -384,9 +324,9 @@ public interface ICreateLocationEndpoint
 
         var interfaceParameters = new InterfaceParameters(
             HeaderContent: HeaderContent,
-            Namespace: "ERUT.ApiClient.Generated.Endpoints",
+            Namespace: "XXX.ApiClient.Generated.Endpoints",
             DocumentationTags: documentationTags,
-            Attributes: attributes,
+            Attributes: AttributesWithGeneratedCode,
             AccessModifier: AccessModifiers.Public,
             InterfaceTypeName: "ICreateLocationEndpoint",
             InheritedInterfaceTypeName: null,
@@ -394,7 +334,7 @@ public interface ICreateLocationEndpoint
             Methods: methodParameters);
 
         var sut = new GenerateContentForInterface(
-            codeDocumentationTagsGenerator,
+            CodeDocumentationTagsGenerator,
             interfaceParameters);
 
         var generatedCode = sut.Generate();
@@ -404,7 +344,7 @@ public interface ICreateLocationEndpoint
     }
 
     [Fact]
-    public void Scenario_Erut_CreateLocation_ForApiClientEndpointResult()
+    public void Scenario_CreateLocation_ForApiClientEndpointResult()
     {
         const string expectedCode =
             @"//------------------------------------------------------------------------------
@@ -413,7 +353,7 @@ public interface ICreateLocationEndpoint
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace ERUT.ApiClient.Generated.Endpoints;
+namespace XXX.ApiClient.Generated.Endpoints;
 
 /// <summary>
 /// Interface for Client Endpoint Result.
@@ -446,11 +386,6 @@ public interface ICreateLocationEndpointResult : IEndpointResponse
 
         var documentationTags = new CodeDocumentationTags(
             "Interface for Client Endpoint Result.\r\nDescription: Create a new location.\r\nOperation: CreateLocation.");
-
-        var attributes = new List<AttributeParameters>
-        {
-            new("GeneratedCode", "\"ApiGenerator\", \"X.X.X.X\""),
-        };
 
         var propertyParameters = new List<PropertyParameters>
         {
@@ -588,9 +523,9 @@ public interface ICreateLocationEndpointResult : IEndpointResponse
 
         var interfaceParameters = new InterfaceParameters(
             HeaderContent: HeaderContent,
-            Namespace: "ERUT.ApiClient.Generated.Endpoints",
+            Namespace: "XXX.ApiClient.Generated.Endpoints",
             DocumentationTags: documentationTags,
-            Attributes: attributes,
+            Attributes: AttributesWithGeneratedCode,
             AccessModifier: AccessModifiers.Public,
             InterfaceTypeName: "ICreateLocationEndpointResult",
             InheritedInterfaceTypeName: "IEndpointResponse",
@@ -598,7 +533,7 @@ public interface ICreateLocationEndpointResult : IEndpointResponse
             Methods: null);
 
         var sut = new GenerateContentForInterface(
-            codeDocumentationTagsGenerator,
+            CodeDocumentationTagsGenerator,
             interfaceParameters);
 
         var generatedCode = sut.Generate();

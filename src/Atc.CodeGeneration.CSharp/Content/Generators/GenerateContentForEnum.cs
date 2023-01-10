@@ -27,7 +27,7 @@ public class GenerateContentForEnum : IContentGenerator
                 parameters.DocumentationTags,
                 GetAttributeParametersList()));
 
-        sb.Append($"{parameters.AccessModifier.ToStringLowerCase()} enum ");
+        sb.Append($"{parameters.AccessModifier.GetDescription()} enum ");
         sb.AppendLine($"{parameters.EnumTypeName}");
 
         sb.AppendLine("{");
@@ -62,7 +62,7 @@ public class GenerateContentForEnum : IContentGenerator
     private IList<AttributeParameters>? GetAttributeParametersList()
     {
         var attributeParameters = parameters.Attributes?.ToList();
-        if (parameters.UseFlag &&
+        if (parameters.UseFlags &&
             attributeParameters is not null &&
             attributeParameters.Find(x => x.Name == "Flags") is null)
         {
