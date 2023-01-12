@@ -11,6 +11,9 @@ public class ServerApiGenerator
     private readonly IApiOperationExtractor apiOperationExtractor;
     private readonly ApiProjectOptions projectOptions;
 
+    private readonly string codeGeneratorContentHeader;
+    private readonly AttributeParameters codeGeneratorAttribute;
+
     public ServerApiGenerator(
         ILogger logger,
         IApiOperationExtractor apiOperationExtractor,
@@ -19,6 +22,16 @@ public class ServerApiGenerator
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.apiOperationExtractor = apiOperationExtractor ?? throw new ArgumentNullException(nameof(apiOperationExtractor));
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
+
+        // TODO: Optimize codeGeneratorContentHeader & codeGeneratorAttribute
+        var codeHeaderGenerator = new GeneratedCodeHeaderGenerator(
+            new GeneratedCodeGeneratorParameters(
+                projectOptions.ApiGeneratorVersion));
+        codeGeneratorContentHeader = codeHeaderGenerator.Generate();
+
+        codeGeneratorAttribute = new AttributeParameters(
+            "GeneratedCode",
+            $"\"{ContentWriterConstants.ApiGeneratorName}\", \"{projectOptions.ApiGeneratorVersion}\"");
     }
 
     public bool Generate()
@@ -216,16 +229,16 @@ public class ServerApiGenerator
         var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}";
 
         // Generate
-        var enumerationParameters = ContentGeneratorServerClientEnumerationParametersFactory.Create(
+        var enumParameters = ContentGeneratorServerClientEnumParametersFactory.Create(
+            codeGeneratorContentHeader,
             fullNamespace,
+            codeGeneratorAttribute,
             enumerationName,
             openApiSchemaEnumeration.Enum);
 
-        var contentGeneratorEnum = new ContentGeneratorServerClientEnumeration(
-            new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-            new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+        var contentGeneratorEnum = new GenerateContentForEnum(
             new CodeDocumentationTagsGenerator(),
-            enumerationParameters);
+            enumParameters);
 
         var enumContent = contentGeneratorEnum.Generate();
 

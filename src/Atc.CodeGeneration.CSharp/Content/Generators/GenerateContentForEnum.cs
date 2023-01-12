@@ -35,11 +35,8 @@ public class GenerateContentForEnum : IContentGenerator
         {
             if (parametersValue.DescriptionAttribute is not null)
             {
-                sb.AppendLine(
-                    4,
-                    string.IsNullOrEmpty(parametersValue.DescriptionAttribute.Content)
-                        ? $"[{parametersValue.DescriptionAttribute.Name}]"
-                        : $"[{parametersValue.DescriptionAttribute.Name}({parametersValue.DescriptionAttribute.Content})]");
+                sb.AppendAttribute(4, parametersValue.DescriptionAttribute);
+                sb.AppendLine();
             }
 
             var sbLine = new StringBuilder();

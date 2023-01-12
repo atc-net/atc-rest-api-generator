@@ -3,7 +3,7 @@ namespace Atc.CodeGeneration.CSharp.Tests.Content.Factories;
 public class EnumParametersFactoryTests
 {
     [Theory]
-    [InlineAutoNSubstituteData]
+    [InlineAutoData]
     public void Create(
         string headerContent,
         string @namespace,
@@ -26,7 +26,7 @@ public class EnumParametersFactoryTests
     }
 
     [Theory]
-    [InlineAutoNSubstituteData]
+    [InlineAutoData]
     public void CreateWithValues(
         string headerContent,
         string @namespace,

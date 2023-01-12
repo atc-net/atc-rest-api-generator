@@ -3,6 +3,7 @@
 // ReSharper disable StringLiteralTypo
 namespace Atc.CodeGeneration.CSharp.Content.Generators.Internal;
 
+[SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "OK.")]
 public class GenerateContentWriter
 {
     private readonly ICodeDocumentationTagsGenerator codeDocumentationTagsGenerator;
@@ -23,7 +24,7 @@ public class GenerateContentWriter
 
         if (!string.IsNullOrEmpty(headerContent))
         {
-            sb.AppendLine(headerContent);
+            sb.Append(headerContent);
         }
 
         sb.AppendLine($"namespace {@namespace};");
@@ -35,16 +36,10 @@ public class GenerateContentWriter
 
         if (attributes is not null)
         {
-            foreach (var item in attributes)
+            foreach (var attribute in attributes)
             {
-                if (string.IsNullOrEmpty(item.Content))
-                {
-                    sb.AppendLine($"[{item.Name}]");
-                }
-                else
-                {
-                    sb.AppendLine($"[{item.Name}({item.Content})]");
-                }
+                sb.AppendAttribute(attribute);
+                sb.AppendLine();
             }
         }
 
@@ -58,7 +53,8 @@ public class GenerateContentWriter
 
         var sb = new StringBuilder();
 
-        sb.Append(4, $"{parameters.AccessModifier.GetDescription()} ");
+        sb.AppendAccessModifier(4, parameters.AccessModifier);
+
         if (string.IsNullOrEmpty(parameters.GenericTypeName))
         {
             sb.Append($"{parameters.TypeName}(");
@@ -137,7 +133,7 @@ public class GenerateContentWriter
         return sb.ToString();
     }
 
-    public string? GeneratePrivateReadonlyMembersToConstructor(
+    public string GeneratePrivateReadonlyMembersToConstructor(
         IList<ConstructorParameters> parameters)
     {
         ArgumentNullException.ThrowIfNull(parameters);
@@ -175,35 +171,16 @@ public class GenerateContentWriter
 
         if (parameters.Attributes is not null)
         {
-            foreach (var item in parameters.Attributes)
-            {
-                if (string.IsNullOrEmpty(item.Content))
-                {
-                    sb.AppendLine(4, $"[{item.Name}]");
-                }
-                else
-                {
-                    sb.AppendLine(4, $"[{item.Name}({item.Content})]");
-                }
-            }
+            sb.AppendAttributesAsLines(4, parameters.Attributes);
         }
 
         sb.Append("    ");
         if (parameters.AccessModifier != AccessModifiers.None)
         {
-            sb.Append($"{parameters.AccessModifier.GetDescription()} ");
+            sb.AppendAccessModifier(parameters.AccessModifier);
         }
 
-        if (string.IsNullOrEmpty(parameters.GenericTypeName))
-        {
-            sb.Append($"{parameters.TypeName} ");
-        }
-        else
-        {
-            sb.Append($"{parameters.GenericTypeName}<{parameters.TypeName}> ");
-        }
-
-        sb.Append(parameters.Name);
+        sb.AppendTypeAndName(parameters.GenericTypeName, parameters.TypeName, parameters.Name);
 
         if (parameters.UseAutoProperty)
         {
@@ -223,7 +200,7 @@ public class GenerateContentWriter
             if (parameters.UseExpressionBody &&
                !string.IsNullOrEmpty(parameters.Content))
             {
-                sb.Append($" => {parameters.Content};");
+                sb.AppendContentAsExpressionBody(1, parameters.Content);
             }
         }
         else if (!string.IsNullOrEmpty(parameters.Content))
@@ -231,37 +208,11 @@ public class GenerateContentWriter
             sb.AppendLine();
             if (parameters.UseExpressionBody)
             {
-                var lines = parameters.Content
-                    .EnsureEnvironmentNewLines()
-                    .Split(Environment.NewLine);
-
-                if (lines.Length == 1)
-                {
-                    sb.Append(8, $"=> {lines[0]};");
-                }
-                else
-                {
-                    for (var i = 0; i < lines.Length; i++)
-                    {
-                        var line = lines[i];
-                        if (i == 0)
-                        {
-                            sb.AppendLine(8, $"=> {line}");
-                        }
-                        else if (i == lines.Length - 1)
-                        {
-                            sb.Append(8, $"{line};");
-                        }
-                        else
-                        {
-                            sb.AppendLine(8, line);
-                        }
-                    }
-                }
+                sb.AppendContentAsExpressionBody(8, parameters.Content);
             }
             else
             {
-                AppendContent(sb, 8, parameters.Content);
+                sb.AppendContent(8, parameters.Content);
             }
         }
         else
@@ -286,38 +237,24 @@ public class GenerateContentWriter
 
         if (parameters.Attributes is not null)
         {
-            foreach (var item in parameters.Attributes)
-            {
-                if (string.IsNullOrEmpty(item.Content))
-                {
-                    sb.AppendLine(4, $"[{item.Name}]");
-                }
-                else
-                {
-                    sb.AppendLine(4, $"[{item.Name}({item.Content})]");
-                }
-            }
+            sb.AppendAttributesAsLines(4, parameters.Attributes);
         }
 
         sb.Append("    ");
         if (parameters.AccessModifier != AccessModifiers.None)
         {
-            sb.Append($"{parameters.AccessModifier.GetDescription()} ");
+            sb.AppendAccessModifier(parameters.AccessModifier);
         }
 
-        if (!string.IsNullOrEmpty(parameters.ReturnTypeName))
+        if (string.IsNullOrEmpty(parameters.ReturnTypeName))
         {
-            if (string.IsNullOrEmpty(parameters.ReturnGenericTypeName))
-            {
-                sb.Append($"{parameters.ReturnTypeName} ");
-            }
-            else
-            {
-                sb.Append($"{parameters.ReturnGenericTypeName}<{parameters.ReturnTypeName}> ");
-            }
+            sb.Append(parameters.Name);
+        }
+        else
+        {
+            sb.AppendTypeAndName(parameters.ReturnGenericTypeName, parameters.ReturnTypeName, parameters.Name);
         }
 
-        sb.Append(parameters.Name);
         if (parameters.Parameters is not null &&
             parameters.Parameters.Any())
         {
@@ -364,15 +301,13 @@ public class GenerateContentWriter
                     if (parameters.UseExpressionBody)
                     {
                         sb.AppendLine();
-                        sb.Append(8, "=> ");
-                        AppendContent(sb, 0, parameters.Content);
-                        sb.Append(';');
+                        sb.AppendContentAsExpressionBody(8, parameters.Content);
                     }
                     else
                     {
                         sb.AppendLine();
                         sb.AppendLine(4, "{");
-                        AppendContent(sb, 8, parameters.Content);
+                        sb.AppendContent(8, parameters.Content);
                         sb.AppendLine();
                         sb.Append(4, "}");
                     }
@@ -388,7 +323,7 @@ public class GenerateContentWriter
             else
             {
                 sb.AppendLine("()");
-                sb.Append(parameters.Content);
+                sb.AppendContent(parameters.Content);
             }
         }
 
@@ -420,36 +355,6 @@ public class GenerateContentWriter
         return sb.ToString();
     }
 
-    private static void AppendContent(
-        StringBuilder sb,
-        int indentSpaces,
-        string content)
-    {
-        var lines = content
-            .EnsureEnvironmentNewLines()
-            .Split(Environment.NewLine);
-
-        for (var i = 0; i < lines.Length; i++)
-        {
-            var line = lines[i];
-            if (string.IsNullOrEmpty(line))
-            {
-                sb.AppendLine();
-            }
-            else
-            {
-                if (i == lines.Length - 1)
-                {
-                    sb.Append(indentSpaces, line);
-                }
-                else
-                {
-                    sb.AppendLine(indentSpaces, line);
-                }
-            }
-        }
-    }
-
     private static void AppendInputParameter(
         StringBuilder sb,
         int indentSpaces,
@@ -462,23 +367,11 @@ public class GenerateContentWriter
     {
         if (attributes is not null && attributes.Count == 1)
         {
-            sb.Append(indentSpaces, $"[{attributes[0].Name}]");
+            sb.AppendAttribute(indentSpaces, attributes[0]);
             indentSpaces = 1;
         }
 
-        if (string.IsNullOrEmpty(genericTypeName))
-        {
-            sb.Append(indentSpaces, $"{typeName} {name}");
-        }
-        else
-        {
-            sb.Append(indentSpaces, $"{genericTypeName}<{typeName}> {name}");
-        }
-
-        if (!string.IsNullOrEmpty(defaultValue))
-        {
-            sb.Append($" = {defaultValue}");
-        }
+        sb.AppendTypeAndName(indentSpaces, genericTypeName, typeName, name, defaultValue);
 
         if (useCommaForEndChar)
         {

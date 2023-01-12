@@ -3,7 +3,7 @@ namespace Atc.CodeGeneration.CSharp.Tests.Content.Factories;
 public class EnumValuesParametersFactoryTests
 {
     [Theory]
-    [InlineAutoNSubstituteData]
+    [InlineAutoData]
     public void Create(string[] names)
     {
         ArgumentNullException.ThrowIfNull(names);
@@ -17,7 +17,7 @@ public class EnumValuesParametersFactoryTests
     }
 
     [Theory]
-    [InlineAutoNSubstituteData]
+    [InlineAutoData]
     public void CreateWithValues(IDictionary<string, int> nameValues)
     {
         ArgumentNullException.ThrowIfNull(nameValues);

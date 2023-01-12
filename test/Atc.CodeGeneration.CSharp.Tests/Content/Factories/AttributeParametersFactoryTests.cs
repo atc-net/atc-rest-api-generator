@@ -3,7 +3,7 @@ namespace Atc.CodeGeneration.CSharp.Tests.Content.Factories;
 public class AttributeParametersFactoryTests
 {
     [Theory]
-    [InlineAutoNSubstituteData]
+    [InlineAutoData]
     public void Create(string name)
     {
         // Act
@@ -16,7 +16,7 @@ public class AttributeParametersFactoryTests
     }
 
     [Theory]
-    [InlineAutoNSubstituteData]
+    [InlineAutoData]
     public void CreateWithContent(string name, string content)
     {
         // Act
