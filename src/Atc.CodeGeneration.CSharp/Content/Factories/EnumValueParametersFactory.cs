@@ -12,7 +12,7 @@ public static class EnumValueParametersFactory
 
     public static EnumValueParameters Create(
         string name,
-        int value)
+        int? value)
         => new(
             DocumentationTags: null,
             DescriptionAttribute: null,

@@ -9,6 +9,8 @@ public class StringBuilderExtensionsTests
     [InlineData("public async ", AccessModifiers.PublicAsync)]
     [InlineData("public static ", AccessModifiers.PublicStatic)]
     [InlineData("public static implicit operator ", AccessModifiers.PublicStaticImplicitOperator)]
+    [InlineData("public record ", AccessModifiers.PublicRecord)]
+    [InlineData("public record struct ", AccessModifiers.PublicRecordStruct)]
     [InlineData("private ", AccessModifiers.Private)]
     [InlineData("protected ", AccessModifiers.Protected)]
     [InlineData("internal ", AccessModifiers.Internal)]
@@ -33,6 +35,8 @@ public class StringBuilderExtensionsTests
     [InlineData("   public async ", 3, AccessModifiers.PublicAsync)]
     [InlineData("   public static ", 3, AccessModifiers.PublicStatic)]
     [InlineData("   public static implicit operator ", 3, AccessModifiers.PublicStaticImplicitOperator)]
+    [InlineData("   public record ", 3, AccessModifiers.PublicRecord)]
+    [InlineData("   public record struct ", 3, AccessModifiers.PublicRecordStruct)]
     [InlineData("   private ", 3, AccessModifiers.Private)]
     [InlineData("   protected ", 3, AccessModifiers.Protected)]
     [InlineData("   internal ", 3, AccessModifiers.Internal)]
@@ -196,6 +200,30 @@ public class StringBuilderExtensionsTests
         Assert.NotEmpty(actual);
         Assert.StartsWith($"[{name}".PadLeft(leftPad), actual, StringComparison.Ordinal);
         Assert.EndsWith("]", actual, StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData("int age,\r\n", 0, null, null, "int", "age", null, true)]
+    [InlineData("int age)", 0, null, null, "int", "age", null, false)]
+    public void AppendInputParameterLine(
+        string expected,
+        int indentSpaces,
+        IList<AttributeParameters>? attributes,
+        string? genericTypeName,
+        string typeName,
+        string name,
+        string? defaultValue,
+        bool useCommaForEndChar)
+    {
+        // Arrange
+        var sb = new StringBuilder();
+
+        // Act
+        sb.AppendInputParameter(indentSpaces, attributes, genericTypeName, typeName, name, defaultValue, useCommaForEndChar);
+        var actual = sb.ToString();
+
+        // Assert
+        Assert.Equal(expected, actual);
     }
 
     [Theory]

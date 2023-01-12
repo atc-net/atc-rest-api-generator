@@ -16,6 +16,12 @@ public enum AccessModifiers
     [Description("public static implicit operator")]
     PublicStaticImplicitOperator,
 
+    [Description("public record")]
+    PublicRecord,
+
+    [Description("public record struct")]
+    PublicRecordStruct,
+
     [Description("private")]
     Private,
 

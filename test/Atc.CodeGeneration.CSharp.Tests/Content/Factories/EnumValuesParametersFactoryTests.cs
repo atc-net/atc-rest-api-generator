@@ -18,7 +18,7 @@ public class EnumValuesParametersFactoryTests
 
     [Theory]
     [InlineAutoData]
-    public void CreateWithValues(IDictionary<string, int> nameValues)
+    public void CreateWithValues(IDictionary<string, int?> nameValues)
     {
         ArgumentNullException.ThrowIfNull(nameValues);
 

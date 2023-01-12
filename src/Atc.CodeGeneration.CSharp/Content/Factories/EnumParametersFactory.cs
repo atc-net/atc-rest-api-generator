@@ -25,7 +25,7 @@ public static class EnumParametersFactory
         CodeDocumentationTags documentationTags,
         IList<AttributeParameters> attributes,
         string enumTypeName,
-        IDictionary<string, int> enumNameValues)
+        IDictionary<string, int?> enumNameValues)
         => new(
             HeaderContent: headerContent,
             Namespace: @namespace,
@@ -33,12 +33,19 @@ public static class EnumParametersFactory
             Attributes: attributes,
             AccessModifier: AccessModifiers.Public,
             EnumTypeName: enumTypeName,
-            UseFlags: AnalyzeForUseFlagAttribute(enumNameValues),
+            UseFlags: DetermineIfFlagsAttributeShouldBeUsed(enumNameValues),
             EnumValuesParametersFactory.Create(enumNameValues));
 
-    private static bool AnalyzeForUseFlagAttribute(
-        IDictionary<string, int> enumNameValues)
-        => enumNameValues
-            .Where(x => x.Value != 0)
-            .All(x => x.Value.IsBinarySequence());
+    private static bool DetermineIfFlagsAttributeShouldBeUsed(
+        IDictionary<string, int?> enumNameValues)
+    {
+        if (enumNameValues.All(x => !x.Value.HasValue))
+        {
+            return false;
+        }
+
+        return enumNameValues
+            .Where(x => x.Value.HasValue && x.Value.Value != 0)
+            .All(x => x.Value.HasValue && x.Value.Value.IsBinarySequence());
+    }
 }

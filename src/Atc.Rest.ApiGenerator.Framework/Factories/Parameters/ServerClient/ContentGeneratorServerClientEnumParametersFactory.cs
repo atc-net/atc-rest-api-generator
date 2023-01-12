@@ -13,28 +13,7 @@ public static class ContentGeneratorServerClientEnumParametersFactory
 
         var documentationTags = new CodeDocumentationTags($"Enumeration: {enumerationName}.");
 
-        var collectedNameAndValues = ExtractNameAndValues(apiSchemaEnums);
-
-        if (collectedNameAndValues.Any(x => x.Value is null))
-        {
-            var names = collectedNameAndValues
-                .Select(x => x.Key)
-                .ToArray();
-
-            return EnumParametersFactory.Create(
-                headerContent,
-                @namespace,
-                documentationTags,
-                new List<AttributeParameters> { codeGeneratorAttribute },
-                enumerationName,
-                names);
-        }
-
-        var nameAndValues = new Dictionary<string, int>(StringComparer.Ordinal);
-        foreach (var item in collectedNameAndValues)
-        {
-            nameAndValues.Add(item.Key, item.Value ?? -1);
-        }
+        var nameAndValues = ExtractNameAndValues(apiSchemaEnums);
 
         return EnumParametersFactory.Create(
             headerContent,

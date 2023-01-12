@@ -85,8 +85,7 @@ public class GenerateContentWriter
                 {
                     var item = parameters.Parameters[i];
                     var useCommaForEndChar = i != parameters.Parameters.Count - 1;
-                    AppendInputParameter(
-                        sb,
+                    sb.AppendInputParameter(
                         8,
                         attributes: null,
                         item.GenericTypeName,
@@ -273,8 +272,7 @@ public class GenerateContentWriter
             {
                 var item = parameters.Parameters[i];
                 var useCommaForEndChar = i != parameters.Parameters.Count - 1;
-                AppendInputParameter(
-                    sb,
+                sb.AppendInputParameter(
                     indentSpaces,
                     item.Attributes,
                     item.GenericTypeName,
@@ -353,33 +351,5 @@ public class GenerateContentWriter
         sb.Append("\";");
 
         return sb.ToString();
-    }
-
-    private static void AppendInputParameter(
-        StringBuilder sb,
-        int indentSpaces,
-        IList<AttributeParameters>? attributes,
-        string? genericTypeName,
-        string typeName,
-        string name,
-        string? defaultValue,
-        bool useCommaForEndChar)
-    {
-        if (attributes is not null && attributes.Count == 1)
-        {
-            sb.AppendAttribute(indentSpaces, attributes[0]);
-            indentSpaces = 1;
-        }
-
-        sb.AppendTypeAndName(indentSpaces, genericTypeName, typeName, name, defaultValue);
-
-        if (useCommaForEndChar)
-        {
-            sb.AppendLine(",");
-        }
-        else
-        {
-            sb.Append(')');
-        }
     }
 }

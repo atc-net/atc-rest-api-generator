@@ -125,3 +125,16 @@ public record EnumValueParameters(
     AttributeParameters? DescriptionAttribute,
     string Name,
     int? Value);
+
+public record RecordsParameters(
+    string? HeaderContent,
+    string Namespace,
+    CodeDocumentationTags? DocumentationTags,
+    IList<AttributeParameters>? Attributes,
+    IList<RecordParameters> Parameters);
+
+public record RecordParameters(
+    CodeDocumentationTags? DocumentationTags,
+    AccessModifiers AccessModifier,
+    string Name,
+    IList<ParameterBaseParameters>? Parameters);

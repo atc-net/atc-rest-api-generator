@@ -106,6 +106,35 @@ public static class StringBuilderExtensions
                 : $"[{name}({content})]");
     }
 
+    public static void AppendInputParameter(
+        this StringBuilder sb,
+        int indentSpaces,
+        IList<AttributeParameters>? attributes,
+        string? genericTypeName,
+        string typeName,
+        string name,
+        string? defaultValue,
+        bool useCommaForEndChar)
+    {
+        if (attributes is not null &&
+            attributes.Count == 1)
+        {
+            sb.AppendAttribute(indentSpaces, attributes[0]);
+            indentSpaces = 1;
+        }
+
+        sb.AppendTypeAndName(indentSpaces, genericTypeName, typeName, name, defaultValue);
+
+        if (useCommaForEndChar)
+        {
+            sb.AppendLine(",");
+        }
+        else
+        {
+            sb.Append(')');
+        }
+    }
+
     public static void AppendContent(
         this StringBuilder sb,
         string content)

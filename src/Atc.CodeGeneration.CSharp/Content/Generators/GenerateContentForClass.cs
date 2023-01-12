@@ -114,8 +114,6 @@ public class GenerateContentForClass : IContentGenerator
             }
 
             sb.AppendLine(contentWriter.GenerateMethodeToString(parameters.Properties));
-
-            isFirstEntry = false;
         }
 
         sb.Append('}');

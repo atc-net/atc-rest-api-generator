@@ -33,7 +33,7 @@ public class EnumParametersFactoryTests
         CodeDocumentationTags documentationTags,
         IList<AttributeParameters> attributes,
         string enumTypeName,
-        IDictionary<string, int> enumNameValues)
+        IDictionary<string, int?> enumNameValues)
     {
         // Act
         var actual = EnumParametersFactory.Create(

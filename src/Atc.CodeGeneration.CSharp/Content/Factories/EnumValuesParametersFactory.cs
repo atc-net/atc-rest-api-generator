@@ -9,7 +9,7 @@ public static class EnumValuesParametersFactory
             .ToList();
 
     public static IList<EnumValueParameters> Create(
-        IDictionary<string, int> nameValues)
+        IDictionary<string, int?> nameValues)
         => nameValues
             .Select(x => EnumValueParametersFactory.Create(x.Key, x.Value))
             .ToList();
