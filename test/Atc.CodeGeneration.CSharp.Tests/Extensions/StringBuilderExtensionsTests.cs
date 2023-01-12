@@ -216,6 +216,7 @@ public class StringBuilderExtensionsTests
         bool useCommaForEndChar)
     {
         // Arrange
+        expected = expected.EnsureEnvironmentNewLines();
         var sb = new StringBuilder();
 
         // Act
@@ -271,6 +272,7 @@ public class StringBuilderExtensionsTests
         string content)
     {
         // Arrange
+        expected = expected.EnsureEnvironmentNewLines();
         var sb = new StringBuilder();
 
         // Act
