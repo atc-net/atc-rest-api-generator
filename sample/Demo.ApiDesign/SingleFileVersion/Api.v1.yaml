@@ -39,7 +39,8 @@ paths:
           description: Not Found
   '/orders/{id}':
     x-authentication-required: true
-    x-authorize-roles: [operator]
+    x-authorize-roles:
+      - operator
     get:
       tags:
         - Orders
@@ -68,7 +69,9 @@ paths:
       summary: Update part of order by id
       description: Update part of order by id
       operationId: patchOrdersId
-      x-authorize-roles: [admin,operator]
+      x-authorize-roles:
+        - admin
+        - operator
       parameters:
         - name: myTestHeader
           in: header
@@ -88,6 +91,12 @@ paths:
           description: The myTestHeaderInt special key
           schema:
             type: integer
+        - name: x-correlation-id
+          in: header
+          required: true
+          description: The correlationId
+          schema:
+            type: string
       requestBody:
         content:
           application/json:

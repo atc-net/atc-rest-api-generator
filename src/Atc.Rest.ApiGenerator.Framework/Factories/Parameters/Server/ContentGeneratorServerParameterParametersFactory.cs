@@ -49,7 +49,7 @@ public static class ContentGeneratorServerParameterParametersFactory
             {
                 parameters.Add(new ContentGeneratorServerParameterParametersProperty(
                     openApiParameter.Name,
-                    openApiParameter.Name.EnsureFirstCharacterToUpper(),
+                    openApiParameter.Name.EnsureValidFormattedPropertyName(),
                     openApiParameter.ExtractDocumentationTags(),
                     ConvertToParameterLocationType(openApiParameter.In),
                     dataType,

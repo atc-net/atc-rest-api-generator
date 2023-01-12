@@ -26,6 +26,8 @@ global using Demo.Api.Generated.Contracts.Orders;
 global using Demo.Api.Generated.Contracts.RouteWithDash;
 global using Demo.Api.Generated.Contracts.Users;
 
+global using FluentAssertions;
+
 global using Microsoft.AspNetCore.Hosting;
 global using Microsoft.AspNetCore.Http;
 global using Microsoft.AspNetCore.Mvc.Testing;
