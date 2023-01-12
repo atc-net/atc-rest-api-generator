@@ -457,7 +457,7 @@ public class CreateLocationEndpoint : ICreateLocationEndpoint
         this.httpMessageFactory = httpMessageFactory;
     }
 
-    public async Task<CreateLocationEndpointResult> ExecuteAsync(
+    public async Task<ICreateLocationEndpointResult> ExecuteAsync(
         CreateLocationParameters parameters,
         CancellationToken cancellationToken = default)
     {
@@ -537,7 +537,7 @@ return await responseBuilder.BuildResponseAsync(x => new CreateLocationEndpointR
                 Attributes: null,
                 AccessModifier: AccessModifiers.PublicAsync,
                 ReturnGenericTypeName: "Task",
-                ReturnTypeName: "CreateLocationEndpointResult",
+                ReturnTypeName: "ICreateLocationEndpointResult",
                 Name: "ExecuteAsync",
                 Parameters: new List<ParameterBaseParameters>
                 {

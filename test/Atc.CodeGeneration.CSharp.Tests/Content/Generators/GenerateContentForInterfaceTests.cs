@@ -283,7 +283,7 @@ public interface ICreateLocationEndpoint
     /// </summary>
     /// <param name=""parameters"">The parameters.</param>
     /// <param name=""cancellationToken"">The cancellation token.</param>
-    Task<CreateLocationEndpointResult> ExecuteAsync(
+    Task<ICreateLocationEndpointResult> ExecuteAsync(
         CreateLocationParameters parameters,
         CancellationToken cancellationToken = default);
 }";
@@ -308,7 +308,7 @@ public interface ICreateLocationEndpoint
                     @return: null),
                 Attributes: null,
                 AccessModifier: AccessModifiers.None,
-                ReturnTypeName: "CreateLocationEndpointResult",
+                ReturnTypeName: "ICreateLocationEndpointResult",
                 ReturnGenericTypeName: "Task",
                 Name: "ExecuteAsync",
                 Parameters: new List<ParameterBaseParameters>

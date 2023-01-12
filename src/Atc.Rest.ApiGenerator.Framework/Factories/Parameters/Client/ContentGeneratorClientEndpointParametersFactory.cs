@@ -44,7 +44,7 @@ public static class ContentGeneratorClientEndpointParametersFactory
                 UrlPath: urlPath,
                 EndpointName: $"{operationName}{ContentGeneratorConstants.Endpoint}",
                 InterfaceName: $"I{operationName}{ContentGeneratorConstants.Endpoint}",
-                ResultName: $"{operationName}{ContentGeneratorConstants.EndpointResult}",
+                ResultName: $"I{operationName}{ContentGeneratorConstants.EndpointResult}",
                 ParameterName: $"{operationName}{ContentGeneratorConstants.Parameters}",
                 SuccessResponseName: successResponseName,
                 UseListForModel: useListForDataType,
