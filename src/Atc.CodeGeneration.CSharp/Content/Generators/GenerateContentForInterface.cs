@@ -26,7 +26,7 @@ public class GenerateContentForInterface : IContentGenerator
                 parameters.DocumentationTags,
                 parameters.Attributes));
 
-        sb.Append($"{parameters.AccessModifier.ToStringLowerCase()} ");
+        sb.Append($"{parameters.AccessModifier.GetDescription()} interface ");
         if (string.IsNullOrEmpty(parameters.InheritedInterfaceTypeName))
         {
             sb.AppendLine($"{parameters.InterfaceTypeName}");
@@ -48,7 +48,7 @@ public class GenerateContentForInterface : IContentGenerator
                     sb.AppendLine();
                 }
 
-                sb.Append(contentWriter.GenerateProperty(propertyParameters));
+                sb.AppendLine(contentWriter.GenerateProperty(propertyParameters));
 
                 isFirstEntry = false;
             }
@@ -63,13 +63,13 @@ public class GenerateContentForInterface : IContentGenerator
                     sb.AppendLine();
                 }
 
-                sb.Append(contentWriter.GenerateMethode(methodParameters));
+                sb.AppendLine(contentWriter.GenerateMethode(methodParameters));
 
                 isFirstEntry = false;
             }
         }
 
-        sb.AppendLine("}");
+        sb.Append('}');
 
         return sb.ToString();
     }

@@ -9,6 +9,9 @@ public class ClientCSharpApiGenerator
     private readonly ClientCSharpApiProjectOptions projectOptions;
     private readonly ApiProjectOptions apiProjectOptions;
 
+    private readonly string codeGeneratorContentHeader;
+    private readonly AttributeParameters codeGeneratorAttribute;
+
     public ClientCSharpApiGenerator(
         ILogger logger,
         IApiOperationExtractor apiOperationExtractor,
@@ -29,6 +32,16 @@ public class ClientCSharpApiGenerator
             projectOptions.UsingCodingRules,
             projectOptions.ForClient,
             projectOptions.ClientFolderName);
+
+        // TODO: Optimize codeGeneratorContentHeader & codeGeneratorAttribute
+        var codeHeaderGenerator = new GeneratedCodeHeaderGenerator(
+            new GeneratedCodeGeneratorParameters(
+                projectOptions.ApiGeneratorVersion));
+        codeGeneratorContentHeader = codeHeaderGenerator.Generate();
+
+        codeGeneratorAttribute = new AttributeParameters(
+            "GeneratedCode",
+            $"\"{ContentWriterConstants.ApiGeneratorName}\", \"{projectOptions.ApiGeneratorVersion}\"");
     }
 
     public bool Generate()
@@ -140,16 +153,16 @@ public class ClientCSharpApiGenerator
         var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}";
 
         // Generate
-        var enumerationParameters = ContentGeneratorServerClientEnumerationParametersFactory.Create(
+        var enumParameters = ContentGeneratorServerClientEnumParametersFactory.Create(
+            codeGeneratorContentHeader,
             fullNamespace,
+            codeGeneratorAttribute,
             enumerationName,
             openApiSchemaEnumeration.Enum);
 
-        var contentGeneratorEnum = new ContentGeneratorServerClientEnumeration(
-            new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-            new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+        var contentGeneratorEnum = new GenerateContentForEnum(
             new CodeDocumentationTagsGenerator(),
-            enumerationParameters);
+            enumParameters);
 
         var enumContent = contentGeneratorEnum.Generate();
 
@@ -175,18 +188,18 @@ public class ClientCSharpApiGenerator
         var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}";
 
         // Generate
-        var modelParameters = ContentGeneratorServerClientModelParametersFactory.Create(
+        var classParameters = ContentGeneratorServerClientModelParametersFactory.Create(
+            codeGeneratorContentHeader,
             fullNamespace,
+            codeGeneratorAttribute,
             modelName,
             apiSchemaModel);
 
-        var contentGeneratorModel = new ContentGeneratorServerClientModel(
-            new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-            new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+        var contentGeneratorClass = new GenerateContentForClass(
             new CodeDocumentationTagsGenerator(),
-            modelParameters);
+            classParameters);
 
-        var modelContent = contentGeneratorModel.Generate();
+        var classContent = contentGeneratorClass.Generate();
 
         // Write
         FileInfo file;
@@ -224,7 +237,7 @@ public class ClientCSharpApiGenerator
             projectOptions.PathForSrcGenerate,
             file,
             ContentWriterArea.Src,
-            modelContent);
+            classContent);
     }
 
     private void GenerateParameters(

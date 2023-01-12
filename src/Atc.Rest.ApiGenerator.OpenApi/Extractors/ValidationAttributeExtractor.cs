@@ -1,3 +1,4 @@
+// ReSharper disable MergeIntoPattern
 namespace Atc.Rest.ApiGenerator.OpenApi.Extractors;
 
 public sealed class ValidationAttributeExtractor : IValidationAttributeExtractor

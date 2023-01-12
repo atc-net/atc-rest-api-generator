@@ -1,11 +1,33 @@
-﻿namespace Atc.CodeGeneration.CSharp.Content;
+namespace Atc.CodeGeneration.CSharp.Content;
 
-[Flags]
 public enum AccessModifiers
 {
-    None = 0x00,
-    Public = 0x01,
-    Private = 0x02,
-    Protected = 0x04,
-    Internal = 0x08,
+    None,
+
+    [Description("public")]
+    Public,
+
+    [Description("public async")]
+    PublicAsync,
+
+    [Description("public static")]
+    PublicStatic,
+
+    [Description("public static implicit operator")]
+    PublicStaticImplicitOperator,
+
+    [Description("public record")]
+    PublicRecord,
+
+    [Description("public record struct")]
+    PublicRecordStruct,
+
+    [Description("private")]
+    Private,
+
+    [Description("protected")]
+    Protected,
+
+    [Description("internal")]
+    Internal,
 }

@@ -3,6 +3,8 @@
 // ReSharper disable ReplaceSubstringWithRangeIndexer
 // ReSharper disable ReturnTypeCanBeEnumerable.Local
 // ReSharper disable UseObjectOrCollectionInitializer
+using Atc.CodeGeneration.CSharp.Content;
+
 namespace Atc.Rest.ApiGenerator.Generators;
 
 public class ServerApiGenerator
@@ -10,6 +12,9 @@ public class ServerApiGenerator
     private readonly ILogger logger;
     private readonly IApiOperationExtractor apiOperationExtractor;
     private readonly ApiProjectOptions projectOptions;
+
+    private readonly string codeGeneratorContentHeader;
+    private readonly AttributeParameters codeGeneratorAttribute;
 
     public ServerApiGenerator(
         ILogger logger,
@@ -19,6 +24,16 @@ public class ServerApiGenerator
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.apiOperationExtractor = apiOperationExtractor ?? throw new ArgumentNullException(nameof(apiOperationExtractor));
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
+
+        // TODO: Optimize codeGeneratorContentHeader & codeGeneratorAttribute
+        var codeHeaderGenerator = new GeneratedCodeHeaderGenerator(
+            new GeneratedCodeGeneratorParameters(
+                projectOptions.ApiGeneratorVersion));
+        codeGeneratorContentHeader = codeHeaderGenerator.Generate();
+
+        codeGeneratorAttribute = new AttributeParameters(
+            "GeneratedCode",
+            $"\"{ContentWriterConstants.ApiGeneratorName}\", \"{projectOptions.ApiGeneratorVersion}\"");
     }
 
     public bool Generate()
@@ -216,16 +231,16 @@ public class ServerApiGenerator
         var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}";
 
         // Generate
-        var enumerationParameters = ContentGeneratorServerClientEnumerationParametersFactory.Create(
+        var enumParameters = ContentGeneratorServerClientEnumParametersFactory.Create(
+            codeGeneratorContentHeader,
             fullNamespace,
+            codeGeneratorAttribute,
             enumerationName,
             openApiSchemaEnumeration.Enum);
 
-        var contentGeneratorEnum = new ContentGeneratorServerClientEnumeration(
-            new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-            new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+        var contentGeneratorEnum = new GenerateContentForEnum(
             new CodeDocumentationTagsGenerator(),
-            enumerationParameters);
+            enumParameters);
 
         var enumContent = contentGeneratorEnum.Generate();
 
@@ -254,18 +269,18 @@ public class ServerApiGenerator
             : $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
 
         // Generate
-        var modelParameters = ContentGeneratorServerClientModelParametersFactory.Create(
+        var classParameters = ContentGeneratorServerClientModelParametersFactory.Create(
+            codeGeneratorContentHeader,
             fullNamespace,
+            codeGeneratorAttribute,
             modelName,
             apiSchemaModel);
 
-        var contentGeneratorModel = new ContentGeneratorServerClientModel(
-            new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-            new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+        var contentGeneratorClass = new GenerateContentForClass(
             new CodeDocumentationTagsGenerator(),
-            modelParameters);
+            classParameters);
 
-        var modelContent = contentGeneratorModel.Generate();
+        var classContent = contentGeneratorClass.Generate();
 
         // Write
         FileInfo file;
@@ -291,7 +306,7 @@ public class ServerApiGenerator
             projectOptions.PathForSrcGenerate,
             file,
             ContentWriterArea.Src,
-            modelContent);
+            classContent);
     }
 
     private void GenerateParameters(

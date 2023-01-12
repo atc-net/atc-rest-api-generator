@@ -32,7 +32,7 @@ public static class ContentGeneratorClientEndpointInterfaceParametersFactory
                 OperationName: operationName,
                 DocumentationTagsForClass: openApiOperation.ExtractDocumentationTagsForEndpointInterface(),
                 InterfaceName: $"I{operationName}{ContentGeneratorConstants.Endpoint}",
-                ResultName: $"{operationName}{ContentGeneratorConstants.EndpointResult}",
+                ResultName: $"I{operationName}{ContentGeneratorConstants.EndpointResult}",
                 ParameterName: $"{operationName}{ContentGeneratorConstants.Parameters}",
                 documentationTagsForMethod);
         }

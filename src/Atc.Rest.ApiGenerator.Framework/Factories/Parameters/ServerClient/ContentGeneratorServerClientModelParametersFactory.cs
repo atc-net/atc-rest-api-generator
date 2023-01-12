@@ -1,18 +1,75 @@
 // ReSharper disable MergeIntoPattern
+// ReSharper disable ConvertIfStatementToReturnStatement
 namespace Atc.Rest.ApiGenerator.Framework.Factories.Parameters.ServerClient;
 
 public static class ContentGeneratorServerClientModelParametersFactory
 {
-    public static ContentGeneratorServerClientModelParameters Create(
+    public static ClassParameters Create(
+        string headerContent,
         string @namespace,
+        AttributeParameters codeGeneratorAttribute,
         string modelName,
         OpenApiSchema apiSchemaModel)
     {
         ArgumentNullException.ThrowIfNull(apiSchemaModel);
 
-        var parameters = new List<ContentGeneratorServerClientModelParametersProperty>();
+        var documentationTags = apiSchemaModel.ExtractDocumentationTags($"{modelName}.");
 
+        var propertiesParameters = ExtractPropertiesParameters(apiSchemaModel);
+
+        return new ClassParameters(
+            headerContent,
+            @namespace,
+            documentationTags,
+            new List<AttributeParameters> { codeGeneratorAttribute },
+            AccessModifiers.Public,
+            ClassTypeName: modelName,
+            InheritedClassTypeName: null,
+            InheritedGenericClassTypeName: null,
+            InheritedInterfaceTypeName: null,
+            Constructors: null,
+            Properties: propertiesParameters,
+            Methods: null,
+            GenerateToStringMethode: true);
+    }
+
+    private static bool GetRequired(
+        ICollection<string> required,
+        string name,
+        bool hasAnyPropertiesAsArrayWithFormatTypeBinary)
+    {
+        if (required.Count == 0 || hasAnyPropertiesAsArrayWithFormatTypeBinary)
+        {
+            return false;
+        }
+
+        return required.Contains(name, StringComparer.OrdinalIgnoreCase);
+    }
+
+    private static string? GetDefaultValue(
+        IOpenApiAny? initializer,
+        string? dataTypeForList)
+    {
+        if (initializer is not null ||
+            string.IsNullOrEmpty(dataTypeForList))
+        {
+            return initializer.GetDefaultValueAsString();
+        }
+
+        if ("List".Equals(dataTypeForList, StringComparison.Ordinal))
+        {
+            return null;
+        }
+
+        return $"new List<{dataTypeForList}>()";
+    }
+
+    private static List<PropertyParameters> ExtractPropertiesParameters(
+        OpenApiSchema apiSchemaModel)
+    {
         var hasAnyPropertiesAsArrayWithFormatTypeBinary = apiSchemaModel.HasAnyPropertiesAsArrayWithFormatTypeBinary();
+
+        var propertiesParameters = new List<PropertyParameters>();
 
         if (apiSchemaModel.Properties.Count == 0)
         {
@@ -20,17 +77,22 @@ public static class ContentGeneratorServerClientModelParametersFactory
 
             var documentationTags = new CodeDocumentationTags($"A list of {childModelName}.");
 
-            parameters.Add(new ContentGeneratorServerClientModelParametersProperty(
-                "#",
-                childModelName + "List",
-                documentationTags,
-                childModelName,
-                IsSimpleType: false,
-                UseListForDataType: true,
-                IsNullable: false,
-                IsRequired: false,
-                new List<ValidationAttribute>(),
-                $"new List<{childModelName}>()"));
+            propertiesParameters.Add(
+                new PropertyParameters(
+                    documentationTags,
+                    Attributes: null,
+                    AccessModifier: AccessModifiers.Public,
+                    GenericTypeName: "List",
+                    IsGenericListType: true,
+                    TypeName: childModelName,
+                    IsReferenceType: false,
+                    Name: childModelName + "List",
+                    DefaultValue: $"new List<{childModelName}>()",
+                    UseAutoProperty: true,
+                    UseGet: true,
+                    UseSet: true,
+                    UseExpressionBody: false,
+                    Content: null));
         }
         else
         {
@@ -77,57 +139,66 @@ public static class ContentGeneratorServerClientModelParametersFactory
                     dataTypeForList = dataType;
                 }
 
-                parameters.Add(new ContentGeneratorServerClientModelParametersProperty(
-                    apiSchema.Key,
-                    apiSchema.Key.EnsureFirstCharacterToUpper(),
-                    documentationTags,
-                    dataType,
-                    isSimpleType,
-                    useListForDataType,
-                    openApiParameter.Nullable,
-                    GetRequired(apiSchemaModel.Required, apiSchema.Key, hasAnyPropertiesAsArrayWithFormatTypeBinary),
-                    GetAdditionalValidationAttributes(openApiParameter),
-                    GetDefaultValue(openApiParameter.Default, dataTypeForList)));
+                if (dataTypeForList is null && useListForDataType)
+                {
+                    dataTypeForList = "List";
+                }
+
+                if (openApiParameter.Nullable)
+                {
+                    dataType += "?";
+                }
+
+                var defaultValue = GetDefaultValue(openApiParameter.Default, dataTypeForList);
+
+                if (dataType.Equals(dataTypeForList, StringComparison.Ordinal))
+                {
+                    dataTypeForList = "List";
+                }
+
+                propertiesParameters.Add(
+                    new PropertyParameters(
+                        documentationTags,
+                        Attributes: ExtractAttributeParameters(
+                            apiSchemaModel.Required,
+                            apiSchema.Key,
+                            hasAnyPropertiesAsArrayWithFormatTypeBinary,
+                            openApiParameter),
+                        AccessModifier: AccessModifiers.Public,
+                        GenericTypeName: dataTypeForList,
+                        IsGenericListType: !string.IsNullOrEmpty(dataTypeForList),
+                        TypeName: dataType,
+                        IsReferenceType: !isSimpleType,
+                        Name: apiSchema.Key.EnsureFirstCharacterToUpper(),
+                        DefaultValue: defaultValue,
+                        UseAutoProperty: true,
+                        UseGet: true,
+                        UseSet: true,
+                        UseExpressionBody: false,
+                        Content: null));
             }
         }
 
-        return new ContentGeneratorServerClientModelParameters(
-            @namespace,
-            modelName,
-            apiSchemaModel.ExtractDocumentationTags($"{modelName}."),
-            parameters);
+        return propertiesParameters;
     }
 
-    private static bool GetRequired(
+    private static IList<AttributeParameters> ExtractAttributeParameters(
         ICollection<string> required,
-        string name,
-        bool hasAnyPropertiesAsArrayWithFormatTypeBinary)
+        string apiSchemaKey,
+        bool hasAnyPropertiesAsArrayWithFormatTypeBinary,
+        OpenApiSchema openApiParameter)
     {
-        if (required.Count == 0 || hasAnyPropertiesAsArrayWithFormatTypeBinary)
+        var attributesParameters = new List<AttributeParameters>();
+        if (GetRequired(required, apiSchemaKey, hasAnyPropertiesAsArrayWithFormatTypeBinary))
         {
-            return false;
+            attributesParameters.Add(new AttributeParameters("Required", Content: null));
         }
 
-        return required.Contains(name, StringComparer.OrdinalIgnoreCase);
-    }
-
-    private static string? GetDefaultValue(
-        IOpenApiAny? initializer,
-        string? dataTypeForList)
-    {
-        if (initializer is null &&
-            !string.IsNullOrEmpty(dataTypeForList))
-        {
-            return $"new List<{dataTypeForList}>()";
-        }
-
-        return initializer.GetDefaultValueAsString();
-    }
-
-    private static IList<ValidationAttribute> GetAdditionalValidationAttributes(
-        OpenApiSchema openApiSchema)
-    {
         var validationAttributeExtractor = new ValidationAttributeExtractor();
-        return validationAttributeExtractor.Extract(openApiSchema);
+        attributesParameters.AddRange(
+            AttributesParametersFactory.Create(
+                validationAttributeExtractor.Extract(openApiParameter)));
+
+        return attributesParameters;
     }
 }

@@ -9,8 +9,4 @@
     <PackageReference Include="Atc.CodeDocumentation" Version="2.0.280" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Content\Factories\" />
-  </ItemGroup>
-
 </Project>
