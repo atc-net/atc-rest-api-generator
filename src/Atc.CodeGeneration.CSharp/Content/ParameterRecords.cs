@@ -68,7 +68,9 @@ public record AttributeParameters(
 public record ParameterBaseParameters(
     IList<AttributeParameters>? Attributes,
     string? GenericTypeName,
+    bool IsGenericListType,
     string TypeName,
+    bool IsReferenceType,
     string Name,
     string? DefaultValue);
 
@@ -97,6 +99,8 @@ public record PropertyParameters(
     string TypeName,
     string Name,
     string? DefaultValue,
+    bool IsReferenceType,
+    bool IsGenericListType,
     bool UseAutoProperty,
     bool UseGet,
     bool UseSet,
@@ -105,7 +109,9 @@ public record PropertyParameters(
     : ParameterBaseParameters(
         Attributes,
         GenericTypeName,
+        IsGenericListType,
         TypeName,
+        IsReferenceType,
         Name,
         DefaultValue);
 

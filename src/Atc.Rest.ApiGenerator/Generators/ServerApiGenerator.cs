@@ -3,6 +3,8 @@
 // ReSharper disable ReplaceSubstringWithRangeIndexer
 // ReSharper disable ReturnTypeCanBeEnumerable.Local
 // ReSharper disable UseObjectOrCollectionInitializer
+using Atc.CodeGeneration.CSharp.Content;
+
 namespace Atc.Rest.ApiGenerator.Generators;
 
 public class ServerApiGenerator
@@ -267,18 +269,18 @@ public class ServerApiGenerator
             : $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
 
         // Generate
-        var modelParameters = ContentGeneratorServerClientModelParametersFactory.Create(
+        var classParameters = ContentGeneratorServerClientModelParametersFactory.Create(
+            codeGeneratorContentHeader,
             fullNamespace,
+            codeGeneratorAttribute,
             modelName,
             apiSchemaModel);
 
-        var contentGeneratorModel = new ContentGeneratorServerClientModel(
-            new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-            new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+        var contentGeneratorClass = new GenerateContentForClass(
             new CodeDocumentationTagsGenerator(),
-            modelParameters);
+            classParameters);
 
-        var modelContent = contentGeneratorModel.Generate();
+        var classContent = contentGeneratorClass.Generate();
 
         // Write
         FileInfo file;
@@ -304,7 +306,7 @@ public class ServerApiGenerator
             projectOptions.PathForSrcGenerate,
             file,
             ContentWriterArea.Src,
-            modelContent);
+            classContent);
     }
 
     private void GenerateParameters(

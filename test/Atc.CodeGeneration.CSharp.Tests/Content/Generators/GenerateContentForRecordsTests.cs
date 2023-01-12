@@ -33,7 +33,9 @@ public record struct GetLocationsByCountryCodeA3Parameters(
                         new(
                             Attributes: null,
                             GenericTypeName: null,
+                            IsGenericListType: false,
                             TypeName: "CreateLocationRequest?",
+                            IsReferenceType: true,
                             Name: "Request",
                             DefaultValue: null),
                     }),
@@ -46,7 +48,9 @@ public record struct GetLocationsByCountryCodeA3Parameters(
                         new(
                             Attributes: new List<AttributeParameters> { new("FromRoute, Required", Content: null) },
                             GenericTypeName: null,
+                            IsGenericListType: false,
                             TypeName: "Guid",
+                            IsReferenceType: false,
                             Name: "LocationId",
                             DefaultValue: null),
                     }),
@@ -59,7 +63,9 @@ public record struct GetLocationsByCountryCodeA3Parameters(
                         new(
                             Attributes: new List<AttributeParameters> { new("FromQuery", Content: null) },
                             GenericTypeName: null,
+                            IsGenericListType: false,
                             TypeName: "string",
+                            IsReferenceType: false,
                             Name: "CountryCodeA3",
                             DefaultValue: null),
                     }),

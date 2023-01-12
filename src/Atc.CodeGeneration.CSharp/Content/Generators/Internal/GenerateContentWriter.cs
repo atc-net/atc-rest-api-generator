@@ -201,6 +201,10 @@ public class GenerateContentWriter
             {
                 sb.AppendContentAsExpressionBody(1, parameters.Content);
             }
+            else if (!string.IsNullOrEmpty(parameters.DefaultValue))
+            {
+                sb.Append($" = {parameters.DefaultValue};");
+            }
         }
         else if (!string.IsNullOrEmpty(parameters.Content))
         {
@@ -341,7 +345,24 @@ public class GenerateContentWriter
         for (var i = 0; i < parameters.Count; i++)
         {
             var parametersProperty = parameters[i];
-            sb.Append($"{{nameof({parametersProperty.Name})}}: {{{parametersProperty.Name}}}");
+            if (parametersProperty.IsGenericListType)
+            {
+                sb.Append($"{{nameof({parametersProperty.Name})}}.Count: ");
+                sb.Append($"{{{parametersProperty.Name}?.Count ?? 0}}");
+            }
+            else
+            {
+                sb.Append($"{{nameof({parametersProperty.Name})}}: ");
+                if (parametersProperty.IsReferenceType)
+                {
+                    sb.Append($"({{{parametersProperty.Name}}})");
+                }
+                else
+                {
+                    sb.Append($"{{{parametersProperty.Name}}}");
+                }
+            }
+
             if (i != parameters.Count - 1)
             {
                 sb.Append(", ");
