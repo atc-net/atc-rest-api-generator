@@ -1,6 +1,6 @@
 namespace Atc.CodeGeneration.CSharp.Tests.Content.Generators;
 
-public class GenerateContentForStructTests : GenerateContentBaseTests
+public class GenerateContentForRecordsTests : GenerateContentBaseTests
 {
     [Fact]
     public void Scenario_EnergyConsumption_CreateLocationParameters()
