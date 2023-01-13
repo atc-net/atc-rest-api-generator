@@ -46,7 +46,7 @@ public class ContentGeneratorClientEndpoint : IContentGenerator
         sb.AppendLine(8, "this.httpMessageFactory = httpMessageFactory;");
         sb.AppendLine(4, "}");
         sb.AppendLine();
-        sb.AppendLine(4, $"public async Task<{parameters.ResultName}> ExecuteAsync(");
+        sb.AppendLine(4, $"public async Task<I{parameters.ResultName}> ExecuteAsync(");
         if (parameters.ParameterName is not null)
         {
             sb.AppendLine(8, $"{parameters.ParameterName} parameters,");
