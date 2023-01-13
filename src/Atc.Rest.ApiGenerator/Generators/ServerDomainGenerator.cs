@@ -92,30 +92,30 @@ public class ServerDomainGenerator
         var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Handlers}.{apiGroupName}";
 
         // Generate
-        var handlerParameters = ContentGeneratorServerHandlerParametersFactory.Create(
+        var classParameters = ContentGeneratorServerHandlerParametersFactory.Create(
             fullNamespace,
             apiPath,
             apiOperation);
 
-        var contentGeneratorHandler = new ContentGeneratorServerHandler(
+        var contentGeneratorClass = new GenerateContentForClass(
             new CodeDocumentationTagsGenerator(),
-            handlerParameters);
+            classParameters);
 
-        var handlerContent = contentGeneratorHandler.Generate();
+        var classContent = contentGeneratorClass.Generate();
 
         // Write
         var file = new FileInfo(
             Helpers.DirectoryInfoHelper.GetCsFileNameForHandler(
                 projectOptions.PathForSrcHandlers!,
                 apiGroupName,
-                handlerParameters.HandlerName));
+                classParameters.TypeName));
 
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
             projectOptions.PathForSrcGenerate,
             file,
             ContentWriterArea.Src,
-            handlerContent,
+            classContent,
             overrideIfExist: false);
     }
 
