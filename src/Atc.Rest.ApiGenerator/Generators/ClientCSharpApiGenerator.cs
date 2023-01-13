@@ -397,13 +397,13 @@ public class ClientCSharpApiGenerator
             {
                 // Generate
                 var interfaceParameters = ContentGeneratorClientEndpointInterfaceParametersFactory.Create(
+                    codeGeneratorContentHeader,
                     fullNamespace,
+                    codeGeneratorAttribute,
                     openApiPath.Value,
                     openApiOperation.Value);
 
-                var contentGeneratorInterface = new ContentGeneratorClientEndpointInterface(
-                    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-                    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                var contentGeneratorInterface = new GenerateContentForInterface(
                     new CodeDocumentationTagsGenerator(),
                     interfaceParameters);
 
@@ -415,7 +415,7 @@ public class ClientCSharpApiGenerator
                         apiProjectOptions.PathForEndpoints,
                         apiGroupName,
                         ContentGeneratorConstants.Interfaces,
-                        interfaceParameters.InterfaceName));
+                        interfaceParameters.TypeName));
 
                 var contentWriter = new ContentWriter(logger);
                 contentWriter.Write(
