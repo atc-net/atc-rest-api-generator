@@ -4,12 +4,12 @@ public sealed class ContentGeneratorServerWebApiControllerBaseTest : IContentGen
 {
     private readonly GeneratedCodeHeaderGenerator codeHeaderGenerator;
     private readonly GeneratedCodeAttributeGenerator codeAttributeGenerator;
-    private readonly ContentGeneratorServerWebApiControllerBaseTestParameters parameters;
+    private readonly ContentGeneratorBaseParameters parameters;
 
     public ContentGeneratorServerWebApiControllerBaseTest(
         GeneratedCodeHeaderGenerator codeHeaderGenerator,
         GeneratedCodeAttributeGenerator codeAttributeGenerator,
-        ContentGeneratorServerWebApiControllerBaseTestParameters parameters)
+        ContentGeneratorBaseParameters parameters)
     {
         this.codeHeaderGenerator = codeHeaderGenerator;
         this.codeAttributeGenerator = codeAttributeGenerator;

@@ -257,7 +257,7 @@ public class ServerHostGenerator
         var fullNamespace = $"{projectOptions.ProjectName}";
 
         var contentGenerator = new ContentGeneratorServerProgram(
-            ContentGeneratorServerProgramParametersFactory.Create(fullNamespace));
+            new ContentGeneratorBaseParameters(fullNamespace));
 
         var content = contentGenerator.Generate();
 
@@ -277,7 +277,7 @@ public class ServerHostGenerator
         var fullNamespace = $"{projectOptions.ProjectName}";
 
         var contentGenerator = new ContentGeneratorServerStartup(
-            ContentGeneratorServerStartupParametersFactory.Create(fullNamespace));
+            new ContentGeneratorBaseParameters(fullNamespace));
 
         var content = contentGenerator.Generate();
 
@@ -364,13 +364,10 @@ public class ServerHostGenerator
     {
         var fullNamespace = $"{projectOptions.ProjectName}.Tests";
 
-        var contentGeneratorServerWebApiControllerBaseTestParameters = ContentGeneratorServerWebApiControllerBaseTestParametersFactory.Create(
-            fullNamespace);
-
         var contentGenerator = new ContentGeneratorServerWebApiControllerBaseTest(
             new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
             new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-            contentGeneratorServerWebApiControllerBaseTestParameters);
+            new ContentGeneratorBaseParameters(fullNamespace));
 
         var content = contentGenerator.Generate();
 

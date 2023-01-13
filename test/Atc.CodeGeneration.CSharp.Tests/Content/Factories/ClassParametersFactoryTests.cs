@@ -20,5 +20,4 @@ public class ClassParametersFactoryTests
         // Assert
         Assert.NotNull(actual);
     }
-
 }
