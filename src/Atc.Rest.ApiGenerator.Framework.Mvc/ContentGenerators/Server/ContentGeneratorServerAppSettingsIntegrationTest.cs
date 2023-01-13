@@ -7,7 +7,7 @@ public sealed class ContentGeneratorServerAppSettingsIntegrationTest : IContentG
         var sb = new StringBuilder();
 
         sb.AppendLine("{");
-        sb.AppendLine("}");
+        sb.Append('}');
 
         return sb.ToString();
     }

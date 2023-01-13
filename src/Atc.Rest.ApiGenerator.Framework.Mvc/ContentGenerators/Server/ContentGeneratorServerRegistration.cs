@@ -26,7 +26,7 @@ public sealed class ContentGeneratorServerRegistration : IContentGenerator
         sb.AppendLine(codeAttributeGenerator.Generate());
         sb.AppendLine($"public class {parameters.RegistrationName}");
         sb.AppendLine("{");
-        sb.AppendLine("}");
+        sb.Append('}');
 
         return sb.ToString();
     }

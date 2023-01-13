@@ -57,7 +57,7 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
             AppendImplicitOperatorContent(sb, parameters);
         }
 
-        sb.AppendLine("}");
+        sb.Append('}');
 
         return sb.ToString();
     }

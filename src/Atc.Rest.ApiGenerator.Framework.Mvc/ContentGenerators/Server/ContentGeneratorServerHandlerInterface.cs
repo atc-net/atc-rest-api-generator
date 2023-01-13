@@ -46,7 +46,7 @@ public sealed class ContentGeneratorServerHandlerInterface : IContentGenerator
         }
 
         sb.AppendLine(8, "CancellationToken cancellationToken = default);");
-        sb.AppendLine("}");
+        sb.Append('}');
 
         return sb.ToString();
     }

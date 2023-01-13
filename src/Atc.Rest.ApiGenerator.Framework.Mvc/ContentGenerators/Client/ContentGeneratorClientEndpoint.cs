@@ -108,7 +108,7 @@ public class ContentGeneratorClientEndpoint : IContentGenerator
         sb.AppendLine();
         sb.AppendLine(8, $"return await responseBuilder.BuildResponseAsync(x => new {parameters.ResultName}(x), cancellationToken);");
         sb.AppendLine(4, "}");
-        sb.AppendLine("}");
+        sb.Append('}');
 
         return sb.ToString();
     }

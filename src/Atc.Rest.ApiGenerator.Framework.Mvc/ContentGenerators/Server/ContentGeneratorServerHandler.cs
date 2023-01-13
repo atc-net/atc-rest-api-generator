@@ -44,7 +44,7 @@ public sealed class ContentGeneratorServerHandler : IContentGenerator
         sb.AppendLine(8, $"throw new NotImplementedException(\"Add logic here for {parameters.HandlerName}\");");
         sb.AppendLine(4, "}");
 
-        sb.AppendLine("}");
+        sb.Append('}');
 
         return sb.ToString();
     }

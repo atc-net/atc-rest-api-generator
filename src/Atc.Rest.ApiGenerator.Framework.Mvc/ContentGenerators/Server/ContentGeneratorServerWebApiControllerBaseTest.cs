@@ -70,7 +70,7 @@ public sealed class ContentGeneratorServerWebApiControllerBaseTest : IContentGen
         sb.AppendLine();
         sb.AppendLine(4, "protected static List<IFormFile> GetTestFiles()");
         sb.AppendLine(8, "=> new() { GetTestFile(), GetTestFile() };");
-        sb.AppendLine("}");
+        sb.Append('}');
 
         return sb.ToString();
     }

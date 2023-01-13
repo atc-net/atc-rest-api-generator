@@ -36,7 +36,7 @@ public sealed class ContentGeneratorServerProgram : IContentGenerator
         sb.AppendLine();
         sb.AppendLine(8, "return builder;");
         sb.AppendLine(4, "}");
-        sb.AppendLine("}");
+        sb.Append('}');
 
         return sb.ToString();
     }

@@ -50,7 +50,7 @@ public sealed class ContentGeneratorServerController : IContentGenerator
             }
         }
 
-        sb.AppendLine("}");
+        sb.Append('}');
 
         return sb.ToString();
     }

@@ -58,7 +58,7 @@ public sealed class ContentGeneratorServerWebApiStartupFactory : IContentGenerat
         sb.AppendLine(4, "partial void ModifyConfiguration(IConfigurationBuilder config);");
         sb.AppendLine();
         sb.AppendLine(4, "partial void ModifyServices(IServiceCollection services);");
-        sb.AppendLine("}");
+        sb.Append('}');
 
         return sb.ToString();
     }

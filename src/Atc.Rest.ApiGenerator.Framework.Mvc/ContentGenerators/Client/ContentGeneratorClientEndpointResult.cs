@@ -100,7 +100,7 @@ public class ContentGeneratorClientEndpointResult : IContentGenerator
             }
         }
 
-        sb.AppendLine("}");
+        sb.Append('}');
 
         return sb.ToString();
     }

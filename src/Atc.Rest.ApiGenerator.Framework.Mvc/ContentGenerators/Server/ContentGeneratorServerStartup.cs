@@ -51,7 +51,7 @@ public sealed class ContentGeneratorServerStartup : IContentGenerator
         sb.AppendLine(4, "{");
         sb.AppendLine(8, "app.ConfigureRestApi(env, restApiOptions);");
         sb.AppendLine(4, "}");
-        sb.AppendLine("}");
+        sb.Append('}');
 
         return sb.ToString();
     }

@@ -111,7 +111,7 @@ public sealed class ContentGeneratorServerSwaggerDocOptions : IContentGenerator
         sb.AppendLine();
         sb.AppendLine(8, "options.IncludeXmlComments(Path.ChangeExtension(GetType().Assembly.Location, \"xml\"));");
         sb.AppendLine(4, "}");
-        sb.AppendLine("}");
+        sb.Append('}');
 
         return sb.ToString();
     }
