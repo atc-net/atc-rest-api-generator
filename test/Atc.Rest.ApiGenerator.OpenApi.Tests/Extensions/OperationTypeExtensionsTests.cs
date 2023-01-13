@@ -1,4 +1,4 @@
-namespace Atc.Rest.ApiGenerator.Tests.Extensions;
+namespace Atc.Rest.ApiGenerator.OpenApi.Tests.Extensions;
 
 public static class OperationTypeExtensionsTests
 {
@@ -11,6 +11,6 @@ public static class OperationTypeExtensionsTests
     [InlineData(false, OperationType.Head)]
     [InlineData(true, OperationType.Patch)]
     [InlineData(false, OperationType.Trace)]
-    public static void XXX(bool expected, OperationType operationType)
+    public static void IsRequestBodySupported(bool expected, OperationType operationType)
         => Assert.Equal(expected, operationType.IsRequestBodySupported());
 }

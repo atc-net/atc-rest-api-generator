@@ -1,5 +1,4 @@
-// ReSharper disable CheckNamespace
-namespace Microsoft.OpenApi.Models;
+namespace Atc.Rest.ApiGenerator.OpenApi.Extensions;
 
 public static class OperationTypeExtensions
 {
