@@ -3,8 +3,6 @@
 // ReSharper disable ReplaceSubstringWithRangeIndexer
 // ReSharper disable ReturnTypeCanBeEnumerable.Local
 // ReSharper disable UseObjectOrCollectionInitializer
-using Atc.CodeGeneration.CSharp.Content;
-
 namespace Atc.Rest.ApiGenerator.Generators;
 
 public class ServerApiGenerator
@@ -425,13 +423,13 @@ public class ServerApiGenerator
             {
                 // Generate
                 var interfaceParameters = ContentGeneratorServerHandlerInterfaceParametersFactory.Create(
+                    codeGeneratorContentHeader,
                     fullNamespace,
+                    codeGeneratorAttribute,
                     openApiPath.Value,
                     openApiOperation.Value);
 
-                var contentGeneratorInterface = new ContentGeneratorServerHandlerInterface(
-                    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-                    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                var contentGeneratorInterface = new GenerateContentForInterface(
                     new CodeDocumentationTagsGenerator(),
                     interfaceParameters);
 
@@ -443,7 +441,7 @@ public class ServerApiGenerator
                         projectOptions.PathForContracts,
                         apiGroupName,
                         ContentGeneratorConstants.Interfaces,
-                        interfaceParameters.InterfaceName));
+                        interfaceParameters.TypeName));
 
                 var contentWriter = new ContentWriter(logger);
                 contentWriter.Write(

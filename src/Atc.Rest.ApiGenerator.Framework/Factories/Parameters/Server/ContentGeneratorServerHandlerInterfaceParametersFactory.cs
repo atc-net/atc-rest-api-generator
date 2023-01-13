@@ -2,64 +2,74 @@ namespace Atc.Rest.ApiGenerator.Framework.Factories.Parameters.Server;
 
 public static class ContentGeneratorServerHandlerInterfaceParametersFactory
 {
-    public static ContentGeneratorServerHandlerInterfaceParameters Create(
+    public static InterfaceParameters Create(
+        string headerContent,
         string @namespace,
+        AttributeParameters codeGeneratorAttribute,
         OpenApiPathItem openApiPath,
         OpenApiOperation openApiOperation)
     {
         var operationName = openApiOperation.GetOperationName();
 
+        var methodParametersAttributes = new Dictionary<string, string>(StringComparer.Ordinal);
+        var methodParametersParameters = new List<ParameterBaseParameters>();
         if (openApiPath.HasParameters() ||
             openApiOperation.HasParametersOrRequestBody())
         {
-            var docParameters = new Dictionary<string, string>(StringComparer.Ordinal)
-            {
-                { "parameters", "The parameters." },
-                { "cancellationToken", "The cancellation token." },
-            };
-
-            var documentationTagsForMethod = new CodeDocumentationTags(
-                summary: "Execute method.",
-                parameters: docParameters,
-                remark: null,
-                code: null,
-                example: null,
-                exceptions: null,
-                @return: null);
-
-            return new ContentGeneratorServerHandlerInterfaceParameters(
-                @namespace,
-                operationName,
-                openApiOperation.ExtractDocumentationTagsForHandlerInterface(),
-                InterfaceName: $"I{operationName}{ContentGeneratorConstants.Handler}",
-                ResultName: $"{operationName}{ContentGeneratorConstants.Result}",
-                ParameterName: $"{operationName}{ContentGeneratorConstants.Parameters}",
-                documentationTagsForMethod);
+            methodParametersAttributes.Add("parameters", "The parameters.");
+            methodParametersParameters.Add(
+                new ParameterBaseParameters(
+                    Attributes: null,
+                    GenericTypeName: null,
+                    IsGenericListType: false,
+                    TypeName: $"{operationName}{ContentGeneratorConstants.Parameters}",
+                    IsReferenceType: true,
+                    Name: "parameters",
+                    DefaultValue: null));
         }
-        else
+
+        methodParametersAttributes.Add("cancellationToken", "The cancellation token.");
+        methodParametersParameters.Add(
+            new ParameterBaseParameters(
+                Attributes: null,
+                GenericTypeName: null,
+                IsGenericListType: false,
+                TypeName: "CancellationToken",
+                IsReferenceType: true,
+                Name: "cancellationToken",
+                DefaultValue: "default"));
+
+        var methodParameters = new List<MethodParameters>
         {
-            var docParameters = new Dictionary<string, string>(StringComparer.Ordinal)
-            {
-                { "cancellationToken", "The cancellation token." },
-            };
+            new(
+                DocumentationTags: new CodeDocumentationTags(
+                    "Execute method",
+                    parameters: methodParametersAttributes,
+                    remark: null,
+                    code: null,
+                    example: null,
+                    exceptions: null,
+                    @return: null),
+                Attributes: null,
+                AccessModifier: AccessModifiers.None,
+                ReturnTypeName: $"{operationName}{ContentGeneratorConstants.Result}",
+                ReturnGenericTypeName: "Task",
+                Name: "ExecuteAsync",
+                Parameters: methodParametersParameters,
+                AlwaysBreakDownParameters: true,
+                UseExpressionBody: false,
+                Content: null),
+        };
 
-            var documentationTagsForMethod = new CodeDocumentationTags(
-                summary: "Execute method.",
-                parameters: docParameters,
-                remark: null,
-                code: null,
-                example: null,
-                exceptions: null,
-                @return: null);
-
-            return new ContentGeneratorServerHandlerInterfaceParameters(
-                @namespace,
-                operationName,
-                openApiOperation.ExtractDocumentationTagsForHandlerInterface(),
-                InterfaceName: $"I{operationName}{ContentGeneratorConstants.Handler}",
-                ResultName: $"{operationName}{ContentGeneratorConstants.Result}",
-                ParameterName: string.Empty,
-                documentationTagsForMethod);
-        }
+        return new InterfaceParameters(
+            headerContent,
+            @namespace,
+            DocumentationTags: openApiOperation.ExtractDocumentationTagsForHandlerInterface(),
+            new List<AttributeParameters> { codeGeneratorAttribute },
+            AccessModifiers.Public,
+            InterfaceTypeName: $"I{operationName}{ContentGeneratorConstants.Handler}",
+            InheritedInterfaceTypeName: null,
+            Properties: null,
+            Methods: methodParameters);
     }
 }
