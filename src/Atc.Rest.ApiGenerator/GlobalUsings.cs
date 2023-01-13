@@ -8,6 +8,7 @@ global using System.Text.RegularExpressions;
 
 global using Atc.CodeDocumentation.CodeComment;
 global using Atc.CodeGeneration.CSharp.Content;
+global using Atc.CodeGeneration.CSharp.Content.Factories;
 global using Atc.CodeGeneration.CSharp.Content.Generators;
 global using Atc.Console.Spectre;
 global using Atc.DotNet;

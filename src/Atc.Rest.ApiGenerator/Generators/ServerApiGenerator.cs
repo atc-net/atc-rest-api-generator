@@ -526,16 +526,17 @@ public class ServerApiGenerator
 
     private void ScaffoldBasicFileApiGenerated()
     {
-        var contentParameters = ContentGeneratorServerRegistrationParametersFactory.Create(
+        var classParameters = ClassParametersFactory.Create(
+            codeGeneratorContentHeader,
             projectOptions.ProjectName,
-            "Api");
+            codeGeneratorAttribute,
+            "ApiRegistration");
 
-        var contentGenerator = new ContentGeneratorServerRegistration(
-            new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-            new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-            contentParameters);
+        var contentGeneratorClass = new GenerateContentForClass(
+            new CodeDocumentationTagsGenerator(),
+            classParameters);
 
-        var content = contentGenerator.Generate();
+        var classContent = contentGeneratorClass.Generate();
 
         var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "ApiRegistration.cs"));
 
@@ -544,7 +545,7 @@ public class ServerApiGenerator
             projectOptions.PathForSrcGenerate,
             file,
             ContentWriterArea.Src,
-            content);
+            classContent);
     }
 
     private void GenerateSrcGlobalUsings()

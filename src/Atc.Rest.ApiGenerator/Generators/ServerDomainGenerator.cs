@@ -10,12 +10,25 @@ public class ServerDomainGenerator
     private readonly ILogger logger;
     private readonly DomainProjectOptions projectOptions;
 
+    private readonly string codeGeneratorContentHeader;
+    private readonly AttributeParameters codeGeneratorAttribute;
+
     public ServerDomainGenerator(
         ILogger logger,
         DomainProjectOptions projectOptions)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
+
+        // TODO: Optimize codeGeneratorContentHeader & codeGeneratorAttribute
+        var codeHeaderGenerator = new GeneratedCodeHeaderGenerator(
+            new GeneratedCodeGeneratorParameters(
+                projectOptions.ApiGeneratorVersion));
+        codeGeneratorContentHeader = codeHeaderGenerator.Generate();
+
+        codeGeneratorAttribute = new AttributeParameters(
+            "GeneratedCode",
+            $"\"{ContentWriterConstants.ApiGeneratorName}\", \"{projectOptions.ApiGeneratorVersion}\"");
     }
 
     public bool Generate()
@@ -251,16 +264,17 @@ public class ServerDomainGenerator
 
     private void ScaffoldBasicFileDomainRegistration()
     {
-        var contentParameters = ContentGeneratorServerRegistrationParametersFactory.Create(
+        var classParameters = ClassParametersFactory.Create(
+            codeGeneratorContentHeader,
             projectOptions.ProjectName,
-            "Domain");
+            codeGeneratorAttribute,
+            "DomainRegistration");
 
-        var contentGenerator = new ContentGeneratorServerRegistration(
-            new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-            new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-            contentParameters);
+        var contentGeneratorClass = new GenerateContentForClass(
+            new CodeDocumentationTagsGenerator(),
+            classParameters);
 
-        var content = contentGenerator.Generate();
+        var classContent = contentGeneratorClass.Generate();
 
         var file = new FileInfo(
             Path.Combine(
@@ -272,7 +286,7 @@ public class ServerDomainGenerator
             projectOptions.PathForSrcGenerate,
             file,
             ContentWriterArea.Src,
-            content);
+            classContent);
     }
 
     private void GenerateSrcGlobalUsings()
