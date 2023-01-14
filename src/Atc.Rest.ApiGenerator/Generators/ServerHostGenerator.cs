@@ -215,10 +215,8 @@ public class ServerHostGenerator
 
         var operationSchemaMappings = apiOperationExtractor.Extract(projectOptions.Document);
 
-        foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
+        foreach (var apiGroupName in projectOptions.ApiGroupNames)
         {
-            var apiGroupName = basePathSegmentName.EnsureFirstCharacterToUpper();
-
             var generator = new SyntaxGeneratorEndpointControllers(apiProjectOptions, operationSchemaMappings, apiGroupName);
             generator.GenerateCode();
 
@@ -227,8 +225,8 @@ public class ServerHostGenerator
                 projectOptions.ProjectName,
                 projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
                 $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Endpoints}",
-                basePathSegmentName,
-                GetRouteByArea(basePathSegmentName),
+                apiGroupName,
+                GetRouteByArea(apiGroupName),
                 projectOptions.Document);
 
             var metadataForMethods = generator.GetMetadataForMethods();
@@ -463,14 +461,14 @@ public class ServerHostGenerator
             $"{projectOptions.ProjectName}.Generated.Contracts",
         };
 
-        foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
+        foreach (var apiGroupName in projectOptions.ApiGroupNames)
         {
-            if (basePathSegmentName.Equals("Tasks", StringComparison.OrdinalIgnoreCase))
+            if (apiGroupName.Equals("Tasks", StringComparison.OrdinalIgnoreCase))
             {
                 continue;
             }
 
-            requiredUsings.Add($"{projectOptions.ProjectName}.Generated.Contracts.{basePathSegmentName}");
+            requiredUsings.Add($"{projectOptions.ProjectName}.Generated.Contracts.{apiGroupName}");
         }
 
         GlobalUsingsHelper.CreateOrUpdate(

@@ -1,4 +1,4 @@
-namespace Scenario2.Domain.Handlers.Eventargs;
+namespace Scenario2.Domain.Handlers.EventArgs;
 
 /// <summary>
 /// Handler for operation request.

@@ -29,7 +29,7 @@ public static class OpenApiDocumentSchemaModelNameResolver
 
     public static string EnsureModelNameWithNamespaceIfNeeded(
         string projectName,
-        string segmentName,
+        string apiGroupName,
         string modelName,
         bool isShared = false,
         bool isClient = false)
@@ -39,13 +39,13 @@ public static class OpenApiDocumentSchemaModelNameResolver
             return string.Empty;
         }
 
-        var isModelNameInNamespace = HasNamespaceRawModelName($"{projectName}.{segmentName}", modelName);
+        var isModelNameInNamespace = HasNamespaceRawModelName($"{projectName}.{apiGroupName}", modelName);
 
         if (isModelNameInNamespace)
         {
             return isClient
                 ? modelName
-                : $"{projectName}.{ContentGeneratorConstants.Contracts}.{segmentName}.{modelName}";
+                : $"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}.{modelName}";
         }
 
         if (!modelName.Contains('.', StringComparison.Ordinal) &&
@@ -62,7 +62,7 @@ public static class OpenApiDocumentSchemaModelNameResolver
                 return $"{ContentGeneratorConstants.Contracts}.{modelName}";
             }
 
-            return $"{projectName}.{ContentGeneratorConstants.Contracts}.{segmentName}.{modelName}";
+            return $"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}.{modelName}";
         }
 
         return modelName;

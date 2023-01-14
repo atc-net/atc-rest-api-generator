@@ -35,7 +35,7 @@ public class ClientCSharpApiProjectOptions
         PathForSrcGenerate = new DirectoryInfo(Path.Combine(PathForSrcGenerate.FullName, ProjectName));
         ProjectSrcCsProj = new FileInfo(Path.Combine(PathForSrcGenerate.FullName, $"{ProjectName}.csproj"));
 
-        BasePathSegmentNames = openApiDocument.GetBasePathSegmentNames();
+        ApiGroupNames = openApiDocument.GetApiGroupNames();
 
         UsingCodingRules = usingCodingRules;
         ExcludeEndpointGeneration = excludeEndpointGeneration;
@@ -70,10 +70,10 @@ public class ClientCSharpApiProjectOptions
 
     public string ProjectName { get; }
 
-    public List<string> BasePathSegmentNames { get; }
+    public IList<string> ApiGroupNames { get; }
 
     public bool ExcludeEndpointGeneration { get; }
 
     public override string ToString()
-        => $"{nameof(ApiGeneratorName)}: {ApiGeneratorName}, {nameof(ApiGeneratorVersion)}: {ApiGeneratorVersion}, {nameof(ApiGeneratorNameAndVersion)}: {ApiGeneratorNameAndVersion}, {nameof(ApiOptions)}: {ApiOptions}, {nameof(PathForSrcGenerate)}: {PathForSrcGenerate}, {nameof(ProjectSrcCsProj)}: {ProjectSrcCsProj}, {nameof(ForClient)}: {ForClient}, {nameof(ClientFolderName)}: {ClientFolderName}, {nameof(Document)}: {Document}, {nameof(DocumentFile)}: {DocumentFile}, {nameof(ProjectName)}: {ProjectName}, {nameof(BasePathSegmentNames)}: {BasePathSegmentNames}, {nameof(ExcludeEndpointGeneration)}: {ExcludeEndpointGeneration}";
+        => $"{nameof(ApiGeneratorName)}: {ApiGeneratorName}, {nameof(ApiGeneratorVersion)}: {ApiGeneratorVersion}, {nameof(ApiGeneratorNameAndVersion)}: {ApiGeneratorNameAndVersion}, {nameof(ApiOptions)}: {ApiOptions}, {nameof(PathForSrcGenerate)}: {PathForSrcGenerate}, {nameof(ProjectSrcCsProj)}: {ProjectSrcCsProj}, {nameof(ForClient)}: {ForClient}, {nameof(ClientFolderName)}: {ClientFolderName}, {nameof(Document)}: {Document}, {nameof(DocumentFile)}: {DocumentFile}, {nameof(ProjectName)}: {ProjectName}, {nameof(ApiGroupNames)}: {ApiGroupNames}, {nameof(ExcludeEndpointGeneration)}: {ExcludeEndpointGeneration}";
 }

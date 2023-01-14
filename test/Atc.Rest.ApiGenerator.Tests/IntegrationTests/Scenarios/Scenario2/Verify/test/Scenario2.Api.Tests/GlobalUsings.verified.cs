@@ -28,7 +28,7 @@ global using Scenario2.Api.Generated;
 global using Scenario2.Api.Generated.Contracts;
 global using Scenario2.Api.Generated.Contracts.Accounts;
 global using Scenario2.Api.Generated.Contracts.Addresses;
-global using Scenario2.Api.Generated.Contracts.Eventargs;
+global using Scenario2.Api.Generated.Contracts.EventArgs;
 global using Scenario2.Api.Generated.Contracts.Files;
 global using Scenario2.Api.Generated.Contracts.Items;
 global using Scenario2.Api.Generated.Contracts.List;

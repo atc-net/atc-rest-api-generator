@@ -4,14 +4,14 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace Scenario2.Api.Tests.Endpoints.Eventargs.Generated
+namespace Scenario2.Api.Tests.Endpoints.EventArgs.Generated
 {
     [GeneratedCode("ApiGenerator", "x.x.x.x")]
     public class GetEventArgsByIdHandlerStub : IGetEventArgsByIdHandler
     {
         public Task<GetEventArgsByIdResult> ExecuteAsync(GetEventArgsByIdParameters parameters, CancellationToken cancellationToken = default)
         {
-            var data = new Scenario2.Api.Generated.Contracts.Eventargs.EventArgs
+            var data = new Scenario2.Api.Generated.Contracts.EventArgs.EventArgs
             {
                 Id = Guid.Parse("77a33260-0000-441f-ba60-b0a833803fab"),
                 EventName = "Hallo1",

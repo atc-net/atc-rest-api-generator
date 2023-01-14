@@ -34,13 +34,13 @@
 
 ### Properties
 
+#### ApiGroupName
+>```csharp
+>ApiGroupName
+>```
 #### ApiProjectOptions
 >```csharp
 >ApiProjectOptions
->```
-#### FocusOnSegmentName
->```csharp
->FocusOnSegmentName
 >```
 ### Methods
 

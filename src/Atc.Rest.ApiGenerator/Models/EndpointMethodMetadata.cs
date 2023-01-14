@@ -6,7 +6,7 @@ public class EndpointMethodMetadata
     public EndpointMethodMetadata(
         bool useNullableReferenceTypes,
         string projectName,
-        string segmentName,
+        string apiGroupName,
         string route,
         OperationType httpOperation,
         string methodName,
@@ -21,7 +21,7 @@ public class EndpointMethodMetadata
     {
         UseNullableReferenceTypes = useNullableReferenceTypes;
         ProjectName = projectName;
-        SegmentName = segmentName;
+        ApiGroupName = apiGroupName;
         Route = route;
         HttpOperation = httpOperation;
         MethodName = methodName;
@@ -41,7 +41,7 @@ public class EndpointMethodMetadata
 
     public string ProjectName { get; }
 
-    public string SegmentName { get; }
+    public string ApiGroupName { get; }
 
     public string Route { get; }
 
@@ -367,5 +367,5 @@ public class EndpointMethodMetadata
     }
 
     public override string ToString()
-        => $"{nameof(SegmentName)}: {SegmentName}, {nameof(HttpOperation)}: {HttpOperation}, {nameof(MethodName)}: {MethodName}, {nameof(Route)}: {Route}";
+        => $"{nameof(ApiGroupName)}: {ApiGroupName}, {nameof(HttpOperation)}: {HttpOperation}, {nameof(MethodName)}: {MethodName}, {nameof(Route)}: {Route}";
 }

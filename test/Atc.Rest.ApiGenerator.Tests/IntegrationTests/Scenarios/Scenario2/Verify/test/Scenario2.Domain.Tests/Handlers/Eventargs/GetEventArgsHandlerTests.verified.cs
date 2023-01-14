@@ -1,4 +1,4 @@
-namespace Scenario2.Domain.Tests.Handlers.Eventargs
+namespace Scenario2.Domain.Tests.Handlers.EventArgs
 {
     public class GetEventArgsHandlerTests
     {

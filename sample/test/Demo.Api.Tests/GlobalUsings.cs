@@ -1,4 +1,4 @@
-﻿global using System;
+global using System;
 global using System.CodeDom.Compiler;
 global using System.Collections.Generic;
 global using System.IO;
@@ -19,7 +19,7 @@ global using Demo.Api.Generated;
 global using Demo.Api.Generated.Contracts;
 global using Demo.Api.Generated.Contracts.Accounts;
 global using Demo.Api.Generated.Contracts.Addresses;
-global using Demo.Api.Generated.Contracts.Eventargs;
+global using Demo.Api.Generated.Contracts.EventArgs;
 global using Demo.Api.Generated.Contracts.Files;
 global using Demo.Api.Generated.Contracts.Items;
 global using Demo.Api.Generated.Contracts.Orders;

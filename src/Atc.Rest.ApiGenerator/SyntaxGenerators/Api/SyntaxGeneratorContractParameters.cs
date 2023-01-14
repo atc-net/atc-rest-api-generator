@@ -6,22 +6,22 @@ public class SyntaxGeneratorContractParameters
 {
     public SyntaxGeneratorContractParameters(
         ApiProjectOptions apiProjectOptions,
-        string focusOnSegmentName)
+        string apiGroupName)
     {
         ApiProjectOptions = apiProjectOptions ?? throw new ArgumentNullException(nameof(apiProjectOptions));
-        FocusOnSegmentName = focusOnSegmentName ?? throw new ArgumentNullException(nameof(focusOnSegmentName));
+        ApiGroupName = apiGroupName ?? throw new ArgumentNullException(nameof(apiGroupName));
     }
 
     public ApiProjectOptions ApiProjectOptions { get; }
 
-    public string FocusOnSegmentName { get; }
+    public string ApiGroupName { get; }
 
     public List<SyntaxGeneratorContractParameter> GenerateSyntaxTrees()
     {
         var list = new List<SyntaxGeneratorContractParameter>();
         foreach (var urlPath in ApiProjectOptions.Document.Paths)
         {
-            if (!urlPath.IsPathStartingSegmentName(FocusOnSegmentName))
+            if (!urlPath.IsPathStartingSegmentName(ApiGroupName))
             {
                 continue;
             }

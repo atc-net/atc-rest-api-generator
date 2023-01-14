@@ -62,7 +62,7 @@ public abstract class BaseProjectOptions
         IsForClient = forClient;
         ClientFolderName = clientFolderName;
 
-        BasePathSegmentNames = openApiDocument.GetBasePathSegmentNames();
+        ApiGroupNames = openApiDocument.GetApiGroupNames();
     }
 
     public bool UsingCodingRules { get; }
@@ -109,5 +109,5 @@ public abstract class BaseProjectOptions
 
     public string? ClientFolderName { get; }
 
-    public List<string> BasePathSegmentNames { get; }
+    public IList<string> ApiGroupNames { get; }
 }

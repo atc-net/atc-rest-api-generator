@@ -4,7 +4,7 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace Scenario2.Api.Tests.Endpoints.Eventargs.Generated
+namespace Scenario2.Api.Tests.Endpoints.EventArgs.Generated
 {
     [GeneratedCode("ApiGenerator", "x.x.x.x")]
     [Collection("Sequential-Endpoints")]
@@ -24,7 +24,7 @@ namespace Scenario2.Api.Tests.Endpoints.Eventargs.Generated
             response.Should().NotBeNull();
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            var responseData = await response.DeserializeAsync<Scenario2.Api.Generated.Contracts.Eventargs.EventArgs>(JsonSerializerOptions);
+            var responseData = await response.DeserializeAsync<Scenario2.Api.Generated.Contracts.EventArgs.EventArgs>(JsonSerializerOptions);
             responseData.Should().NotBeNull();
         }
     }

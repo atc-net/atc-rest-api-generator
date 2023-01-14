@@ -65,21 +65,13 @@ public class ServerDomainGenerator
     {
         ArgumentNullException.ThrowIfNull(projectOptions);
 
-        foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
+        foreach (var urlPath in document.Paths)
         {
-            var apiGroupName = basePathSegmentName.EnsureFirstCharacterToUpper();
+            var apiGroupName = urlPath.GetApiGroupName();
 
-            foreach (var urlPath in document.Paths)
+            foreach (var openApiOperation in urlPath.Value.Operations)
             {
-                if (!urlPath.IsPathStartingSegmentName(apiGroupName))
-                {
-                    continue;
-                }
-
-                foreach (var openApiOperation in urlPath.Value.Operations)
-                {
-                    GenerateSrcHandler(apiGroupName, urlPath.Value, openApiOperation.Value);
-                }
+                GenerateSrcHandler(apiGroupName, urlPath.Value, openApiOperation.Value);
             }
         }
     }
@@ -124,21 +116,13 @@ public class ServerDomainGenerator
     {
         ArgumentNullException.ThrowIfNull(projectOptions);
 
-        foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
+        foreach (var urlPath in document.Paths)
         {
-            var apiGroupName = basePathSegmentName.EnsureFirstCharacterToUpper();
+            var apiGroupName = urlPath.GetApiGroupName();
 
-            foreach (var urlPath in document.Paths)
+            foreach (var openApiOperation in urlPath.Value.Operations)
             {
-                if (!urlPath.IsPathStartingSegmentName(apiGroupName))
-                {
-                    continue;
-                }
-
-                foreach (var openApiOperation in urlPath.Value.Operations)
-                {
-                    GenerateTestHandler(apiGroupName, urlPath.Value, openApiOperation.Value);
-                }
+                GenerateTestHandler(apiGroupName, urlPath.Value, openApiOperation.Value);
             }
         }
     }
@@ -300,9 +284,9 @@ public class ServerDomainGenerator
         };
 
         var projectName = projectOptions.ProjectName.Replace(".Domain", ".Api.Generated", StringComparison.Ordinal);
-        foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
+        foreach (var apiGroupName in projectOptions.ApiGroupNames)
         {
-            requiredUsings.Add($"{projectName}.Contracts.{basePathSegmentName}");
+            requiredUsings.Add($"{projectName}.Contracts.{apiGroupName}");
         }
 
         GlobalUsingsHelper.CreateOrUpdate(
@@ -321,9 +305,9 @@ public class ServerDomainGenerator
             "Xunit",
         };
 
-        foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
+        foreach (var apiGroupName in projectOptions.ApiGroupNames)
         {
-            requiredUsings.Add($"{projectOptions.ProjectName}.Handlers.{basePathSegmentName}");
+            requiredUsings.Add($"{projectOptions.ProjectName}.Handlers.{apiGroupName}");
         }
 
         GlobalUsingsHelper.CreateOrUpdate(

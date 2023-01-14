@@ -52,7 +52,7 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
         HostProjectOptions hostProjectOptions,
         EndpointMethodMetadata endpointMethodMetadata)
     {
-        sb.AppendLine($"namespace {hostProjectOptions.ProjectName}.Tests.Endpoints.{endpointMethodMetadata.SegmentName}.Generated");
+        sb.AppendLine($"namespace {hostProjectOptions.ProjectName}.Tests.Endpoints.{endpointMethodMetadata.ApiGroupName}.Generated");
         sb.AppendLine("{");
 
         GenerateCodeHelper.AppendGeneratedCodeAttribute(sb, hostProjectOptions.ApiGeneratorName, hostProjectOptions.ApiGeneratorVersion);
@@ -107,7 +107,7 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
         EndpointMethodMetadata endpointMethodMetadata)
     {
         var pathA = Path.Combine(hostProjectOptions.PathForTestGenerate!.FullName, "Endpoints");
-        var pathB = Path.Combine(pathA, endpointMethodMetadata.SegmentName);
+        var pathB = Path.Combine(pathA, endpointMethodMetadata.ApiGroupName);
         var pathC = Path.Combine(pathB, "Generated");
         var fileName = $"{endpointMethodMetadata.MethodName}Tests.cs";
         var file = new FileInfo(Path.Combine(pathC, fileName));
@@ -174,7 +174,7 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
             if (!endpointMethodMetadata.IsContractParameterRequestBodyUsedAsMultipartOctetStreamData() &&
                 !endpointMethodMetadata.IsContractReturnTypeUsingTaskName())
             {
-                list.Add($"{hostProjectOptions.ProjectName}.Generated.Contracts.{endpointMethodMetadata.SegmentName}");
+                list.Add($"{hostProjectOptions.ProjectName}.Generated.Contracts.{endpointMethodMetadata.ApiGroupName}");
             }
         }
         else if (endpointMethodMetadata.HasContractReturnTypeAsComplexAsListOrPagination())

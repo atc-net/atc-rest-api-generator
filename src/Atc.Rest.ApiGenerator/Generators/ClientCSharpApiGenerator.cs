@@ -52,10 +52,19 @@ public class ClientCSharpApiGenerator
 
         var operationSchemaMappings = apiOperationExtractor.Extract(projectOptions.Document);
 
-        GenerateContracts(operationSchemaMappings);
+        GenerateModels(projectOptions.Document, operationSchemaMappings);
+
+        GenerateParameters(projectOptions.Document);
+
         if (!projectOptions.ExcludeEndpointGeneration)
         {
-            GenerateClientEndpoints(operationSchemaMappings);
+            GenerateEndpointInterfaces(projectOptions.Document);
+
+            GenerateEndpoints(projectOptions.Document);
+
+            GenerateEndpointResultInterfaces(projectOptions.Document);
+
+            GenerateEndpointResults(projectOptions.Document);
         }
 
         GenerateSrcGlobalUsings();
@@ -103,45 +112,36 @@ public class ClientCSharpApiGenerator
         }
     }
 
-    private void GenerateContracts(
+    private void GenerateModels(
+        OpenApiDocument document,
         IList<ApiOperation> operationSchemaMappings)
     {
         ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 
-        foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
+        foreach (var apiGroupName in projectOptions.ApiGroupNames)
         {
-            var apiGroupName = basePathSegmentName.EnsureFirstCharacterToUpper();
+            var apiOperations = operationSchemaMappings
+                .Where(x => x.LocatedArea is ApiSchemaMapLocatedAreaType.Response or ApiSchemaMapLocatedAreaType.RequestBody &&
+                            x.ApiGroupName.Equals(apiGroupName, StringComparison.OrdinalIgnoreCase))
+                .ToList();
 
-            GenerateModels(projectOptions.Document, apiGroupName, operationSchemaMappings);
-            GenerateParameters(projectOptions.Document, apiGroupName);
-        }
-    }
+            var apiOperationModels = GetDistinctApiOperationModels(apiOperations);
 
-    private void GenerateModels(
-        OpenApiDocument document,
-        string apiGroupName,
-        IEnumerable<ApiOperation> operationSchemaMappings)
-    {
-        var apiOperations = operationSchemaMappings
-            .Where(x => x.LocatedArea is ApiSchemaMapLocatedAreaType.Response or ApiSchemaMapLocatedAreaType.RequestBody &&
-                        x.SegmentName.Equals(apiGroupName, StringComparison.OrdinalIgnoreCase))
-            .ToList();
-
-        var apiOperationModels = GetDistinctApiOperationModels(apiOperations);
-
-        foreach (var apiOperationModel in apiOperationModels)
-        {
-            var apiSchema = document.Components.Schemas.First(x => x.Key.Equals(apiOperationModel.Name, StringComparison.OrdinalIgnoreCase));
-
-            var modelName = apiSchema.Key.EnsureFirstCharacterToUpper();
-
-            if (apiOperationModel.IsEnum)
+            foreach (var apiOperationModel in apiOperationModels)
             {
-                GenerateEnumerationType(modelName, apiSchema.Value.GetEnumSchema().Item2);
-            }
-            else
-            {
-                GenerateModel(modelName, apiSchema.Value, apiGroupName, apiOperationModel.IsShared);
+                var apiSchema = document.Components.Schemas.First(x =>
+                    x.Key.Equals(apiOperationModel.Name, StringComparison.OrdinalIgnoreCase));
+
+                var modelName = apiSchema.Key.EnsureFirstCharacterToUpper();
+
+                if (apiOperationModel.IsEnum)
+                {
+                    GenerateEnumerationType(modelName, apiSchema.Value.GetEnumSchema().Item2);
+                }
+                else
+                {
+                    GenerateModel(modelName, apiSchema.Value, apiGroupName, apiOperationModel.IsShared);
+                }
             }
         }
     }
@@ -241,25 +241,21 @@ public class ClientCSharpApiGenerator
     }
 
     private void GenerateParameters(
-        OpenApiDocument document,
-        string apiGroupName)
+        OpenApiDocument document)
     {
-        foreach (var urlPath in document.Paths)
+        foreach (var openApiPath in document.Paths)
         {
-            if (!urlPath.IsPathStartingSegmentName(apiGroupName))
-            {
-                continue;
-            }
+            var apiGroupName = openApiPath.GetApiGroupName();
 
-            foreach (var apiOperation in urlPath.Value.Operations)
+            foreach (var apiOperation in openApiPath.Value.Operations)
             {
                 if (!apiOperation.Value.HasParametersOrRequestBody() &&
-                    !urlPath.Value.HasParameters())
+                    !openApiPath.Value.HasParameters())
                 {
                     continue;
                 }
 
-                GenerateParameter(apiGroupName, urlPath.Value, apiOperation.Value);
+                GenerateParameter(apiGroupName, openApiPath.Value, apiOperation.Value);
             }
         }
     }
@@ -304,33 +300,6 @@ public class ClientCSharpApiGenerator
             file,
             ContentWriterArea.Src,
             parameterContent);
-    }
-
-    private void GenerateClientEndpoints(
-        IList<ApiOperation> operationSchemaMappings)
-    {
-        ArgumentNullException.ThrowIfNull(operationSchemaMappings);
-
-        foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
-        {
-            var apiGroupName = basePathSegmentName.EnsureFirstCharacterToUpper();
-
-            GenerateEndpointInterfaces(
-                projectOptions.Document,
-                apiGroupName);
-
-            GenerateEndpoints(
-                projectOptions.Document,
-                apiGroupName);
-
-            GenerateEndpointResultInterfaces(
-                projectOptions.Document,
-                apiGroupName);
-
-            GenerateEndpointResults(
-                projectOptions.Document,
-                apiGroupName);
-        }
     }
 
     private static List<ApiOperationModel> GetDistinctApiOperationModels(
@@ -379,8 +348,7 @@ public class ClientCSharpApiGenerator
     }
 
     private void GenerateEndpointInterfaces(
-        OpenApiDocument document,
-        string apiGroupName)
+        OpenApiDocument document)
     {
         var fullNamespace = string.IsNullOrEmpty(projectOptions.ClientFolderName)
                 ? $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Endpoints}"
@@ -388,10 +356,7 @@ public class ClientCSharpApiGenerator
 
         foreach (var openApiPath in document.Paths)
         {
-            if (!openApiPath.IsPathStartingSegmentName(apiGroupName))
-            {
-                continue;
-            }
+            var apiGroupName = openApiPath.GetApiGroupName();
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
@@ -428,8 +393,7 @@ public class ClientCSharpApiGenerator
     }
 
     private void GenerateEndpoints(
-        OpenApiDocument document,
-        string apiGroupName)
+        OpenApiDocument document)
     {
         var fullNamespace = string.IsNullOrEmpty(projectOptions.ClientFolderName)
             ? $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Endpoints}"
@@ -437,10 +401,7 @@ public class ClientCSharpApiGenerator
 
         foreach (var openApiPath in document.Paths)
         {
-            if (!openApiPath.IsPathStartingSegmentName(apiGroupName))
-            {
-                continue;
-            }
+            var apiGroupName = openApiPath.GetApiGroupName();
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
@@ -482,8 +443,7 @@ public class ClientCSharpApiGenerator
     }
 
     private void GenerateEndpointResultInterfaces(
-        OpenApiDocument document,
-        string apiGroupName)
+        OpenApiDocument document)
     {
         var fullNamespace = string.IsNullOrEmpty(projectOptions.ClientFolderName)
             ? $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Endpoints}"
@@ -491,10 +451,7 @@ public class ClientCSharpApiGenerator
 
         foreach (var openApiPath in document.Paths)
         {
-            if (!openApiPath.IsPathStartingSegmentName(apiGroupName))
-            {
-                continue;
-            }
+            var apiGroupName = openApiPath.GetApiGroupName();
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
@@ -534,8 +491,7 @@ public class ClientCSharpApiGenerator
     }
 
     private void GenerateEndpointResults(
-        OpenApiDocument document,
-        string apiGroupName)
+        OpenApiDocument document)
     {
         var fullNamespace = string.IsNullOrEmpty(projectOptions.ClientFolderName)
             ? $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Endpoints}"
@@ -543,10 +499,7 @@ public class ClientCSharpApiGenerator
 
         foreach (var openApiPath in document.Paths)
         {
-            if (!openApiPath.IsPathStartingSegmentName(apiGroupName))
-            {
-                continue;
-            }
+            var apiGroupName = openApiPath.GetApiGroupName();
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {

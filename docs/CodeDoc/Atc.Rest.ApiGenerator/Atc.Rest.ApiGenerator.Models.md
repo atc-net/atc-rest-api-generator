@@ -50,13 +50,13 @@
 >```csharp
 >ApiGeneratorVersion
 >```
+#### ApiGroupNames
+>```csharp
+>ApiGroupNames
+>```
 #### ApiOptions
 >```csharp
 >ApiOptions
->```
-#### BasePathSegmentNames
->```csharp
->BasePathSegmentNames
 >```
 #### ClientFolderName
 >```csharp
@@ -141,13 +141,13 @@
 >```csharp
 >ApiGeneratorVersion
 >```
+#### ApiGroupNames
+>```csharp
+>ApiGroupNames
+>```
 #### ApiOptions
 >```csharp
 >ApiOptions
->```
-#### BasePathSegmentNames
->```csharp
->BasePathSegmentNames
 >```
 #### ClientFolderName
 >```csharp
@@ -276,6 +276,10 @@
 
 ### Properties
 
+#### ApiGroupName
+>```csharp
+>ApiGroupName
+>```
 #### ApiOperation
 >```csharp
 >ApiOperation
@@ -323,10 +327,6 @@
 #### Route
 >```csharp
 >Route
->```
-#### SegmentName
->```csharp
->SegmentName
 >```
 #### UseNullableReferenceTypes
 >```csharp

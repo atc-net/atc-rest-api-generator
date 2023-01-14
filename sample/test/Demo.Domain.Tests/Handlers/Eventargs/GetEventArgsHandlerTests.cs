@@ -1,4 +1,4 @@
-﻿namespace Demo.Domain.Tests.Handlers.Eventargs
+namespace Demo.Domain.Tests.Handlers.EventArgs
 {
     public class GetEventArgsHandlerTests
     {

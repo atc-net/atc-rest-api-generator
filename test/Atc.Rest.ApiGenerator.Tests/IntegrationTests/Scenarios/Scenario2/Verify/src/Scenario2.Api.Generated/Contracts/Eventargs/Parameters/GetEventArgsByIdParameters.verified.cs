@@ -4,7 +4,7 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace Scenario2.Api.Generated.Contracts.Eventargs;
+namespace Scenario2.Api.Generated.Contracts.EventArgs;
 
 /// <summary>
 /// Parameters for operation request.

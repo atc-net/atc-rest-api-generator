@@ -18,14 +18,14 @@ public sealed class ApiOperation
         Path = path;
         HttpOperation = httpOperation;
         ParentSchemaKey = parentSchemaKey;
-        SegmentName = ExtractSegmentName(Path);
+        ApiGroupName = ExtractApiGroupName(Path);
     }
 
     public ApiOperationModel Model { get; }
 
     public ApiSchemaMapLocatedAreaType LocatedArea { get; }
 
-    public string SegmentName { get; }
+    public string ApiGroupName { get; }
 
     public string Path { get; }
 
@@ -36,10 +36,10 @@ public sealed class ApiOperation
     public CardinalityType Cardinality { get; set; }
 
     public override string ToString()
-        => $"{nameof(Model)}: ({Model}), {nameof(LocatedArea)}: {LocatedArea}, {nameof(SegmentName)}: {SegmentName}, {nameof(Path)}: {Path}, {nameof(HttpOperation)}: {HttpOperation}, {nameof(ParentSchemaKey)}: {ParentSchemaKey}, {nameof(Cardinality)}: {Cardinality}";
+        => $"{nameof(Model)}: ({Model}), {nameof(LocatedArea)}: {LocatedArea}, {nameof(ApiGroupName)}: {ApiGroupName}, {nameof(Path)}: {Path}, {nameof(HttpOperation)}: {HttpOperation}, {nameof(ParentSchemaKey)}: {ParentSchemaKey}, {nameof(Cardinality)}: {Cardinality}";
 
     public override int GetHashCode()
-        => HashCode.Combine(Model.Name, (int)LocatedArea, SegmentName, Path, (int)HttpOperation, ParentSchemaKey);
+        => HashCode.Combine(Model.Name, (int)LocatedArea, ApiGroupName, Path, (int)HttpOperation, ParentSchemaKey);
 
     public override bool Equals(
         object? obj)
@@ -56,12 +56,12 @@ public sealed class ApiOperation
         ApiOperation other)
         => Model.Name == other.Model.Name &&
            LocatedArea == other.LocatedArea &&
-           SegmentName == other.SegmentName &&
+           ApiGroupName == other.ApiGroupName &&
            Path == other.Path &&
            HttpOperation == other.HttpOperation &&
            ParentSchemaKey == other.ParentSchemaKey;
 
-    private static string ExtractSegmentName(
+    private static string ExtractApiGroupName(
         string path)
         => path
             .Split('/', StringSplitOptions.RemoveEmptyEntries)

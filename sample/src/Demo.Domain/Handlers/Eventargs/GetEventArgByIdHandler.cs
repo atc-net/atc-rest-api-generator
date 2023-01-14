@@ -1,10 +1,10 @@
-﻿namespace Demo.Domain.Handlers.Eventargs;
+namespace Demo.Domain.Handlers.EventArgs;
 
 /// <summary>
 /// Handler for operation request.
 /// Description: Get EventArgs By Id.
 /// Operation: GetEventArgById.
-/// Area: Eventargs.
+/// Area: EventArgs.
 /// </summary>
 public class GetEventArgByIdHandler : IGetEventArgByIdHandler
 {

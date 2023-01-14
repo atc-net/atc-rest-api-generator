@@ -20,7 +20,7 @@ public static class OpenApiDocumentSchemaModelNameHelper
 
         return OpenApiDocumentSchemaModelNameResolver.EnsureModelNameWithNamespaceIfNeeded(
             endpointMethodMetadata.ProjectName,
-            endpointMethodMetadata.SegmentName,
+            endpointMethodMetadata.ApiGroupName,
             modelName,
             endpointMethodMetadata.IsSharedModel(modelName));
     }
