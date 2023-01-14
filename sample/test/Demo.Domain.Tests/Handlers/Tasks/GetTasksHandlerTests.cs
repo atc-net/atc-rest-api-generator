@@ -1,15 +1,14 @@
-﻿namespace Demo.Domain.Tests.Handlers.Tasks
+﻿namespace Demo.Domain.Tests.Handlers.Tasks;
+
+public class GetTasksHandlerTests
 {
-    public class GetTasksHandlerTests
+    [Fact(Skip="Change this to a real test")]
+    public void Sample()
     {
-        [Fact(Skip="Change this to a real test")]
-        public void Sample()
-        {
-            // Arrange
+        // Arrange
 
-            // Act
+        // Act
 
-            // Assert
-        }
+        // Assert
     }
 }

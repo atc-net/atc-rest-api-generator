@@ -1,15 +1,14 @@
-namespace Demo.Domain.Tests.Handlers.EventArgs
+﻿namespace Demo.Domain.Tests.Handlers.EventArgs;
+
+public class GetEventArgsHandlerTests
 {
-    public class GetEventArgsHandlerTests
+    [Fact(Skip="Change this to a real test")]
+    public void Sample()
     {
-        [Fact(Skip="Change this to a real test")]
-        public void Sample()
-        {
-            // Arrange
+        // Arrange
 
-            // Act
+        // Act
 
-            // Assert
-        }
+        // Assert
     }
 }

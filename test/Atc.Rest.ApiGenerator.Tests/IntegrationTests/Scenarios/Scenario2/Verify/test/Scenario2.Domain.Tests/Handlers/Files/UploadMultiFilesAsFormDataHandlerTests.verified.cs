@@ -1,15 +1,14 @@
-namespace Scenario2.Domain.Tests.Handlers.Files
+namespace Scenario2.Domain.Tests.Handlers.Files;
+
+public class UploadMultiFilesAsFormDataHandlerTests
 {
-    public class UploadMultiFilesAsFormDataHandlerTests
+    [Fact(Skip="Change this to a real test")]
+    public void Sample()
     {
-        [Fact(Skip="Change this to a real test")]
-        public void Sample()
-        {
-            // Arrange
+        // Arrange
 
-            // Act
+        // Act
 
-            // Assert
-        }
+        // Assert
     }
 }

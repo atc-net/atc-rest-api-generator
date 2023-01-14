@@ -1,15 +1,14 @@
-﻿namespace Demo.Domain.Tests.Handlers.Orders
+﻿namespace Demo.Domain.Tests.Handlers.Orders;
+
+public class PatchOrdersIdHandlerTests
 {
-    public class PatchOrdersIdHandlerTests
+    [Fact(Skip="Change this to a real test")]
+    public void Sample()
     {
-        [Fact(Skip="Change this to a real test")]
-        public void Sample()
-        {
-            // Arrange
+        // Arrange
 
-            // Act
+        // Act
 
-            // Assert
-        }
+        // Assert
     }
 }

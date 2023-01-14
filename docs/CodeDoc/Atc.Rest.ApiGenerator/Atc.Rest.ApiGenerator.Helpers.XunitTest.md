@@ -37,25 +37,6 @@
 
 <br />
 
-## GenerateServerDomainXunitTestHelper
-
->```csharp
->public static class GenerateServerDomainXunitTestHelper
->```
-
-### Static Methods
-
-#### GenerateCustomTests
->```csharp
->void GenerateCustomTests(ILogger logger, DomainProjectOptions domainProjectOptions, string apiGroupName, string handlerName)
->```
-#### GenerateGeneratedTests
->```csharp
->void GenerateGeneratedTests(ILogger logger, DomainProjectOptions domainProjectOptions, string apiGroupName, string handlerName, bool hasParametersOrRequestBody)
->```
-
-<br />
-
 ## GenerateXunitTestHelper
 
 >```csharp

@@ -1,15 +1,14 @@
-﻿namespace Demo.Domain.Tests.Handlers.Accounts
+﻿namespace Demo.Domain.Tests.Handlers.Accounts;
+
+public class SetAccountNameHandlerTests
 {
-    public class SetAccountNameHandlerTests
+    [Fact(Skip="Change this to a real test")]
+    public void Sample()
     {
-        [Fact(Skip="Change this to a real test")]
-        public void Sample()
-        {
-            // Arrange
+        // Arrange
 
-            // Act
+        // Act
 
-            // Assert
-        }
+        // Assert
     }
 }

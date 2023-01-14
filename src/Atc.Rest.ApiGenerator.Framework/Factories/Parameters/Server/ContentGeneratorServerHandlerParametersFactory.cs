@@ -75,7 +75,7 @@ public static class ContentGeneratorServerHandlerParametersFactory
         {
             new(
                 DocumentationTags: null,
-                Attributes: null,
+                Attributes: AttributesParametersFactory.Create("Fact", "Skip=\"Change this to a real test\""),
                 AccessModifier: AccessModifiers.Public,
                 ReturnTypeName: "void",
                 ReturnGenericTypeName: null,
@@ -90,7 +90,7 @@ public static class ContentGeneratorServerHandlerParametersFactory
             HeaderContent: null,
             @namespace,
             DocumentationTags: null,
-            Attributes: AttributesParametersFactory.Create("Fact", "Skip=\"Change this to a real test\""),
+            Attributes: null,
             AccessModifiers.Public,
             ClassTypeName: $"{operationName}{ContentGeneratorConstants.HandlerTests}",
             InheritedClassTypeName: null,

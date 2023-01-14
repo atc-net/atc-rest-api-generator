@@ -1,15 +1,14 @@
-﻿namespace Demo.Domain.Tests.Handlers.RouteWithDash
+﻿namespace Demo.Domain.Tests.Handlers.RouteWithDash;
+
+public class GetRouteWithDashHandlerTests
 {
-    public class GetRouteWithDashHandlerTests
+    [Fact(Skip="Change this to a real test")]
+    public void Sample()
     {
-        [Fact(Skip="Change this to a real test")]
-        public void Sample()
-        {
-            // Arrange
+        // Arrange
 
-            // Act
+        // Act
 
-            // Assert
-        }
+        // Assert
     }
 }

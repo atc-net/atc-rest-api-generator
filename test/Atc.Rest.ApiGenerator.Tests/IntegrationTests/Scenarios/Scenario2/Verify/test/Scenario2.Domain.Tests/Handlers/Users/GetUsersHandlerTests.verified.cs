@@ -1,15 +1,14 @@
-namespace Scenario2.Domain.Tests.Handlers.Users
+namespace Scenario2.Domain.Tests.Handlers.Users;
+
+public class GetUsersHandlerTests
 {
-    public class GetUsersHandlerTests
+    [Fact(Skip="Change this to a real test")]
+    public void Sample()
     {
-        [Fact(Skip="Change this to a real test")]
-        public void Sample()
-        {
-            // Arrange
+        // Arrange
 
-            // Act
+        // Act
 
-            // Assert
-        }
+        // Assert
     }
 }

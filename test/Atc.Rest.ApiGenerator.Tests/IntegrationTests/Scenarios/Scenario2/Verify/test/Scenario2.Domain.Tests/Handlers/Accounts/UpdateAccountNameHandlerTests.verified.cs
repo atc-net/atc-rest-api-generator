@@ -1,15 +1,14 @@
-namespace Scenario2.Domain.Tests.Handlers.Accounts
+namespace Scenario2.Domain.Tests.Handlers.Accounts;
+
+public class UpdateAccountNameHandlerTests
 {
-    public class UpdateAccountNameHandlerTests
+    [Fact(Skip="Change this to a real test")]
+    public void Sample()
     {
-        [Fact(Skip="Change this to a real test")]
-        public void Sample()
-        {
-            // Arrange
+        // Arrange
 
-            // Act
+        // Act
 
-            // Assert
-        }
+        // Assert
     }
 }

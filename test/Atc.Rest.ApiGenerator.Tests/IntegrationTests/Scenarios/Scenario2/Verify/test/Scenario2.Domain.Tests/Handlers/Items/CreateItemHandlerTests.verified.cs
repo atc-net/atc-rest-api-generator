@@ -1,15 +1,14 @@
-namespace Scenario2.Domain.Tests.Handlers.Items
+namespace Scenario2.Domain.Tests.Handlers.Items;
+
+public class CreateItemHandlerTests
 {
-    public class CreateItemHandlerTests
+    [Fact(Skip="Change this to a real test")]
+    public void Sample()
     {
-        [Fact(Skip="Change this to a real test")]
-        public void Sample()
-        {
-            // Arrange
+        // Arrange
 
-            // Act
+        // Act
 
-            // Assert
-        }
+        // Assert
     }
 }
