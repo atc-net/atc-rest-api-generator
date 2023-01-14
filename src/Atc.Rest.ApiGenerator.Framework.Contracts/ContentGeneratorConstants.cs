@@ -6,10 +6,11 @@ public static class ContentGeneratorConstants
     public const string Controller = "Controller";
     public const string Endpoint = "Endpoint";
     public const string Endpoints = "Endpoints";
-    public const string EndpointResult = $"{Endpoint}{Result}";
+    public const string EndpointResult = "EndpointResult";
     public const string EndpointResponse = "EndpointResponse";
     public const string Handler = "Handler";
     public const string Handlers = "Handlers";
+    public const string HandlerTests = "HandlerTests";
     public const string Interfaces = "Interfaces";
     public const string Parameters = "Parameters";
     public const string Result = "Result";

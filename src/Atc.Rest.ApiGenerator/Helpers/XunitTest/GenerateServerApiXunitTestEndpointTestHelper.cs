@@ -36,17 +36,6 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
         SaveFile(logger, sb, hostProjectOptions, endpointMethodMetadata);
     }
 
-    private static void AppendUsingStatements(
-        StringBuilder sb,
-        HostProjectOptions hostProjectOptions,
-        EndpointMethodMetadata endpointMethodMetadata)
-    {
-        foreach (var statement in GetUsingStatements(hostProjectOptions, endpointMethodMetadata))
-        {
-            sb.AppendLine($"using {statement};");
-        }
-    }
-
     private static void AppendNamespaceAndClassStart(
         StringBuilder sb,
         HostProjectOptions hostProjectOptions,
@@ -118,81 +107,6 @@ public static class GenerateServerApiXunitTestEndpointTestHelper
             file,
             ContentWriterArea.Test,
             sb.ToString());
-    }
-
-    private static List<string> GetUsingStatements(
-        HostProjectOptions hostProjectOptions,
-        EndpointMethodMetadata endpointMethodMetadata)
-    {
-        var systemList = new List<string>
-        {
-            "System.CodeDom.Compiler",
-            "System.Net",
-            "System.Threading.Tasks",
-        };
-
-        if (endpointMethodMetadata.IsContractParameterRequestBodyUsingSystemNamespace())
-        {
-            systemList.Add("System");
-        }
-
-        if (endpointMethodMetadata.IsContractParameterRequestBodyUsingStringBuilder())
-        {
-            systemList.Add("System.Text");
-        }
-
-        if (endpointMethodMetadata.IsContractReturnTypeUsingList() ||
-            endpointMethodMetadata.IsContractParameterRequestBodyUsingSystemCollectionGenericNamespace())
-        {
-            systemList.Add("System.Collections.Generic");
-        }
-
-        var list = new List<string>
-        {
-            "Atc.XUnit",
-            "FluentAssertions",
-            "Xunit",
-        };
-
-        if (endpointMethodMetadata.IsContractReturnTypeUsingPagination())
-        {
-            list.Add("Atc.Rest.Results");
-        }
-
-        if (!endpointMethodMetadata.IsContractReturnTypeUsingTaskName() &&
-            (endpointMethodMetadata.HasSharedModelOrEnumInContractParameterRequestBody() ||
-             endpointMethodMetadata.HasSharedModelOrEnumInContractReturnType(includeProperties: false)))
-        {
-            list.Add($"{hostProjectOptions.ProjectName}.Generated.Contracts");
-        }
-
-        if (endpointMethodMetadata.IsContractParameterRequestBodyUsed() ||
-            endpointMethodMetadata.HasContractReturnTypeAsComplex())
-        {
-            systemList.Add("System.Net.Http");
-
-            if (!endpointMethodMetadata.IsContractParameterRequestBodyUsedAsMultipartOctetStreamData() &&
-                !endpointMethodMetadata.IsContractReturnTypeUsingTaskName())
-            {
-                list.Add($"{hostProjectOptions.ProjectName}.Generated.Contracts.{endpointMethodMetadata.ApiGroupName}");
-            }
-        }
-        else if (endpointMethodMetadata.HasContractReturnTypeAsComplexAsListOrPagination())
-        {
-            systemList.Add("System.Net.Http");
-        }
-
-        if (endpointMethodMetadata.IsContractParameterRequestBodyUsedAsMultipartFormData() ||
-            endpointMethodMetadata.IsContractParameterRequestBodyUsedAsMultipartOctetStreamData())
-        {
-            list.Add("Microsoft.AspNetCore.Http");
-        }
-
-        return systemList
-            .OrderBy(x => x)
-            .Concat(list
-                .OrderBy(x => x))
-            .ToList();
     }
 
     private static void AppendTest200Ok(

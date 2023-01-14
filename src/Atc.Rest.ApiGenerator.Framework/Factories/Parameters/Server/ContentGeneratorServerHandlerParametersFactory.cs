@@ -65,6 +65,43 @@ public static class ContentGeneratorServerHandlerParametersFactory
             GenerateToStringMethode: false);
     }
 
+    public static ClassParameters CreateForCustomTest(
+        string @namespace,
+        OpenApiOperation openApiOperation)
+    {
+        var operationName = openApiOperation.GetOperationName();
+
+        var methodParameters = new List<MethodParameters>
+        {
+            new(
+                DocumentationTags: null,
+                Attributes: null,
+                AccessModifier: AccessModifiers.Public,
+                ReturnTypeName: "void",
+                ReturnGenericTypeName: null,
+                Name: "Sample",
+                Parameters: null,
+                AlwaysBreakDownParameters: false,
+                UseExpressionBody: false,
+                Content: GenerateContentTestSample()),
+        };
+
+        return new ClassParameters(
+            HeaderContent: null,
+            @namespace,
+            DocumentationTags: null,
+            Attributes: AttributesParametersFactory.Create("Fact", "Skip=\"Change this to a real test\""),
+            AccessModifiers.Public,
+            ClassTypeName: $"{operationName}{ContentGeneratorConstants.HandlerTests}",
+            InheritedClassTypeName: null,
+            InheritedGenericClassTypeName: null,
+            InheritedInterfaceTypeName: null,
+            Constructors: null,
+            Properties: null,
+            Methods: methodParameters,
+            GenerateToStringMethode: false);
+    }
+
     private static string GenerateContentExecuteMethod(
         bool hasParameters,
         string operationName)
@@ -77,6 +114,19 @@ public static class ContentGeneratorServerHandlerParametersFactory
         }
 
         sb.Append($"throw new NotImplementedException(\"Add logic here for {operationName}{ContentGeneratorConstants.Handler}\");");
+        return sb.ToString();
+    }
+
+    private static string GenerateContentTestSample()
+    {
+        var sb = new StringBuilder();
+        sb.AppendLine(4, "{");
+        sb.AppendLine(8, "// Arrange");
+        sb.AppendLine();
+        sb.AppendLine(8, "// Act");
+        sb.AppendLine();
+        sb.AppendLine(8, "// Assert");
+        sb.Append(4, "}");
         return sb.ToString();
     }
 }

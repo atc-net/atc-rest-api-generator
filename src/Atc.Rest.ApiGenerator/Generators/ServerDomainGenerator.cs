@@ -122,26 +122,42 @@ public class ServerDomainGenerator
 
             foreach (var openApiOperation in urlPath.Value.Operations)
             {
-                GenerateTestHandler(apiGroupName, urlPath.Value, openApiOperation.Value);
+                GenerateTestHandlerCustom(apiGroupName, openApiOperation.Value);
             }
         }
     }
 
-    private void GenerateTestHandler(
+    private void GenerateTestHandlerCustom(
         string apiGroupName,
-        OpenApiPathItem apiPath,
         OpenApiOperation apiOperation)
     {
-        //// TODO: Rewrite:
+        var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Handlers}.{apiGroupName}";
 
-        var operationName = apiOperation.GetOperationName();
-        var handlerName = $"{operationName}{ContentGeneratorConstants.Handler}";
+        // Generate
+        var classParameters = ContentGeneratorServerHandlerParametersFactory.CreateForCustomTest(
+            fullNamespace,
+            apiOperation);
 
-        var hasParametersOrRequestBody = apiPath.HasParameters() ||
-                                         apiOperation.HasParametersOrRequestBody();
+        var contentGeneratorClass = new GenerateContentForClass(
+            new CodeDocumentationTagsGenerator(),
+            classParameters);
 
-        GenerateServerDomainXunitTestHelper.GenerateGeneratedTests(logger, projectOptions, apiGroupName, handlerName, hasParametersOrRequestBody);
-        GenerateServerDomainXunitTestHelper.GenerateCustomTests(logger, projectOptions, apiGroupName, handlerName);
+        var classContent = contentGeneratorClass.Generate();
+
+        // Write
+        var file = new FileInfo(
+            Helpers.DirectoryInfoHelper.GetCsFileNameForHandler(
+                projectOptions.PathForTestHandlers!,
+                apiGroupName,
+                classParameters.TypeName));
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectOptions.PathForTestGenerate!,
+            file,
+            ContentWriterArea.Test,
+            classContent,
+            overrideIfExist: false);
     }
 
     private void ScaffoldSrc()
