@@ -142,7 +142,7 @@ public static class GenerateHelper
             usingCodingRules,
             apiPath,
             domainPath);
-        var serverHostGenerator = new ServerHostGenerator(logger, apiOperationExtractor, hostProjectOptions);
+        var serverHostGenerator = new ServerHostGenerator(logger, hostProjectOptions);
         return serverHostGenerator.Generate();
     }
 

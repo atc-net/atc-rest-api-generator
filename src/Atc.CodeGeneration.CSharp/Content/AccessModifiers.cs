@@ -25,6 +25,9 @@ public enum AccessModifiers
     [Description("private")]
     Private,
 
+    [Description("private async")]
+    PrivateAsync,
+
     [Description("protected")]
     Protected,
 

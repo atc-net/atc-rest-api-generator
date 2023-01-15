@@ -65,7 +65,7 @@ public class Order
     /// </summary>
     public List<string> MyStringList { get; set; } = new List<string>();
 
-    [Range(10, 9.223372036854776E+18)]
+    [Range(10, 2147483647)]
     public long MyLong { get; set; }
 
     /// <summary>

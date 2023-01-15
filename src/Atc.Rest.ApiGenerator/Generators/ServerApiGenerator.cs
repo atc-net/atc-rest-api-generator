@@ -287,7 +287,7 @@ public class ServerApiGenerator
                 Helpers.DirectoryInfoHelper.GetCsFileNameForContract(
                     projectOptions.PathForContracts,
                     apiGroupName,
-                    NameConstants.ContractModels,
+                    ContentGeneratorConstants.Models,
                     modelName));
         }
 

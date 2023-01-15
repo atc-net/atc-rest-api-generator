@@ -29,18 +29,8 @@
 - [GenerateHelper](Atc.Rest.ApiGenerator.Helpers.md#generatehelper)
 - [GlobalUsingsHelper](Atc.Rest.ApiGenerator.Helpers.md#globalusingshelper)
 - [NugetPackageReferenceHelper](Atc.Rest.ApiGenerator.Helpers.md#nugetpackagereferencehelper)
-- [OpenApiDocumentSchemaModelNameHelper](Atc.Rest.ApiGenerator.Helpers.md#openapidocumentschemamodelnamehelper)
 - [SolutionAndProjectHelper](Atc.Rest.ApiGenerator.Helpers.md#solutionandprojecthelper)
-
-## [Atc.Rest.ApiGenerator.Helpers.XunitTest](Atc.Rest.ApiGenerator.Helpers.XunitTest.md)
-
-- [GenerateServerApiXunitTestEndpointHandlerStubHelper](Atc.Rest.ApiGenerator.Helpers.XunitTest.md#generateserverapixunittestendpointhandlerstubhelper)
-- [GenerateServerApiXunitTestEndpointTestHelper](Atc.Rest.ApiGenerator.Helpers.XunitTest.md#generateserverapixunittestendpointtesthelper)
-- [GenerateXunitTestHelper](Atc.Rest.ApiGenerator.Helpers.XunitTest.md#generatexunittesthelper)
-- [GenerateXunitTestPartsHelper](Atc.Rest.ApiGenerator.Helpers.XunitTest.md#generatexunittestpartshelper)
-- [ParameterCombinationHelper](Atc.Rest.ApiGenerator.Helpers.XunitTest.md#parametercombinationhelper)
-- [TrailingCharType](Atc.Rest.ApiGenerator.Helpers.XunitTest.md#trailingchartype)
-- [ValueTypeTestPropertiesHelper](Atc.Rest.ApiGenerator.Helpers.XunitTest.md#valuetypetestpropertieshelper)
+- [TrailingCharType](Atc.Rest.ApiGenerator.Helpers.md#trailingchartype)
 
 ## [Atc.Rest.ApiGenerator.Models](Atc.Rest.ApiGenerator.Models.md)
 
@@ -49,19 +39,9 @@
 - [ClientCSharpApiProjectOptions](Atc.Rest.ApiGenerator.Models.md#clientcsharpapiprojectoptions)
 - [DomainProjectOptions](Atc.Rest.ApiGenerator.Models.md#domainprojectoptions)
 - [DotnetNugetPackage](Atc.Rest.ApiGenerator.Models.md#dotnetnugetpackage)
-- [EndpointMethodMetadata](Atc.Rest.ApiGenerator.Models.md#endpointmethodmetadata)
 - [HostProjectOptions](Atc.Rest.ApiGenerator.Models.md#hostprojectoptions)
 - [ProjectType](Atc.Rest.ApiGenerator.Models.md#projecttype)
-
-## [Atc.Rest.ApiGenerator.SyntaxGenerators](Atc.Rest.ApiGenerator.SyntaxGenerators.md)
-
-- [ResponseTypeNameAndItemSchema](Atc.Rest.ApiGenerator.SyntaxGenerators.md#responsetypenameanditemschema)
-
-## [Atc.Rest.ApiGenerator.SyntaxGenerators.Api](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md)
-
-- [SyntaxGeneratorContractParameter](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorcontractparameter)
-- [SyntaxGeneratorContractParameters](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorcontractparameters)
-- [SyntaxGeneratorEndpointControllers](Atc.Rest.ApiGenerator.SyntaxGenerators.Api.md#syntaxgeneratorendpointcontrollers)
+- [ResponseTypeNameAndItemSchema](Atc.Rest.ApiGenerator.Models.md#responsetypenameanditemschema)
 
 ## [Microsoft.OpenApi.Models](Microsoft.OpenApi.Models.md)
 

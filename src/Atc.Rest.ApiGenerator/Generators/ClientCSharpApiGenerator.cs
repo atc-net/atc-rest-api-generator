@@ -203,13 +203,13 @@ public class ClientCSharpApiGenerator
 
         // Write
         FileInfo file;
-        if (modelName.EndsWith(NameConstants.Request, StringComparison.Ordinal))
+        if (modelName.EndsWith(ContentGeneratorConstants.Request, StringComparison.Ordinal))
         {
             file = new FileInfo(
                 Helpers.DirectoryInfoHelper.GetCsFileNameForContract(
                     apiProjectOptions.PathForContracts,
                     apiGroupName,
-                    NameConstants.ClientRequestParameters,
+                    ContentGeneratorConstants.RequestParameters,
                     modelName));
         }
         else
@@ -227,7 +227,7 @@ public class ClientCSharpApiGenerator
                     Helpers.DirectoryInfoHelper.GetCsFileNameForContract(
                         apiProjectOptions.PathForContracts,
                         apiGroupName,
-                        NameConstants.ContractModels,
+                        ContentGeneratorConstants.Models,
                         modelName));
             }
         }
@@ -291,7 +291,7 @@ public class ClientCSharpApiGenerator
             Helpers.DirectoryInfoHelper.GetCsFileNameForContract(
                 apiProjectOptions.PathForContracts,
                 apiGroupName,
-                NameConstants.ClientRequestParameters,
+                ContentGeneratorConstants.RequestParameters,
                 parameterName));
 
         var contentWriter = new ContentWriter(logger);

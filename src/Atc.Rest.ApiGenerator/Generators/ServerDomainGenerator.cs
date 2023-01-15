@@ -131,7 +131,7 @@ public class ServerDomainGenerator
         string apiGroupName,
         OpenApiOperation apiOperation)
     {
-        var fullNamespace = $"{projectOptions.ProjectName}.Tests.{ContentGeneratorConstants.Handlers}.{apiGroupName}";
+        var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Tests}.{ContentGeneratorConstants.Handlers}.{apiGroupName}";
 
         // Generate
         var classParameters = ContentGeneratorServerHandlerParametersFactory.CreateForCustomTest(

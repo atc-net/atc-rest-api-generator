@@ -1,3 +1,4 @@
+// ReSharper disable UnusedVariable
 namespace Atc.CodeGeneration.CSharp.Content.Factories;
 
 public static class AttributesParametersFactory
@@ -17,7 +18,6 @@ public static class AttributesParametersFactory
             new(name, content),
         };
 
-    [SuppressMessage("Minor Code Smell", "S1481:Unused local variables should be removed", Justification = "OK.")]
     public static IList<AttributeParameters> Create(
         IList<ValidationAttribute> validationAttributes)
     {
@@ -43,10 +43,10 @@ public static class AttributesParametersFactory
                 case RegularExpressionAttribute regularExpressionAttribute:
                     result.Add(new AttributeParameters("RegularExpression", $"\"{regularExpressionAttribute.Pattern}\""));
                     break;
-                case UriAttribute uriAttribute:
+                case UriAttribute:
                     result.Add(new AttributeParameters("Uri", Content: null));
                     break;
-                case EmailAddressAttribute emailAddressAttribute:
+                case EmailAddressAttribute:
                     result.Add(new AttributeParameters("EmailAddress", Content: null));
                     break;
             }

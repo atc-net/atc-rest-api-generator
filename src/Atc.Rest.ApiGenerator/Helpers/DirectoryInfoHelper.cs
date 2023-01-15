@@ -63,7 +63,7 @@ public static class DirectoryInfoHelper
         ArgumentNullException.ThrowIfNull(pathForContracts);
         ArgumentNullException.ThrowIfNull(modelName);
 
-        var a = Path.Combine(pathForContracts.FullName, NameConstants.ContractsEnumerationTypes);
+        var a = Path.Combine(pathForContracts.FullName, ContentGeneratorConstants.SpecialFolderEnumerationTypes);
         var b = Path.Combine(a, $"{modelName}.cs");
         return b;
     }

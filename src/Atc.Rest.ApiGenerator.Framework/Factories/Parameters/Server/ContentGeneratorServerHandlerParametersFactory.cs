@@ -8,7 +8,9 @@ public static class ContentGeneratorServerHandlerParametersFactory
         OpenApiOperation openApiOperation)
     {
         var operationName = openApiOperation.GetOperationName();
-        var hasParameters = openApiPath.HasParameters() || openApiOperation.HasParametersOrRequestBody();
+
+        var hasParameters = openApiPath.HasParameters() ||
+                            openApiOperation.HasParametersOrRequestBody();
 
         var methodParametersParameters = new List<ParameterBaseParameters>();
         if (hasParameters)
@@ -75,7 +77,7 @@ public static class ContentGeneratorServerHandlerParametersFactory
         {
             new(
                 DocumentationTags: null,
-                Attributes: AttributesParametersFactory.Create("Fact", "Skip=\"Change this to a real test\""),
+                Attributes: AttributesParametersFactory.Create("Fact", "Skip = \"Change this to a real test\""),
                 AccessModifier: AccessModifiers.Public,
                 ReturnTypeName: "void",
                 ReturnGenericTypeName: null,

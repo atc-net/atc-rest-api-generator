@@ -154,32 +154,9 @@ public sealed class ValidationAttributeExtractor : IValidationAttributeExtractor
     private static ValidationAttribute CreateRangeAttributeLong(
         OpenApiSchema schema)
     {
-        long min;
-        if (schema.Minimum.HasValue)
-        {
-            min = (long)schema.Minimum.Value;
-        }
-        else
-        {
-            min = int.MinValue;
-        }
-
-        long max;
-        if (schema.Maximum.HasValue)
-        {
-            max = (long)schema.Maximum.Value;
-        }
-        else
-        {
-            max = long.MaxValue;
-        }
-
-        if (max < min)
-        {
-            max = min;
-        }
-
-        return new RangeAttribute(min, max);
+        // Since RangeAttribute only supports int and decimal,
+        // - then downcast to int.
+        return CreateRangeAttributeInt(schema);
     }
 
     private static ValidationAttribute CreateRangeAttributeInt(
