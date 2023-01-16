@@ -446,7 +446,7 @@ public class ServerApiGenerator
                 projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
                 $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Endpoints}",
                 apiGroupName,
-                GetRouteByArea(apiGroupName),
+                GetRouteByApiGroupName(apiGroupName),
                 projectOptions.Document);
 
             var contentGenerator = new ContentGeneratorServerController(
@@ -488,13 +488,13 @@ public class ServerApiGenerator
         return result;
     }
 
-    private string GetRouteByArea(
+    private string GetRouteByApiGroupName(
         string apiGroupName)
     {
         var (key, _) = projectOptions.Document.Paths.FirstOrDefault(x => x.IsPathStartingSegmentName(apiGroupName));
         if (key is null)
         {
-            throw new NotSupportedException("Area was not found in any route.");
+            throw new NotSupportedException($"{nameof(apiGroupName)} was not found in any route.");
         }
 
         var routeSuffix = key

@@ -50,12 +50,12 @@
      - GetLatestVersionForPackageId(string packageId, CancellationToken cancellationToken = null)
 - [DirectoryInfoHelper](Atc.Rest.ApiGenerator.Helpers.md#directoryinfohelper)
   -  Static Methods
-     - GetCsFileNameForContract(DirectoryInfo pathForContracts, string area, string modelName)
-     - GetCsFileNameForContract(DirectoryInfo pathForContracts, string area, string subArea, string modelName)
+     - GetCsFileNameForContract(DirectoryInfo pathForContracts, string apiGroupName, string modelName)
+     - GetCsFileNameForContract(DirectoryInfo pathForContracts, string apiGroupName, string subArea, string modelName)
      - GetCsFileNameForContractEnumTypes(DirectoryInfo pathForContracts, string modelName)
      - GetCsFileNameForContractShared(DirectoryInfo pathForContracts, string modelName)
      - GetCsFileNameForEndpoints(DirectoryInfo pathForEndpoints, string modelName)
-     - GetCsFileNameForHandler(DirectoryInfo pathForHandlers, string area, string handlerName)
+     - GetCsFileNameForHandler(DirectoryInfo pathForHandlers, string apiGroupName, string handlerName)
      - GetProjectPath()
 - [GenerateAtcCodingRulesHelper](Atc.Rest.ApiGenerator.Helpers.md#generateatccodingruleshelper)
   -  Static Fields

@@ -96,7 +96,7 @@ public static class OpenApiDocumentExtensions
         serverUrl = serverUrl.Replace("http:/", "http://", StringComparison.OrdinalIgnoreCase);
         serverUrl = serverUrl.Replace("https:/", "https://", StringComparison.OrdinalIgnoreCase);
         if (!serverUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase) &&
-            !serverUrl.StartsWith("/", StringComparison.Ordinal))
+            !serverUrl.StartsWith('/'))
         {
             serverUrl = $"/{serverUrl}";
         }

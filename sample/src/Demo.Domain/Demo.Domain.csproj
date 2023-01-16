@@ -22,10 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="11.4.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Demo.Api.Generated\Demo.Api.Generated.csproj" />
   </ItemGroup>
 

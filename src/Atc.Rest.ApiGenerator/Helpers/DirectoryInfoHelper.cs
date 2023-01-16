@@ -27,30 +27,30 @@ public static class DirectoryInfoHelper
 
     public static string GetCsFileNameForContract(
         DirectoryInfo pathForContracts,
-        string area,
+        string apiGroupName,
         string modelName)
     {
         ArgumentNullException.ThrowIfNull(pathForContracts);
-        ArgumentNullException.ThrowIfNull(area);
+        ArgumentNullException.ThrowIfNull(apiGroupName);
         ArgumentNullException.ThrowIfNull(modelName);
 
-        var a = Path.Combine(pathForContracts.FullName, area);
+        var a = Path.Combine(pathForContracts.FullName, apiGroupName);
         var b = Path.Combine(a, $"{modelName}.cs");
         return b;
     }
 
     public static string GetCsFileNameForContract(
         DirectoryInfo pathForContracts,
-        string area,
+        string apiGroupName,
         string subArea,
         string modelName)
     {
         ArgumentNullException.ThrowIfNull(pathForContracts);
-        ArgumentNullException.ThrowIfNull(area);
+        ArgumentNullException.ThrowIfNull(apiGroupName);
         ArgumentNullException.ThrowIfNull(subArea);
         ArgumentNullException.ThrowIfNull(modelName);
 
-        var a = Path.Combine(pathForContracts.FullName, area);
+        var a = Path.Combine(pathForContracts.FullName, apiGroupName);
         var b = Path.Combine(a, subArea);
         var c = Path.Combine(b, $"{modelName}.cs");
         return c;
@@ -80,14 +80,14 @@ public static class DirectoryInfoHelper
 
     public static string GetCsFileNameForHandler(
         DirectoryInfo pathForHandlers,
-        string area,
+        string apiGroupName,
         string handlerName)
     {
         ArgumentNullException.ThrowIfNull(pathForHandlers);
-        ArgumentNullException.ThrowIfNull(area);
+        ArgumentNullException.ThrowIfNull(apiGroupName);
         ArgumentNullException.ThrowIfNull(handlerName);
 
-        var a = Path.Combine(pathForHandlers.FullName, area);
+        var a = Path.Combine(pathForHandlers.FullName, apiGroupName);
         var b = Path.Combine(a, $"{handlerName}.cs");
         return b;
     }

@@ -1,4 +1,4 @@
-global using System;
+﻿global using System;
 global using System.CodeDom.Compiler;
 global using System.Threading;
 global using System.Threading.Tasks;
@@ -12,5 +12,3 @@ global using Demo.Api.Generated.Contracts.Orders;
 global using Demo.Api.Generated.Contracts.RouteWithDash;
 global using Demo.Api.Generated.Contracts.Tasks;
 global using Demo.Api.Generated.Contracts.Users;
-
-global using FluentValidation;

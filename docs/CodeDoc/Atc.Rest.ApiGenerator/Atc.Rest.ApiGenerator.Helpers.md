@@ -36,11 +36,11 @@
 
 #### GetCsFileNameForContract
 >```csharp
->string GetCsFileNameForContract(DirectoryInfo pathForContracts, string area, string modelName)
+>string GetCsFileNameForContract(DirectoryInfo pathForContracts, string apiGroupName, string modelName)
 >```
 #### GetCsFileNameForContract
 >```csharp
->string GetCsFileNameForContract(DirectoryInfo pathForContracts, string area, string subArea, string modelName)
+>string GetCsFileNameForContract(DirectoryInfo pathForContracts, string apiGroupName, string subArea, string modelName)
 >```
 #### GetCsFileNameForContractEnumTypes
 >```csharp
@@ -56,7 +56,7 @@
 >```
 #### GetCsFileNameForHandler
 >```csharp
->string GetCsFileNameForHandler(DirectoryInfo pathForHandlers, string area, string handlerName)
+>string GetCsFileNameForHandler(DirectoryInfo pathForHandlers, string apiGroupName, string handlerName)
 >```
 #### GetProjectPath
 >```csharp
