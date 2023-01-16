@@ -48,9 +48,6 @@ public class ServerHostGenerator
 
             GenerateTestEndpoints(projectOptions.Document);
 
-            // TODO: Remove Old way:
-            ////GenerateTestEndpoints();
-
             GenerateTestGlobalUsings();
         }
 
@@ -481,29 +478,27 @@ public class ServerHostGenerator
     {
         var requiredUsings = new List<string>
         {
+            "System",
             "System.CodeDom.Compiler",
             "System.Collections.Generic",
             "System.IO",
-            "System.Net",
             "System.Net.Http",
             "System.Text",
             "System.Text.Json",
             "System.Text.Json.Serialization",
-            "Microsoft.AspNetCore.Http",
-            "Microsoft.Extensions.Configuration",
-            "Xunit",
             "System.Reflection",
             "System.Threading",
             "System.Threading.Tasks",
-            "System",
+            "Microsoft.AspNetCore.Http",
+            "Xunit",
+            "AutoFixture",
+            "Atc.Rest.Results",
             "Atc.Rest.Options",
-            "FluentAssertions",
             "Microsoft.AspNetCore.Hosting",
             "Microsoft.AspNetCore.Mvc.Testing",
             "Microsoft.AspNetCore.TestHost",
             "Microsoft.Extensions.Configuration",
             "Microsoft.Extensions.DependencyInjection",
-            "Atc.Rest.Results",
             "Atc.XUnit",
             $"{projectOptions.ProjectName}.Generated",
             $"{projectOptions.ProjectName}.Generated.Contracts",
