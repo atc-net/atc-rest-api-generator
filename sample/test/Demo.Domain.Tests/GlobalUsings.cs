@@ -1,4 +1,4 @@
-global using System;
+﻿global using System;
 global using System.CodeDom.Compiler;
 
 global using Demo.Domain.Handlers.Accounts;
