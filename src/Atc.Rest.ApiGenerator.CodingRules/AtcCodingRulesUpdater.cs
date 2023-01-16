@@ -1,23 +1,29 @@
 // ReSharper disable SuggestBaseTypeForParameter
-// ReSharper disable InvertIf
-namespace Atc.Rest.ApiGenerator.Helpers;
+namespace Atc.Rest.ApiGenerator.CodingRules;
 
-public static class GenerateAtcCodingRulesHelper
+/// <summary>
+/// The main AtcCodingRulesUpdater - Handles call execution.
+/// </summary>
+public sealed partial class AtcCodingRulesUpdater : IAtcCodingRulesUpdater
 {
-    private const string RawCodingRulesDistribution = "https://raw.githubusercontent.com/atc-net/atc-coding-rules/main/distribution/dotnet6";
+    public const string GitRawContentUrl = "https://raw.githubusercontent.com";
+    public const string GitHubPrefix = "[silver][[GitHub]][/] ";
+
+    private const string RawCodingRulesDistributionUrl = "https://raw.githubusercontent.com/atc-net/atc-coding-rules/main/distribution/dotnet6";
     public const string FileNameEditorConfig = ".editorconfig";
     public const string FileNameDirectoryBuildProps = "Directory.Build.props";
 
-    public static bool Generate(
-        ILogger logger,
+    public AtcCodingRulesUpdater(
+        ILogger<AtcCodingRulesUpdater> logger)
+    {
+        this.logger = logger;
+    }
+
+    public bool Scaffold(
         string outputSlnPath,
         DirectoryInfo outputSrcPath,
         DirectoryInfo? outputTestPath)
     {
-        ArgumentNullException.ThrowIfNull(logger);
-        ArgumentNullException.ThrowIfNull(outputSlnPath);
-        ArgumentNullException.ThrowIfNull(outputSrcPath);
-
         var rootPath = outputSlnPath.EndsWith(".sln", StringComparison.OrdinalIgnoreCase)
             ? new FileInfo(outputSlnPath).Directory
             : new DirectoryInfo(outputSlnPath);
@@ -27,12 +33,14 @@ public static class GenerateAtcCodingRulesHelper
             throw new IOException("Invalid outputSlnPath");
         }
 
-        if (IsFirstTime(rootPath))
+        if (!IsFirstTime(rootPath))
         {
-            HandleCodingRulesFiles(logger, outputSrcPath, outputTestPath, rootPath);
-            HandleEditorConfigFiles(logger, outputSrcPath, outputTestPath, rootPath);
-            HandleDirectoryBuildPropsFiles(logger, outputSrcPath, outputTestPath, rootPath);
+            return true;
         }
+
+        HandleCodingRulesFiles(outputSrcPath, outputTestPath, rootPath);
+        HandleEditorConfigFiles(outputSrcPath, outputTestPath, rootPath);
+        HandleDirectoryBuildPropsFiles(outputSrcPath, outputTestPath, rootPath);
 
         return true;
     }
@@ -44,68 +52,64 @@ public static class GenerateAtcCodingRulesHelper
         return !file.Exists;
     }
 
-    private static void HandleCodingRulesFiles(
-        ILogger logger,
+    private void HandleCodingRulesFiles(
         DirectoryInfo outputSrcPath,
         DirectoryInfo? outputTestPath,
         DirectoryInfo rootPath)
     {
-        logger.LogInformation($"{AppEmojisConstants.AreaCodingRules} Working on Coding Rules files");
-        HandleAtcCodingRulesJson(logger, rootPath, outputSrcPath, outputTestPath);
-        HandleAtcCodingRulesPowerShell(logger, rootPath);
+        LogWorkingOnCodingRules($"{CodingRulesConstants.AreaCodingRules} ");
+        HandleAtcCodingRulesJson(rootPath, outputSrcPath, outputTestPath);
+        HandleAtcCodingRulesPowerShell(rootPath);
     }
 
-    private static void HandleEditorConfigFiles(
-        ILogger logger,
+    private void HandleEditorConfigFiles(
         DirectoryInfo outputSrcPath,
         DirectoryInfo? outputTestPath,
         DirectoryInfo rootPath)
     {
-        logger.LogInformation($"{AppEmojisConstants.AreaEditorConfig} Working on EditorConfig files");
-        HandleFileEditorConfig(logger, rootPath, "root", string.Empty);
+        LogWorkingOnEditorConfigFiles($"{CodingRulesConstants.AreaEditorConfig} ");
+        HandleFileEditorConfig(rootPath, "root", string.Empty);
 
         if (rootPath.FullName != outputSrcPath.FullName)
         {
-            HandleFileEditorConfig(logger, outputSrcPath, "src", "src");
+            HandleFileEditorConfig(outputSrcPath, "src", "src");
         }
 
         if (outputTestPath is not null &&
             rootPath.FullName != outputTestPath.FullName)
         {
-            HandleFileEditorConfig(logger, outputTestPath, "test", "test");
+            HandleFileEditorConfig(outputTestPath, "test", "test");
         }
     }
 
-    private static void HandleDirectoryBuildPropsFiles(
-        ILogger logger,
+    private void HandleDirectoryBuildPropsFiles(
         DirectoryInfo outputSrcPath,
         DirectoryInfo? outputTestPath,
         DirectoryInfo rootPath)
     {
-        logger.LogInformation($"{AppEmojisConstants.AreaDirectoryBuildProps} Working on Directory.Build.props files");
-
-        HandleFileDirectoryBuildProps(logger, rootPath, "root", string.Empty);
+        LogWorkingOnDirectoryBuildPropsFiles($"{CodingRulesConstants.AreaDirectoryBuildProps} ");
+        HandleFileDirectoryBuildProps(rootPath, "root", string.Empty);
 
         if (rootPath.FullName != outputSrcPath.FullName)
         {
-            HandleFileDirectoryBuildProps(logger, outputSrcPath, "src", "src");
+            HandleFileDirectoryBuildProps(outputSrcPath, "src", "src");
         }
 
         if (outputTestPath is not null &&
             rootPath.FullName != outputTestPath.FullName)
         {
-            HandleFileDirectoryBuildProps(logger, outputTestPath, "test", "test");
+            HandleFileDirectoryBuildProps(outputTestPath, "test", "test");
         }
     }
 
-    private static void HandleAtcCodingRulesJson(
-    ILogger logger,
-    DirectoryInfo path,
-    DirectoryInfo outputSrcPath,
-    DirectoryInfo? outputTestPath)
+    private void HandleAtcCodingRulesJson(
+        DirectoryInfo path,
+        DirectoryInfo outputSrcPath,
+        DirectoryInfo? outputTestPath)
     {
         const string file = "atc-coding-rules-updater.json";
         var filePath = Path.Combine(path.FullName, file);
+
         try
         {
             var sb = new StringBuilder();
@@ -131,20 +135,20 @@ public static class GenerateAtcCodingRulesHelper
             sb.AppendLine("  }");
             sb.AppendLine("}");
             File.WriteAllText(filePath, sb.ToString());
-            logger.LogDebug($"{EmojisConstants.FileCreated}   root: {file} created");
+            LogFileCreated($"{CodingRulesConstants.LogFileCreated}   ", "root", file);
         }
         catch (IOException ex)
         {
-            logger.LogError($"{EmojisConstants.Error}   root: {file} skipped - {ex.Message}");
+            LogFileSkipped($"{CodingRulesConstants.LogError}   ", "root", file, ex.GetLastInnerMessage());
         }
     }
 
-    private static void HandleAtcCodingRulesPowerShell(
-        ILogger logger,
+    private void HandleAtcCodingRulesPowerShell(
         DirectoryInfo path)
     {
         const string file = "atc-coding-rules-updater.ps1";
         var filePath = Path.Combine(path.FullName, file);
+
         try
         {
             var sb = new StringBuilder();
@@ -160,16 +164,15 @@ public static class GenerateAtcCodingRulesHelper
             sb.AppendLine("  -v true");
             File.WriteAllText(file, sb.ToString());
             File.WriteAllText(filePath, sb.ToString());
-            logger.LogDebug($"{EmojisConstants.FileCreated}   root: {file} created");
+            logger.LogDebug($"{CodingRulesConstants.LogFileCreated}   root: {file} created");
         }
         catch (IOException ex)
         {
-            logger.LogError($"{EmojisConstants.Error}   root: {file} skipped - {ex.Message}");
+            logger.LogError($"{CodingRulesConstants.LogError}   root: {file} skipped - {ex.Message}");
         }
     }
 
-    private static void HandleFileEditorConfig(
-        ILogger logger,
+    private void HandleFileEditorConfig(
         DirectoryInfo path,
         string area,
         string urlPart)
@@ -177,8 +180,8 @@ public static class GenerateAtcCodingRulesHelper
         var file = new FileInfo(Path.Combine(path.FullName, FileNameEditorConfig));
 
         var rawGitUrl = string.IsNullOrEmpty(urlPart)
-            ? $"{RawCodingRulesDistribution}/{FileNameEditorConfig}"
-            : $"{RawCodingRulesDistribution}/{urlPart}/{FileNameEditorConfig}";
+            ? $"{RawCodingRulesDistributionUrl}/{FileNameEditorConfig}"
+            : $"{RawCodingRulesDistributionUrl}/{urlPart}/{FileNameEditorConfig}";
 
         try
         {
@@ -187,21 +190,20 @@ public static class GenerateAtcCodingRulesHelper
                 Directory.CreateDirectory(file.Directory.FullName);
             }
 
-            var displayName = rawGitUrl.Replace(Constants.GitRawContentUrl, Constants.GitHubPrefix, StringComparison.Ordinal);
-            var rawEditorConfig = HttpClientHelper.GetAsString(logger, rawGitUrl, displayName).TrimEndForEmptyLines();
+            var displayName = rawGitUrl.Replace(GitRawContentUrl, GitHubPrefix, StringComparison.Ordinal);
+            var rawEditorConfig = HttpClientHelper.GetAsString(rawGitUrl, displayName).TrimEndForEmptyLines();
 
             rawEditorConfig += $"{Environment.NewLine}dotnet_diagnostic.IDE0058.severity = none           # Have to override this for now - to get smoke-test to run";
             File.WriteAllText(file.FullName, rawEditorConfig);
-            logger.LogDebug($"{EmojisConstants.FileCreated}   {area}: {FileNameEditorConfig} created");
+            LogFileCreated($"{CodingRulesConstants.LogFileCreated}   ", area, FileNameEditorConfig);
         }
         catch (IOException ex)
         {
-            logger.LogError($"{EmojisConstants.Error}   {area}: {FileNameEditorConfig} skipped - {ex.Message}");
+            LogFileSkipped($"{CodingRulesConstants.LogError}   ", area, FileNameEditorConfig, ex.GetLastInnerMessage());
         }
     }
 
-    private static void HandleFileDirectoryBuildProps(
-        ILogger logger,
+    private void HandleFileDirectoryBuildProps(
         DirectoryInfo path,
         string area,
         string urlPart)
@@ -209,8 +211,8 @@ public static class GenerateAtcCodingRulesHelper
         var file = new FileInfo(Path.Combine(path.FullName, FileNameDirectoryBuildProps));
 
         var rawGitUrl = string.IsNullOrEmpty(urlPart)
-            ? $"{RawCodingRulesDistribution}/{FileNameDirectoryBuildProps}"
-            : $"{RawCodingRulesDistribution}/{urlPart}/{FileNameDirectoryBuildProps}";
+            ? $"{RawCodingRulesDistributionUrl}/{FileNameDirectoryBuildProps}"
+            : $"{RawCodingRulesDistributionUrl}/{urlPart}/{FileNameDirectoryBuildProps}";
 
         try
         {
@@ -219,14 +221,14 @@ public static class GenerateAtcCodingRulesHelper
                 Directory.CreateDirectory(file.Directory.FullName);
             }
 
-            var displayName = rawGitUrl.Replace(Constants.GitRawContentUrl, Constants.GitHubPrefix, StringComparison.Ordinal);
-            var rawDirectoryBuildProps = HttpClientHelper.GetAsString(logger, rawGitUrl, displayName).TrimEndForEmptyLines();
+            var displayName = rawGitUrl.Replace(GitRawContentUrl, GitHubPrefix, StringComparison.Ordinal);
+            var rawDirectoryBuildProps = HttpClientHelper.GetAsString(rawGitUrl, displayName).TrimEndForEmptyLines();
             File.WriteAllText(file.FullName, rawDirectoryBuildProps);
-            logger.LogDebug($"{EmojisConstants.FileCreated}   {area}: {FileNameDirectoryBuildProps} created");
+            LogFileCreated($"{CodingRulesConstants.LogFileCreated}   ", area, FileNameDirectoryBuildProps);
         }
         catch (IOException ex)
         {
-            logger.LogError($"{EmojisConstants.Error}   {area}: {FileNameDirectoryBuildProps} skipped - {ex.Message}");
+            LogFileSkipped($"{CodingRulesConstants.LogError}   ", area, FileNameDirectoryBuildProps, ex.GetLastInnerMessage());
         }
     }
 }

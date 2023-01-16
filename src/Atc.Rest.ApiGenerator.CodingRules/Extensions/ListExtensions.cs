@@ -1,11 +1,9 @@
-namespace Atc.Rest.ApiGenerator.Extensions;
-
+namespace Atc.Rest.ApiGenerator.CodingRules.Extensions;
 public static class ListExtensions
 {
-    public static void TrimEndForEmptyValues(this IList<string> values)
+    public static void TrimEndForEmptyValues(
+        this IList<string> values)
     {
-        ArgumentNullException.ThrowIfNull(values);
-
         var tryAgain = true;
         while (tryAgain)
         {

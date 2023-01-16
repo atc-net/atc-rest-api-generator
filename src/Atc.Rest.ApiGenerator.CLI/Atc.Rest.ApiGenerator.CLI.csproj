@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Atc.Rest.ApiGenerator.CodingRules\Atc.Rest.ApiGenerator.CodingRules.csproj" />
     <ProjectReference Include="..\Atc.Rest.ApiGenerator\Atc.Rest.ApiGenerator.csproj" />
   </ItemGroup>
 

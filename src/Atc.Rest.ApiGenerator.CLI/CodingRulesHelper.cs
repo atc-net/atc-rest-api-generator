@@ -25,7 +25,7 @@ public static class CodingRulesHelper
     private static bool HasBuildPropsWithCodingRulesEnabled(
         string rootPath)
     {
-        var rootDirectoryBuildProps = new FileInfo(Path.Combine(rootPath, GenerateAtcCodingRulesHelper.FileNameDirectoryBuildProps));
+        var rootDirectoryBuildProps = new FileInfo(Path.Combine(rootPath, AtcCodingRulesUpdater.FileNameDirectoryBuildProps));
         if (!rootDirectoryBuildProps.Exists)
         {
             return false;

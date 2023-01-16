@@ -28,6 +28,7 @@ public static class Program
         serviceCollection.AddSingleton<IApiOperationExtractor, ApiOperationExtractor>();
         serviceCollection.AddSingleton<INugetPackageReferenceProvider, NugetPackageReferenceProvider>();
         serviceCollection.AddSingleton<IAtcApiNugetClient, AtcApiNugetClient>();
+        serviceCollection.AddSingleton<IAtcCodingRulesUpdater, AtcCodingRulesUpdater>();
 
         var app = CommandAppFactory.CreateWithRootCommand<RootCommand>(serviceCollection);
         app.ConfigureCommands();

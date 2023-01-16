@@ -14,6 +14,7 @@ global using Atc.Helpers;
 global using Atc.Rest.ApiGenerator.CLI.Commands;
 global using Atc.Rest.ApiGenerator.CLI.Commands.Settings;
 global using Atc.Rest.ApiGenerator.CLI.Extensions;
+global using Atc.Rest.ApiGenerator.CodingRules;
 global using Atc.Rest.ApiGenerator.Framework.Contracts.Options;
 global using Atc.Rest.ApiGenerator.Framework.Readers;
 global using Atc.Rest.ApiGenerator.Helpers;

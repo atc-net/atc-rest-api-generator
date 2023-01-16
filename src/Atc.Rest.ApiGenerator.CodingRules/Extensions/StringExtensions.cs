@@ -1,14 +1,8 @@
-// ReSharper disable once CheckNamespace
-namespace System;
+namespace Atc.Rest.ApiGenerator.CodingRules.Extensions;
 
-internal static class StringExtensions
+public static class StringExtensions
 {
     private static readonly string[] LineBreaks = { "\r\n", "\r", "\n" };
-
-    public static string EnsureNewlineAfterMethod(
-        this string value,
-        string methodName)
-        => value.Replace(methodName, methodName + Environment.NewLine, StringComparison.Ordinal);
 
     public static string TrimEndForEmptyLines(
         this string value)
