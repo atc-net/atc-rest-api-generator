@@ -112,6 +112,7 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
     private static bool EndsWithWellKnownSystemTypeName(string value)
         => value.EndsWith("Task", StringComparison.Ordinal) ||
            value.EndsWith("Tasks", StringComparison.Ordinal) ||
+           value.EndsWith("Endpoint", StringComparison.Ordinal) ||
            value.EndsWith("EventArgs", StringComparison.Ordinal);
 
     [SuppressMessage("Performance", "CA1854:Prefer the 'IDictionary.TryGetValue(TKey, out TValue)' method", Justification = "OK.")]
