@@ -26,6 +26,8 @@ public static class Program
         serviceCollection.AddSingleton<ILogItemFactory, LogItemFactory>();
         serviceCollection.AddSingleton<IOpenApiDocumentValidator, OpenApiDocumentValidator>();
         serviceCollection.AddSingleton<IApiOperationExtractor, ApiOperationExtractor>();
+        serviceCollection.AddSingleton<INugetPackageReferenceProvider, NugetPackageReferenceProvider>();
+        serviceCollection.AddSingleton<IAtcApiNugetClient, AtcApiNugetClient>();
 
         var app = CommandAppFactory.CreateWithRootCommand<RootCommand>(serviceCollection);
         app.ConfigureCommands();

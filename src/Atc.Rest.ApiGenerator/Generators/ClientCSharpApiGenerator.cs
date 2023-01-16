@@ -6,6 +6,7 @@ public class ClientCSharpApiGenerator
 {
     private readonly ILogger logger;
     private readonly IApiOperationExtractor apiOperationExtractor;
+    private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
     private readonly ClientCSharpApiProjectOptions projectOptions;
     private readonly ApiProjectOptions apiProjectOptions;
 
@@ -15,10 +16,12 @@ public class ClientCSharpApiGenerator
     public ClientCSharpApiGenerator(
         ILogger logger,
         IApiOperationExtractor apiOperationExtractor,
+        INugetPackageReferenceProvider nugetPackageReferenceProvider,
         ClientCSharpApiProjectOptions projectOptions)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.apiOperationExtractor = apiOperationExtractor ?? throw new ArgumentNullException(nameof(apiOperationExtractor));
+        this.nugetPackageReferenceProvider = nugetPackageReferenceProvider ?? throw new ArgumentNullException(nameof(nugetPackageReferenceProvider));
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
 
         apiProjectOptions = new ApiProjectOptions(
@@ -95,6 +98,12 @@ public class ClientCSharpApiGenerator
         }
         else
         {
+            IList<(string PackageId, string PackageVersion, string? SubElements)>? packageReferencesBaseLineForApiClientProject = null;
+            TaskHelper.RunSync(async () =>
+            {
+                packageReferencesBaseLineForApiClientProject = await nugetPackageReferenceProvider.GetPackageReferencesBaseLineForApiClientProject();
+            });
+
             SolutionAndProjectHelper.ScaffoldProjFile(
                 logger,
                 projectOptions.ProjectSrcCsProj,
@@ -105,7 +114,7 @@ public class ClientCSharpApiGenerator
                 projectName: projectOptions.ProjectName,
                 "net6.0",
                 frameworkReferences: null,
-                packageReferences: NugetPackageReferenceHelper.CreateForClientApiProject(),
+                packageReferences: packageReferencesBaseLineForApiClientProject,
                 projectReferences: null,
                 includeApiSpecification: false,
                 usingCodingRules: projectOptions.UsingCodingRules);

@@ -17,9 +17,11 @@ global using Atc.Rest.ApiGenerator.CLI.Extensions;
 global using Atc.Rest.ApiGenerator.Framework.Contracts.Options;
 global using Atc.Rest.ApiGenerator.Framework.Readers;
 global using Atc.Rest.ApiGenerator.Helpers;
+global using Atc.Rest.ApiGenerator.Nuget.Clients;
 global using Atc.Rest.ApiGenerator.OpenApi.Extractors;
 global using Atc.Rest.ApiGenerator.OpenApi.Factories;
 global using Atc.Rest.ApiGenerator.OpenApi.Validators;
+global using Atc.Rest.ApiGenerator.Projects;
 
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;

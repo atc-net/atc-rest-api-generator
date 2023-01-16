@@ -3,14 +3,16 @@ namespace Atc.Rest.ApiGenerator.CLI.Commands;
 public class GenerateServerDomainCommand : AsyncCommand<ServerDomainCommandSettings>
 {
     private readonly ILogger<GenerateServerDomainCommand> logger;
+    private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
     private readonly IOpenApiDocumentValidator openApiDocumentValidator;
 
     public GenerateServerDomainCommand(
         ILogger<GenerateServerDomainCommand> logger,
-        IApiOperationExtractor apiOperationExtractor,
+        INugetPackageReferenceProvider nugetPackageReferenceProvider,
         IOpenApiDocumentValidator openApiDocumentValidator)
     {
         this.logger = logger;
+        this.nugetPackageReferenceProvider = nugetPackageReferenceProvider;
         this.openApiDocumentValidator = openApiDocumentValidator;
     }
 
@@ -68,6 +70,7 @@ public class GenerateServerDomainCommand : AsyncCommand<ServerDomainCommandSetti
 
             if (!GenerateHelper.GenerateServerDomain(
                     logger,
+                    nugetPackageReferenceProvider,
                     settings.ProjectPrefixName,
                     new DirectoryInfo(settings.OutputPath),
                     outputTestPath,

@@ -26,7 +26,18 @@ public class ClientCSharpApiProjectOptions
         DocumentFile = openApiDocumentFile ?? throw new ArgumentNullException(nameof(openApiDocumentFile));
 
         ApiGeneratorName = "ApiGenerator";
-        ApiGeneratorVersion = GenerateHelper.GetAtcApiGeneratorVersion();
+
+        // TODO: Cleanup this temp. re-write hack
+        Version? apiGeneratorVersion = default;
+        TaskHelper.RunSync(async () =>
+        {
+            apiGeneratorVersion = await new NugetPackageReferenceProvider(
+                    new AtcApiNugetClient(NullLogger<AtcApiNugetClient>.Instance))
+                .GetAtcApiGeneratorVersion();
+        });
+
+        ApiGeneratorVersion = apiGeneratorVersion!;
+
         ApiOptions = apiOptions;
         ProjectName = projectPrefixName
             .Replace(" ", ".", StringComparison.Ordinal)

@@ -6,6 +6,7 @@ namespace Atc.Rest.ApiGenerator.Generators;
 public class ServerHostGenerator
 {
     private readonly ILogger logger;
+    private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
     private readonly HostProjectOptions projectOptions;
 
     private readonly string codeGeneratorContentHeader;
@@ -13,9 +14,11 @@ public class ServerHostGenerator
 
     public ServerHostGenerator(
         ILogger logger,
+        INugetPackageReferenceProvider nugetPackageReferenceProvider,
         HostProjectOptions projectOptions)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        this.nugetPackageReferenceProvider = nugetPackageReferenceProvider ?? throw new ArgumentNullException(nameof(nugetPackageReferenceProvider));
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
 
         // TODO: Optimize codeGeneratorContentHeader & codeGeneratorAttribute
@@ -88,6 +91,12 @@ public class ServerHostGenerator
                 projectReferences.Add(projectOptions.DomainProjectSrcCsProj);
             }
 
+            IList<(string PackageId, string PackageVersion, string? SubElements)>? packageReferencesBaseLineForHostProject = null;
+            TaskHelper.RunSync(async () =>
+            {
+                packageReferencesBaseLineForHostProject = await nugetPackageReferenceProvider.GetPackageReferencesBaseLineForHostProject(projectOptions.UseRestExtended);
+            });
+
             SolutionAndProjectHelper.ScaffoldProjFile(
                 logger,
                 projectOptions.ProjectSrcCsProj,
@@ -98,7 +107,7 @@ public class ServerHostGenerator
                 projectOptions.ProjectName,
                 "net6.0",
                 frameworkReferences: null,
-                NugetPackageReferenceHelper.CreateForHostProject(projectOptions.UseRestExtended),
+                packageReferencesBaseLineForHostProject,
                 projectReferences,
                 includeApiSpecification: false,
                 usingCodingRules: projectOptions.UsingCodingRules);
@@ -202,7 +211,7 @@ public class ServerHostGenerator
                 $"{projectOptions.ProjectName}.Tests",
                 "net6.0",
                 frameworkReferences: null,
-                NugetPackageReferenceHelper.CreateForTestProject(useMvc: true),
+                nugetPackageReferenceProvider.GetPackageReferencesBaseLineForTestProject(useMvc: true),
                 projectReferences,
                 includeApiSpecification: true,
                 usingCodingRules: projectOptions.UsingCodingRules);

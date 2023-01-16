@@ -1,8 +1,5 @@
-global using System.Collections.Concurrent;
-global using System.Diagnostics;
 global using System.Diagnostics.CodeAnalysis;
 global using System.Net;
-global using System.Runtime.CompilerServices;
 global using System.Text;
 
 global using Atc.CodeDocumentation.CodeComment;
@@ -19,7 +16,6 @@ global using Atc.Rest.ApiGenerator.Framework.Contracts.ContentGeneratorsParamete
 global using Atc.Rest.ApiGenerator.Framework.Contracts.Extensions;
 global using Atc.Rest.ApiGenerator.Framework.Contracts.Models;
 global using Atc.Rest.ApiGenerator.Framework.Contracts.Options;
-global using Atc.Rest.ApiGenerator.Framework.Contracts.Resolver;
 global using Atc.Rest.ApiGenerator.Framework.Factories.Parameters.Client;
 global using Atc.Rest.ApiGenerator.Framework.Factories.Parameters.Server;
 global using Atc.Rest.ApiGenerator.Framework.Factories.Parameters.ServerClient;
@@ -30,10 +26,12 @@ global using Atc.Rest.ApiGenerator.Framework.Writers;
 global using Atc.Rest.ApiGenerator.Generators;
 global using Atc.Rest.ApiGenerator.Helpers;
 global using Atc.Rest.ApiGenerator.Models;
+global using Atc.Rest.ApiGenerator.Nuget.Clients;
 global using Atc.Rest.ApiGenerator.OpenApi;
 global using Atc.Rest.ApiGenerator.OpenApi.Extensions;
 global using Atc.Rest.ApiGenerator.OpenApi.Extractors;
 global using Atc.Rest.ApiGenerator.OpenApi.Models;
+global using Atc.Rest.ApiGenerator.Projects;
 
 global using Microsoft.Extensions.Logging;
 global using Microsoft.Extensions.Logging.Abstractions;

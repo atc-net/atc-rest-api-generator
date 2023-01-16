@@ -8,6 +8,7 @@ namespace Atc.Rest.ApiGenerator.Generators;
 public class ServerDomainGenerator
 {
     private readonly ILogger logger;
+    private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
     private readonly DomainProjectOptions projectOptions;
 
     private readonly string codeGeneratorContentHeader;
@@ -15,9 +16,11 @@ public class ServerDomainGenerator
 
     public ServerDomainGenerator(
         ILogger logger,
+        INugetPackageReferenceProvider nugetPackageReferenceProvider,
         DomainProjectOptions projectOptions)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        this.nugetPackageReferenceProvider = nugetPackageReferenceProvider ?? throw new ArgumentNullException(nameof(nugetPackageReferenceProvider));
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
 
         // TODO: Optimize codeGeneratorContentHeader & codeGeneratorAttribute
@@ -255,7 +258,7 @@ public class ServerDomainGenerator
                 $"{projectOptions.ProjectName}.Tests",
                 "net6.0",
                 frameworkReferences: null,
-                NugetPackageReferenceHelper.CreateForTestProject(false),
+                nugetPackageReferenceProvider.GetPackageReferencesBaseLineForTestProject(useMvc: false),
                 projectReferences,
                 includeApiSpecification: true,
                 usingCodingRules: projectOptions.UsingCodingRules);

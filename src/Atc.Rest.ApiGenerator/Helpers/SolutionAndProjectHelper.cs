@@ -19,7 +19,7 @@ public static class SolutionAndProjectHelper
         string projectName,
         string targetFramework,
         IList<string>? frameworkReferences,
-        IList<Tuple<string, string, string?>>? packageReferences,
+        IList<(string, string, string?)>? packageReferences,
         IList<FileInfo>? projectReferences,
         bool includeApiSpecification,
         bool usingCodingRules)
@@ -293,7 +293,7 @@ public static class SolutionAndProjectHelper
                 StringComparison.Ordinal);
         }
 
-        var packageReferencesThatNeedsToBeUpdated = GetPackageReferencesThatNeedsToBeUpdated(logger, fileContent);
+        var packageReferencesThatNeedsToBeUpdated = GetPackageReferencesThatNeedsToBeUpdated(fileContent);
         if (!packageReferencesThatNeedsToBeUpdated.Any())
         {
             return false;
@@ -571,7 +571,6 @@ public static class SolutionAndProjectHelper
     }
 
     private static List<DotnetNugetPackage> GetPackageReferencesThatNeedsToBeUpdated(
-        ILogger logger,
         string fileContent)
     {
         var result = new List<DotnetNugetPackage>();
@@ -583,16 +582,22 @@ public static class SolutionAndProjectHelper
             {
                 if (Version.TryParse(item.Version, out var version))
                 {
-                    var latestVersion = AtcApiNugetClientHelper.GetLatestVersionForPackageId(logger, item.PackageId, CancellationToken.None);
+                    // TODO: Cleanup this temp re-write hack!
+                    var atcApiNugetClient = new AtcApiNugetClient(NullLogger<AtcApiNugetClient>.Instance);
 
-                    if (latestVersion is not null &&
-                        latestVersion.IsNewerThan(version, withinMinorReleaseOnly: true))
+                    Version? latestVersion = default;
+                    TaskHelper.RunSync(async () =>
+                    {
+                        latestVersion = await atcApiNugetClient.RetrieveLatestVersionForPackageId(item.PackageId, CancellationToken.None);
+                    });
+
+                    if (latestVersion!.IsNewerThan(version, withinMinorReleaseOnly: true))
                     {
                         result.Add(
                             new DotnetNugetPackage(
                                 item.PackageId,
                                 version,
-                                latestVersion));
+                                latestVersion!));
                     }
                 }
             }

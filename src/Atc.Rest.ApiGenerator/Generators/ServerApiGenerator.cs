@@ -9,6 +9,7 @@ public class ServerApiGenerator
 {
     private readonly ILogger logger;
     private readonly IApiOperationExtractor apiOperationExtractor;
+    private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
     private readonly ApiProjectOptions projectOptions;
 
     private readonly string codeGeneratorContentHeader;
@@ -17,10 +18,12 @@ public class ServerApiGenerator
     public ServerApiGenerator(
         ILogger logger,
         IApiOperationExtractor apiOperationExtractor,
+        INugetPackageReferenceProvider nugetPackageReferenceProvider,
         ApiProjectOptions projectOptions)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.apiOperationExtractor = apiOperationExtractor ?? throw new ArgumentNullException(nameof(apiOperationExtractor));
+        this.nugetPackageReferenceProvider = nugetPackageReferenceProvider ?? throw new ArgumentNullException(nameof(nugetPackageReferenceProvider));
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
 
         // TODO: Optimize codeGeneratorContentHeader & codeGeneratorAttribute
@@ -78,7 +81,11 @@ public class ServerApiGenerator
 
         var lines = File.ReadLines(apiGeneratedFile).ToList();
 
-        var newVersion = GenerateHelper.GetAtcApiGeneratorVersion();
+        Version? newVersion = null;
+        TaskHelper.RunSync(async () =>
+        {
+            newVersion = await nugetPackageReferenceProvider.GetAtcApiGeneratorVersion();
+        });
 
         foreach (var line in lines)
         {
@@ -137,6 +144,12 @@ public class ServerApiGenerator
         }
         else
         {
+            IList<(string PackageId, string PackageVersion, string? SubElements)>? packageReferencesBaseLineForApiProject = null;
+            TaskHelper.RunSync(async () =>
+            {
+                packageReferencesBaseLineForApiProject = await nugetPackageReferenceProvider.GetPackageReferencesBaseLineForApiProject();
+            });
+
             SolutionAndProjectHelper.ScaffoldProjFile(
                 logger,
                 projectOptions.ProjectSrcCsProj,
@@ -147,7 +160,7 @@ public class ServerApiGenerator
                 projectOptions.ProjectName,
                 "net6.0",
                 new List<string> { "Microsoft.AspNetCore.App" },
-                NugetPackageReferenceHelper.CreateForApiProject(),
+                packageReferencesBaseLineForApiProject,
                 projectReferences: null,
                 includeApiSpecification: true,
                 usingCodingRules: projectOptions.UsingCodingRules);
