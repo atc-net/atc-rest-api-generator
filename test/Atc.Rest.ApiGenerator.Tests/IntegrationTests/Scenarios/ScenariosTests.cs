@@ -65,7 +65,7 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
                     .Replace(".verified", string.Empty, StringComparison.Ordinal)
                     .Replace(verifyPath, outputPath, StringComparison.Ordinal);
 
-                Assert.True(File.Exists(generatedFile));
+                Assert.True(File.Exists(generatedFile), $"File not generated: {generatedFile}");
 
                 var fileExtension = Path.GetExtension(generatedFile)[1..];
                 var settings = new VerifySettings();
@@ -74,13 +74,6 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
                 settings.UseExtension(fileExtension);
 
                 var generatedFileContent = await ReadGeneratedFile(generatedFile);
-
-                // TODO: vNext - Fix before release (remove if-continue)
-                if (generatedFileContent.Contains("public class Startup", StringComparison.Ordinal) ||
-                    generatedFileContent.Contains("public static class Program", StringComparison.Ordinal))
-                {
-                    continue;
-                }
 
                 await Verify(generatedFileContent, settings);
             }
