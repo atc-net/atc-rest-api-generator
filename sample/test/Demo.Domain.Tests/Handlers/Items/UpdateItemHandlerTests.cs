@@ -1,15 +1,14 @@
-﻿namespace Demo.Domain.Tests.Handlers.Items
+﻿namespace Demo.Domain.Tests.Handlers.Items;
+
+public class UpdateItemHandlerTests
 {
-    public class UpdateItemHandlerTests
+    [Fact(Skip = "Change this to a real test")]
+    public void Sample()
     {
-        [Fact(Skip="Change this to a real test")]
-        public void Sample()
-        {
-            // Arrange
+        // Arrange
 
-            // Act
+        // Act
 
-            // Assert
-        }
+        // Assert
     }
 }

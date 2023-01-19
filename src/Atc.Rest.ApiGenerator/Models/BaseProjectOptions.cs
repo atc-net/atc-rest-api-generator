@@ -1,3 +1,5 @@
+using Atc.Rest.ApiGenerator.Projects;
+
 namespace Atc.Rest.ApiGenerator.Models;
 
 public abstract class BaseProjectOptions
@@ -32,7 +34,17 @@ public abstract class BaseProjectOptions
         DocumentFile = openApiDocumentFile ?? throw new ArgumentNullException(nameof(openApiDocumentFile));
 
         ApiGeneratorName = "ApiGenerator";
-        ApiGeneratorVersion = GenerateHelper.GetAtcApiGeneratorVersion();
+
+        // TODO: Cleanup this temp. re-write hack
+        Version? apiGeneratorVersion = default;
+        TaskHelper.RunSync(async () =>
+        {
+            apiGeneratorVersion = await new NugetPackageReferenceProvider(
+                new AtcApiNugetClient(NullLogger<AtcApiNugetClient>.Instance))
+                .GetAtcApiGeneratorVersion();
+        });
+
+        ApiGeneratorVersion = apiGeneratorVersion!;
         ApiOptions = apiOptions;
 
         RouteBase = openApiDocument.GetServerUrlBasePath();
@@ -62,7 +74,7 @@ public abstract class BaseProjectOptions
         IsForClient = forClient;
         ClientFolderName = clientFolderName;
 
-        BasePathSegmentNames = openApiDocument.GetBasePathSegmentNames();
+        ApiGroupNames = openApiDocument.GetApiGroupNames();
     }
 
     public bool UsingCodingRules { get; }
@@ -109,5 +121,5 @@ public abstract class BaseProjectOptions
 
     public string? ClientFolderName { get; }
 
-    public List<string> BasePathSegmentNames { get; }
+    public IList<string> ApiGroupNames { get; }
 }

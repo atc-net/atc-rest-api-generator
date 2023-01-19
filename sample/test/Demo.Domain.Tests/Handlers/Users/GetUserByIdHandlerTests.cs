@@ -1,15 +1,14 @@
-﻿namespace Demo.Domain.Tests.Handlers.Users
+﻿namespace Demo.Domain.Tests.Handlers.Users;
+
+public class GetUserByIdHandlerTests
 {
-    public class GetUserByIdHandlerTests
+    [Fact(Skip = "Change this to a real test")]
+    public void Sample()
     {
-        [Fact(Skip="Change this to a real test")]
-        public void Sample()
-        {
-            // Arrange
+        // Arrange
 
-            // Act
+        // Act
 
-            // Assert
-        }
+        // Assert
     }
 }

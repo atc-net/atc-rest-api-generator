@@ -4,11 +4,13 @@ global using System.Diagnostics;
 global using System.Diagnostics.CodeAnalysis;
 global using System.Globalization;
 global using System.Net;
+global using System.Net.Mime;
 global using System.Text;
 
 global using Atc.CodeDocumentation.CodeComment;
 global using Atc.CodeGeneration.CSharp.Content;
 global using Atc.CodeGeneration.CSharp.Content.Factories;
+global using Atc.CodeGeneration.CSharp.Content.Generators;
 global using Atc.CodeGeneration.CSharp.Extensions;
 global using Atc.Helpers;
 global using Atc.Rest.ApiGenerator.Framework.Contracts;

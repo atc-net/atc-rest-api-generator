@@ -4,10 +4,10 @@ public static class ContentWriterConstants
 {
     public const string ApiGeneratorName = "ApiGenerator";
 
-    public const string LogFileCreated = "🟢"; // Green
-    public const string LogFileUpdated = "🔵"; // Blue
-    public const string LogFileNotUpdated = "⚪"; // White
+    public const string LogFileCreated = Console.EmojiConstants.GreenSquare;
+    public const string LogFileUpdated = Console.EmojiConstants.BlueCircle;
+    public const string LogFileNotUpdated = Console.EmojiConstants.WhiteCircle;
 
-    public const string LogSuccess = "✅";
-    public const string LogError = "🔴"; // Red
+    public const string LogSuccess = Console.EmojiConstants.CheckMarkButton;
+    public const string LogError = Console.EmojiConstants.RedCircle;
 }

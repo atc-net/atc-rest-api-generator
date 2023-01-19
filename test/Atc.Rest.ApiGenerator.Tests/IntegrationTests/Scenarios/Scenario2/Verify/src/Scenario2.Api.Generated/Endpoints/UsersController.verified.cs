@@ -46,6 +46,23 @@ public class UsersController : ControllerBase
         => await handler.ExecuteAsync(parameters, cancellationToken);
 
     /// <summary>
+    /// Description: Get user by email.
+    /// Operation: GetUserByEmail.
+    /// </summary>
+    [HttpGet("email")]
+    [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
+    public async Task<ActionResult> GetUserByEmail(
+        GetUserByEmailParameters parameters,
+        [FromServices] IGetUserByEmailHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(parameters, cancellationToken);
+
+    /// <summary>
     /// Description: Get user by id.
     /// Operation: GetUserById.
     /// </summary>
@@ -108,23 +125,6 @@ public class UsersController : ControllerBase
     public async Task<ActionResult> UpdateMyTestGender(
         UpdateMyTestGenderParameters parameters,
         [FromServices] IUpdateMyTestGenderHandler handler,
-        CancellationToken cancellationToken)
-        => await handler.ExecuteAsync(parameters, cancellationToken);
-
-    /// <summary>
-    /// Description: Get user by email.
-    /// Operation: GetUserByEmail.
-    /// </summary>
-    [HttpGet("email")]
-    [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
-    public async Task<ActionResult> GetUserByEmail(
-        GetUserByEmailParameters parameters,
-        [FromServices] IGetUserByEmailHandler handler,
         CancellationToken cancellationToken)
         => await handler.ExecuteAsync(parameters, cancellationToken);
 }

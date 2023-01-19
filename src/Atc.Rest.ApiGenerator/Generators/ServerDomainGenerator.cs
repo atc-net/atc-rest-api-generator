@@ -8,14 +8,30 @@ namespace Atc.Rest.ApiGenerator.Generators;
 public class ServerDomainGenerator
 {
     private readonly ILogger logger;
+    private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
     private readonly DomainProjectOptions projectOptions;
+
+    private readonly string codeGeneratorContentHeader;
+    private readonly AttributeParameters codeGeneratorAttribute;
 
     public ServerDomainGenerator(
         ILogger logger,
+        INugetPackageReferenceProvider nugetPackageReferenceProvider,
         DomainProjectOptions projectOptions)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        this.nugetPackageReferenceProvider = nugetPackageReferenceProvider ?? throw new ArgumentNullException(nameof(nugetPackageReferenceProvider));
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
+
+        // TODO: Optimize codeGeneratorContentHeader & codeGeneratorAttribute
+        var codeHeaderGenerator = new GeneratedCodeHeaderGenerator(
+            new GeneratedCodeGeneratorParameters(
+                projectOptions.ApiGeneratorVersion));
+        codeGeneratorContentHeader = codeHeaderGenerator.Generate();
+
+        codeGeneratorAttribute = new AttributeParameters(
+            "GeneratedCode",
+            $"\"{ContentWriterConstants.ApiGeneratorName}\", \"{projectOptions.ApiGeneratorVersion}\"");
     }
 
     public bool Generate()
@@ -52,21 +68,13 @@ public class ServerDomainGenerator
     {
         ArgumentNullException.ThrowIfNull(projectOptions);
 
-        foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
+        foreach (var urlPath in document.Paths)
         {
-            var apiGroupName = basePathSegmentName.EnsureFirstCharacterToUpper();
+            var apiGroupName = urlPath.GetApiGroupName();
 
-            foreach (var urlPath in document.Paths)
+            foreach (var openApiOperation in urlPath.Value.Operations)
             {
-                if (!urlPath.IsPathStartingSegmentName(apiGroupName))
-                {
-                    continue;
-                }
-
-                foreach (var openApiOperation in urlPath.Value.Operations)
-                {
-                    GenerateSrcHandler(apiGroupName, urlPath.Value, openApiOperation.Value);
-                }
+                GenerateSrcHandler(apiGroupName, urlPath.Value, openApiOperation.Value);
             }
         }
     }
@@ -79,30 +87,30 @@ public class ServerDomainGenerator
         var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Handlers}.{apiGroupName}";
 
         // Generate
-        var handlerParameters = ContentGeneratorServerHandlerParametersFactory.Create(
+        var classParameters = ContentGeneratorServerHandlerParametersFactory.Create(
             fullNamespace,
             apiPath,
             apiOperation);
 
-        var contentGeneratorHandler = new ContentGeneratorServerHandler(
+        var contentGeneratorClass = new GenerateContentForClass(
             new CodeDocumentationTagsGenerator(),
-            handlerParameters);
+            classParameters);
 
-        var handlerContent = contentGeneratorHandler.Generate();
+        var classContent = contentGeneratorClass.Generate();
 
         // Write
         var file = new FileInfo(
             Helpers.DirectoryInfoHelper.GetCsFileNameForHandler(
                 projectOptions.PathForSrcHandlers!,
                 apiGroupName,
-                handlerParameters.HandlerName));
+                classParameters.TypeName));
 
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
             projectOptions.PathForSrcGenerate,
             file,
             ContentWriterArea.Src,
-            handlerContent,
+            classContent,
             overrideIfExist: false);
     }
 
@@ -111,40 +119,48 @@ public class ServerDomainGenerator
     {
         ArgumentNullException.ThrowIfNull(projectOptions);
 
-        foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
+        foreach (var urlPath in document.Paths)
         {
-            var apiGroupName = basePathSegmentName.EnsureFirstCharacterToUpper();
+            var apiGroupName = urlPath.GetApiGroupName();
 
-            foreach (var urlPath in document.Paths)
+            foreach (var openApiOperation in urlPath.Value.Operations)
             {
-                if (!urlPath.IsPathStartingSegmentName(apiGroupName))
-                {
-                    continue;
-                }
-
-                foreach (var openApiOperation in urlPath.Value.Operations)
-                {
-                    GenerateTestHandler(apiGroupName, urlPath.Value, openApiOperation.Value);
-                }
+                GenerateTestHandler(apiGroupName, openApiOperation.Value);
             }
         }
     }
 
     private void GenerateTestHandler(
         string apiGroupName,
-        OpenApiPathItem apiPath,
         OpenApiOperation apiOperation)
     {
-        //// TODO: Rewrite:
+        var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Tests}.{ContentGeneratorConstants.Handlers}.{apiGroupName}";
 
-        var operationName = apiOperation.GetOperationName();
-        var handlerName = $"{operationName}{ContentGeneratorConstants.Handler}";
+        // Generate
+        var classParameters = ContentGeneratorServerHandlerParametersFactory.CreateForCustomTest(
+            fullNamespace,
+            apiOperation);
 
-        var hasParametersOrRequestBody = apiPath.HasParameters() ||
-                                         apiOperation.HasParametersOrRequestBody();
+        var contentGeneratorClass = new GenerateContentForClass(
+            new CodeDocumentationTagsGenerator(),
+            classParameters);
 
-        GenerateServerDomainXunitTestHelper.GenerateGeneratedTests(logger, projectOptions, apiGroupName, handlerName, hasParametersOrRequestBody);
-        GenerateServerDomainXunitTestHelper.GenerateCustomTests(logger, projectOptions, apiGroupName, handlerName);
+        var classContent = contentGeneratorClass.Generate();
+
+        // Write
+        var file = new FileInfo(
+            Helpers.DirectoryInfoHelper.GetCsFileNameForHandler(
+                projectOptions.PathForTestHandlers!,
+                apiGroupName,
+                classParameters.TypeName));
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectOptions.PathForTestGenerate!,
+            file,
+            ContentWriterArea.Test,
+            classContent,
+            overrideIfExist: false);
     }
 
     private void ScaffoldSrc()
@@ -242,7 +258,7 @@ public class ServerDomainGenerator
                 $"{projectOptions.ProjectName}.Tests",
                 "net6.0",
                 frameworkReferences: null,
-                NugetPackageReferenceHelper.CreateForTestProject(false),
+                nugetPackageReferenceProvider.GetPackageReferencesBaseLineForTestProject(useMvc: false),
                 projectReferences,
                 includeApiSpecification: true,
                 usingCodingRules: projectOptions.UsingCodingRules);
@@ -251,16 +267,17 @@ public class ServerDomainGenerator
 
     private void ScaffoldBasicFileDomainRegistration()
     {
-        var contentParameters = ContentGeneratorServerRegistrationParametersFactory.Create(
+        var classParameters = ClassParametersFactory.Create(
+            codeGeneratorContentHeader,
             projectOptions.ProjectName,
-            "Domain");
+            codeGeneratorAttribute,
+            "DomainRegistration");
 
-        var contentGenerator = new ContentGeneratorServerRegistration(
-            new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-            new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-            contentParameters);
+        var contentGeneratorClass = new GenerateContentForClass(
+            new CodeDocumentationTagsGenerator(),
+            classParameters);
 
-        var content = contentGenerator.Generate();
+        var classContent = contentGeneratorClass.Generate();
 
         var file = new FileInfo(
             Path.Combine(
@@ -272,7 +289,7 @@ public class ServerDomainGenerator
             projectOptions.PathForSrcGenerate,
             file,
             ContentWriterArea.Src,
-            content);
+            classContent);
     }
 
     private void GenerateSrcGlobalUsings()
@@ -286,9 +303,9 @@ public class ServerDomainGenerator
         };
 
         var projectName = projectOptions.ProjectName.Replace(".Domain", ".Api.Generated", StringComparison.Ordinal);
-        foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
+        foreach (var apiGroupName in projectOptions.ApiGroupNames)
         {
-            requiredUsings.Add($"{projectName}.Contracts.{basePathSegmentName}");
+            requiredUsings.Add($"{projectName}.Contracts.{apiGroupName}");
         }
 
         GlobalUsingsHelper.CreateOrUpdate(
@@ -307,9 +324,9 @@ public class ServerDomainGenerator
             "Xunit",
         };
 
-        foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
+        foreach (var apiGroupName in projectOptions.ApiGroupNames)
         {
-            requiredUsings.Add($"{projectOptions.ProjectName}.Handlers.{basePathSegmentName}");
+            requiredUsings.Add($"{projectOptions.ProjectName}.Handlers.{apiGroupName}");
         }
 
         GlobalUsingsHelper.CreateOrUpdate(

@@ -3,7 +3,7 @@ global using System.CodeDom.Compiler;
 
 global using Demo.Domain.Handlers.Accounts;
 global using Demo.Domain.Handlers.Addresses;
-global using Demo.Domain.Handlers.Eventargs;
+global using Demo.Domain.Handlers.EventArgs;
 global using Demo.Domain.Handlers.Files;
 global using Demo.Domain.Handlers.Items;
 global using Demo.Domain.Handlers.Orders;

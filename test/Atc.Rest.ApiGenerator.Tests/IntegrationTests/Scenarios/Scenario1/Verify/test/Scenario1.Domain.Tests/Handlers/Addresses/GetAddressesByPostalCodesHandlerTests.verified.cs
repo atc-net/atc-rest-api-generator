@@ -1,15 +1,14 @@
-namespace Scenario1.Domain.Tests.Handlers.Addresses
+namespace Scenario1.Domain.Tests.Handlers.Addresses;
+
+public class GetAddressesByPostalCodesHandlerTests
 {
-    public class GetAddressesByPostalCodesHandlerTests
+    [Fact(Skip = "Change this to a real test")]
+    public void Sample()
     {
-        [Fact(Skip="Change this to a real test")]
-        public void Sample()
-        {
-            // Arrange
+        // Arrange
 
-            // Act
+        // Act
 
-            // Assert
-        }
+        // Assert
     }
 }

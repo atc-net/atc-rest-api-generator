@@ -1,11 +1,11 @@
-﻿global using System;
+global using System;
 global using System.CodeDom.Compiler;
 global using System.Threading;
 global using System.Threading.Tasks;
 
 global using Demo.Api.Generated.Contracts.Accounts;
 global using Demo.Api.Generated.Contracts.Addresses;
-global using Demo.Api.Generated.Contracts.Eventargs;
+global using Demo.Api.Generated.Contracts.EventArgs;
 global using Demo.Api.Generated.Contracts.Files;
 global using Demo.Api.Generated.Contracts.Items;
 global using Demo.Api.Generated.Contracts.Orders;

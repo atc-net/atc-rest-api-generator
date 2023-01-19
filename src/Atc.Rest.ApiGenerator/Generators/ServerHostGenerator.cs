@@ -6,17 +6,30 @@ namespace Atc.Rest.ApiGenerator.Generators;
 public class ServerHostGenerator
 {
     private readonly ILogger logger;
-    private readonly IApiOperationExtractor apiOperationExtractor;
+    private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
     private readonly HostProjectOptions projectOptions;
+
+    private readonly string codeGeneratorContentHeader;
+    private readonly AttributeParameters codeGeneratorAttribute;
 
     public ServerHostGenerator(
         ILogger logger,
-        IApiOperationExtractor apiOperationExtractor,
+        INugetPackageReferenceProvider nugetPackageReferenceProvider,
         HostProjectOptions projectOptions)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        this.apiOperationExtractor = apiOperationExtractor ?? throw new ArgumentNullException(nameof(apiOperationExtractor));
+        this.nugetPackageReferenceProvider = nugetPackageReferenceProvider ?? throw new ArgumentNullException(nameof(nugetPackageReferenceProvider));
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
+
+        // TODO: Optimize codeGeneratorContentHeader & codeGeneratorAttribute
+        var codeHeaderGenerator = new GeneratedCodeHeaderGenerator(
+            new GeneratedCodeGeneratorParameters(
+                projectOptions.ApiGeneratorVersion));
+        codeGeneratorContentHeader = codeHeaderGenerator.Generate();
+
+        codeGeneratorAttribute = new AttributeParameters(
+            "GeneratedCode",
+            $"\"{ContentWriterConstants.ApiGeneratorName}\", \"{projectOptions.ApiGeneratorVersion}\"");
     }
 
     public bool Generate()
@@ -35,7 +48,9 @@ public class ServerHostGenerator
         {
             logger.LogInformation($"{AppEmojisConstants.AreaGenerateTest} Working on server host unit-test generation ({projectOptions.ProjectName}.Tests)");
             ScaffoldTest();
-            GenerateTestEndpoints();
+
+            GenerateTestEndpoints(projectOptions.Document);
+
             GenerateTestGlobalUsings();
         }
 
@@ -76,6 +91,12 @@ public class ServerHostGenerator
                 projectReferences.Add(projectOptions.DomainProjectSrcCsProj);
             }
 
+            IList<(string PackageId, string PackageVersion, string? SubElements)>? packageReferencesBaseLineForHostProject = null;
+            TaskHelper.RunSync(async () =>
+            {
+                packageReferencesBaseLineForHostProject = await nugetPackageReferenceProvider.GetPackageReferencesBaseLineForHostProject(projectOptions.UseRestExtended);
+            });
+
             SolutionAndProjectHelper.ScaffoldProjFile(
                 logger,
                 projectOptions.ProjectSrcCsProj,
@@ -86,7 +107,7 @@ public class ServerHostGenerator
                 projectOptions.ProjectName,
                 "net6.0",
                 frameworkReferences: null,
-                NugetPackageReferenceHelper.CreateForHostProject(projectOptions.UseRestExtended),
+                packageReferencesBaseLineForHostProject,
                 projectReferences,
                 includeApiSpecification: false,
                 usingCodingRules: projectOptions.UsingCodingRules);
@@ -190,7 +211,7 @@ public class ServerHostGenerator
                 $"{projectOptions.ProjectName}.Tests",
                 "net6.0",
                 frameworkReferences: null,
-                NugetPackageReferenceHelper.CreateForTestProject(useMvc: true),
+                nugetPackageReferenceProvider.GetPackageReferencesBaseLineForTestProject(useMvc: true),
                 projectReferences,
                 includeApiSpecification: true,
                 usingCodingRules: projectOptions.UsingCodingRules);
@@ -201,55 +222,86 @@ public class ServerHostGenerator
         ScaffoldAppSettingsIntegrationTest();
     }
 
-    private void GenerateTestEndpoints()
+    private void GenerateTestEndpoints(
+        OpenApiDocument document)
     {
-        var apiProjectOptions = new ApiProjectOptions(
-            projectOptions.ApiProjectSrcPath,
-            projectTestGeneratePath: null,
-            projectOptions.Document,
-            projectOptions.DocumentFile,
-            projectOptions.ProjectName.Replace(".Api", string.Empty, StringComparison.Ordinal),
-            "Api.Generated",
-            projectOptions.ApiOptions,
-            projectOptions.UsingCodingRules);
-
-        var operationSchemaMappings = apiOperationExtractor.Extract(projectOptions.Document);
-
-        foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
+        foreach (var openApiPath in document.Paths)
         {
-            var apiGroupName = basePathSegmentName.EnsureFirstCharacterToUpper();
+            var apiGroupName = openApiPath.GetApiGroupName();
 
-            var generator = new SyntaxGeneratorEndpointControllers(apiProjectOptions, operationSchemaMappings, apiGroupName);
-            generator.GenerateCode();
-
-            var controllerParameters = ContentGeneratorServerControllerParametersFactory.Create(
-                operationSchemaMappings,
-                projectOptions.ProjectName,
-                projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
-                $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Endpoints}",
-                basePathSegmentName,
-                GetRouteByArea(basePathSegmentName),
-                projectOptions.Document);
-
-            var metadataForMethods = generator.GetMetadataForMethods();
-            for (var i = 0; i < metadataForMethods.Count; i++)
+            foreach (var openApiOperation in openApiPath.Value.Operations)
             {
-                var endpointMethodMetadata = metadataForMethods[i];
-                var contentGeneratorServerControllerMethodParameters = controllerParameters.MethodParameters[i];
-
-                GenerateServerApiXunitTestEndpointHandlerStubHelper.Generate(
-                    logger,
-                    projectOptions,
-                    endpointMethodMetadata,
-                    apiGroupName,
-                    contentGeneratorServerControllerMethodParameters);
-
-                GenerateServerApiXunitTestEndpointTestHelper.Generate(
-                    logger,
-                    projectOptions,
-                    endpointMethodMetadata);
+                GenerateTestEndpointHandlerStub(apiGroupName, openApiPath.Value, openApiOperation.Value);
+                GenerateTestEndpointTests(apiGroupName, openApiOperation.Value);
             }
         }
+    }
+
+    private void GenerateTestEndpointHandlerStub(
+        string apiGroupName,
+        OpenApiPathItem openApiPath,
+        OpenApiOperation openApiOperation)
+    {
+        var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Tests}.{ContentGeneratorConstants.Endpoints}.{apiGroupName}";
+
+        // Generate
+        var classParameters = ContentGeneratorServerTestEndpointHandlerStubParametersFactory.Create(
+            codeGeneratorContentHeader,
+            fullNamespace,
+            codeGeneratorAttribute,
+            openApiPath,
+            openApiOperation);
+
+        var contentGeneratorClass = new GenerateContentForClass(
+            new CodeDocumentationTagsGenerator(),
+            classParameters);
+
+        var classContent = contentGeneratorClass.Generate();
+
+        // Write
+        var pathA = Path.Combine(projectOptions.PathForTestGenerate!.FullName, ContentGeneratorConstants.Endpoints);
+        var pathB = Path.Combine(pathA, apiGroupName);
+        var fileName = $"{classParameters.TypeName}.cs";
+        var file = new FileInfo(Path.Combine(pathB, fileName));
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectOptions.PathForTestGenerate,
+            file,
+            ContentWriterArea.Test,
+            classContent);
+    }
+
+    private void GenerateTestEndpointTests(
+        string apiGroupName,
+        OpenApiOperation openApiOperation)
+    {
+        var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Tests}.{ContentGeneratorConstants.Endpoints}.{apiGroupName}";
+
+        // Generate
+        var classParameters = ContentGeneratorServerTestEndpointTestsParametersFactory.Create(
+            fullNamespace,
+            openApiOperation);
+
+        var contentGeneratorClass = new GenerateContentForClass(
+            new CodeDocumentationTagsGenerator(),
+            classParameters);
+
+        var classContent = contentGeneratorClass.Generate();
+
+        // Write
+        var pathA = Path.Combine(projectOptions.PathForTestGenerate!.FullName, ContentGeneratorConstants.Endpoints);
+        var pathB = Path.Combine(pathA, apiGroupName);
+        var fileName = $"{classParameters.TypeName}.cs";
+        var file = new FileInfo(Path.Combine(pathB, fileName));
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectOptions.PathForTestGenerate,
+            file,
+            ContentWriterArea.Test,
+            classContent,
+            overrideIfExist: false);
     }
 
     private void ScaffoldProgramFile()
@@ -257,7 +309,7 @@ public class ServerHostGenerator
         var fullNamespace = $"{projectOptions.ProjectName}";
 
         var contentGenerator = new ContentGeneratorServerProgram(
-            ContentGeneratorServerProgramParametersFactory.Create(fullNamespace));
+            new ContentGeneratorBaseParameters(fullNamespace));
 
         var content = contentGenerator.Generate();
 
@@ -277,7 +329,7 @@ public class ServerHostGenerator
         var fullNamespace = $"{projectOptions.ProjectName}";
 
         var contentGenerator = new ContentGeneratorServerStartup(
-            ContentGeneratorServerStartupParametersFactory.Create(fullNamespace));
+            new ContentGeneratorBaseParameters(fullNamespace));
 
         var content = contentGenerator.Generate();
 
@@ -364,13 +416,10 @@ public class ServerHostGenerator
     {
         var fullNamespace = $"{projectOptions.ProjectName}.Tests";
 
-        var contentGeneratorServerWebApiControllerBaseTestParameters = ContentGeneratorServerWebApiControllerBaseTestParametersFactory.Create(
-            fullNamespace);
-
         var contentGenerator = new ContentGeneratorServerWebApiControllerBaseTest(
             new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
             new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-            contentGeneratorServerWebApiControllerBaseTestParameters);
+            new ContentGeneratorBaseParameters(fullNamespace));
 
         var content = contentGenerator.Generate();
 
@@ -438,42 +487,40 @@ public class ServerHostGenerator
     {
         var requiredUsings = new List<string>
         {
+            "System",
             "System.CodeDom.Compiler",
             "System.Collections.Generic",
             "System.IO",
-            "System.Net",
             "System.Net.Http",
             "System.Text",
             "System.Text.Json",
             "System.Text.Json.Serialization",
-            "Microsoft.AspNetCore.Http",
-            "Microsoft.Extensions.Configuration",
-            "Xunit",
             "System.Reflection",
             "System.Threading",
             "System.Threading.Tasks",
-            "System",
+            "Microsoft.AspNetCore.Http",
+            "Xunit",
+            "AutoFixture",
+            "Atc.Rest.Results",
             "Atc.Rest.Options",
-            "FluentAssertions",
             "Microsoft.AspNetCore.Hosting",
             "Microsoft.AspNetCore.Mvc.Testing",
             "Microsoft.AspNetCore.TestHost",
             "Microsoft.Extensions.Configuration",
             "Microsoft.Extensions.DependencyInjection",
-            "Atc.Rest.Results",
             "Atc.XUnit",
             $"{projectOptions.ProjectName}.Generated",
             $"{projectOptions.ProjectName}.Generated.Contracts",
         };
 
-        foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
+        foreach (var apiGroupName in projectOptions.ApiGroupNames)
         {
-            if (basePathSegmentName.Equals("Tasks", StringComparison.OrdinalIgnoreCase))
+            if (apiGroupName.Equals("Tasks", StringComparison.OrdinalIgnoreCase))
             {
                 continue;
             }
 
-            requiredUsings.Add($"{projectOptions.ProjectName}.Generated.Contracts.{basePathSegmentName}");
+            requiredUsings.Add($"{projectOptions.ProjectName}.Generated.Contracts.{apiGroupName}");
         }
 
         GlobalUsingsHelper.CreateOrUpdate(
@@ -481,21 +528,5 @@ public class ServerHostGenerator
             ContentWriterArea.Test,
             projectOptions.PathForTestGenerate!,
             requiredUsings);
-    }
-
-    private string GetRouteByArea(
-        string area)
-    {
-        var (key, _) = projectOptions.Document.Paths.FirstOrDefault(x => x.IsPathStartingSegmentName(area));
-        if (key is null)
-        {
-            throw new NotSupportedException("Area was not found in any route.");
-        }
-
-        var routeSuffix = key
-            .Split('/', StringSplitOptions.RemoveEmptyEntries)
-            .FirstOrDefault();
-
-        return $"{projectOptions.RouteBase}/{routeSuffix}";
     }
 }

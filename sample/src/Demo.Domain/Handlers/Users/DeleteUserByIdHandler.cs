@@ -4,24 +4,15 @@
 /// Handler for operation request.
 /// Description: Delete user by id.
 /// Operation: DeleteUserById.
-/// Area: Users.
 /// </summary>
 public class DeleteUserByIdHandler : IDeleteUserByIdHandler
 {
-    public Task<DeleteUserByIdResult> ExecuteAsync(DeleteUserByIdParameters parameters, CancellationToken cancellationToken = default)
+    public Task<DeleteUserByIdResult> ExecuteAsync(
+        DeleteUserByIdParameters parameters,
+        CancellationToken cancellationToken = default)
     {
-        if (parameters is null)
-        {
-            throw new System.ArgumentNullException(nameof(parameters));
-        }
+        ArgumentNullException.ThrowIfNull(parameters);
 
-        return InvokeExecuteAsync(parameters, cancellationToken);
-    }
-
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-    private async Task<DeleteUserByIdResult> InvokeExecuteAsync(DeleteUserByIdParameters parameters, CancellationToken cancellationToken)
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
-    {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException("Add logic here for DeleteUserByIdHandler");
     }
 }

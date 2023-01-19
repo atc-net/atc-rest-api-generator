@@ -2,10 +2,10 @@ namespace Atc.Rest.ApiGenerator.Framework.Mvc.ContentGenerators.Server;
 
 public sealed class ContentGeneratorServerStartup : IContentGenerator
 {
-    private readonly ContentGeneratorServerStartupParameters parameters;
+    private readonly ContentGeneratorBaseParameters parameters;
 
     public ContentGeneratorServerStartup(
-        ContentGeneratorServerStartupParameters parameters)
+        ContentGeneratorBaseParameters parameters)
     {
         this.parameters = parameters;
     }
@@ -51,7 +51,7 @@ public sealed class ContentGeneratorServerStartup : IContentGenerator
         sb.AppendLine(4, "{");
         sb.AppendLine(8, "app.ConfigureRestApi(env, restApiOptions);");
         sb.AppendLine(4, "}");
-        sb.AppendLine("}");
+        sb.Append('}');
 
         return sb.ToString();
     }

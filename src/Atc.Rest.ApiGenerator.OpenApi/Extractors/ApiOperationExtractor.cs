@@ -305,15 +305,15 @@ public sealed class ApiOperationExtractor : IApiOperationExtractor
         {
             var mapsForSchemaKey = result.Where(x => x.Model.Name == schemaMap.Model.Name).ToList();
 
-            var segmentNames = new List<string>();
+            var apiGroupNames = new List<string>();
             foreach (var s in mapsForSchemaKey
-                         .Select(map => map.SegmentName)
-                         .Where(s => !segmentNames.Contains(s, StringComparer.Ordinal)))
+                         .Select(map => map.ApiGroupName)
+                         .Where(s => !apiGroupNames.Contains(s, StringComparer.Ordinal)))
             {
-                segmentNames.Add(s);
+                apiGroupNames.Add(s);
             }
 
-            if (segmentNames.Count > 1)
+            if (apiGroupNames.Count > 1)
             {
                 schemaMap.Model.IsShared = true;
             }

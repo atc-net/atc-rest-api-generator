@@ -3,58 +3,10 @@ namespace Atc.Rest.ApiGenerator.Helpers;
 
 public static class GenerateHelper
 {
-    private static readonly Version AtcApiGeneratorVersion = new(1, 1, 405, 0); // TODO: Fix version
-
-    public static Version GetAtcVersion()
-    {
-        var version = AtcApiNugetClientHelper.GetLatestVersionForPackageId(
-            NullLogger.Instance,
-            "Atc",
-            CancellationToken.None) ?? new Version(2, 0, 81, 0);
-        return version;
-    }
-
-    public static string GetAtcVersionAsString3()
-    {
-        var atcVersion = GetAtcVersion();
-        return $"{atcVersion.Major}.{atcVersion.Minor}.{atcVersion.Build}";
-    }
-
-    public static string GetAtcVersionAsString4()
-    {
-        var atcVersion = GetAtcVersion();
-        return $"{atcVersion.Major}.{atcVersion.Minor}.{atcVersion.Build}.{atcVersion.Revision}";
-    }
-
-    public static Version GetAtcApiGeneratorVersion()
-    {
-        var version = AtcApiNugetClientHelper.GetLatestVersionForPackageId(
-            NullLogger.Instance,
-            "Atc.Rest.ApiGenerator",
-            CancellationToken.None) ?? new Version(2, 0, 101, 0);
-
-        var assemblyVersion = CliHelper.GetCurrentVersion();
-
-        return assemblyVersion.GreaterThan(version)
-            ? assemblyVersion
-            : AtcApiGeneratorVersion;
-    }
-
-    public static string GetAtcApiGeneratorVersionAsString3()
-    {
-        var atcApiGeneratorVersion = GetAtcApiGeneratorVersion();
-        return $"{atcApiGeneratorVersion.Major}.{atcApiGeneratorVersion.Minor}.{atcApiGeneratorVersion.Build}";
-    }
-
-    public static string GetAtcApiGeneratorVersionAsString4()
-    {
-        var atcApiGeneratorVersion = GetAtcApiGeneratorVersion();
-        return $"{atcApiGeneratorVersion.Major}.{atcApiGeneratorVersion.Minor}.{atcApiGeneratorVersion.Build}.{atcApiGeneratorVersion.Revision}";
-    }
-
     public static bool GenerateServerApi(
         ILogger logger,
         IApiOperationExtractor apiOperationExtractor,
+        INugetPackageReferenceProvider nugetPackageReferenceProvider,
         string projectPrefixName,
         DirectoryInfo outputPath,
         DirectoryInfo? outputTestPath,
@@ -78,12 +30,13 @@ public static class GenerateHelper
             "Api.Generated",
             apiOptions,
             useCodingRules);
-        var serverApiGenerator = new ServerApiGenerator(logger, apiOperationExtractor, projectOptions);
+        var serverApiGenerator = new ServerApiGenerator(logger, apiOperationExtractor, nugetPackageReferenceProvider, projectOptions);
         return serverApiGenerator.Generate();
     }
 
     public static bool GenerateServerDomain(
         ILogger logger,
+        INugetPackageReferenceProvider nugetPackageReferenceProvider,
         string projectPrefixName,
         DirectoryInfo outputSourcePath,
         DirectoryInfo? outputTestPath,
@@ -108,13 +61,13 @@ public static class GenerateHelper
             apiOptions,
             useCodingRules,
             apiPath);
-        var serverDomainGenerator = new ServerDomainGenerator(logger, domainProjectOptions);
+        var serverDomainGenerator = new ServerDomainGenerator(logger, nugetPackageReferenceProvider, domainProjectOptions);
         return serverDomainGenerator.Generate();
     }
 
     public static bool GenerateServerHost(
         ILogger logger,
-        IApiOperationExtractor apiOperationExtractor,
+        INugetPackageReferenceProvider nugetPackageReferenceProvider,
         string projectPrefixName,
         DirectoryInfo outputSourcePath,
         DirectoryInfo? outputTestPath,
@@ -142,7 +95,7 @@ public static class GenerateHelper
             usingCodingRules,
             apiPath,
             domainPath);
-        var serverHostGenerator = new ServerHostGenerator(logger, apiOperationExtractor, hostProjectOptions);
+        var serverHostGenerator = new ServerHostGenerator(logger, nugetPackageReferenceProvider, hostProjectOptions);
         return serverHostGenerator.Generate();
     }
 
@@ -203,6 +156,7 @@ public static class GenerateHelper
     public static bool GenerateServerCSharpClient(
         ILogger logger,
         IApiOperationExtractor apiOperationExtractor,
+        INugetPackageReferenceProvider nugetPackageReferenceProvider,
         string projectPrefixName,
         string? clientFolderName,
         DirectoryInfo outputPath,
@@ -227,7 +181,7 @@ public static class GenerateHelper
             excludeEndpointGeneration,
             apiOptions,
             useCodingRules);
-        var clientCSharpApiGenerator = new ClientCSharpApiGenerator(logger, apiOperationExtractor, clientCSharpApiProjectOptions);
+        var clientCSharpApiGenerator = new ClientCSharpApiGenerator(logger, apiOperationExtractor, nugetPackageReferenceProvider, clientCSharpApiProjectOptions);
         return clientCSharpApiGenerator.Generate();
     }
 }

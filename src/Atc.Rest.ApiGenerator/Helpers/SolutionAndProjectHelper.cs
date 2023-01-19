@@ -19,7 +19,7 @@ public static class SolutionAndProjectHelper
         string projectName,
         string targetFramework,
         IList<string>? frameworkReferences,
-        IList<Tuple<string, string, string?>>? packageReferences,
+        IList<(string, string, string?)>? packageReferences,
         IList<FileInfo>? projectReferences,
         bool includeApiSpecification,
         bool usingCodingRules)
@@ -82,7 +82,7 @@ public static class SolutionAndProjectHelper
             frameworkReferences.Count > 0)
         {
             sb.AppendLine(2, "<ItemGroup>");
-            foreach (var frameworkReference in frameworkReferences.OrderBy(x => x))
+            foreach (var frameworkReference in frameworkReferences.OrderBy(x => x, StringComparer.Ordinal))
             {
                 sb.AppendLine(4, $"<FrameworkReference Include=\"{frameworkReference}\" />");
             }
@@ -95,7 +95,7 @@ public static class SolutionAndProjectHelper
             packageReferences.Count > 0)
         {
             sb.AppendLine(2, "<ItemGroup>");
-            foreach (var (package, version, extra) in packageReferences.OrderBy(x => x.Item1))
+            foreach (var (package, version, extra) in packageReferences.OrderBy(x => x.Item1, StringComparer.Ordinal))
             {
                 if (extra is null)
                 {
@@ -122,7 +122,7 @@ public static class SolutionAndProjectHelper
             projectReferences.Count > 0)
         {
             sb.AppendLine(2, "<ItemGroup>");
-            foreach (var projectReference in projectReferences.OrderBy(x => x.Name))
+            foreach (var projectReference in projectReferences.OrderBy(x => x.Name, StringComparer.Ordinal))
             {
                 var packageReferenceValue = GetProjectReference(projectCsProjFile, projectReference);
                 sb.AppendLine(4, $"<ProjectReference Include=\"{packageReferenceValue}\" />");
@@ -293,7 +293,7 @@ public static class SolutionAndProjectHelper
                 StringComparison.Ordinal);
         }
 
-        var packageReferencesThatNeedsToBeUpdated = GetPackageReferencesThatNeedsToBeUpdated(logger, fileContent);
+        var packageReferencesThatNeedsToBeUpdated = GetPackageReferencesThatNeedsToBeUpdated(fileContent);
         if (!packageReferencesThatNeedsToBeUpdated.Any())
         {
             return false;
@@ -570,8 +570,8 @@ public static class SolutionAndProjectHelper
         return $"{sb1}{sb2}";
     }
 
+    [SuppressMessage("Maintainability", "CA1508:Avoid dead conditional code", Justification = "OK.")]
     private static List<DotnetNugetPackage> GetPackageReferencesThatNeedsToBeUpdated(
-        ILogger logger,
         string fileContent)
     {
         var result = new List<DotnetNugetPackage>();
@@ -583,7 +583,17 @@ public static class SolutionAndProjectHelper
             {
                 if (Version.TryParse(item.Version, out var version))
                 {
-                    var latestVersion = AtcApiNugetClientHelper.GetLatestVersionForPackageId(logger, item.PackageId, CancellationToken.None);
+                    // TODO: Cleanup this temp re-write hack!
+                    var atcApiNugetClient = new AtcApiNugetClient(NullLogger<AtcApiNugetClient>.Instance);
+
+                    Version? latestVersion = default;
+                    TaskHelper.RunSync(async () =>
+                    {
+                        latestVersion =
+                            await atcApiNugetClient.RetrieveLatestVersionForPackageId(
+                                item.PackageId,
+                                CancellationToken.None);
+                    });
 
                     if (latestVersion is not null &&
                         latestVersion.IsNewerThan(version, withinMinorReleaseOnly: true))
@@ -592,7 +602,7 @@ public static class SolutionAndProjectHelper
                             new DotnetNugetPackage(
                                 item.PackageId,
                                 version,
-                                latestVersion));
+                                latestVersion!));
                     }
                 }
             }

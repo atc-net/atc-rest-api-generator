@@ -1,15 +1,14 @@
-﻿namespace Demo.Domain.Tests.Handlers.Files
+﻿namespace Demo.Domain.Tests.Handlers.Files;
+
+public class UploadSingleFileAsFormDataHandlerTests
 {
-    public class UploadSingleFileAsFormDataHandlerTests
+    [Fact(Skip = "Change this to a real test")]
+    public void Sample()
     {
-        [Fact(Skip="Change this to a real test")]
-        public void Sample()
-        {
-            // Arrange
+        // Arrange
 
-            // Act
+        // Act
 
-            // Assert
-        }
+        // Assert
     }
 }

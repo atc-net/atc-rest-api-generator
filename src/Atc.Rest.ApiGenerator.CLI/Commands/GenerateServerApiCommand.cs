@@ -4,15 +4,18 @@ public class GenerateServerApiCommand : AsyncCommand<ServerApiCommandSettings>
 {
     private readonly ILogger<GenerateServerApiCommand> logger;
     private readonly IApiOperationExtractor apiOperationExtractor;
+    private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
     private readonly IOpenApiDocumentValidator openApiDocumentValidator;
 
     public GenerateServerApiCommand(
         ILogger<GenerateServerApiCommand> logger,
         IApiOperationExtractor apiOperationExtractor,
+        INugetPackageReferenceProvider nugetPackageReferenceProvider,
         IOpenApiDocumentValidator openApiDocumentValidator)
     {
         this.logger = logger;
         this.apiOperationExtractor = apiOperationExtractor;
+        this.nugetPackageReferenceProvider = nugetPackageReferenceProvider;
         this.openApiDocumentValidator = openApiDocumentValidator;
     }
 
@@ -71,6 +74,7 @@ public class GenerateServerApiCommand : AsyncCommand<ServerApiCommandSettings>
             if (!GenerateHelper.GenerateServerApi(
                     logger,
                     apiOperationExtractor,
+                    nugetPackageReferenceProvider,
                     settings.ProjectPrefixName,
                     new DirectoryInfo(settings.OutputPath),
                     outputTestPath,

@@ -4,15 +4,21 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
 {
     private readonly ILogger<GenerateServerAllCommand> logger;
     private readonly IApiOperationExtractor apiOperationExtractor;
+    private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
+    private readonly IAtcCodingRulesUpdater atcCodingRulesUpdater;
     private readonly IOpenApiDocumentValidator openApiDocumentValidator;
 
     public GenerateServerAllCommand(
         ILogger<GenerateServerAllCommand> logger,
         IApiOperationExtractor apiOperationExtractor,
+        INugetPackageReferenceProvider nugetPackageReferenceProvider,
+        IAtcCodingRulesUpdater atcCodingRulesUpdater,
         IOpenApiDocumentValidator openApiDocumentValidator)
     {
         this.logger = logger;
         this.apiOperationExtractor = apiOperationExtractor;
+        this.nugetPackageReferenceProvider = nugetPackageReferenceProvider;
+        this.atcCodingRulesUpdater = atcCodingRulesUpdater;
         this.openApiDocumentValidator = openApiDocumentValidator;
     }
 
@@ -75,6 +81,7 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
             if (!GenerateHelper.GenerateServerApi(
                     logger,
                     apiOperationExtractor,
+                    nugetPackageReferenceProvider,
                     projectPrefixName,
                     outputSrcPath,
                     outputTestPath,
@@ -87,6 +94,7 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
 
             if (!GenerateHelper.GenerateServerDomain(
                     logger,
+                    nugetPackageReferenceProvider,
                     projectPrefixName,
                     outputSrcPath,
                     outputTestPath,
@@ -100,7 +108,7 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
 
             if (!GenerateHelper.GenerateServerHost(
                     logger,
-                    apiOperationExtractor,
+                    nugetPackageReferenceProvider,
                     projectPrefixName,
                     outputSrcPath,
                     outputTestPath,
@@ -124,8 +132,7 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
             }
 
             if (shouldScaffoldCodingRules &&
-                !GenerateAtcCodingRulesHelper.Generate(
-                    logger,
+                !atcCodingRulesUpdater.Scaffold(
                     outputSlnPath,
                     outputSrcPath,
                     outputTestPath))

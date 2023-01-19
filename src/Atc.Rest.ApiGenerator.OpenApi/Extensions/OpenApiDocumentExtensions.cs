@@ -1,5 +1,6 @@
 // ReSharper disable InvertIf
 // ReSharper disable LoopCanBeConvertedToQuery
+// ReSharper disable ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
 namespace Atc.Rest.ApiGenerator.OpenApi.Extensions;
 
 public static class OpenApiDocumentExtensions
@@ -58,7 +59,7 @@ public static class OpenApiDocumentExtensions
             openApiDocument.Info?.License?.Name,
             openApiDocument.Info?.License?.Url?.ToString());
 
-    public static List<string> GetBasePathSegmentNames(
+    public static IList<string> GetApiGroupNames(
         this OpenApiDocument openApiDocument)
     {
         var names = new List<string>();
@@ -67,17 +68,17 @@ public static class OpenApiDocumentExtensions
             return names.ToList();
         }
 
-        foreach (var name in openApiDocument.Paths.Keys
-                     .Select(x => x.Split('/', StringSplitOptions.RemoveEmptyEntries))
-                     .Where(sa => sa.Length != 0)
-                     .Select(sa => sa[0].ToLower(CultureInfo.CurrentCulture)).Where(name => !names.Contains(name, StringComparer.Ordinal)))
+        foreach (var path in openApiDocument.Paths)
         {
-            names.Add(name);
+            var apiGroupName = path.GetApiGroupName();
+            if (!names.Contains(apiGroupName, StringComparer.Ordinal))
+            {
+                names.Add(apiGroupName);
+            }
         }
 
         return names
-            .Select(x => x.PascalCase(true))
-            .OrderBy(x => x)
+            .OrderBy(x => x, StringComparer.Ordinal)
             .ToList();
     }
 
@@ -95,7 +96,7 @@ public static class OpenApiDocumentExtensions
         serverUrl = serverUrl.Replace("http:/", "http://", StringComparison.OrdinalIgnoreCase);
         serverUrl = serverUrl.Replace("https:/", "https://", StringComparison.OrdinalIgnoreCase);
         if (!serverUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase) &&
-            !serverUrl.StartsWith("/", StringComparison.Ordinal))
+            !serverUrl.StartsWith('/'))
         {
             serverUrl = $"/{serverUrl}";
         }

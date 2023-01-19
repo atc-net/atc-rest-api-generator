@@ -3,14 +3,13 @@
 // ReSharper disable ReplaceSubstringWithRangeIndexer
 // ReSharper disable ReturnTypeCanBeEnumerable.Local
 // ReSharper disable UseObjectOrCollectionInitializer
-using Atc.CodeGeneration.CSharp.Content;
-
 namespace Atc.Rest.ApiGenerator.Generators;
 
 public class ServerApiGenerator
 {
     private readonly ILogger logger;
     private readonly IApiOperationExtractor apiOperationExtractor;
+    private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
     private readonly ApiProjectOptions projectOptions;
 
     private readonly string codeGeneratorContentHeader;
@@ -19,10 +18,12 @@ public class ServerApiGenerator
     public ServerApiGenerator(
         ILogger logger,
         IApiOperationExtractor apiOperationExtractor,
+        INugetPackageReferenceProvider nugetPackageReferenceProvider,
         ApiProjectOptions projectOptions)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.apiOperationExtractor = apiOperationExtractor ?? throw new ArgumentNullException(nameof(apiOperationExtractor));
+        this.nugetPackageReferenceProvider = nugetPackageReferenceProvider ?? throw new ArgumentNullException(nameof(nugetPackageReferenceProvider));
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
 
         // TODO: Optimize codeGeneratorContentHeader & codeGeneratorAttribute
@@ -52,7 +53,11 @@ public class ServerApiGenerator
 
         var operationSchemaMappings = apiOperationExtractor.Extract(projectOptions.Document);
 
-        GenerateContracts(operationSchemaMappings);
+        GenerateModels(projectOptions.Document, operationSchemaMappings);
+        GenerateParameters(projectOptions.Document);
+        GenerateResults(projectOptions.Document);
+        GenerateInterfaces(projectOptions.Document);
+
         GenerateEndpoints(operationSchemaMappings);
         GenerateSrcGlobalUsings();
 
@@ -76,7 +81,11 @@ public class ServerApiGenerator
 
         var lines = File.ReadLines(apiGeneratedFile).ToList();
 
-        var newVersion = GenerateHelper.GetAtcApiGeneratorVersion();
+        Version? newVersion = null;
+        TaskHelper.RunSync(async () =>
+        {
+            newVersion = await nugetPackageReferenceProvider.GetAtcApiGeneratorVersion();
+        });
 
         foreach (var line in lines)
         {
@@ -135,6 +144,12 @@ public class ServerApiGenerator
         }
         else
         {
+            IList<(string PackageId, string PackageVersion, string? SubElements)>? packageReferencesBaseLineForApiProject = null;
+            TaskHelper.RunSync(async () =>
+            {
+                packageReferencesBaseLineForApiProject = await nugetPackageReferenceProvider.GetPackageReferencesBaseLineForApiProject();
+            });
+
             SolutionAndProjectHelper.ScaffoldProjFile(
                 logger,
                 projectOptions.ProjectSrcCsProj,
@@ -145,7 +160,7 @@ public class ServerApiGenerator
                 projectOptions.ProjectName,
                 "net6.0",
                 new List<string> { "Microsoft.AspNetCore.App" },
-                NugetPackageReferenceHelper.CreateForApiProject(),
+                packageReferencesBaseLineForApiProject,
                 projectReferences: null,
                 includeApiSpecification: true,
                 usingCodingRules: projectOptions.UsingCodingRules);
@@ -179,47 +194,35 @@ public class ServerApiGenerator
         }
     }
 
-    private void GenerateContracts(
-        IList<ApiOperation> operationSchemaMappings)
+    private void GenerateModels(
+        OpenApiDocument document,
+        IEnumerable<ApiOperation> operationSchemaMappings)
     {
         ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 
-        foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
+        foreach (var apiGroupName in projectOptions.ApiGroupNames)
         {
-            var apiGroupName = basePathSegmentName.EnsureFirstCharacterToUpper();
+            var apiOperations = operationSchemaMappings
+                .Where(x => x.LocatedArea is ApiSchemaMapLocatedAreaType.Response or ApiSchemaMapLocatedAreaType.RequestBody &&
+                            x.ApiGroupName.Equals(apiGroupName, StringComparison.OrdinalIgnoreCase))
+                .ToList();
 
-            GenerateModels(projectOptions.Document, apiGroupName, operationSchemaMappings);
-            GenerateParameters(projectOptions.Document, apiGroupName);
-            GenerateResults(projectOptions.Document, apiGroupName);
-            GenerateInterfaces(projectOptions.Document, apiGroupName);
-        }
-    }
+            var apiOperationModels = GetDistinctApiOperationModels(apiOperations);
 
-    private void GenerateModels(
-        OpenApiDocument document,
-        string apiGroupName,
-        IEnumerable<ApiOperation> operationSchemaMappings)
-    {
-        var apiOperations = operationSchemaMappings
-            .Where(x => x.LocatedArea is ApiSchemaMapLocatedAreaType.Response or ApiSchemaMapLocatedAreaType.RequestBody &&
-                        x.SegmentName.Equals(apiGroupName, StringComparison.OrdinalIgnoreCase))
-            .ToList();
-
-        var apiOperationModels = GetDistinctApiOperationModels(apiOperations);
-
-        foreach (var apiOperationModel in apiOperationModels)
-        {
-            var apiSchema = document.Components.Schemas.First(x => x.Key.Equals(apiOperationModel.Name, StringComparison.OrdinalIgnoreCase));
-
-            var modelName = apiSchema.Key.EnsureFirstCharacterToUpper();
-
-            if (apiOperationModel.IsEnum)
+            foreach (var apiOperationModel in apiOperationModels)
             {
-                GenerateEnumerationType(modelName, apiSchema.Value.GetEnumSchema().Item2);
-            }
-            else
-            {
-                GenerateModel(modelName, apiSchema.Value, apiGroupName, apiOperationModel.IsShared);
+                var apiSchema = document.Components.Schemas.First(x => x.Key.Equals(apiOperationModel.Name, StringComparison.OrdinalIgnoreCase));
+
+                var modelName = apiSchema.Key.EnsureFirstCharacterToUpper();
+
+                if (apiOperationModel.IsEnum)
+                {
+                    GenerateEnumerationType(modelName, apiSchema.Value.GetEnumSchema().Item2);
+                }
+                else
+                {
+                    GenerateModel(modelName, apiSchema.Value, apiGroupName, apiOperationModel.IsShared);
+                }
             }
         }
     }
@@ -297,7 +300,7 @@ public class ServerApiGenerator
                 Helpers.DirectoryInfoHelper.GetCsFileNameForContract(
                     projectOptions.PathForContracts,
                     apiGroupName,
-                    NameConstants.ContractModels,
+                    ContentGeneratorConstants.Models,
                     modelName));
         }
 
@@ -310,17 +313,13 @@ public class ServerApiGenerator
     }
 
     private void GenerateParameters(
-        OpenApiDocument document,
-        string apiGroupName)
+        OpenApiDocument document)
     {
-        var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
-
         foreach (var openApiPath in document.Paths)
         {
-            if (!openApiPath.IsPathStartingSegmentName(apiGroupName))
-            {
-                continue;
-            }
+            var apiGroupName = openApiPath.GetApiGroupName();
+
+            var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
@@ -362,17 +361,13 @@ public class ServerApiGenerator
     }
 
     private void GenerateResults(
-        OpenApiDocument document,
-        string apiGroupName)
+        OpenApiDocument document)
     {
-        var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
-
         foreach (var openApiPath in document.Paths)
         {
-            if (!openApiPath.IsPathStartingSegmentName(apiGroupName))
-            {
-                continue;
-            }
+            var apiGroupName = openApiPath.GetApiGroupName();
+
+            var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
@@ -409,29 +404,25 @@ public class ServerApiGenerator
     }
 
     private void GenerateInterfaces(
-        OpenApiDocument document,
-        string apiGroupName)
+        OpenApiDocument document)
     {
-        var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
-
         foreach (var openApiPath in document.Paths)
         {
-            if (!openApiPath.IsPathStartingSegmentName(apiGroupName))
-            {
-                continue;
-            }
+            var apiGroupName = openApiPath.GetApiGroupName();
+
+            var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
                 // Generate
                 var interfaceParameters = ContentGeneratorServerHandlerInterfaceParametersFactory.Create(
+                    codeGeneratorContentHeader,
                     fullNamespace,
+                    codeGeneratorAttribute,
                     openApiPath.Value,
                     openApiOperation.Value);
 
-                var contentGeneratorInterface = new ContentGeneratorServerHandlerInterface(
-                    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-                    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                var contentGeneratorInterface = new GenerateContentForInterface(
                     new CodeDocumentationTagsGenerator(),
                     interfaceParameters);
 
@@ -443,7 +434,7 @@ public class ServerApiGenerator
                         projectOptions.PathForContracts,
                         apiGroupName,
                         ContentGeneratorConstants.Interfaces,
-                        interfaceParameters.InterfaceName));
+                        interfaceParameters.TypeName));
 
                 var contentWriter = new ContentWriter(logger);
                 contentWriter.Write(
@@ -460,15 +451,15 @@ public class ServerApiGenerator
     {
         ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 
-        foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
+        foreach (var apiGroupName in projectOptions.ApiGroupNames)
         {
             var controllerParameters = ContentGeneratorServerControllerParametersFactory.Create(
                 operationSchemaMappings,
                 projectOptions.ProjectName,
                 projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
                 $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Endpoints}",
-                basePathSegmentName,
-                GetRouteByArea(basePathSegmentName),
+                apiGroupName,
+                GetRouteByApiGroupName(apiGroupName),
                 projectOptions.Document);
 
             var contentGenerator = new ContentGeneratorServerController(
@@ -510,13 +501,13 @@ public class ServerApiGenerator
         return result;
     }
 
-    private string GetRouteByArea(
-        string area)
+    private string GetRouteByApiGroupName(
+        string apiGroupName)
     {
-        var (key, _) = projectOptions.Document.Paths.FirstOrDefault(x => x.IsPathStartingSegmentName(area));
+        var (key, _) = projectOptions.Document.Paths.FirstOrDefault(x => x.IsPathStartingSegmentName(apiGroupName));
         if (key is null)
         {
-            throw new NotSupportedException("Area was not found in any route.");
+            throw new NotSupportedException($"{nameof(apiGroupName)} was not found in any route.");
         }
 
         var routeSuffix = key
@@ -528,16 +519,17 @@ public class ServerApiGenerator
 
     private void ScaffoldBasicFileApiGenerated()
     {
-        var contentParameters = ContentGeneratorServerRegistrationParametersFactory.Create(
+        var classParameters = ClassParametersFactory.Create(
+            codeGeneratorContentHeader,
             projectOptions.ProjectName,
-            "Api");
+            codeGeneratorAttribute,
+            "ApiRegistration");
 
-        var contentGenerator = new ContentGeneratorServerRegistration(
-            new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-            new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-            contentParameters);
+        var contentGeneratorClass = new GenerateContentForClass(
+            new CodeDocumentationTagsGenerator(),
+            classParameters);
 
-        var content = contentGenerator.Generate();
+        var classContent = contentGeneratorClass.Generate();
 
         var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "ApiRegistration.cs"));
 
@@ -546,7 +538,7 @@ public class ServerApiGenerator
             projectOptions.PathForSrcGenerate,
             file,
             ContentWriterArea.Src,
-            content);
+            classContent);
     }
 
     private void GenerateSrcGlobalUsings()
@@ -569,9 +561,9 @@ public class ServerApiGenerator
         };
 
         requiredUsings.Add($"{projectOptions.ProjectName}.Contracts");
-        foreach (var basePathSegmentName in projectOptions.BasePathSegmentNames)
+        foreach (var apiGroupName in projectOptions.ApiGroupNames)
         {
-            requiredUsings.Add($"{projectOptions.ProjectName}.Contracts.{basePathSegmentName}");
+            requiredUsings.Add($"{projectOptions.ProjectName}.Contracts.{apiGroupName}");
         }
 
         GlobalUsingsHelper.CreateOrUpdate(

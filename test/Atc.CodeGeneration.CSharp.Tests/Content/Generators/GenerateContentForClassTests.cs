@@ -267,6 +267,7 @@ public class AccountsController : ControllerBase
                     new(new List<AttributeParameters> { new("FromServices", null) }, null, false, "IUpdateAccountNameHandler", true, "handler", null),
                     new(null, null, false, "CancellationToken", false, "cancellationToken", null),
                 },
+                AlwaysBreakDownParameters: false,
                 UseExpressionBody: true,
                 Content: "await handler.ExecuteAsync(parameters, cancellationToken)"),
             new(
@@ -289,6 +290,7 @@ public class AccountsController : ControllerBase
                     new(new List<AttributeParameters> { new("FromServices", null) }, null, false, "ISetAccountNameHandler", true, "handler", null),
                     new(null, null, false, "CancellationToken", false, "cancellationToken", null),
                 },
+                AlwaysBreakDownParameters: false,
                 UseExpressionBody: true,
                 Content: "await handler.ExecuteAsync(parameters, cancellationToken)"),
         };
@@ -387,6 +389,7 @@ public class UpdateAccountNameResult : ResultBase
                 ReturnTypeName: "UpdateAccountNameResult",
                 Name: "Ok",
                 Parameters: new List<ParameterBaseParameters> { new(null, null, false, "string?", false, "message", "null") },
+                AlwaysBreakDownParameters: false,
                 UseExpressionBody: true,
                 Content: "new UpdateAccountNameResult(new OkObjectResult(message))"),
             new(
@@ -397,6 +400,7 @@ public class UpdateAccountNameResult : ResultBase
                 ReturnTypeName: null,
                 Name: "UpdateAccountNameResult",
                 Parameters: new List<ParameterBaseParameters> { new(null, null, false, "string", false, "response", null) },
+                AlwaysBreakDownParameters: false,
                 UseExpressionBody: true,
                 Content: "Ok(response)"),
         };
@@ -558,6 +562,7 @@ return await responseBuilder.BuildResponseAsync(x => new CreateLocationEndpointR
                         Name: "cancellationToken",
                         DefaultValue: "default"),
                 },
+                AlwaysBreakDownParameters: false,
                 UseExpressionBody: false,
                 Content: executeMethodeContent),
         };

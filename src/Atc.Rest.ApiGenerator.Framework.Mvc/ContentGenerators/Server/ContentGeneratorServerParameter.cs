@@ -53,7 +53,7 @@ public sealed class ContentGeneratorServerParameter : IContentGenerator
 
         AppendMethodToStringContent(sb, parameters.PropertyParameters);
 
-        sb.AppendLine("}");
+        sb.Append('}');
 
         return sb.ToString();
     }

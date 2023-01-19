@@ -4,15 +4,18 @@ public class GenerateClientCSharpCommand : AsyncCommand<ClientApiCommandSettings
 {
     private readonly ILogger<GenerateClientCSharpCommand> logger;
     private readonly IApiOperationExtractor apiOperationExtractor;
+    private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
     private readonly IOpenApiDocumentValidator openApiDocumentValidator;
 
     public GenerateClientCSharpCommand(
         ILogger<GenerateClientCSharpCommand> logger,
         IApiOperationExtractor apiOperationExtractor,
+        INugetPackageReferenceProvider nugetPackageReferenceProvider,
         IOpenApiDocumentValidator openApiDocumentValidator)
     {
         this.logger = logger;
         this.apiOperationExtractor = apiOperationExtractor;
+        this.nugetPackageReferenceProvider = nugetPackageReferenceProvider;
         this.openApiDocumentValidator = openApiDocumentValidator;
     }
 
@@ -63,6 +66,7 @@ public class GenerateClientCSharpCommand : AsyncCommand<ClientApiCommandSettings
             if (!GenerateHelper.GenerateServerCSharpClient(
                     logger,
                     apiOperationExtractor,
+                    nugetPackageReferenceProvider,
                     settings.ProjectPrefixName,
                     settings.ClientFolderName is not null && settings.ClientFolderName.IsSet ? settings.ClientFolderName.Value : string.Empty,
                     new DirectoryInfo(settings.OutputPath),

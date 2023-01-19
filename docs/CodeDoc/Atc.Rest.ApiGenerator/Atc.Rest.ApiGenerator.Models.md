@@ -50,13 +50,13 @@
 >```csharp
 >ApiGeneratorVersion
 >```
+#### ApiGroupNames
+>```csharp
+>ApiGroupNames
+>```
 #### ApiOptions
 >```csharp
 >ApiOptions
->```
-#### BasePathSegmentNames
->```csharp
->BasePathSegmentNames
 >```
 #### ClientFolderName
 >```csharp
@@ -141,13 +141,13 @@
 >```csharp
 >ApiGeneratorVersion
 >```
+#### ApiGroupNames
+>```csharp
+>ApiGroupNames
+>```
 #### ApiOptions
 >```csharp
 >ApiOptions
->```
-#### BasePathSegmentNames
->```csharp
->BasePathSegmentNames
 >```
 #### ClientFolderName
 >```csharp
@@ -268,183 +268,6 @@
 
 <br />
 
-## EndpointMethodMetadata
-
->```csharp
->public class EndpointMethodMetadata
->```
-
-### Properties
-
-#### ApiOperation
->```csharp
->ApiOperation
->```
-#### ComponentsSchemas
->```csharp
->ComponentsSchemas
->```
-#### ContractInterfaceHandlerTypeName
->```csharp
->ContractInterfaceHandlerTypeName
->```
-#### ContractParameterTypeName
->```csharp
->ContractParameterTypeName
->```
-#### ContractResultTypeName
->```csharp
->ContractResultTypeName
->```
-#### ContractReturnTypeNames
->```csharp
->ContractReturnTypeNames
->```
-#### GlobalPathParameters
->```csharp
->GlobalPathParameters
->```
-#### HttpOperation
->```csharp
->HttpOperation
->```
-#### MethodName
->```csharp
->MethodName
->```
-#### OperationSchemaMappings
->```csharp
->OperationSchemaMappings
->```
-#### ProjectName
->```csharp
->ProjectName
->```
-#### Route
->```csharp
->Route
->```
-#### SegmentName
->```csharp
->SegmentName
->```
-#### UseNullableReferenceTypes
->```csharp
->UseNullableReferenceTypes
->```
-### Methods
-
-#### Contains
->```csharp
->bool Contains(string value)
->```
-#### GetHeaderParameters
->```csharp
->List<OpenApiParameter> GetHeaderParameters()
->```
-#### GetHeaderRequiredParameters
->```csharp
->List<OpenApiParameter> GetHeaderRequiredParameters()
->```
-#### GetQueryParameters
->```csharp
->List<OpenApiParameter> GetQueryParameters()
->```
-#### GetQueryRequiredParameters
->```csharp
->List<OpenApiParameter> GetQueryRequiredParameters()
->```
-#### GetRelevantSchemasForBadRequestBodyParameters
->```csharp
->List<KeyValuePair<string, OpenApiSchema>> GetRelevantSchemasForBadRequestBodyParameters(OpenApiSchema modelSchema)
->```
-#### GetRequestBodyModelName
->```csharp
->string GetRequestBodyModelName()
->```
-#### GetRequestBodySchema
->```csharp
->OpenApiSchema GetRequestBodySchema()
->```
-#### GetRouteParameters
->```csharp
->List<OpenApiParameter> GetRouteParameters()
->```
-#### HasContractParameterAnyParametersOrRequestBody
->```csharp
->bool HasContractParameterAnyParametersOrRequestBody()
->```
-#### HasContractParameterRequestBody
->```csharp
->bool HasContractParameterRequestBody()
->```
-#### HasContractReturnTypeAsComplex
->```csharp
->bool HasContractReturnTypeAsComplex()
->```
-#### HasContractReturnTypeAsComplexAsListOrPagination
->```csharp
->bool HasContractReturnTypeAsComplexAsListOrPagination()
->```
-#### HasSharedModelOrEnumInContractParameterRequestBody
->```csharp
->bool HasSharedModelOrEnumInContractParameterRequestBody()
->```
-#### HasSharedModelOrEnumInContractReturnType
->```csharp
->bool HasSharedModelOrEnumInContractReturnType(bool includeProperties = True)
->```
-#### IsContractParameterRequestBodyUsed
->```csharp
->bool IsContractParameterRequestBodyUsed()
->```
-#### IsContractParameterRequestBodyUsedAsMultipartFormData
->```csharp
->bool IsContractParameterRequestBodyUsedAsMultipartFormData()
->```
-#### IsContractParameterRequestBodyUsedAsMultipartFormDataAndHasInlineSchemaFile
->```csharp
->bool IsContractParameterRequestBodyUsedAsMultipartFormDataAndHasInlineSchemaFile()
->```
-#### IsContractParameterRequestBodyUsedAsMultipartOctetStreamData
->```csharp
->bool IsContractParameterRequestBodyUsedAsMultipartOctetStreamData()
->```
-#### IsContractParameterRequestBodyUsingStringBuilder
->```csharp
->bool IsContractParameterRequestBodyUsingStringBuilder()
->```
-#### IsContractParameterRequestBodyUsingSystemCollectionGenericNamespace
->```csharp
->bool IsContractParameterRequestBodyUsingSystemCollectionGenericNamespace()
->```
-#### IsContractParameterRequestBodyUsingSystemNamespace
->```csharp
->bool IsContractParameterRequestBodyUsingSystemNamespace()
->```
-#### IsContractReturnTypeUsingList
->```csharp
->bool IsContractReturnTypeUsingList()
->```
-#### IsContractReturnTypeUsingPagination
->```csharp
->bool IsContractReturnTypeUsingPagination()
->```
-#### IsContractReturnTypeUsingTaskName
->```csharp
->bool IsContractReturnTypeUsingTaskName()
->```
-#### IsSharedModel
->```csharp
->bool IsSharedModel(string modelName)
->```
-#### ToString
->```csharp
->string ToString()
->```
-
-<br />
-
 ## HostProjectOptions
 
 >```csharp
@@ -497,4 +320,41 @@
 | 3 | ClientApi | Client Api |  | 
 
 
+
+<br />
+
+## ResponseTypeNameAndItemSchema
+
+>```csharp
+>public class ResponseTypeNameAndItemSchema
+>```
+
+### Properties
+
+#### FullModelName
+>```csharp
+>FullModelName
+>```
+#### HasModelName
+>```csharp
+>HasModelName
+>```
+#### HasSchema
+>```csharp
+>HasSchema
+>```
+#### Schema
+>```csharp
+>Schema
+>```
+#### StatusCode
+>```csharp
+>StatusCode
+>```
+### Methods
+
+#### ToString
+>```csharp
+>string ToString()
+>```
 <hr /><div style='text-align: right'><i>Generated by MarkdownCodeDoc version 1.2</i></div>

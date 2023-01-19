@@ -2,7 +2,6 @@
 global using System.CodeDom.Compiler;
 global using System.Collections.Generic;
 global using System.IO;
-global using System.Net;
 global using System.Net.Http;
 global using System.Reflection;
 global using System.Text;
@@ -15,18 +14,18 @@ global using Atc.Rest.Options;
 global using Atc.Rest.Results;
 global using Atc.XUnit;
 
+global using AutoFixture;
+
 global using Demo.Api.Generated;
 global using Demo.Api.Generated.Contracts;
 global using Demo.Api.Generated.Contracts.Accounts;
 global using Demo.Api.Generated.Contracts.Addresses;
-global using Demo.Api.Generated.Contracts.Eventargs;
+global using Demo.Api.Generated.Contracts.EventArgs;
 global using Demo.Api.Generated.Contracts.Files;
 global using Demo.Api.Generated.Contracts.Items;
 global using Demo.Api.Generated.Contracts.Orders;
 global using Demo.Api.Generated.Contracts.RouteWithDash;
 global using Demo.Api.Generated.Contracts.Users;
-
-global using FluentAssertions;
 
 global using Microsoft.AspNetCore.Hosting;
 global using Microsoft.AspNetCore.Http;

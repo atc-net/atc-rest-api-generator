@@ -22,10 +22,10 @@ public class DomainProjectOptions : BaseProjectOptions
             useCodingRules)
     {
         ApiProjectSrcPath = apiProjectSrcPath ?? throw new ArgumentNullException(nameof(apiProjectSrcPath));
-        PathForSrcHandlers = new DirectoryInfo(Path.Combine(PathForSrcGenerate.FullName, NameConstants.Handlers));
+        PathForSrcHandlers = new DirectoryInfo(Path.Combine(PathForSrcGenerate.FullName, ContentGeneratorConstants.Handlers));
         if (PathForTestGenerate is not null)
         {
-            PathForTestHandlers = new DirectoryInfo(Path.Combine(PathForTestGenerate.FullName, NameConstants.Handlers));
+            PathForTestHandlers = new DirectoryInfo(Path.Combine(PathForTestGenerate.FullName, ContentGeneratorConstants.Handlers));
         }
     }
 

@@ -67,13 +67,32 @@ public static class ContentGeneratorServerParameterParametersFactory
         OpenApiParameter openApiParameter,
         bool useListForDataType)
     {
-        var isNullable = openApiParameter.Schema.Nullable;
-        isNullable = isNullable switch
+        if (useListForDataType)
         {
-            true when useListForDataType => false,
-            false when openApiParameter.Schema.IsSchemaEnumOrPropertyEnum() => true,
-            _ => isNullable,
-        };
+            return false;
+        }
+
+        var isNullable = openApiParameter.Schema.Nullable;
+        if (isNullable)
+        {
+            if (openApiParameter.Required ||
+                openApiParameter.Schema.IsSchemaEnumOrPropertyEnum())
+            {
+                isNullable = false;
+            }
+        }
+        else
+        {
+            if (!openApiParameter.Required &&
+                openApiParameter.In is
+                    ParameterLocation.Query or
+                    ParameterLocation.Header or
+                    ParameterLocation.Cookie &&
+                string.IsNullOrEmpty(openApiParameter.Schema.GetDefaultValueAsString()))
+            {
+                isNullable = true;
+            }
+        }
 
         return isNullable;
     }

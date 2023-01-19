@@ -6,14 +6,9 @@ global using System.Text.RegularExpressions;
 global using Atc.CodeDocumentation.Markdown;
 global using Atc.DotNet;
 global using Atc.Helpers;
-global using Atc.Rest.ApiGenerator.Extensions;
 global using Atc.Rest.ApiGenerator.Framework.Contracts.Options;
 global using Atc.Rest.ApiGenerator.Framework.Contracts.Resolver;
-global using Atc.Rest.ApiGenerator.Generators;
-global using Atc.Rest.ApiGenerator.Helpers;
-global using Atc.Rest.ApiGenerator.Helpers.XunitTest;
 global using Atc.Rest.ApiGenerator.Models;
-global using Atc.Rest.ApiGenerator.SyntaxGenerators.Api;
 global using Atc.Rest.ApiGenerator.Tests.XUnitTestTypes.CodeGenerator;
 global using Atc.XUnit;
 

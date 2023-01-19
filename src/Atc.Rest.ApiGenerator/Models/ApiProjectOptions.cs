@@ -27,15 +27,15 @@ public class ApiProjectOptions : BaseProjectOptions
     {
         if (string.IsNullOrEmpty(clientFolderName))
         {
-            PathForEndpoints = new DirectoryInfo(Path.Combine(PathForSrcGenerate.FullName, NameConstants.Endpoints));
-            PathForContracts = new DirectoryInfo(Path.Combine(PathForSrcGenerate.FullName, NameConstants.Contracts));
-            PathForContractsShared = new DirectoryInfo(Path.Combine(PathForContracts.FullName, NameConstants.ContractsSharedModels));
+            PathForEndpoints = new DirectoryInfo(Path.Combine(PathForSrcGenerate.FullName, ContentGeneratorConstants.Endpoints));
+            PathForContracts = new DirectoryInfo(Path.Combine(PathForSrcGenerate.FullName, ContentGeneratorConstants.Contracts));
+            PathForContractsShared = new DirectoryInfo(Path.Combine(PathForContracts.FullName, ContentGeneratorConstants.SpecialFolderSharedModels));
         }
         else
         {
-            PathForEndpoints = new DirectoryInfo(Path.Combine(Path.Combine(PathForSrcGenerate.FullName, clientFolderName), NameConstants.Endpoints));
-            PathForContracts = new DirectoryInfo(Path.Combine(Path.Combine(PathForSrcGenerate.FullName, clientFolderName), NameConstants.Contracts));
-            PathForContractsShared = new DirectoryInfo(Path.Combine(Path.Combine(PathForContracts.FullName), NameConstants.ContractsSharedModels));
+            PathForEndpoints = new DirectoryInfo(Path.Combine(Path.Combine(PathForSrcGenerate.FullName, clientFolderName), ContentGeneratorConstants.Endpoints));
+            PathForContracts = new DirectoryInfo(Path.Combine(Path.Combine(PathForSrcGenerate.FullName, clientFolderName), ContentGeneratorConstants.Contracts));
+            PathForContractsShared = new DirectoryInfo(Path.Combine(Path.Combine(PathForContracts.FullName), ContentGeneratorConstants.SpecialFolderSharedModels));
         }
     }
 

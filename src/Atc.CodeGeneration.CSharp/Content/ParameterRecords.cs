@@ -123,6 +123,7 @@ public record MethodParameters(
     string? ReturnTypeName,
     string Name,
     IList<ParameterBaseParameters>? Parameters,
+    bool AlwaysBreakDownParameters,
     bool UseExpressionBody,
     string? Content);
 

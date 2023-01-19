@@ -66,7 +66,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Rest.ApiGenerator.Frame
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.CodeGeneration.CSharp", "src\Atc.CodeGeneration.CSharp\Atc.CodeGeneration.CSharp.csproj", "{9A87BAA2-F521-45B1-AF93-9BC642FD8C76}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Atc.CodeGeneration.CSharp.Tests", "test\Atc.CodeGeneration.CSharp.Tests\Atc.CodeGeneration.CSharp.Tests.csproj", "{F8F86538-AFA4-4CD9-9DF7-C870F85F4608}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.CodeGeneration.CSharp.Tests", "test\Atc.CodeGeneration.CSharp.Tests\Atc.CodeGeneration.CSharp.Tests.csproj", "{F8F86538-AFA4-4CD9-9DF7-C870F85F4608}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Atc.Rest.ApiGenerator.Nuget", "src\Atc.Rest.ApiGenerator.Nuget\Atc.Rest.ApiGenerator.Nuget.csproj", "{8670E175-EB04-4FDC-9D04-8FB0839CCF49}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Atc.Rest.ApiGenerator.Projects", "src\Atc.Rest.ApiGenerator.Projects\Atc.Rest.ApiGenerator.Projects.csproj", "{189D4B2C-6BF9-48CE-8D80-ECD20D554EBB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Atc.Rest.ApiGenerator.CodingRules", "src\Atc.Rest.ApiGenerator.CodingRules\Atc.Rest.ApiGenerator.CodingRules.csproj", "{6DE044E7-2804-48AD-8EF1-EC804A2C0395}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Atc.Rest.ApiGenerator.Nuget.Tests", "test\Atc.Rest.ApiGenerator.Nuget.Tests\Atc.Rest.ApiGenerator.Nuget.Tests.csproj", "{3F33D1B3-7AD9-44A3-B5F4-048BED3913C8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -150,6 +158,22 @@ Global
 		{F8F86538-AFA4-4CD9-9DF7-C870F85F4608}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8F86538-AFA4-4CD9-9DF7-C870F85F4608}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8F86538-AFA4-4CD9-9DF7-C870F85F4608}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8670E175-EB04-4FDC-9D04-8FB0839CCF49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8670E175-EB04-4FDC-9D04-8FB0839CCF49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8670E175-EB04-4FDC-9D04-8FB0839CCF49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8670E175-EB04-4FDC-9D04-8FB0839CCF49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{189D4B2C-6BF9-48CE-8D80-ECD20D554EBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{189D4B2C-6BF9-48CE-8D80-ECD20D554EBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{189D4B2C-6BF9-48CE-8D80-ECD20D554EBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{189D4B2C-6BF9-48CE-8D80-ECD20D554EBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DE044E7-2804-48AD-8EF1-EC804A2C0395}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DE044E7-2804-48AD-8EF1-EC804A2C0395}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DE044E7-2804-48AD-8EF1-EC804A2C0395}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DE044E7-2804-48AD-8EF1-EC804A2C0395}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F33D1B3-7AD9-44A3-B5F4-048BED3913C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F33D1B3-7AD9-44A3-B5F4-048BED3913C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F33D1B3-7AD9-44A3-B5F4-048BED3913C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F33D1B3-7AD9-44A3-B5F4-048BED3913C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -178,6 +202,10 @@ Global
 		{B8194FFD-8C4D-46AA-B1FA-A3EE195AF0FD} = {F39DCB66-0A9F-47BA-A916-301EC83F26EA}
 		{9A87BAA2-F521-45B1-AF93-9BC642FD8C76} = {A4F3156B-9E74-4710-ADBC-4628DF389F68}
 		{F8F86538-AFA4-4CD9-9DF7-C870F85F4608} = {F39DCB66-0A9F-47BA-A916-301EC83F26EA}
+		{8670E175-EB04-4FDC-9D04-8FB0839CCF49} = {A4F3156B-9E74-4710-ADBC-4628DF389F68}
+		{189D4B2C-6BF9-48CE-8D80-ECD20D554EBB} = {A4F3156B-9E74-4710-ADBC-4628DF389F68}
+		{6DE044E7-2804-48AD-8EF1-EC804A2C0395} = {A4F3156B-9E74-4710-ADBC-4628DF389F68}
+		{3F33D1B3-7AD9-44A3-B5F4-048BED3913C8} = {F39DCB66-0A9F-47BA-A916-301EC83F26EA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DFD408B5-CCB3-4B3A-9E3B-DC85C74256B1}

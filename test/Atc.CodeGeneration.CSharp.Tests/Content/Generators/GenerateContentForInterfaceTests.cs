@@ -136,6 +136,7 @@ public interface ISetAccountNameHandler
                         Name: "cancellationToken",
                         DefaultValue: "default"),
                 },
+                AlwaysBreakDownParameters: false,
                 UseExpressionBody: false,
                 Content: null),
         };
@@ -233,6 +234,7 @@ public interface IUpdateAccountNameHandler
                         Name: "cancellationToken",
                         DefaultValue: "default"),
                 },
+                AlwaysBreakDownParameters: false,
                 UseExpressionBody: false,
                 Content: null),
         };
@@ -330,6 +332,7 @@ public interface ICreateLocationEndpoint
                         Name: "cancellationToken",
                         DefaultValue: "default"),
                 },
+                AlwaysBreakDownParameters: false,
                 UseExpressionBody: false,
                 Content: null),
         };

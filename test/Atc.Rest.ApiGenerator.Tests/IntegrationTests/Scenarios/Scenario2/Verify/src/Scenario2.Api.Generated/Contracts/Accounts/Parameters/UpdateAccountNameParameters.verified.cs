@@ -25,7 +25,7 @@ public class UpdateAccountNameParameters
     /// The account name.
     /// </summary>
     [FromHeader(Name = "name")]
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     /// <inheritdoc />
     public override string ToString()

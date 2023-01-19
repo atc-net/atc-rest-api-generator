@@ -6,7 +6,14 @@ global using Atc.Rest.Options;
 
 global using Demo.Api.Full.Configuration;
 global using Demo.Api.Generated;
+global using Demo.Api.Generated.Contracts.Orders;
+global using Demo.Api.Generated.Contracts.Users;
 global using Demo.Domain;
+global using Demo.Domain.Handlers.Orders;
+global using Demo.Domain.Handlers.Users;
+global using Demo.Domain.Validators.Users;
+
+global using FluentValidation;
 
 global using Microsoft.AspNetCore.Builder;
 global using Microsoft.AspNetCore.Hosting;

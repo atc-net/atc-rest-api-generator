@@ -262,7 +262,8 @@ public class GenerateContentWriter
             parameters.Parameters.Any())
         {
             var indentSpaces = 0;
-            if (parameters.Parameters.Count == 1)
+            if (!parameters.AlwaysBreakDownParameters &&
+                parameters.Parameters.Count == 1)
             {
                 sb.Append('(');
             }
