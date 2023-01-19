@@ -125,12 +125,12 @@ public class ServerDomainGenerator
 
             foreach (var openApiOperation in urlPath.Value.Operations)
             {
-                GenerateTestHandlerCustom(apiGroupName, openApiOperation.Value);
+                GenerateTestHandler(apiGroupName, openApiOperation.Value);
             }
         }
     }
 
-    private void GenerateTestHandlerCustom(
+    private void GenerateTestHandler(
         string apiGroupName,
         OpenApiOperation apiOperation)
     {

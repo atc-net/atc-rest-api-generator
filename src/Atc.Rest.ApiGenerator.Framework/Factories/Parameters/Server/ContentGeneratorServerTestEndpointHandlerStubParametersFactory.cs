@@ -113,6 +113,8 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
         => value.EndsWith("Task", StringComparison.Ordinal) ||
            value.EndsWith("Tasks", StringComparison.Ordinal) ||
            value.EndsWith("Endpoint", StringComparison.Ordinal) ||
+           value.EndsWith("User", StringComparison.Ordinal) ||
+           value.EndsWith("Pet", StringComparison.Ordinal) ||
            value.EndsWith("EventArgs", StringComparison.Ordinal);
 
     [SuppressMessage("Performance", "CA1854:Prefer the 'IDictionary.TryGetValue(TKey, out TValue)' method", Justification = "OK.")]
@@ -123,11 +125,16 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
         bool hasParameters)
     {
         var responseStatusCodes = openApiOperation.Responses.GetHttpStatusCodes();
+        if (!responseStatusCodes.Any())
+        {
+            return "throw new NotImplementedException();";
+        }
+
         if (!responseStatusCodes.Contains(HttpStatusCode.OK))
         {
             return responseStatusCodes.Contains(HttpStatusCode.Created)
                 ? $"return Task.FromResult({contractResultTypeName}.Created());"
-                : string.Empty;
+                : "throw new NotImplementedException();";
         }
 
         var returnType = string.Empty;
@@ -246,6 +253,11 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
         }
         else
         {
+            if (string.IsNullOrEmpty(returnName))
+            {
+                returnName = "string";
+            }
+
             sb.AppendLine($"var data = new Fixture().Create<{returnName}>();");
             sb.AppendLine();
             sb.Append($"return Task.FromResult({contractResultTypeName}.Ok(data));");
