@@ -103,6 +103,16 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
             return value;
         }
 
+        // Fix hack later on...
+        if (@namespace.Contains("Petstore", StringComparison.Ordinal))
+        {
+            if (valueToTest.EndsWith("User", StringComparison.Ordinal) ||
+                valueToTest.EndsWith("Pet", StringComparison.Ordinal))
+            {
+                return value;
+            }
+        }
+
         var s1 = @namespace.Replace(".Generated", string.Empty, StringComparison.Ordinal);
         var s2 = s1.Replace("Tests.Endpoints.", "Generated.Contracts.", StringComparison.Ordinal);
 
@@ -113,8 +123,6 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
         => value.EndsWith("Task", StringComparison.Ordinal) ||
            value.EndsWith("Tasks", StringComparison.Ordinal) ||
            value.EndsWith("Endpoint", StringComparison.Ordinal) ||
-           value.EndsWith("User", StringComparison.Ordinal) ||
-           value.EndsWith("Pet", StringComparison.Ordinal) ||
            value.EndsWith("EventArgs", StringComparison.Ordinal);
 
     [SuppressMessage("Performance", "CA1854:Prefer the 'IDictionary.TryGetValue(TKey, out TValue)' method", Justification = "OK.")]
