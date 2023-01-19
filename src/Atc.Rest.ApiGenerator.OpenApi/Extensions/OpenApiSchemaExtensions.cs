@@ -7,6 +7,45 @@ public static class OpenApiSchemaExtensions
         this OpenApiSchema apiSchema)
         => apiSchema.Default.GetDefaultValueAsString();
 
+    public static ParameterLocationType GetParameterLocationType(
+        this OpenApiSchema apiSchema,
+        ParameterLocationType defaultParameterLocationType = ParameterLocationType.Body)
+    {
+        var parameterLocationType = defaultParameterLocationType;
+        if (apiSchema.IsTypeArray())
+        {
+            if (apiSchema.HasItemsWithFormatTypeBinary())
+            {
+                parameterLocationType = ParameterLocationType.Form;
+            }
+        }
+        else
+        {
+            if (apiSchema.HasAnyPropertiesWithFormatTypeBinary() ||
+                apiSchema.HasAnyPropertiesAsArrayWithFormatTypeBinary())
+            {
+                parameterLocationType = ParameterLocationType.Form;
+            }
+        }
+
+        return parameterLocationType;
+    }
+
+    public static IDictionary<string, OpenApiSchema> GetPaginationParameters(
+        this OpenApiSchema apiSchema)
+    {
+        if (!apiSchema.IsPaging())
+        {
+            return new Dictionary<string, OpenApiSchema>(StringComparer.Ordinal);
+        }
+
+        var apiSchemaPaging = NameConstants.Pagination.Equals(apiSchema.AllOf[0].Reference?.Id, StringComparison.OrdinalIgnoreCase)
+            ? apiSchema.AllOf[0]
+            : apiSchema.AllOf[1];
+
+        return apiSchemaPaging.Properties;
+    }
+
     public static bool IsModelOfTypeArray(
         this OpenApiSchema apiSchema,
         IDictionary<string, OpenApiSchema> modelSchemas)
@@ -37,30 +76,6 @@ public static class OpenApiSchemaExtensions
         => apiSchema.AllOf.Count == 2 &&
            (NameConstants.Pagination.Equals(apiSchema.AllOf[0].Reference?.Id, StringComparison.OrdinalIgnoreCase) ||
             NameConstants.Pagination.Equals(apiSchema.AllOf[1].Reference?.Id, StringComparison.OrdinalIgnoreCase));
-
-    public static ParameterLocationType GetParameterLocationType(
-        this OpenApiSchema apiSchema,
-        ParameterLocationType defaultParameterLocationType = ParameterLocationType.Body)
-    {
-        var parameterLocationType = defaultParameterLocationType;
-        if (apiSchema.IsTypeArray())
-        {
-            if (apiSchema.HasItemsWithFormatTypeBinary())
-            {
-                parameterLocationType = ParameterLocationType.Form;
-            }
-        }
-        else
-        {
-            if (apiSchema.HasAnyPropertiesWithFormatTypeBinary() ||
-                apiSchema.HasAnyPropertiesAsArrayWithFormatTypeBinary())
-            {
-                parameterLocationType = ParameterLocationType.Form;
-            }
-        }
-
-        return parameterLocationType;
-    }
 
     public static CodeDocumentationTags ExtractDocumentationTags(
         this OpenApiSchema apiSchema,

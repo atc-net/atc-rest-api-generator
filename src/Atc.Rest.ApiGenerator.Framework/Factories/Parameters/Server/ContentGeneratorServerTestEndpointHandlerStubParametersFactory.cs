@@ -79,52 +79,6 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
             GenerateToStringMethode: false);
     }
 
-    private static string EnsureFullNamespaceIfNeeded(
-        string value,
-        string @namespace)
-    {
-        // TODO: Use OpenApiDocumentSchemaModelNameResolver
-        string valueToTest;
-        if (value.EndsWith("Handler", StringComparison.Ordinal))
-        {
-            valueToTest = value[..(value.LastIndexOf("Handler", StringComparison.Ordinal) - 1)];
-        }
-        else if (value.EndsWith("Result", StringComparison.Ordinal))
-        {
-            valueToTest = value[..(value.LastIndexOf("Result", StringComparison.Ordinal) - 1)];
-        }
-        else
-        {
-            valueToTest = value;
-        }
-
-        if (!EndsWithWellKnownSystemTypeName(valueToTest) &&
-            !EndsWithWellKnownSystemTypeNameHackForPerstore(@namespace, valueToTest))
-        {
-            return value;
-        }
-
-        var s1 = @namespace.Replace(".Generated", string.Empty, StringComparison.Ordinal);
-        var s2 = s1.Replace("Tests.Endpoints.", "Generated.Contracts.", StringComparison.Ordinal);
-
-        return $"{s2}.{value}";
-    }
-
-    private static bool EndsWithWellKnownSystemTypeName(
-        string value)
-        => value.EndsWith("Task", StringComparison.Ordinal) ||
-           value.EndsWith("Tasks", StringComparison.Ordinal) ||
-           value.EndsWith("Endpoint", StringComparison.Ordinal) ||
-           value.EndsWith("EventArgs", StringComparison.Ordinal);
-
-    // TODO: Fix hack later on...
-    private static bool EndsWithWellKnownSystemTypeNameHackForPerstore(
-        string @namespace,
-        string value)
-        => @namespace.Contains("Petstore", StringComparison.Ordinal) &&
-           (value.EndsWith("User", StringComparison.Ordinal) ||
-            value.EndsWith("Pet", StringComparison.Ordinal));
-
     [SuppressMessage("Performance", "CA1854:Prefer the 'IDictionary.TryGetValue(TKey, out TValue)' method", Justification = "OK.")]
     private static string GenerateContentExecuteMethod(
         string @namespace,
@@ -239,9 +193,21 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
                 sb.AppendLine(4, "data,");
                 if (hasParameters)
                 {
-                    sb.AppendLine(4, "parameters.PageSize,");
-                    sb.AppendLine(4, "parameters.QueryString,");
-                    sb.AppendLine(4, "parameters.ContinuationToken);");
+                    var paginationParameters = returnSchema.GetPaginationParameters();
+                    if (HasParametersForAtcRestPagination(paginationParameters))
+                    {
+                        sb.AppendLine(4, "parameters.PageSize,");
+                        sb.AppendLine(4, "parameters.QueryString,");
+                        sb.AppendLine(4, "parameters.ContinuationToken);");
+                    }
+                    else
+                    {
+                        sb.AppendLine(4, "pageSize: 10,");
+                        sb.AppendLine(4, "queryString: null,");
+                        sb.AppendLine(4, "pageIndex: 1,");
+                        sb.AppendLine(4, "totalCount: 0);");
+                    }
+
                     sb.AppendLine();
                 }
                 else
@@ -271,4 +237,61 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
             sb.Append($"return Task.FromResult({contractResultTypeName}.Ok(data));");
         }
     }
+
+    private static bool HasParametersForAtcRestPagination(
+        IDictionary<string, OpenApiSchema> paginationParameters)
+    {
+        if (!paginationParameters.Any())
+        {
+            return false;
+        }
+
+        var keys = paginationParameters.Keys;
+        return keys.Contains("PageSize", StringComparer.OrdinalIgnoreCase) &&
+               keys.Contains("QueryString", StringComparer.OrdinalIgnoreCase) &&
+               keys.Contains("ContinuationToken", StringComparer.OrdinalIgnoreCase);
+    }
+
+    private static string EnsureFullNamespaceIfNeeded(
+        string value,
+        string @namespace)
+    {
+        // TODO: Use OpenApiDocumentSchemaModelNameResolver
+        string valueToTest;
+        if (value.EndsWith("Handler", StringComparison.Ordinal))
+        {
+            valueToTest = value[..(value.LastIndexOf("Handler", StringComparison.Ordinal) - 1)];
+        }
+        else if (value.EndsWith("Result", StringComparison.Ordinal))
+        {
+            valueToTest = value[..(value.LastIndexOf("Result", StringComparison.Ordinal) - 1)];
+        }
+        else
+        {
+            valueToTest = value;
+        }
+
+        if (!EndsWithWellKnownContract(@namespace, valueToTest) &&
+            !EndsWithWellKnownSystemTypeName(valueToTest))
+        {
+            return value;
+        }
+
+        var s1 = @namespace.Replace(".Generated", string.Empty, StringComparison.Ordinal);
+        var s2 = s1.Replace("Tests.Endpoints.", "Generated.Contracts.", StringComparison.Ordinal);
+
+        return $"{s2}.{value}";
+    }
+
+    private static bool EndsWithWellKnownContract(
+        string @namespace,
+        string valueToTest)
+        => @namespace.EndsWith("." + valueToTest, StringComparison.Ordinal);
+
+    private static bool EndsWithWellKnownSystemTypeName(
+        string value)
+        => value.EndsWith("Task", StringComparison.Ordinal) ||
+           value.EndsWith("Tasks", StringComparison.Ordinal) ||
+           value.EndsWith("Endpoint", StringComparison.Ordinal) ||
+           value.EndsWith("EventArgs", StringComparison.Ordinal);
 }

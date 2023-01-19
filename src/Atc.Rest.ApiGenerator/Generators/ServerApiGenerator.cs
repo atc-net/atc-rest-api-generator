@@ -196,7 +196,7 @@ public class ServerApiGenerator
 
     private void GenerateModels(
         OpenApiDocument document,
-        IEnumerable<ApiOperation> operationSchemaMappings)
+        IList<ApiOperation> operationSchemaMappings)
     {
         ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 

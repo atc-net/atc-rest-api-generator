@@ -282,6 +282,12 @@ public sealed class ApiOperationExtractor : IApiOperationExtractor
             schemaKey = apiSchema.OneOf.First().Reference.Id.EnsureFirstCharacterToUpper();
             apiSchema = apiSchema.OneOf.First();
         }
+        else if (apiSchema.AnyOf.Any() &&
+                 apiSchema.AnyOf.First().Reference?.Id is not null)
+        {
+            schemaKey = apiSchema.AnyOf.First().Reference.Id.EnsureFirstCharacterToUpper();
+            apiSchema = apiSchema.AnyOf.First();
+        }
         else if (apiSchema.IsPaging())
         {
             if (!NameConstants.Pagination.Equals(apiSchema.AllOf[0].Reference?.Id, StringComparison.OrdinalIgnoreCase))

@@ -102,9 +102,17 @@ public static class ContentGeneratorServerClientModelParametersFactory
 
                 var useListForDataType = openApiParameter.IsTypeArray();
 
-                var dataType = useListForDataType
-                    ? openApiParameter.Items.GetDataType()
-                    : openApiParameter.GetDataType();
+                string? dataType;
+                if (useListForDataType)
+                {
+                    dataType = openApiParameter.Items.GetDataType();
+                }
+                else
+                {
+                    dataType = openApiParameter.AnyOf.Count == 1
+                        ? openApiParameter.AnyOf[0].GetDataType()
+                        : openApiParameter.GetDataType();
+                }
 
                 var isSimpleType = useListForDataType
                     ? openApiParameter.Items.IsSimpleDataType() || openApiParameter.Items.IsSchemaEnumOrPropertyEnum() || openApiParameter.Items.IsFormatTypeBinary()
