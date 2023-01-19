@@ -22,4 +22,8 @@
     <ProjectReference Include="..\..\src\Atc.Rest.ApiGenerator.OpenApi\Atc.Rest.ApiGenerator.OpenApi.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="Atc.Test" Version="1.0.72" />
+  </ItemGroup>
+
 </Project>
