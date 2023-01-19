@@ -43,7 +43,7 @@ public static class OpenApiResponsesExtensions
         bool includeIfNotDefinedInternalServerError)
     {
         var result = new List<Tuple<HttpStatusCode, string>>();
-        foreach (var response in responses.OrderBy(x => x.Key))
+        foreach (var response in responses.OrderBy(x => x.Key, StringComparer.Ordinal))
         {
             if (!Enum.TryParse(typeof(HttpStatusCode), response.Key, out var parsedType))
             {

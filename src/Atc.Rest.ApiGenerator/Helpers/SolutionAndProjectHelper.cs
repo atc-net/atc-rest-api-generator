@@ -82,7 +82,7 @@ public static class SolutionAndProjectHelper
             frameworkReferences.Count > 0)
         {
             sb.AppendLine(2, "<ItemGroup>");
-            foreach (var frameworkReference in frameworkReferences.OrderBy(x => x))
+            foreach (var frameworkReference in frameworkReferences.OrderBy(x => x, StringComparer.Ordinal))
             {
                 sb.AppendLine(4, $"<FrameworkReference Include=\"{frameworkReference}\" />");
             }
@@ -95,7 +95,7 @@ public static class SolutionAndProjectHelper
             packageReferences.Count > 0)
         {
             sb.AppendLine(2, "<ItemGroup>");
-            foreach (var (package, version, extra) in packageReferences.OrderBy(x => x.Item1))
+            foreach (var (package, version, extra) in packageReferences.OrderBy(x => x.Item1, StringComparer.Ordinal))
             {
                 if (extra is null)
                 {
@@ -122,7 +122,7 @@ public static class SolutionAndProjectHelper
             projectReferences.Count > 0)
         {
             sb.AppendLine(2, "<ItemGroup>");
-            foreach (var projectReference in projectReferences.OrderBy(x => x.Name))
+            foreach (var projectReference in projectReferences.OrderBy(x => x.Name, StringComparer.Ordinal))
             {
                 var packageReferenceValue = GetProjectReference(projectCsProjFile, projectReference);
                 sb.AppendLine(4, $"<ProjectReference Include=\"{packageReferenceValue}\" />");

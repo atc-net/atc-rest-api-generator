@@ -78,7 +78,7 @@ public static class OpenApiDocumentExtensions
         }
 
         return names
-            .OrderBy(x => x)
+            .OrderBy(x => x, StringComparer.Ordinal)
             .ToList();
     }
 

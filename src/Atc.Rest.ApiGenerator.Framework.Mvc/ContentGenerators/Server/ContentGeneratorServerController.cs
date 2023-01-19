@@ -104,8 +104,8 @@ public sealed class ContentGeneratorServerController : IContentGenerator
         if (ShouldUseAuthorizeAttribute(item))
         {
             var authorizeLineBuilder = new StringBuilder();
-            var authRoles = string.Join(',', item.ApiPathAuthorizationRoles.Concat(item.ApiOperationAuthorizationRoles).Distinct(StringComparer.Ordinal).OrderBy(x => x));
-            var authSchemes = string.Join(',', item.ApiPathAuthenticationSchemes.Concat(item.ApiOperationAuthenticationSchemes).Distinct(StringComparer.Ordinal).OrderBy(x => x));
+            var authRoles = string.Join(',', item.ApiPathAuthorizationRoles.Concat(item.ApiOperationAuthorizationRoles).Distinct(StringComparer.Ordinal).OrderBy(x => x, StringComparer.Ordinal));
+            var authSchemes = string.Join(',', item.ApiPathAuthenticationSchemes.Concat(item.ApiOperationAuthenticationSchemes).Distinct(StringComparer.Ordinal).OrderBy(x => x, StringComparer.Ordinal));
 
             authorizeLineBuilder.Append(4, "[Authorize");
 
