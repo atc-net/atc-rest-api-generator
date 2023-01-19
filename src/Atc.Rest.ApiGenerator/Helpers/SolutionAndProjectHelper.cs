@@ -591,7 +591,8 @@ public static class SolutionAndProjectHelper
                         latestVersion = await atcApiNugetClient.RetrieveLatestVersionForPackageId(item.PackageId, CancellationToken.None);
                     });
 
-                    if (latestVersion!.IsNewerThan(version, withinMinorReleaseOnly: true))
+                    if (latestVersion is not null &&
+                        latestVersion!.IsNewerThan(version, withinMinorReleaseOnly: true))
                     {
                         result.Add(
                             new DotnetNugetPackage(

@@ -103,10 +103,10 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
             return value;
         }
 
-        // Fix hack later on...
+        // TODO: Fix hack later on...
         if (@namespace.Contains("Petstore", StringComparison.Ordinal) &&
-            (valueToTest.EndsWith("User", StringComparison.Ordinal) ||
-             valueToTest.EndsWith("Pet", StringComparison.Ordinal)))
+            !(valueToTest.EndsWith("User", StringComparison.Ordinal) ||
+              valueToTest.EndsWith("Pet", StringComparison.Ordinal)))
         {
             return value;
         }
