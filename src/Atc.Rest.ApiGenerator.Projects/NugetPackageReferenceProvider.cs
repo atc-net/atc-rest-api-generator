@@ -45,7 +45,7 @@ public class NugetPackageReferenceProvider : INugetPackageReferenceProvider
         packageReferences.Add(("Microsoft.AspNetCore.Authentication.JwtBearer", "6.0.9", null));
         packageReferences.Add(("Microsoft.AspNetCore.Mvc.Versioning", "5.0.0", null));
         packageReferences.Add(("Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer", "5.0.0", null));
-        packageReferences.Add(("Swashbuckle.AspNetCore", "6.4.0", null));
+        packageReferences.Add(("Swashbuckle.AspNetCore", "6.5.0", null));
 
         return packageReferences;
     }
