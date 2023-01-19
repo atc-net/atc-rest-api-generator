@@ -98,15 +98,8 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
             valueToTest = value;
         }
 
-        if (!EndsWithWellKnownSystemTypeName(valueToTest))
-        {
-            return value;
-        }
-
-        // TODO: Fix hack later on...
-        if (@namespace.Contains("Petstore", StringComparison.Ordinal) &&
-            !(valueToTest.EndsWith("User", StringComparison.Ordinal) ||
-              valueToTest.EndsWith("Pet", StringComparison.Ordinal)))
+        if (!EndsWithWellKnownSystemTypeName(valueToTest) &&
+            !EndsWithWellKnownSystemTypeNameHackForPerstore(@namespace, valueToTest))
         {
             return value;
         }
@@ -117,11 +110,20 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
         return $"{s2}.{value}";
     }
 
-    private static bool EndsWithWellKnownSystemTypeName(string value)
+    private static bool EndsWithWellKnownSystemTypeName(
+        string value)
         => value.EndsWith("Task", StringComparison.Ordinal) ||
            value.EndsWith("Tasks", StringComparison.Ordinal) ||
            value.EndsWith("Endpoint", StringComparison.Ordinal) ||
            value.EndsWith("EventArgs", StringComparison.Ordinal);
+
+    // TODO: Fix hack later on...
+    private static bool EndsWithWellKnownSystemTypeNameHackForPerstore(
+        string @namespace,
+        string value)
+        => @namespace.Contains("Petstore", StringComparison.Ordinal) &&
+           (value.EndsWith("User", StringComparison.Ordinal) ||
+            value.EndsWith("Pet", StringComparison.Ordinal));
 
     [SuppressMessage("Performance", "CA1854:Prefer the 'IDictionary.TryGetValue(TKey, out TValue)' method", Justification = "OK.")]
     private static string GenerateContentExecuteMethod(
