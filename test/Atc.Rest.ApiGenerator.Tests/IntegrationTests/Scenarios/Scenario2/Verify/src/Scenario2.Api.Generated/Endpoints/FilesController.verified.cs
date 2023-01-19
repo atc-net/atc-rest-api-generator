@@ -16,21 +16,6 @@ namespace Scenario2.Api.Generated.Endpoints;
 public class FilesController : ControllerBase
 {
     /// <summary>
-    /// Description: Get File By Id.
-    /// Operation: GetFileById.
-    /// </summary>
-    [HttpGet("{id}")]
-    [ProducesResponseType(typeof(byte[]), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> GetFileById(
-        GetFileByIdParameters parameters,
-        [FromServices] IGetFileByIdHandler handler,
-        CancellationToken cancellationToken)
-        => await handler.ExecuteAsync(parameters, cancellationToken);
-
-    /// <summary>
     /// Description: Upload multi files as form data.
     /// Operation: UploadMultiFilesAsFormData.
     /// </summary>
@@ -91,6 +76,21 @@ public class FilesController : ControllerBase
     public async Task<ActionResult> UploadSingleObjectWithFilesAsFormData(
         UploadSingleObjectWithFilesAsFormDataParameters parameters,
         [FromServices] IUploadSingleObjectWithFilesAsFormDataHandler handler,
+        CancellationToken cancellationToken)
+        => await handler.ExecuteAsync(parameters, cancellationToken);
+
+    /// <summary>
+    /// Description: Get File By Id.
+    /// Operation: GetFileById.
+    /// </summary>
+    [HttpGet("{id}")]
+    [ProducesResponseType(typeof(byte[]), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> GetFileById(
+        GetFileByIdParameters parameters,
+        [FromServices] IGetFileByIdHandler handler,
         CancellationToken cancellationToken)
         => await handler.ExecuteAsync(parameters, cancellationToken);
 }

@@ -8,24 +8,10 @@
 
 - [AppEmojisConstants](Atc.Rest.ApiGenerator.md#appemojisconstants)
   -  Static Fields
-     - string AreaCodingRules
-     - string AreaDirectoryBuildProps
-     - string AreaDownload
-     - string AreaEditorConfig
      - string AreaGenerateCode
      - string AreaGenerateTest
      - string PackageReference
 - [AtcRestApiGeneratorAssemblyTypeInitializer](Atc.Rest.ApiGenerator.md#atcrestapigeneratorassemblytypeinitializer)
-- [Constants](Atc.Rest.ApiGenerator.md#constants)
-  -  Static Fields
-     - string GitHubPrefix
-     - string GitRawContentUrl
-
-## [Atc.Rest.ApiGenerator.Extensions](Atc.Rest.ApiGenerator.Extensions.md)
-
-- [ListExtensions](Atc.Rest.ApiGenerator.Extensions.md#listextensions)
-  -  Static Methods
-     - TrimEndForEmptyValues(this IList&lt;string&gt; values)
 
 ## [Atc.Rest.ApiGenerator.Generators](Atc.Rest.ApiGenerator.Generators.md)
 
@@ -44,10 +30,6 @@
 
 ## [Atc.Rest.ApiGenerator.Helpers](Atc.Rest.ApiGenerator.Helpers.md)
 
-- [AtcApiNugetClientHelper](Atc.Rest.ApiGenerator.Helpers.md#atcapinugetclienthelper)
-  -  Static Methods
-     - GetLatestVersionForPackageId(ILogger logger, string packageId, CancellationToken cancellationToken = null)
-     - GetLatestVersionForPackageId(string packageId, CancellationToken cancellationToken = null)
 - [DirectoryInfoHelper](Atc.Rest.ApiGenerator.Helpers.md#directoryinfohelper)
   -  Static Methods
      - GetCsFileNameForContract(DirectoryInfo pathForContracts, string apiGroupName, string modelName)
@@ -57,38 +39,20 @@
      - GetCsFileNameForEndpoints(DirectoryInfo pathForEndpoints, string modelName)
      - GetCsFileNameForHandler(DirectoryInfo pathForHandlers, string apiGroupName, string handlerName)
      - GetProjectPath()
-- [GenerateAtcCodingRulesHelper](Atc.Rest.ApiGenerator.Helpers.md#generateatccodingruleshelper)
-  -  Static Fields
-     - string FileNameDirectoryBuildProps
-     - string FileNameEditorConfig
-  -  Static Methods
-     - Generate(ILogger logger, string outputSlnPath, DirectoryInfo outputSrcPath, DirectoryInfo outputTestPath)
 - [GenerateHelper](Atc.Rest.ApiGenerator.Helpers.md#generatehelper)
   -  Static Methods
-     - GenerateServerApi(ILogger logger, IApiOperationExtractor apiOperationExtractor, string projectPrefixName, DirectoryInfo outputPath, DirectoryInfo outputTestPath, OpenApiDocumentContainer apiDocumentContainer, ApiOptions apiOptions, bool useCodingRules)
-     - GenerateServerCSharpClient(ILogger logger, IApiOperationExtractor apiOperationExtractor, string projectPrefixName, string clientFolderName, DirectoryInfo outputPath, OpenApiDocumentContainer apiDocumentContainer, bool excludeEndpointGeneration, ApiOptions apiOptions, bool useCodingRules)
-     - GenerateServerDomain(ILogger logger, string projectPrefixName, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath, OpenApiDocumentContainer apiDocumentContainer, ApiOptions apiOptions, bool useCodingRules, DirectoryInfo apiPath)
-     - GenerateServerHost(ILogger logger, IApiOperationExtractor apiOperationExtractor, string projectPrefixName, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath, OpenApiDocumentContainer apiDocumentContainer, ApiOptions apiOptions, bool usingCodingRules, DirectoryInfo apiPath, DirectoryInfo domainPath)
+     - GenerateServerApi(ILogger logger, IApiOperationExtractor apiOperationExtractor, INugetPackageReferenceProvider nugetPackageReferenceProvider, string projectPrefixName, DirectoryInfo outputPath, DirectoryInfo outputTestPath, OpenApiDocumentContainer apiDocumentContainer, ApiOptions apiOptions, bool useCodingRules)
+     - GenerateServerCSharpClient(ILogger logger, IApiOperationExtractor apiOperationExtractor, INugetPackageReferenceProvider nugetPackageReferenceProvider, string projectPrefixName, string clientFolderName, DirectoryInfo outputPath, OpenApiDocumentContainer apiDocumentContainer, bool excludeEndpointGeneration, ApiOptions apiOptions, bool useCodingRules)
+     - GenerateServerDomain(ILogger logger, INugetPackageReferenceProvider nugetPackageReferenceProvider, string projectPrefixName, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath, OpenApiDocumentContainer apiDocumentContainer, ApiOptions apiOptions, bool useCodingRules, DirectoryInfo apiPath)
+     - GenerateServerHost(ILogger logger, INugetPackageReferenceProvider nugetPackageReferenceProvider, string projectPrefixName, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath, OpenApiDocumentContainer apiDocumentContainer, ApiOptions apiOptions, bool usingCodingRules, DirectoryInfo apiPath, DirectoryInfo domainPath)
      - GenerateServerSln(ILogger logger, string projectPrefixName, string outputSlnPath, DirectoryInfo outputSourcePath, DirectoryInfo outputTestPath)
-     - GetAtcApiGeneratorVersion()
-     - GetAtcApiGeneratorVersionAsString3()
-     - GetAtcApiGeneratorVersionAsString4()
-     - GetAtcVersion()
-     - GetAtcVersionAsString3()
-     - GetAtcVersionAsString4()
 - [GlobalUsingsHelper](Atc.Rest.ApiGenerator.Helpers.md#globalusingshelper)
   -  Static Methods
      - CreateOrUpdate(ILogger logger, ContentWriterArea contentWriterArea, DirectoryInfo directoryInfo, List&lt;string&gt; requiredUsings)
-- [NugetPackageReferenceHelper](Atc.Rest.ApiGenerator.Helpers.md#nugetpackagereferencehelper)
-  -  Static Methods
-     - CreateForApiProject()
-     - CreateForClientApiProject()
-     - CreateForHostProject(bool useRestExtended)
-     - CreateForTestProject(bool useMvc)
 - [SolutionAndProjectHelper](Atc.Rest.ApiGenerator.Helpers.md#solutionandprojecthelper)
   -  Static Methods
      - EnsureLatestPackageReferencesVersionInProjFile(ILogger logger, FileInfo projectCsProjFile, string fileDisplayLocation, ProjectType projectType, bool isTestProject)
-     - ScaffoldProjFile(ILogger logger, FileInfo projectCsProjFile, string fileDisplayLocation, ProjectType projectType, bool createAsWeb, bool createAsTestProject, string projectName, string targetFramework, IList&lt;string&gt; frameworkReferences, IList&lt;Tuple&lt;string, string, string&gt;&gt; packageReferences, IList&lt;FileInfo&gt; projectReferences, bool includeApiSpecification, bool usingCodingRules)
+     - ScaffoldProjFile(ILogger logger, FileInfo projectCsProjFile, string fileDisplayLocation, ProjectType projectType, bool createAsWeb, bool createAsTestProject, string projectName, string targetFramework, IList&lt;string&gt; frameworkReferences, IList&lt;ValueTuple&lt;string, string, string&gt;&gt; packageReferences, IList&lt;FileInfo&gt; projectReferences, bool includeApiSpecification, bool usingCodingRules)
      - ScaffoldSlnFile(ILogger logger, FileInfo slnFile, string projectName, DirectoryInfo apiPath, DirectoryInfo domainPath, DirectoryInfo hostPath, DirectoryInfo domainTestPath = null, DirectoryInfo hostTestPath = null)
 - [TrailingCharType](Atc.Rest.ApiGenerator.Helpers.md#trailingchartype)
 
