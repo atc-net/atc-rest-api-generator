@@ -570,6 +570,7 @@ public static class SolutionAndProjectHelper
         return $"{sb1}{sb2}";
     }
 
+    [SuppressMessage("Maintainability", "CA1508:Avoid dead conditional code", Justification = "OK.")]
     private static List<DotnetNugetPackage> GetPackageReferencesThatNeedsToBeUpdated(
         string fileContent)
     {
@@ -588,11 +589,14 @@ public static class SolutionAndProjectHelper
                     Version? latestVersion = default;
                     TaskHelper.RunSync(async () =>
                     {
-                        latestVersion = await atcApiNugetClient.RetrieveLatestVersionForPackageId(item.PackageId, CancellationToken.None);
+                        latestVersion =
+                            await atcApiNugetClient.RetrieveLatestVersionForPackageId(
+                                item.PackageId,
+                                CancellationToken.None);
                     });
 
                     if (latestVersion is not null &&
-                        latestVersion!.IsNewerThan(version, withinMinorReleaseOnly: true))
+                        latestVersion.IsNewerThan(version, withinMinorReleaseOnly: true))
                     {
                         result.Add(
                             new DotnetNugetPackage(
