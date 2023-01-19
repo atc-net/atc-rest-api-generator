@@ -104,13 +104,11 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
         }
 
         // Fix hack later on...
-        if (@namespace.Contains("Petstore", StringComparison.Ordinal))
+        if (@namespace.Contains("Petstore", StringComparison.Ordinal) &&
+            (valueToTest.EndsWith("User", StringComparison.Ordinal) ||
+             valueToTest.EndsWith("Pet", StringComparison.Ordinal)))
         {
-            if (valueToTest.EndsWith("User", StringComparison.Ordinal) ||
-                valueToTest.EndsWith("Pet", StringComparison.Ordinal))
-            {
-                return value;
-            }
+            return value;
         }
 
         var s1 = @namespace.Replace(".Generated", string.Empty, StringComparison.Ordinal);
