@@ -1,6 +1,0 @@
-{
-  "Mappings": {
-    "Src": { "Paths": [ "C:\\Temp\\@PerArrayIssue\\src" ] },
-    "Test": { "Paths": [ "C:\\Temp\\@PerArrayIssue\\test" ] }
-  }
-}

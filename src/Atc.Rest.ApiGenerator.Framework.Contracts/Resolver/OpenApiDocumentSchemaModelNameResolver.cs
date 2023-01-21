@@ -1,4 +1,5 @@
 // ReSharper disable ReplaceSubstringWithRangeIndexer
+// ReSharper disable InvertIf
 namespace Atc.Rest.ApiGenerator.Framework.Contracts.Resolver;
 
 public static class OpenApiDocumentSchemaModelNameResolver

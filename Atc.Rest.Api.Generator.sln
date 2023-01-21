@@ -9,8 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{A4F3156B-9E7
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Rest.ApiGenerator", "src\Atc.Rest.ApiGenerator\Atc.Rest.ApiGenerator.csproj", "{91EBC1B7-0F17-4E4E-96AF-A9D5445344AB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Rest.ApiGenerator.Tests", "test\Atc.Rest.ApiGenerator.Tests\Atc.Rest.ApiGenerator.Tests.csproj", "{DFA48952-8368-4203-A607-817B8E2EB965}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{1575FE97-3F0C-4E58-963E-30B06A03133F}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
@@ -68,13 +66,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.CodeGeneration.CSharp",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.CodeGeneration.CSharp.Tests", "test\Atc.CodeGeneration.CSharp.Tests\Atc.CodeGeneration.CSharp.Tests.csproj", "{F8F86538-AFA4-4CD9-9DF7-C870F85F4608}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Atc.Rest.ApiGenerator.Nuget", "src\Atc.Rest.ApiGenerator.Nuget\Atc.Rest.ApiGenerator.Nuget.csproj", "{8670E175-EB04-4FDC-9D04-8FB0839CCF49}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Rest.ApiGenerator.Nuget", "src\Atc.Rest.ApiGenerator.Nuget\Atc.Rest.ApiGenerator.Nuget.csproj", "{8670E175-EB04-4FDC-9D04-8FB0839CCF49}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Atc.Rest.ApiGenerator.Projects", "src\Atc.Rest.ApiGenerator.Projects\Atc.Rest.ApiGenerator.Projects.csproj", "{189D4B2C-6BF9-48CE-8D80-ECD20D554EBB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Rest.ApiGenerator.Projects", "src\Atc.Rest.ApiGenerator.Projects\Atc.Rest.ApiGenerator.Projects.csproj", "{189D4B2C-6BF9-48CE-8D80-ECD20D554EBB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Atc.Rest.ApiGenerator.CodingRules", "src\Atc.Rest.ApiGenerator.CodingRules\Atc.Rest.ApiGenerator.CodingRules.csproj", "{6DE044E7-2804-48AD-8EF1-EC804A2C0395}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Rest.ApiGenerator.CodingRules", "src\Atc.Rest.ApiGenerator.CodingRules\Atc.Rest.ApiGenerator.CodingRules.csproj", "{6DE044E7-2804-48AD-8EF1-EC804A2C0395}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Atc.Rest.ApiGenerator.Nuget.Tests", "test\Atc.Rest.ApiGenerator.Nuget.Tests\Atc.Rest.ApiGenerator.Nuget.Tests.csproj", "{3F33D1B3-7AD9-44A3-B5F4-048BED3913C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Rest.ApiGenerator.Nuget.Tests", "test\Atc.Rest.ApiGenerator.Nuget.Tests\Atc.Rest.ApiGenerator.Nuget.Tests.csproj", "{3F33D1B3-7AD9-44A3-B5F4-048BED3913C8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Rest.ApiGenerator.Framework.Contracts.Tests", "test\Atc.Rest.ApiGenerator.Framework.Contracts.Tests\Atc.Rest.ApiGenerator.Framework.Contracts.Tests.csproj", "{8FF7EF9D-DDBB-4D25-B3A5-5E0D11462545}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Rest.ApiGenerator.CLI.Tests", "test\Atc.Rest.ApiGenerator.CLI.Tests\Atc.Rest.ApiGenerator.CLI.Tests.csproj", "{D75819AA-3092-43F6-80D2-1BF2FCAA92EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -86,10 +88,6 @@ Global
 		{91EBC1B7-0F17-4E4E-96AF-A9D5445344AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91EBC1B7-0F17-4E4E-96AF-A9D5445344AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91EBC1B7-0F17-4E4E-96AF-A9D5445344AB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DFA48952-8368-4203-A607-817B8E2EB965}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DFA48952-8368-4203-A607-817B8E2EB965}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DFA48952-8368-4203-A607-817B8E2EB965}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DFA48952-8368-4203-A607-817B8E2EB965}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B63975D1-8BD6-4436-8B73-460407AC807B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B63975D1-8BD6-4436-8B73-460407AC807B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B63975D1-8BD6-4436-8B73-460407AC807B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -174,13 +172,20 @@ Global
 		{3F33D1B3-7AD9-44A3-B5F4-048BED3913C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F33D1B3-7AD9-44A3-B5F4-048BED3913C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F33D1B3-7AD9-44A3-B5F4-048BED3913C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FF7EF9D-DDBB-4D25-B3A5-5E0D11462545}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FF7EF9D-DDBB-4D25-B3A5-5E0D11462545}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FF7EF9D-DDBB-4D25-B3A5-5E0D11462545}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FF7EF9D-DDBB-4D25-B3A5-5E0D11462545}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D75819AA-3092-43F6-80D2-1BF2FCAA92EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D75819AA-3092-43F6-80D2-1BF2FCAA92EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D75819AA-3092-43F6-80D2-1BF2FCAA92EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D75819AA-3092-43F6-80D2-1BF2FCAA92EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{91EBC1B7-0F17-4E4E-96AF-A9D5445344AB} = {A4F3156B-9E74-4710-ADBC-4628DF389F68}
-		{DFA48952-8368-4203-A607-817B8E2EB965} = {F39DCB66-0A9F-47BA-A916-301EC83F26EA}
 		{B63975D1-8BD6-4436-8B73-460407AC807B} = {C1130B67-DEF9-480F-BEBB-E32E5E490583}
 		{DF929E2C-7526-423B-891B-AB752E7A1635} = {C1130B67-DEF9-480F-BEBB-E32E5E490583}
 		{7676D3AA-2882-4517-8E93-93E632C9EA80} = {02E0684C-13A4-4D2C-B6D3-379C52E724E7}
@@ -206,6 +211,8 @@ Global
 		{189D4B2C-6BF9-48CE-8D80-ECD20D554EBB} = {A4F3156B-9E74-4710-ADBC-4628DF389F68}
 		{6DE044E7-2804-48AD-8EF1-EC804A2C0395} = {A4F3156B-9E74-4710-ADBC-4628DF389F68}
 		{3F33D1B3-7AD9-44A3-B5F4-048BED3913C8} = {F39DCB66-0A9F-47BA-A916-301EC83F26EA}
+		{8FF7EF9D-DDBB-4D25-B3A5-5E0D11462545} = {F39DCB66-0A9F-47BA-A916-301EC83F26EA}
+		{D75819AA-3092-43F6-80D2-1BF2FCAA92EE} = {F39DCB66-0A9F-47BA-A916-301EC83F26EA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DFD408B5-CCB3-4B3A-9E3B-DC85C74256B1}
