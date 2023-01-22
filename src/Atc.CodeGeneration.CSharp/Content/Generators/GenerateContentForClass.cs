@@ -1,4 +1,5 @@
 // ReSharper disable MergeIntoPattern
+// ReSharper disable ConvertIfStatementToSwitchStatement
 namespace Atc.CodeGeneration.CSharp.Content.Generators;
 
 public class GenerateContentForClass : IContentGenerator
@@ -27,30 +28,33 @@ public class GenerateContentForClass : IContentGenerator
                 parameters.Attributes));
 
         sb.Append($"{parameters.AccessModifier.GetDescription()} class ");
-        if (string.IsNullOrEmpty(parameters.InheritedClassTypeName) &&
-            string.IsNullOrEmpty(parameters.InheritedInterfaceTypeName))
+        sb.Append(parameters.ClassTypeName);
+        if (!string.IsNullOrEmpty(parameters.GenericTypeName))
         {
-            sb.AppendLine($"{parameters.ClassTypeName}");
+            sb.Append($"<{parameters.GenericTypeName}>");
         }
-        else
+
+        if (!string.IsNullOrEmpty(parameters.InheritedClassTypeName) ||
+            !string.IsNullOrEmpty(parameters.InheritedInterfaceTypeName))
         {
+            sb.Append(" : ");
+
             if (!string.IsNullOrEmpty(parameters.InheritedClassTypeName) &&
-                string.IsNullOrEmpty(parameters.InheritedInterfaceTypeName))
+                !string.IsNullOrEmpty(parameters.InheritedInterfaceTypeName))
             {
-                sb.AppendLine($"{parameters.ClassTypeName} : {parameters.InheritedClassTypeName}");
+                sb.Append($"{parameters.InheritedClassTypeName}, {parameters.InheritedInterfaceTypeName}");
             }
-            else if (string.IsNullOrEmpty(parameters.InheritedClassTypeName) &&
-                     !string.IsNullOrEmpty(parameters.InheritedInterfaceTypeName))
+            else if (!string.IsNullOrEmpty(parameters.InheritedClassTypeName))
             {
-                sb.AppendLine($"{parameters.ClassTypeName} : {parameters.InheritedInterfaceTypeName}");
+                sb.Append(parameters.InheritedClassTypeName);
             }
-            else if (!string.IsNullOrEmpty(parameters.InheritedClassTypeName) &&
-                     !string.IsNullOrEmpty(parameters.InheritedInterfaceTypeName))
+            else if (!string.IsNullOrEmpty(parameters.InheritedInterfaceTypeName))
             {
-                sb.AppendLine($"{parameters.ClassTypeName} : {parameters.InheritedClassTypeName}, {parameters.InheritedInterfaceTypeName}");
+                sb.Append(parameters.InheritedInterfaceTypeName);
             }
         }
 
+        sb.AppendLine();
         sb.AppendLine("{");
 
         var isFirstEntry = true;

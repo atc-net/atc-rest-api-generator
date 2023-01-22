@@ -17,6 +17,12 @@ public static class ContentGeneratorServerClientModelParametersFactory
 
         var propertiesParameters = ExtractPropertiesParameters(apiSchemaModel);
 
+        string? genericTypeName = null;
+        if (propertiesParameters.Any(x => x.TypeName == "T"))
+        {
+            genericTypeName = "T";
+        }
+
         return new ClassParameters(
             headerContent,
             @namespace,
@@ -24,6 +30,7 @@ public static class ContentGeneratorServerClientModelParametersFactory
             new List<AttributeParameters> { codeGeneratorAttribute },
             AccessModifiers.Public,
             ClassTypeName: modelName,
+            GenericTypeName: genericTypeName,
             InheritedClassTypeName: null,
             InheritedGenericClassTypeName: null,
             InheritedInterfaceTypeName: null,
@@ -102,10 +109,16 @@ public static class ContentGeneratorServerClientModelParametersFactory
 
                 var useListForDataType = openApiParameter.IsTypeArray();
 
-                string? dataType;
+                string? dataType = null;
                 if (useListForDataType)
                 {
-                    dataType = openApiParameter.Items.GetDataType();
+                    if (apiSchema.Key.IsNamedAsItemsOrResult() &&
+                        string.IsNullOrEmpty(openApiParameter.Items.Type))
+                    {
+                        dataType = "T";
+                    }
+
+                    dataType ??= openApiParameter.Items.GetDataType();
                 }
                 else
                 {

@@ -8,7 +8,9 @@ public enum SchemaType
     ComplexType,
     ComplexTypeList,
     ComplexTypePagedList,
+    ComplexTypeCustomPagedList,
     SimpleType,
     SimpleTypeList,
     SimpleTypePagedList,
+    SimpleTypeCustomPagedList,
 }

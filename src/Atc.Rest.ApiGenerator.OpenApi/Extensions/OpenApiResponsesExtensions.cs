@@ -65,7 +65,7 @@ public static class OpenApiResponsesExtensions
                 useProblemDetails = true;
             }
 
-            string? typeResponseName;
+            string? typeResponseName = null;
             switch (httpStatusCode)
             {
                 case HttpStatusCode.OK:
@@ -96,6 +96,26 @@ public static class OpenApiResponsesExtensions
                                 {
                                     dataType = schema.GetSimpleDataTypeFromPagination();
                                 }
+                                else if (schema.IsTypeCustomPagination())
+                                {
+                                    var customPaginationSchema = schema.GetCustomPaginationSchema();
+                                    var customPaginationItemsSchema = schema.GetCustomPaginationItemsSchema();
+                                    if (customPaginationSchema is not null &&
+                                        customPaginationItemsSchema is not null)
+                                    {
+                                        var genericDataTypeName = customPaginationSchema.GetDataType();
+                                        if (customPaginationItemsSchema.Items.IsSimpleDataType())
+                                        {
+                                            dataType = customPaginationItemsSchema.GetDataType();
+                                            typeResponseName = $"{genericDataTypeName}<{dataType}>";
+                                        }
+                                        else
+                                        {
+                                            dataType = customPaginationItemsSchema.GetModelName();
+                                            typeResponseName = $"{genericDataTypeName}<{dataType}>";
+                                        }
+                                    }
+                                }
                             }
 
                             if (string.IsNullOrEmpty(dataType))
@@ -104,16 +124,19 @@ public static class OpenApiResponsesExtensions
                             }
                         }
 
-                        if (isList)
+                        if (string.IsNullOrEmpty(typeResponseName))
                         {
-                            typeResponseName = $"{NameConstants.List}<{dataType}>";
-                        }
-                        else
-                        {
-                            var isPagination = responses.IsSchemaTypePaginationForStatusCode(httpStatusCode);
-                            typeResponseName = isPagination
-                                ? $"{NameConstants.Pagination}<{dataType}>"
-                                : dataType;
+                            if (isList)
+                            {
+                                typeResponseName = $"{NameConstants.List}<{dataType}>";
+                            }
+                            else
+                            {
+                                var isPagination = responses.IsSchemaTypePaginationForStatusCode(httpStatusCode);
+                                typeResponseName = isPagination
+                                    ? $"{NameConstants.Pagination}<{dataType}>"
+                                    : dataType;
+                            }
                         }
                     }
 

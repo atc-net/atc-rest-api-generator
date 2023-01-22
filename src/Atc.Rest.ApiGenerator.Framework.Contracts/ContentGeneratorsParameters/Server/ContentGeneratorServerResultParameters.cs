@@ -15,9 +15,11 @@ public record ContentGeneratorServerResultMethodParameters(
     string? ModelName,
     CodeDocumentationTags DocumentationTags,
     bool? UsesBinaryResponse,
-    string? SimpleDataTypeName);
+    string? SimpleDataTypeName,
+    string? GenericDataTypeName);
 
 public record ContentGeneratorServerResultImplicitOperatorParameters(
     SchemaType SchemaType,
     string? ModelName,
-    string? SimpleDataTypeName);
+    string? SimpleDataTypeName,
+    string? GenericDataTypeName);

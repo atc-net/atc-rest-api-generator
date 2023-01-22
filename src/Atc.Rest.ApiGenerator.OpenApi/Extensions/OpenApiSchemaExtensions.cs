@@ -34,7 +34,7 @@ public static class OpenApiSchemaExtensions
     public static IDictionary<string, OpenApiSchema> GetPaginationParameters(
         this OpenApiSchema apiSchema)
     {
-        if (!apiSchema.IsPaging())
+        if (!apiSchema.IsTypePagination())
         {
             return new Dictionary<string, OpenApiSchema>(StringComparer.Ordinal);
         }
@@ -44,6 +44,55 @@ public static class OpenApiSchemaExtensions
             : apiSchema.AllOf[1];
 
         return apiSchemaPaging.Properties;
+    }
+
+    public static OpenApiSchema? GetCustomPaginationSchema(
+        this OpenApiSchema apiSchema)
+    {
+        if (!apiSchema.IsTypeCustomPagination())
+        {
+            return null;
+        }
+
+        return apiSchema.AllOf[0].Reference?.Id is not null
+            ? apiSchema.AllOf[0]
+            : apiSchema.AllOf[1];
+    }
+
+    public static OpenApiSchema? GetCustomPaginationItemsSchema(
+        this OpenApiSchema apiSchema)
+    {
+        if (!apiSchema.IsTypeCustomPagination())
+        {
+            return null;
+        }
+
+        var apiSchemaForItems = apiSchema.AllOf[0].Reference?.Id is null
+            ? apiSchema.AllOf[0]?.Properties?.FirstOrDefault()
+            : apiSchema.AllOf[1]?.Properties?.FirstOrDefault();
+
+        if (apiSchemaForItems is null ||
+            string.IsNullOrEmpty(apiSchemaForItems.Value.Key) ||
+            apiSchemaForItems.Value.Value is null)
+        {
+            return null;
+        }
+
+        return apiSchemaForItems.Value.Value;
+    }
+
+    public static string GetSimpleDataTypeFromCustomPagination(
+        this OpenApiSchema schema)
+    {
+        if (schema is null)
+        {
+            throw new ArgumentNullException(nameof(schema));
+        }
+
+        var customPaginationItemsSchema = schema.GetCustomPaginationItemsSchema();
+        return customPaginationItemsSchema is null
+            ? string.Empty
+            : customPaginationItemsSchema.GetDataType();
     }
 
     public static bool IsModelOfTypeArray(
@@ -71,11 +120,31 @@ public static class OpenApiSchemaExtensions
         => apiSchema.IsTypeArray() &&
            apiSchema.Items?.Reference?.Id is not null;
 
-    public static bool IsPaging(
-        this OpenApiSchema apiSchema)
-        => apiSchema.AllOf.Count == 2 &&
-           (NameConstants.Pagination.Equals(apiSchema.AllOf[0].Reference?.Id, StringComparison.OrdinalIgnoreCase) ||
-            NameConstants.Pagination.Equals(apiSchema.AllOf[1].Reference?.Id, StringComparison.OrdinalIgnoreCase));
+    public static bool IsTypeCustomPagination(
+        this OpenApiSchema schema)
+    {
+        if (schema is null)
+        {
+            throw new ArgumentNullException(nameof(schema));
+        }
+
+        if (schema.AllOf.Count == 2)
+        {
+            if (schema.AllOf[0].Reference?.Id is null &&
+                schema.AllOf[1].Reference?.Id is not null)
+            {
+                return true;
+            }
+
+            if (schema.AllOf[0].Reference?.Id is not null &&
+                schema.AllOf[1].Reference?.Id is null)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     public static CodeDocumentationTags ExtractDocumentationTags(
         this OpenApiSchema apiSchema,

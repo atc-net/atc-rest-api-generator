@@ -14,6 +14,7 @@ public static class ClassParametersFactory
             Attributes: new List<AttributeParameters> { attribute },
             AccessModifiers.Public,
             ClassTypeName: classTypeName,
+            GenericTypeName: null,
             InheritedClassTypeName: null,
             InheritedGenericClassTypeName: null,
             InheritedInterfaceTypeName: null,

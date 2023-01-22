@@ -70,6 +70,7 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
             new List<AttributeParameters> { codeGeneratorAttribute },
             AccessModifiers.Public,
             ClassTypeName: $"{operationName}{ContentGeneratorConstants.HandlerStub}",
+            GenericTypeName: null,
             InheritedClassTypeName: inheritedClassTypeName,
             InheritedGenericClassTypeName: null,
             InheritedInterfaceTypeName: null,
@@ -111,9 +112,24 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
         }
         else
         {
-            returnType = returnSchema.IsSimpleDataType()
-                 ? returnSchema.GetDataType()
-                 : returnSchema.GetModelType();
+            if (returnSchema.IsTypeCustomPagination())
+            {
+                var customPaginationSchema = returnSchema.GetCustomPaginationSchema();
+                var customPaginationItemsSchema = returnSchema.GetCustomPaginationItemsSchema();
+                if (customPaginationSchema is not null &&
+                    customPaginationItemsSchema is not null)
+                {
+                    returnType = customPaginationItemsSchema.IsSimpleDataType()
+                        ? customPaginationItemsSchema.GetDataType()
+                        : customPaginationItemsSchema.GetModelName();
+                }
+            }
+            else
+            {
+                returnType = returnSchema.IsSimpleDataType()
+                    ? returnSchema.GetDataType()
+                    : returnSchema.GetModelType();
+            }
         }
 
         var sb = new StringBuilder();
@@ -166,14 +182,31 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
         OpenApiSchema returnSchema,
         bool hasParameters)
     {
+        var isTypeCustomPagination = returnSchema.IsTypeCustomPagination();
+
         var returnName = EnsureFullNamespaceIfNeeded(
             returnSchema.GetModelName(),
             @namespace);
 
         if (string.IsNullOrEmpty(returnName) &&
-            returnSchema.IsTypeArrayOrPagination())
+            (isTypeCustomPagination || returnSchema.IsTypeArrayOrPagination()))
         {
-            if (returnSchema.IsTypeArray())
+            if (isTypeCustomPagination)
+            {
+                var customPaginationItemsSchema = returnSchema.GetCustomPaginationItemsSchema();
+                if (customPaginationItemsSchema is not null)
+                {
+                    if (customPaginationItemsSchema.IsSimpleDataType())
+                    {
+                        returnName = customPaginationItemsSchema.GetDataType();
+                    }
+                    else
+                    {
+                        returnName = customPaginationItemsSchema.GetModelName();
+                    }
+                }
+            }
+            else if (returnSchema.IsTypeArray())
             {
                 returnName = returnSchema.GetSimpleDataTypeFromArray();
             }
@@ -183,39 +216,54 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
             }
         }
 
-        if (returnSchema.IsTypeArrayOrPagination())
+        if (isTypeCustomPagination ||
+            returnSchema.IsTypeArrayOrPagination())
         {
             sb.AppendLine($"var data = new Fixture().Create<List<{returnName}>>();");
             sb.AppendLine();
-            if (returnSchema.IsTypePagination())
+            if (isTypeCustomPagination ||
+                returnSchema.IsTypePagination())
             {
-                sb.AppendLine($"var paginationData = new Pagination<{returnName}>(");
-                sb.AppendLine(4, "data,");
-                if (hasParameters)
+                if (isTypeCustomPagination)
                 {
-                    var paginationParameters = returnSchema.GetPaginationParameters();
-                    if (HasParametersForAtcRestPagination(paginationParameters))
+                    var customPaginationSchema = returnSchema.GetCustomPaginationSchema();
+                    if (customPaginationSchema is not null)
                     {
-                        sb.AppendLine(4, "parameters.PageSize,");
-                        sb.AppendLine(4, "parameters.QueryString,");
-                        sb.AppendLine(4, "parameters.ContinuationToken);");
+                        var genericDataTypeName = customPaginationSchema.GetModelName();
+                        sb.AppendLine($"var paginationData = new {genericDataTypeName}<{returnName}>();");
+                        sb.AppendLine();
+                    }
+                }
+                else
+                {
+                    sb.AppendLine($"var paginationData = new Pagination<{returnName}>(");
+                    sb.AppendLine(4, "data,");
+                    if (hasParameters)
+                    {
+                        var paginationParameters = returnSchema.GetPaginationParameters();
+                        if (HasParametersForAtcRestPagination(paginationParameters))
+                        {
+                            sb.AppendLine(4, "parameters.PageSize,");
+                            sb.AppendLine(4, "parameters.QueryString,");
+                            sb.AppendLine(4, "parameters.ContinuationToken);");
+                        }
+                        else
+                        {
+                            sb.AppendLine(4, "pageSize: 10,");
+                            sb.AppendLine(4, "queryString: null,");
+                            sb.AppendLine(4, "pageIndex: 1,");
+                            sb.AppendLine(4, "totalCount: 0);");
+                        }
+
+                        sb.AppendLine();
                     }
                     else
                     {
                         sb.AppendLine(4, "pageSize: 10,");
                         sb.AppendLine(4, "queryString: null,");
-                        sb.AppendLine(4, "pageIndex: 1,");
-                        sb.AppendLine(4, "totalCount: 0);");
+                        sb.AppendLine(4, "continuationToken: null);");
+                        sb.AppendLine();
                     }
-
-                    sb.AppendLine();
-                }
-                else
-                {
-                    sb.AppendLine(4, "pageSize: 10,");
-                    sb.AppendLine(4, "queryString: null,");
-                    sb.AppendLine(4, "continuationToken: null);");
-                    sb.AppendLine();
                 }
 
                 sb.Append($"return Task.FromResult({contractResultTypeName}.Ok(paginationData));");

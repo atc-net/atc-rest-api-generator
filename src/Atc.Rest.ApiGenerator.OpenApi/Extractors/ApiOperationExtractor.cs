@@ -1,3 +1,6 @@
+// ReSharper disable ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
+// ReSharper disable InvertIf
+// ReSharper disable TailRecursiveCall
 namespace Atc.Rest.ApiGenerator.OpenApi.Extractors;
 
 public sealed class ApiOperationExtractor : IApiOperationExtractor
@@ -123,6 +126,35 @@ public sealed class ApiOperationExtractor : IApiOperationExtractor
             schemaKey == nameof(ProblemDetails) ||
             schemaKey.Equals(NameConstants.Pagination, StringComparison.OrdinalIgnoreCase))
         {
+            if (apiSchema.IsTypeCustomPagination())
+            {
+                var apiSchemaForCustomPagination = apiSchema.GetCustomPaginationSchema();
+                var apiSchemaForCustomPaginationItems = apiSchema.GetCustomPaginationItemsSchema();
+                if (apiSchemaForCustomPagination is not null &&
+                    apiSchemaForCustomPaginationItems is not null)
+                {
+                    var consolidateSchemaForCustomPaginationItems = ConsolidateSchemaObjectTypes(apiSchemaForCustomPaginationItems);
+                    CollectSchema(
+                        componentsSchemas,
+                        consolidateSchemaForCustomPaginationItems.Item2,
+                        locatedArea,
+                        apiPath,
+                        httpOperation,
+                        parentApiSchema,
+                        result);
+
+                    var consolidateSchemaForCustomPagination = ConsolidateSchemaObjectTypes(apiSchemaForCustomPagination);
+                    CollectSchema(
+                        componentsSchemas,
+                        consolidateSchemaForCustomPagination.Item2,
+                        locatedArea,
+                        apiPath,
+                        httpOperation,
+                        parentApiSchema,
+                        result);
+                }
+            }
+
             return;
         }
 
@@ -155,7 +187,7 @@ public sealed class ApiOperationExtractor : IApiOperationExtractor
                 schemaKey,
                 result);
         }
-        else if (apiSchema.IsPaging())
+        else if (apiSchema.IsTypePagination())
         {
             apiOperation.Cardinality = CardinalityType.Paged;
             HandleCardinalityPaged(componentsSchemas, apiSchema, locatedArea, apiPath, httpOperation, result, schemaKey);
@@ -288,7 +320,7 @@ public sealed class ApiOperationExtractor : IApiOperationExtractor
             schemaKey = apiSchema.AnyOf.First().Reference.Id.EnsureFirstCharacterToUpper();
             apiSchema = apiSchema.AnyOf.First();
         }
-        else if (apiSchema.IsPaging())
+        else if (apiSchema.IsTypePagination())
         {
             if (!NameConstants.Pagination.Equals(apiSchema.AllOf[0].Reference?.Id, StringComparison.OrdinalIgnoreCase))
             {
