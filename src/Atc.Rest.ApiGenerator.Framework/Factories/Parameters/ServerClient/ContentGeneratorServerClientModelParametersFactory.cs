@@ -80,7 +80,7 @@ public static class ContentGeneratorServerClientModelParametersFactory
 
         if (apiSchemaModel.Properties.Count == 0)
         {
-            var childModelName = apiSchemaModel.Items.Title.EnsureFirstCharacterToUpper();
+            var childModelName = apiSchemaModel.Items.GetModelName();
 
             var documentationTags = new CodeDocumentationTags($"A list of {childModelName}.");
 
