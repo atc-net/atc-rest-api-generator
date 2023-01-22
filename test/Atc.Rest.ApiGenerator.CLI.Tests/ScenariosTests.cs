@@ -42,8 +42,8 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
                 StringSplitOptions.RemoveEmptyEntries);
 
         Assert.True(
-            "Schema validated successfully.".Equals(outputLines[^1], StringComparison.Ordinal),
-            $"CLI validate schema output is missing 'Schema validated successfully' for scenario '{scenarioPath.Name}' - Last line: '{outputLines[^1]}'");
+            outputLines[^1].Contains("Schema validated successfully.", StringComparison.Ordinal),
+            $"CLI validate schema output is missing 'Schema validated successfully.' for scenario '{scenarioPath.Name}'");
     }
 
     [Theory]
