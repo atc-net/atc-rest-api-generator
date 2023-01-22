@@ -43,8 +43,4 @@
     <PackageReference Update="Atc.Test" Version="1.0.72" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="PetStoreApi\VerifyServerAll\" />
-  </ItemGroup>
-
 </Project>
