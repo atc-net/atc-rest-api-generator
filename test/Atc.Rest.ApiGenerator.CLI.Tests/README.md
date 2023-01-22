@@ -45,3 +45,10 @@ Note for the request parameters, global-query-parameters is defined and ref from
 - `pageSize` as `int` and default set to `10`
 - `pageIndex` as `int` and default set to `0`
 - `queryString` as `string`
+
+## Scenario - PetStoreApi
+
+The is PetStore from OpenApi example and can be found [here](https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml).
+
+Note: This example don't follow the strict-rules that `atc-net` encourage you to use.
+With the scrict-rules you will get the best c# output experience.

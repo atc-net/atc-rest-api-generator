@@ -16,6 +16,7 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
     [InlineData("DemoSampleApi")]
     [InlineData("DemoUsersApi")]
     [InlineData("GenericPaginationApi")]
+    [InlineData("PetStoreApi")]
     public async Task ValidateYamlSpecificationByScenario(
         string scenarioName)
     {
@@ -49,6 +50,7 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
     [InlineData("DemoSampleApi")]
     [InlineData("DemoUsersApi")]
     [InlineData("GenericPaginationApi")]
+    [InlineData("PetStoreApi")]
     public async Task GenerateVerifyAndBuildForServerAllByScenario(
         string scenarioName)
     {
@@ -69,6 +71,7 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
     ////[InlineData("DemoSampleApi")]
     ////[InlineData("DemoUsersApi")]
     ////[InlineData("GenericPaginationApi")]
+    ////[InlineData("PetStoreApi")]
     public async Task GenerateVerifyAndBuildForServerAllByScenarioWithoutCleanup(
         string scenarioName)
     {
@@ -95,6 +98,7 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
     [InlineData("DemoSampleApi")]
     [InlineData("DemoUsersApi")]
     [InlineData("GenericPaginationApi")]
+    [InlineData("PetStoreApi")]
     public async Task GenerateVerifyAndBuildForClientCSharpByScenario(
         string scenarioName)
     {
@@ -114,6 +118,7 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
     ////[InlineData("DemoSampleApi")]
     ////[InlineData("DemoUsersApi")]
     ////[InlineData("GenericPaginationApi")]
+    ////[InlineData("PetStoreApi")]
     public async Task GenerateVerifyAndBuildForClientCSharpByScenarioWithoutCleanup(
         string scenarioName)
     {
