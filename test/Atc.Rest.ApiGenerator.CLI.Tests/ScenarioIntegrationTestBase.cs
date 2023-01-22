@@ -1,3 +1,4 @@
+// ReSharper disable SuggestBaseTypeForParameter
 namespace Atc.Rest.ApiGenerator.CLI.Tests;
 
 [SuppressMessage("Major Code Smell", "S4457:Parameter validation in \"async\"/\"await\" methods should be wrapped", Justification = "OK.")]
@@ -129,5 +130,4 @@ public abstract class ScenarioIntegrationTestBase : IntegrationTestCliBase
             .Replace(verifyPath, outputPath.FullName, StringComparison.Ordinal);
         return new FileInfo(generatedFile);
     }
-
 }

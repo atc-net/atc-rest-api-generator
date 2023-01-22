@@ -109,7 +109,6 @@ public static class ContentGeneratorClientEndpointResultInterfaceParametersFacto
             return string.IsNullOrEmpty(tmpModelName)
                 ? modelName
                 : tmpModelName;
-
         }
 
         modelName = OpenApiDocumentSchemaModelNameResolver.EnsureModelNameWithNamespaceIfNeeded(

@@ -5,6 +5,7 @@
     <IsPackable>false</IsPackable>
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <NoWarn>$(NoWarn);CA1016</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
