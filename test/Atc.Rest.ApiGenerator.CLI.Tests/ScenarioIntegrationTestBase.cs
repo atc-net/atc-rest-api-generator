@@ -64,36 +64,6 @@ public abstract class ScenarioIntegrationTestBase : IntegrationTestCliBase
         return new DirectoryInfo(Path.Combine(workingPath.FullName, scenario.Name));
     }
 
-    public static FileInfo[] GetVerifyCsFilesForScenario(
-        FileSystemInfo scenarioDirectoryInfo)
-    {
-        ArgumentNullException.ThrowIfNull(scenarioDirectoryInfo);
-
-        var verifyPath = Path.Combine(scenarioDirectoryInfo.FullName, "Verify");
-        var verifyCsFiles = Directory
-            .GetFiles(verifyPath, "*.verified.cs", SearchOption.AllDirectories)
-            .Select(x => new FileInfo(x))
-            .ToArray();
-        return verifyCsFiles;
-    }
-
-    public static FileInfo GetGeneratedFile(
-        FileSystemInfo scenarioDirectoryInfo,
-        FileInfo verifyFile,
-        DirectoryInfo outputPath)
-    {
-        ArgumentNullException.ThrowIfNull(scenarioDirectoryInfo);
-        ArgumentNullException.ThrowIfNull(verifyFile);
-        ArgumentNullException.ThrowIfNull(outputPath);
-
-        var verifyPath = Path.Combine(scenarioDirectoryInfo.FullName, "Verify");
-        var generatedFile = verifyFile
-            .FullName
-            .Replace(".verified", string.Empty, StringComparison.Ordinal)
-            .Replace(verifyPath, outputPath.FullName, StringComparison.Ordinal);
-        return new FileInfo(generatedFile);
-    }
-
     public static VerifySettings GetVerifySettings(
         FileInfo verifyFile,
         FileInfo generatedFile)
@@ -107,4 +77,57 @@ public abstract class ScenarioIntegrationTestBase : IntegrationTestCliBase
         settings.UseExtension(fileExtension);
         return settings;
     }
+
+    public static FileInfo[] GetVerifyServerAllCsFilesForScenario(
+        FileSystemInfo scenarioDirectoryInfo)
+        => GetVerifyCsFilesForScenario(scenarioDirectoryInfo, "VerifyServerAll");
+
+    public static FileInfo[] GetVerifyClientCSharpCsFilesForScenario(
+        FileSystemInfo scenarioDirectoryInfo)
+        => GetVerifyCsFilesForScenario(scenarioDirectoryInfo, "VerifyClientCSharp");
+
+    public static FileInfo GetServerAllGeneratedFileForScenario(
+        FileSystemInfo scenarioDirectoryInfo,
+        FileInfo verifyFile,
+        DirectoryInfo outputPath)
+        => GetGeneratedFileForScenario(scenarioDirectoryInfo, verifyFile, outputPath, "VerifyServerAll");
+
+    public static FileInfo GetClientCSharpGeneratedFileForScenario(
+        FileSystemInfo scenarioDirectoryInfo,
+        FileInfo verifyFile,
+        DirectoryInfo outputPath)
+        => GetGeneratedFileForScenario(scenarioDirectoryInfo, verifyFile, outputPath, "VerifyClientCSharp");
+
+    private static FileInfo[] GetVerifyCsFilesForScenario(
+        FileSystemInfo scenarioDirectoryInfo,
+        string area)
+    {
+        ArgumentNullException.ThrowIfNull(scenarioDirectoryInfo);
+
+        var verifyPath = Path.Combine(scenarioDirectoryInfo.FullName, area);
+        var verifyCsFiles = Directory
+            .GetFiles(verifyPath, "*.verified.cs", SearchOption.AllDirectories)
+            .Select(x => new FileInfo(x))
+            .ToArray();
+        return verifyCsFiles;
+    }
+
+    private static FileInfo GetGeneratedFileForScenario(
+        FileSystemInfo scenarioDirectoryInfo,
+        FileInfo verifyFile,
+        DirectoryInfo outputPath,
+        string area)
+    {
+        ArgumentNullException.ThrowIfNull(scenarioDirectoryInfo);
+        ArgumentNullException.ThrowIfNull(verifyFile);
+        ArgumentNullException.ThrowIfNull(outputPath);
+
+        var verifyPath = Path.Combine(scenarioDirectoryInfo.FullName, area);
+        var generatedFile = verifyFile
+            .FullName
+            .Replace(".verified", string.Empty, StringComparison.Ordinal)
+            .Replace(verifyPath, outputPath.FullName, StringComparison.Ordinal);
+        return new FileInfo(generatedFile);
+    }
+
 }
