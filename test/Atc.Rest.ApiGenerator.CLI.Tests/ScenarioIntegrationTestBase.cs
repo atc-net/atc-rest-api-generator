@@ -14,15 +14,16 @@ public abstract class ScenarioIntegrationTestBase : IntegrationTestCliBase
                 testAssemblyName,
                 StringSplitOptions.RemoveEmptyEntries)[0]);
 
-        var scenariosPath = Path.Combine(
+        var directories = Directory.GetDirectories(Path.Combine(
             testBasePath.FullName,
-            Path.Combine(
-                "Atc.Rest.ApiGenerator.CLI.Tests",
-                "Scenarios"));
+            "Atc.Rest.ApiGenerator.CLI.Tests"));
 
-        return Directory
-            .EnumerateDirectories(scenariosPath)
-            .Select(x => new DirectoryInfo(x));
+        return (
+                from directory
+                in directories
+                where Directory.GetFiles(directory, "*.yaml").Length == 1
+                select new DirectoryInfo(directory))
+            .ToList();
     }
 
     [SuppressMessage("Performance", "MA0023:Add RegexOptions.ExplicitCapture", Justification = "OK.")]
