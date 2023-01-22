@@ -120,36 +120,24 @@ public static class ContentGeneratorClientEndpointResultParametersFactory
         var tmpModelName = modelSchema.GetModelName();
         if (string.IsNullOrEmpty(tmpModelName))
         {
-            if (modelSchema.IsTypeCustomPagination())
+            if (!modelSchema.IsTypeCustomPagination())
             {
-                var customPaginationSchema = modelSchema.GetCustomPaginationSchema();
-                var customPaginationItemsSchema = modelSchema.GetCustomPaginationItemsSchema();
-                if (customPaginationSchema is null ||
-                    customPaginationItemsSchema is null)
-                {
-                    return modelName;
-                }
+                return modelSchema.GetDataType();
+            }
 
-                var modelTypeName = customPaginationItemsSchema.IsSimpleDataType()
-                    ? customPaginationItemsSchema.GetDataType()
-                    : customPaginationItemsSchema.GetModelName();
-                var customPaginationTypeName = customPaginationSchema.GetModelName();
-                modelName = $"{customPaginationTypeName}<{modelTypeName}>";
-            }
-            else
-            {
-                modelName = modelSchema.GetDataType();
-            }
+            tmpModelName = modelSchema.GetCustomPaginationGenericTypeWithItemType();
+            return string.IsNullOrEmpty(tmpModelName)
+                ? modelName
+                : tmpModelName;
+
         }
-        else
-        {
-            modelName = OpenApiDocumentSchemaModelNameResolver.EnsureModelNameWithNamespaceIfNeeded(
-                projectName,
-                apiGroupName,
-                tmpModelName,
-                isShared: false,
-                isClient: true);
-        }
+
+        modelName = OpenApiDocumentSchemaModelNameResolver.EnsureModelNameWithNamespaceIfNeeded(
+            projectName,
+            apiGroupName,
+            tmpModelName,
+            isShared: false,
+            isClient: true);
 
         return modelName;
     }

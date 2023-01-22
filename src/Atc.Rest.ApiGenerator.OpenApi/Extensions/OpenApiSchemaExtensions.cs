@@ -95,6 +95,29 @@ public static class OpenApiSchemaExtensions
             : customPaginationItemsSchema.GetDataType();
     }
 
+    public static string? GetCustomPaginationGenericTypeWithItemType(
+        this OpenApiSchema schema)
+    {
+        if (!schema.IsTypeCustomPagination())
+        {
+            return null;
+        }
+
+        var customPaginationSchema = schema.GetCustomPaginationSchema();
+        var customPaginationItemsSchema = schema.GetCustomPaginationItemsSchema();
+        if (customPaginationSchema is null ||
+            customPaginationItemsSchema is null)
+        {
+            return null;
+        }
+
+        var itemTypeName = customPaginationItemsSchema.IsSimpleDataType()
+            ? customPaginationItemsSchema.GetDataType()
+            : customPaginationItemsSchema.GetModelName();
+        var customPaginationTypeName = customPaginationSchema.GetModelName();
+        return $"{customPaginationTypeName}<{itemTypeName}>";
+    }
+
     public static bool IsModelOfTypeArray(
         this OpenApiSchema apiSchema,
         IDictionary<string, OpenApiSchema> modelSchemas)
