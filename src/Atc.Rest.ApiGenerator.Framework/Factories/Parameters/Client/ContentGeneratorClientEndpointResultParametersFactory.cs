@@ -120,7 +120,26 @@ public static class ContentGeneratorClientEndpointResultParametersFactory
         var tmpModelName = modelSchema.GetModelName();
         if (string.IsNullOrEmpty(tmpModelName))
         {
-            modelName = modelSchema.GetDataType();
+            if (modelSchema.IsTypeCustomPagination())
+            {
+                var customPaginationSchema = modelSchema.GetCustomPaginationSchema();
+                var customPaginationItemsSchema = modelSchema.GetCustomPaginationItemsSchema();
+                if (customPaginationSchema is null ||
+                    customPaginationItemsSchema is null)
+                {
+                    return modelName;
+                }
+
+                var modelTypeName = customPaginationItemsSchema.IsSimpleDataType()
+                    ? customPaginationItemsSchema.GetDataType()
+                    : customPaginationItemsSchema.GetModelName();
+                var customPaginationTypeName = customPaginationSchema.GetModelName();
+                modelName = $"{customPaginationTypeName}<{modelTypeName}>";
+            }
+            else
+            {
+                modelName = modelSchema.GetDataType();
+            }
         }
         else
         {

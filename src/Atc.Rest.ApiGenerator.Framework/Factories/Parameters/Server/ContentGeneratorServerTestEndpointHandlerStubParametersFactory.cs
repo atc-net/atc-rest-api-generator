@@ -196,14 +196,9 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
                 var customPaginationItemsSchema = returnSchema.GetCustomPaginationItemsSchema();
                 if (customPaginationItemsSchema is not null)
                 {
-                    if (customPaginationItemsSchema.IsSimpleDataType())
-                    {
-                        returnName = customPaginationItemsSchema.GetDataType();
-                    }
-                    else
-                    {
-                        returnName = customPaginationItemsSchema.GetModelName();
-                    }
+                    returnName = customPaginationItemsSchema.IsSimpleDataType()
+                        ? customPaginationItemsSchema.GetDataType()
+                        : customPaginationItemsSchema.GetModelName();
                 }
             }
             else if (returnSchema.IsTypeArray())
