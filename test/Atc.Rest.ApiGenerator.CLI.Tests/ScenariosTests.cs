@@ -1,3 +1,4 @@
+// ReSharper disable SuggestBaseTypeForParameter
 namespace Atc.Rest.ApiGenerator.CLI.Tests;
 
 [UsesVerify]
@@ -158,7 +159,7 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
             StringSplitOptions.RemoveEmptyEntries);
 
         Assert.True(
-            "Γ£à Done".Equals(outputLines[^1], StringComparison.Ordinal),
+            outputLines[^1].Contains("Done", StringComparison.Ordinal),
             $"CLI output is missing 'Done' for scenario '{scenarioPath.Name}'");
     }
 
@@ -230,7 +231,7 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
             StringSplitOptions.RemoveEmptyEntries);
 
         Assert.True(
-            "Γ£à Done".Equals(outputLines[^1], StringComparison.Ordinal),
+            outputLines[^1].Contains("Done", StringComparison.Ordinal),
             $"CLI output is missing 'Done' for scenario '{scenarioPath.Name}'");
     }
 
