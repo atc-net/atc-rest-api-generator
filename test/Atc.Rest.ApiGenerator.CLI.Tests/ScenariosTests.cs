@@ -34,9 +34,11 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
             isSuccessful,
             $"CLI validate schema output is not successful for scenario '{scenarioPath.Name}'");
 
-        var outputLines = output.Split(
-            Environment.NewLine,
-            StringSplitOptions.RemoveEmptyEntries);
+        var outputLines = output
+            .EnsureEnvironmentNewLines()
+            .Split(
+                Environment.NewLine,
+                StringSplitOptions.RemoveEmptyEntries);
 
         Assert.True(
             "Schema validated successfully.".Equals(outputLines[^1], StringComparison.Ordinal),
@@ -154,9 +156,11 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
             isSuccessful,
             $"CLI output is not successful for scenario '{scenarioPath.Name}'");
 
-        var outputLines = output.Split(
-            Environment.NewLine,
-            StringSplitOptions.RemoveEmptyEntries);
+        var outputLines = output
+            .EnsureEnvironmentNewLines()
+            .Split(
+                Environment.NewLine,
+                StringSplitOptions.RemoveEmptyEntries);
 
         Assert.True(
             outputLines[^1].Contains("Done", StringComparison.Ordinal),
@@ -226,9 +230,11 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
             isSuccessful,
             $"CLI output is not successful for scenario '{scenarioPath.Name}'");
 
-        var outputLines = output.Split(
-            Environment.NewLine,
-            StringSplitOptions.RemoveEmptyEntries);
+        var outputLines = output
+            .EnsureEnvironmentNewLines()
+            .Split(
+                Environment.NewLine,
+                StringSplitOptions.RemoveEmptyEntries);
 
         Assert.True(
             outputLines[^1].Contains("Done", StringComparison.Ordinal),
