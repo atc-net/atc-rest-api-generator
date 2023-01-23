@@ -371,7 +371,8 @@ public class OpenApiDocumentValidator : IOpenApiDocumentValidator
                                 }
                                 else
                                 {
-                                    if (value.Items.Type is null)
+                                    if (value.Items.Type is null &&
+                                        !key.IsNamedAsItemsOrResult())
                                     {
                                         logItems.Add(logItemFactory.Create(LogCategoryType.Error, ValidationRuleNameConstants.Schema09, $"Not specifying a data type for array property '{key}' in type '{schema.Reference.ReferenceV3}' is not supported."));
                                     }

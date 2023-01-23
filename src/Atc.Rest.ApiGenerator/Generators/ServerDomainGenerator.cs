@@ -326,7 +326,7 @@ public class ServerDomainGenerator
 
         foreach (var apiGroupName in projectOptions.ApiGroupNames)
         {
-            requiredUsings.Add($"{projectOptions.ProjectName}.Handlers.{apiGroupName}");
+            requiredUsings.Add($"{projectOptions.ProjectName}.Tests.Handlers.{apiGroupName}");
         }
 
         GlobalUsingsHelper.CreateOrUpdate(

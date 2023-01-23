@@ -56,6 +56,7 @@ public static class ContentGeneratorServerTestEndpointTestsParametersFactory
             },
             AccessModifiers.Public,
             ClassTypeName: $"{operationName}{ContentGeneratorConstants.Tests}",
+            GenericTypeName: null,
             InheritedClassTypeName: "WebApiControllerBaseTest",
             InheritedGenericClassTypeName: null,
             InheritedInterfaceTypeName: null,

@@ -1,5 +1,6 @@
 // ReSharper disable ConvertIfStatementToReturnStatement
 // ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
+// ReSharper disable InvertIf
 namespace Atc.Rest.ApiGenerator.Framework.Factories.Parameters.Server;
 
 public static class ContentGeneratorServerResultParametersFactory
@@ -20,6 +21,8 @@ public static class ContentGeneratorServerResultParametersFactory
 
         // Methods
         var methodParameters = new List<ContentGeneratorServerResultMethodParameters>();
+        string? genericDataTypeName = null;
+
         foreach (var httpStatusCode in httpStatusCodes)
         {
             // TODO: Refactor to method
@@ -37,20 +40,53 @@ public static class ContentGeneratorServerResultParametersFactory
             }
 
             var simpleDataTypeName = GetSimpleDataTypeName(schemaType, openApiOperation, httpStatusCode);
-            if (httpStatusCode is HttpStatusCode.OK or HttpStatusCode.Created && !string.IsNullOrEmpty(simpleDataTypeName))
-            {
-                if ("Object".Equals(simpleDataTypeName, StringComparison.Ordinal))
-                {
-                    simpleDataTypeName = "object";
-                }
-
-                simpleDataTypeNameForImplicitOperator = simpleDataTypeName;
-            }
-
+            var modelSchemaForStatusCode = openApiOperation.GetModelSchemaFromResponse();
             var modelNameForStatusCode = openApiOperation.Responses.GetModelNameForStatusCode(httpStatusCode);
-            if (httpStatusCode is HttpStatusCode.OK or HttpStatusCode.Created && !string.IsNullOrEmpty(modelNameForStatusCode))
+            if (httpStatusCode is HttpStatusCode.OK or HttpStatusCode.Created)
             {
-                modelNameForImplicitOperator = modelNameForStatusCode;
+                if (!string.IsNullOrEmpty(simpleDataTypeName))
+                {
+                    if ("Object".Equals(simpleDataTypeName, StringComparison.Ordinal))
+                    {
+                        simpleDataTypeName = "object";
+                    }
+
+                    simpleDataTypeNameForImplicitOperator = simpleDataTypeName;
+                }
+                else if (!string.IsNullOrEmpty(modelNameForStatusCode))
+                {
+                    modelNameForImplicitOperator = modelNameForStatusCode;
+                }
+                else
+                {
+                    if (simpleDataTypeNameForImplicitOperator is null &&
+                        schemaType == SchemaType.SimpleTypeCustomPagedList &&
+                        modelSchemaForStatusCode is not null)
+                    {
+                        var customPaginationSchema = modelSchemaForStatusCode.GetCustomPaginationSchema();
+                        var customPaginationItemsSchema = modelSchemaForStatusCode.GetCustomPaginationItemsSchema();
+                        if (customPaginationSchema is not null &&
+                            customPaginationItemsSchema is not null)
+                        {
+                            genericDataTypeName = customPaginationSchema.GetDataType();
+                            simpleDataTypeNameForImplicitOperator = customPaginationItemsSchema.GetDataType();
+                        }
+                    }
+                    else if (modelNameForImplicitOperator is null &&
+                             schemaType == SchemaType.ComplexTypeCustomPagedList &&
+                             modelSchemaForStatusCode is not null)
+                    {
+                        var customPaginationSchema = modelSchemaForStatusCode.GetCustomPaginationSchema();
+                        var customPaginationItemsSchema = modelSchemaForStatusCode.GetCustomPaginationItemsSchema();
+                        if (customPaginationSchema is not null &&
+                            customPaginationItemsSchema is not null)
+                        {
+                            genericDataTypeName = customPaginationSchema.GetDataType();
+                            modelNameForImplicitOperator = customPaginationItemsSchema.GetModelName();
+                            modelNameForStatusCode = modelNameForImplicitOperator;
+                        }
+                    }
+                }
             }
 
             var documentationTags = new CodeDocumentationTags($"{(int)httpStatusCode} - {httpStatusCode.ToNormalizedString()} response.");
@@ -64,7 +100,8 @@ public static class ContentGeneratorServerResultParametersFactory
                 UsesBinaryResponse: httpStatusCode == HttpStatusCode.OK
                     ? openApiOperation.Responses.IsSchemaUsingBinaryFormatForOkResponse()
                     : null,
-                SimpleDataTypeName: simpleDataTypeName));
+                SimpleDataTypeName: simpleDataTypeName,
+                GenericDataTypeName: genericDataTypeName));
         }
 
         ContentGeneratorServerResultImplicitOperatorParameters? implicitOperatorParameters = null;
@@ -75,7 +112,8 @@ public static class ContentGeneratorServerResultParametersFactory
             implicitOperatorParameters = new ContentGeneratorServerResultImplicitOperatorParameters(
                 SchemaType: schemaTypeForImplicitOperator,
                 modelNameForImplicitOperator,
-                simpleDataTypeNameForImplicitOperator);
+                simpleDataTypeNameForImplicitOperator,
+                GenericDataTypeName: genericDataTypeName);
         }
 
         return new ContentGeneratorServerResultParameters(
@@ -164,6 +202,18 @@ public static class ContentGeneratorServerResultParametersFactory
             return SchemaType.SimpleTypePagedList;
         }
 
+        if (schema.IsTypeCustomPagination())
+        {
+            var customPaginationItemsSchema = schema.GetCustomPaginationItemsSchema();
+            if (customPaginationItemsSchema is not null &&
+                customPaginationItemsSchema.Items.IsSimpleDataType())
+            {
+                return SchemaType.SimpleTypeCustomPagedList;
+            }
+
+            return SchemaType.ComplexTypeCustomPagedList;
+        }
+
         return SchemaType.SimpleType;
     }
 
@@ -183,6 +233,7 @@ public static class ContentGeneratorServerResultParametersFactory
             SchemaType.SimpleType => schema.GetDataType(),
             SchemaType.SimpleTypeList => schema.GetSimpleDataTypeFromArray(),
             SchemaType.SimpleTypePagedList => schema.GetSimpleDataTypeFromPagination(),
+            SchemaType.SimpleTypeCustomPagedList => schema.GetSimpleDataTypeFromCustomPagination(),
             _ => null,
         };
     }

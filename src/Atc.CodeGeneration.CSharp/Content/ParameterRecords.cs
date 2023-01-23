@@ -31,6 +31,7 @@ public record ClassParameters(
     IList<AttributeParameters>? Attributes,
     AccessModifiers AccessModifier,
     string ClassTypeName,
+    string? GenericTypeName,
     string? InheritedClassTypeName,
     string? InheritedGenericClassTypeName,
     string? InheritedInterfaceTypeName,

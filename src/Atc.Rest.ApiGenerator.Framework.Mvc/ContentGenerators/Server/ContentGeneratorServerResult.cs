@@ -124,6 +124,9 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
                 case SchemaType.SimpleTypePagedList:
                     sb.AppendLine(4, $"public static implicit operator {item.ResultName}(Pagination<{item.ImplicitOperatorParameters.SimpleDataTypeName}> response)");
                     break;
+                case SchemaType.SimpleTypeCustomPagedList:
+                    sb.AppendLine(4, $"public static implicit operator {item.ResultName}({item.ImplicitOperatorParameters.GenericDataTypeName}<{item.ImplicitOperatorParameters.SimpleDataTypeName}> response)");
+                    break;
                 default:
                     sb.AppendLine("//// TODO: This is unexpected when we do not have a model-name!"); // TODO: Remove eventually
                     break;
@@ -141,6 +144,9 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
                     break;
                 case SchemaType.ComplexTypePagedList:
                     sb.AppendLine(4, $"public static implicit operator {item.ResultName}(Pagination<{item.ImplicitOperatorParameters.ModelName}> response)");
+                    break;
+                case SchemaType.ComplexTypeCustomPagedList:
+                    sb.AppendLine(4, $"public static implicit operator {item.ResultName}({item.ImplicitOperatorParameters.GenericDataTypeName}<{item.ImplicitOperatorParameters.ModelName}> response)");
                     break;
                 default:
                     sb.AppendLine("//// TODO: This is unexpected when we have a model-name!"); // TODO: Remove eventually
@@ -183,6 +189,10 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
                         sb.AppendLine(4, $"public static {resultName} Ok(Pagination<{item.SimpleDataTypeName}> response)");
                         sb.AppendLine(8, $"=> new {resultName}(new OkObjectResult(response));");
                         break;
+                    case SchemaType.SimpleTypeCustomPagedList:
+                        sb.AppendLine(4, $"public static {resultName} Ok({item.GenericDataTypeName}<{item.SimpleDataTypeName}> response)");
+                        sb.AppendLine(8, $"=> new {resultName}(new OkObjectResult(response));");
+                        break;
                     default:
                         sb.AppendLine("//// TODO: This is unexpected when we do not have a model-name!"); // TODO: Remove eventually
                         break;
@@ -202,6 +212,10 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
                         break;
                     case SchemaType.ComplexTypePagedList:
                         sb.AppendLine(4, $"public static {resultName} Ok(Pagination<{item.ModelName}> response)");
+                        sb.AppendLine(8, $"=> new {resultName}(new OkObjectResult(response));");
+                        break;
+                    case SchemaType.ComplexTypeCustomPagedList:
+                        sb.AppendLine(4, $"public static {resultName} Ok({item.GenericDataTypeName}<{item.ModelName}> response)");
                         sb.AppendLine(8, $"=> new {resultName}(new OkObjectResult(response));");
                         break;
                     default:

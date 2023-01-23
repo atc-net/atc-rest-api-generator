@@ -128,17 +128,23 @@ public static class ContentGeneratorClientEndpointParametersFactory
         var tmpModelName = modelSchema.GetModelName();
         if (string.IsNullOrEmpty(tmpModelName))
         {
-            modelName = modelSchema.GetDataType();
+            if (!modelSchema.IsTypeCustomPagination())
+            {
+                return modelSchema.GetDataType();
+            }
+
+            tmpModelName = modelSchema.GetCustomPaginationGenericTypeWithItemType();
+            return string.IsNullOrEmpty(tmpModelName)
+                ? modelName
+                : tmpModelName;
         }
-        else
-        {
-            modelName = OpenApiDocumentSchemaModelNameResolver.EnsureModelNameWithNamespaceIfNeeded(
-                projectName,
-                apiGroupName,
-                tmpModelName,
-                isShared: false,
-                isClient: true);
-        }
+
+        modelName = OpenApiDocumentSchemaModelNameResolver.EnsureModelNameWithNamespaceIfNeeded(
+            projectName,
+            apiGroupName,
+            tmpModelName,
+            isShared: false,
+            isClient: true);
 
         return modelName;
     }
