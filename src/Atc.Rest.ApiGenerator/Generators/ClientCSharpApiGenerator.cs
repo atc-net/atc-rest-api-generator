@@ -49,7 +49,7 @@ public class ClientCSharpApiGenerator
 
     public bool Generate()
     {
-        logger.LogInformation($"{AppEmojisConstants.AreaGenerateCode} Working on client api generation ({projectOptions.ProjectName})");
+        logger.LogInformation($"{ContentWriterConstants.AreaGenerateCode} Working on client api generation ({projectOptions.ProjectName})");
 
         ScaffoldSrc();
 

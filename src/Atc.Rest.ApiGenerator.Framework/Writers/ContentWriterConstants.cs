@@ -10,4 +10,9 @@ public static class ContentWriterConstants
 
     public const string LogSuccess = Console.EmojiConstants.CheckMarkButton;
     public const string LogError = Console.EmojiConstants.RedCircle;
+
+    public const string AreaGenerateCode = Console.EmojiConstants.LargeBlueDiamond;
+    public const string AreaGenerateTest = Console.EmojiConstants.LargeOrangeDiamond;
+
+    public const string PackageReference = Console.EmojiConstants.Package;
 }
