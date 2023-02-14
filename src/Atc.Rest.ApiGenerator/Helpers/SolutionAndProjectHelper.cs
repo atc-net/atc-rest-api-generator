@@ -306,7 +306,7 @@ public static class SolutionAndProjectHelper
                 $"<PackageReference Include=\"{item.PackageId}\" Version=\"{item.NewestVersion}\"",
                 StringComparison.Ordinal);
 
-            var logMessage = $"{AppEmojisConstants.PackageReference}   PackageReference {item.PackageId} @ {item.Version} => {item.NewestVersion}";
+            var logMessage = $"{ContentWriterConstants.PackageReference}   PackageReference {item.PackageId} @ {item.Version} => {item.NewestVersion}";
             logger.LogTrace(logMessage);
         }
 

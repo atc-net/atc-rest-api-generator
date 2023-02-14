@@ -34,7 +34,7 @@ public class ServerHostGenerator
 
     public bool Generate()
     {
-        logger.LogInformation($"{AppEmojisConstants.AreaGenerateCode} Working on server host generation ({projectOptions.ProjectName})");
+        logger.LogInformation($"{ContentWriterConstants.AreaGenerateCode} Working on server host generation ({projectOptions.ProjectName})");
 
         if (!projectOptions.SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles(logger))
         {
@@ -46,7 +46,7 @@ public class ServerHostGenerator
 
         if (projectOptions.PathForTestGenerate is not null)
         {
-            logger.LogInformation($"{AppEmojisConstants.AreaGenerateTest} Working on server host unit-test generation ({projectOptions.ProjectName}.Tests)");
+            logger.LogInformation($"{ContentWriterConstants.AreaGenerateTest} Working on server host unit-test generation ({projectOptions.ProjectName}.Tests)");
             ScaffoldTest();
 
             GenerateTestEndpoints(projectOptions.Document);

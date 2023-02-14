@@ -39,7 +39,7 @@ public class ServerApiGenerator
 
     public bool Generate()
     {
-        logger.LogInformation($"{AppEmojisConstants.AreaGenerateCode} Working on server api generation ({projectOptions.ProjectName})");
+        logger.LogInformation($"{ContentWriterConstants.AreaGenerateCode} Working on server api generation ({projectOptions.ProjectName})");
 
         var isVersionValid = ValidateVersioning();
         if (!isVersionValid)
