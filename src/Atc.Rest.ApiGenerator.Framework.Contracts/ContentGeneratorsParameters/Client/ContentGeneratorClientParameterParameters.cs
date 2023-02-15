@@ -11,6 +11,7 @@ public record ContentGeneratorClientParameterParametersProperty(
     string Name,
     string ParameterName,
     CodeDocumentationTags DocumentationTags,
+    ParameterLocationType ParameterLocationType,
     string DataType,
     bool IsSimpleType,
     bool UseListForDataType,

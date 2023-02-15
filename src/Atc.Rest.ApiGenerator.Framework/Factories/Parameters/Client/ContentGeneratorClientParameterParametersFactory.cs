@@ -49,8 +49,9 @@ public static class ContentGeneratorClientParameterParametersFactory
             {
                 parameters.Add(new ContentGeneratorClientParameterParametersProperty(
                     openApiParameter.Name,
-                    openApiParameter.Name.EnsureFirstCharacterToUpper(),
+                    openApiParameter.Name.EnsureValidFormattedPropertyName(),
                     openApiParameter.ExtractDocumentationTags(),
+                    ConvertToParameterLocationType(openApiParameter.In),
                     dataType,
                     isSimpleType,
                     useListForDataType,
@@ -113,6 +114,7 @@ public static class ContentGeneratorClientParameterParametersFactory
             string.Empty,
             ContentGeneratorConstants.Request,
             requestSchema.ExtractDocumentationTags(),
+            requestSchema.GetParameterLocationType(),
             requestBodyType,
             IsSimpleType: false,
             UseListForDataType: requestSchema.IsTypeArray(),
@@ -121,6 +123,18 @@ public static class ContentGeneratorClientParameterParametersFactory
             AdditionalValidationAttributes: new List<ValidationAttribute>(),
             DefaultValueInitializer: null));
     }
+
+    private static ParameterLocationType ConvertToParameterLocationType(
+        ParameterLocation? openApiParameterLocation)
+        => openApiParameterLocation switch
+        {
+            ParameterLocation.Query => ParameterLocationType.Query,
+            ParameterLocation.Header => ParameterLocationType.Header,
+            ParameterLocation.Path => ParameterLocationType.Route,
+            ParameterLocation.Cookie => ParameterLocationType.Cookie,
+            null => ParameterLocationType.None,
+            _ => throw new SwitchCaseDefaultException(openApiParameterLocation),
+        };
 
     private static IList<ValidationAttribute> GetAdditionalValidationAttributes(
         OpenApiParameter openApiParameter)

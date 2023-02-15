@@ -62,6 +62,20 @@ public sealed class ContentGeneratorClientParameter : IContentGenerator
         StringBuilder sb,
         ContentGeneratorClientParameterParametersProperty item)
     {
+        switch (item.ParameterLocationType)
+        {
+            case ParameterLocationType.Query:
+            case ParameterLocationType.Header:
+            case ParameterLocationType.Route:
+            case ParameterLocationType.Cookie:
+                sb.AppendLine(4, $"[From{item.ParameterLocationType}(Name = \"{item.Name}\")]");
+                break;
+            case ParameterLocationType.Body:
+            case ParameterLocationType.Form:
+                sb.AppendLine(4, $"[From{item.ParameterLocationType}]");
+                break;
+        }
+
         if (item.IsRequired)
         {
             sb.AppendLine(4, "[Required]");

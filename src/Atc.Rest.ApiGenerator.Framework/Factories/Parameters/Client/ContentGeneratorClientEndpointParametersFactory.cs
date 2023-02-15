@@ -79,7 +79,7 @@ public static class ContentGeneratorClientEndpointParametersFactory
             {
                 parameters.Add(new ContentGeneratorClientEndpointParametersParameters(
                     openApiParameter.Name,
-                    openApiParameter.Name.EnsureFirstCharacterToUpper(),
+                    openApiParameter.Name.EnsureValidFormattedPropertyName(),
                     ConvertToParameterLocationType(openApiParameter.In)));
             }
         }
