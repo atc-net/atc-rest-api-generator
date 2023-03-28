@@ -337,6 +337,7 @@ public class ClientCSharpApiGenerator
             "System.Collections.Generic",
             "System.ComponentModel.DataAnnotations",
             "System.Diagnostics.CodeAnalysis",
+            "System.Linq",
             "System.Net",
             "System.Net.Http",
             "System.Threading",

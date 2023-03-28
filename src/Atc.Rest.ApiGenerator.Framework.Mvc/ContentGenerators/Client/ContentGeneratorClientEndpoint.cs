@@ -60,15 +60,18 @@ public class ContentGeneratorClientEndpoint : IContentGenerator
 
         if (parameters.Parameters is not null && parameters.Parameters.Any())
         {
-            foreach (var item in parameters.Parameters)
+            for (var index = 0; index < parameters.Parameters.Count; index++)
             {
+                var item = parameters.Parameters[index];
+                var isLastParameter = index == parameters.Parameters.Count - 1;
+
                 switch (item.ParameterLocationType)
                 {
                     case ParameterLocationType.Query:
-                        sb.AppendLine(8, $"requestBuilder.WithQueryParameter(\"{item.Name}\", parameters.{item.ParameterName});");
+                        AppendParameterForParameterLocation(sb, item, item.ParameterLocationType, isLastParameter);
                         break;
                     case ParameterLocationType.Header:
-                        sb.AppendLine(8, $"requestBuilder.WithHeaderParameter(\"{item.Name}\", parameters.{item.ParameterName});");
+                        AppendParameterForParameterLocation(sb, item, item.ParameterLocationType, isLastParameter);
                         break;
                     case ParameterLocationType.Route:
                         sb.AppendLine(8, $"requestBuilder.WithPathParameter(\"{item.Name}\", parameters.{item.ParameterName});");
@@ -111,5 +114,29 @@ public class ContentGeneratorClientEndpoint : IContentGenerator
         sb.Append('}');
 
         return sb.ToString();
+    }
+
+    private static void AppendParameterForParameterLocation(
+        StringBuilder sb,
+        ContentGeneratorClientEndpointParametersParameters item,
+        ParameterLocationType parameterLocationType,
+        bool isLastParameter)
+    {
+        if (item.IsList)
+        {
+            sb.AppendLine(8, $"if (parameters.{item.ParameterName}.Any())");
+            sb.AppendLine(8, "{");
+            sb.AppendLine(12, $"requestBuilder.With{parameterLocationType}Parameter(\"{item.Name}\", parameters.{item.ParameterName});");
+            sb.AppendLine(8, "}");
+
+            if (!isLastParameter)
+            {
+                sb.AppendLine();
+            }
+        }
+        else
+        {
+            sb.AppendLine(8, $"requestBuilder.With{parameterLocationType}Parameter(\"{item.Name}\", parameters.{item.ParameterName});");
+        }
     }
 }

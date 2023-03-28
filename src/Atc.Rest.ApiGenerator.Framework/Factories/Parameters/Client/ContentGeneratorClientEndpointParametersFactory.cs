@@ -80,7 +80,8 @@ public static class ContentGeneratorClientEndpointParametersFactory
                 parameters.Add(new ContentGeneratorClientEndpointParametersParameters(
                     openApiParameter.Name,
                     openApiParameter.Name.EnsureValidFormattedPropertyName(),
-                    ConvertToParameterLocationType(openApiParameter.In)));
+                    ConvertToParameterLocationType(openApiParameter.In),
+                    openApiParameter.Schema.IsTypeArray()));
             }
         }
     }
@@ -99,7 +100,8 @@ public static class ContentGeneratorClientEndpointParametersFactory
         parameters.Add(new ContentGeneratorClientEndpointParametersParameters(
             string.Empty,
             ContentGeneratorConstants.Request,
-            requestSchema.GetParameterLocationType()));
+            requestSchema.GetParameterLocationType(),
+            requestSchema.IsTypeArray()));
     }
 
     private static ParameterLocationType ConvertToParameterLocationType(

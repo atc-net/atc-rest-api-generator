@@ -23,4 +23,5 @@ public record ContentGeneratorClientEndpointErrorResponsesParameters(
 public record ContentGeneratorClientEndpointParametersParameters(
     string Name,
     string ParameterName,
-    ParameterLocationType ParameterLocationType);
+    ParameterLocationType ParameterLocationType,
+    bool IsList);
