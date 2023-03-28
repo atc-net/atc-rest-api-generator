@@ -1,5 +1,3 @@
-using Atc.Rest.ApiGenerator.Projects;
-
 namespace Atc.Rest.ApiGenerator.Models;
 
 public abstract class BaseProjectOptions
