@@ -12,6 +12,7 @@ public record ContentGeneratorClientEndpointParameters(
     string ResultName,
     string? ParameterName,
     string? SuccessResponseName,
+    HttpStatusCode? SuccessResponseStatusCode,
     bool UseListForModel,
     IList<ContentGeneratorClientEndpointErrorResponsesParameters> ErrorResponses,
     IList<ContentGeneratorClientEndpointParametersParameters>? Parameters);

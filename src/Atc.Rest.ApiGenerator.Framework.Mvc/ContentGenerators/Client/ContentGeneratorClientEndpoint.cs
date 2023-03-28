@@ -93,11 +93,19 @@ public class ContentGeneratorClientEndpoint : IContentGenerator
         sb.AppendLine(8, "using var response = await client.SendAsync(requestMessage, cancellationToken);");
         sb.AppendLine();
         sb.AppendLine(8, "var responseBuilder = httpMessageFactory.FromResponse(response);");
-        sb.AppendLine(
-            8,
-            parameters.UseListForModel
-                ? $"responseBuilder.AddSuccessResponse<List<{parameters.SuccessResponseName}>>(HttpStatusCode.OK);"
-                : $"responseBuilder.AddSuccessResponse<{parameters.SuccessResponseName}>(HttpStatusCode.OK);");
+
+        if (string.IsNullOrEmpty(parameters.SuccessResponseName))
+        {
+            sb.AppendLine(8, $"responseBuilder.AddSuccessResponse(HttpStatusCode.{parameters.SuccessResponseStatusCode});");
+        }
+        else
+        {
+            sb.AppendLine(
+                8,
+                parameters.UseListForModel
+                    ? $"responseBuilder.AddSuccessResponse<List<{parameters.SuccessResponseName}>>(HttpStatusCode.OK);"
+                    : $"responseBuilder.AddSuccessResponse<{parameters.SuccessResponseName}>(HttpStatusCode.{parameters.SuccessResponseStatusCode});");
+        }
 
         foreach (var item in parameters.ErrorResponses)
         {

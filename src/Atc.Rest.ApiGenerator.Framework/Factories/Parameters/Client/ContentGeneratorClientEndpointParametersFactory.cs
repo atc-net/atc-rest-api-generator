@@ -23,8 +23,26 @@ public static class ContentGeneratorClientEndpointParametersFactory
         AppendParametersFromBody(parameters, openApiOperation.RequestBody);
 
         var operationName = openApiOperation.GetOperationName();
-        var modelSchema = openApiOperation.Responses.GetSchemaForStatusCode(HttpStatusCode.OK);
-        var successResponseName = GetSuccessResponseName(projectName, apiGroupName, modelSchema);
+        var successResponseStatusCodes = openApiOperation.Responses
+            .GetHttpStatusCodes()
+            .Where(x => x.IsSuccessful())
+            .ToList();
+
+        OpenApiSchema? modelSchema = null;
+        string? successResponseName = null;
+        HttpStatusCode? successResponseStatusCode = null;
+
+        if (successResponseStatusCodes.Count == 1)
+        {
+            successResponseStatusCode = successResponseStatusCodes[0];
+
+            if (successResponseStatusCode is not HttpStatusCode.Accepted or HttpStatusCode.NoContent)
+            {
+                modelSchema = openApiOperation.Responses.GetSchemaForStatusCode(successResponseStatusCode.Value);
+                successResponseName = GetSuccessResponseName(projectName, apiGroupName, modelSchema);
+            }
+        }
+
         var useListForDataType = modelSchema?.IsTypeArray() ?? false;
 
         var errorResponses = GetErrorResponses(
@@ -47,6 +65,7 @@ public static class ContentGeneratorClientEndpointParametersFactory
                 ResultName: $"{operationName}{ContentGeneratorConstants.EndpointResult}",
                 ParameterName: $"{operationName}{ContentGeneratorConstants.Parameters}",
                 SuccessResponseName: successResponseName,
+                SuccessResponseStatusCode: successResponseStatusCode,
                 UseListForModel: useListForDataType,
                 ErrorResponses: errorResponses,
                 parameters);
@@ -64,6 +83,7 @@ public static class ContentGeneratorClientEndpointParametersFactory
             ResultName: $"{operationName}{ContentGeneratorConstants.EndpointResult}",
             ParameterName: null,
             SuccessResponseName: successResponseName,
+            SuccessResponseStatusCode: successResponseStatusCode,
             UseListForModel: useListForDataType,
             ErrorResponses: errorResponses,
             Parameters: null);
@@ -158,7 +178,7 @@ public static class ContentGeneratorClientEndpointParametersFactory
     {
         var httpStatusCodes = openApiOperation.Responses
             .GetHttpStatusCodes()
-            .Where(x => x.IsClientOrServerError())
+            .Where(x => x.IsClientOrServerError() || x.IsRedirect())
             .ToList();
 
         if (hasParameters &&

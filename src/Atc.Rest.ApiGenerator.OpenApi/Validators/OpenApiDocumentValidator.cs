@@ -693,11 +693,10 @@ public class OpenApiDocumentValidator : IOpenApiDocumentValidator
                     logItems.Add(logItemFactory.Create(logCategory, ValidationRuleNameConstants.Operation10, $"Contains BadRequest response type for operation '{value.OperationId}', but has no parameters."));
                 }
 
-                if (httpStatusCodes.Contains(HttpStatusCode.OK) &&
-                    httpStatusCodes.Contains(HttpStatusCode.Created))
+                if (httpStatusCodes.Count(x => x.IsSuccessful()) > 1)
                 {
-                    // We do not support both 200 and 201, since our ActionResult - implicit operators only supports 1 type.
-                    logItems.Add(logItemFactory.Create(logCategory, ValidationRuleNameConstants.Operation18, $"The operation '{value.OperationId}' contains both 200 and 201, which is not supported."));
+                    // We do not support multiple 2xx statusCodes, since our ActionResult - implicit operators only supports 1 type.
+                    logItems.Add(logItemFactory.Create(logCategory, ValidationRuleNameConstants.Operation18, $"The operation '{value.OperationId}' contains multiple 2xx status codes, which is not supported."));
                 }
 
                 if (value.HasParametersOrRequestBody())
