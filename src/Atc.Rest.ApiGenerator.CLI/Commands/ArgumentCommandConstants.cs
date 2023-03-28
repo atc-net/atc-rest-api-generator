@@ -18,6 +18,7 @@ public static class ArgumentCommandConstants
     public const string LongConfigurationValidateModelPropertyNameCasingStyle = "--validate-modelPropertyNameCasingStyle";
 
     public const string LongClientFolderName = "--clientFolderName";
+    public const string LongClientHttpClientName = "--httpClientName";
     public const string LongExcludeEndpointGeneration = "--excludeEndpointGeneration";
 
     public const string LongServerOutputSolutionPath = "--outputSlnPath";

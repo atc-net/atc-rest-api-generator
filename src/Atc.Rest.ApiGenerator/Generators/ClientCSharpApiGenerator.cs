@@ -424,7 +424,7 @@ public class ClientCSharpApiGenerator
                     openApiPath.Value,
                     openApiOperation.Key,
                     openApiOperation.Value,
-                    $"{apiProjectOptions.ProjectPrefixName}-ApiClient",
+                    projectOptions.HttpClientName,
                     $"{apiProjectOptions.RouteBase}{openApiPath.Key}");
 
                 var contentGeneratorEndpoint = new ContentGeneratorClientEndpoint(
