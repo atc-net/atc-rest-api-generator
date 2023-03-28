@@ -337,6 +337,7 @@ public class ClientCSharpApiGenerator
             "System.Collections.Generic",
             "System.ComponentModel.DataAnnotations",
             "System.Diagnostics.CodeAnalysis",
+            "System.Linq",
             "System.Net",
             "System.Net.Http",
             "System.Threading",
@@ -423,7 +424,7 @@ public class ClientCSharpApiGenerator
                     openApiPath.Value,
                     openApiOperation.Key,
                     openApiOperation.Value,
-                    $"{apiProjectOptions.ProjectPrefixName}-ApiClient",
+                    projectOptions.HttpClientName,
                     $"{apiProjectOptions.RouteBase}{openApiPath.Key}");
 
                 var contentGeneratorEndpoint = new ContentGeneratorClientEndpoint(

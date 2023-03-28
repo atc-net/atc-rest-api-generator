@@ -158,6 +158,7 @@ public static class GenerateHelper
         IApiOperationExtractor apiOperationExtractor,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
         string projectPrefixName,
+        string? httpClientName,
         string? clientFolderName,
         DirectoryInfo outputPath,
         OpenApiDocumentContainer apiDocumentContainer,
@@ -178,6 +179,7 @@ public static class GenerateHelper
             apiDocumentContainer.DocFile,
             projectPrefixName,
             "ApiClient.Generated",
+            httpClientName,
             excludeEndpointGeneration,
             apiOptions,
             useCodingRules);

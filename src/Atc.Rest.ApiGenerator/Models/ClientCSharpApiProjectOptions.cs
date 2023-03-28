@@ -9,6 +9,7 @@ public class ClientCSharpApiProjectOptions
         FileInfo openApiDocumentFile,
         string projectPrefixName,
         string projectSuffixName,
+        string? httpClientName,
         bool excludeEndpointGeneration,
         ApiOptions apiOptions,
         bool usingCodingRules)
@@ -43,6 +44,9 @@ public class ClientCSharpApiProjectOptions
             .Replace(" ", ".", StringComparison.Ordinal)
             .Replace("-", ".", StringComparison.Ordinal)
             .Trim() + $".{projectSuffixName}";
+
+        HttpClientName = httpClientName ?? $"{projectPrefixName}-ApiClient";
+
         PathForSrcGenerate = new DirectoryInfo(Path.Combine(PathForSrcGenerate.FullName, ProjectName));
         ProjectSrcCsProj = new FileInfo(Path.Combine(PathForSrcGenerate.FullName, $"{ProjectName}.csproj"));
 
@@ -81,10 +85,12 @@ public class ClientCSharpApiProjectOptions
 
     public string ProjectName { get; }
 
+    public string HttpClientName { get; set; }
+
     public IList<string> ApiGroupNames { get; }
 
     public bool ExcludeEndpointGeneration { get; }
 
     public override string ToString()
-        => $"{nameof(ApiGeneratorName)}: {ApiGeneratorName}, {nameof(ApiGeneratorVersion)}: {ApiGeneratorVersion}, {nameof(ApiGeneratorNameAndVersion)}: {ApiGeneratorNameAndVersion}, {nameof(ApiOptions)}: {ApiOptions}, {nameof(PathForSrcGenerate)}: {PathForSrcGenerate}, {nameof(ProjectSrcCsProj)}: {ProjectSrcCsProj}, {nameof(ForClient)}: {ForClient}, {nameof(ClientFolderName)}: {ClientFolderName}, {nameof(Document)}: {Document}, {nameof(DocumentFile)}: {DocumentFile}, {nameof(ProjectName)}: {ProjectName}, {nameof(ApiGroupNames)}: {ApiGroupNames}, {nameof(ExcludeEndpointGeneration)}: {ExcludeEndpointGeneration}";
+        => $"{nameof(ApiGeneratorName)}: {ApiGeneratorName}, {nameof(ApiGeneratorVersion)}: {ApiGeneratorVersion}, {nameof(ApiGeneratorNameAndVersion)}: {ApiGeneratorNameAndVersion}, {nameof(ApiOptions)}: {ApiOptions}, {nameof(PathForSrcGenerate)}: {PathForSrcGenerate}, {nameof(ProjectSrcCsProj)}: {ProjectSrcCsProj}, {nameof(ForClient)}: {ForClient}, {nameof(ClientFolderName)}: {ClientFolderName}, {nameof(Document)}: {Document}, {nameof(DocumentFile)}: {DocumentFile}, {nameof(ProjectName)}: {ProjectName}, {nameof(HttpClientName)}: {HttpClientName}, {nameof(ApiGroupNames)}: {ApiGroupNames}, {nameof(ExcludeEndpointGeneration)}: {ExcludeEndpointGeneration}";
 }

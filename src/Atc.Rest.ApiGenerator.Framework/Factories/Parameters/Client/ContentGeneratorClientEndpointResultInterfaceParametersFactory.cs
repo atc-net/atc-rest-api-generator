@@ -128,7 +128,7 @@ public static class ContentGeneratorClientEndpointResultInterfaceParametersFacto
     {
         var httpStatusCodes = openApiOperation.Responses
             .GetHttpStatusCodes()
-            .Where(x => x.IsClientOrServerError())
+            .Where(x => x.IsClientOrServerError() || x.IsRedirect())
             .ToList();
 
         if (hasParameters &&

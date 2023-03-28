@@ -12,6 +12,7 @@ public record ContentGeneratorClientEndpointParameters(
     string ResultName,
     string? ParameterName,
     string? SuccessResponseName,
+    HttpStatusCode? SuccessResponseStatusCode,
     bool UseListForModel,
     IList<ContentGeneratorClientEndpointErrorResponsesParameters> ErrorResponses,
     IList<ContentGeneratorClientEndpointParametersParameters>? Parameters);
@@ -23,4 +24,5 @@ public record ContentGeneratorClientEndpointErrorResponsesParameters(
 public record ContentGeneratorClientEndpointParametersParameters(
     string Name,
     string ParameterName,
-    ParameterLocationType ParameterLocationType);
+    ParameterLocationType ParameterLocationType,
+    bool IsList);
