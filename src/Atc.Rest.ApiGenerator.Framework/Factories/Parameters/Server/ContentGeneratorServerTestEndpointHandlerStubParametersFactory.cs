@@ -196,9 +196,16 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
                 var customPaginationItemsSchema = returnSchema.GetCustomPaginationItemsSchema();
                 if (customPaginationItemsSchema is not null)
                 {
-                    returnName = customPaginationItemsSchema.IsSimpleDataType()
-                        ? customPaginationItemsSchema.GetDataType()
-                        : customPaginationItemsSchema.GetModelName();
+                    if (customPaginationItemsSchema.IsSimpleDataType())
+                    {
+                        returnName = customPaginationItemsSchema.GetDataType();
+                    }
+                    else
+                    {
+                        returnName = EnsureFullNamespaceIfNeeded(
+                            customPaginationItemsSchema.GetModelName(),
+                            @namespace);
+                    }
                 }
             }
             else if (returnSchema.IsTypeArray())
@@ -314,8 +321,11 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
             valueToTest = value;
         }
 
+        var namespaceComponents = @namespace.Split('.');
+
         if (!EndsWithWellKnownContract(@namespace, valueToTest) &&
-            !EndsWithWellKnownSystemTypeName(valueToTest))
+            !EndsWithWellKnownSystemTypeName(valueToTest) &&
+            !namespaceComponents.Contains(valueToTest, StringComparer.Ordinal))
         {
             return value;
         }
