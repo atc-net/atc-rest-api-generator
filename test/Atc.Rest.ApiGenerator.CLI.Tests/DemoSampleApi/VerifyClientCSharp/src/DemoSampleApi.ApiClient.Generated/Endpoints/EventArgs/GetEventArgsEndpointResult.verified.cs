@@ -15,7 +15,7 @@ namespace DemoSampleApi.ApiClient.Generated.Endpoints;
 public class GetEventArgsEndpointResult : EndpointResponse, IGetEventArgsEndpointResult
 {
     public GetEventArgsEndpointResult(EndpointResponse response)
-    : base(response)
+        : base(response)
     {
     }
 
