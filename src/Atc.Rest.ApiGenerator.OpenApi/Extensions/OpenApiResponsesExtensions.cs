@@ -112,6 +112,7 @@ public static class OpenApiResponsesExtensions
                                         else
                                         {
                                             dataType = customPaginationItemsSchema.GetModelName();
+                                            dataType = OpenApiDocumentSchemaModelNameResolver.EnsureModelNameWithNamespaceIfNeeded(projectName, apiGroupName, dataType, isShared);
                                             typeResponseName = $"{genericDataTypeName}<{dataType}>";
                                         }
                                     }

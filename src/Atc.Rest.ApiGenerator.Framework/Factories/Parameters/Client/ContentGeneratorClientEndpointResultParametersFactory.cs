@@ -125,7 +125,7 @@ public static class ContentGeneratorClientEndpointResultParametersFactory
                 return modelSchema.GetDataType();
             }
 
-            tmpModelName = modelSchema.GetCustomPaginationGenericTypeWithItemType();
+            tmpModelName = modelSchema.GetCustomPaginationGenericTypeWithItemType(projectName, apiGroupName, isClient: true);
             return string.IsNullOrEmpty(tmpModelName)
                 ? modelName
                 : tmpModelName;

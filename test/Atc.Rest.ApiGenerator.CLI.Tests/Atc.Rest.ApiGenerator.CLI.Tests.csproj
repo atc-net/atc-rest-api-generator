@@ -35,8 +35,14 @@
   <ItemGroup>
     <Compile Remove="**\*.verified.cs" />
     <Compile Remove="**\*.received.cs" />
+    <Compile Remove="MyCompany.ProductionUnit.Task.NamespaceApi\**" />
     <None Include="**\*.verified.cs" />
     <None Include="**\*.received.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="MyCompany.ProductionUnit.Task.NamespaceApi\**" />
+    <None Remove="MyCompany.ProductionUnit.Task.NamespaceApi\**" />
   </ItemGroup>
 
   <ItemGroup>

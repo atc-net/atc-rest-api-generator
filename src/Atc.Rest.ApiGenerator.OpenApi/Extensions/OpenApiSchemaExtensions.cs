@@ -96,7 +96,10 @@ public static class OpenApiSchemaExtensions
     }
 
     public static string? GetCustomPaginationGenericTypeWithItemType(
-        this OpenApiSchema schema)
+        this OpenApiSchema schema,
+        string projectName,
+        string apiGroupName,
+        bool isClient = false)
     {
         if (!schema.IsTypeCustomPagination())
         {
@@ -111,9 +114,21 @@ public static class OpenApiSchemaExtensions
             return null;
         }
 
-        var itemTypeName = customPaginationItemsSchema.IsSimpleDataType()
-            ? customPaginationItemsSchema.GetDataType()
-            : customPaginationItemsSchema.GetModelName();
+        string? itemTypeName;
+        if (customPaginationItemsSchema.IsSimpleDataType())
+        {
+            itemTypeName = customPaginationItemsSchema.GetDataType();
+        }
+        else
+        {
+            itemTypeName = OpenApiDocumentSchemaModelNameResolver.EnsureModelNameWithNamespaceIfNeeded(
+                projectName,
+                apiGroupName,
+                customPaginationItemsSchema.GetModelName(),
+                isShared: false,
+                isClient);
+        }
+
         var customPaginationTypeName = customPaginationSchema.GetModelName();
         return $"{customPaginationTypeName}<{itemTypeName}>";
     }

@@ -45,7 +45,7 @@ public static class OpenApiDocumentSchemaModelNameResolver
         if (isModelNameInNamespace)
         {
             return isClient
-                ? modelName
+                ? $"{ContentGeneratorConstants.Contracts}.{modelName}"
                 : $"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}.{modelName}";
         }
 

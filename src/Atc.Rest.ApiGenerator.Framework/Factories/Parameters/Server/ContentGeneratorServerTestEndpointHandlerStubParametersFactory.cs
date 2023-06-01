@@ -96,7 +96,7 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
         if (!responseStatusCodes.Contains(HttpStatusCode.OK))
         {
             return responseStatusCodes.Contains(HttpStatusCode.Created)
-                ? $"return Task.FromResult({contractResultTypeName}.Created());"
+                ? $"return {GetTaskName(@namespace)}.FromResult({contractResultTypeName}.Created());"
                 : "throw new NotImplementedException();";
         }
 
@@ -138,25 +138,25 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
             case "":
             case null:
             case "string":
-                sb.Append($"return Task.FromResult({contractResultTypeName}.Ok(\"Hallo world\"));");
+                sb.Append($"return {GetTaskName(@namespace)}.FromResult({contractResultTypeName}.Ok(\"Hallo world\"));");
                 break;
             case "bool":
-                sb.Append($"return Task.FromResult({contractResultTypeName}.Ok(true));");
+                sb.Append($"return {GetTaskName(@namespace)}.FromResult({contractResultTypeName}.Ok(true));");
                 break;
             case "int":
             case "long":
-                sb.Append($"return Task.FromResult({contractResultTypeName}.Ok(42));");
+                sb.Append($"return {GetTaskName(@namespace)}.FromResult({contractResultTypeName}.Ok(42));");
                 break;
             case "float":
             case "double":
-                sb.Append($"return Task.FromResult({contractResultTypeName}.Ok(42.2));");
+                sb.Append($"return {GetTaskName(@namespace)}.FromResult({contractResultTypeName}.Ok(42.2));");
                 break;
             case "Guid":
-                sb.Append($"return Task.FromResult({contractResultTypeName}.Ok(Guid.NewGuid()));");
+                sb.Append($"return {GetTaskName(@namespace)}.FromResult({contractResultTypeName}.Ok(Guid.NewGuid()));");
                 break;
             case "byte[]":
                 sb.AppendLine("var bytes = Encoding.UTF8.GetBytes(\"Hello World\");");
-                sb.Append($"return Task.FromResult({contractResultTypeName}.Ok(bytes, \"dummy.txt\"));");
+                sb.Append($"return {GetTaskName(@namespace)}.FromResult({contractResultTypeName}.Ok(bytes, \"dummy.txt\"));");
                 break;
             default:
                 if (returnSchema is not null)
@@ -196,9 +196,16 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
                 var customPaginationItemsSchema = returnSchema.GetCustomPaginationItemsSchema();
                 if (customPaginationItemsSchema is not null)
                 {
-                    returnName = customPaginationItemsSchema.IsSimpleDataType()
-                        ? customPaginationItemsSchema.GetDataType()
-                        : customPaginationItemsSchema.GetModelName();
+                    if (customPaginationItemsSchema.IsSimpleDataType())
+                    {
+                        returnName = customPaginationItemsSchema.GetDataType();
+                    }
+                    else
+                    {
+                        returnName = EnsureFullNamespaceIfNeeded(
+                            customPaginationItemsSchema.GetModelName(),
+                            @namespace);
+                    }
                 }
             }
             else if (returnSchema.IsTypeArray())
@@ -261,11 +268,11 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
                     }
                 }
 
-                sb.Append($"return Task.FromResult({contractResultTypeName}.Ok(paginationData));");
+                sb.Append($"return {GetTaskName(@namespace)}.FromResult({contractResultTypeName}.Ok(paginationData));");
             }
             else
             {
-                sb.Append($"return Task.FromResult({contractResultTypeName}.Ok(data));");
+                sb.Append($"return {GetTaskName(@namespace)}.FromResult({contractResultTypeName}.Ok(data));");
             }
         }
         else
@@ -277,7 +284,7 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
 
             sb.AppendLine($"var data = new Fixture().Create<{returnName}>();");
             sb.AppendLine();
-            sb.Append($"return Task.FromResult({contractResultTypeName}.Ok(data));");
+            sb.Append($"return {GetTaskName(@namespace)}.FromResult({contractResultTypeName}.Ok(data));");
         }
     }
 
@@ -314,8 +321,11 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
             valueToTest = value;
         }
 
+        var namespaceComponents = @namespace.Split('.');
+
         if (!EndsWithWellKnownContract(@namespace, valueToTest) &&
-            !EndsWithWellKnownSystemTypeName(valueToTest))
+            !EndsWithWellKnownSystemTypeName(valueToTest) &&
+            !namespaceComponents.Contains(valueToTest, StringComparer.Ordinal))
         {
             return value;
         }
@@ -337,4 +347,17 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
            value.EndsWith("Tasks", StringComparison.Ordinal) ||
            value.EndsWith("Endpoint", StringComparison.Ordinal) ||
            value.EndsWith("EventArgs", StringComparison.Ordinal);
+
+    private static string GetTaskName(
+        string @namespace)
+    {
+        var taskName = "Task";
+        var namespaceComponents = @namespace.Split('.');
+        if (namespaceComponents.Contains("Task", StringComparer.Ordinal))
+        {
+            taskName = "System.Threading.Tasks.Task";
+        }
+
+        return taskName;
+    }
 }
