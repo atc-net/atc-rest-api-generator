@@ -1,4 +1,4 @@
-﻿global using System;
+global using System;
 global using System.CodeDom.Compiler;
 global using System.Collections.Generic;
 global using System.IO;
@@ -26,6 +26,7 @@ global using Microsoft.Extensions.DependencyInjection;
 global using TestUnit.Task.NamespaceApi.Api.Generated;
 global using TestUnit.Task.NamespaceApi.Api.Generated.Contracts;
 global using TestUnit.Task.NamespaceApi.Api.Generated.Contracts.EventArgs;
+global using TestUnit.Task.NamespaceApi.Api.Generated.Contracts.Orders;
 global using TestUnit.Task.NamespaceApi.Api.Generated.Contracts.TestUnits;
 
 global using Xunit;

@@ -9,6 +9,65 @@ servers:
   - url: /api/v1
     description: Api version 1.0
 paths:
+  /orders:
+    get:
+      tags:
+        - Orders
+      summary: Get orders
+      description: Get orders
+      operationId: getOrders
+      parameters:
+        - $ref: '#/components/parameters/pagingPageSize'
+        - $ref: '#/components/parameters/pagingPageIndex'
+        - $ref: '#/components/parameters/continuationToken'
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginationResult'
+                  - type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Order'
+        '404':
+          description: Not Found
+  '/orders/{id}':
+    get:
+      tags:
+        - Orders
+      summary: Get order by id
+      description: Get order by id
+      operationId: getOrderById
+      parameters:
+        - name: myEmail
+          in: query
+          description: The email for filter orders to retrieve
+          schema:
+            type: string
+            format: email
+            nullable: true
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '404':
+          description: Not Found
+    parameters:
+      - name: id
+        in: path
+        description: The id of the order
+        required: true
+        schema:
+          type: string
+          format: uuid
   /test-units:
     get:
       summary: List test units
@@ -112,6 +171,26 @@ components:
         nullable: true
       description: The continuation token.
   schemas:
+    Order:
+      title: Order
+      description: |-
+        A single order.
+        Hallo description with multiline and no ending dot
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        description:
+          type: string
+    Orders:
+      description: A list of orders.
+      type: array
+      x-tags:
+        - Orders
+      title: Orders
+      items:
+        $ref: '#/components/schemas/Order'
     PaginationResult:
       type: object
       title: PaginationResult

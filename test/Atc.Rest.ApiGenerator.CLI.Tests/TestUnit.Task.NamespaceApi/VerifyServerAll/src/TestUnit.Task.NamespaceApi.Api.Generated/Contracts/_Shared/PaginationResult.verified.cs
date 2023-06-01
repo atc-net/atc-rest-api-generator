@@ -4,7 +4,7 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace TestUnit.Task.NamespaceApi.Api.Generated.Contracts.TestUnits;
+namespace TestUnit.Task.NamespaceApi.Api.Generated.Contracts;
 
 /// <summary>
 /// An item result subset of a data query.
