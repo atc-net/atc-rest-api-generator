@@ -19,7 +19,7 @@ public class GetEventArgByIdResult : ResultBase
     /// <summary>
     /// 200 - Ok response.
     /// </summary>
-    public static GetEventArgByIdResult Ok(Contracts.EventArgs response)
+    public static GetEventArgByIdResult Ok(EventArgs response)
         => new GetEventArgByIdResult(new OkObjectResult(response));
 
     /// <summary>
@@ -31,6 +31,6 @@ public class GetEventArgByIdResult : ResultBase
     /// <summary>
     /// Performs an implicit conversion from GetEventArgByIdResult to ActionResult.
     /// </summary>
-    public static implicit operator GetEventArgByIdResult(Contracts.EventArgs response)
+    public static implicit operator GetEventArgByIdResult(EventArgs response)
         => Ok(response);
 }
