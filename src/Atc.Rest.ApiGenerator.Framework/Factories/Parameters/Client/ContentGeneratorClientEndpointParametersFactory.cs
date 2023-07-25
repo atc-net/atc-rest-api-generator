@@ -212,6 +212,13 @@ public static class ContentGeneratorClientEndpointParametersFactory
                         "ValidationProblemDetails",
                         httpStatusCode));
             }
+            else if (httpStatusCode == HttpStatusCode.NotModified)
+            {
+                errorResponses.Add(
+                    new ContentGeneratorClientEndpointErrorResponsesParameters(
+                        string.Empty,
+                        httpStatusCode));
+            }
             else
             {
                 if (useProblemDetailsAsDefaultResponseBody)

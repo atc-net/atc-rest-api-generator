@@ -57,6 +57,12 @@ public class ContentGeneratorClientEndpointResultInterface : IContentGenerator
             }
             else
             {
+                if (item.StatusCode == HttpStatusCode.NotModified)
+                {
+                    // NotModified does not return any content to the client
+                    continue;
+                }
+
                 if (parameters.UseProblemDetailsAsDefaultBody)
                 {
                     sb.AppendLine();

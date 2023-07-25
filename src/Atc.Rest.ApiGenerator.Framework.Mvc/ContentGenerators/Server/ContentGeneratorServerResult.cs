@@ -255,7 +255,7 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
                 break;
             case HttpStatusCode.NotModified:
                 sb.AppendLine(4, $"public static {resultName} NotModified()");
-                sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResultWithProblemDetails)}(HttpStatusCode.NotModified, null));");
+                sb.AppendLine(8, $"=> new {resultName}(new StatusCodeResult(StatusCodes.Status304NotModified));");
                 break;
             case HttpStatusCode.BadRequest:
                 sb.AppendLine(4, $"public static {resultName} BadRequest(string message)");
