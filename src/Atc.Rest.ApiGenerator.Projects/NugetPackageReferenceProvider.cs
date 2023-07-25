@@ -40,11 +40,11 @@ public class NugetPackageReferenceProvider : INugetPackageReferenceProvider
         }
 
         packageReferences.Add(("Atc.Rest.Extended", atcVersion, null));
-        packageReferences.Add(("FluentValidation.AspNetCore", "11.2.2", null));
+        packageReferences.Add(("FluentValidation.AspNetCore", "11.3.0", null));
         packageReferences.Add(("Microsoft.ApplicationInsights.AspNetCore", "2.21.0", null));
         packageReferences.Add(("Microsoft.AspNetCore.Authentication.JwtBearer", "6.0.9", null));
-        packageReferences.Add(("Microsoft.AspNetCore.Mvc.Versioning", "5.0.0", null));
-        packageReferences.Add(("Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer", "5.0.0", null));
+        packageReferences.Add(("Microsoft.AspNetCore.Mvc.Versioning", "5.1.0", null));
+        packageReferences.Add(("Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer", "5.1.0", null));
         packageReferences.Add(("Swashbuckle.AspNetCore", "6.5.0", null));
 
         return packageReferences;
