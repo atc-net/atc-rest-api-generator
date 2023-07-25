@@ -142,9 +142,11 @@ public static class OpenApiResponsesExtensions
                     }
 
                     break;
+                case HttpStatusCode.NotModified:
+                    typeResponseName = null;
+                    break;
                 case HttpStatusCode.Accepted:
                 case HttpStatusCode.NoContent:
-                case HttpStatusCode.NotModified:
                 case HttpStatusCode.Unauthorized:
                 case HttpStatusCode.Forbidden:
                     typeResponseName = useProblemDetails
