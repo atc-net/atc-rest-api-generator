@@ -545,15 +545,9 @@ public class ServerApiGenerator
     {
         var requiredUsings = new List<string>
         {
-            "System",
             "System.CodeDom.Compiler",
-            "System.Collections.Generic",
             "System.ComponentModel.DataAnnotations",
-            "System.Diagnostics.CodeAnalysis",
-            "System.Linq",
             "System.Net",
-            "System.Threading",
-            "System.Threading.Tasks",
             "Microsoft.AspNetCore.Authorization",
             "Microsoft.AspNetCore.Http",
             "Microsoft.AspNetCore.Mvc",

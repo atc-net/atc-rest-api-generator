@@ -57,7 +57,7 @@ public class ServerDomainGenerator
 
             GenerateTestHandlers(projectOptions.Document);
 
-            GenerateTestGlobalUsings();
+            GenerateTestGlobalUsings(projectOptions.UsingCodingRules);
         }
 
         return true;
@@ -296,10 +296,7 @@ public class ServerDomainGenerator
     {
         var requiredUsings = new List<string>
         {
-            "System",
             "System.CodeDom.Compiler",
-            "System.Threading",
-            "System.Threading.Tasks",
         };
 
         var projectName = projectOptions.ProjectName.Replace(".Domain", ".Api.Generated", StringComparison.Ordinal);
@@ -315,18 +312,14 @@ public class ServerDomainGenerator
             requiredUsings);
     }
 
-    private void GenerateTestGlobalUsings()
+    private void GenerateTestGlobalUsings(
+        bool usingCodingRules)
     {
-        var requiredUsings = new List<string>
-        {
-            "System",
-            "System.CodeDom.Compiler",
-            "Xunit",
-        };
+        var requiredUsings = new List<string>();
 
-        foreach (var apiGroupName in projectOptions.ApiGroupNames)
+        if (!usingCodingRules)
         {
-            requiredUsings.Add($"{projectOptions.ProjectName}.Tests.Handlers.{apiGroupName}");
+            requiredUsings.Add("Xunit");
         }
 
         GlobalUsingsHelper.CreateOrUpdate(

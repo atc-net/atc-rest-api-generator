@@ -332,7 +332,6 @@ public class ClientCSharpApiGenerator
     {
         var requiredUsings = new List<string>
         {
-            "System",
             "System.CodeDom.Compiler",
             "System.Collections.Generic",
             "System.ComponentModel.DataAnnotations",
