@@ -11,6 +11,7 @@ public class HostProjectOptions : BaseProjectOptions
         string projectPrefixName,
         ApiOptions apiOptions,
         bool usingCodingRules,
+        bool removeNamespaceGroupSeparatorInGlobalUsings,
         DirectoryInfo apiProjectSrcPath,
         DirectoryInfo domainProjectSrcPath)
         : base(
@@ -21,7 +22,8 @@ public class HostProjectOptions : BaseProjectOptions
             projectPrefixName,
             "Api",
             apiOptions,
-            usingCodingRules)
+            usingCodingRules,
+            removeNamespaceGroupSeparatorInGlobalUsings)
     {
         ArgumentNullException.ThrowIfNull(apiOptions);
 

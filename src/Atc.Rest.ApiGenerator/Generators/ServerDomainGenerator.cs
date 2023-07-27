@@ -47,7 +47,7 @@ public class ServerDomainGenerator
 
         GenerateSrcHandlers(projectOptions.Document);
 
-        GenerateSrcGlobalUsings();
+        GenerateSrcGlobalUsings(projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
 
         if (projectOptions.PathForTestGenerate is not null)
         {
@@ -57,7 +57,7 @@ public class ServerDomainGenerator
 
             GenerateTestHandlers(projectOptions.Document);
 
-            GenerateTestGlobalUsings(projectOptions.UsingCodingRules);
+            GenerateTestGlobalUsings(projectOptions.UsingCodingRules, projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
         }
 
         return true;
@@ -292,7 +292,8 @@ public class ServerDomainGenerator
             classContent);
     }
 
-    private void GenerateSrcGlobalUsings()
+    private void GenerateSrcGlobalUsings(
+        bool removeNamespaceGroupSeparatorInGlobalUsings)
     {
         var requiredUsings = new List<string>
         {
@@ -309,11 +310,13 @@ public class ServerDomainGenerator
             logger,
             ContentWriterArea.Src,
             projectOptions.PathForSrcGenerate,
-            requiredUsings);
+            requiredUsings,
+            removeNamespaceGroupSeparatorInGlobalUsings);
     }
 
     private void GenerateTestGlobalUsings(
-        bool usingCodingRules)
+        bool usingCodingRules,
+        bool removeNamespaceGroupSeparatorInGlobalUsings)
     {
         var requiredUsings = new List<string>();
 
@@ -326,6 +329,7 @@ public class ServerDomainGenerator
             logger,
             ContentWriterArea.Test,
             projectOptions.PathForTestGenerate!,
-            requiredUsings);
+            requiredUsings,
+            removeNamespaceGroupSeparatorInGlobalUsings);
     }
 }

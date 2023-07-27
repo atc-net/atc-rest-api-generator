@@ -12,7 +12,8 @@ public static class GenerateHelper
         DirectoryInfo? outputTestPath,
         OpenApiDocumentContainer apiDocumentContainer,
         ApiOptions apiOptions,
-        bool useCodingRules)
+        bool useCodingRules,
+        bool removeNamespaceGroupSeparatorInGlobalUsings)
     {
         ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(apiOperationExtractor);
@@ -29,7 +30,8 @@ public static class GenerateHelper
             projectPrefixName,
             "Api.Generated",
             apiOptions,
-            useCodingRules);
+            useCodingRules,
+            removeNamespaceGroupSeparatorInGlobalUsings);
         var serverApiGenerator = new ServerApiGenerator(logger, apiOperationExtractor, nugetPackageReferenceProvider, projectOptions);
         return serverApiGenerator.Generate();
     }
@@ -43,6 +45,7 @@ public static class GenerateHelper
         OpenApiDocumentContainer apiDocumentContainer,
         ApiOptions apiOptions,
         bool useCodingRules,
+        bool removeNamespaceGroupSeparatorInGlobalUsings,
         DirectoryInfo apiPath)
     {
         ArgumentNullException.ThrowIfNull(logger);
@@ -60,6 +63,7 @@ public static class GenerateHelper
             projectPrefixName,
             apiOptions,
             useCodingRules,
+            removeNamespaceGroupSeparatorInGlobalUsings,
             apiPath);
         var serverDomainGenerator = new ServerDomainGenerator(logger, nugetPackageReferenceProvider, domainProjectOptions);
         return serverDomainGenerator.Generate();
@@ -74,6 +78,7 @@ public static class GenerateHelper
         OpenApiDocumentContainer apiDocumentContainer,
         ApiOptions apiOptions,
         bool usingCodingRules,
+        bool removeNamespaceGroupSeparatorInGlobalUsings,
         DirectoryInfo apiPath,
         DirectoryInfo domainPath)
     {
@@ -93,6 +98,7 @@ public static class GenerateHelper
             projectPrefixName,
             apiOptions,
             usingCodingRules,
+            removeNamespaceGroupSeparatorInGlobalUsings,
             apiPath,
             domainPath);
         var serverHostGenerator = new ServerHostGenerator(logger, nugetPackageReferenceProvider, hostProjectOptions);
@@ -164,7 +170,8 @@ public static class GenerateHelper
         OpenApiDocumentContainer apiDocumentContainer,
         bool excludeEndpointGeneration,
         ApiOptions apiOptions,
-        bool useCodingRules)
+        bool useCodingRules,
+        bool removeNamespaceGroupSeparatorInGlobalUsings)
     {
         ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(projectPrefixName);
@@ -182,7 +189,8 @@ public static class GenerateHelper
             httpClientName,
             excludeEndpointGeneration,
             apiOptions,
-            useCodingRules);
+            useCodingRules,
+            removeNamespaceGroupSeparatorInGlobalUsings);
         var clientCSharpApiGenerator = new ClientCSharpApiGenerator(logger, apiOperationExtractor, nugetPackageReferenceProvider, clientCSharpApiProjectOptions);
         return clientCSharpApiGenerator.Generate();
     }

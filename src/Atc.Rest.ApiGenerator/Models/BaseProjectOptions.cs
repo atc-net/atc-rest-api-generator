@@ -11,6 +11,7 @@ public abstract class BaseProjectOptions
         string? projectSuffixName,
         ApiOptions apiOptions,
         bool usingCodingRules,
+        bool removeNamespaceGroupSeparatorInGlobalUsings,
         bool forClient = false,
         string? clientFolderName = null)
     {
@@ -69,6 +70,7 @@ public abstract class BaseProjectOptions
         }
 
         UsingCodingRules = usingCodingRules;
+        RemoveNamespaceGroupSeparatorInGlobalUsings = removeNamespaceGroupSeparatorInGlobalUsings;
         IsForClient = forClient;
         ClientFolderName = clientFolderName;
 
@@ -76,6 +78,8 @@ public abstract class BaseProjectOptions
     }
 
     public bool UsingCodingRules { get; }
+
+    public bool RemoveNamespaceGroupSeparatorInGlobalUsings { get; }
 
     public bool UseNullableReferenceTypes { get; } = true;
 

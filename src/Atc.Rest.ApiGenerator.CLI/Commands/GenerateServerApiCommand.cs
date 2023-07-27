@@ -80,7 +80,8 @@ public class GenerateServerApiCommand : AsyncCommand<ServerApiCommandSettings>
                     outputTestPath,
                     apiDocumentContainer,
                     apiOptions,
-                    isUsingCodingRules))
+                    isUsingCodingRules,
+                    settings.RemoveNamespaceGroupSeparatorInGlobalUsings))
             {
                 return ConsoleExitStatusCodes.Failure;
             }

@@ -33,6 +33,7 @@ public class ClientCSharpApiGenerator
             projectSuffixName: null,
             projectOptions.ApiOptions,
             projectOptions.UsingCodingRules,
+            projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings,
             projectOptions.ForClient,
             projectOptions.ClientFolderName);
 
@@ -70,7 +71,7 @@ public class ClientCSharpApiGenerator
             GenerateEndpointResults(projectOptions.Document);
         }
 
-        GenerateSrcGlobalUsings();
+        GenerateSrcGlobalUsings(projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
 
         return true;
     }
@@ -328,7 +329,8 @@ public class ClientCSharpApiGenerator
         return result;
     }
 
-    private void GenerateSrcGlobalUsings()
+    private void GenerateSrcGlobalUsings(
+        bool removeNamespaceGroupSeparatorInGlobalUsings)
     {
         var requiredUsings = new List<string>
         {
@@ -353,7 +355,8 @@ public class ClientCSharpApiGenerator
            logger,
            ContentWriterArea.Src,
            projectOptions.PathForSrcGenerate,
-           requiredUsings);
+           requiredUsings,
+           removeNamespaceGroupSeparatorInGlobalUsings);
     }
 
     private void GenerateEndpointInterfaces(

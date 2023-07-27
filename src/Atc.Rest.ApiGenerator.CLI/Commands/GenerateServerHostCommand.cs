@@ -77,6 +77,7 @@ public class GenerateServerHostCommand : AsyncCommand<ServerHostCommandSettings>
                     apiDocumentContainer,
                     apiOptions,
                     isUsingCodingRules,
+                    settings.RemoveNamespaceGroupSeparatorInGlobalUsings,
                     new DirectoryInfo(settings.ApiPath),
                     new DirectoryInfo(settings.DomainPath)))
             {

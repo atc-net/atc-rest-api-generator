@@ -59,7 +59,7 @@ public class ServerApiGenerator
         GenerateInterfaces(projectOptions.Document);
 
         GenerateEndpoints(operationSchemaMappings);
-        GenerateSrcGlobalUsings();
+        GenerateSrcGlobalUsings(projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
 
         return true;
     }
@@ -541,7 +541,8 @@ public class ServerApiGenerator
             classContent);
     }
 
-    private void GenerateSrcGlobalUsings()
+    private void GenerateSrcGlobalUsings(
+        bool removeNamespaceGroupSeparatorInGlobalUsings)
     {
         var requiredUsings = new List<string>
         {
@@ -552,9 +553,9 @@ public class ServerApiGenerator
             "Microsoft.AspNetCore.Http",
             "Microsoft.AspNetCore.Mvc",
             "Atc.Rest.Results",
+            $"{projectOptions.ProjectName}.Contracts",
         };
 
-        requiredUsings.Add($"{projectOptions.ProjectName}.Contracts");
         foreach (var apiGroupName in projectOptions.ApiGroupNames)
         {
             requiredUsings.Add($"{projectOptions.ProjectName}.Contracts.{apiGroupName}");
@@ -564,6 +565,7 @@ public class ServerApiGenerator
             logger,
             ContentWriterArea.Src,
             projectOptions.PathForSrcGenerate,
-            requiredUsings);
+            requiredUsings,
+            removeNamespaceGroupSeparatorInGlobalUsings);
     }
 }

@@ -8,7 +8,8 @@ namespace Atc.Rest.ApiGenerator.Helpers
             ILogger logger,
             ContentWriterArea contentWriterArea,
             DirectoryInfo directoryInfo,
-            List<string> requiredUsings)
+            IReadOnlyList<string> requiredUsings,
+            bool removeNamespaceGroupSeparatorInGlobalUsings)
         {
             ArgumentNullException.ThrowIfNull(directoryInfo);
             ArgumentNullException.ThrowIfNull(requiredUsings);
@@ -19,19 +20,23 @@ namespace Atc.Rest.ApiGenerator.Helpers
             }
 
             var content = DotnetGlobalUsingsHelper.GetNewContentByReadingExistingIfExistAndMergeWithRequired(
-                directoryInfo,
-                requiredUsings);
+                directoryInfo: directoryInfo,
+                requiredNamespaces: requiredUsings,
+                setSystemFirst: true,
+                addNamespaceSeparator: !removeNamespaceGroupSeparatorInGlobalUsings);
 
             var globalUsingFile = new FileInfo(Path.Combine(directoryInfo.FullName, "GlobalUsings.cs"));
-            if (!string.IsNullOrEmpty(content))
+            if (string.IsNullOrEmpty(content))
             {
-                var contentWriter = new ContentWriter(logger);
-                contentWriter.Write(
-                    globalUsingFile.Directory!,
-                    globalUsingFile,
-                    contentWriterArea,
-                    content);
+                return;
             }
+
+            var contentWriter = new ContentWriter(logger);
+            contentWriter.Write(
+                globalUsingFile.Directory!,
+                globalUsingFile,
+                contentWriterArea,
+                content);
         }
     }
 }

@@ -78,7 +78,8 @@ public class GenerateClientCSharpCommand : AsyncCommand<ClientApiCommandSettings
                     apiDocumentContainer,
                     settings.ExcludeEndpointGeneration,
                     apiOptions,
-                    isUsingCodingRules))
+                    isUsingCodingRules,
+                    settings.RemoveNamespaceGroupSeparatorInGlobalUsings))
             {
                 return ConsoleExitStatusCodes.Failure;
             }
