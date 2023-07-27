@@ -18,7 +18,7 @@ public static class CodingRulesHelper
     {
         ArgumentNullException.ThrowIfNull(rootPath);
 
-        return !disableCodingRules &&
+        return !disableCodingRules ||
                HasBuildPropsWithCodingRulesEnabled(rootPath);
     }
 
