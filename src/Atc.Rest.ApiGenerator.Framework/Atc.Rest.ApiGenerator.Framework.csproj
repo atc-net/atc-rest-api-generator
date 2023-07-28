@@ -6,9 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc" Version="2.0.290" />
-    <PackageReference Include="Atc.OpenApi" Version="2.0.290" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Atc" Version="2.0.349" />
+    <PackageReference Include="Atc.OpenApi" Version="2.0.349" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
   </ItemGroup>
 
   <ItemGroup>

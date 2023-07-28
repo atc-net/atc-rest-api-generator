@@ -11,8 +11,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc.Test" Version="1.0.70" />
-    <PackageReference Include="NSubstitute.Analyzers.CSharp" Version="1.0.15" PrivateAssets="All" />
+    <PackageReference Include="Atc.Test" Version="1.0.77" />
+    <PackageReference Include="NSubstitute.Analyzers.CSharp" Version="1.0.16" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
