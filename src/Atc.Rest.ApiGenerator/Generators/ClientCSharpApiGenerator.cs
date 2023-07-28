@@ -71,7 +71,9 @@ public class ClientCSharpApiGenerator
             GenerateEndpointResults(projectOptions.Document);
         }
 
-        GenerateSrcGlobalUsings(projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
+        GenerateSrcGlobalUsings(
+            projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings,
+            operationSchemaMappings);
 
         return true;
     }
@@ -330,26 +332,24 @@ public class ClientCSharpApiGenerator
     }
 
     private void GenerateSrcGlobalUsings(
-        bool removeNamespaceGroupSeparatorInGlobalUsings)
+        bool removeNamespaceGroupSeparatorInGlobalUsings,
+        IList<ApiOperation> operationSchemaMappings)
     {
         var requiredUsings = new List<string>
         {
             "System.CodeDom.Compiler",
-            "System.Collections.Generic",
             "System.ComponentModel.DataAnnotations",
-            "System.Diagnostics.CodeAnalysis",
-            "System.Linq",
             "System.Net",
-            "System.Net.Http",
-            "System.Threading",
-            "System.Threading.Tasks",
             "Atc.Rest.Client",
             "Atc.Rest.Client.Builder",
-            "Atc.Rest.Results",
             "Microsoft.AspNetCore.Mvc",
-            "Microsoft.AspNetCore.Http",
             $"{projectOptions.ProjectName}.Contracts",
         };
+
+        if (operationSchemaMappings.FirstOrDefault(x => x.Model.UsesIFormFile) is not null)
+        {
+            requiredUsings.Add("Microsoft.AspNetCore.Http");
+        }
 
         GlobalUsingsHelper.CreateOrUpdate(
            logger,

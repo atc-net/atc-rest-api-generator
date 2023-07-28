@@ -8,6 +8,8 @@ public sealed class ApiOperationModel
 
     public bool IsShared { get; set; }
 
+    public bool UsesIFormFile { get; set; }
+
     public override string ToString()
-        => $"{nameof(Name)}: {Name}, {nameof(IsEnum)}: {IsEnum}, {nameof(IsShared)}: {IsShared}";
+        => $"{nameof(Name)}: {Name}, {nameof(IsEnum)}: {IsEnum}, {nameof(IsShared)}: {IsShared}, {nameof(UsesIFormFile)}: {UsesIFormFile}";
 }
