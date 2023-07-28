@@ -17,6 +17,7 @@
   <PropertyGroup Label="Compile settings">
     <Nullable>enable</Nullable>
     <LangVersion>10.0</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
     <IsPackable>false</IsPackable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>1573,1591,1712</NoWarn>

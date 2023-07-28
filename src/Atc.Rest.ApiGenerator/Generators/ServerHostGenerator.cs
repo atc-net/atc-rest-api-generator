@@ -42,7 +42,7 @@ public class ServerHostGenerator
         }
 
         ScaffoldSrc();
-        GenerateSrcGlobalUsings();
+        GenerateSrcGlobalUsings(projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
 
         if (projectOptions.PathForTestGenerate is not null)
         {
@@ -51,7 +51,7 @@ public class ServerHostGenerator
 
             GenerateTestEndpoints(projectOptions.Document);
 
-            GenerateTestGlobalUsings();
+            GenerateTestGlobalUsings(projectOptions.UsingCodingRules, projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
         }
 
         return true;
@@ -450,19 +450,13 @@ public class ServerHostGenerator
             overrideIfExist: false);
     }
 
-    private void GenerateSrcGlobalUsings()
+    private void GenerateSrcGlobalUsings(
+        bool removeNamespaceGroupSeparatorInGlobalUsings)
     {
         var requiredUsings = new List<string>
         {
-            "System",
             "System.CodeDom.Compiler",
             "System.Reflection",
-            "System.IO",
-            "Microsoft.AspNetCore.Builder",
-            "Microsoft.AspNetCore.Hosting",
-            "Microsoft.Extensions.Configuration",
-            "Microsoft.Extensions.DependencyInjection",
-            "Microsoft.Extensions.Hosting",
             projectOptions.ProjectName.Replace(".Api", ".Domain", StringComparison.Ordinal),
             $"{projectOptions.ProjectName}.Generated",
         };
@@ -480,38 +474,39 @@ public class ServerHostGenerator
             logger,
             ContentWriterArea.Src,
             projectOptions.PathForSrcGenerate,
-            requiredUsings);
+            requiredUsings,
+            removeNamespaceGroupSeparatorInGlobalUsings);
     }
 
-    private void GenerateTestGlobalUsings()
+    private void GenerateTestGlobalUsings(
+        bool usingCodingRules,
+        bool removeNamespaceGroupSeparatorInGlobalUsings)
     {
         var requiredUsings = new List<string>
         {
-            "System",
             "System.CodeDom.Compiler",
-            "System.Collections.Generic",
-            "System.IO",
-            "System.Net.Http",
             "System.Text",
             "System.Text.Json",
             "System.Text.Json.Serialization",
             "System.Reflection",
-            "System.Threading",
-            "System.Threading.Tasks",
-            "Microsoft.AspNetCore.Http",
-            "Xunit",
-            "AutoFixture",
+            "Atc.XUnit",
             "Atc.Rest.Results",
             "Atc.Rest.Options",
             "Microsoft.AspNetCore.Hosting",
-            "Microsoft.AspNetCore.Mvc.Testing",
+            "Microsoft.AspNetCore.Http",
             "Microsoft.AspNetCore.TestHost",
+            "Microsoft.AspNetCore.Mvc.Testing",
             "Microsoft.Extensions.Configuration",
             "Microsoft.Extensions.DependencyInjection",
-            "Atc.XUnit",
             $"{projectOptions.ProjectName}.Generated",
             $"{projectOptions.ProjectName}.Generated.Contracts",
         };
+
+        if (!usingCodingRules)
+        {
+            requiredUsings.Add("AutoFixture");
+            requiredUsings.Add("Xunit");
+        }
 
         foreach (var apiGroupName in projectOptions.ApiGroupNames)
         {
@@ -527,6 +522,7 @@ public class ServerHostGenerator
             logger,
             ContentWriterArea.Test,
             projectOptions.PathForTestGenerate!,
-            requiredUsings);
+            requiredUsings,
+            removeNamespaceGroupSeparatorInGlobalUsings);
     }
 }

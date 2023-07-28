@@ -12,7 +12,8 @@ public class ClientCSharpApiProjectOptions
         string? httpClientName,
         bool excludeEndpointGeneration,
         ApiOptions apiOptions,
-        bool usingCodingRules)
+        bool usingCodingRules,
+        bool removeNamespaceGroupSeparatorInGlobalUsings)
     {
         ArgumentNullException.ThrowIfNull(projectSrcGeneratePath);
 
@@ -53,10 +54,13 @@ public class ClientCSharpApiProjectOptions
         ApiGroupNames = openApiDocument.GetApiGroupNames();
 
         UsingCodingRules = usingCodingRules;
+        RemoveNamespaceGroupSeparatorInGlobalUsings = removeNamespaceGroupSeparatorInGlobalUsings;
         ExcludeEndpointGeneration = excludeEndpointGeneration;
     }
 
     public bool UsingCodingRules { get; }
+
+    public bool RemoveNamespaceGroupSeparatorInGlobalUsings { get; }
 
     public bool UseNullableReferenceTypes { get; } = true;
 

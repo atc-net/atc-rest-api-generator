@@ -10,6 +10,10 @@ public class BaseGenerateCommandSettings : BaseConfigurationCommandSettings
     [Description("Disable ATC-Coding-Rules")]
     public bool DisableCodingRules { get; init; }
 
+    [CommandOption($"{ArgumentCommandConstants.LongRemoveNamespaceGroupSeparatorInGlobalUsings}")]
+    [Description("Remove space between namespace groups in GlobalUsing.cs")]
+    public bool RemoveNamespaceGroupSeparatorInGlobalUsings { get; init; }
+
     public override ValidationResult Validate()
     {
         var validationResult = base.Validate();

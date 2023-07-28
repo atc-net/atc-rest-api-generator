@@ -47,7 +47,7 @@ public class ServerDomainGenerator
 
         GenerateSrcHandlers(projectOptions.Document);
 
-        GenerateSrcGlobalUsings();
+        GenerateSrcGlobalUsings(projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
 
         if (projectOptions.PathForTestGenerate is not null)
         {
@@ -57,7 +57,7 @@ public class ServerDomainGenerator
 
             GenerateTestHandlers(projectOptions.Document);
 
-            GenerateTestGlobalUsings();
+            GenerateTestGlobalUsings(projectOptions.UsingCodingRules, projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
         }
 
         return true;
@@ -292,14 +292,12 @@ public class ServerDomainGenerator
             classContent);
     }
 
-    private void GenerateSrcGlobalUsings()
+    private void GenerateSrcGlobalUsings(
+        bool removeNamespaceGroupSeparatorInGlobalUsings)
     {
         var requiredUsings = new List<string>
         {
-            "System",
             "System.CodeDom.Compiler",
-            "System.Threading",
-            "System.Threading.Tasks",
         };
 
         var projectName = projectOptions.ProjectName.Replace(".Domain", ".Api.Generated", StringComparison.Ordinal);
@@ -312,27 +310,26 @@ public class ServerDomainGenerator
             logger,
             ContentWriterArea.Src,
             projectOptions.PathForSrcGenerate,
-            requiredUsings);
+            requiredUsings,
+            removeNamespaceGroupSeparatorInGlobalUsings);
     }
 
-    private void GenerateTestGlobalUsings()
+    private void GenerateTestGlobalUsings(
+        bool usingCodingRules,
+        bool removeNamespaceGroupSeparatorInGlobalUsings)
     {
-        var requiredUsings = new List<string>
-        {
-            "System",
-            "System.CodeDom.Compiler",
-            "Xunit",
-        };
+        var requiredUsings = new List<string>();
 
-        foreach (var apiGroupName in projectOptions.ApiGroupNames)
+        if (!usingCodingRules)
         {
-            requiredUsings.Add($"{projectOptions.ProjectName}.Tests.Handlers.{apiGroupName}");
+            requiredUsings.Add("Xunit");
         }
 
         GlobalUsingsHelper.CreateOrUpdate(
             logger,
             ContentWriterArea.Test,
             projectOptions.PathForTestGenerate!,
-            requiredUsings);
+            requiredUsings,
+            removeNamespaceGroupSeparatorInGlobalUsings);
     }
 }

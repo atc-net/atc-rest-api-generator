@@ -11,7 +11,7 @@ public class AttributesParametersFactoryTests
 
         // Assert
         Assert.NotNull(actual);
-        Assert.Equal(1, actual.Count);
+        Assert.Single(actual);
         Assert.Equal(name, actual[0].Name);
         Assert.Null(actual[0].Content);
     }
@@ -25,7 +25,7 @@ public class AttributesParametersFactoryTests
 
         // Assert
         Assert.NotNull(actual);
-        Assert.Equal(1, actual.Count);
+        Assert.Single(actual);
         Assert.Equal(name, actual[0].Name);
         Assert.Equal(content, actual[0].Content);
     }

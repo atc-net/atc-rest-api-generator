@@ -127,6 +127,7 @@ OPTIONS:
         --outputSrcPath <OUTPUTSRCPATH>                                           Path to generated src projects (directory)
         --outputTestPath [OUTPUTTESTPATH]                                         Path to generated test projects (directory)
         --disableCodingRules                                                      Disable ATC-Coding-Rules
+        --removeNamespaceGroupSeparatorInGlobalUsings                             Remove space between namespace groups in GlobalUsing.cs
 ```
 
 #### Command **options-file**

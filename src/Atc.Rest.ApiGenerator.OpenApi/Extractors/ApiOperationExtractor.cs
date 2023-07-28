@@ -169,6 +169,11 @@ public sealed class ApiOperationExtractor : IApiOperationExtractor
             apiOperation.Model.IsEnum = true;
         }
 
+        if (apiSchema.HasAnyPropertiesWithFormatTypeBinary())
+        {
+            apiOperation.Model.UsesIFormFile = true;
+        }
+
         if (apiOperation.Cardinality == CardinalityType.None)
         {
             apiOperation.Cardinality = CardinalityType.Single;

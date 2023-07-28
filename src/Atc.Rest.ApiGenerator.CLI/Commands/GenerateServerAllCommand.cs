@@ -87,7 +87,8 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
                     outputTestPath,
                     apiDocumentContainer,
                     apiOptions,
-                    isUsingCodingRules))
+                    isUsingCodingRules,
+                    settings.RemoveNamespaceGroupSeparatorInGlobalUsings))
             {
                 return ConsoleExitStatusCodes.Failure;
             }
@@ -101,6 +102,7 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
                     apiDocumentContainer,
                     apiOptions,
                     isUsingCodingRules,
+                    settings.RemoveNamespaceGroupSeparatorInGlobalUsings,
                     outputSrcPath))
             {
                 return ConsoleExitStatusCodes.Failure;
@@ -115,6 +117,7 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
                     apiDocumentContainer,
                     apiOptions,
                     isUsingCodingRules,
+                    settings.RemoveNamespaceGroupSeparatorInGlobalUsings,
                     outputSrcPath,
                     outputSrcPath))
             {

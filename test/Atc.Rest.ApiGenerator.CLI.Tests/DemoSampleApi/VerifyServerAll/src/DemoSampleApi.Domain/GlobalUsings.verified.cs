@@ -1,7 +1,4 @@
-﻿global using System;
 global using System.CodeDom.Compiler;
-global using System.Threading;
-global using System.Threading.Tasks;
 
 global using DemoSampleApi.Api.Generated.Contracts.Accounts;
 global using DemoSampleApi.Api.Generated.Contracts.Addresses;

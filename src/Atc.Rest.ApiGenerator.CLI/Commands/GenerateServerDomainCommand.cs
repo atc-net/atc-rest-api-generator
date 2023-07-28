@@ -77,6 +77,7 @@ public class GenerateServerDomainCommand : AsyncCommand<ServerDomainCommandSetti
                     apiDocumentContainer,
                     apiOptions,
                     isUsingCodingRules,
+                    settings.RemoveNamespaceGroupSeparatorInGlobalUsings,
                     new DirectoryInfo(settings.ApiPath)))
             {
                 return ConsoleExitStatusCodes.Failure;

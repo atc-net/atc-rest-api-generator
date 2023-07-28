@@ -83,10 +83,10 @@ public class NugetPackageReferenceProvider : INugetPackageReferenceProvider
         var packageReferences = new List<(string, string, string?)>
         {
             new("Atc.XUnit", "2.0.93", null),
-            new("AutoFixture", "4.17.0", null),
-            new("AutoFixture.AutoNSubstitute", "4.17.0", null),
-            new("AutoFixture.Xunit2", "4.17.0", null),
-            new("FluentAssertions", "6.5.1", null),
+            new("AutoFixture", "4.18.0", null),
+            new("AutoFixture.AutoNSubstitute", "4.18.0", null),
+            new("AutoFixture.Xunit2", "4.18.0", null),
+            new("FluentAssertions", "6.11.0", null),
         };
 
         if (useMvc)
@@ -96,8 +96,8 @@ public class NugetPackageReferenceProvider : INugetPackageReferenceProvider
 
         packageReferences.AddRange(new List<(string, string, string?)>
         {
-            new("Microsoft.NET.Test.Sdk", "17.3.1", null),
-            new("NSubstitute", "4.4.0", null),
+            new("Microsoft.NET.Test.Sdk", "17.6.2", null),
+            new("NSubstitute", "5.0.0", null),
             new("xunit", "2.4.2", null),
             new("xunit.runner.visualstudio", "2.4.4", "<PrivateAssets>all</PrivateAssets>\n<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>"),
         });

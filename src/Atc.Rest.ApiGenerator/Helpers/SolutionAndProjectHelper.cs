@@ -39,6 +39,7 @@ public static class SolutionAndProjectHelper
         {
             sb.AppendLine(4, "<LangVersion>10.0</LangVersion>");
             sb.AppendLine(4, "<Nullable>enable</Nullable>");
+            sb.AppendLine(4, "<ImplicitUsings>enable</ImplicitUsings>");
         }
 
         if (!createAsTestProject)
