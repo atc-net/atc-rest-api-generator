@@ -62,6 +62,13 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
         var shouldScaffoldCodingRules = CodingRulesHelper.ShouldScaffoldCodingRules(outputSlnPath, settings.DisableCodingRules);
         var isUsingCodingRules = CodingRulesHelper.IsUsingCodingRules(outputSlnPath, settings.DisableCodingRules);
 
+        var aspNetOutputType = AspNetOutputType.Mvc;
+
+        if (settings.AspNetOutputType.IsSet)
+        {
+            aspNetOutputType = settings.AspNetOutputType.Value;
+        }
+
         if (shouldScaffoldCodingRules &&
             !NetworkInformationHelper.HasHttpConnection())
         {
@@ -78,7 +85,14 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
                 return ConsoleExitStatusCodes.Failure;
             }
 
-            if (!GenerateHelper.GenerateServerApi(
+            if (aspNetOutputType == AspNetOutputType.MinimalApi)
+            {
+                // TODO: Implement
+                return ConsoleExitStatusCodes.Success;
+            }
+            else
+            {
+                if (!GenerateHelper.GenerateServerApi(
                     logger,
                     apiOperationExtractor,
                     nugetPackageReferenceProvider,
@@ -89,58 +103,59 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
                     apiOptions,
                     isUsingCodingRules,
                     settings.RemoveNamespaceGroupSeparatorInGlobalUsings))
-            {
-                return ConsoleExitStatusCodes.Failure;
-            }
+                {
+                    return ConsoleExitStatusCodes.Failure;
+                }
 
-            if (!GenerateHelper.GenerateServerDomain(
-                    logger,
-                    nugetPackageReferenceProvider,
-                    projectPrefixName,
-                    outputSrcPath,
-                    outputTestPath,
-                    apiDocumentContainer,
-                    apiOptions,
-                    isUsingCodingRules,
-                    settings.RemoveNamespaceGroupSeparatorInGlobalUsings,
-                    outputSrcPath))
-            {
-                return ConsoleExitStatusCodes.Failure;
-            }
+                if (!GenerateHelper.GenerateServerDomain(
+                        logger,
+                        nugetPackageReferenceProvider,
+                        projectPrefixName,
+                        outputSrcPath,
+                        outputTestPath,
+                        apiDocumentContainer,
+                        apiOptions,
+                        isUsingCodingRules,
+                        settings.RemoveNamespaceGroupSeparatorInGlobalUsings,
+                        outputSrcPath))
+                {
+                    return ConsoleExitStatusCodes.Failure;
+                }
 
-            if (!GenerateHelper.GenerateServerHost(
-                    logger,
-                    nugetPackageReferenceProvider,
-                    projectPrefixName,
-                    outputSrcPath,
-                    outputTestPath,
-                    apiDocumentContainer,
-                    apiOptions,
-                    isUsingCodingRules,
-                    settings.RemoveNamespaceGroupSeparatorInGlobalUsings,
-                    outputSrcPath,
-                    outputSrcPath))
-            {
-                return ConsoleExitStatusCodes.Failure;
-            }
+                if (!GenerateHelper.GenerateServerHost(
+                        logger,
+                        nugetPackageReferenceProvider,
+                        projectPrefixName,
+                        outputSrcPath,
+                        outputTestPath,
+                        apiDocumentContainer,
+                        apiOptions,
+                        isUsingCodingRules,
+                        settings.RemoveNamespaceGroupSeparatorInGlobalUsings,
+                        outputSrcPath,
+                        outputSrcPath))
+                {
+                    return ConsoleExitStatusCodes.Failure;
+                }
 
-            if (!GenerateHelper.GenerateServerSln(
-                    logger,
-                    projectPrefixName,
-                    outputSlnPath,
-                    outputSrcPath,
-                    outputTestPath))
-            {
-                return ConsoleExitStatusCodes.Failure;
-            }
+                if (!GenerateHelper.GenerateServerSln(
+                        logger,
+                        projectPrefixName,
+                        outputSlnPath,
+                        outputSrcPath,
+                        outputTestPath))
+                {
+                    return ConsoleExitStatusCodes.Failure;
+                }
 
-            if (shouldScaffoldCodingRules &&
-                !atcCodingRulesUpdater.Scaffold(
-                    outputSlnPath,
-                    outputSrcPath,
-                    outputTestPath))
-            {
-                return ConsoleExitStatusCodes.Failure;
+                if (shouldScaffoldCodingRules &&
+                    !atcCodingRulesUpdater.Scaffold(
+                        outputSlnPath,
+                        outputSrcPath,
+                        outputTestPath))
+                {
+                    return ConsoleExitStatusCodes.Failure;
+                }
             }
         }
         catch (Exception ex)

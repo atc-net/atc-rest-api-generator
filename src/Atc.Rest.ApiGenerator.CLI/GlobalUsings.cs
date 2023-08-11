@@ -12,6 +12,7 @@ global using Atc.Console.Spectre.Helpers;
 global using Atc.Console.Spectre.Logging;
 global using Atc.Helpers;
 global using Atc.Rest.ApiGenerator.CLI.Commands;
+global using Atc.Rest.ApiGenerator.CLI.Commands.Attributes;
 global using Atc.Rest.ApiGenerator.CLI.Commands.Settings;
 global using Atc.Rest.ApiGenerator.CLI.Extensions;
 global using Atc.Rest.ApiGenerator.CodingRules;

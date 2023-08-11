@@ -1,6 +1,6 @@
 namespace Atc.Rest.ApiGenerator.CLI.Commands.Settings;
 
-public class ServerApiCommandSettings : BaseGenerateCommandSettings
+public class ServerApiCommandSettings : BaseServerCommandSettings
 {
     [CommandOption($"{ArgumentCommandConstants.ShortOutputPath}|{ArgumentCommandConstants.LongOutputPath} <OUTPUTPATH>")]
     [Description("Path to generated project (directory)")]
