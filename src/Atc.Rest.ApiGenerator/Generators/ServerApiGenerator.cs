@@ -271,19 +271,37 @@ public class ServerApiGenerator
             ? $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}"
             : $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
 
-        // Generate
-        var classParameters = ContentGeneratorServerClientModelParametersFactory.Create(
-            codeGeneratorContentHeader,
-            fullNamespace,
-            codeGeneratorAttribute,
-            modelName,
-            apiSchemaModel);
+        string? content = string.Empty;
+        if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
+        {
+            var parameters = ContentGeneratorServerClientModelParametersFactory.CreateForClass(
+                codeGeneratorContentHeader,
+                fullNamespace,
+                codeGeneratorAttribute,
+                modelName,
+                apiSchemaModel);
 
-        var contentGeneratorClass = new GenerateContentForClass(
-            new CodeDocumentationTagsGenerator(),
-            classParameters);
+            var contentGeneratorClass = new GenerateContentForClass(
+                new CodeDocumentationTagsGenerator(),
+                parameters);
 
-        var classContent = contentGeneratorClass.Generate();
+            content = contentGeneratorClass.Generate();
+        }
+        else
+        {
+            var parameters = ContentGeneratorServerClientModelParametersFactory.CreateForRecord(
+                codeGeneratorContentHeader,
+                fullNamespace,
+                codeGeneratorAttribute,
+                modelName,
+                apiSchemaModel);
+
+            var contentGeneratorRecord = new GenerateContentForRecords(
+                new CodeDocumentationTagsGenerator(),
+                parameters);
+
+            content = contentGeneratorRecord.Generate();
+        }
 
         // Write
         FileInfo file;
@@ -309,7 +327,7 @@ public class ServerApiGenerator
             projectOptions.PathForSrcGenerate,
             file,
             ContentWriterArea.Src,
-            classContent);
+            content);
     }
 
     private void GenerateParameters(
