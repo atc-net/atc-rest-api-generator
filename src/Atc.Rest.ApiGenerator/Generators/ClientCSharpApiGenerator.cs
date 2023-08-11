@@ -201,7 +201,7 @@ public class ClientCSharpApiGenerator
         var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}";
 
         // Generate
-        var classParameters = ContentGeneratorServerClientModelParametersFactory.Create(
+        var classParameters = ContentGeneratorServerClientModelParametersFactory.CreateForClass(
             codeGeneratorContentHeader,
             fullNamespace,
             codeGeneratorAttribute,
