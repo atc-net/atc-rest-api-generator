@@ -4,6 +4,7 @@ public class HostProjectOptions : BaseProjectOptions
 {
     [SuppressMessage("Major Code Smell", "S107:Methods should not have too many parameters", Justification = "OK.")]
     public HostProjectOptions(
+        AspNetOutputType aspNetOutputType,
         DirectoryInfo projectSrcGeneratePath,
         DirectoryInfo? projectTestGeneratePath,
         OpenApiDocument openApiDocument,
@@ -15,6 +16,7 @@ public class HostProjectOptions : BaseProjectOptions
         DirectoryInfo apiProjectSrcPath,
         DirectoryInfo domainProjectSrcPath)
         : base(
+            aspNetOutputType,
             projectSrcGeneratePath,
             projectTestGeneratePath,
             openApiDocument,
