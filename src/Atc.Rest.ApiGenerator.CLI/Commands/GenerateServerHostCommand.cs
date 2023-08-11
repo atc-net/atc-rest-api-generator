@@ -75,29 +75,21 @@ public class GenerateServerHostCommand : AsyncCommand<ServerHostCommandSettings>
                 return ConsoleExitStatusCodes.Failure;
             }
 
-
-            if (aspNetOutputType == AspNetOutputType.MinimalApi)
+            if (!GenerateHelper.GenerateServerHost(
+                    logger,
+                    aspNetOutputType,
+                    nugetPackageReferenceProvider,
+                    settings.ProjectPrefixName,
+                    new DirectoryInfo(settings.OutputPath),
+                    outputTestPath,
+                    apiDocumentContainer,
+                    apiOptions,
+                    isUsingCodingRules,
+                    settings.RemoveNamespaceGroupSeparatorInGlobalUsings,
+                    new DirectoryInfo(settings.ApiPath),
+                    new DirectoryInfo(settings.DomainPath)))
             {
-                // TODO: Implement
-                return ConsoleExitStatusCodes.Success;
-            }
-            else
-            {
-                if (!GenerateHelper.GenerateServerHost(
-                        logger,
-                        nugetPackageReferenceProvider,
-                        settings.ProjectPrefixName,
-                        new DirectoryInfo(settings.OutputPath),
-                        outputTestPath,
-                        apiDocumentContainer,
-                        apiOptions,
-                        isUsingCodingRules,
-                        settings.RemoveNamespaceGroupSeparatorInGlobalUsings,
-                        new DirectoryInfo(settings.ApiPath),
-                        new DirectoryInfo(settings.DomainPath)))
-                {
-                    return ConsoleExitStatusCodes.Failure;
-                }
+                return ConsoleExitStatusCodes.Failure;
             }
         }
         catch (Exception ex)
