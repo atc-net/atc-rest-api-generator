@@ -3,7 +3,7 @@
 CLS
 SET currentDirectory=%cd%
 FOR %%a IN ("%currentDirectory%") DO SET rootDirectory=%%~dpa
-SET projectsRootDirectory=%rootDirectory%\sample\Code
+SET projectsRootDirectory=%rootDirectory%\sample-mvc\Code
 SET slnDirectory=%projectsRootDirectory%
 SET srcDirectory=%projectsRootDirectory%\src
 SET testDirectory=%projectsRootDirectory%\test

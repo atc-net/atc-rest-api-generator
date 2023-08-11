@@ -91,7 +91,7 @@ function HandleProject
 }
 
 $projects = @(
-  @{ Name = 'ATCDemo';      ValidateStrictMode = $true;     FileLocation = "$($generatorBasePath)\sample\Demo.ApiDesign\SingleFileVersion\Api.v1.yaml";},
+  @{ Name = 'ATCDemo';      ValidateStrictMode = $true;     FileLocation = "$($generatorBasePath)\sample-mvc\Demo.ApiDesign\SingleFileVersion\Api.v1.yaml";},
   @{ Name = 'PetStore';     ValidateStrictMode = $false;    FileLocation = 'https://petstore3.swagger.io/api/v3/openapi.yaml';                         }
 )
 
