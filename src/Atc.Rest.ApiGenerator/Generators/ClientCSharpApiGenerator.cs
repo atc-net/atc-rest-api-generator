@@ -25,6 +25,7 @@ public class ClientCSharpApiGenerator
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
 
         apiProjectOptions = new ApiProjectOptions(
+            AspNetOutputType.Mvc,
             projectOptions.PathForSrcGenerate,
             projectTestGeneratePath: null,
             projectOptions.Document,

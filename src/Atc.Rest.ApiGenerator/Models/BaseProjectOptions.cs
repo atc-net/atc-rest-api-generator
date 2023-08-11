@@ -3,6 +3,7 @@ namespace Atc.Rest.ApiGenerator.Models;
 public abstract class BaseProjectOptions
 {
     protected BaseProjectOptions(
+        AspNetOutputType aspNetOutputType,
         DirectoryInfo projectSrcGeneratePath,
         DirectoryInfo? projectTestGeneratePath,
         OpenApiDocument openApiDocument,
@@ -69,6 +70,7 @@ public abstract class BaseProjectOptions
             ProjectTestCsProj = new FileInfo(Path.Combine(PathForTestGenerate.FullName, $"{ProjectName}.Tests.csproj"));
         }
 
+        AspNetOutputType = aspNetOutputType;
         UsingCodingRules = usingCodingRules;
         RemoveNamespaceGroupSeparatorInGlobalUsings = removeNamespaceGroupSeparatorInGlobalUsings;
         IsForClient = forClient;
@@ -76,6 +78,8 @@ public abstract class BaseProjectOptions
 
         ApiGroupNames = openApiDocument.GetApiGroupNames();
     }
+
+    public AspNetOutputType AspNetOutputType { get; }
 
     public bool UsingCodingRules { get; }
 
