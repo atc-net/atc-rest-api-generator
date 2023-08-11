@@ -75,20 +75,27 @@ public class GenerateServerDomainCommand : AsyncCommand<ServerDomainCommandSetti
                 return ConsoleExitStatusCodes.Failure;
             }
 
-            if (!GenerateHelper.GenerateServerDomain(
-                    logger,
-                    aspNetOutputType,
-                    nugetPackageReferenceProvider,
-                    settings.ProjectPrefixName,
-                    new DirectoryInfo(settings.OutputPath),
-                    outputTestPath,
-                    apiDocumentContainer,
-                    apiOptions,
-                    isUsingCodingRules,
-                    settings.RemoveNamespaceGroupSeparatorInGlobalUsings,
-                    new DirectoryInfo(settings.ApiPath)))
+            if (aspNetOutputType == AspNetOutputType.MinimalApi)
             {
-                return ConsoleExitStatusCodes.Failure;
+                // TODO: Implement
+                return ConsoleExitStatusCodes.Success;
+            }
+            else
+            {
+                if (!GenerateHelper.GenerateServerDomain(
+                        logger,
+                        nugetPackageReferenceProvider,
+                        settings.ProjectPrefixName,
+                        new DirectoryInfo(settings.OutputPath),
+                        outputTestPath,
+                        apiDocumentContainer,
+                        apiOptions,
+                        isUsingCodingRules,
+                        settings.RemoveNamespaceGroupSeparatorInGlobalUsings,
+                        new DirectoryInfo(settings.ApiPath)))
+                {
+                    return ConsoleExitStatusCodes.Failure;
+                }
             }
         }
         catch (Exception ex)

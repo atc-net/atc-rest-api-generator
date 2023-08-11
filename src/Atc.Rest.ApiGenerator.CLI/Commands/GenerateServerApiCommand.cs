@@ -78,20 +78,27 @@ public class GenerateServerApiCommand : AsyncCommand<ServerApiCommandSettings>
                 return ConsoleExitStatusCodes.Failure;
             }
 
-            if (!GenerateHelper.GenerateServerApi(
-                    logger,
-                    aspNetOutputType,
-                    apiOperationExtractor,
-                    nugetPackageReferenceProvider,
-                    settings.ProjectPrefixName,
-                    new DirectoryInfo(settings.OutputPath),
-                    outputTestPath,
-                    apiDocumentContainer,
-                    apiOptions,
-                    isUsingCodingRules,
-                    settings.RemoveNamespaceGroupSeparatorInGlobalUsings))
+            if (aspNetOutputType == AspNetOutputType.MinimalApi)
             {
-                return ConsoleExitStatusCodes.Failure;
+                // TODO: Implement
+                return ConsoleExitStatusCodes.Success;
+            }
+            else
+            {
+                if (!GenerateHelper.GenerateServerApi(
+                        logger,
+                        apiOperationExtractor,
+                        nugetPackageReferenceProvider,
+                        settings.ProjectPrefixName,
+                        new DirectoryInfo(settings.OutputPath),
+                        outputTestPath,
+                        apiDocumentContainer,
+                        apiOptions,
+                        isUsingCodingRules,
+                        settings.RemoveNamespaceGroupSeparatorInGlobalUsings))
+                {
+                    return ConsoleExitStatusCodes.Failure;
+                }
             }
         }
         catch (Exception ex)
