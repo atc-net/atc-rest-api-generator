@@ -1,0 +1,7 @@
+{
+  "projectTarget": "DotNet7",
+  "mappings": {
+    "src": { "paths": [ "src" ] },
+    "test": { "paths": [ "test" ] }
+  }
+}

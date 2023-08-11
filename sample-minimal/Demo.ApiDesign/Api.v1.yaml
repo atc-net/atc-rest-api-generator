@@ -1,0 +1,250 @@
+openapi: 3.0.0
+info:
+  title: Demo Api
+  description: Demo Api
+  version: '1.0'
+  contact:
+    name: atc-net A/S
+servers:
+  - url: /api/v1
+    description: Api version 1.0
+x-authorize-roles:
+  - admin
+  - operator
+paths:
+  /users/email:
+    get:
+      tags:
+        - Users
+      summary: Get user by email
+      description: Get user by email
+      operationId: getUserByEmail
+      parameters:
+        - name: email
+          in: query
+          description: The email of the user to retrieve
+          required: true
+          schema:
+            type: string
+            format: email
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Not Found
+  '/users/{id}':
+    get:
+      summary: Get user by id
+      description: Get user by id
+      operationId: getUserById
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Not Found
+    put:
+      summary: Update user by id
+      description: Update user by id
+      operationId: updateUserById
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '409':
+          description: Conflict
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+    delete:
+      summary: Delete user by id
+      description: Delete user by id
+      operationId: deleteUserById
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+    parameters:
+      - name: id
+        in: path
+        description: Id of the user
+        required: true
+        schema:
+          type: string
+          format: uuid
+  /users:
+    get:
+      summary: Get all users
+      description: Get all users
+      operationId: getAllUsers
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      summary: Create a new user
+      description: Create a new user
+      operationId: createUser
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '409':
+          description: Conflict
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+components:
+  parameters: {}
+  schemas:
+    Address:
+      title: Address
+      type: object
+      properties:
+        streetName:
+          type: string
+          maxLength: 255
+        streetNumber:
+          type: string
+        postalCode:
+          type: string
+        cityName:
+          type: string
+        country:
+          $ref: '#/components/schemas/Country'
+    Country:
+      title: Country
+      type: object
+      properties:
+        name:
+          type: string
+        alpha2Code:
+          type: string
+          minLength: 2
+          maxLength: 2
+          pattern: '^[A-Za-z]{2}$'
+        alpha3Code:
+          type: string
+          minLength: 3
+          maxLength: 3
+          pattern: '^[A-Za-z]{3}$'
+      required:
+        - name
+        - alpha2Code
+        - alpha3Code
+    CreateUserRequest:
+      title: CreateUserRequest
+      description: Request to create a user
+      type: object
+      properties:
+        gender:
+          $ref: '#/components/schemas/GenderType'
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+          example: email@email.dk
+        telephone:
+          type: string
+        homepage:
+          type: string
+          format: uri
+        homeAddress:
+          nullable: true
+          oneOf:
+            - $ref: '#/components/schemas/Address'
+        workAddress:
+          $ref: '#/components/schemas/Address'
+      required:
+        - firstName
+        - lastName
+        - myDateTime
+        - email
+        - gender
+    GenderType:
+      title: GenderType
+      description: ''
+      type: object
+      properties:
+        gender:
+          type: string
+          description: The users gender type
+          enum:
+            - None
+            - NonBinary
+            - Male
+            - Female
+      required:
+        - gender
+    UpdateUserRequest:
+      title: UpdateUserRequest
+      description: Request to update a user
+      type: object
+      properties:
+        gender:
+          $ref: '#/components/schemas/GenderType'
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+          example: email@email.dk
+        workAddress:
+          $ref: '#/components/schemas/Address'
+    User:
+      title: User
+      description: A single user.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 00000000-0000-0000-0000-000000000000
+        gender:
+          $ref: '#/components/schemas/GenderType'
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+          example: email@email.dk
+        telephone:
+          type: string
+        homepage:
+          type: string
+          format: uri
+        homeAddress:
+          $ref: '#/components/schemas/Address'
+        workAddress:
+          $ref: '#/components/schemas/Address'
+  responses: {}
+  requestBodies: {}
