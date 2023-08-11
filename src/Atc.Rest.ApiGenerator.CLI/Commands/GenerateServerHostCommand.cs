@@ -52,6 +52,13 @@ public class GenerateServerHostCommand : AsyncCommand<ServerHostCommandSettings>
         var shouldScaffoldCodingRules = CodingRulesHelper.ShouldScaffoldCodingRules(settings.OutputPath, settings.DisableCodingRules);
         var isUsingCodingRules = CodingRulesHelper.IsUsingCodingRules(settings.OutputPath, settings.DisableCodingRules);
 
+        var aspNetOutputType = AspNetOutputType.Mvc;
+
+        if (settings.AspNetOutputType.IsSet)
+        {
+            aspNetOutputType = settings.AspNetOutputType.Value;
+        }
+
         if (shouldScaffoldCodingRules &&
             !NetworkInformationHelper.HasHttpConnection())
         {
@@ -68,20 +75,29 @@ public class GenerateServerHostCommand : AsyncCommand<ServerHostCommandSettings>
                 return ConsoleExitStatusCodes.Failure;
             }
 
-            if (!GenerateHelper.GenerateServerHost(
-                    logger,
-                    nugetPackageReferenceProvider,
-                    settings.ProjectPrefixName,
-                    new DirectoryInfo(settings.OutputPath),
-                    outputTestPath,
-                    apiDocumentContainer,
-                    apiOptions,
-                    isUsingCodingRules,
-                    settings.RemoveNamespaceGroupSeparatorInGlobalUsings,
-                    new DirectoryInfo(settings.ApiPath),
-                    new DirectoryInfo(settings.DomainPath)))
+
+            if (aspNetOutputType == AspNetOutputType.MinimalApi)
             {
-                return ConsoleExitStatusCodes.Failure;
+                // TODO: Implement
+                return ConsoleExitStatusCodes.Success;
+            }
+            else
+            {
+                if (!GenerateHelper.GenerateServerHost(
+                        logger,
+                        nugetPackageReferenceProvider,
+                        settings.ProjectPrefixName,
+                        new DirectoryInfo(settings.OutputPath),
+                        outputTestPath,
+                        apiDocumentContainer,
+                        apiOptions,
+                        isUsingCodingRules,
+                        settings.RemoveNamespaceGroupSeparatorInGlobalUsings,
+                        new DirectoryInfo(settings.ApiPath),
+                        new DirectoryInfo(settings.DomainPath)))
+                {
+                    return ConsoleExitStatusCodes.Failure;
+                }
             }
         }
         catch (Exception ex)

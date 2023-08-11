@@ -1,6 +1,6 @@
 namespace Atc.Rest.ApiGenerator.CLI.Commands.Settings;
 
-public class ServerAllCommandSettings : BaseGenerateCommandSettings
+public class ServerAllCommandSettings : BaseServerCommandSettings
 {
     [CommandOption($"{ArgumentCommandConstants.LongServerOutputSolutionPath} <OUTPUTSLNPATH>")]
     [Description("Path to solution file (directory or file)")]
