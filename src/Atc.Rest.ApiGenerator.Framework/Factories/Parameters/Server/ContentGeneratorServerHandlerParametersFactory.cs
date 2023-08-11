@@ -65,7 +65,7 @@ public static class ContentGeneratorServerHandlerParametersFactory
             Constructors: null,
             Properties: null,
             Methods: methodParameters,
-            GenerateToStringMethode: false);
+            GenerateToStringMethod: false);
     }
 
     public static ClassParameters CreateForCustomTest(
@@ -103,7 +103,7 @@ public static class ContentGeneratorServerHandlerParametersFactory
             Constructors: null,
             Properties: null,
             Methods: methodParameters,
-            GenerateToStringMethode: false);
+            GenerateToStringMethod: false);
     }
 
     private static string GenerateContentExecuteMethod(

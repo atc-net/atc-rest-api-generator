@@ -37,7 +37,7 @@ public static class ContentGeneratorServerClientModelParametersFactory
             Constructors: null,
             Properties: propertiesParameters,
             Methods: null,
-            GenerateToStringMethode: true);
+            GenerateToStringMethod: true);
     }
 
     private static bool GetRequired(

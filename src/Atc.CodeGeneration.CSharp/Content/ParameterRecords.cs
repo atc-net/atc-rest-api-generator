@@ -38,7 +38,7 @@ public record ClassParameters(
     IList<ConstructorParameters>? Constructors,
     IList<PropertyParameters>? Properties,
     IList<MethodParameters>? Methods,
-    bool GenerateToStringMethode)
+    bool GenerateToStringMethod)
     : BaseParameters(
         HeaderContent,
         Namespace,
