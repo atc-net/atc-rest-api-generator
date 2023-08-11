@@ -3,6 +3,7 @@ namespace Atc.Rest.ApiGenerator.Models;
 public class DomainProjectOptions : BaseProjectOptions
 {
     public DomainProjectOptions(
+        AspNetOutputType aspNetOutputType,
         DirectoryInfo projectSourceGeneratePath,
         DirectoryInfo? projectTestGeneratePath,
         OpenApiDocument openApiDocument,
@@ -13,6 +14,7 @@ public class DomainProjectOptions : BaseProjectOptions
         bool removeNamespaceGroupSeparatorInGlobalUsings,
         DirectoryInfo apiProjectSrcPath)
         : base(
+            aspNetOutputType,
             projectSourceGeneratePath,
             projectTestGeneratePath,
             openApiDocument,
