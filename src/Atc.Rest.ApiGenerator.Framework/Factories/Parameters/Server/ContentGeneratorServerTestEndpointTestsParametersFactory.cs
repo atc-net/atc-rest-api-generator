@@ -63,7 +63,7 @@ public static class ContentGeneratorServerTestEndpointTestsParametersFactory
             Constructors: constructorParameters,
             Properties: null,
             Methods: methodParameters,
-            GenerateToStringMethode: false);
+            GenerateToStringMethod: false);
     }
 
     private static string GenerateContentTestSample()

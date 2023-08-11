@@ -109,7 +109,7 @@ public class GenerateContentForClass : IContentGenerator
             }
         }
 
-        if (parameters.GenerateToStringMethode &&
+        if (parameters.GenerateToStringMethod &&
             parameters.Properties is not null)
         {
             if (!isFirstEntry)
