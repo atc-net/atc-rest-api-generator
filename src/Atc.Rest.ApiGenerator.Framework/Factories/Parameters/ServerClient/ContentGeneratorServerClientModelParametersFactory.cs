@@ -4,7 +4,7 @@ namespace Atc.Rest.ApiGenerator.Framework.Factories.Parameters.ServerClient;
 
 public static class ContentGeneratorServerClientModelParametersFactory
 {
-    public static ClassParameters Create(
+    public static ClassParameters CreateForClass(
         string headerContent,
         string @namespace,
         AttributeParameters codeGeneratorAttribute,
@@ -38,6 +38,42 @@ public static class ContentGeneratorServerClientModelParametersFactory
             Properties: propertiesParameters,
             Methods: null,
             GenerateToStringMethod: true);
+    }
+
+    public static RecordParameters CreateForRecord(
+        string headerContent,
+        string @namespace,
+        AttributeParameters codeGeneratorAttribute,
+        string modelName,
+        OpenApiSchema apiSchemaModel)
+    {
+        ArgumentNullException.ThrowIfNull(apiSchemaModel);
+
+        var documentationTags = apiSchemaModel.ExtractDocumentationTags($"{modelName}.");
+
+        var propertiesParameters = ExtractPropertiesParameters(apiSchemaModel);
+
+        string? genericTypeName = null;
+        if (propertiesParameters.Any(x => x.TypeName == "T"))
+        {
+            genericTypeName = "T";
+        }
+
+        return new RecordParameters(
+            documentationTags,
+            AccessModifiers.Public,
+            "hest",
+            new List<ParameterBaseParameters>
+            {
+                new(
+                    Attributes: new List<AttributeParameters> { codeGeneratorAttribute },
+                    GenericTypeName: genericTypeName,
+                    IsGenericListType: false,
+                    TypeName: "Gris",
+                    IsReferenceType: false,
+                    Name: "ko",
+                    DefaultValue: "defaultvalue"),
+            });
     }
 
     private static bool GetRequired(
