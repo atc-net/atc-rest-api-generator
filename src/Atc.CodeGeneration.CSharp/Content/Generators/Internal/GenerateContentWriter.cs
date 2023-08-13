@@ -38,7 +38,7 @@ public class GenerateContentWriter
         {
             foreach (var attribute in attributes)
             {
-                sb.AppendAttribute(attribute);
+                sb.AppendAttribute(usePropertyPrefix: false, attribute);
                 sb.AppendLine();
             }
         }
@@ -87,6 +87,7 @@ public class GenerateContentWriter
                     var useCommaForEndChar = i != parameters.Parameters.Count - 1;
                     sb.AppendInputParameter(
                         8,
+                        usePropertyPrefix: false,
                         attributes: null,
                         item.GenericTypeName,
                         item.TypeName,
@@ -170,7 +171,7 @@ public class GenerateContentWriter
 
         if (parameters.Attributes is not null)
         {
-            sb.AppendAttributesAsLines(4, parameters.Attributes);
+            sb.AppendAttributesAsLines(4, usePropertyPrefix: false, parameters.Attributes);
         }
 
         sb.Append("    ");
@@ -240,7 +241,7 @@ public class GenerateContentWriter
 
         if (parameters.Attributes is not null)
         {
-            sb.AppendAttributesAsLines(4, parameters.Attributes);
+            sb.AppendAttributesAsLines(4, usePropertyPrefix: false, parameters.Attributes);
         }
 
         sb.Append("    ");
@@ -279,6 +280,7 @@ public class GenerateContentWriter
                 var useCommaForEndChar = i != parameters.Parameters.Count - 1;
                 sb.AppendInputParameter(
                     indentSpaces,
+                    usePropertyPrefix: false,
                     item.Attributes,
                     item.GenericTypeName,
                     item.TypeName,

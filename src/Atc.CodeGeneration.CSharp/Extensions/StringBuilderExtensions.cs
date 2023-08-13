@@ -74,48 +74,66 @@ public static class StringBuilderExtensions
     public static void AppendAttributesAsLines(
         this StringBuilder sb,
         int indentSpaces,
+        bool usePropertyPrefix,
         IList<AttributeParameters> attributes)
     {
         foreach (var item in attributes)
         {
-            sb.AppendAttribute(indentSpaces, item);
+            sb.AppendAttribute(indentSpaces, usePropertyPrefix, item);
             sb.AppendLine();
         }
     }
 
     public static void AppendAttribute(
         this StringBuilder sb,
+        bool usePropertyPrefix,
         AttributeParameters attribute)
         => sb.AppendAttribute(
             indentSpaces: 0,
+            usePropertyPrefix,
             attribute.Name,
             attribute.Content);
 
     public static void AppendAttribute(
         this StringBuilder sb,
         int indentSpaces,
+        bool usePropertyPrefix,
         AttributeParameters attribute)
         => sb.AppendAttribute(
             indentSpaces,
+            usePropertyPrefix,
             attribute.Name,
             attribute.Content);
 
     public static void AppendAttribute(
         this StringBuilder sb,
         int indentSpaces,
+        bool usePropertyPrefix,
         string name,
         string? content)
     {
-        sb.Append(
-            indentSpaces,
-            string.IsNullOrEmpty(content)
-                ? $"[{name}]"
-                : $"[{name}({content})]");
+        if (usePropertyPrefix)
+        {
+            sb.Append(
+                indentSpaces,
+                string.IsNullOrEmpty(content)
+                    ? $"[property: {name}]"
+                    : $"[property: {name}({content})]");
+        }
+        else
+        {
+            sb.Append(
+                indentSpaces,
+                string.IsNullOrEmpty(content)
+                    ? $"[{name}]"
+                    : $"[{name}({content})]");
+        }
     }
 
     public static void AppendInputParameter(
         this StringBuilder sb,
         int indentSpaces,
+        bool usePropertyPrefix,
         IList<AttributeParameters>? attributes,
         string? genericTypeName,
         string typeName,
@@ -126,7 +144,7 @@ public static class StringBuilderExtensions
         if (attributes is not null &&
             attributes.Count == 1)
         {
-            sb.AppendAttribute(indentSpaces, attributes[0]);
+            sb.AppendAttribute(indentSpaces, usePropertyPrefix, attributes[0]);
             indentSpaces = 1;
         }
 

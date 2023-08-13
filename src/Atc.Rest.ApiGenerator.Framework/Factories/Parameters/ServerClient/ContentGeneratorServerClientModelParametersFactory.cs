@@ -40,7 +40,7 @@ public static class ContentGeneratorServerClientModelParametersFactory
             GenerateToStringMethod: true);
     }
 
-    public static RecordParameters CreateForRecord(
+    public static RecordsParameters CreateForRecord(
         string headerContent,
         string @namespace,
         AttributeParameters codeGeneratorAttribute,
@@ -51,29 +51,14 @@ public static class ContentGeneratorServerClientModelParametersFactory
 
         var documentationTags = apiSchemaModel.ExtractDocumentationTags($"{modelName}.");
 
-        var propertiesParameters = ExtractPropertiesParameters(apiSchemaModel);
+        var recordParameters = ExtractRecordParameters(apiSchemaModel);
 
-        string? genericTypeName = null;
-        if (propertiesParameters.Any(x => x.TypeName == "T"))
-        {
-            genericTypeName = "T";
-        }
-
-        return new RecordParameters(
+        return new RecordsParameters(
+            headerContent,
+            @namespace,
             documentationTags,
-            AccessModifiers.Public,
-            "hest",
-            new List<ParameterBaseParameters>
-            {
-                new(
-                    Attributes: new List<AttributeParameters> { codeGeneratorAttribute },
-                    GenericTypeName: genericTypeName,
-                    IsGenericListType: false,
-                    TypeName: "Gris",
-                    IsReferenceType: false,
-                    Name: "ko",
-                    DefaultValue: "defaultvalue"),
-            });
+            new List<AttributeParameters> { codeGeneratorAttribute },
+            Parameters: recordParameters);
     }
 
     private static bool GetRequired(
@@ -110,9 +95,9 @@ public static class ContentGeneratorServerClientModelParametersFactory
     private static List<PropertyParameters> ExtractPropertiesParameters(
         OpenApiSchema apiSchemaModel)
     {
-        var hasAnyPropertiesAsArrayWithFormatTypeBinary = apiSchemaModel.HasAnyPropertiesAsArrayWithFormatTypeBinary();
-
         var propertiesParameters = new List<PropertyParameters>();
+
+        var hasAnyPropertiesAsArrayWithFormatTypeBinary = apiSchemaModel.HasAnyPropertiesAsArrayWithFormatTypeBinary();
 
         if (apiSchemaModel.Properties.Count == 0)
         {
@@ -265,5 +250,120 @@ public static class ContentGeneratorServerClientModelParametersFactory
                 validationAttributeExtractor.Extract(openApiParameter)));
 
         return attributesParameters;
+    }
+
+    private static List<RecordParameters> ExtractRecordParameters(
+        OpenApiSchema apiSchemaModel)
+    {
+        var modelName = apiSchemaModel.GetModelName();
+        var documentationTags = apiSchemaModel.ExtractDocumentationTags($"{modelName}.");
+
+        return new List<RecordParameters>
+        {
+            new(
+                documentationTags,
+                AccessModifiers.Public,
+                Name: modelName,
+                Parameters: ExtractParameterBaseParameters(apiSchemaModel)),
+        };
+    }
+
+    private static List<ParameterBaseParameters> ExtractParameterBaseParameters(
+        OpenApiSchema apiSchemaModel)
+    {
+        var parameterBaseParameters = new List<ParameterBaseParameters>();
+
+        var hasAnyPropertiesAsArrayWithFormatTypeBinary = apiSchemaModel.HasAnyPropertiesAsArrayWithFormatTypeBinary();
+
+        if (apiSchemaModel.Properties.Count == 0)
+        {
+            var childModelName = apiSchemaModel.Items.GetModelName();
+
+            // TODO: Handle list
+        }
+        else
+        {
+            foreach (var apiSchema in apiSchemaModel.Properties)
+            {
+                var openApiParameter = apiSchema.Value;
+
+                var useListForDataType = openApiParameter.IsTypeArray();
+
+                string? dataType = null;
+                if (useListForDataType)
+                {
+                    if (apiSchema.Key.IsNamedAsItemsOrResult() &&
+                        string.IsNullOrEmpty(openApiParameter.Items.Type))
+                    {
+                        dataType = "T";
+                    }
+
+                    dataType ??= openApiParameter.Items.GetDataType();
+                }
+                else
+                {
+                    dataType = openApiParameter.AnyOf.Count == 1
+                        ? openApiParameter.AnyOf[0].GetDataType()
+                        : openApiParameter.GetDataType();
+                }
+
+                var isSimpleType = useListForDataType
+                    ? openApiParameter.Items.IsSimpleDataType() || openApiParameter.Items.IsSchemaEnumOrPropertyEnum() || openApiParameter.Items.IsFormatTypeBinary()
+                    : openApiParameter.IsSimpleDataType() || openApiParameter.IsSchemaEnumOrPropertyEnum() || openApiParameter.IsFormatTypeBinary();
+
+                string? dataTypeForList = null;
+                if (hasAnyPropertiesAsArrayWithFormatTypeBinary)
+                {
+                    dataTypeForList = dataType;
+                }
+                else if (useListForDataType && !string.IsNullOrEmpty(openApiParameter.Items.Title) &&
+                         openApiParameter.Default is null &&
+                         !GetRequired(apiSchemaModel.Required, apiSchema.Key, hasAnyPropertiesAsArrayWithFormatTypeBinary))
+                {
+                    dataTypeForList = dataType;
+                }
+
+                if (dataTypeForList is null &&
+                    openApiParameter.Default is null &&
+                    useListForDataType &&
+                    !GetRequired(apiSchemaModel.Required, apiSchema.Key, hasAnyPropertiesAsArrayWithFormatTypeBinary))
+                {
+                    dataTypeForList = dataType;
+                }
+
+                if (dataTypeForList is null && useListForDataType)
+                {
+                    dataTypeForList = "List";
+                }
+
+                if (openApiParameter.Nullable)
+                {
+                    dataType += "?";
+                }
+
+                var defaultValue = GetDefaultValue(openApiParameter.Default, dataTypeForList);
+
+                if (dataType.Equals(dataTypeForList, StringComparison.Ordinal))
+                {
+                    dataTypeForList = "List";
+                }
+
+                parameterBaseParameters.Add(
+                    new ParameterBaseParameters(
+                        Attributes: ExtractAttributeParameters(
+                            apiSchemaModel.Required,
+                            apiSchema.Key,
+                            hasAnyPropertiesAsArrayWithFormatTypeBinary,
+                            openApiParameter),
+                        GenericTypeName: dataTypeForList,
+                        IsGenericListType: !string.IsNullOrEmpty(dataTypeForList),
+                        TypeName: dataType,
+                        IsReferenceType: !isSimpleType,
+                        Name: apiSchema.Key.EnsureFirstCharacterToUpper(),
+                        DefaultValue: defaultValue));
+            }
+        }
+
+        return parameterBaseParameters;
     }
 }

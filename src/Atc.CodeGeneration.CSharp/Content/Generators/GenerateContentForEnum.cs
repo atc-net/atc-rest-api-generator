@@ -35,7 +35,7 @@ public class GenerateContentForEnum : IContentGenerator
         {
             if (parametersValue.DescriptionAttribute is not null)
             {
-                sb.AppendAttribute(4, parametersValue.DescriptionAttribute);
+                sb.AppendAttribute(4, usePropertyPrefix: false, parametersValue.DescriptionAttribute);
                 sb.AppendLine();
             }
 
