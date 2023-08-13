@@ -132,7 +132,7 @@ public class StringBuilderExtensionsTests
         var sb = new StringBuilder();
 
         // Act
-        sb.AppendAttributesAsLines(indentSpaces, attributes);
+        sb.AppendAttributesAsLines(indentSpaces, usePropertyPrefix: false, attributes);
         var actual = sb.ToString();
 
         // Assert
@@ -152,7 +152,7 @@ public class StringBuilderExtensionsTests
         var sb = new StringBuilder();
 
         // Act
-        sb.AppendAttribute(attribute);
+        sb.AppendAttribute(usePropertyPrefix: false, attribute);
         var actual = sb.ToString();
 
         // Assert
@@ -171,7 +171,7 @@ public class StringBuilderExtensionsTests
         var sb = new StringBuilder();
 
         // Act
-        sb.AppendAttribute(indentSpaces, attribute);
+        sb.AppendAttribute(indentSpaces, usePropertyPrefix: false, attribute);
         var actual = sb.ToString();
 
         // Assert
@@ -192,7 +192,7 @@ public class StringBuilderExtensionsTests
         var sb = new StringBuilder();
 
         // Act
-        sb.AppendAttribute(indentSpaces, name, content);
+        sb.AppendAttribute(indentSpaces, usePropertyPrefix: false, name, content);
         var actual = sb.ToString();
 
         // Assert
@@ -220,7 +220,7 @@ public class StringBuilderExtensionsTests
         var sb = new StringBuilder();
 
         // Act
-        sb.AppendInputParameter(indentSpaces, attributes, genericTypeName, typeName, name, defaultValue, useCommaForEndChar);
+        sb.AppendInputParameter(indentSpaces, usePropertyPrefix: false, attributes, genericTypeName, typeName, name, defaultValue, useCommaForEndChar);
         var actual = sb.ToString();
 
         // Assert

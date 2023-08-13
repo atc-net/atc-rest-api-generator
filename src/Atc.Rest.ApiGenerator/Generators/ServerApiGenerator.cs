@@ -271,7 +271,7 @@ public class ServerApiGenerator
             ? $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}"
             : $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
 
-        string? content = string.Empty;
+        string content;
         if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
         {
             var parameters = ContentGeneratorServerClientModelParametersFactory.CreateForClass(
