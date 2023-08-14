@@ -130,6 +130,56 @@ public static class StringBuilderExtensions
         }
     }
 
+    public static void AppendAttributes(
+        this StringBuilder sb,
+        int indentSpaces,
+        bool usePropertyPrefix,
+        bool mergeIntoOne,
+        IList<AttributeParameters> attributes)
+    {
+        if (mergeIntoOne)
+        {
+            for (var i = 0; i < attributes.Count; i++)
+            {
+                if (i == 0)
+                {
+                    sb.Append(
+                        indentSpaces,
+                        usePropertyPrefix
+                            ? "[property: "
+                            : "[");
+                }
+
+                var attribute = attributes[i];
+
+                if (string.IsNullOrEmpty(attribute.Content))
+                {
+                    sb.Append(attribute.Name);
+                }
+                else
+                {
+                    sb.Append($"{attribute.Name}({attribute.Content})");
+                }
+
+                if (i == attributes.Count - 1)
+                {
+                    sb.Append(']');
+                }
+                else
+                {
+                    sb.Append(", ");
+                }
+            }
+        }
+        else
+        {
+            foreach (var attribute in attributes)
+            {
+                AppendAttribute(sb, indentSpaces, usePropertyPrefix, attribute);
+            }
+        }
+    }
+
     public static void AppendInputParameter(
         this StringBuilder sb,
         int indentSpaces,
@@ -142,10 +192,19 @@ public static class StringBuilderExtensions
         bool useCommaForEndChar)
     {
         if (attributes is not null &&
-            attributes.Count == 1)
+            attributes.Count > 0)
         {
-            sb.AppendAttribute(indentSpaces, usePropertyPrefix, attributes[0]);
-            indentSpaces = 1;
+            switch (attributes.Count)
+            {
+                case 1:
+                    sb.AppendAttribute(indentSpaces, usePropertyPrefix, attributes[0]);
+                    indentSpaces = 1;
+                    break;
+                case > 1:
+                    sb.AppendAttributes(indentSpaces, usePropertyPrefix, mergeIntoOne: true, attributes);
+                    indentSpaces = 1;
+                    break;
+            }
         }
 
         sb.AppendTypeAndName(indentSpaces, genericTypeName, typeName, name, defaultValue);
