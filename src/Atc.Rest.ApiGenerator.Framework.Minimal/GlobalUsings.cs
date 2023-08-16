@@ -8,3 +8,5 @@ global using Atc.CodeGeneration.CSharp.Extensions;
 global using Atc.Rest.ApiGenerator.Framework.ContentGenerators;
 global using Atc.Rest.ApiGenerator.Framework.Contracts;
 global using Atc.Rest.ApiGenerator.Framework.Contracts.ContentGeneratorsParameters.Server;
+global using Atc.Rest.ApiGenerator.OpenApi.Extensions;
+global using Microsoft.OpenApi.Models;

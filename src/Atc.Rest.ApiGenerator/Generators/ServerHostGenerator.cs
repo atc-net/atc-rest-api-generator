@@ -49,7 +49,10 @@ public class ServerHostGenerator
             logger.LogInformation($"{ContentWriterConstants.AreaGenerateTest} Working on server host unit-test generation ({projectOptions.ProjectName}.Tests)");
             ScaffoldTest();
 
-            GenerateTestEndpoints(projectOptions.Document);
+            if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
+            {
+                GenerateTestEndpoints(projectOptions.Document);
+            }
 
             GenerateTestGlobalUsings(projectOptions.UsingCodingRules, projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
         }

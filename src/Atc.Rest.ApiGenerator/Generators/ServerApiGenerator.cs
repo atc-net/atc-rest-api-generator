@@ -55,7 +55,12 @@ public class ServerApiGenerator
 
         GenerateModels(projectOptions.Document, operationSchemaMappings);
         GenerateParameters(projectOptions.Document);
-        GenerateResults(projectOptions.Document);
+
+        if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
+        {
+            GenerateResults(projectOptions.Document);
+        }
+
         GenerateInterfaces(projectOptions.Document);
 
         GenerateEndpoints(operationSchemaMappings);
@@ -352,7 +357,6 @@ public class ServerApiGenerator
                     openApiPath.Value.Parameters);
 
                 string content;
-
                 if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
                 {
                     var contentGeneratorParameter = new ContentGeneratorServerParameter(
@@ -446,19 +450,32 @@ public class ServerApiGenerator
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
-                // Generate
-                var interfaceParameters = ContentGeneratorServerHandlerInterfaceParametersFactory.Create(
-                    codeGeneratorContentHeader,
-                    fullNamespace,
-                    codeGeneratorAttribute,
-                    openApiPath.Value,
-                    openApiOperation.Value);
+                InterfaceParameters interfaceParameters;
+
+                if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
+                {
+                    interfaceParameters = Framework.Mvc.Factories.Parameters.Server.ContentGeneratorServerHandlerInterfaceParametersFactory.Create(
+                        codeGeneratorContentHeader,
+                        fullNamespace,
+                        codeGeneratorAttribute,
+                        openApiPath.Value,
+                        openApiOperation.Value);
+                }
+                else
+                {
+                    interfaceParameters = Framework.Minimal.Factories.Parameters.Server.ContentGeneratorServerHandlerInterfaceParametersFactory.Create(
+                        codeGeneratorContentHeader,
+                        fullNamespace,
+                        codeGeneratorAttribute,
+                        openApiPath.Value,
+                        openApiOperation.Value);
+                }
 
                 var contentGeneratorInterface = new GenerateContentForInterface(
                     new CodeDocumentationTagsGenerator(),
                     interfaceParameters);
 
-                var interfaceContent = contentGeneratorInterface.Generate();
+                var content = contentGeneratorInterface.Generate();
 
                 // Write
                 var file = new FileInfo(
@@ -473,7 +490,7 @@ public class ServerApiGenerator
                     projectOptions.PathForSrcGenerate,
                     file,
                     ContentWriterArea.Src,
-                    interfaceContent);
+                    content);
             }
         }
     }
