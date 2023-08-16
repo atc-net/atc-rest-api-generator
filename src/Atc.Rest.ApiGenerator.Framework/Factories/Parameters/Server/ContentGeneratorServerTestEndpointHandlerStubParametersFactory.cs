@@ -68,7 +68,7 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
             @namespace,
             DocumentationTags: null,
             new List<AttributeParameters> { codeGeneratorAttribute },
-            AccessModifiers.Public,
+            AccessModifiers.PublicClass,
             ClassTypeName: $"{operationName}{ContentGeneratorConstants.HandlerStub}",
             GenericTypeName: null,
             InheritedClassTypeName: inheritedClassTypeName,
