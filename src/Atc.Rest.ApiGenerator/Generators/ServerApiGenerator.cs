@@ -346,19 +346,33 @@ public class ServerApiGenerator
                     continue;
                 }
 
-                // Generate
                 var parameterParameters = ContentGeneratorServerParameterParametersFactory.Create(
                     fullNamespace,
                     openApiOperation.Value,
                     openApiPath.Value.Parameters);
 
-                var contentGeneratorParameter = new ContentGeneratorServerParameter(
-                    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-                    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-                    new CodeDocumentationTagsGenerator(),
-                    parameterParameters);
+                string content;
 
-                var parameterContent = contentGeneratorParameter.Generate();
+                if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
+                {
+                    var contentGeneratorParameter = new ContentGeneratorServerParameter(
+                        new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                        new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                        new CodeDocumentationTagsGenerator(),
+                        parameterParameters);
+
+                    content = contentGeneratorParameter.Generate();
+                }
+                else
+                {
+                    var contentGeneratorParameter = new Framework.Minimal.ContentGenerators.Server.ContentGeneratorServerParameter(
+                        new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                        new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
+                        new CodeDocumentationTagsGenerator(),
+                        parameterParameters);
+
+                    content = contentGeneratorParameter.Generate();
+                }
 
                 // Write
                 var file = new FileInfo(
@@ -373,7 +387,7 @@ public class ServerApiGenerator
                     projectOptions.PathForSrcGenerate,
                     file,
                     ContentWriterArea.Src,
-                    parameterContent);
+                    content);
             }
         }
     }
