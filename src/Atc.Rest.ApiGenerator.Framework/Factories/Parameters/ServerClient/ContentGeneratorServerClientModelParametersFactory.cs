@@ -262,7 +262,7 @@ public static class ContentGeneratorServerClientModelParametersFactory
         {
             new(
                 documentationTags,
-                AccessModifiers.Public,
+                AccessModifiers.PublicRecord,
                 Name: modelName,
                 Parameters: ExtractParameterBaseParameters(apiSchemaModel)),
         };
