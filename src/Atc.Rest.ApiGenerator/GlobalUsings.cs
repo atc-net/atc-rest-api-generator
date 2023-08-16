@@ -12,7 +12,6 @@ global using Atc.Helpers;
 global using Atc.Rest.ApiGenerator.Framework.ContentGenerators;
 global using Atc.Rest.ApiGenerator.Framework.Contracts;
 global using Atc.Rest.ApiGenerator.Framework.Contracts.ContentGeneratorsParameters;
-global using Atc.Rest.ApiGenerator.Framework.Contracts.Extensions;
 global using Atc.Rest.ApiGenerator.Framework.Contracts.Models;
 global using Atc.Rest.ApiGenerator.Framework.Contracts.Options;
 global using Atc.Rest.ApiGenerator.Framework.Factories.Parameters.Client;
