@@ -29,6 +29,7 @@ public sealed class ContentGeneratorServerParameter : IContentGenerator
         sb.Append(codeHeaderGenerator.Generate());
         sb.AppendLine($"namespace {parameters.Namespace};");
         sb.AppendLine();
+
         if (codeDocumentationTagsGenerator.ShouldGenerateTags(parameters.DocumentationTags))
         {
             sb.Append(codeDocumentationTagsGenerator.GenerateTags(0, parameters.DocumentationTags));
