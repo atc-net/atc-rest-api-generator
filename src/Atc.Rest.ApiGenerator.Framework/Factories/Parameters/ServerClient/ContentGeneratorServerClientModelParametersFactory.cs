@@ -28,7 +28,7 @@ public static class ContentGeneratorServerClientModelParametersFactory
             @namespace,
             documentationTags,
             new List<AttributeParameters> { codeGeneratorAttribute },
-            AccessModifiers.Public,
+            AccessModifiers.PublicClass,
             ClassTypeName: modelName,
             GenericTypeName: genericTypeName,
             InheritedClassTypeName: null,
