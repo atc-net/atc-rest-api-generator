@@ -55,7 +55,7 @@ public class UpdateAccountRequest
             Namespace: "Demo.Api.Generated.Contracts.Accounts",
             DocumentationTags: documentationTags,
             Attributes: AttributesWithGeneratedCode,
-            AccessModifier: AccessModifiers.Public,
+            AccessModifier: AccessModifiers.PublicClass,
             ClassTypeName: "UpdateAccountRequest",
             GenericTypeName: null,
             InheritedClassTypeName: null,
@@ -163,7 +163,7 @@ public class UpdateAccountNameParameters
             Namespace: "Demo.Api.Generated.Contracts.Accounts",
             DocumentationTags: documentationTags,
             Attributes: AttributesWithGeneratedCode,
-            AccessModifier: AccessModifiers.Public,
+            AccessModifier: AccessModifiers.PublicClass,
             ClassTypeName: "UpdateAccountNameParameters",
             GenericTypeName: null,
             InheritedClassTypeName: null,
@@ -302,7 +302,7 @@ public class AccountsController : ControllerBase
             Namespace: "Demo.Api.Generated.Endpoints",
             DocumentationTags: documentationTags,
             Attributes: attributes,
-            AccessModifier: AccessModifiers.Public,
+            AccessModifier: AccessModifiers.PublicClass,
             ClassTypeName: "AccountsController",
             GenericTypeName: null,
             InheritedClassTypeName: "ControllerBase",
@@ -413,7 +413,7 @@ public class UpdateAccountNameResult : ResultBase
             Namespace: "Demo.Api.Generated.Contracts.Accounts",
             DocumentationTags: documentationTags,
             Attributes: AttributesWithGeneratedCode,
-            AccessModifier: AccessModifiers.Public,
+            AccessModifier: AccessModifiers.PublicClass,
             ClassTypeName: "UpdateAccountNameResult",
             GenericTypeName: null,
             InheritedClassTypeName: "ResultBase",
@@ -469,7 +469,7 @@ public class CreateLocationEndpoint : ICreateLocationEndpoint
         CreateLocationParameters parameters,
         CancellationToken cancellationToken = default)
     {
-        var client = factory.CreateClient(""ERUT-ApiClient"");
+        var client = factory.CreateClient(""ApiClient"");
 
         var requestBuilder = httpMessageFactory.FromTemplate(""/api/v1/locations"");
         requestBuilder.WithBody(parameters.Request);
@@ -492,7 +492,7 @@ public class CreateLocationEndpoint : ICreateLocationEndpoint
             "Client Endpoint.\r\nDescription: Create a new location.\r\nOperation: CreateLocation.");
 
         const string executeMethodeContent =
-            @"var client = factory.CreateClient(""ERUT-ApiClient"");
+            @"var client = factory.CreateClient(""ApiClient"");
 
 var requestBuilder = httpMessageFactory.FromTemplate(""/api/v1/locations"");
 requestBuilder.WithBody(parameters.Request);
@@ -576,7 +576,7 @@ return await responseBuilder.BuildResponseAsync(x => new CreateLocationEndpointR
             Namespace: "XXX.ApiClient.Generated.Endpoints",
             DocumentationTags: documentationTags,
             Attributes: AttributesWithGeneratedCode,
-            AccessModifier: AccessModifiers.Public,
+            AccessModifier: AccessModifiers.PublicClass,
             ClassTypeName: "CreateLocationEndpoint",
             GenericTypeName: null,
             InheritedClassTypeName: "ICreateLocationEndpoint",
@@ -846,7 +846,7 @@ public class CreateLocationEndpointResult : EndpointResponse, ICreateLocationEnd
             Namespace: "XXX.ApiClient.Generated.Endpoints",
             DocumentationTags: documentationTags,
             Attributes: AttributesWithGeneratedCode,
-            AccessModifier: AccessModifiers.Public,
+            AccessModifier: AccessModifiers.PublicClass,
             ClassTypeName: "CreateLocationEndpointResult",
             GenericTypeName: null,
             InheritedClassTypeName: "EndpointResponse",
