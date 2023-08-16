@@ -1,4 +1,4 @@
-namespace Atc.Rest.ApiGenerator.Framework.Factories.Parameters.Server;
+namespace Atc.Rest.ApiGenerator.Framework.Mvc.Factories.Parameters.Server;
 
 public static class ContentGeneratorServerHandlerInterfaceParametersFactory
 {
