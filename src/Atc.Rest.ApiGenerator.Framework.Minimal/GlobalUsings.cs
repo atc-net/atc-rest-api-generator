@@ -1,4 +1,5 @@
 global using System.ComponentModel.DataAnnotations;
+global using System.Net;
 global using System.Text;
 global using Atc.CodeDocumentation.CodeComment;
 global using Atc.CodeGeneration.CSharp.Content;
