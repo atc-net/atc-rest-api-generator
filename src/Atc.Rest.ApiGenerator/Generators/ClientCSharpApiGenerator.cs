@@ -116,7 +116,7 @@ public class ClientCSharpApiGenerator
                 createAsWeb: false,
                 createAsTestProject: false,
                 projectName: projectOptions.ProjectName,
-                "net6.0",
+                "net7.0",
                 frameworkReferences: null,
                 packageReferences: packageReferencesBaseLineForApiClientProject,
                 projectReferences: null,

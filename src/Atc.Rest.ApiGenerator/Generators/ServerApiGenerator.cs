@@ -163,7 +163,7 @@ public class ServerApiGenerator
                 createAsWeb: false,
                 createAsTestProject: false,
                 projectOptions.ProjectName,
-                "net6.0",
+                "net7.0",
                 new List<string> { "Microsoft.AspNetCore.App" },
                 packageReferencesBaseLineForApiProject,
                 projectReferences: null,
