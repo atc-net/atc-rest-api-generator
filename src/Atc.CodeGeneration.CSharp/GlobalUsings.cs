@@ -8,3 +8,5 @@ global using Atc.CodeDocumentation.CodeComment;
 global using Atc.CodeGeneration.CSharp.Content;
 global using Atc.CodeGeneration.CSharp.Content.Generators.Internal;
 global using Atc.CodeGeneration.CSharp.Extensions;
+
+global using Microsoft.CodeAnalysis.CSharp;
