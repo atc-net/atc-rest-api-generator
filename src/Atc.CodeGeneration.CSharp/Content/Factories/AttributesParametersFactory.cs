@@ -41,7 +41,7 @@ public static class AttributesParametersFactory
                     result.Add(new AttributeParameters("Range", $"{rangeAttribute.Minimum}, {rangeAttribute.Maximum}"));
                     break;
                 case RegularExpressionAttribute regularExpressionAttribute:
-                    var escapedPattern = SymbolDisplay.FormatLiteral(regularExpressionAttribute.Pattern, true);
+                    var escapedPattern = SymbolDisplay.FormatLiteral(regularExpressionAttribute.Pattern, quote: true);
                     result.Add(new AttributeParameters("RegularExpression", escapedPattern));
                     break;
                 case UriAttribute:
