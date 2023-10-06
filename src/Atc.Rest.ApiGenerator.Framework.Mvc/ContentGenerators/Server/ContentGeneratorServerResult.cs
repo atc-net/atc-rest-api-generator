@@ -266,8 +266,8 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
                 sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResultWithProblemDetails)}(HttpStatusCode.Unauthorized, null));");
                 break;
             case HttpStatusCode.Forbidden:
-                sb.AppendLine(4, $"public static {resultName} Forbidden()");
-                sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResultWithProblemDetails)}(HttpStatusCode.Forbidden, null));");
+                sb.AppendLine(4, $"public static {resultName} Forbidden(string? message = null)");
+                sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResultWithProblemDetails)}(HttpStatusCode.Forbidden, message));");
                 break;
             case HttpStatusCode.NotFound:
                 sb.AppendLine(4, $"public static {resultName} NotFound(string? message = null)");
@@ -323,10 +323,6 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
                 sb.AppendLine(4, $"public static {resultName} Unauthorized()");
                 sb.AppendLine(8, $"=> new {resultName}(new UnauthorizedResult());");
                 break;
-            case HttpStatusCode.Forbidden:
-                sb.AppendLine(4, $"public static {resultName} Forbidden()");
-                sb.AppendLine(8, $"=> new {resultName}(new StatusCodeResult(StatusCodes.Status403Forbidden));");
-                break;
             case HttpStatusCode.NotFound:
                 sb.AppendLine(4, $"public static {resultName} NotFound(string? message = null)");
                 sb.AppendLine(8, $"=> new {resultName}(new NotFoundObjectResult(message));");
@@ -335,6 +331,7 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
                 sb.AppendLine(4, $"public static {resultName} Conflict(string? error = null)");
                 sb.AppendLine(8, $"=> new {resultName}(new ConflictObjectResult(error));");
                 break;
+            case HttpStatusCode.Forbidden:
             case HttpStatusCode.MethodNotAllowed:
             case HttpStatusCode.InternalServerError:
             case HttpStatusCode.NotImplemented:
