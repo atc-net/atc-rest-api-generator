@@ -779,12 +779,31 @@ components:
           nullable: true
           oneOf:
             - $ref: '#/components/schemas/Address'
+        tags:
+          type: object
+          additionalProperties:
+            type: string
+        desiredProperties1:
+          type: object
+          additionalProperties:
+            type: string
+        desiredProperties2:
+          type: object
+          nullable: true
+          additionalProperties:
+            type: string
+        desiredProperties3:
+          type: object
+          nullable: true
+          additionalProperties:
+            type: integer
       required:
         - firstName
         - lastName
         - myDateTime
         - email
         - gender
+        - tags
     CreateUsersRequest:
       description: A list of users.
       type: array
