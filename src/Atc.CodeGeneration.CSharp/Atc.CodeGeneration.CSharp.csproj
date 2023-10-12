@@ -6,9 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc" Version="2.0.349" />
-    <PackageReference Include="Atc.CodeDocumentation" Version="2.0.349" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.6.0" />
+    <PackageReference Include="Atc" Version="2.0.360" />
+    <PackageReference Include="Atc.CodeDocumentation" Version="2.0.360" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.7.0" />
   </ItemGroup>
 
 </Project>

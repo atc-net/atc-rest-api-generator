@@ -355,7 +355,8 @@ public class OpenApiDocumentValidator : IOpenApiDocumentValidator
                         {
                             case OpenApiDataTypeConstants.Object:
                             {
-                                if (!value.IsObjectReferenceTypeDeclared())
+                                if (!value.IsObjectReferenceTypeDeclared() &&
+                                    value.AdditionalProperties is null)
                                 {
                                     logItems.Add(logItemFactory.Create(LogCategoryType.Error, ValidationRuleNameConstants.Schema10, $"Implicit object definition on property '{key}' in type '{schema.Reference.ReferenceV3}' is not supported."));
                                 }

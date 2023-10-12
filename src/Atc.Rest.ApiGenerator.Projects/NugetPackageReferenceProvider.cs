@@ -14,13 +14,13 @@ public class NugetPackageReferenceProvider : INugetPackageReferenceProvider
     {
         var version = await atcApiNugetClient.RetrieveLatestVersionForPackageId(
             "Atc.Rest.ApiGenerator",
-            CancellationToken.None) ?? new Version(2, 0, 313, 0);
+            CancellationToken.None) ?? new Version(2, 0, 360, 0);
 
         var assemblyVersion = CliHelper.GetCurrentVersion();
 
         return assemblyVersion.GreaterThan(version)
             ? assemblyVersion
-            : new Version(2, 0, 313, 0);
+            : new Version(2, 0, 360, 0);
     }
 
     public async Task<IList<(string PackageId, string PackageVersion, string? SubElements)>> GetPackageReferencesBaseLineForHostProject(

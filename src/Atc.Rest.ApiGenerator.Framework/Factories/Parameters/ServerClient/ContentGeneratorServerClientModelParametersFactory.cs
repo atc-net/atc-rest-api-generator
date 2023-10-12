@@ -125,6 +125,14 @@ public static class ContentGeneratorServerClientModelParametersFactory
                     dataType = openApiParameter.AnyOf.Count == 1
                         ? openApiParameter.AnyOf[0].GetDataType()
                         : openApiParameter.GetDataType();
+
+                    if ("Object".Equals(dataType, StringComparison.Ordinal) &&
+                        openApiParameter.AdditionalProperties is not null)
+                    {
+                        // A defined Object with AdditionalProperties is a Dictionary - https://swagger.io/docs/specification/data-models/dictionaries/
+                        var additionalPropertiesDataType = openApiParameter.AdditionalProperties.GetDataType();
+                        dataType = $"Dictionary<string, {additionalPropertiesDataType}>";
+                    }
                 }
 
                 var isSimpleType = useListForDataType

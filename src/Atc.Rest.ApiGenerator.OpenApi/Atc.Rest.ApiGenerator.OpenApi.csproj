@@ -6,11 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc" Version="2.0.349" />
-    <PackageReference Include="Atc.CodeDocumentation" Version="2.0.349" />
-    <PackageReference Include="Atc.OpenApi" Version="2.0.349" />
-    <PackageReference Include="Microsoft.OpenApi" Version="1.6.6" />
-    <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.6.6" />
+    <PackageReference Include="Atc" Version="2.0.360" />
+    <PackageReference Include="Atc.CodeDocumentation" Version="2.0.360" />
+    <PackageReference Include="Atc.OpenApi" Version="2.0.360" />
+    <PackageReference Include="Microsoft.OpenApi" Version="1.6.9" />
+    <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.6.9" />
   </ItemGroup>
 
   <ItemGroup>
