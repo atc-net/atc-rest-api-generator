@@ -52,9 +52,10 @@ public class ContentGeneratorClientEndpoint : IContentGenerator
             sb.AppendLine(8, $"{parameters.ParameterName} parameters,");
         }
 
+        sb.AppendLine(8, $"string httpClientName = \"{parameters.HttpClientName}\",");
         sb.AppendLine(8, "CancellationToken cancellationToken = default)");
         sb.AppendLine(4, "{");
-        sb.AppendLine(8, $"var client = factory.CreateClient(\"{parameters.HttpClientName}\");");
+        sb.AppendLine(8, "var client = factory.CreateClient(httpClientName);");
         sb.AppendLine();
         sb.AppendLine(8, $"var requestBuilder = httpMessageFactory.FromTemplate(\"{parameters.UrlPath}\");");
 

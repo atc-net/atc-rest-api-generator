@@ -378,7 +378,8 @@ public class ClientCSharpApiGenerator
                     fullNamespace,
                     codeGeneratorAttribute,
                     openApiPath.Value,
-                    openApiOperation.Value);
+                    openApiOperation.Value,
+                    projectOptions.HttpClientName);
 
                 var contentGeneratorInterface = new GenerateContentForInterface(
                     new CodeDocumentationTagsGenerator(),
