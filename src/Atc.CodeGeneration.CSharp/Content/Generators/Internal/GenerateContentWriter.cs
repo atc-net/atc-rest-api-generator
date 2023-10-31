@@ -226,7 +226,7 @@ public class GenerateContentWriter
         return sb.ToString();
     }
 
-    public string GenerateMethode(
+    public string GenerateMethod(
         MethodParameters parameters)
     {
         ArgumentNullException.ThrowIfNull(parameters);
@@ -333,7 +333,7 @@ public class GenerateContentWriter
         return sb.ToString();
     }
 
-    public string GenerateMethodeToString(
+    public string GenerateMethodToString(
         IList<PropertyParameters> parameters)
     {
         ArgumentNullException.ThrowIfNull(parameters);

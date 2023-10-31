@@ -103,13 +103,13 @@ public class GenerateContentForClass : IContentGenerator
                     sb.AppendLine();
                 }
 
-                sb.AppendLine(contentWriter.GenerateMethode(methodParameters));
+                sb.AppendLine(contentWriter.GenerateMethod(methodParameters));
 
                 isFirstEntry = false;
             }
         }
 
-        if (parameters.GenerateToStringMethode &&
+        if (parameters.GenerateToStringMethod &&
             parameters.Properties is not null)
         {
             if (!isFirstEntry)
@@ -117,7 +117,7 @@ public class GenerateContentForClass : IContentGenerator
                 sb.AppendLine();
             }
 
-            sb.AppendLine(contentWriter.GenerateMethodeToString(parameters.Properties));
+            sb.AppendLine(contentWriter.GenerateMethodToString(parameters.Properties));
         }
 
         sb.Append('}');

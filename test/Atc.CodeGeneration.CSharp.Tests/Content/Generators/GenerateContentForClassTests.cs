@@ -64,7 +64,7 @@ public class UpdateAccountRequest
             Constructors: null,
             Properties: propertyParameters,
             Methods: null,
-            GenerateToStringMethode: true);
+            GenerateToStringMethod: true);
 
         var sut = new GenerateContentForClass(
             CodeDocumentationTagsGenerator,
@@ -172,7 +172,7 @@ public class UpdateAccountNameParameters
             Constructors: null,
             Properties: propertyParameters,
             Methods: null,
-            GenerateToStringMethode: true);
+            GenerateToStringMethod: true);
 
         var sut = new GenerateContentForClass(
             CodeDocumentationTagsGenerator,
@@ -311,7 +311,7 @@ public class AccountsController : ControllerBase
             Constructors: null,
             Properties: null,
             Methods: methodParameters,
-            GenerateToStringMethode: false);
+            GenerateToStringMethod: false);
 
         var sut = new GenerateContentForClass(
             CodeDocumentationTagsGenerator,
@@ -422,7 +422,7 @@ public class UpdateAccountNameResult : ResultBase
             Constructors: constructorParameters,
             Properties: null,
             Methods: methodParameters,
-            GenerateToStringMethode: false);
+            GenerateToStringMethod: false);
 
         var sut = new GenerateContentForClass(
             CodeDocumentationTagsGenerator,
@@ -491,7 +491,7 @@ public class CreateLocationEndpoint : ICreateLocationEndpoint
         var documentationTags = new CodeDocumentationTags(
             "Client Endpoint.\r\nDescription: Create a new location.\r\nOperation: CreateLocation.");
 
-        const string executeMethodeContent =
+        const string executeMethodContent =
             @"var client = factory.CreateClient(""ERUT-ApiClient"");
 
 var requestBuilder = httpMessageFactory.FromTemplate(""/api/v1/locations"");
@@ -568,7 +568,7 @@ return await responseBuilder.BuildResponseAsync(x => new CreateLocationEndpointR
                 },
                 AlwaysBreakDownParameters: false,
                 UseExpressionBody: false,
-                Content: executeMethodeContent),
+                Content: executeMethodContent),
         };
 
         var classParameters = new ClassParameters(
@@ -585,7 +585,7 @@ return await responseBuilder.BuildResponseAsync(x => new CreateLocationEndpointR
             Constructors: constructorParameters,
             Properties: null,
             Methods: methodParameters,
-            GenerateToStringMethode: false);
+            GenerateToStringMethod: false);
 
         var sut = new GenerateContentForClass(
             CodeDocumentationTagsGenerator,
@@ -855,7 +855,7 @@ public class CreateLocationEndpointResult : EndpointResponse, ICreateLocationEnd
             Constructors: constructorParameters,
             Properties: propertyParameters,
             Methods: null,
-            GenerateToStringMethode: false);
+            GenerateToStringMethod: false);
 
         var sut = new GenerateContentForClass(
             CodeDocumentationTagsGenerator,

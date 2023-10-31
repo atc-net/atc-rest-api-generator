@@ -63,7 +63,7 @@ public class GenerateContentForInterface : IContentGenerator
                     sb.AppendLine();
                 }
 
-                sb.AppendLine(contentWriter.GenerateMethode(methodParameters));
+                sb.AppendLine(contentWriter.GenerateMethod(methodParameters));
 
                 isFirstEntry = false;
             }
