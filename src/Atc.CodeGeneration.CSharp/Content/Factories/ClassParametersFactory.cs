@@ -12,7 +12,7 @@ public static class ClassParametersFactory
             Namespace: @namespace,
             DocumentationTags: null,
             Attributes: new List<AttributeParameters> { attribute },
-            AccessModifiers.Public,
+            AccessModifiers.PublicClass,
             ClassTypeName: classTypeName,
             GenericTypeName: null,
             InheritedClassTypeName: null,

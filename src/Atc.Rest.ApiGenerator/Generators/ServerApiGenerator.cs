@@ -600,6 +600,7 @@ public class ServerApiGenerator
             "System.Net",
             "Microsoft.AspNetCore.Authorization",
             "Microsoft.AspNetCore.Http",
+            "Microsoft.AspNetCore.Http.HttpResults", // TODO: Use in minimalAPI, not MVC
             "Microsoft.AspNetCore.Mvc",
             "Atc.Rest.Results",
             $"{projectOptions.ProjectName}.Contracts",
