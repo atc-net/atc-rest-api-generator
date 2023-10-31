@@ -27,9 +27,10 @@ public class GetEventArgByIdEndpoint : IGetEventArgByIdEndpoint
 
     public async Task<IGetEventArgByIdEndpointResult> ExecuteAsync(
         GetEventArgByIdParameters parameters,
+        string httpClientName = "DemoSampleApi-ApiClient",
         CancellationToken cancellationToken = default)
     {
-        var client = factory.CreateClient("DemoSampleApi-ApiClient");
+        var client = factory.CreateClient(httpClientName);
 
         var requestBuilder = httpMessageFactory.FromTemplate("/api/v1/eventArgs/{id}");
         requestBuilder.WithPathParameter("id", parameters.Id);
