@@ -21,5 +21,5 @@ public static class ClassParametersFactory
             Constructors: null,
             Properties: null,
             Methods: null,
-            GenerateToStringMethode: false);
+            GenerateToStringMethod: false);
 }

@@ -60,7 +60,14 @@ public static class StringBuilderExtensions
 
         if (!string.IsNullOrEmpty(defaultValue))
         {
-            sb.Append($" = {defaultValue}");
+            if (typeName.Equals("string", StringComparison.Ordinal))
+            {
+                sb.Append($" = \"{defaultValue}\"");
+            }
+            else
+            {
+                sb.Append($" = {defaultValue}");
+            }
         }
     }
 

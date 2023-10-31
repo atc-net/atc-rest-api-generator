@@ -26,9 +26,10 @@ public class CreatePetsEndpoint : ICreatePetsEndpoint
     }
 
     public async Task<ICreatePetsEndpointResult> ExecuteAsync(
+        string httpClientName = "PetStoreApi-ApiClient",
         CancellationToken cancellationToken = default)
     {
-        var client = factory.CreateClient("PetStoreApi-ApiClient");
+        var client = factory.CreateClient(httpClientName);
 
         var requestBuilder = httpMessageFactory.FromTemplate("/v1/pets");
 

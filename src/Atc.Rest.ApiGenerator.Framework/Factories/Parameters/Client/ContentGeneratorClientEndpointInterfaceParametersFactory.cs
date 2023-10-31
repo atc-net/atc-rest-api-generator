@@ -7,12 +7,14 @@ public static class ContentGeneratorClientEndpointInterfaceParametersFactory
         string @namespace,
         AttributeParameters codeGeneratorAttribute,
         OpenApiPathItem openApiPath,
-        OpenApiOperation openApiOperation)
+        OpenApiOperation openApiOperation,
+        string httpClientName)
     {
         var operationName = openApiOperation.GetOperationName();
 
         var methodParametersAttributes = new Dictionary<string, string>(StringComparer.Ordinal);
         var methodParametersParameters = new List<ParameterBaseParameters>();
+
         if (openApiPath.HasParameters() ||
             openApiOperation.HasParametersOrRequestBody())
         {
@@ -27,6 +29,17 @@ public static class ContentGeneratorClientEndpointInterfaceParametersFactory
                     Name: "parameters",
                     DefaultValue: null));
         }
+
+        methodParametersAttributes.Add("httpClientName", "The http client name.");
+        methodParametersParameters.Add(
+            new ParameterBaseParameters(
+                Attributes: null,
+                GenericTypeName: null,
+                IsGenericListType: false,
+                TypeName: "string",
+                IsReferenceType: false,
+                Name: "httpClientName",
+                DefaultValue: httpClientName));
 
         methodParametersAttributes.Add("cancellationToken", "The cancellation token.");
         methodParametersParameters.Add(

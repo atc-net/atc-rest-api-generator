@@ -27,9 +27,10 @@ public class PostUserEndpoint : IPostUserEndpoint
 
     public async Task<IPostUserEndpointResult> ExecuteAsync(
         PostUserParameters parameters,
+        string httpClientName = "DemoSampleApi-ApiClient",
         CancellationToken cancellationToken = default)
     {
-        var client = factory.CreateClient("DemoSampleApi-ApiClient");
+        var client = factory.CreateClient(httpClientName);
 
         var requestBuilder = httpMessageFactory.FromTemplate("/api/v1/users");
         requestBuilder.WithBody(parameters.Request);

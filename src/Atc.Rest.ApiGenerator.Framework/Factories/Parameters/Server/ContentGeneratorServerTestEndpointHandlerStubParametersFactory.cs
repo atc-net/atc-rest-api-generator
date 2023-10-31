@@ -77,7 +77,7 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
             Constructors: null,
             Properties: null,
             Methods: methodParameters,
-            GenerateToStringMethode: false);
+            GenerateToStringMethod: false);
     }
 
     [SuppressMessage("Performance", "CA1854:Prefer the 'IDictionary.TryGetValue(TKey, out TValue)' method", Justification = "OK.")]
