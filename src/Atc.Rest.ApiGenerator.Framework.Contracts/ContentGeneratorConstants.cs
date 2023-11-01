@@ -5,6 +5,7 @@ public static class ContentGeneratorConstants
     public const string Contracts = "Contracts";
     public const string Controller = "Controller";
     public const string Endpoint = "Endpoint";
+    public const string EndpointDefinition = "EndpointDefinition";
     public const string Endpoints = "Endpoints";
     public const string EndpointResult = "EndpointResult";
     public const string EndpointResponse = "EndpointResponse";

@@ -97,7 +97,14 @@ public class ServerHostGenerator
             IList<(string PackageId, string PackageVersion, string? SubElements)>? packageReferencesBaseLineForHostProject = null;
             TaskHelper.RunSync(async () =>
             {
-                packageReferencesBaseLineForHostProject = await nugetPackageReferenceProvider.GetPackageReferencesBaseLineForHostProject(projectOptions.UseRestExtended);
+                if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
+                {
+                    packageReferencesBaseLineForHostProject = await nugetPackageReferenceProvider.GetPackageReferencesBaseLineForHostProjectForMvc(projectOptions.UseRestExtended);
+                }
+                else
+                {
+                    packageReferencesBaseLineForHostProject = await nugetPackageReferenceProvider.GetPackageReferencesBaseLineForHostProjectForMinimalApi();
+                }
             });
 
             SolutionAndProjectHelper.ScaffoldProjFile(
@@ -311,7 +318,7 @@ public class ServerHostGenerator
     {
         var fullNamespace = $"{projectOptions.ProjectName}";
 
-        var contentGenerator = new ContentGeneratorServerProgram(
+        var contentGenerator = new Framework.Mvc.ContentGenerators.Server.ContentGeneratorServerProgram(
             new ContentGeneratorBaseParameters(fullNamespace));
 
         var content = contentGenerator.Generate();
@@ -331,7 +338,7 @@ public class ServerHostGenerator
     {
         var fullNamespace = $"{projectOptions.ProjectName}";
 
-        var contentGenerator = new ContentGeneratorServerStartup(
+        var contentGenerator = new Framework.Mvc.ContentGenerators.Server.ContentGeneratorServerStartup(
             new ContentGeneratorBaseParameters(fullNamespace));
 
         var content = contentGenerator.Generate();
@@ -349,7 +356,7 @@ public class ServerHostGenerator
 
     private void ScaffoldWebConfig()
     {
-        var contentGenerator = new ContentGeneratorServerWebConfig();
+        var contentGenerator = new Framework.Mvc.ContentGenerators.Server.ContentGeneratorServerWebConfig();
 
         var content = contentGenerator.Generate();
 
@@ -373,7 +380,7 @@ public class ServerHostGenerator
                 fullNamespace,
                 projectOptions.Document.ToSwaggerDocOptionsParameters());
 
-        var contentGenerator = new ContentGeneratorServerSwaggerDocOptions(
+        var contentGenerator = new Framework.Mvc.ContentGenerators.Server.ContentGeneratorServerSwaggerDocOptions(
             new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
             new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
             contentGeneratorServerSwaggerDocOptionsParameters);
@@ -397,7 +404,7 @@ public class ServerHostGenerator
         var contentGeneratorServerWebApiStartupFactoryParameters = ContentGeneratorServerWebApiStartupFactoryParametersFactory.Create(
             fullNamespace);
 
-        var contentGenerator = new ContentGeneratorServerWebApiStartupFactory(
+        var contentGenerator = new Framework.Mvc.ContentGenerators.Server.ContentGeneratorServerWebApiStartupFactory(
             new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
             new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
             new CodeDocumentationTagsGenerator(),
@@ -419,7 +426,7 @@ public class ServerHostGenerator
     {
         var fullNamespace = $"{projectOptions.ProjectName}.Tests";
 
-        var contentGenerator = new ContentGeneratorServerWebApiControllerBaseTest(
+        var contentGenerator = new Framework.Mvc.ContentGenerators.Server.ContentGeneratorServerWebApiControllerBaseTest(
             new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
             new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
             new ContentGeneratorBaseParameters(fullNamespace));
@@ -438,7 +445,7 @@ public class ServerHostGenerator
 
     private void ScaffoldAppSettingsIntegrationTest()
     {
-        var contentGenerator = new ContentGeneratorServerAppSettingsIntegrationTest();
+        var contentGenerator = new Framework.Mvc.ContentGenerators.Server.ContentGeneratorServerAppSettingsIntegrationTest();
 
         var content = contentGenerator.Generate();
 

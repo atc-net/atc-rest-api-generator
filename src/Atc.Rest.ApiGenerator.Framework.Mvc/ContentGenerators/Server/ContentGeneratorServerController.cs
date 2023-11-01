@@ -26,6 +26,7 @@ public sealed class ContentGeneratorServerController : IContentGenerator
         sb.Append(codeHeaderGenerator.Generate());
         sb.AppendLine($"namespace {parameters.Namespace};");
         sb.AppendLine();
+
         if (codeDocumentationTagsGenerator.ShouldGenerateTags(parameters.DocumentationTags))
         {
             sb.Append(codeDocumentationTagsGenerator.GenerateTags(0, parameters.DocumentationTags));
@@ -35,7 +36,7 @@ public sealed class ContentGeneratorServerController : IContentGenerator
         sb.AppendLine("[ApiController]");
         sb.AppendLine($"[Route(\"{parameters.RouteBase}\")]");
         sb.AppendLine(codeAttributeGenerator.Generate());
-        sb.AppendLine($"public class {parameters.ApiGroupName}Controller : ControllerBase");
+        sb.AppendLine($"public sealed class {parameters.ApiGroupName}Controller : ControllerBase");
         sb.AppendLine("{");
 
         for (var i = 0; i < parameters.MethodParameters.Count; i++)

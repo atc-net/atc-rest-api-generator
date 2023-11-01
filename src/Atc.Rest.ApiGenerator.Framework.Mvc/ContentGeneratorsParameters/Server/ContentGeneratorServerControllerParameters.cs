@@ -1,11 +1,11 @@
-namespace Atc.Rest.ApiGenerator.Framework.Contracts.ContentGeneratorsParameters.Server;
+namespace Atc.Rest.ApiGenerator.Framework.Mvc.ContentGeneratorsParameters.Server;
 
 public record ContentGeneratorServerControllerParameters(
     string Namespace,
     string ApiGroupName,
     string RouteBase,
     CodeDocumentationTags DocumentationTags,
-    string ControllerName,
+    string EndpointName,
     IList<ContentGeneratorServerControllerMethodParameters> MethodParameters);
 
 public record ContentGeneratorServerControllerMethodParameters(

@@ -23,7 +23,7 @@ public class NugetPackageReferenceProvider : INugetPackageReferenceProvider
             : new Version(2, 0, 360, 0);
     }
 
-    public async Task<IList<(string PackageId, string PackageVersion, string? SubElements)>> GetPackageReferencesBaseLineForHostProject(
+    public async Task<IList<(string PackageId, string PackageVersion, string? SubElements)>> GetPackageReferencesBaseLineForHostProjectForMvc(
         bool useRestExtended)
     {
         var atcVersion = await GetAtcVersionAsString3();
@@ -50,7 +50,21 @@ public class NugetPackageReferenceProvider : INugetPackageReferenceProvider
         return packageReferences;
     }
 
-    public async Task<IList<(string PackageId, string PackageVersion, string? SubElements)>> GetPackageReferencesBaseLineForApiProject()
+    public async Task<IList<(string PackageId, string PackageVersion, string? SubElements)>> GetPackageReferencesBaseLineForHostProjectForMinimalApi()
+    {
+        var atcVersion = await GetAtcVersionAsString3();
+
+        var packageReferences = new List<(string, string, string?)>
+        {
+            new("Atc", atcVersion, null),
+            new("Microsoft.NETCore.Platforms", "7.0.4", null),
+            new("Swashbuckle.AspNetCore", "6.5.0", null),
+        };
+
+        return packageReferences;
+    }
+
+    public async Task<IList<(string PackageId, string PackageVersion, string? SubElements)>> GetPackageReferencesBaseLineForApiProjectForMvc()
     {
         var atcVersion = await GetAtcVersionAsString3();
 
@@ -58,6 +72,23 @@ public class NugetPackageReferenceProvider : INugetPackageReferenceProvider
         {
             new("Atc", atcVersion, null),
             new("Atc.Rest", atcVersion, null),
+        };
+
+        return packageReferences;
+    }
+
+    public async Task<IList<(string PackageId, string PackageVersion, string? SubElements)>> GetPackageReferencesBaseLineForApiProjectForMinimalApi()
+    {
+        var atcVersion = await GetAtcVersionAsString3();
+
+        var packageReferences = new List<(string, string, string?)>
+        {
+            new("Asp.Versioning.Http", "7.1.0", null),
+            new("Atc", atcVersion, null),
+            new("Atc.Rest.MinimalApi", "1.0.29", null),
+            new("FluentValidation.AspNetCore", "11.3.0", null),
+            new("Microsoft.AspNetCore.OpenApi", "7.0.12", null),
+            new("Microsoft.NETCore.Platforms", "7.0.4", null),
         };
 
         return packageReferences;

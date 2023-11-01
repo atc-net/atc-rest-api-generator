@@ -1,0 +1,186 @@
+using System.Net;
+using System.Net.Mail;
+using Microsoft.OpenApi.Extensions;
+using SharpYaml.Serialization.Serializers;
+using ContentGeneratorServerEndpointMethodParameters = Atc.Rest.ApiGenerator.Framework.Minimal.ContentGeneratorsParameters.Server.ContentGeneratorServerEndpointMethodParameters;
+using ContentGeneratorServerEndpointParameters = Atc.Rest.ApiGenerator.Framework.Minimal.ContentGeneratorsParameters.Server.ContentGeneratorServerEndpointParameters;
+
+namespace Atc.Rest.ApiGenerator.Framework.Minimal.ContentGenerators.Server;
+
+public sealed class ContentGeneratorServerEndpoints : IContentGenerator
+{
+    private readonly GeneratedCodeHeaderGenerator codeHeaderGenerator;
+    private readonly GeneratedCodeAttributeGenerator codeAttributeGenerator;
+    private readonly CodeDocumentationTagsGenerator codeDocumentationTagsGenerator;
+    private readonly ContentGeneratorServerEndpointParameters parameters;
+
+    public ContentGeneratorServerEndpoints(
+        GeneratedCodeHeaderGenerator codeHeaderGenerator,
+        GeneratedCodeAttributeGenerator codeAttributeGenerator,
+        CodeDocumentationTagsGenerator codeDocumentationTagsGenerator,
+        ContentGeneratorServerEndpointParameters parameters)
+    {
+        this.codeHeaderGenerator = codeHeaderGenerator;
+        this.codeAttributeGenerator = codeAttributeGenerator;
+        this.codeDocumentationTagsGenerator = codeDocumentationTagsGenerator;
+        this.parameters = parameters;
+    }
+
+    public string Generate()
+    {
+        var sb = new StringBuilder();
+
+        var routeGroupBuilderName = parameters.ApiGroupName.EnsureFirstCharacterToLower();
+
+        sb.Append(codeHeaderGenerator.Generate());
+        sb.AppendLine($"namespace {parameters.Namespace};");
+        sb.AppendLine();
+
+        if (codeDocumentationTagsGenerator.ShouldGenerateTags(parameters.DocumentationTags))
+        {
+            sb.Append(codeDocumentationTagsGenerator.GenerateTags(0, parameters.DocumentationTags));
+        }
+
+        sb.AppendLine(codeAttributeGenerator.Generate());
+
+        sb.AppendLine($"public sealed class {parameters.ApiGroupName}EndpointDefinition : IEndpointDefinition");
+        sb.AppendLine("{");
+
+        sb.AppendLine(4, $"internal const string ApiRouteBase = \"{parameters.RouteBase}\";");
+        sb.AppendLine();
+
+        AppendDefineEndpoints(sb, routeGroupBuilderName);
+
+        AppendRouteHandlers(sb);
+
+        // TODO: Define methods
+
+        sb.Append('}');
+
+        return sb.ToString();
+    }
+
+    private void AppendDefineEndpoints(
+        StringBuilder sb,
+        string routeGroupBuilderName)
+    {
+        sb.AppendLine(4, "public void DefineEndpoints(");
+        sb.AppendLine(8, "WebApplication app)");
+        sb.AppendLine(4, "{");
+        sb.AppendLine(8, $"var {routeGroupBuilderName} = app.MapGroup(ApiRouteBase);");
+        sb.AppendLine();
+
+        for (var i = 0; i < parameters.MethodParameters.Count; i++)
+        {
+            var item = parameters.MethodParameters[i];
+
+            AppendRoute(sb, routeGroupBuilderName, item);
+
+            if (i < parameters.MethodParameters.Count - 1)
+            {
+                sb.AppendLine();
+            }
+        }
+
+        sb.AppendLine(4, "}");
+    }
+
+    private void AppendRoute(
+        StringBuilder sb,
+        string routeGroupBuilderName,
+        ContentGeneratorServerEndpointMethodParameters item)
+    {
+        // TODO: item.RouteSuffix - if null "/"
+
+        sb.AppendLine(8, routeGroupBuilderName);
+        sb.AppendLine(12, $".Map{item.OperationTypeRepresentation}(\"routeYY\", {item.Name})");
+        sb.AppendLine(12, $".WithName(\"{item.Name}\")");
+        sb.AppendLine(12, ".WithDescription(\"xxx\")");
+        sb.AppendLine(12, ".WithSummary(\"xxx\");");
+
+        /*
+                usersV1
+                    .MapGet("/", GetAllUsers)
+                    .WithName(Names.UserDefinitionNames.GetAllUsers)
+                    .WithDescription("Retrieve all users.")
+                    .WithSummary("Retrieve all users.");
+
+                usersV1
+                    .MapPost("/", CreateUser)
+                    .WithName(Names.UserDefinitionNames.CreateUser)
+                    .WithDescription("Create user.")
+                    .WithSummary("Create user.")
+                    .AddEndpointFilter<ValidationFilter<CreateUserParameters>>()
+                    .ProducesValidationProblem();
+
+                usersV1
+                    .MapPut("/{userId}", UpdateUserById)
+                    .WithName(Names.UserDefinitionNames.UpdateUserById)
+                    .WithDescription("Update user.")
+                    .WithSummary("Update user.")
+                    .AddEndpointFilter<ValidationFilter<UpdateUserByIdParameters>>()
+                    .ProducesValidationProblem();
+         */
+
+        ////.ProducesProblem(StatusCodes.Status409Conflict)
+        ////.ProducesValidationProblem(); //Only for 400
+    }
+
+    private void AppendRouteHandlers(
+        StringBuilder sb)
+    {
+
+        for (var i = 0; i < parameters.MethodParameters.Count; i++)
+        {
+            var item = parameters.MethodParameters[i];
+
+            sb.Append(4, "internal Task<");
+
+            switch (item.HttpResults.Count)
+            {
+                case > 1:
+                {
+                    sb.Append("Results<");
+
+                    for (var x = 0; x < item.HttpResults.Count; x++)
+                    {
+                        var (httpStatusCode, returnType) = item.HttpResults[x];
+                        sb.Append($"{httpStatusCode.ToNormalizedString()}<{returnType}>");
+
+                        if (x != item.HttpResults.Count - 1)
+                        {
+                            sb.Append(", ");
+                        }
+                    }
+
+                    sb.Append('>');
+                    break;
+                }
+                case 1:
+                {
+                    var (httpStatusCode, returnType) = item.HttpResults[0];
+
+                    sb.Append($"{httpStatusCode.ToNormalizedString()}<{returnType}>");
+                    break;
+                }
+            }
+
+            sb.AppendLine($"> {item.Name}(");
+
+            sb.AppendLine(8, $"[FromServices] {item.InterfaceName} handler,");
+
+            if (!string.IsNullOrEmpty(item.ParameterTypeName))
+            {
+                sb.AppendLine(8, $"[AsParameters] {item.ParameterTypeName} parameters,");
+            }
+
+            sb.AppendLine(8, "CancellationToken cancellationToken)");
+            sb.AppendLine(8, "=> handler.ExecuteAsync(cancellationToken);");
+
+            if (i < parameters.MethodParameters.Count - 1)
+            {
+                sb.AppendLine();
+            }
+        }
+    }
+}

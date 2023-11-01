@@ -1,10 +1,10 @@
 // ReSharper disable LoopCanBeConvertedToQuery
 // ReSharper disable ReplaceWithSingleAssignment.True
-namespace Atc.Rest.ApiGenerator.Framework.Factories.Parameters.Server;
+namespace Atc.Rest.ApiGenerator.Framework.Minimal.Factories.Parameters.Server;
 
-public static class ContentGeneratorServerControllerParametersFactory
+public static class ContentGeneratorServerEndpointParametersFactory
 {
-    public static ContentGeneratorServerControllerParameters Create(
+    public static ContentGeneratorServerEndpointParameters Create(
         IList<ApiOperation> operationSchemaMappings,
         string projectName,
         bool useProblemDetailsAsDefaultBody,
@@ -13,7 +13,7 @@ public static class ContentGeneratorServerControllerParametersFactory
         string route,
         OpenApiDocument openApiDocument)
     {
-        var methodParameters = new List<ContentGeneratorServerControllerMethodParameters>();
+        var methodParameters = new List<ContentGeneratorServerEndpointMethodParameters>();
 
         foreach (var (apiPath, apiPathData) in openApiDocument.GetPathsByBasePathSegmentName(apiGroupName))
         {
@@ -29,7 +29,7 @@ public static class ContentGeneratorServerControllerParametersFactory
 
                 var operationName = apiOperation.Value.GetOperationName();
 
-                methodParameters.Add(new ContentGeneratorServerControllerMethodParameters(
+                methodParameters.Add(new ContentGeneratorServerEndpointMethodParameters(
                     OperationTypeRepresentation: apiOperation.Key.ToString(),
                     Name: operationName,
                     DocumentationTags: apiOperation.Value.ExtractDocumentationTags(),
@@ -37,7 +37,7 @@ public static class ContentGeneratorServerControllerParametersFactory
                     InterfaceName: $"I{operationName}{ContentGeneratorConstants.Handler}",
                     ParameterTypeName: GetParameterTypeName(operationName, apiPathData, apiOperation.Value),
                     MultipartBodyLengthLimit: GetMultipartBodyLengthLimit(apiOperation.Value),
-                    ProducesResponseTypeRepresentations: GetProducesResponseTypeRepresentations(
+                    HttpResults: GetHttpResults(
                         operationSchemaMappings,
                         apiOperation.Value,
                         apiGroupName,
@@ -55,12 +55,12 @@ public static class ContentGeneratorServerControllerParametersFactory
 
         var documentationTags = new CodeDocumentationTags("Endpoint definitions.");
 
-        return new ContentGeneratorServerControllerParameters(
+        return new ContentGeneratorServerEndpointParameters(
             Namespace: @namespace,
             ApiGroupName: apiGroupName,
             route,
             documentationTags,
-            ControllerName: $"{apiGroupName}{ContentGeneratorConstants.Controller}",
+            EndpointName: $"{apiGroupName}{ContentGeneratorConstants.EndpointDefinition}",
             methodParameters);
     }
 
@@ -108,21 +108,29 @@ public static class ContentGeneratorServerControllerParametersFactory
         return null;
     }
 
-    private static List<string> GetProducesResponseTypeRepresentations(
+    private static List<(HttpStatusCode HttpStatusCode, string ReturnType)> GetHttpResults(
         IList<ApiOperation> operationSchemaMappings,
         OpenApiOperation apiOperation,
         string apiGroupName,
         string projectName,
         bool useProblemDetailsAsDefaultBody,
         bool shouldUseAuthorization)
-        => apiOperation.Responses.GetProducesResponseAttributeParts(
+    {
+        var responseTypes = apiOperation.Responses.GetResponseTypes(
             operationSchemaMappings,
             apiGroupName,
             projectName,
             useProblemDetailsAsDefaultBody,
+            includeEmptyResponseTypes: true,
             apiOperation.HasParametersOrRequestBody(),
             shouldUseAuthorization,
             includeIfNotDefinedInternalServerError: false);
+
+        return responseTypes
+            .Where(x => x.Item1 != HttpStatusCode.Forbidden && x.Item1 != HttpStatusCode.Unauthorized)
+            .Select(tuple => (HttpStatusCode: tuple.Item1, ReturnType: tuple.Item2))
+            .ToList();
+    }
 
     private static bool ShouldUseAuthorization(
         bool? apiPathAuthenticationRequired,
