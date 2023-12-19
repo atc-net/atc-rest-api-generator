@@ -1,7 +1,3 @@
-using System.Net;
-using System.Net.Mail;
-using Microsoft.OpenApi.Extensions;
-using SharpYaml.Serialization.Serializers;
 using ContentGeneratorServerEndpointMethodParameters = Atc.Rest.ApiGenerator.Framework.Minimal.ContentGeneratorsParameters.Server.ContentGeneratorServerEndpointMethodParameters;
 using ContentGeneratorServerEndpointParameters = Atc.Rest.ApiGenerator.Framework.Minimal.ContentGeneratorsParameters.Server.ContentGeneratorServerEndpointParameters;
 
@@ -129,7 +125,6 @@ public sealed class ContentGeneratorServerEndpoints : IContentGenerator
     private void AppendRouteHandlers(
         StringBuilder sb)
     {
-
         for (var i = 0; i < parameters.MethodParameters.Count; i++)
         {
             var item = parameters.MethodParameters[i];
@@ -156,6 +151,7 @@ public sealed class ContentGeneratorServerEndpoints : IContentGenerator
                     sb.Append('>');
                     break;
                 }
+
                 case 1:
                 {
                     var (httpStatusCode, returnType) = item.HttpResults[0];

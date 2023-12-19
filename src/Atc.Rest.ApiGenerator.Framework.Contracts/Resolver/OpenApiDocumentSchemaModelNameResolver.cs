@@ -13,11 +13,11 @@ public static class OpenApiDocumentSchemaModelNameResolver
         }
 
         var s = modelName;
-        var indexEnd = s.IndexOf(">", StringComparison.Ordinal);
+        var indexEnd = s.IndexOf('>', StringComparison.Ordinal);
         if (indexEnd != -1)
         {
             s = s.Substring(0, indexEnd);
-            s = s.Substring(s.IndexOf("<", StringComparison.Ordinal) + 1);
+            s = s.Substring(s.IndexOf('<', StringComparison.Ordinal) + 1);
         }
 
         if (s.Contains('.', StringComparison.Ordinal))
