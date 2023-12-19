@@ -1,6 +1,7 @@
 // ReSharper disable ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
 // ReSharper disable SuggestBaseTypeForParameter
 // ReSharper disable ReturnTypeCanBeEnumerable.Local
+// ReSharper disable StringLiteralTypo
 namespace Atc.Rest.ApiGenerator.Generators;
 
 public class ServerHostGenerator
@@ -123,6 +124,7 @@ public class ServerHostGenerator
                 usingCodingRules: projectOptions.UsingCodingRules);
 
             ScaffoldPropertiesLaunchSettingsFile(
+                projectOptions.ProjectName,
                 projectOptions.PathForSrcGenerate,
                 projectOptions.UseRestExtended);
 
@@ -138,6 +140,7 @@ public class ServerHostGenerator
     }
 
     private void ScaffoldPropertiesLaunchSettingsFile(
+        string projectName,
         DirectoryInfo pathForSrcGenerate,
         bool useExtended)
     {
@@ -152,6 +155,7 @@ public class ServerHostGenerator
 
         var resourceStream = typeof(ServerHostGenerator).Assembly.GetManifestResourceStream(resourceName);
         var json = resourceStream!.ToStringData();
+        json = json.Replace("\"[[PROJECTNAME]]\":", $"\"{projectName}\":", StringComparison.Ordinal);
 
         var file = new FileInfo(Path.Combine(propertiesPath.FullName, "launchSettings.json"));
 
