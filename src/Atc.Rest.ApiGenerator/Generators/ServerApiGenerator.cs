@@ -179,14 +179,17 @@ public class ServerApiGenerator
                 createAsWeb: false,
                 createAsTestProject: false,
                 projectOptions.ProjectName,
-                "net7.0",
+                "net8.0",
                 new List<string> { "Microsoft.AspNetCore.App" },
                 packageReferencesBaseLineForApiProject,
                 projectReferences: null,
                 includeApiSpecification: true,
                 usingCodingRules: projectOptions.UsingCodingRules);
 
-            ScaffoldBasicFileApiGenerated();
+            if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
+            {
+                ScaffoldBasicFileApiGenerated();
+            }
         }
     }
 
@@ -559,7 +562,8 @@ public class ServerApiGenerator
             var endpointParameters = ContentGeneratorServerEndpointParametersFactory.Create(
                 operationSchemaMappings,
                 projectOptions.ProjectName,
-                projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
+                ////projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody, // TODO: Find out how to handle this.. instead of false
+                useProblemDetailsAsDefaultBody: false,
                 $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Endpoints}",
                 apiGroupName,
                 GetRouteByApiGroupName(apiGroupName),
@@ -686,7 +690,7 @@ public class ServerApiGenerator
             "Microsoft.AspNetCore.Builder",
             "Microsoft.AspNetCore.Http",
             "Microsoft.AspNetCore.Http.HttpResults",
-            "Microsoft.AspNetCore.Mvc",
+            "Microsoft.AspNetCore.Mvc", // TODO: ????
             $"{projectOptions.ProjectName}.Contracts",
         };
 
