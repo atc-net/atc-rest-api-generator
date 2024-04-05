@@ -518,3 +518,15 @@ dotnet_diagnostic.S3267.severity = none				# Loop should be simplified by callin
 
 dotnet_diagnostic.SA1118.Severity = none			# Parameter spans multiple lines
 dotnet_diagnostic.SA1414.Severity = none			# Tuple types in signatures should have element names
+
+
+
+dotnet_diagnostic.CS1591.Severity = none
+dotnet_diagnostic.CA1822.Severity = none
+dotnet_diagnostic.CA1859.Severity = none
+dotnet_diagnostic.CA1860.Severity = none
+dotnet_diagnostic.CA1861.Severity = none
+dotnet_diagnostic.S125.Severity = none
+dotnet_diagnostic.S1481.Severity = none
+dotnet_diagnostic.SA1512.Severity = none
+dotnet_diagnostic.SA1513.Severity = none

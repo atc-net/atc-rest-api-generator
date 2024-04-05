@@ -49,7 +49,7 @@ function HandleProject
         --outputSlnPath "$($projectRootFolder)\$($projectName)" `
         --outputSrcPath "$($projectRootFolder)\$($projectName)\src" `
         --outputTestPath "$($projectRootFolder)\$($projectName)\test" `
-        -v
+        --verbose
     }
     else
     {
@@ -60,7 +60,7 @@ function HandleProject
         --outputSlnPath "$($projectRootFolder)\$($projectName)" `
         --outputSrcPath "$($projectRootFolder)\$($projectName)\src" `
         --outputTestPath "$($projectRootFolder)\$($projectName)\test" `
-        -v
+        --verbose
     }
 
     Write-Host "   Building '$($projectName)' project" -ForegroundColor Yellow

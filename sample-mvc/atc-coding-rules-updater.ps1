@@ -7,4 +7,4 @@ $currentPath = Get-Location
 atc-coding-rules-updater run `
 -p $currentPath `
 --optionsPath $currentPath'\atc-coding-rules-updater.json' `
--v
+--verbose
