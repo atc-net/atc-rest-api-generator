@@ -43,7 +43,15 @@ public class ServerHostGenerator
         }
 
         ScaffoldSrc();
-        GenerateSrcGlobalUsings(projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
+
+        if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
+        {
+            GenerateSrcGlobalUsingsForMvc(projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
+        }
+        else
+        {
+            GenerateSrcGlobalUsingsForMinimalApi(projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
+        }
 
         if (projectOptions.PathForTestGenerate is not null)
         {
@@ -116,7 +124,7 @@ public class ServerHostGenerator
                 createAsWeb: true,
                 createAsTestProject: false,
                 projectOptions.ProjectName,
-                "net7.0",
+                "net8.0",
                 frameworkReferences: null,
                 packageReferencesBaseLineForHostProject,
                 projectReferences,
@@ -132,6 +140,7 @@ public class ServerHostGenerator
             ScaffoldStartupFile();
             ScaffoldWebConfig();
 
+            // TODO: Deviate on minimal API
             if (projectOptions.UseRestExtended)
             {
                 ScaffoldConfigureSwaggerDocOptions();
@@ -223,7 +232,7 @@ public class ServerHostGenerator
                 createAsWeb: false,
                 createAsTestProject: true,
                 $"{projectOptions.ProjectName}.Tests",
-                "net7.0",
+                "net8.0",
                 frameworkReferences: null,
                 nugetPackageReferenceProvider.GetPackageReferencesBaseLineForTestProject(useMvc: true),
                 projectReferences,
@@ -342,6 +351,7 @@ public class ServerHostGenerator
     {
         var fullNamespace = $"{projectOptions.ProjectName}";
 
+        // TODO: Deviate on startup file for minimal api
         var contentGenerator = new Framework.Mvc.ContentGenerators.Server.ContentGeneratorServerStartup(
             new ContentGeneratorBaseParameters(fullNamespace));
 
@@ -464,7 +474,7 @@ public class ServerHostGenerator
             overrideIfExist: false);
     }
 
-    private void GenerateSrcGlobalUsings(
+    private void GenerateSrcGlobalUsingsForMvc(
         bool removeNamespaceGroupSeparatorInGlobalUsings)
     {
         var requiredUsings = new List<string>
@@ -483,6 +493,28 @@ public class ServerHostGenerator
             requiredUsings.Add("Microsoft.OpenApi.Models");
             requiredUsings.Add("Swashbuckle.AspNetCore.SwaggerGen");
         }
+
+        GlobalUsingsHelper.CreateOrUpdate(
+            logger,
+            ContentWriterArea.Src,
+            projectOptions.PathForSrcGenerate,
+            requiredUsings,
+            removeNamespaceGroupSeparatorInGlobalUsings);
+    }
+
+    private void GenerateSrcGlobalUsingsForMinimalApi(
+        bool removeNamespaceGroupSeparatorInGlobalUsings)
+    {
+        var requiredUsings = new List<string>
+        {
+            "System.CodeDom.Compiler",
+            "System.Reflection",
+            projectOptions.ProjectName.Replace(".Api", ".Domain", StringComparison.Ordinal),
+            $"{projectOptions.ProjectName}.Generated",
+            "Microsoft.Extensions.Options",
+            "Microsoft.OpenApi.Models",
+            "Swashbuckle.AspNetCore.SwaggerGen",
+        };
 
         GlobalUsingsHelper.CreateOrUpdate(
             logger,

@@ -129,7 +129,7 @@ public static class OpenApiResponsesExtensions
                         {
                             if (isList)
                             {
-                                typeResponseName = $"{NameConstants.List}<{dataType}>";
+                                typeResponseName = $"IEnumerable<{dataType}>"; // TODO: Verify MVC code
                             }
                             else
                             {
@@ -154,7 +154,9 @@ public static class OpenApiResponsesExtensions
                         : null;
                     break;
                 case HttpStatusCode.BadRequest:
-                    typeResponseName = "ValidationProblemDetails";
+                    typeResponseName = useProblemDetails
+                        ? "ValidationProblemDetails"
+                        : "string";
                     break;
                 case HttpStatusCode.NotFound:
                 case HttpStatusCode.MethodNotAllowed:
@@ -182,6 +184,7 @@ public static class OpenApiResponsesExtensions
             }
         }
 
+        // TODO: Find out what todo here...
         if (includeIfNotDefinedValidation &&
             result.All(x => x.Item1 != HttpStatusCode.BadRequest))
         {

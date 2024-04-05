@@ -79,6 +79,7 @@ public sealed class ContentGeneratorServerEndpoints : IContentGenerator
         }
 
         sb.AppendLine(4, "}");
+        sb.AppendLine();
     }
 
     private void AppendRoute(
@@ -140,7 +141,14 @@ public sealed class ContentGeneratorServerEndpoints : IContentGenerator
                     for (var x = 0; x < item.HttpResults.Count; x++)
                     {
                         var (httpStatusCode, returnType) = item.HttpResults[x];
-                        sb.Append($"{httpStatusCode.ToNormalizedString()}<{returnType}>");
+                        if (string.IsNullOrEmpty(returnType))
+                        {
+                            sb.Append($"{httpStatusCode.ToNormalizedString()}");
+                        }
+                        else
+                        {
+                            sb.Append($"{httpStatusCode.ToNormalizedString()}<{returnType}>");
+                        }
 
                         if (x != item.HttpResults.Count - 1)
                         {
@@ -171,7 +179,11 @@ public sealed class ContentGeneratorServerEndpoints : IContentGenerator
             }
 
             sb.AppendLine(8, "CancellationToken cancellationToken)");
-            sb.AppendLine(8, "=> handler.ExecuteAsync(cancellationToken);");
+
+            sb.AppendLine(8,
+                !string.IsNullOrEmpty(item.ParameterTypeName)
+                    ? "=> handler.ExecuteAsync(parameters, cancellationToken);"
+                    : "=> handler.ExecuteAsync(cancellationToken);");
 
             if (i < parameters.MethodParameters.Count - 1)
             {

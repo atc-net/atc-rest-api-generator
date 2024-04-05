@@ -83,7 +83,7 @@ public class NugetPackageReferenceProvider : INugetPackageReferenceProvider
 
         var packageReferences = new List<(string, string, string?)>
         {
-            new("Asp.Versioning.Http", "7.1.0", null),
+            new("Asp.Versioning.Http", "8.0.0", null),
             new("Atc", atcVersion, null),
             new("Atc.Rest.MinimalApi", "1.0.29", null),
             new("FluentValidation.AspNetCore", "11.3.0", null),

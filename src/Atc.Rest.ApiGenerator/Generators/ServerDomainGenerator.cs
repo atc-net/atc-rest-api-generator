@@ -45,9 +45,23 @@ public class ServerDomainGenerator
 
         ScaffoldSrc();
 
-        GenerateSrcHandlers(projectOptions.Document);
+        if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
+        {
+            GenerateSrcMvcHandlers(projectOptions.Document);
+        }
+        else
+        {
+            GenerateSrcMinimalApiHandlers(projectOptions.Document);
+        }
 
-        GenerateSrcGlobalUsings(projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
+        if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
+        {
+            GenerateSrcGlobalUsingsForMvc(projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
+        }
+        else
+        {
+            GenerateSrcGlobalUsingsForMinimalApi(projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
+        }
 
         if (projectOptions.PathForTestGenerate is not null)
         {
@@ -63,7 +77,7 @@ public class ServerDomainGenerator
         return true;
     }
 
-    private void GenerateSrcHandlers(
+    private void GenerateSrcMvcHandlers(
         OpenApiDocument document)
     {
         ArgumentNullException.ThrowIfNull(projectOptions);
@@ -74,12 +88,28 @@ public class ServerDomainGenerator
 
             foreach (var openApiOperation in urlPath.Value.Operations)
             {
-                GenerateSrcHandler(apiGroupName, urlPath.Value, openApiOperation.Value);
+                GenerateSrcMvcHandler(apiGroupName, urlPath.Value, openApiOperation.Value);
             }
         }
     }
 
-    private void GenerateSrcHandler(
+    private void GenerateSrcMinimalApiHandlers(
+        OpenApiDocument document)
+    {
+        ArgumentNullException.ThrowIfNull(projectOptions);
+
+        foreach (var urlPath in document.Paths)
+        {
+            var apiGroupName = urlPath.GetApiGroupName();
+
+            foreach (var openApiOperation in urlPath.Value.Operations)
+            {
+                GenerateSrcMinimalApiHandler(apiGroupName, urlPath.Value, openApiOperation.Value);
+            }
+        }
+    }
+
+    private void GenerateSrcMvcHandler(
         string apiGroupName,
         OpenApiPathItem apiPath,
         OpenApiOperation apiOperation)
@@ -87,7 +117,42 @@ public class ServerDomainGenerator
         var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Handlers}.{apiGroupName}";
 
         // Generate
-        var classParameters = ContentGeneratorServerHandlerParametersFactory.Create(
+        var classParameters = Framework.Mvc.Factories.Parameters.Server.ContentGeneratorServerHandlerParametersFactory.Create(
+            fullNamespace,
+            apiPath,
+            apiOperation);
+
+        var contentGeneratorClass = new GenerateContentForClass(
+            new CodeDocumentationTagsGenerator(),
+            classParameters);
+
+        var classContent = contentGeneratorClass.Generate();
+
+        // Write
+        var file = new FileInfo(
+            Helpers.DirectoryInfoHelper.GetCsFileNameForHandler(
+                projectOptions.PathForSrcHandlers!,
+                apiGroupName,
+                classParameters.TypeName));
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectOptions.PathForSrcGenerate,
+            file,
+            ContentWriterArea.Src,
+            classContent,
+            overrideIfExist: false);
+    }
+
+    private void GenerateSrcMinimalApiHandler(
+        string apiGroupName,
+        OpenApiPathItem apiPath,
+        OpenApiOperation apiOperation)
+    {
+        var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Handlers}.{apiGroupName}";
+
+        // Generate
+        var classParameters = Framework.Minimal.Factories.Parameters.Server.ContentGeneratorServerHandlerParametersFactory.Create(
             fullNamespace,
             apiPath,
             apiOperation);
@@ -137,7 +202,7 @@ public class ServerDomainGenerator
         var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Tests}.{ContentGeneratorConstants.Handlers}.{apiGroupName}";
 
         // Generate
-        var classParameters = ContentGeneratorServerHandlerParametersFactory.CreateForCustomTest(
+        var classParameters = Framework.Mvc.Factories.Parameters.Server.ContentGeneratorServerHandlerParametersFactory.CreateForCustomTest( // TODO: Fix this.....
             fullNamespace,
             apiOperation);
 
@@ -179,6 +244,7 @@ public class ServerDomainGenerator
                 projectOptions.ProjectSrcCsProjDisplayLocation,
                 ProjectType.ServerDomain,
                 isTestProject: false);
+
             if (!hasUpdates)
             {
                 logger.LogDebug($"{EmojisConstants.FileNotUpdated}   No updates for csproj");
@@ -200,7 +266,7 @@ public class ServerDomainGenerator
                 createAsWeb: false,
                 createAsTestProject: false,
                 projectOptions.ProjectName,
-                "net7.0",
+                "net8.0",
                 new List<string> { "Microsoft.AspNetCore.App" },
                 packageReferences: null,
                 projectReferences,
@@ -256,7 +322,7 @@ public class ServerDomainGenerator
                 createAsWeb: false,
                 createAsTestProject: true,
                 $"{projectOptions.ProjectName}.Tests",
-                "net7.0",
+                "net8.0",
                 frameworkReferences: null,
                 nugetPackageReferenceProvider.GetPackageReferencesBaseLineForTestProject(useMvc: false),
                 projectReferences,
@@ -292,12 +358,35 @@ public class ServerDomainGenerator
             classContent);
     }
 
-    private void GenerateSrcGlobalUsings(
+    private void GenerateSrcGlobalUsingsForMvc(
         bool removeNamespaceGroupSeparatorInGlobalUsings)
     {
         var requiredUsings = new List<string>
         {
             "System.CodeDom.Compiler",
+        };
+
+        var projectName = projectOptions.ProjectName.Replace(".Domain", ".Api.Generated", StringComparison.Ordinal);
+        foreach (var apiGroupName in projectOptions.ApiGroupNames)
+        {
+            requiredUsings.Add($"{projectName}.Contracts.{apiGroupName}");
+        }
+
+        GlobalUsingsHelper.CreateOrUpdate(
+            logger,
+            ContentWriterArea.Src,
+            projectOptions.PathForSrcGenerate,
+            requiredUsings,
+            removeNamespaceGroupSeparatorInGlobalUsings);
+    }
+
+    private void GenerateSrcGlobalUsingsForMinimalApi(
+        bool removeNamespaceGroupSeparatorInGlobalUsings)
+    {
+        var requiredUsings = new List<string>
+        {
+            "System.CodeDom.Compiler",
+            "Microsoft.AspNetCore.Http.HttpResults",
         };
 
         var projectName = projectOptions.ProjectName.Replace(".Domain", ".Api.Generated", StringComparison.Ordinal);
