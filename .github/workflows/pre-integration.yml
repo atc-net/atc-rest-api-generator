@@ -16,12 +16,12 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: 🛒 Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: ⚙️ Setup dotnet 6.0.x
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '6.0.x'
 
@@ -42,12 +42,12 @@ jobs:
       - dotnet-build
     steps:
       - name: 🛒 Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: ⚙️ Setup dotnet 6.0.x
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '6.0.x'
 
@@ -70,12 +70,12 @@ jobs:
       - dotnet-test
     steps:
       - name: 🛒 Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: ⚙️ Setup dotnet 6.0.x
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '6.0.x'
 
