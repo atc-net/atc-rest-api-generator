@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <PackageId>atc-rest-api-generator</PackageId>
     <PackageTags>rest;api;netstandard;generator</PackageTags>
     <Description>A .NET Core Web API C# code generator using a OpenApi 3.0.x specification YAML file.</Description>

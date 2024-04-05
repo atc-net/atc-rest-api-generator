@@ -25,8 +25,8 @@
 
 |Project|Target Framework|Description|Nuget Download Link|
 |---|---|---|---|
-|[Atc.Rest.ApiGenerator](src/Atc.Rest.ApiGenerator)|net6.0|Atc.Rest.ApiGenerator is a WebApi C# code generator using a OpenApi 3.0.x specification YAML file.|[![Nuget](https://img.shields.io/nuget/dt/Atc.Rest.ApiGenerator?logo=nuget&style=flat-square)](https://www.nuget.org/packages/Atc.Rest.ApiGenerator)|
-|[Atc.Rest.ApiGenerator.CLI](src/Atc.Rest.ApiGenerator.CLI)|net6.0|A CLI tool that use Atc.Rest.ApiGenerator to create/update a project specified by a OpenApi 3.0.x specification YAML file.|[![Nuget](https://img.shields.io/nuget/dt/atc-rest-api-generator?logo=nuget&style=flat-square)](https://www.nuget.org/packages/atc-rest-api-generator)|
+|[Atc.Rest.ApiGenerator](src/Atc.Rest.ApiGenerator)|net8.0|Atc.Rest.ApiGenerator is a WebApi C# code generator using a OpenApi 3.0.x specification YAML file.|[![Nuget](https://img.shields.io/nuget/dt/Atc.Rest.ApiGenerator?logo=nuget&style=flat-square)](https://www.nuget.org/packages/Atc.Rest.ApiGenerator)|
+|[Atc.Rest.ApiGenerator.CLI](src/Atc.Rest.ApiGenerator.CLI)|net8.0|A CLI tool that use Atc.Rest.ApiGenerator to create/update a project specified by a OpenApi 3.0.x specification YAML file.|[![Nuget](https://img.shields.io/nuget/dt/atc-rest-api-generator?logo=nuget&style=flat-square)](https://www.nuget.org/packages/atc-rest-api-generator)|
 
 ## CLI Tool
 
@@ -49,7 +49,7 @@ Recommended tools for working with OpenAPI specifications:
 
 ### Requirements
 
-- [.NET 6 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
+- [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
 
 ### Installation
 
