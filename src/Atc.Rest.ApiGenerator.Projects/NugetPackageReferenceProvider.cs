@@ -39,12 +39,11 @@ public class NugetPackageReferenceProvider : INugetPackageReferenceProvider
             return packageReferences;
         }
 
+        packageReferences.Add(("Asp.Versioning.Http", "8.1.0", null));
         packageReferences.Add(("Atc.Rest.Extended", atcVersion, null));
         packageReferences.Add(("FluentValidation.AspNetCore", "11.3.0", null));
-        packageReferences.Add(("Microsoft.ApplicationInsights.AspNetCore", "2.21.0", null));
-        packageReferences.Add(("Microsoft.AspNetCore.Authentication.JwtBearer", "6.0.9", null));
-        packageReferences.Add(("Microsoft.AspNetCore.Mvc.Versioning", "5.1.0", null));
-        packageReferences.Add(("Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer", "5.1.0", null));
+        packageReferences.Add(("Microsoft.ApplicationInsights.AspNetCore", "2.22.0", null));
+        packageReferences.Add(("Microsoft.AspNetCore.Authentication.JwtBearer", "8.0.3", null));
         packageReferences.Add(("Swashbuckle.AspNetCore", "6.5.0", null));
 
         return packageReferences;
@@ -56,7 +55,9 @@ public class NugetPackageReferenceProvider : INugetPackageReferenceProvider
 
         var packageReferences = new List<(string, string, string?)>
         {
+            new("Asp.Versioning.Http", "8.1.0", null),
             new("Atc", atcVersion, null),
+            new("Atc.Rest.Extended", atcVersion, null),
             new("Microsoft.NETCore.Platforms", "7.0.4", null),
             new("Swashbuckle.AspNetCore", "6.5.0", null),
         };
@@ -83,11 +84,11 @@ public class NugetPackageReferenceProvider : INugetPackageReferenceProvider
 
         var packageReferences = new List<(string, string, string?)>
         {
-            new("Asp.Versioning.Http", "8.0.0", null),
+            new("Asp.Versioning.Http", "8.1.0", null),
             new("Atc", atcVersion, null),
-            new("Atc.Rest.MinimalApi", "1.0.29", null),
+            new("Atc.Rest.MinimalApi", "1.0.60", null),
             new("FluentValidation.AspNetCore", "11.3.0", null),
-            new("Microsoft.AspNetCore.OpenApi", "7.0.12", null),
+            new("Microsoft.AspNetCore.OpenApi", "8.0.3", null),
             new("Microsoft.NETCore.Platforms", "7.0.4", null),
         };
 
@@ -108,29 +109,31 @@ public class NugetPackageReferenceProvider : INugetPackageReferenceProvider
         return packageReferences;
     }
 
-    public IList<(string PackageId, string PackageVersion, string? SubElements)> GetPackageReferencesBaseLineForTestProject(
+    public async Task<IList<(string PackageId, string PackageVersion, string? SubElements)>> GetPackageReferencesBaseLineForTestProject(
         bool useMvc)
     {
+        var atcVersion = await GetAtcVersionAsString3();
+
         var packageReferences = new List<(string, string, string?)>
         {
-            new("Atc.XUnit", "2.0.93", null),
-            new("AutoFixture", "4.18.0", null),
-            new("AutoFixture.AutoNSubstitute", "4.18.0", null),
-            new("AutoFixture.Xunit2", "4.18.0", null),
-            new("FluentAssertions", "6.11.0", null),
+            new("Atc.XUnit", atcVersion, null),
+            new("AutoFixture", "4.18.1", null),
+            new("AutoFixture.AutoNSubstitute", "4.18.1", null),
+            new("AutoFixture.Xunit2", "4.18.1", null),
+            new("FluentAssertions", "6.12.0", null),
         };
 
         if (useMvc)
         {
-            packageReferences.Add(("Microsoft.AspNetCore.Mvc.Testing", "6.0.3", null));
+            packageReferences.Add(("Microsoft.AspNetCore.Mvc.Testing", "8.0.3", null));
         }
 
         packageReferences.AddRange(new List<(string, string, string?)>
         {
-            new("Microsoft.NET.Test.Sdk", "17.6.2", null),
-            new("NSubstitute", "5.0.0", null),
-            new("xunit", "2.4.2", null),
-            new("xunit.runner.visualstudio", "2.4.4", "<PrivateAssets>all</PrivateAssets>\n<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>"),
+            new("Microsoft.NET.Test.Sdk", "17.9.0", null),
+            new("NSubstitute", "5.1.0", null),
+            new("xunit", "2.7.0", null),
+            new("xunit.runner.visualstudio", "2.5.7", "<PrivateAssets>all</PrivateAssets>\n<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>"),
         });
 
         return packageReferences;
