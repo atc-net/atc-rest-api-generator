@@ -56,7 +56,7 @@ public class ApiSpecificationContentReader : IApiSpecificationContentReader
             apiDocFile = docFiles.Length switch
             {
                 0 => throw new IOException("Api specification file don't exist in folder."),
-                1 => new FileInfo(docFiles.First()),
+                1 => new FileInfo(docFiles[0]),
                 _ => CreateCombineApiDocumentFile(specificationPath),
             };
         }

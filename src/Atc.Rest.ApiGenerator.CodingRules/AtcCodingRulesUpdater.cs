@@ -9,7 +9,7 @@ public sealed partial class AtcCodingRulesUpdater : IAtcCodingRulesUpdater
     public const string GitRawContentUrl = "https://raw.githubusercontent.com";
     public const string GitHubPrefix = "[silver][[GitHub]][/] ";
 
-    private const string RawCodingRulesDistributionUrl = "https://raw.githubusercontent.com/atc-net/atc-coding-rules/main/distribution/dotnet6";
+    private const string RawCodingRulesDistributionUrl = "https://raw.githubusercontent.com/atc-net/atc-coding-rules/main/distribution/dotnet8";
     public const string FileNameEditorConfig = ".editorconfig";
     public const string FileNameDirectoryBuildProps = "Directory.Build.props";
 
@@ -114,7 +114,7 @@ public sealed partial class AtcCodingRulesUpdater : IAtcCodingRulesUpdater
         {
             var sb = new StringBuilder();
             sb.AppendLine("{");
-            sb.AppendLine("  \"projectTarget\": \"DotNet6\",");
+            sb.AppendLine("  \"projectTarget\": \"DotNet8\",");
             sb.AppendLine("  \"mappings\": {");
             sb.Append("    \"src\": { \"paths\": [ \"");
 
@@ -161,7 +161,7 @@ public sealed partial class AtcCodingRulesUpdater : IAtcCodingRulesUpdater
             sb.AppendLine("atc-coding-rules-updater run `");
             sb.AppendLine("  -p $currentPath `");
             sb.AppendLine("  --optionsPath $currentPath'\\atc-coding-rules-updater.json' `");
-            sb.AppendLine("  -v true");
+            sb.AppendLine("  --verbose");
             File.WriteAllText(file, sb.ToString());
             File.WriteAllText(filePath, sb.ToString());
             logger.LogDebug($"{CodingRulesConstants.LogFileCreated}   root: {file} created");

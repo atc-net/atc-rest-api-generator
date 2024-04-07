@@ -68,7 +68,7 @@ public class GenerateContentWriter
         {
             if (parameters.Parameters.Count(x => x.PassToInheritedClass) == 1)
             {
-                var firstParameterParameters = parameters.Parameters.First();
+                var firstParameterParameters = parameters.Parameters[0];
                 if (firstParameterParameters.CreateAaOneLiner)
                 {
                     sb.Append($"{firstParameterParameters.TypeName} {firstParameterParameters.Name})");
@@ -112,7 +112,7 @@ public class GenerateContentWriter
             if (parameters.Parameters is not null &&
                 parameters.Parameters.Count(x => x.PassToInheritedClass) == 1)
             {
-                var firstParameterParameters = parameters.Parameters.First();
+                var firstParameterParameters = parameters.Parameters[0];
                 if (firstParameterParameters.CreateAaOneLiner)
                 {
                     sb.Append($" : {parameters.InheritedClassTypeName}({firstParameterParameters.Name}) {{ }}");

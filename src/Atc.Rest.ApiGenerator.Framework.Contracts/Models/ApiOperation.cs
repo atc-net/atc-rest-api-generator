@@ -65,6 +65,6 @@ public sealed class ApiOperation
         string path)
         => path
             .Split('/', StringSplitOptions.RemoveEmptyEntries)
-            .First()
+            [0]
             .PascalCase(removeSeparators: true);
 }

@@ -244,7 +244,7 @@ public class AccountsController : ControllerBase
             new("Authorize", null),
             new("ApiController", null),
             new("Route", "\"/api/v1/accounts\""),
-            AttributesWithGeneratedCode.First(),
+            AttributesWithGeneratedCode[0],
         };
 
         var methodParameters = new List<MethodParameters>

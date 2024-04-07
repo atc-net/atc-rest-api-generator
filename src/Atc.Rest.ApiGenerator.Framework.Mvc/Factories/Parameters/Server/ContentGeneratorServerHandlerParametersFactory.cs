@@ -36,13 +36,15 @@ public static class ContentGeneratorServerHandlerParametersFactory
                 Name: "cancellationToken",
                 DefaultValue: "default"));
 
+        var returnTypeName = $"{operationName}{ContentGeneratorConstants.Result}";
+
         var methodParameters = new List<MethodParameters>
         {
             new(
                 DocumentationTags: null,
                 Attributes: null,
                 AccessModifier: AccessModifiers.Public,
-                ReturnTypeName: $"{operationName}{ContentGeneratorConstants.Result}",
+                ReturnTypeName: returnTypeName,
                 ReturnGenericTypeName: "Task",
                 Name: "ExecuteAsync",
                 Parameters: methodParametersParameters,

@@ -38,7 +38,8 @@ public class ServerDomainGenerator
     {
         logger.LogInformation($"{ContentWriterConstants.AreaGenerateCode} Working on server domain generation ({projectOptions.ProjectName})");
 
-        if (!projectOptions.SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles(logger))
+        if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc &&
+            !projectOptions.SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles(logger))
         {
             return false;
         }
@@ -71,7 +72,9 @@ public class ServerDomainGenerator
 
             GenerateTestHandlers(projectOptions.Document);
 
-            GenerateTestGlobalUsings(projectOptions.UsingCodingRules, projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
+            GenerateTestGlobalUsings(
+                projectOptions.UsingCodingRules,
+                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
         }
 
         return true;
@@ -88,7 +91,10 @@ public class ServerDomainGenerator
 
             foreach (var openApiOperation in urlPath.Value.Operations)
             {
-                GenerateSrcMvcHandler(apiGroupName, urlPath.Value, openApiOperation.Value);
+                GenerateSrcMvcHandler(
+                    apiGroupName,
+                    urlPath.Value,
+                    openApiOperation.Value);
             }
         }
     }
@@ -202,7 +208,7 @@ public class ServerDomainGenerator
         var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Tests}.{ContentGeneratorConstants.Handlers}.{apiGroupName}";
 
         // Generate
-        var classParameters = Framework.Mvc.Factories.Parameters.Server.ContentGeneratorServerHandlerParametersFactory.CreateForCustomTest( // TODO: Fix this.....
+        var classParameters = Framework.Mvc.Factories.Parameters.Server.ContentGeneratorServerHandlerParametersFactory.CreateForCustomTest(
             fullNamespace,
             apiOperation);
 
@@ -314,6 +320,12 @@ public class ServerDomainGenerator
                 projectReferences.Add(projectOptions.ProjectSrcCsProj);
             }
 
+            IList<(string PackageId, string PackageVersion, string? SubElements)>? packageReferencesBaseLineForTestProject = null;
+            TaskHelper.RunSync(async () =>
+            {
+                packageReferencesBaseLineForTestProject = await nugetPackageReferenceProvider.GetPackageReferencesBaseLineForTestProject(useMvc: false);
+            });
+
             SolutionAndProjectHelper.ScaffoldProjFile(
                 logger,
                 projectOptions.ProjectTestCsProj,
@@ -324,7 +336,7 @@ public class ServerDomainGenerator
                 $"{projectOptions.ProjectName}.Tests",
                 "net8.0",
                 frameworkReferences: null,
-                nugetPackageReferenceProvider.GetPackageReferencesBaseLineForTestProject(useMvc: false),
+                packageReferencesBaseLineForTestProject,
                 projectReferences,
                 includeApiSpecification: true,
                 usingCodingRules: projectOptions.UsingCodingRules);

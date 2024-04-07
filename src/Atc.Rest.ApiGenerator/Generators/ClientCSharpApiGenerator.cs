@@ -322,7 +322,7 @@ public class ClientCSharpApiGenerator
 
         foreach (var apiOperation in apiOperations)
         {
-            var apiOperationModel = result.FirstOrDefault(x => x.Name.Equals(apiOperation.Model.Name, StringComparison.Ordinal));
+            var apiOperationModel = result.Find(x => x.Name.Equals(apiOperation.Model.Name, StringComparison.Ordinal));
             if (apiOperationModel is null)
             {
                 result.Add(apiOperation.Model);

@@ -1,5 +1,3 @@
-using System;
-
 namespace Atc.Rest.ApiGenerator.Nuget.Tests.Clients;
 
 [Collection("Sequential-Endpoints")]

@@ -8,7 +8,7 @@ public static class DirectoryInfoHelper
 
         var projectPath = currentDomainBaseDirectory!
             .Replace("\\Bin", string.Empty, StringComparison.OrdinalIgnoreCase)
-            .Replace("\\net6.0", string.Empty, StringComparison.OrdinalIgnoreCase)
+            .Replace("\\net8.0", string.Empty, StringComparison.OrdinalIgnoreCase)
             .Replace("\\Debug", string.Empty, StringComparison.OrdinalIgnoreCase)
             .Replace("\\ApiGenerator", string.Empty, StringComparison.OrdinalIgnoreCase);
 

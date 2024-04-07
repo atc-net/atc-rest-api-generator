@@ -186,21 +186,21 @@ public static class OpenApiResponsesExtensions
 
         // TODO: Find out what todo here...
         if (includeIfNotDefinedValidation &&
-            result.All(x => x.Item1 != HttpStatusCode.BadRequest))
+            result.TrueForAll(x => x.Item1 != HttpStatusCode.BadRequest))
         {
             result.Add(Tuple.Create(HttpStatusCode.BadRequest, "ValidationProblemDetails"));
         }
 
         if (includeIfNotDefinedAuthorization)
         {
-            if (result.All(x => x.Item1 != HttpStatusCode.Unauthorized))
+            if (result.TrueForAll(x => x.Item1 != HttpStatusCode.Unauthorized))
             {
                 result.Add(useProblemDetailsAsDefaultResponseBody
                     ? Tuple.Create(HttpStatusCode.Unauthorized, "ProblemDetails")
                     : Tuple.Create(HttpStatusCode.Unauthorized, string.Empty));
             }
 
-            if (result.All(x => x.Item1 != HttpStatusCode.Forbidden))
+            if (result.TrueForAll(x => x.Item1 != HttpStatusCode.Forbidden))
             {
                 result.Add(useProblemDetailsAsDefaultResponseBody
                     ? Tuple.Create(HttpStatusCode.Forbidden, "ProblemDetails")
@@ -209,7 +209,7 @@ public static class OpenApiResponsesExtensions
         }
 
         if (includeIfNotDefinedInternalServerError &&
-            result.All(x => x.Item1 != HttpStatusCode.InternalServerError))
+            result.TrueForAll(x => x.Item1 != HttpStatusCode.InternalServerError))
         {
             result.Add(useProblemDetailsAsDefaultResponseBody
                 ? Tuple.Create(HttpStatusCode.InternalServerError, "ProblemDetails")

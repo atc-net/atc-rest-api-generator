@@ -85,7 +85,7 @@ public class OpenApiDocumentValidator : IOpenApiDocumentValidator
         AddIndentationToLogItemKeys(logItems);
 
         logger.LogKeyValueItems(logItems);
-        return logItems.All(x => x.LogCategory != LogCategoryType.Error);
+        return logItems.TrueForAll(x => x.LogCategory != LogCategoryType.Error);
     }
 
     private void ValidateSecurity(

@@ -180,7 +180,8 @@ public sealed class ContentGeneratorServerEndpoints : IContentGenerator
 
             sb.AppendLine(8, "CancellationToken cancellationToken)");
 
-            sb.AppendLine(8,
+            sb.AppendLine(
+                8,
                 !string.IsNullOrEmpty(item.ParameterTypeName)
                     ? "=> handler.ExecuteAsync(parameters, cancellationToken);"
                     : "=> handler.ExecuteAsync(cancellationToken);");

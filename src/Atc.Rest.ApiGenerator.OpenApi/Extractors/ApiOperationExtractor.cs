@@ -123,7 +123,7 @@ public sealed class ApiOperationExtractor : IApiOperationExtractor
         (var schemaKey, apiSchema) = ConsolidateSchemaObjectTypes(apiSchema);
 
         if (schemaKey.Length == 0 ||
-            schemaKey == nameof(ProblemDetails) ||
+            schemaKey == "ProblemDetails" ||
             schemaKey.Equals(NameConstants.Pagination, StringComparison.OrdinalIgnoreCase))
         {
             if (apiSchema.IsTypeCustomPagination())
@@ -314,16 +314,16 @@ public sealed class ApiOperationExtractor : IApiOperationExtractor
             apiSchema = apiSchema.Items;
         }
         else if (apiSchema.OneOf.Any() &&
-                 apiSchema.OneOf.First().Reference?.Id is not null)
+                 apiSchema.OneOf[0].Reference?.Id is not null)
         {
-            schemaKey = apiSchema.OneOf.First().Reference.Id.EnsureFirstCharacterToUpper();
-            apiSchema = apiSchema.OneOf.First();
+            schemaKey = apiSchema.OneOf[0].Reference.Id.EnsureFirstCharacterToUpper();
+            apiSchema = apiSchema.OneOf[0];
         }
         else if (apiSchema.AnyOf.Any() &&
-                 apiSchema.AnyOf.First().Reference?.Id is not null)
+                 apiSchema.AnyOf[0].Reference?.Id is not null)
         {
-            schemaKey = apiSchema.AnyOf.First().Reference.Id.EnsureFirstCharacterToUpper();
-            apiSchema = apiSchema.AnyOf.First();
+            schemaKey = apiSchema.AnyOf[0].Reference.Id.EnsureFirstCharacterToUpper();
+            apiSchema = apiSchema.AnyOf[0];
         }
         else if (apiSchema.IsTypePagination())
         {

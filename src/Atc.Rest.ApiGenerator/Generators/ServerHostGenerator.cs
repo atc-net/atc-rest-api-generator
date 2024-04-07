@@ -37,7 +37,8 @@ public class ServerHostGenerator
     {
         logger.LogInformation($"{ContentWriterConstants.AreaGenerateCode} Working on server host generation ({projectOptions.ProjectName})");
 
-        if (!projectOptions.SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles(logger))
+        if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc &&
+            !projectOptions.SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles(logger))
         {
             return false;
         }
@@ -224,6 +225,12 @@ public class ServerHostGenerator
                 projectReferences.Add(projectOptions.DomainProjectSrcCsProj);
             }
 
+            IList<(string PackageId, string PackageVersion, string? SubElements)>? packageReferencesBaseLineForTestProject = null;
+            TaskHelper.RunSync(async () =>
+            {
+                packageReferencesBaseLineForTestProject = await nugetPackageReferenceProvider.GetPackageReferencesBaseLineForTestProject(useMvc: true);
+            });
+
             SolutionAndProjectHelper.ScaffoldProjFile(
                 logger,
                 projectOptions.ProjectTestCsProj,
@@ -234,7 +241,7 @@ public class ServerHostGenerator
                 $"{projectOptions.ProjectName}.Tests",
                 "net8.0",
                 frameworkReferences: null,
-                nugetPackageReferenceProvider.GetPackageReferencesBaseLineForTestProject(useMvc: true),
+                packageReferencesBaseLineForTestProject,
                 projectReferences,
                 includeApiSpecification: true,
                 usingCodingRules: projectOptions.UsingCodingRules);
@@ -487,8 +494,8 @@ public class ServerHostGenerator
 
         if (projectOptions.UseRestExtended)
         {
+            requiredUsings.Add("Asp.Versioning.ApiExplorer");
             requiredUsings.Add("Atc.Rest.Extended.Options");
-            requiredUsings.Add("Microsoft.AspNetCore.Mvc.ApiExplorer");
             requiredUsings.Add("Microsoft.Extensions.Options");
             requiredUsings.Add("Microsoft.OpenApi.Models");
             requiredUsings.Add("Swashbuckle.AspNetCore.SwaggerGen");
@@ -509,8 +516,7 @@ public class ServerHostGenerator
         {
             "System.CodeDom.Compiler",
             "System.Reflection",
-            projectOptions.ProjectName.Replace(".Api", ".Domain", StringComparison.Ordinal),
-            $"{projectOptions.ProjectName}.Generated",
+            "Asp.Versioning.ApiExplorer",
             "Microsoft.Extensions.Options",
             "Microsoft.OpenApi.Models",
             "Swashbuckle.AspNetCore.SwaggerGen",

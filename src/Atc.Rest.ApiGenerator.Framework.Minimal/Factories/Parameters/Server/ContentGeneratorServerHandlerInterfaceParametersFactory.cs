@@ -3,6 +3,7 @@ namespace Atc.Rest.ApiGenerator.Framework.Minimal.Factories.Parameters.Server;
 public static class ContentGeneratorServerHandlerInterfaceParametersFactory
 {
     public static InterfaceParameters Create(
+        bool useProblemDetails,
         string headerContent,
         string @namespace,
         AttributeParameters codeGeneratorAttribute,
@@ -41,7 +42,9 @@ public static class ContentGeneratorServerHandlerInterfaceParametersFactory
                 Name: "cancellationToken",
                 DefaultValue: "default"));
 
-        var returnTypeName = ConstructReturnTypeName(openApiOperation.Responses);
+        var returnTypeName = ConstructReturnTypeName(
+            useProblemDetails,
+            openApiOperation.Responses);
 
         var methodParameters = new List<MethodParameters>
         {
@@ -78,9 +81,10 @@ public static class ContentGeneratorServerHandlerInterfaceParametersFactory
     }
 
     private static string ConstructReturnTypeName(
+        bool useProblemDetails,
         OpenApiResponses responses)
     {
-        var responseReturnTypes = ExtractResponseReturnTypes(responses);
+        var responseReturnTypes = ExtractResponseReturnTypes(useProblemDetails, responses);
 
         if (responseReturnTypes.Count == 1)
         {
@@ -104,6 +108,7 @@ public static class ContentGeneratorServerHandlerInterfaceParametersFactory
     }
 
     private static List<(HttpStatusCode HttpStatusCode, string? ReturnTypeName)> ExtractResponseReturnTypes(
+        bool useProblemDetails,
         OpenApiResponses responses)
     {
         var result = new List<(HttpStatusCode HttpStatusCode, string? ReturnTypeName)>();
@@ -172,7 +177,6 @@ public static class ContentGeneratorServerHandlerInterfaceParametersFactory
                                         else
                                         {
                                             dataType = customPaginationItemsSchema.GetModelName();
-                                            ////dataType = OpenApiDocumentSchemaModelNameResolver.EnsureModelNameWithNamespaceIfNeeded(projectName, apiGroupName, dataType, isShared); // TODO: FIx isshared
                                             typeResponseName = $"{genericDataTypeName}<{dataType}>";
                                         }
                                     }
@@ -205,13 +209,21 @@ public static class ContentGeneratorServerHandlerInterfaceParametersFactory
 
                     break;
                 case HttpStatusCode.NotModified:
+                    result.Add((httpStatusCode, null));
+                    break;
                 case HttpStatusCode.Accepted:
                 case HttpStatusCode.NoContent:
                 case HttpStatusCode.Unauthorized:
                 case HttpStatusCode.Forbidden:
-                    result.Add((httpStatusCode, null));
+                    result.Add(useProblemDetails
+                        ? (httpStatusCode, "ProblemDetails")
+                        : (httpStatusCode, null));
                     break;
                 case HttpStatusCode.BadRequest:
+                    result.Add(useProblemDetails
+                        ? (httpStatusCode, "ValidationProblemDetails")
+                        : (httpStatusCode, "string"));
+                    break;
                 case HttpStatusCode.NotFound:
                 case HttpStatusCode.MethodNotAllowed:
                 case HttpStatusCode.Conflict:
@@ -220,7 +232,9 @@ public static class ContentGeneratorServerHandlerInterfaceParametersFactory
                 case HttpStatusCode.BadGateway:
                 case HttpStatusCode.ServiceUnavailable:
                 case HttpStatusCode.GatewayTimeout:
-                    result.Add((httpStatusCode, "string"));
+                    result.Add(useProblemDetails
+                        ? (httpStatusCode, "ProblemDetails")
+                        : (httpStatusCode, "string"));
                     break;
                 default:
                     throw new NotImplementedException($"ResponseType for {(int)httpStatusCode} - {httpStatusCode} is missing.");

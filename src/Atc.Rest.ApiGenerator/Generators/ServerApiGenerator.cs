@@ -483,6 +483,7 @@ public class ServerApiGenerator
                 else
                 {
                     interfaceParameters = Framework.Minimal.Factories.Parameters.Server.ContentGeneratorServerHandlerInterfaceParametersFactory.Create(
+                        projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
                         codeGeneratorContentHeader,
                         fullNamespace,
                         codeGeneratorAttribute,
@@ -598,7 +599,7 @@ public class ServerApiGenerator
 
         foreach (var apiOperation in apiOperations)
         {
-            var apiOperationModel = result.FirstOrDefault(x => x.Name.Equals(apiOperation.Model.Name, StringComparison.Ordinal));
+            var apiOperationModel = result.Find(x => x.Name.Equals(apiOperation.Model.Name, StringComparison.Ordinal));
             if (apiOperationModel is null)
             {
                 result.Add(apiOperation.Model);

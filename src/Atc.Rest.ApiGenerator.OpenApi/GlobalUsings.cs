@@ -16,7 +16,6 @@ global using Atc.Rest.ApiGenerator.OpenApi.Extensions;
 global using Atc.Rest.ApiGenerator.OpenApi.Factories;
 global using Atc.Rest.ApiGenerator.OpenApi.Models;
 
-global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.Extensions.Logging;
 global using Microsoft.OpenApi;
 global using Microsoft.OpenApi.Any;

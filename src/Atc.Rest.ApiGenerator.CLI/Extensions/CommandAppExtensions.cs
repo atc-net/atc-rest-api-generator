@@ -23,20 +23,20 @@ public static class CommandAppExtensions
             node
                 .AddCommand<OptionsFileCreateCommand>(CommandConstants.NameOptionsFileCreate)
                 .WithDescription("Create default options file 'ApiGeneratorOptions.json' if it doesn't exist")
-                .WithExample(new[]
-                {
+                .WithExample(
+                [
                     CreateArgumentCommandsOptionsFileWithCreate(),
                     CreateArgumentConfigurationOptionsPath(),
-                });
+                ]);
 
             node
                 .AddCommand<OptionsFileValidateCommand>(CommandConstants.NameOptionsFileValidate)
                 .WithDescription("Validate the options file 'ApiGeneratorOptions.json'")
-                .WithExample(new[]
-                {
+                .WithExample(
+                [
                     CreateArgumentCommandsOptionsFileWithValidate(),
                     CreateArgumentConfigurationOptionsPath(),
-                });
+                ]);
         };
 
     private static Action<IConfigurator<CommandSettings>> ConfigureGenerateCommands()
@@ -55,12 +55,11 @@ public static class CommandAppExtensions
 
             node.AddCommand<ValidateSchemaCommand>(NameCommandConstants.ValidateSchema)
                 .WithDescription("Validate OpenApi Specification")
-                .WithExample(new[]
-                {
+                .WithExample([
                     NameCommandConstants.Validate,
                     NameCommandConstants.ValidateSchema,
-                    CreateArgumentConfigurationSpecificationPath(),
-                });
+                    CreateArgumentConfigurationSpecificationPath()
+                ]);
         };
 
     private static void ConfigureGenerateClientCommands(
@@ -71,13 +70,12 @@ public static class CommandAppExtensions
 
             client.AddCommand<GenerateClientCSharpCommand>(NameCommandConstants.GenerateClientCsharp)
                 .WithDescription("Generate client project in C#.")
-                .WithExample(new[]
-                {
+                .WithExample([
                     NameCommandConstants.Generate,
                     NameCommandConstants.GenerateClient,
                     NameCommandConstants.GenerateClientCsharp,
-                    CreateArgumentConfigurationSpecificationPath(),
-                });
+                    CreateArgumentConfigurationSpecificationPath()
+                ]);
         });
 
     private static void ConfigureGenerateServerCommands(
@@ -88,62 +86,56 @@ public static class CommandAppExtensions
 
             client.AddCommand<GenerateServerAllCommand>(NameCommandConstants.GenerateServerAll)
                 .WithDescription("Creates API, domain and host projects.")
-                .WithExample(new[]
-                {
+                .WithExample([
                     NameCommandConstants.Generate,
                     NameCommandConstants.GenerateServer,
                     CreateArgumentConfigurationSpecificationPath(),
                     CreateArgumentProjectPrefixName(),
-                    ".",
-                })
-                .WithExample(new[]
-                {
+                    "."
+                ])
+                .WithExample([
                     NameCommandConstants.Generate,
                     NameCommandConstants.GenerateServer,
                     NameCommandConstants.GenerateServerAll,
                     CreateArgumentConfigurationSpecificationPath(),
                     CreateArgumentProjectPrefixName(),
-                    ".",
-                })
-                .WithExample(new[]
-                {
+                    "."
+                ])
+                .WithExample([
                     NameCommandConstants.Generate,
                     NameCommandConstants.GenerateServer,
                     NameCommandConstants.GenerateServerAll,
                     CreateArgumentConfigurationSpecificationPath(),
                     CreateArgumentProjectPrefixName(),
                     CreateArgumentConfigurationOutputSolutionPath(),
-                    CreateArgumentConfigurationSourcePath(),
-                });
+                    CreateArgumentConfigurationSourcePath()
+                ]);
 
             client.AddCommand<GenerateServerApiCommand>(NameCommandConstants.GenerateServerApi)
                 .WithDescription("Create API project.")
-                .WithExample(new[]
-                {
+                .WithExample([
                     NameCommandConstants.Generate,
                     NameCommandConstants.GenerateServer,
                     NameCommandConstants.GenerateServerApi,
                     CreateArgumentConfigurationSpecificationPath(),
                     CreateArgumentProjectPrefixName(),
-                    CreateArgumentConfigurationOutputPath(),
-                });
+                    CreateArgumentConfigurationOutputPath()
+                ]);
 
             client.AddCommand<GenerateServerDomainCommand>(NameCommandConstants.GenerateServerDomain)
                 .WithDescription("Create domain project (requires API project).")
-                .WithExample(new[]
-                {
+                .WithExample([
                     NameCommandConstants.Generate,
                     NameCommandConstants.GenerateServer,
                     NameCommandConstants.GenerateServerDomain,
                     CreateArgumentConfigurationSpecificationPath(),
                     CreateArgumentProjectPrefixName(),
-                    CreateArgumentConfigurationOutputPath(),
-                });
+                    CreateArgumentConfigurationOutputPath()
+                ]);
 
             client.AddCommand<GenerateServerHostCommand>(NameCommandConstants.GenerateServerHost)
                 .WithDescription("Create ASP.NET Core host project (requires API and domain projects).")
-                .WithExample(new[]
-                {
+                .WithExample([
                     NameCommandConstants.Generate,
                     NameCommandConstants.GenerateServer,
                     NameCommandConstants.GenerateServerHost,
@@ -151,8 +143,8 @@ public static class CommandAppExtensions
                     CreateArgumentProjectPrefixName(),
                     CreateArgumentConfigurationOutputPath(),
                     CreateArgumentConfigurationApiPath(),
-                    CreateArgumentConfigurationDomainPath(),
-                });
+                    CreateArgumentConfigurationDomainPath()
+                ]);
         });
 
     private static string CreateArgumentCommandsOptionsFileWithCreate()
@@ -183,5 +175,5 @@ public static class CommandAppExtensions
         => @$"{ArgumentCommandConstants.LongServerOutputDomainPath} c:\temp\MyProject\src";
 
     private static string CreateArgumentProjectPrefixName()
-        => $@"{ArgumentCommandConstants.ShortProjectPrefixName} MyApi";
+        => $"{ArgumentCommandConstants.ShortProjectPrefixName} MyApi";
 }
