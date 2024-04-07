@@ -284,23 +284,23 @@ Running the above command produces the following output:
 🟢   root: atc-coding-rules-updater.json created
 🟢   root: atc-coding-rules-updater.ps1 created
 🐭 Working on EditorConfig files
-     Download from: [GitHub] /atc-net/atc-coding-rules/main/distribution/dotnet6/.editorconfig
+     Download from: [GitHub] /atc-net/atc-coding-rules/main/distribution/dotnet8/.editorconfig
      Download time: 27.947 ms
 🟢   root: .editorconfig created
-     Download from: [GitHub] /atc-net/atc-coding-rules/main/distribution/dotnet6/src/.editorconfig
+     Download from: [GitHub] /atc-net/atc-coding-rules/main/distribution/dotnet8/src/.editorconfig
      Download time: 22.987 ms
 🟢   src: .editorconfig created
-     Download from: [GitHub] /atc-net/atc-coding-rules/main/distribution/dotnet6/test/.editorconfig
+     Download from: [GitHub] /atc-net/atc-coding-rules/main/distribution/dotnet8/test/.editorconfig
      Download time: 24.465 ms
 🟢   test: .editorconfig created
 🔨 Working on Directory.Build.props files
-     Download from: [GitHub] /atc-net/atc-coding-rules/main/distribution/dotnet6/Directory.Build.props
+     Download from: [GitHub] /atc-net/atc-coding-rules/main/distribution/dotnet8/Directory.Build.props
      Download time: 20.880 ms
 🟢   root: Directory.Build.props created
-     Download from: [GitHub] /atc-net/atc-coding-rules/main/distribution/dotnet6/src/Directory.Build.props
+     Download from: [GitHub] /atc-net/atc-coding-rules/main/distribution/dotnet8/src/Directory.Build.props
      Download time: 48.340 ms
 🟢   src: Directory.Build.props created
-     Download from: [GitHub] /atc-net/atc-coding-rules/main/distribution/dotnet6/test/Directory.Build.props
+     Download from: [GitHub] /atc-net/atc-coding-rules/main/distribution/dotnet8/test/Directory.Build.props
      Download time: 29.480 ms
 🟢   test: Directory.Build.props created
 ✅ Done

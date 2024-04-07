@@ -1,0 +1,17 @@
+# ATC coding rules - https://github.com/atc-net/atc-coding-rules
+# Version: 1.0.0
+# Updated: 27-03-2024
+# Location: webapi
+# Distribution: Frameworks
+
+##########################################
+# Code Analyzers Rules
+##########################################
+[*.{cs}]
+
+dotnet_diagnostic.CA1062.severity = none            # No need for null-checking in public method.
+
+
+##########################################
+# Custom - Code Analyzers Rules
+##########################################

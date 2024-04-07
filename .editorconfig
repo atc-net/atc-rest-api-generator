@@ -1,8 +1,8 @@
-﻿# ATC coding rules - https://github.com/atc-net/atc-coding-rules
-# Version: 1.0.9
-# Updated: 01-02-2022
+# ATC coding rules - https://github.com/atc-net/atc-coding-rules
+# Version: 1.0.0
+# Updated: 25-09-2023
 # Location: Root
-# Distribution: DotNet6
+# Distribution: DotNet8
 # Inspired by: https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/code-style-rule-options
 
 ##########################################
@@ -87,6 +87,7 @@ dotnet_separate_import_directive_groups = false
 # .NET Code Style Settings
 # https://docs.microsoft.com/visualstudio/ide/editorconfig-language-conventions#net-code-style-settings
 [*.{cs,csx,cake}]
+
 # "this." and "Me." qualifiers
 # https://docs.microsoft.com/visualstudio/ide/editorconfig-language-conventions#this-and-me
 dotnet_style_qualification_for_field = false
@@ -146,11 +147,16 @@ dotnet_style_operator_placement_when_wrapping = end_of_line
 # C# Code Style Settings
 # https://docs.microsoft.com/visualstudio/ide/editorconfig-language-conventions#c-code-style-settings
 [*.{cs,csx,cake}]
+
 # Implicit and explicit types
 # https://docs.microsoft.com/visualstudio/ide/editorconfig-language-conventions#implicit-and-explicit-types
 csharp_style_var_for_built_in_types = true                                      # IDE0007 and IDE0008
 csharp_style_var_when_type_is_apparent = true                                   # IDE0007 and IDE0008
 csharp_style_var_elsewhere = true                                               # IDE0007 and IDE0008
+
+# Namespace declaration preferences
+# https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0160-ide0161?view=vs-2022
+csharp_style_namespace_declarations = file_scoped                               # IDE0160 and IDE0161
 
 # Expression-bodied members
 # https://docs.microsoft.com/visualstudio/ide/editorconfig-language-conventions#expression-bodied-members
@@ -195,8 +201,8 @@ csharp_style_unused_value_assignment_preference = discard_variable              
 
 # Index and range preferences
 # https://docs.microsoft.com/visualstudio/ide/editorconfig-language-conventions#index-and-range-preferences
-csharp_style_prefer_index_operator = true                                       # IDE0056
-csharp_style_prefer_range_operator = true                                       # IDE0057
+csharp_style_prefer_index_operator = true:suggestion                            # IDE0056
+csharp_style_prefer_range_operator = true:suggestion                            # IDE0057
 
 # Miscellaneous preferences
 # https://docs.microsoft.com/visualstudio/ide/editorconfig-language-conventions#miscellaneous-preferences
@@ -259,6 +265,7 @@ csharp_space_between_square_brackets = false
 # https://docs.microsoft.com/visualstudio/ide/editorconfig-formatting-conventions#wrap-options
 csharp_preserve_single_line_statements = false
 csharp_preserve_single_line_blocks = true
+csharp_style_namespace_declarations = file_scoped:suggestion
 
 ##########################################
 # .NET Naming Conventions
@@ -443,10 +450,12 @@ dotnet_naming_rule.parameters_rule.severity             = warning
 dotnet_diagnostic.MA0003.severity = suggestion      # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/Meziantou/MA0003.md
 dotnet_diagnostic.MA0004.severity = suggestion      # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/Meziantou/MA0004.md
 dotnet_diagnostic.MA0006.severity = none            # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/Meziantou/MA0006.md
+dotnet_diagnostic.MA0011.severity = none            # Duplicate of CA1305
 dotnet_diagnostic.MA0016.severity = error           # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/Meziantou/MA0016.md
 dotnet_diagnostic.MA0025.severity = suggestion      # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/Meziantou/MA0025.md
 dotnet_diagnostic.MA0026.severity = suggestion      # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/Meziantou/MA0026.md
 dotnet_diagnostic.MA0028.severity = none            # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/Meziantou/MA0028.md
+dotnet_diagnostic.MA0038.severity = none            # Duplicate of CA1822
 dotnet_diagnostic.MA0048.severity = error           # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/Meziantou/MA0048.md
 
 
@@ -454,8 +463,12 @@ dotnet_diagnostic.MA0048.severity = error           # https://github.com/atc-net
 # https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/
 dotnet_diagnostic.CA1014.severity = none            # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/MicrosoftCodeAnalysis/CA1014.md
 dotnet_diagnostic.CA1068.severity = error           # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/MicrosoftCodeAnalysis/CA1068.md
+dotnet_diagnostic.CA1305.severity = error
 dotnet_diagnostic.CA1707.severity = error           # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/MicrosoftCodeAnalysis/CA1707.md
+dotnet_diagnostic.CA1812.severity = none
+dotnet_diagnostic.CA1822.severity = suggestion
 dotnet_diagnostic.CA2007.severity = suggestion      # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/MicrosoftCodeAnalysis/CA2007.md
+dotnet_diagnostic.IDE0005.severity = warning        # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/MicrosoftCodeAnalysis/IDE0005.md
 dotnet_diagnostic.IDE0058.severity = none           # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/MicrosoftCodeAnalysis/IDE0058.md
 
 
@@ -480,6 +493,7 @@ dotnet_diagnostic.SA1202.severity = none            # https://github.com/atc-net
 dotnet_diagnostic.SA1204.severity = none            # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/StyleCop/SA1204.md
 dotnet_diagnostic.SA1413.severity = error           # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/StyleCop/SA1413.md
 dotnet_diagnostic.SA1600.severity = none            # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/StyleCop/SA1600.md
+dotnet_diagnostic.SA1601.severity = none
 dotnet_diagnostic.SA1602.severity = none            # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/StyleCop/SA1602.md
 dotnet_diagnostic.SA1604.severity = none            # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/StyleCop/SA1604.md
 dotnet_diagnostic.SA1623.severity = none            # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/StyleCop/SA1623.md
@@ -491,6 +505,10 @@ dotnet_diagnostic.SA1649.severity = error           # https://github.com/atc-net
 # SonarAnalyzer.CSharp
 # https://rules.sonarsource.com/csharp
 dotnet_diagnostic.S1135.severity = suggestion       # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/SonarAnalyzerCSharp/S1135.md
+dotnet_diagnostic.S2629.severity = none            	# Don't use string interpolation in logging message templates.
+dotnet_diagnostic.S6602.severity = none           	# "Find" method should be used instead of the "FirstOrDefault"
+dotnet_diagnostic.S6603.severity = none            	# The collection-specific "TrueForAll" method should be used instead of the "All"
+dotnet_diagnostic.S6605.severity = none             # Collection-specific "Exists" method should be used instead of the "Any"
 
 
 ##########################################
@@ -514,12 +532,14 @@ dotnet_diagnostic.CA1848.severity = suggestion		# Use the LoggerMessage delegate
 dotnet_diagnostic.CA2254.severity = suggestion		# Template should be a static expression - https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2254
 
 dotnet_diagnostic.S1172.severity = none				# False positive
+dotnet_diagnostic.S2629.Severity = none
 dotnet_diagnostic.S3267.severity = none				# Loop should be simplified by calling Select(x => x.Value)) - We dont like this rule because of readability/maintainability
+dotnet_diagnostic.S3878.Severity = none
+dotnet_diagnostic.S6605.Severity = none
+dotnet_diagnostic.S6667.Severity = none
 
 dotnet_diagnostic.SA1118.Severity = none			# Parameter spans multiple lines
 dotnet_diagnostic.SA1414.Severity = none			# Tuple types in signatures should have element names
-
-
 
 dotnet_diagnostic.CS1591.Severity = none
 dotnet_diagnostic.CA1822.Severity = none
