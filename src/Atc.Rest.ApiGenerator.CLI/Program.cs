@@ -100,10 +100,9 @@ public static class Program
             newArgs.Add(ArgumentCommandConstants.LongConfigurationValidateStrictMode);
         }
 
-        if (!newArgs.Contains(CommandConstants.ArgumentShortVerbose, StringComparer.OrdinalIgnoreCase) ||
-            !newArgs.Contains(CommandConstants.ArgumentLongVerbose, StringComparer.OrdinalIgnoreCase))
+        if (!newArgs.Contains(CommandConstants.ArgumentLongVerbose, StringComparer.OrdinalIgnoreCase))
         {
-            newArgs.Add(CommandConstants.ArgumentShortVerbose);
+            newArgs.Add(CommandConstants.ArgumentLongVerbose);
         }
 
         return newArgs.ToArray();
