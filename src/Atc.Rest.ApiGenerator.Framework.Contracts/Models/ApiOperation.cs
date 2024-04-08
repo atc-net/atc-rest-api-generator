@@ -64,7 +64,6 @@ public sealed class ApiOperation
     private static string ExtractApiGroupName(
         string path)
         => path
-            .Split('/', StringSplitOptions.RemoveEmptyEntries)
-            [0]
+            .Split('/', StringSplitOptions.RemoveEmptyEntries)[0]
             .PascalCase(removeSeparators: true);
 }

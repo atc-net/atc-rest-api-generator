@@ -13,7 +13,7 @@ public static class ListExtensions
             }
             else
             {
-                var lastLine = values.Last().Trim();
+                var lastLine = values[^1].Trim();
                 if (lastLine.Length == 0)
                 {
                     values.RemoveAt(values.Count - 1);
