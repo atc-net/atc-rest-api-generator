@@ -258,17 +258,18 @@ public static class ContentGeneratorServerClientModelParametersFactory
         var modelName = apiSchemaModel.GetModelName();
         var documentationTags = apiSchemaModel.ExtractDocumentationTags($"{modelName}.");
 
-        return new List<RecordParameters>
-        {
+        return
+        [
             new(
                 documentationTags,
                 AccessModifiers.PublicRecord,
                 Name: modelName,
-                Parameters: ExtractParameterBaseParameters(apiSchemaModel)),
-        };
+                Parameters: ExtractRecordParameterBaseParameters(apiSchemaModel))
+
+        ];
     }
 
-    private static List<ParameterBaseParameters> ExtractParameterBaseParameters(
+    private static List<ParameterBaseParameters> ExtractRecordParameterBaseParameters(
         OpenApiSchema apiSchemaModel)
     {
         var parameterBaseParameters = new List<ParameterBaseParameters>();
@@ -364,6 +365,22 @@ public static class ContentGeneratorServerClientModelParametersFactory
             }
         }
 
-        return parameterBaseParameters;
+        return SortOptionalParametersMustAppearAfterAllRequiredParameters(parameterBaseParameters);
+    }
+
+    /// <summary>
+    /// CS1737 -  Sorts the optional parameters must appear after all required parameters.
+    /// </summary>
+    /// <param name="parameters">The parameter base parameters.</param>
+    private static List<ParameterBaseParameters> SortOptionalParametersMustAppearAfterAllRequiredParameters(
+        IReadOnlyCollection<ParameterBaseParameters> parameters)
+    {
+        var parametersWithoutDefaultValues = parameters.Where(x => x.DefaultValue is null).ToList();
+        var parametersWitDefaultValues = parameters.Where(x => x.DefaultValue is not null).ToList();
+
+        var data = new List<ParameterBaseParameters>();
+        data.AddRange(parametersWithoutDefaultValues);
+        data.AddRange(parametersWitDefaultValues);
+        return data;
     }
 }

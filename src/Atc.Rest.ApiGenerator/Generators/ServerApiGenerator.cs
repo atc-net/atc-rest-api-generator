@@ -186,10 +186,7 @@ public class ServerApiGenerator
                 includeApiSpecification: true,
                 usingCodingRules: projectOptions.UsingCodingRules);
 
-            if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
-            {
-                ScaffoldBasicFileApiGenerated();
-            }
+            ScaffoldBasicFileApiGenerated();
         }
     }
 
@@ -370,14 +367,17 @@ public class ServerApiGenerator
                     continue;
                 }
 
-                var parameterParameters = ContentGeneratorServerParameterParametersFactory.Create(
-                    fullNamespace,
-                    openApiOperation.Value,
-                    openApiPath.Value.Parameters);
-
+                string modelName;
                 string content;
                 if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
                 {
+                    var parameterParameters = ContentGeneratorServerParameterParametersFactory.CreateForClass(
+                        fullNamespace,
+                        openApiOperation.Value,
+                        openApiPath.Value.Parameters);
+
+                    modelName = parameterParameters.ParameterName;
+
                     var contentGeneratorParameter = new Framework.Mvc.ContentGenerators.Server.ContentGeneratorServerParameter(
                         new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
                         new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
@@ -388,6 +388,13 @@ public class ServerApiGenerator
                 }
                 else
                 {
+                    var parameterParameters = ContentGeneratorServerParameterParametersFactory.CreateForRecord(
+                        fullNamespace,
+                        openApiOperation.Value,
+                        openApiPath.Value.Parameters);
+
+                    modelName = parameterParameters.ParameterName;
+
                     var contentGeneratorParameter = new Framework.Minimal.ContentGenerators.Server.ContentGeneratorServerParameter(
                         new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
                         new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
@@ -403,7 +410,7 @@ public class ServerApiGenerator
                         projectOptions.PathForContracts,
                         apiGroupName,
                         ContentGeneratorConstants.Parameters,
-                        parameterParameters.ParameterName));
+                        modelName));
 
                 var contentWriter = new ContentWriter(logger);
                 contentWriter.Write(

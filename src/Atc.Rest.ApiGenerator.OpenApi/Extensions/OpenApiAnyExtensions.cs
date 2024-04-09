@@ -13,7 +13,7 @@ public static class OpenApiAnyExtensions
         return openApiAny switch
         {
             OpenApiInteger apiInteger => apiInteger.Value.ToString(),
-            OpenApiString apiString => string.IsNullOrEmpty(apiString.Value) ? "string.Empty" : $"\"{apiString.Value}\"",
+            OpenApiString apiString => string.IsNullOrEmpty(apiString.Value) ? "string.Empty" : $"{apiString.Value}",
             OpenApiBoolean { Value: true } => "true",
             OpenApiBoolean { Value: false } => "false",
             _ => throw new NotImplementedException("Property initializer: " + openApiAny.GetType()),
