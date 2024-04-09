@@ -58,7 +58,12 @@ public static class StringBuilderExtensions
                 ? $"{typeName} {name}"
                 : $"{genericTypeName}<{typeName}> {name}");
 
-        if (!string.IsNullOrEmpty(defaultValue))
+        if (string.IsNullOrEmpty(defaultValue))
+        {
+            return;
+        }
+
+        if (string.IsNullOrEmpty(genericTypeName))
         {
             if (typeName.Equals("string", StringComparison.Ordinal))
             {
@@ -68,6 +73,10 @@ public static class StringBuilderExtensions
             {
                 sb.Append($" = {defaultValue}");
             }
+        }
+        else
+        {
+            sb.Append($" = {defaultValue}");
         }
     }
 
