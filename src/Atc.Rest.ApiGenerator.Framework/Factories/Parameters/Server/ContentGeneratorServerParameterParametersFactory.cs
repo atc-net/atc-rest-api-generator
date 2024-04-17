@@ -79,7 +79,7 @@ public static class ContentGeneratorServerParameterParametersFactory
                     dataType,
                     isSimpleType,
                     useListForDataType,
-                    GetIsNullable(openApiParameter, useListForDataType),
+                    GetIsNullable(openApiParameter),
                     openApiParameter.Required,
                     GetAdditionalValidationAttributes(openApiParameter),
                     openApiParameter.Schema.GetDefaultValueAsString()));
@@ -88,14 +88,8 @@ public static class ContentGeneratorServerParameterParametersFactory
     }
 
     private static bool GetIsNullable(
-        OpenApiParameter openApiParameter,
-        bool useListForDataType)
+        OpenApiParameter openApiParameter)
     {
-        if (useListForDataType)
-        {
-            return false;
-        }
-
         var isNullable = openApiParameter.Schema.Nullable;
         if (isNullable)
         {
