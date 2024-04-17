@@ -184,8 +184,9 @@ public static class OpenApiResponsesExtensions
             }
         }
 
-        // TODO: Find out what todo here...
-        if (includeIfNotDefinedValidation &&
+        // TODO: For MinimalApi - Should we use ProblemDetails or move to "middleware generate a response body"
+        if (useProblemDetailsAsDefaultResponseBody &&
+            includeIfNotDefinedValidation &&
             result.TrueForAll(x => x.Item1 != HttpStatusCode.BadRequest))
         {
             result.Add(Tuple.Create(HttpStatusCode.BadRequest, "ValidationProblemDetails"));
