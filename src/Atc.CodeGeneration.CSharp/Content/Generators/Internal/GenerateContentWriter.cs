@@ -205,7 +205,16 @@ public class GenerateContentWriter
             }
             else if (!string.IsNullOrEmpty(parameters.DefaultValue))
             {
-                sb.Append($" = {parameters.DefaultValue};");
+                if (!parameters.IsGenericListType &&
+                    parameters.TypeName.Equals("string", StringComparison.Ordinal) &&
+                    !parameters.DefaultValue.Equals("null", StringComparison.Ordinal))
+                {
+                    sb.Append($" = \"{parameters.DefaultValue}\";");
+                }
+                else
+                {
+                    sb.Append($" = {parameters.DefaultValue};");
+                }
             }
         }
         else if (!string.IsNullOrEmpty(parameters.Content))
