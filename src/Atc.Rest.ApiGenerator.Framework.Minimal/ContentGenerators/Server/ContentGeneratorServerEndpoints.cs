@@ -89,13 +89,26 @@ public sealed class ContentGeneratorServerEndpoints : IContentGenerator
     {
         // TODO: item.RouteSuffix - if null "/"
 
-        sb.AppendLine(8, routeGroupBuilderName);
-        sb.AppendLine(12, $".Map{item.OperationTypeRepresentation}(\"routeYY\", {item.Name})");
-        sb.AppendLine(12, $".WithName(\"{item.Name}\")");
-        sb.AppendLine(12, ".WithDescription(\"xxx\")");
-        sb.AppendLine(12, ".WithSummary(\"xxx\");");
+        var description = item.DocumentationTags.Summary
+            .Replace("Description: ", string.Empty, StringComparison.Ordinal)
+            .Replace($"Operation: {item.Name}.", string.Empty, StringComparison.Ordinal)
+            .Replace(Environment.NewLine, string.Empty, StringComparison.Ordinal)
+            .Trim();
 
+        var summary = item.Name;
+
+        sb.AppendLine(8, routeGroupBuilderName);
+        sb.AppendLine(12,
+            item.RouteSuffix is null
+                ? $".Map{item.OperationTypeRepresentation}(\"/\", {item.Name})"
+                : $".Map{item.OperationTypeRepresentation}(\"{item.RouteSuffix}\", {item.Name})");
+        sb.AppendLine(12, $".WithName(\"{item.Name}\")");
+        sb.AppendLine(12, $".WithDescription(\"{description}\")");
+        sb.AppendLine(12, $".WithSummary(\"{summary}\");");
+
+        
         /*
+         TODO:
                 usersV1
                     .MapGet("/", GetAllUsers)
                     .WithName(Names.UserDefinitionNames.GetAllUsers)
