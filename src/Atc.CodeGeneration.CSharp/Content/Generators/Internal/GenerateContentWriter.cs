@@ -91,6 +91,7 @@ public class GenerateContentWriter
                         attributes: null,
                         item.GenericTypeName,
                         item.TypeName,
+                        item.IsNullableType,
                         item.Name,
                         item.DefaultValue,
                         useCommaForEndChar);
@@ -180,7 +181,7 @@ public class GenerateContentWriter
             sb.AppendAccessModifier(parameters.AccessModifier);
         }
 
-        sb.AppendTypeAndName(parameters.GenericTypeName, parameters.TypeName, parameters.Name);
+        sb.AppendTypeAndName(parameters.GenericTypeName, parameters.TypeName, parameters.IsNullableType, parameters.Name);
 
         if (parameters.UseAutoProperty)
         {
@@ -256,7 +257,7 @@ public class GenerateContentWriter
         }
         else
         {
-            sb.AppendTypeAndName(parameters.ReturnGenericTypeName, parameters.ReturnTypeName, parameters.Name);
+            sb.AppendTypeAndName(parameters.ReturnGenericTypeName, parameters.ReturnTypeName, isNullableType: false, parameters.Name);
         }
 
         if (parameters.Parameters is not null &&
@@ -284,6 +285,7 @@ public class GenerateContentWriter
                     item.Attributes,
                     item.GenericTypeName,
                     item.TypeName,
+                    item.IsNullableType,
                     item.Name,
                     item.DefaultValue,
                     useCommaForEndChar);

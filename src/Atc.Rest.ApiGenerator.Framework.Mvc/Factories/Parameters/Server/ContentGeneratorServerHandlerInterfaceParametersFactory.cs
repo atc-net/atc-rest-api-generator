@@ -23,6 +23,7 @@ public static class ContentGeneratorServerHandlerInterfaceParametersFactory
                     GenericTypeName: null,
                     IsGenericListType: false,
                     TypeName: $"{operationName}{ContentGeneratorConstants.Parameters}",
+                    IsNullableType: false,
                     IsReferenceType: true,
                     Name: "parameters",
                     DefaultValue: null));
@@ -35,6 +36,7 @@ public static class ContentGeneratorServerHandlerInterfaceParametersFactory
                 GenericTypeName: null,
                 IsGenericListType: false,
                 TypeName: "CancellationToken",
+                IsNullableType: false,
                 IsReferenceType: true,
                 Name: "cancellationToken",
                 DefaultValue: "default"));

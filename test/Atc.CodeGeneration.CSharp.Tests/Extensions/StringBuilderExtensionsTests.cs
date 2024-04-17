@@ -57,19 +57,20 @@ public class StringBuilderExtensionsTests
     }
 
     [Theory]
-    [InlineData("int age", null, "int", "age")]
-    [InlineData("List<int> ages", "List", "int", "ages")]
+    [InlineData("int age", null, "int", false, "age")]
+    [InlineData("List<int> ages", "List", "int", false, "ages")]
     public void AppendTypeAndName(
         string expected,
         string? genericTypeName,
         string typeName,
+        bool isNullableType,
         string name)
     {
         // Arrange
         var sb = new StringBuilder();
 
         // Act
-        sb.AppendTypeAndName(genericTypeName, typeName, name);
+        sb.AppendTypeAndName(genericTypeName, typeName, isNullableType, name);
         var actual = sb.ToString();
 
         // Assert
@@ -77,20 +78,21 @@ public class StringBuilderExtensionsTests
     }
 
     [Theory]
-    [InlineData("   int age", 3, null, "int", "age")]
-    [InlineData("   List<int> ages", 3, "List", "int", "ages")]
+    [InlineData("   int age", 3, null, "int", false, "age")]
+    [InlineData("   List<int> ages", 3, "List", "int", false, "ages")]
     public void AppendTypeAndName_WithIndentSpaces(
         string expected,
         int indentSpaces,
         string? genericTypeName,
         string typeName,
+        bool isNullableType,
         string name)
     {
         // Arrange
         var sb = new StringBuilder();
 
         // Act
-        sb.AppendTypeAndName(indentSpaces, genericTypeName, typeName, name);
+        sb.AppendTypeAndName(indentSpaces, genericTypeName, typeName, isNullableType, name);
         var actual = sb.ToString();
 
         // Assert
@@ -98,16 +100,17 @@ public class StringBuilderExtensionsTests
     }
 
     [Theory]
-    [InlineData("   int age", 3, null, "int", "age", null)]
-    [InlineData("   List<int> ages", 3, "List", "int", "ages", null)]
-    [InlineData("   int age = 5", 3, null, "int", "age", "5")]
-    [InlineData("   int? age = null", 3, null, "int?", "age", "null")]
-    [InlineData("   List<int> ages = new List<int>", 3, "List", "int", "ages", "new List<int>")]
+    [InlineData("   int age", 3, null, "int", false, "age", null)]
+    [InlineData("   List<int> ages", 3, "List", "int", false, "ages", null)]
+    [InlineData("   int age = 5", 3, null, "int", false, "age", "5")]
+    [InlineData("   int? age = null", 3, null, "int", true, "age", "null")]
+    [InlineData("   List<int> ages = new List<int>", 3, "List", "int", false, "ages", "new List<int>")]
     public void AppendTypeAndName_WithIndentSpaces_AndDefaultValue(
         string expected,
         int indentSpaces,
         string? genericTypeName,
         string typeName,
+        bool isNullableType,
         string name,
         string? defaultValue)
     {
@@ -115,7 +118,7 @@ public class StringBuilderExtensionsTests
         var sb = new StringBuilder();
 
         // Act
-        sb.AppendTypeAndName(indentSpaces, genericTypeName, typeName, name, defaultValue);
+        sb.AppendTypeAndName(indentSpaces, genericTypeName, typeName, isNullableType, name, defaultValue);
         var actual = sb.ToString();
 
         // Assert
@@ -220,7 +223,7 @@ public class StringBuilderExtensionsTests
         var sb = new StringBuilder();
 
         // Act
-        sb.AppendInputParameter(indentSpaces, usePropertyPrefix: false, attributes, genericTypeName, typeName, name, defaultValue, useCommaForEndChar);
+        sb.AppendInputParameter(indentSpaces, usePropertyPrefix: false, attributes, genericTypeName, typeName, isNullableType: false, name, defaultValue, useCommaForEndChar);
         var actual = sb.ToString();
 
         // Assert

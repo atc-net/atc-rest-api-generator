@@ -113,6 +113,7 @@ public static class ContentGeneratorServerClientModelParametersFactory
                     GenericTypeName: "List",
                     IsGenericListType: true,
                     TypeName: childModelName,
+                    IsNullableType: false,
                     IsReferenceType: false,
                     Name: childModelName + "List",
                     DefaultValue: $"new List<{childModelName}>()",
@@ -194,11 +195,6 @@ public static class ContentGeneratorServerClientModelParametersFactory
                     dataTypeForList = "List";
                 }
 
-                if (openApiParameter.Nullable)
-                {
-                    dataType += "?";
-                }
-
                 var defaultValue = GetDefaultValue(openApiParameter.Default, dataTypeForList);
 
                 if (dataType.Equals(dataTypeForList, StringComparison.Ordinal))
@@ -218,6 +214,7 @@ public static class ContentGeneratorServerClientModelParametersFactory
                         GenericTypeName: dataTypeForList,
                         IsGenericListType: !string.IsNullOrEmpty(dataTypeForList),
                         TypeName: dataType,
+                        IsNullableType: openApiParameter.Nullable,
                         IsReferenceType: !isSimpleType,
                         Name: apiSchema.Key.EnsureFirstCharacterToUpper(),
                         DefaultValue: defaultValue,
@@ -337,11 +334,6 @@ public static class ContentGeneratorServerClientModelParametersFactory
                     dataTypeForList = "List";
                 }
 
-                if (openApiParameter.Nullable)
-                {
-                    dataType += "?";
-                }
-
                 var defaultValue = GetDefaultValue(openApiParameter.Default, dataTypeForList);
 
                 if (dataType.Equals(dataTypeForList, StringComparison.Ordinal))
@@ -359,6 +351,7 @@ public static class ContentGeneratorServerClientModelParametersFactory
                         GenericTypeName: dataTypeForList,
                         IsGenericListType: !string.IsNullOrEmpty(dataTypeForList),
                         TypeName: dataType,
+                        IsNullableType: openApiParameter.Nullable,
                         IsReferenceType: !isSimpleType,
                         Name: apiSchema.Key.EnsureFirstCharacterToUpper(),
                         DefaultValue: defaultValue));

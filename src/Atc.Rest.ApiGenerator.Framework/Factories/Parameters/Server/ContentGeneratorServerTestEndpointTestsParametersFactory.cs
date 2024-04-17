@@ -22,6 +22,7 @@ public static class ContentGeneratorServerTestEndpointTestsParametersFactory
                     new(
                         GenericTypeName: null,
                         TypeName: "WebApiStartupFactory",
+                        IsNullableType: false,
                         Name: "fixture",
                         DefaultValue: null,
                         PassToInheritedClass: true,

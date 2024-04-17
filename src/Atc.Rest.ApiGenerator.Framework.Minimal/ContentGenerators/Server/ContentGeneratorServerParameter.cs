@@ -54,6 +54,7 @@ public sealed class ContentGeneratorServerParameter : IContentGenerator
                     attributes: ExtractAttributes(item),
                     genericTypeName: null,
                     typeName: item.DataType,
+                    item.IsNullable,
                     item.ParameterName,
                     item.DefaultValueInitializer,
                     useCommaForEndChar);

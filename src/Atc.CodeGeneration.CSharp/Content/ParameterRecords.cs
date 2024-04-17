@@ -71,6 +71,7 @@ public record ParameterBaseParameters(
     string? GenericTypeName,
     bool IsGenericListType,
     string TypeName,
+    bool IsNullableType,
     bool IsReferenceType,
     string Name,
     string? DefaultValue);
@@ -78,6 +79,7 @@ public record ParameterBaseParameters(
 public record ConstructorParameterBaseParameters(
     string? GenericTypeName,
     string TypeName,
+    bool IsNullableType,
     string Name,
     string? DefaultValue,
     bool PassToInheritedClass,
@@ -98,6 +100,7 @@ public record PropertyParameters(
     AccessModifiers AccessModifier,
     string? GenericTypeName,
     string TypeName,
+    bool IsNullableType,
     string Name,
     string? DefaultValue,
     bool IsReferenceType,
@@ -112,6 +115,7 @@ public record PropertyParameters(
         GenericTypeName,
         IsGenericListType,
         TypeName,
+        IsNullableType,
         IsReferenceType,
         Name,
         DefaultValue);

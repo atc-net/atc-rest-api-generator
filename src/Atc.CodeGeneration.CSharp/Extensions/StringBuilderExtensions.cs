@@ -23,11 +23,13 @@ public static class StringBuilderExtensions
         this StringBuilder sb,
         string? genericTypeName,
         string typeName,
+        bool isNullableType,
         string name)
         => sb.AppendTypeAndName(
             0,
             genericTypeName,
             typeName,
+            isNullableType,
             name,
             defaultValue: null);
 
@@ -36,11 +38,13 @@ public static class StringBuilderExtensions
         int indentSpaces,
         string? genericTypeName,
         string typeName,
+        bool isNullableType,
         string name)
         => sb.AppendTypeAndName(
             indentSpaces,
             genericTypeName,
             typeName,
+            isNullableType,
             name,
             defaultValue: null);
 
@@ -49,14 +53,26 @@ public static class StringBuilderExtensions
         int indentSpaces,
         string? genericTypeName,
         string typeName,
+        bool isNullableType,
         string name,
         string? defaultValue)
     {
-        sb.Append(
-            indentSpaces,
-            string.IsNullOrEmpty(genericTypeName)
-                ? $"{typeName} {name}"
-                : $"{genericTypeName}<{typeName}> {name}");
+        if (isNullableType)
+        {
+            sb.Append(
+                indentSpaces,
+                string.IsNullOrEmpty(genericTypeName)
+                    ? $"{typeName}? {name}"
+                    : $"{genericTypeName}<{typeName}>? {name}");
+        }
+        else
+        {
+            sb.Append(
+                indentSpaces,
+                string.IsNullOrEmpty(genericTypeName)
+                    ? $"{typeName} {name}"
+                    : $"{genericTypeName}<{typeName}> {name}");
+        }
 
         if (string.IsNullOrEmpty(defaultValue))
         {
@@ -196,6 +212,7 @@ public static class StringBuilderExtensions
         IList<AttributeParameters>? attributes,
         string? genericTypeName,
         string typeName,
+        bool isNullableType,
         string name,
         string? defaultValue,
         bool useCommaForEndChar)
@@ -216,7 +233,7 @@ public static class StringBuilderExtensions
             }
         }
 
-        sb.AppendTypeAndName(indentSpaces, genericTypeName, typeName, name, defaultValue);
+        sb.AppendTypeAndName(indentSpaces, genericTypeName, typeName, isNullableType, name, defaultValue);
 
         if (useCommaForEndChar)
         {

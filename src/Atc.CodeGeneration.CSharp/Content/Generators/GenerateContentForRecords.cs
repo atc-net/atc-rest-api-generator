@@ -51,6 +51,7 @@ public class GenerateContentForRecords : IContentGenerator
                         item.Attributes,
                         item.GenericTypeName,
                         item.TypeName,
+                        item.IsNullableType,
                         item.Name,
                         item.DefaultValue,
                         useCommaForEndChar);
