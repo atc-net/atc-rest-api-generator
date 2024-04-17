@@ -127,7 +127,7 @@ public sealed class ContentGeneratorServerParameter : IContentGenerator
             sb.Append('>');
         }
 
-        if (item.IsNullable)
+        if (item is { IsNullable: true, UseListForDataType: false })
         {
             sb.Append('?');
         }
