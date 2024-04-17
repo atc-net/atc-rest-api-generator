@@ -160,7 +160,7 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
             $"--outputSlnPath {outputPath.FullName} " +
             $"--outputSrcPath {Path.Combine(outputPath.FullName, "src")} " +
             $"--outputTestPath {Path.Combine(outputPath.FullName, "test")} " +
-            "-v");
+            "--verbose");
 
         Assert.True(
             isSuccessful,
@@ -234,7 +234,7 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
             $"--specificationPath {specificationFile.FullName} " +
             $"--projectPrefixName {scenarioPath.Name} " +
             $"--outputPath {Path.Combine(outputPath.FullName, "src")} " +
-            "-v");
+            "--verbose");
 
         Assert.True(
             isSuccessful,
