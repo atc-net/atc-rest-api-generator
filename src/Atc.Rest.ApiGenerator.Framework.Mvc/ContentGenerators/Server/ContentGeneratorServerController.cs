@@ -36,6 +36,7 @@ public sealed class ContentGeneratorServerController : IContentGenerator
         sb.AppendLine("[ApiController]");
         sb.AppendLine($"[Route(\"{parameters.RouteBase}\")]");
         sb.AppendLine(codeAttributeGenerator.Generate());
+
         // TODO: sb.AppendLine($"public sealed class {parameters.ApiGroupName}Controller : ControllerBase");
         sb.AppendLine($"public class {parameters.ApiGroupName}Controller : ControllerBase");
         sb.AppendLine("{");
