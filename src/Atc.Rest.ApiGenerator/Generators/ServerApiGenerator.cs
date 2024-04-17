@@ -12,6 +12,9 @@ public class ServerApiGenerator
     private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
     private readonly ApiProjectOptions projectOptions;
 
+    private readonly IServerApiGenerator serverApiGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerApiGenerator();
+    private readonly IServerApiGenerator serverApiGeneratorMinimalApi = new Framework.Minimal.ProjectGenerator.ServerApiGenerator();
+
     private readonly string codeGeneratorContentHeader;
     private readonly AttributeParameters codeGeneratorAttribute;
 
@@ -41,13 +44,33 @@ public class ServerApiGenerator
     {
         logger.LogInformation($"{ContentWriterConstants.AreaGenerateCode} Working on server api generation ({projectOptions.ProjectName})");
 
-        var isVersionValid = ValidateVersioning();
-        if (!isVersionValid)
+        if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
         {
-            return false;
+            var isVersionValid = ValidateVersioning();
+            if (!isVersionValid)
+            {
+                return false;
+            }
         }
 
         ScaffoldSrc();
+
+        if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
+        {
+            serverApiGeneratorMvc.GeneratedAssemblyMarker(
+                logger,
+                projectOptions.ProjectName,
+                projectOptions.ApiGeneratorVersion,
+                projectOptions.PathForSrcGenerate);
+        }
+        else
+        {
+            serverApiGeneratorMinimalApi.GeneratedAssemblyMarker(
+                logger,
+                projectOptions.ProjectName,
+                projectOptions.ApiGeneratorVersion,
+                projectOptions.PathForSrcGenerate);
+        }
 
         CopyApiSpecification();
 
@@ -185,8 +208,6 @@ public class ServerApiGenerator
                 projectReferences: null,
                 includeApiSpecification: true,
                 usingCodingRules: projectOptions.UsingCodingRules);
-
-            ScaffoldBasicFileApiGenerated();
         }
     }
 
@@ -490,7 +511,8 @@ public class ServerApiGenerator
                 else
                 {
                     interfaceParameters = Framework.Minimal.Factories.Parameters.Server.ContentGeneratorServerHandlerInterfaceParametersFactory.Create(
-                        projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
+                        ////projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody, // TODO: For MinimalApi - Should we use ProblemDetails or move to "middleware generate a response body"
+                        useProblemDetails: false,
                         codeGeneratorContentHeader,
                         fullNamespace,
                         codeGeneratorAttribute,
@@ -570,7 +592,7 @@ public class ServerApiGenerator
             var endpointParameters = ContentGeneratorServerEndpointParametersFactory.Create(
                 operationSchemaMappings,
                 projectOptions.ProjectName,
-                ////projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody, // TODO: Find out how to handle this.. instead of false
+                ////projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody, // TODO: For MinimalApi - Should we use ProblemDetails or move to "middleware generate a response body"
                 useProblemDetailsAsDefaultBody: false,
                 $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Endpoints}",
                 apiGroupName,
@@ -632,30 +654,6 @@ public class ServerApiGenerator
         return $"{projectOptions.RouteBase}/{routeSuffix}";
     }
 
-    private void ScaffoldBasicFileApiGenerated()
-    {
-        var classParameters = ClassParametersFactory.Create(
-            codeGeneratorContentHeader,
-            projectOptions.ProjectName,
-            codeGeneratorAttribute,
-            "ApiRegistration");
-
-        var contentGeneratorClass = new GenerateContentForClass(
-            new CodeDocumentationTagsGenerator(),
-            classParameters);
-
-        var classContent = contentGeneratorClass.Generate();
-
-        var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "ApiRegistration.cs"));
-
-        var contentWriter = new ContentWriter(logger);
-        contentWriter.Write(
-            projectOptions.PathForSrcGenerate,
-            file,
-            ContentWriterArea.Src,
-            classContent);
-    }
-
     private void GenerateSrcGlobalUsingsForMvc(
         bool removeNamespaceGroupSeparatorInGlobalUsings)
     {
@@ -692,6 +690,7 @@ public class ServerApiGenerator
             "System.CodeDom.Compiler",
             "System.ComponentModel.DataAnnotations",
             "System.Net",
+            "Atc.Rest.Results",
             "Atc.Rest.MinimalApi.Abstractions",
             "Atc.Rest.MinimalApi.Filters.Endpoints",
             "Microsoft.AspNetCore.Authorization",

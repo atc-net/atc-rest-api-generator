@@ -11,8 +11,8 @@ public class ServerDomainGenerator
     private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
     private readonly DomainProjectOptions projectOptions;
 
-    private readonly string codeGeneratorContentHeader;
-    private readonly AttributeParameters codeGeneratorAttribute;
+    private readonly IServerDomainGenerator serverDomainGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerDomainGenerator();
+    private readonly IServerDomainGenerator serverDomainGeneratorMinimalApi = new Framework.Minimal.ProjectGenerator.ServerDomainGenerator();
 
     public ServerDomainGenerator(
         ILogger logger,
@@ -22,16 +22,6 @@ public class ServerDomainGenerator
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.nugetPackageReferenceProvider = nugetPackageReferenceProvider ?? throw new ArgumentNullException(nameof(nugetPackageReferenceProvider));
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
-
-        // TODO: Optimize codeGeneratorContentHeader & codeGeneratorAttribute
-        var codeHeaderGenerator = new GeneratedCodeHeaderGenerator(
-            new GeneratedCodeGeneratorParameters(
-                projectOptions.ApiGeneratorVersion));
-        codeGeneratorContentHeader = codeHeaderGenerator.Generate();
-
-        codeGeneratorAttribute = new AttributeParameters(
-            "GeneratedCode",
-            $"\"{ContentWriterConstants.ApiGeneratorName}\", \"{projectOptions.ApiGeneratorVersion}\"");
     }
 
     public bool Generate()
@@ -54,6 +44,23 @@ public class ServerDomainGenerator
         }
 
         ScaffoldSrc();
+
+        if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
+        {
+            serverDomainGeneratorMvc.GeneratedAssemblyMarker(
+                logger,
+                projectOptions.ProjectName,
+                projectOptions.ApiGeneratorVersion,
+                projectOptions.PathForSrcGenerate);
+        }
+        else
+        {
+            serverDomainGeneratorMinimalApi.GeneratedAssemblyMarker(
+                logger,
+                projectOptions.ProjectName,
+                projectOptions.ApiGeneratorVersion,
+                projectOptions.PathForSrcGenerate);
+        }
 
         if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
         {
@@ -273,6 +280,15 @@ public class ServerDomainGenerator
                 projectReferences.Add(projectOptions.ApiProjectSrcCsProj);
             }
 
+            IList<(string PackageId, string PackageVersion, string? SubElements)>? packageReferencesBaseLineForDomainProject = null;
+            if (projectOptions.AspNetOutputType == AspNetOutputType.MinimalApi)
+            {
+                TaskHelper.RunSync(async () =>
+                {
+                    packageReferencesBaseLineForDomainProject = await nugetPackageReferenceProvider.GetPackageReferencesBaseLineForDomainProjectForMinimalApi();
+                });
+            }
+
             SolutionAndProjectHelper.ScaffoldProjFile(
                 logger,
                 projectOptions.ProjectSrcCsProj,
@@ -283,12 +299,10 @@ public class ServerDomainGenerator
                 projectOptions.ProjectName,
                 "net8.0",
                 new List<string> { "Microsoft.AspNetCore.App" },
-                packageReferences: null,
+                packageReferences: packageReferencesBaseLineForDomainProject,
                 projectReferences,
                 includeApiSpecification: false,
                 usingCodingRules: projectOptions.UsingCodingRules);
-
-            ScaffoldBasicFileDomainRegistration();
         }
     }
 
@@ -352,33 +366,6 @@ public class ServerDomainGenerator
         }
     }
 
-    private void ScaffoldBasicFileDomainRegistration()
-    {
-        var classParameters = ClassParametersFactory.Create(
-            codeGeneratorContentHeader,
-            projectOptions.ProjectName,
-            codeGeneratorAttribute,
-            "DomainRegistration");
-
-        var contentGeneratorClass = new GenerateContentForClass(
-            new CodeDocumentationTagsGenerator(),
-            classParameters);
-
-        var classContent = contentGeneratorClass.Generate();
-
-        var file = new FileInfo(
-            Path.Combine(
-                projectOptions.PathForSrcGenerate.FullName,
-                "DomainRegistration.cs"));
-
-        var contentWriter = new ContentWriter(logger);
-        contentWriter.Write(
-            projectOptions.PathForSrcGenerate,
-            file,
-            ContentWriterArea.Src,
-            classContent);
-    }
-
     private void GenerateSrcGlobalUsingsForMvc(
         bool removeNamespaceGroupSeparatorInGlobalUsings)
     {
@@ -407,6 +394,7 @@ public class ServerDomainGenerator
         var requiredUsings = new List<string>
         {
             "System.CodeDom.Compiler",
+            "Atc.Rest.Results",
             "Microsoft.AspNetCore.Http.HttpResults",
         };
 
