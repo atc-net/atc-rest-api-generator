@@ -86,6 +86,7 @@ public class NugetPackageReferenceProvider : INugetPackageReferenceProvider
         {
             new("Asp.Versioning.Http", "8.1.0", null),
             new("Atc", atcVersion, null),
+            new("Atc.Rest", atcVersion, null),
             new("Atc.Rest.MinimalApi", "1.0.60", null),
             new("FluentValidation.AspNetCore", "11.3.0", null),
             new("Microsoft.AspNetCore.OpenApi", "8.0.3", null),
@@ -104,6 +105,18 @@ public class NugetPackageReferenceProvider : INugetPackageReferenceProvider
             new("Atc", atcVersion, null),
             new("Atc.Rest", atcVersion, null),
             new("Atc.Rest.Client", "1.0.36", null),
+        };
+
+        return packageReferences;
+    }
+
+    public async Task<IList<(string PackageId, string PackageVersion, string? SubElements)>?> GetPackageReferencesBaseLineForDomainProjectForMinimalApi()
+    {
+        var atcVersion = await GetAtcVersionAsString3();
+
+        var packageReferences = new List<(string, string, string?)>
+        {
+            new("Atc.Rest", atcVersion, null),
         };
 
         return packageReferences;

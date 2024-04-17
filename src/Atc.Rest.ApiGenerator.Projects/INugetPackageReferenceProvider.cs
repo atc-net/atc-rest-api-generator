@@ -15,6 +15,8 @@ public interface INugetPackageReferenceProvider
 
     Task<IList<(string PackageId, string PackageVersion, string? SubElements)>> GetPackageReferencesBaseLineForApiClientProject();
 
+    Task<IList<(string PackageId, string PackageVersion, string? SubElements)>?> GetPackageReferencesBaseLineForDomainProjectForMinimalApi();
+
     Task<IList<(string PackageId, string PackageVersion, string? SubElements)>> GetPackageReferencesBaseLineForTestProject(
             bool useMvc);
 }
