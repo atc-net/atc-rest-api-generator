@@ -37,10 +37,19 @@ public class ServerHostGenerator
     {
         logger.LogInformation($"{ContentWriterConstants.AreaGenerateCode} Working on server host generation ({projectOptions.ProjectName})");
 
-        if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc &&
-            !projectOptions.SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles(logger))
+        if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
         {
-            return false;
+            if (!projectOptions.SetPropertiesAfterValidationsOfProjectReferencesPathAndFilesForMvc(logger))
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if (!projectOptions.SetPropertiesAfterValidationsOfProjectReferencesPathAndFilesForMinimalApi(logger))
+            {
+                return false;
+            }
         }
 
         ScaffoldSrc();
@@ -516,6 +525,7 @@ public class ServerHostGenerator
         {
             "System.CodeDom.Compiler",
             "System.Reflection",
+            "Atc.Rest.Extended.Options",
             "Asp.Versioning.ApiExplorer",
             "Microsoft.Extensions.Options",
             "Microsoft.OpenApi.Models",

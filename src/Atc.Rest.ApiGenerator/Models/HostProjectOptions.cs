@@ -44,7 +44,7 @@ public class HostProjectOptions : BaseProjectOptions
 
     public bool UseRestExtended { get; set; }
 
-    public bool SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles(
+    public bool SetPropertiesAfterValidationsOfProjectReferencesPathAndFilesForMvc(
         ILogger logger)
     {
         if (ApiProjectSrcPath.Exists)
@@ -71,6 +71,54 @@ public class HostProjectOptions : BaseProjectOptions
         if (DomainProjectSrcPath.Exists)
         {
             var files = Directory.GetFiles(DomainProjectSrcPath.FullName, "DomainRegistration.cs", SearchOption.AllDirectories);
+            if (files.Length == 1)
+            {
+                DomainProjectSrcPath = new FileInfo(files[0]).Directory!;
+                files = Directory.GetFiles(DomainProjectSrcPath.FullName, "*.csproj", SearchOption.AllDirectories);
+                if (files.Length == 1)
+                {
+                    DomainProjectSrcCsProj = new FileInfo(files[0]);
+                }
+            }
+        }
+
+        if (DomainProjectSrcCsProj is null ||
+            !DomainProjectSrcCsProj.Exists)
+        {
+            logger.LogError($"{EmojisConstants.Error} {ValidationRuleNameConstants.ProjectHostGenerated05} - Can't find Domain .csproj file");
+            return false;
+        }
+
+        return true;
+    }
+
+    public bool SetPropertiesAfterValidationsOfProjectReferencesPathAndFilesForMinimalApi(
+        ILogger logger)
+    {
+        if (ApiProjectSrcPath.Exists)
+        {
+            var files = Directory.GetFiles(ApiProjectSrcPath.FullName, "IApiContractAssemblyMarker.cs", SearchOption.AllDirectories);
+            if (files.Length == 1)
+            {
+                ApiProjectSrcPath = new FileInfo(files[0]).Directory!;
+                files = Directory.GetFiles(ApiProjectSrcPath.FullName, "*.csproj", SearchOption.AllDirectories);
+                if (files.Length == 1)
+                {
+                    ApiProjectSrcCsProj = new FileInfo(files[0]);
+                }
+            }
+        }
+
+        if (ApiProjectSrcCsProj is null ||
+            !ApiProjectSrcCsProj.Exists)
+        {
+            logger.LogError($"{EmojisConstants.Error} {ValidationRuleNameConstants.ProjectHostGenerated04} - Can't find API .csproj file");
+            return false;
+        }
+
+        if (DomainProjectSrcPath.Exists)
+        {
+            var files = Directory.GetFiles(DomainProjectSrcPath.FullName, "IDomainAssemblyMarker.cs", SearchOption.AllDirectories);
             if (files.Length == 1)
             {
                 DomainProjectSrcPath = new FileInfo(files[0]).Directory!;

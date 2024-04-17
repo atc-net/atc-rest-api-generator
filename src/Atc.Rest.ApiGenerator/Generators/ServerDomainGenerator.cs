@@ -38,9 +38,19 @@ public class ServerDomainGenerator
     {
         logger.LogInformation($"{ContentWriterConstants.AreaGenerateCode} Working on server domain generation ({projectOptions.ProjectName})");
 
-        if (!projectOptions.SetPropertiesAfterValidationsOfProjectReferencesPathAndFiles(logger))
+        if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
         {
-            return false;
+            if (!projectOptions.SetPropertiesAfterValidationsOfProjectReferencesPathAndFilesForMvc(logger))
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if (!projectOptions.SetPropertiesAfterValidationsOfProjectReferencesPathAndFilesForMinimalApi(logger))
+            {
+                return false;
+            }
         }
 
         ScaffoldSrc();
