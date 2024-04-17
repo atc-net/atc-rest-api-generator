@@ -20,7 +20,7 @@ public class EventArgsController : ControllerBase
     /// Operation: GetEventArgs.
     /// </summary>
     [HttpGet]
-    [ProducesResponseType(typeof(List<Demo.Api.Generated.Contracts.EventArgs.EventArgs>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IEnumerable<Demo.Api.Generated.Contracts.EventArgs.EventArgs>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     public async Task<ActionResult> GetEventArgs(
