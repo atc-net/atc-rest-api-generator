@@ -12,22 +12,36 @@ public class ServerApiGenerator
     private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
     private readonly ApiProjectOptions projectOptions;
 
-    private readonly IServerApiGenerator serverApiGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerApiGenerator();
-    private readonly IServerApiGenerator serverApiGeneratorMinimalApi = new Framework.Minimal.ProjectGenerator.ServerApiGenerator();
+    private readonly IServerApiGenerator serverApiGeneratorMvc;
+    private readonly IServerApiGenerator serverApiGeneratorMinimalApi;
 
     private readonly string codeGeneratorContentHeader;
     private readonly AttributeParameters codeGeneratorAttribute;
 
     public ServerApiGenerator(
-        ILogger logger,
+        ILoggerFactory loggerFactory,
         IApiOperationExtractor apiOperationExtractor,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
         ApiProjectOptions projectOptions)
     {
-        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        ArgumentNullException.ThrowIfNull(loggerFactory);
+
+        logger = loggerFactory.CreateLogger<ServerDomainGenerator>();
         this.apiOperationExtractor = apiOperationExtractor ?? throw new ArgumentNullException(nameof(apiOperationExtractor));
         this.nugetPackageReferenceProvider = nugetPackageReferenceProvider ?? throw new ArgumentNullException(nameof(nugetPackageReferenceProvider));
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
+
+        serverApiGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerApiGenerator(
+            loggerFactory,
+            projectOptions.ApiGeneratorVersion,
+            projectOptions.ProjectName,
+            projectOptions.PathForSrcGenerate);
+
+        serverApiGeneratorMinimalApi = new Framework.Minimal.ProjectGenerator.ServerApiGenerator(
+            loggerFactory,
+            projectOptions.ApiGeneratorVersion,
+            projectOptions.ProjectName,
+            projectOptions.PathForSrcGenerate);
 
         // TODO: Optimize codeGeneratorContentHeader & codeGeneratorAttribute
         var codeHeaderGenerator = new GeneratedCodeHeaderGenerator(
@@ -57,19 +71,19 @@ public class ServerApiGenerator
 
         if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
         {
-            serverApiGeneratorMvc.GeneratedAssemblyMarker(
-                logger,
-                projectOptions.ProjectName,
-                projectOptions.ApiGeneratorVersion,
-                projectOptions.PathForSrcGenerate);
+            serverApiGeneratorMvc.GenerateAssemblyMarker();
+
+            serverApiGeneratorMvc.MaintainGlobalUsings(
+                projectOptions.ApiGroupNames,
+                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
         }
         else
         {
-            serverApiGeneratorMinimalApi.GeneratedAssemblyMarker(
-                logger,
-                projectOptions.ProjectName,
-                projectOptions.ApiGeneratorVersion,
-                projectOptions.PathForSrcGenerate);
+            serverApiGeneratorMinimalApi.GenerateAssemblyMarker();
+
+            serverApiGeneratorMinimalApi.MaintainGlobalUsings(
+                projectOptions.ApiGroupNames,
+                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
         }
 
         CopyApiSpecification();

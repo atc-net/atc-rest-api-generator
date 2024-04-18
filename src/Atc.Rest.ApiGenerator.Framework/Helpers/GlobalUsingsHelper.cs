@@ -1,6 +1,6 @@
 // ReSharper disable ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
 // ReSharper disable LoopCanBeConvertedToQuery
-namespace Atc.Rest.ApiGenerator.Helpers
+namespace Atc.Rest.ApiGenerator.Framework.Helpers
 {
     public static class GlobalUsingsHelper
     {

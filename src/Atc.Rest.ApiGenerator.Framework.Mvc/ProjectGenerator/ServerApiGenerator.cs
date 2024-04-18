@@ -2,25 +2,38 @@ namespace Atc.Rest.ApiGenerator.Framework.Mvc.ProjectGenerator;
 
 public class ServerApiGenerator : IServerApiGenerator
 {
-    public void GeneratedAssemblyMarker(
-        ILogger logger,
-        string projectName,
-        Version projectVersion,
-        DirectoryInfo path)
-    {
-        ArgumentNullException.ThrowIfNull(logger);
-        ArgumentNullException.ThrowIfNull(projectName);
-        ArgumentNullException.ThrowIfNull(projectVersion);
-        ArgumentNullException.ThrowIfNull(path);
+    private readonly ILogger<ServerApiGenerator> logger;
+    private readonly Version apiGeneratorVersion;
+    private readonly string projectName;
+    private readonly DirectoryInfo projectPath;
 
+    public ServerApiGenerator(
+        ILoggerFactory loggerFactory,
+        Version apiGeneratorVersion,
+        string projectName,
+        DirectoryInfo projectPath)
+    {
+        ArgumentNullException.ThrowIfNull(loggerFactory);
+        ArgumentNullException.ThrowIfNull(apiGeneratorVersion);
+        ArgumentNullException.ThrowIfNull(projectName);
+        ArgumentNullException.ThrowIfNull(projectPath);
+
+        logger = loggerFactory.CreateLogger<ServerApiGenerator>();
+        this.apiGeneratorVersion = apiGeneratorVersion;
+        this.projectName = projectName;
+        this.projectPath = projectPath;
+    }
+
+    public void GenerateAssemblyMarker()
+    {
         var codeHeaderGenerator = new GeneratedCodeHeaderGenerator(
             new GeneratedCodeGeneratorParameters(
-                projectVersion));
+                apiGeneratorVersion));
         var codeGeneratorContentHeader = codeHeaderGenerator.Generate();
 
         var codeGeneratorAttribute = AttributeParametersFactory.Create(
             "GeneratedCode",
-            $"\"{ContentWriterConstants.ApiGeneratorName}\", \"{projectVersion}\"");
+            $"\"{ContentWriterConstants.ApiGeneratorName}\", \"{apiGeneratorVersion}\"");
 
         var classParameters = ClassParametersFactory.Create(
             codeGeneratorContentHeader,
@@ -35,14 +48,45 @@ public class ServerApiGenerator : IServerApiGenerator
         var content = contentGenerator.Generate();
 
         var file = new FileInfo(Path.Combine(
-            path.FullName,
+            projectPath.FullName,
             "ApiRegistration.cs"));
 
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
-            path,
+            projectPath,
             file,
             ContentWriterArea.Src,
             content);
+    }
+
+    public void MaintainGlobalUsings(
+        IList<string> apiGroupNames,
+        bool removeNamespaceGroupSeparatorInGlobalUsings)
+    {
+        ArgumentNullException.ThrowIfNull(apiGroupNames);
+
+        var requiredUsings = new List<string>
+        {
+            "System.CodeDom.Compiler",
+            "System.ComponentModel.DataAnnotations",
+            "System.Net",
+            "Microsoft.AspNetCore.Authorization",
+            "Microsoft.AspNetCore.Http",
+            "Microsoft.AspNetCore.Mvc",
+            "Atc.Rest.Results",
+            $"{projectName}.Contracts",
+        };
+
+        foreach (var apiGroupName in apiGroupNames)
+        {
+            requiredUsings.Add($"{projectName}.Contracts.{apiGroupName}");
+        }
+
+        GlobalUsingsHelper.CreateOrUpdate(
+            logger,
+            ContentWriterArea.Src,
+            projectPath,
+            requiredUsings,
+            removeNamespaceGroupSeparatorInGlobalUsings);
     }
 }

@@ -4,6 +4,7 @@ namespace Atc.Rest.ApiGenerator.Helpers;
 public static class GenerateHelper
 {
     public static bool GenerateServerApi(
+        ILoggerFactory loggerFactory,
         ILogger logger,
         AspNetOutputType aspNetOutputType,
         IApiOperationExtractor apiOperationExtractor,
@@ -34,11 +35,12 @@ public static class GenerateHelper
             apiOptions,
             useCodingRules,
             removeNamespaceGroupSeparatorInGlobalUsings);
-        var serverApiGenerator = new ServerApiGenerator(logger, apiOperationExtractor, nugetPackageReferenceProvider, projectOptions);
+        var serverApiGenerator = new ServerApiGenerator(loggerFactory, apiOperationExtractor, nugetPackageReferenceProvider, projectOptions);
         return serverApiGenerator.Generate();
     }
 
     public static bool GenerateServerDomain(
+        ILoggerFactory loggerFactory,
         ILogger logger,
         AspNetOutputType aspNetOutputType,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
@@ -69,7 +71,7 @@ public static class GenerateHelper
             useCodingRules,
             removeNamespaceGroupSeparatorInGlobalUsings,
             apiPath);
-        var serverDomainGenerator = new ServerDomainGenerator(logger, nugetPackageReferenceProvider, domainProjectOptions);
+        var serverDomainGenerator = new ServerDomainGenerator(loggerFactory, nugetPackageReferenceProvider, domainProjectOptions);
         return serverDomainGenerator.Generate();
     }
 

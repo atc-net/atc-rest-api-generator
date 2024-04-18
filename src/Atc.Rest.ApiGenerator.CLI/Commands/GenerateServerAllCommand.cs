@@ -2,6 +2,7 @@ namespace Atc.Rest.ApiGenerator.CLI.Commands;
 
 public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
 {
+    private readonly ILoggerFactory loggerFactory;
     private readonly ILogger<GenerateServerAllCommand> logger;
     private readonly IApiOperationExtractor apiOperationExtractor;
     private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
@@ -9,13 +10,14 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
     private readonly IOpenApiDocumentValidator openApiDocumentValidator;
 
     public GenerateServerAllCommand(
-        ILogger<GenerateServerAllCommand> logger,
+        ILoggerFactory loggerFactory,
         IApiOperationExtractor apiOperationExtractor,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
         IAtcCodingRulesUpdater atcCodingRulesUpdater,
         IOpenApiDocumentValidator openApiDocumentValidator)
     {
-        this.logger = logger;
+        this.loggerFactory = loggerFactory;
+        logger = loggerFactory.CreateLogger<GenerateServerAllCommand>();
         this.apiOperationExtractor = apiOperationExtractor;
         this.nugetPackageReferenceProvider = nugetPackageReferenceProvider;
         this.atcCodingRulesUpdater = atcCodingRulesUpdater;
@@ -86,6 +88,7 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
             }
 
             if (!GenerateHelper.GenerateServerApi(
+                loggerFactory,
                 logger,
                 aspNetOutputType,
                 apiOperationExtractor,
@@ -102,6 +105,7 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
             }
 
             if (!GenerateHelper.GenerateServerDomain(
+                    loggerFactory,
                     logger,
                     aspNetOutputType,
                     nugetPackageReferenceProvider,

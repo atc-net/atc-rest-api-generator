@@ -4,7 +4,6 @@ global using System.Text;
 
 global using Atc.CodeDocumentation.CodeComment;
 global using Atc.CodeGeneration.CSharp.Content;
-global using Atc.CodeGeneration.CSharp.Content.Factories;
 global using Atc.CodeGeneration.CSharp.Content.Generators;
 global using Atc.Console.Spectre;
 global using Atc.DotNet;
@@ -17,6 +16,7 @@ global using Atc.Rest.ApiGenerator.Framework.Contracts.Options;
 global using Atc.Rest.ApiGenerator.Framework.Factories.Parameters.Client;
 global using Atc.Rest.ApiGenerator.Framework.Factories.Parameters.Server;
 global using Atc.Rest.ApiGenerator.Framework.Factories.Parameters.ServerClient;
+global using Atc.Rest.ApiGenerator.Framework.Helpers;
 global using Atc.Rest.ApiGenerator.Framework.Minimal.Factories.Parameters.Server;
 global using Atc.Rest.ApiGenerator.Framework.Mvc.ContentGenerators.Client;
 global using Atc.Rest.ApiGenerator.Framework.Mvc.Factories.Parameters.Server;

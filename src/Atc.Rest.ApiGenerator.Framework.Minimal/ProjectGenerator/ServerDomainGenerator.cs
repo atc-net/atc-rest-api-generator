@@ -4,25 +4,38 @@ namespace Atc.Rest.ApiGenerator.Framework.Minimal.ProjectGenerator;
 
 public class ServerDomainGenerator : IServerDomainGenerator
 {
-    public void GeneratedAssemblyMarker(
-        ILogger logger,
-        string projectName,
-        Version projectVersion,
-        DirectoryInfo path)
-    {
-        ArgumentNullException.ThrowIfNull(logger);
-        ArgumentNullException.ThrowIfNull(projectName);
-        ArgumentNullException.ThrowIfNull(projectVersion);
-        ArgumentNullException.ThrowIfNull(path);
+    private readonly ILogger<ServerDomainGenerator> logger;
+    private readonly Version apiGeneratorVersion;
+    private readonly string projectName;
+    private readonly DirectoryInfo projectPath;
 
+    public ServerDomainGenerator(
+        ILoggerFactory loggerFactory,
+        Version apiGeneratorVersion,
+        string projectName,
+        DirectoryInfo projectPath)
+    {
+        ArgumentNullException.ThrowIfNull(loggerFactory);
+        ArgumentNullException.ThrowIfNull(apiGeneratorVersion);
+        ArgumentNullException.ThrowIfNull(projectName);
+        ArgumentNullException.ThrowIfNull(projectPath);
+
+        logger = loggerFactory.CreateLogger<ServerDomainGenerator>();
+        this.apiGeneratorVersion = apiGeneratorVersion;
+        this.projectName = projectName;
+        this.projectPath = projectPath;
+    }
+
+    public void GenerateAssemblyMarker()
+    {
         var codeHeaderGenerator = new GeneratedCodeHeaderGenerator(
             new GeneratedCodeGeneratorParameters(
-                projectVersion));
+                apiGeneratorVersion));
         var codeGeneratorContentHeader = codeHeaderGenerator.Generate();
 
         var codeGeneratorAttribute = new AttributeParameters(
             "GeneratedCode",
-            $"\"{ContentWriterConstants.ApiGeneratorName}\", \"{projectVersion}\"");
+            $"\"{ContentWriterConstants.ApiGeneratorName}\", \"{apiGeneratorVersion}\"");
 
         var suppressMessageAvoidEmptyInterfaceAttribute = new AttributeParameters(
             "SuppressMessage",
@@ -42,38 +55,31 @@ public class ServerDomainGenerator : IServerDomainGenerator
 
         var file = new FileInfo(
             Path.Combine(
-                path.FullName,
+                projectPath.FullName,
                 "IDomainAssemblyMarker.cs"));
 
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
-            path,
+            projectPath,
             file,
             ContentWriterArea.Src,
             content);
     }
 
-    public void GenerateCollectionExtensions(
-        ILogger logger,
-        string projectName,
-        Version projectVersion,
-        DirectoryInfo path,
+    public void GenerateServiceCollectionExtensions(
         OpenApiDocument openApiDocument)
     {
-        ArgumentNullException.ThrowIfNull(logger);
-        ArgumentNullException.ThrowIfNull(projectName);
-        ArgumentNullException.ThrowIfNull(projectVersion);
-        ArgumentNullException.ThrowIfNull(path);
         ArgumentNullException.ThrowIfNull(openApiDocument);
 
         var codeHeaderGenerator = new GeneratedCodeHeaderGenerator(
             new GeneratedCodeGeneratorParameters(
-                projectVersion));
+                apiGeneratorVersion));
+
         var codeGeneratorContentHeader = codeHeaderGenerator.Generate();
 
         var attributes = AttributesParametersFactory.Create(
             "GeneratedCode",
-            $"\"{ContentWriterConstants.ApiGeneratorName}\", \"{projectVersion}\"");
+            $"\"{ContentWriterConstants.ApiGeneratorName}\", \"{apiGeneratorVersion}\"");
 
         var sbServicesHandlerRegistrations = new StringBuilder();
         foreach (var urlPath in openApiDocument.Paths)
@@ -210,14 +216,39 @@ public class ServerDomainGenerator : IServerDomainGenerator
 
         var file = new FileInfo(
             Path.Combine(
-                Path.Combine(path.FullName, "Extensions"),
+                Path.Combine(projectPath.FullName, "Extensions"),
                 "ServiceCollectionExtensions.cs"));
 
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
-            path,
+            projectPath,
             file,
             ContentWriterArea.Src,
             content);
+    }
+
+    public void MaintainGlobalUsings(
+        string apiProjectName,
+        IList<string> apiGroupNames,
+        bool removeNamespaceGroupSeparatorInGlobalUsings)
+    {
+        ArgumentNullException.ThrowIfNull(projectName);
+        ArgumentNullException.ThrowIfNull(apiGroupNames);
+
+        var requiredUsings = new List<string>
+        {
+            "System.CodeDom.Compiler",
+            "Atc.Rest.Results",
+            "Microsoft.AspNetCore.Http.HttpResults",
+        };
+
+        requiredUsings.AddRange(apiGroupNames.Select(x => $"{apiProjectName}.Contracts.{x}"));
+
+        GlobalUsingsHelper.CreateOrUpdate(
+            logger,
+            ContentWriterArea.Src,
+            projectPath,
+            requiredUsings,
+            removeNamespaceGroupSeparatorInGlobalUsings);
     }
 }

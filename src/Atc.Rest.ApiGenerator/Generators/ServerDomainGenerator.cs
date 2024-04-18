@@ -11,17 +11,31 @@ public class ServerDomainGenerator
     private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
     private readonly DomainProjectOptions projectOptions;
 
-    private readonly IServerDomainGenerator serverDomainGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerDomainGenerator();
-    private readonly IServerDomainGenerator serverDomainGeneratorMinimalApi = new Framework.Minimal.ProjectGenerator.ServerDomainGenerator();
+    private readonly IServerDomainGenerator serverDomainGeneratorMvc;
+    private readonly IServerDomainGenerator serverDomainGeneratorMinimalApi;
 
     public ServerDomainGenerator(
-        ILogger logger,
+        ILoggerFactory loggerFactory,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
         DomainProjectOptions projectOptions)
     {
-        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        ArgumentNullException.ThrowIfNull(loggerFactory);
+
+        logger = loggerFactory.CreateLogger<ServerDomainGenerator>();
         this.nugetPackageReferenceProvider = nugetPackageReferenceProvider ?? throw new ArgumentNullException(nameof(nugetPackageReferenceProvider));
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
+
+        serverDomainGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerDomainGenerator(
+            loggerFactory,
+            projectOptions.ApiGeneratorVersion,
+            projectOptions.ProjectName,
+            projectOptions.PathForSrcGenerate);
+
+        serverDomainGeneratorMinimalApi = new Framework.Minimal.ProjectGenerator.ServerDomainGenerator(
+            loggerFactory,
+            projectOptions.ApiGeneratorVersion,
+            projectOptions.ProjectName,
+            projectOptions.PathForSrcGenerate);
     }
 
     public bool Generate()
@@ -47,26 +61,24 @@ public class ServerDomainGenerator
 
         if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
         {
-            serverDomainGeneratorMvc.GeneratedAssemblyMarker(
-                logger,
-                projectOptions.ProjectName,
-                projectOptions.ApiGeneratorVersion,
-                projectOptions.PathForSrcGenerate);
+            serverDomainGeneratorMvc.GenerateAssemblyMarker();
+
+            serverDomainGeneratorMvc.MaintainGlobalUsings(
+                projectOptions.ProjectName.Replace(".Domain", ".Api.Generated", StringComparison.Ordinal),
+                projectOptions.ApiGroupNames,
+                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
         }
         else
         {
-            serverDomainGeneratorMinimalApi.GeneratedAssemblyMarker(
-                logger,
-                projectOptions.ProjectName,
-                projectOptions.ApiGeneratorVersion,
-                projectOptions.PathForSrcGenerate);
+            serverDomainGeneratorMinimalApi.GenerateAssemblyMarker();
 
-            serverDomainGeneratorMinimalApi.GenerateCollectionExtensions(
-                logger,
-                projectOptions.ProjectName,
-                projectOptions.ApiGeneratorVersion,
-                projectOptions.PathForSrcGenerate,
+            serverDomainGeneratorMinimalApi.GenerateServiceCollectionExtensions(
                 projectOptions.Document);
+
+            serverDomainGeneratorMvc.MaintainGlobalUsings(
+                projectOptions.ProjectName.Replace(".Domain", ".Api.Generated", StringComparison.Ordinal),
+                projectOptions.ApiGroupNames,
+                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
         }
 
         if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
@@ -76,15 +88,6 @@ public class ServerDomainGenerator
         else
         {
             GenerateSrcMinimalApiHandlers(projectOptions.Document);
-        }
-
-        if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
-        {
-            GenerateSrcGlobalUsingsForMvc(projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
-        }
-        else
-        {
-            GenerateSrcGlobalUsingsForMinimalApi(projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
         }
 
         if (projectOptions.PathForTestGenerate is not null)
@@ -371,52 +374,6 @@ public class ServerDomainGenerator
                 includeApiSpecification: true,
                 usingCodingRules: projectOptions.UsingCodingRules);
         }
-    }
-
-    private void GenerateSrcGlobalUsingsForMvc(
-        bool removeNamespaceGroupSeparatorInGlobalUsings)
-    {
-        var requiredUsings = new List<string>
-        {
-            "System.CodeDom.Compiler",
-        };
-
-        var projectName = projectOptions.ProjectName.Replace(".Domain", ".Api.Generated", StringComparison.Ordinal);
-        foreach (var apiGroupName in projectOptions.ApiGroupNames)
-        {
-            requiredUsings.Add($"{projectName}.Contracts.{apiGroupName}");
-        }
-
-        GlobalUsingsHelper.CreateOrUpdate(
-            logger,
-            ContentWriterArea.Src,
-            projectOptions.PathForSrcGenerate,
-            requiredUsings,
-            removeNamespaceGroupSeparatorInGlobalUsings);
-    }
-
-    private void GenerateSrcGlobalUsingsForMinimalApi(
-        bool removeNamespaceGroupSeparatorInGlobalUsings)
-    {
-        var requiredUsings = new List<string>
-        {
-            "System.CodeDom.Compiler",
-            "Atc.Rest.Results",
-            "Microsoft.AspNetCore.Http.HttpResults",
-        };
-
-        var projectName = projectOptions.ProjectName.Replace(".Domain", ".Api.Generated", StringComparison.Ordinal);
-        foreach (var apiGroupName in projectOptions.ApiGroupNames)
-        {
-            requiredUsings.Add($"{projectName}.Contracts.{apiGroupName}");
-        }
-
-        GlobalUsingsHelper.CreateOrUpdate(
-            logger,
-            ContentWriterArea.Src,
-            projectOptions.PathForSrcGenerate,
-            requiredUsings,
-            removeNamespaceGroupSeparatorInGlobalUsings);
     }
 
     private void GenerateTestGlobalUsings(
