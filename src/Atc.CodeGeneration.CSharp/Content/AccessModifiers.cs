@@ -19,6 +19,9 @@ public enum AccessModifiers
     [Description("public class")]
     PublicClass,
 
+    [Description("public static class")]
+    PublicStaticClass,
+
     [Description("public record")]
     PublicRecord,
 
