@@ -82,7 +82,6 @@ public class GenerateServerApiCommand : AsyncCommand<ServerApiCommandSettings>
 
             if (!GenerateHelper.GenerateServerApi(
                     loggerFactory,
-                    logger,
                     aspNetOutputType,
                     apiOperationExtractor,
                     nugetPackageReferenceProvider,

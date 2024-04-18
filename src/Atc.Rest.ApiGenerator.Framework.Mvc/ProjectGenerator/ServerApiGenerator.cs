@@ -77,10 +77,7 @@ public class ServerApiGenerator : IServerApiGenerator
             $"{projectName}.Contracts",
         };
 
-        foreach (var apiGroupName in apiGroupNames)
-        {
-            requiredUsings.Add($"{projectName}.Contracts.{apiGroupName}");
-        }
+        requiredUsings.AddRange(apiGroupNames.Select(x => $"{projectName}.Contracts.{x}"));
 
         GlobalUsingsHelper.CreateOrUpdate(
             logger,

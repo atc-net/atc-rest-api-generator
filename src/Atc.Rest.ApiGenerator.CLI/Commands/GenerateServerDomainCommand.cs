@@ -13,7 +13,7 @@ public class GenerateServerDomainCommand : AsyncCommand<ServerDomainCommandSetti
         IOpenApiDocumentValidator openApiDocumentValidator)
     {
         this.loggerFactory = loggerFactory;
-        this.logger = loggerFactory.CreateLogger<GenerateServerDomainCommand>();
+        logger = loggerFactory.CreateLogger<GenerateServerDomainCommand>();
         this.nugetPackageReferenceProvider = nugetPackageReferenceProvider;
         this.openApiDocumentValidator = openApiDocumentValidator;
     }
@@ -79,7 +79,6 @@ public class GenerateServerDomainCommand : AsyncCommand<ServerDomainCommandSetti
 
             if (!GenerateHelper.GenerateServerDomain(
                     loggerFactory,
-                    logger,
                     aspNetOutputType,
                     nugetPackageReferenceProvider,
                     settings.ProjectPrefixName,

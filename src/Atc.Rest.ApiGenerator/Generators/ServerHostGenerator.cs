@@ -10,17 +10,34 @@ public class ServerHostGenerator
     private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
     private readonly HostProjectOptions projectOptions;
 
+    private readonly IServerHostGenerator serverHostGeneratorMvc;
+    private readonly IServerHostGenerator serverHostGeneratorMinimalApi;
+
     private readonly string codeGeneratorContentHeader;
     private readonly AttributeParameters codeGeneratorAttribute;
 
     public ServerHostGenerator(
-        ILogger logger,
+        ILoggerFactory loggerFactory,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
         HostProjectOptions projectOptions)
     {
-        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        ArgumentNullException.ThrowIfNull(loggerFactory);
+
+        logger = loggerFactory.CreateLogger<ServerDomainGenerator>();
         this.nugetPackageReferenceProvider = nugetPackageReferenceProvider ?? throw new ArgumentNullException(nameof(nugetPackageReferenceProvider));
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
+
+        serverHostGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerHostGenerator(
+            loggerFactory,
+            projectOptions.ApiGeneratorVersion,
+            projectOptions.ProjectName,
+            projectOptions.PathForSrcGenerate);
+
+        serverHostGeneratorMinimalApi = new Framework.Minimal.ProjectGenerator.ServerHostGenerator(
+            loggerFactory,
+            projectOptions.ApiGeneratorVersion,
+            projectOptions.ProjectName,
+            projectOptions.PathForSrcGenerate);
 
         // TODO: Optimize codeGeneratorContentHeader & codeGeneratorAttribute
         var codeHeaderGenerator = new GeneratedCodeHeaderGenerator(
@@ -56,11 +73,17 @@ public class ServerHostGenerator
 
         if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
         {
-            GenerateSrcGlobalUsingsForMvc(projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
+            serverHostGeneratorMvc.MaintainGlobalUsings(
+                projectOptions.ProjectName.Replace(".Api", ".Domain", StringComparison.Ordinal),
+                projectOptions.ApiGroupNames,
+                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
         }
         else
         {
-            GenerateSrcGlobalUsingsForMinimalApi(projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
+            serverHostGeneratorMinimalApi.MaintainGlobalUsings(
+                projectOptions.ProjectName.Replace(".Api", ".Domain", StringComparison.Ordinal),
+                projectOptions.ApiGroupNames,
+                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
         }
 
         if (projectOptions.PathForTestGenerate is not null)
@@ -488,56 +511,6 @@ public class ServerHostGenerator
             ContentWriterArea.Test,
             content,
             overrideIfExist: false);
-    }
-
-    private void GenerateSrcGlobalUsingsForMvc(
-        bool removeNamespaceGroupSeparatorInGlobalUsings)
-    {
-        var requiredUsings = new List<string>
-        {
-            "System.CodeDom.Compiler",
-            "System.Reflection",
-            projectOptions.ProjectName.Replace(".Api", ".Domain", StringComparison.Ordinal),
-            $"{projectOptions.ProjectName}.Generated",
-        };
-
-        if (projectOptions.UseRestExtended)
-        {
-            requiredUsings.Add("Asp.Versioning.ApiExplorer");
-            requiredUsings.Add("Atc.Rest.Extended.Options");
-            requiredUsings.Add("Microsoft.Extensions.Options");
-            requiredUsings.Add("Microsoft.OpenApi.Models");
-            requiredUsings.Add("Swashbuckle.AspNetCore.SwaggerGen");
-        }
-
-        GlobalUsingsHelper.CreateOrUpdate(
-            logger,
-            ContentWriterArea.Src,
-            projectOptions.PathForSrcGenerate,
-            requiredUsings,
-            removeNamespaceGroupSeparatorInGlobalUsings);
-    }
-
-    private void GenerateSrcGlobalUsingsForMinimalApi(
-        bool removeNamespaceGroupSeparatorInGlobalUsings)
-    {
-        var requiredUsings = new List<string>
-        {
-            "System.CodeDom.Compiler",
-            "System.Reflection",
-            "Atc.Rest.Extended.Options",
-            "Asp.Versioning.ApiExplorer",
-            "Microsoft.Extensions.Options",
-            "Microsoft.OpenApi.Models",
-            "Swashbuckle.AspNetCore.SwaggerGen",
-        };
-
-        GlobalUsingsHelper.CreateOrUpdate(
-            logger,
-            ContentWriterArea.Src,
-            projectOptions.PathForSrcGenerate,
-            requiredUsings,
-            removeNamespaceGroupSeparatorInGlobalUsings);
     }
 
     private void GenerateTestGlobalUsings(

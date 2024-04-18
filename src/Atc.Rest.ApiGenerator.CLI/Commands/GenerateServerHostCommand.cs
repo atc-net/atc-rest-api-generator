@@ -2,16 +2,18 @@ namespace Atc.Rest.ApiGenerator.CLI.Commands;
 
 public class GenerateServerHostCommand : AsyncCommand<ServerHostCommandSettings>
 {
+    private readonly ILoggerFactory loggerFactory;
     private readonly ILogger<GenerateServerHostCommand> logger;
     private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
     private readonly IOpenApiDocumentValidator openApiDocumentValidator;
 
     public GenerateServerHostCommand(
-        ILogger<GenerateServerHostCommand> logger,
+        ILoggerFactory loggerFactory,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
         IOpenApiDocumentValidator openApiDocumentValidator)
     {
-        this.logger = logger;
+        this.loggerFactory = loggerFactory;
+        logger = loggerFactory.CreateLogger<GenerateServerHostCommand>();
         this.nugetPackageReferenceProvider = nugetPackageReferenceProvider;
         this.openApiDocumentValidator = openApiDocumentValidator;
     }
@@ -76,7 +78,7 @@ public class GenerateServerHostCommand : AsyncCommand<ServerHostCommandSettings>
             }
 
             if (!GenerateHelper.GenerateServerHost(
-                    logger,
+                    loggerFactory,
                     aspNetOutputType,
                     nugetPackageReferenceProvider,
                     settings.ProjectPrefixName,

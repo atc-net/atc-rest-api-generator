@@ -5,7 +5,6 @@ public static class GenerateHelper
 {
     public static bool GenerateServerApi(
         ILoggerFactory loggerFactory,
-        ILogger logger,
         AspNetOutputType aspNetOutputType,
         IApiOperationExtractor apiOperationExtractor,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
@@ -17,7 +16,6 @@ public static class GenerateHelper
         bool useCodingRules,
         bool removeNamespaceGroupSeparatorInGlobalUsings)
     {
-        ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(apiOperationExtractor);
         ArgumentNullException.ThrowIfNull(projectPrefixName);
         ArgumentNullException.ThrowIfNull(outputPath);
@@ -41,7 +39,6 @@ public static class GenerateHelper
 
     public static bool GenerateServerDomain(
         ILoggerFactory loggerFactory,
-        ILogger logger,
         AspNetOutputType aspNetOutputType,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
         string projectPrefixName,
@@ -53,7 +50,6 @@ public static class GenerateHelper
         bool removeNamespaceGroupSeparatorInGlobalUsings,
         DirectoryInfo apiPath)
     {
-        ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(projectPrefixName);
         ArgumentNullException.ThrowIfNull(outputSourcePath);
         ArgumentNullException.ThrowIfNull(apiDocumentContainer);
@@ -76,7 +72,7 @@ public static class GenerateHelper
     }
 
     public static bool GenerateServerHost(
-        ILogger logger,
+        ILoggerFactory loggerFactory,
         AspNetOutputType aspNetOutputType,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
         string projectPrefixName,
@@ -89,7 +85,6 @@ public static class GenerateHelper
         DirectoryInfo apiPath,
         DirectoryInfo domainPath)
     {
-        ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(projectPrefixName);
         ArgumentNullException.ThrowIfNull(outputSourcePath);
         ArgumentNullException.ThrowIfNull(apiDocumentContainer);
@@ -109,7 +104,7 @@ public static class GenerateHelper
             removeNamespaceGroupSeparatorInGlobalUsings,
             apiPath,
             domainPath);
-        var serverHostGenerator = new ServerHostGenerator(logger, nugetPackageReferenceProvider, hostProjectOptions);
+        var serverHostGenerator = new ServerHostGenerator(loggerFactory, nugetPackageReferenceProvider, hostProjectOptions);
         return serverHostGenerator.Generate();
     }
 

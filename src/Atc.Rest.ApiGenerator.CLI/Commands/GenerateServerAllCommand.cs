@@ -89,7 +89,6 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
 
             if (!GenerateHelper.GenerateServerApi(
                 loggerFactory,
-                logger,
                 aspNetOutputType,
                 apiOperationExtractor,
                 nugetPackageReferenceProvider,
@@ -106,7 +105,6 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
 
             if (!GenerateHelper.GenerateServerDomain(
                     loggerFactory,
-                    logger,
                     aspNetOutputType,
                     nugetPackageReferenceProvider,
                     projectPrefixName,
@@ -122,7 +120,7 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
             }
 
             if (!GenerateHelper.GenerateServerHost(
-                    logger,
+                    loggerFactory,
                     aspNetOutputType,
                     nugetPackageReferenceProvider,
                     projectPrefixName,
