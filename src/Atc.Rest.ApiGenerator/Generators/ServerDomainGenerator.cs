@@ -75,7 +75,7 @@ public class ServerDomainGenerator
             serverDomainGeneratorMinimalApi.GenerateServiceCollectionExtensions(
                 projectOptions.Document);
 
-            serverDomainGeneratorMvc.MaintainGlobalUsings(
+            serverDomainGeneratorMinimalApi.MaintainGlobalUsings(
                 projectOptions.ProjectName.Replace(".Domain", ".Api.Generated", StringComparison.Ordinal),
                 projectOptions.ApiGroupNames,
                 projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);

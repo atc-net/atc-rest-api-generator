@@ -79,7 +79,8 @@ public static class StringBuilderExtensions
             return;
         }
 
-        if (typeName.Equals("string", StringComparison.Ordinal) &&
+        if (string.IsNullOrEmpty(genericTypeName) &&
+            typeName.Equals("string", StringComparison.Ordinal) &&
             !defaultValue.Equals("null", StringComparison.Ordinal))
         {
             sb.Append($" = \"{defaultValue}\"");

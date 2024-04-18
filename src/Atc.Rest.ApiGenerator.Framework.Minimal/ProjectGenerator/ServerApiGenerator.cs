@@ -76,6 +76,7 @@ public class ServerApiGenerator : IServerApiGenerator
         {
             "System.CodeDom.Compiler",
             "System.ComponentModel.DataAnnotations",
+            "System.Diagnostics.CodeAnalysis",
             "System.Net",
             "Atc.Rest.Results",
             "Atc.Rest.MinimalApi.Abstractions",

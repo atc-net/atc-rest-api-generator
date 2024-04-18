@@ -116,6 +116,7 @@ public class NugetPackageReferenceProvider : INugetPackageReferenceProvider
 
         var packageReferences = new List<(string, string, string?)>
         {
+            new("Atc.Azure.Options", "3.0.28", null),
             new("Atc.Rest", atcVersion, null),
         };
 

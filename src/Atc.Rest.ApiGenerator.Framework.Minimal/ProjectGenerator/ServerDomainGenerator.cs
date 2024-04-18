@@ -232,17 +232,22 @@ public class ServerDomainGenerator : IServerDomainGenerator
         IList<string> apiGroupNames,
         bool removeNamespaceGroupSeparatorInGlobalUsings)
     {
-        ArgumentNullException.ThrowIfNull(projectName);
         ArgumentNullException.ThrowIfNull(apiGroupNames);
 
         var requiredUsings = new List<string>
         {
             "System.CodeDom.Compiler",
+            "System.Diagnostics.CodeAnalysis",
+            "Atc.Azure.Options",
+            "Atc.Azure.Options.Environment",
             "Atc.Rest.Results",
             "Microsoft.AspNetCore.Http.HttpResults",
+            "Microsoft.Extensions.Configuration",
+            "Microsoft.Extensions.DependencyInjection",
         };
 
         requiredUsings.AddRange(apiGroupNames.Select(x => $"{apiProjectName}.Contracts.{x}"));
+        requiredUsings.AddRange(apiGroupNames.Select(x => $"{projectName}.{ContentGeneratorConstants.Handlers}.{x}"));
 
         GlobalUsingsHelper.CreateOrUpdate(
             logger,
