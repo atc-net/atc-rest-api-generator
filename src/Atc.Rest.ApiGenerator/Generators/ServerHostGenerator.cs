@@ -7,6 +7,7 @@ namespace Atc.Rest.ApiGenerator.Generators;
 public class ServerHostGenerator
 {
     private readonly ILogger logger;
+    private readonly IApiOperationExtractor apiOperationExtractor;
     private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
     private readonly HostProjectOptions projectOptions;
 
@@ -18,12 +19,14 @@ public class ServerHostGenerator
 
     public ServerHostGenerator(
         ILoggerFactory loggerFactory,
+        IApiOperationExtractor apiOperationExtractor,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
         HostProjectOptions projectOptions)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
 
         logger = loggerFactory.CreateLogger<ServerDomainGenerator>();
+        this.apiOperationExtractor = apiOperationExtractor ?? throw new ArgumentNullException(nameof(apiOperationExtractor));
         this.nugetPackageReferenceProvider = nugetPackageReferenceProvider ?? throw new ArgumentNullException(nameof(nugetPackageReferenceProvider));
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
 
@@ -31,13 +34,15 @@ public class ServerHostGenerator
             loggerFactory,
             projectOptions.ApiGeneratorVersion,
             projectOptions.ProjectName,
-            projectOptions.PathForSrcGenerate);
+            projectOptions.PathForSrcGenerate,
+            projectOptions.Document);
 
         serverHostGeneratorMinimalApi = new Framework.Minimal.ProjectGenerator.ServerHostGenerator(
             loggerFactory,
             projectOptions.ApiGeneratorVersion,
             projectOptions.ProjectName,
-            projectOptions.PathForSrcGenerate);
+            projectOptions.PathForSrcGenerate,
+            projectOptions.Document);
 
         // TODO: Optimize codeGeneratorContentHeader & codeGeneratorAttribute
         var codeHeaderGenerator = new GeneratedCodeHeaderGenerator(
@@ -88,6 +93,8 @@ public class ServerHostGenerator
 
         if (projectOptions.PathForTestGenerate is not null)
         {
+            var operationSchemaMappings = apiOperationExtractor.Extract(projectOptions.Document);
+
             logger.LogInformation($"{ContentWriterConstants.AreaGenerateTest} Working on server host unit-test generation ({projectOptions.ProjectName}.Tests)");
             ScaffoldTest();
 
@@ -96,7 +103,11 @@ public class ServerHostGenerator
                 GenerateTestEndpoints(projectOptions.Document);
             }
 
-            GenerateTestGlobalUsings(projectOptions.UsingCodingRules, projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
+            GenerateTestGlobalUsings(
+                projectOptions.UsingCodingRules,
+                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings,
+                projectOptions.Document,
+                operationSchemaMappings);
         }
 
         return true;
@@ -515,8 +526,13 @@ public class ServerHostGenerator
 
     private void GenerateTestGlobalUsings(
         bool usingCodingRules,
-        bool removeNamespaceGroupSeparatorInGlobalUsings)
+        bool removeNamespaceGroupSeparatorInGlobalUsings,
+        OpenApiDocument openApiDocument,
+        IList<ApiOperation> operationSchemaMappings)
     {
+        ArgumentNullException.ThrowIfNull(openApiDocument);
+        ArgumentNullException.ThrowIfNull(operationSchemaMappings);
+
         var requiredUsings = new List<string>
         {
             "System.CodeDom.Compiler",
@@ -525,7 +541,6 @@ public class ServerHostGenerator
             "System.Text.Json.Serialization",
             "System.Reflection",
             "Atc.XUnit",
-            "Atc.Rest.Results",
             "Atc.Rest.Options",
             "Microsoft.AspNetCore.Hosting",
             "Microsoft.AspNetCore.Http",
@@ -534,8 +549,17 @@ public class ServerHostGenerator
             "Microsoft.Extensions.Configuration",
             "Microsoft.Extensions.DependencyInjection",
             $"{projectOptions.ProjectName}.Generated",
-            $"{projectOptions.ProjectName}.Generated.Contracts",
         };
+
+        if (openApiDocument.IsUsingRequiredForAtcRestResults())
+        {
+            requiredUsings.Add("Atc.Rest.Results");
+        }
+
+        if (operationSchemaMappings.Any(apiOperation => apiOperation.Model.IsShared))
+        {
+            requiredUsings.Add($"{projectOptions.ProjectName}.Generated.Contracts");
+        }
 
         if (!usingCodingRules)
         {

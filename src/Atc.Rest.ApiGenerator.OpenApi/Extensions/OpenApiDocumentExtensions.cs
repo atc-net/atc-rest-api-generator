@@ -113,4 +113,74 @@ public static class OpenApiDocumentExtensions
 
         return serverUrl;
     }
+
+    public static bool IsUsingRequiredForSystemNet(
+        this OpenApiDocument openApiDocument,
+        bool useProblemDetailsAsDefaultBody)
+    {
+        foreach (var path in openApiDocument.Paths)
+        {
+            foreach (var openApiOperation in path.Value.Operations.Values)
+            {
+                foreach (var response in openApiOperation.Responses.OrderBy(x => x.Key, StringComparer.Ordinal))
+                {
+                    if (!Enum.TryParse(typeof(HttpStatusCode), response.Key, out var parsedType))
+                    {
+                        continue;
+                    }
+
+                    var httpStatusCode = (HttpStatusCode)parsedType;
+                    if (httpStatusCode == HttpStatusCode.OK)
+                    {
+                        continue;
+                    }
+
+                    var useProblemDetails = openApiOperation.Responses.IsSchemaTypeProblemDetailsForStatusCode(httpStatusCode);
+                    if (!useProblemDetails &&
+                        !useProblemDetailsAsDefaultBody)
+                    {
+                        continue;
+                    }
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public static bool IsUsingRequiredForAtcRestResults(
+        this OpenApiDocument openApiDocument)
+    {
+        foreach (var path in openApiDocument.Paths)
+        {
+            foreach (var openApiOperation in path.Value.Operations.Values)
+            {
+                foreach (var response in openApiOperation.Responses.OrderBy(x => x.Key, StringComparer.Ordinal))
+                {
+                    if (!Enum.TryParse(typeof(HttpStatusCode), response.Key, out var parsedType))
+                    {
+                        continue;
+                    }
+
+                    var httpStatusCode = (HttpStatusCode)parsedType;
+                    if (httpStatusCode != HttpStatusCode.OK)
+                    {
+                        continue;
+                    }
+
+                    var usePagination = openApiOperation.Responses.IsSchemaTypePaginationForStatusCode(httpStatusCode);
+                    if (!usePagination)
+                    {
+                        continue;
+                    }
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }

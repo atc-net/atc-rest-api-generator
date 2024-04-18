@@ -4,16 +4,19 @@ public class GenerateServerHostCommand : AsyncCommand<ServerHostCommandSettings>
 {
     private readonly ILoggerFactory loggerFactory;
     private readonly ILogger<GenerateServerHostCommand> logger;
+    private readonly IApiOperationExtractor apiOperationExtractor;
     private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
     private readonly IOpenApiDocumentValidator openApiDocumentValidator;
 
     public GenerateServerHostCommand(
         ILoggerFactory loggerFactory,
+        IApiOperationExtractor apiOperationExtractor,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
         IOpenApiDocumentValidator openApiDocumentValidator)
     {
         this.loggerFactory = loggerFactory;
         logger = loggerFactory.CreateLogger<GenerateServerHostCommand>();
+        this.apiOperationExtractor = apiOperationExtractor;
         this.nugetPackageReferenceProvider = nugetPackageReferenceProvider;
         this.openApiDocumentValidator = openApiDocumentValidator;
     }
@@ -79,6 +82,7 @@ public class GenerateServerHostCommand : AsyncCommand<ServerHostCommandSettings>
 
             if (!GenerateHelper.GenerateServerHost(
                     loggerFactory,
+                    apiOperationExtractor,
                     aspNetOutputType,
                     nugetPackageReferenceProvider,
                     settings.ProjectPrefixName,

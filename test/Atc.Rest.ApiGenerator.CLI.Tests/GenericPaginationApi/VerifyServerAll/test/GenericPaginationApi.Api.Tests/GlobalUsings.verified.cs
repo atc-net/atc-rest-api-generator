@@ -5,7 +5,6 @@ global using System.Text.Json;
 global using System.Text.Json.Serialization;
 
 global using Atc.Rest.Options;
-global using Atc.Rest.Results;
 global using Atc.XUnit;
 
 global using GenericPaginationApi.Api.Generated;

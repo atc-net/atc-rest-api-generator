@@ -121,6 +121,7 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
 
             if (!GenerateHelper.GenerateServerHost(
                     loggerFactory,
+                    apiOperationExtractor,
                     aspNetOutputType,
                     nugetPackageReferenceProvider,
                     projectPrefixName,

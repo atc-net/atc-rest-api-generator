@@ -15,5 +15,7 @@ public interface IServerApiGenerator
 
     void MaintainGlobalUsings(
         IList<string> apiGroupNames,
-        bool removeNamespaceGroupSeparatorInGlobalUsings);
+        bool removeNamespaceGroupSeparatorInGlobalUsings,
+        IList<ApiOperation> operationSchemaMappings,
+        bool useProblemDetailsAsDefaultBody);
 }

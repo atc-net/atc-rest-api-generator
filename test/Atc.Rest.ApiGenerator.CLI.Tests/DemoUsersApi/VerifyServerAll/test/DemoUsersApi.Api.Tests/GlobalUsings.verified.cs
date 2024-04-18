@@ -5,11 +5,9 @@ global using System.Text.Json;
 global using System.Text.Json.Serialization;
 
 global using Atc.Rest.Options;
-global using Atc.Rest.Results;
 global using Atc.XUnit;
 
 global using DemoUsersApi.Api.Generated;
-global using DemoUsersApi.Api.Generated.Contracts;
 global using DemoUsersApi.Api.Generated.Contracts.Users;
 
 global using Microsoft.AspNetCore.Hosting;

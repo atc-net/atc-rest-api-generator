@@ -13,8 +13,7 @@ public interface IServerDomainGenerator
 {
     void GenerateAssemblyMarker();
 
-    void GenerateServiceCollectionExtensions(
-        OpenApiDocument openApiDocument);
+    void GenerateServiceCollectionExtensions();
 
     void MaintainGlobalUsings(
         string apiProjectName,

@@ -8,22 +8,26 @@ public class ServerDomainGenerator : IServerDomainGenerator
     private readonly Version apiGeneratorVersion;
     private readonly string projectName;
     private readonly DirectoryInfo projectPath;
+    private readonly OpenApiDocument openApiDocument;
 
     public ServerDomainGenerator(
         ILoggerFactory loggerFactory,
         Version apiGeneratorVersion,
         string projectName,
-        DirectoryInfo projectPath)
+        DirectoryInfo projectPath,
+        OpenApiDocument openApiDocument)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
         ArgumentNullException.ThrowIfNull(apiGeneratorVersion);
         ArgumentNullException.ThrowIfNull(projectName);
         ArgumentNullException.ThrowIfNull(projectPath);
+        ArgumentNullException.ThrowIfNull(openApiDocument);
 
         logger = loggerFactory.CreateLogger<ServerDomainGenerator>();
         this.apiGeneratorVersion = apiGeneratorVersion;
         this.projectName = projectName;
         this.projectPath = projectPath;
+        this.openApiDocument = openApiDocument;
     }
 
     public void GenerateAssemblyMarker()
@@ -66,11 +70,8 @@ public class ServerDomainGenerator : IServerDomainGenerator
             content);
     }
 
-    public void GenerateServiceCollectionExtensions(
-        OpenApiDocument openApiDocument)
+    public void GenerateServiceCollectionExtensions()
     {
-        ArgumentNullException.ThrowIfNull(openApiDocument);
-
         var codeHeaderGenerator = new GeneratedCodeHeaderGenerator(
             new GeneratedCodeGeneratorParameters(
                 apiGeneratorVersion));

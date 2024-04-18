@@ -6,22 +6,26 @@ public class ServerApiGenerator : IServerApiGenerator
     private readonly Version apiGeneratorVersion;
     private readonly string projectName;
     private readonly DirectoryInfo projectPath;
+    private readonly OpenApiDocument openApiDocument;
 
     public ServerApiGenerator(
         ILoggerFactory loggerFactory,
         Version apiGeneratorVersion,
         string projectName,
-        DirectoryInfo projectPath)
+        DirectoryInfo projectPath,
+        OpenApiDocument openApiDocument)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
         ArgumentNullException.ThrowIfNull(apiGeneratorVersion);
         ArgumentNullException.ThrowIfNull(projectName);
         ArgumentNullException.ThrowIfNull(projectPath);
+        ArgumentNullException.ThrowIfNull(openApiDocument);
 
         logger = loggerFactory.CreateLogger<ServerApiGenerator>();
         this.apiGeneratorVersion = apiGeneratorVersion;
         this.projectName = projectName;
         this.projectPath = projectPath;
+        this.openApiDocument = openApiDocument;
     }
 
     public void GenerateAssemblyMarker()
@@ -68,9 +72,12 @@ public class ServerApiGenerator : IServerApiGenerator
 
     public void MaintainGlobalUsings(
         IList<string> apiGroupNames,
-        bool removeNamespaceGroupSeparatorInGlobalUsings)
+        bool removeNamespaceGroupSeparatorInGlobalUsings,
+        IList<ApiOperation> operationSchemaMappings,
+        bool useProblemDetailsAsDefaultBody)
     {
         ArgumentNullException.ThrowIfNull(apiGroupNames);
+        ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 
         var requiredUsings = new List<string>
         {

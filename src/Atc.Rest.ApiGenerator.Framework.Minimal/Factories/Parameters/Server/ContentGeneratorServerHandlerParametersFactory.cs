@@ -114,7 +114,7 @@ public static class ContentGeneratorServerHandlerParametersFactory
                 continue;
             }
 
-            var httpStatusCode = parsedType is HttpStatusCode code ? code : 0;
+            var httpStatusCode = (HttpStatusCode)parsedType;
 
             var isList = responses.IsSchemaTypeArrayForStatusCode(httpStatusCode);
             var modelName = responses.GetModelNameForStatusCode(httpStatusCode);

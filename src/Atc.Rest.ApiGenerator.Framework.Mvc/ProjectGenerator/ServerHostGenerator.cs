@@ -6,22 +6,26 @@ public class ServerHostGenerator : IServerHostGenerator
     private readonly Version apiGeneratorVersion;
     private readonly string projectName;
     private readonly DirectoryInfo projectPath;
+    private readonly OpenApiDocument openApiDocument;
 
     public ServerHostGenerator(
         ILoggerFactory loggerFactory,
         Version apiGeneratorVersion,
         string projectName,
-        DirectoryInfo projectPath)
+        DirectoryInfo projectPath,
+        OpenApiDocument openApiDocument)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
         ArgumentNullException.ThrowIfNull(apiGeneratorVersion);
         ArgumentNullException.ThrowIfNull(projectName);
         ArgumentNullException.ThrowIfNull(projectPath);
+        ArgumentNullException.ThrowIfNull(openApiDocument);
 
         logger = loggerFactory.CreateLogger<ServerHostGenerator>();
         this.apiGeneratorVersion = apiGeneratorVersion;
         this.projectName = projectName;
         this.projectPath = projectPath;
+        this.openApiDocument = openApiDocument;
     }
 
     public void MaintainGlobalUsings(

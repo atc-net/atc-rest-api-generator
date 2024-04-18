@@ -122,7 +122,7 @@ public static class ContentGeneratorServerEndpointParametersFactory
             projectName,
             useProblemDetailsAsDefaultBody,
             includeEmptyResponseTypes: true,
-            apiOperation.HasParametersOrRequestBody(),
+            includeIfNotDefinedValidation: useProblemDetailsAsDefaultBody && apiOperation.HasParametersOrRequestBody(),
             shouldUseAuthorization,
             includeIfNotDefinedInternalServerError: false);
 

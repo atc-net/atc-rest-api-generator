@@ -29,13 +29,15 @@ public class ServerDomainGenerator
             loggerFactory,
             projectOptions.ApiGeneratorVersion,
             projectOptions.ProjectName,
-            projectOptions.PathForSrcGenerate);
+            projectOptions.PathForSrcGenerate,
+            projectOptions.Document);
 
         serverDomainGeneratorMinimalApi = new Framework.Minimal.ProjectGenerator.ServerDomainGenerator(
             loggerFactory,
             projectOptions.ApiGeneratorVersion,
             projectOptions.ProjectName,
-            projectOptions.PathForSrcGenerate);
+            projectOptions.PathForSrcGenerate,
+            projectOptions.Document);
     }
 
     public bool Generate()
@@ -72,8 +74,7 @@ public class ServerDomainGenerator
         {
             serverDomainGeneratorMinimalApi.GenerateAssemblyMarker();
 
-            serverDomainGeneratorMinimalApi.GenerateServiceCollectionExtensions(
-                projectOptions.Document);
+            serverDomainGeneratorMinimalApi.GenerateServiceCollectionExtensions();
 
             serverDomainGeneratorMinimalApi.MaintainGlobalUsings(
                 projectOptions.ProjectName.Replace(".Domain", ".Api.Generated", StringComparison.Ordinal),

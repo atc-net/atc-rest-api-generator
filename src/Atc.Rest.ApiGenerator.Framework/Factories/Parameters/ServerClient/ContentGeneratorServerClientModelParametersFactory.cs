@@ -329,16 +329,14 @@ public static class ContentGeneratorServerClientModelParametersFactory
                     dataTypeForList = dataType;
                 }
 
-                if (dataTypeForList is null && useListForDataType)
+                string? defaultValue = null;
+                if (useListForDataType)
                 {
                     dataTypeForList = "List";
                 }
-
-                var defaultValue = GetDefaultValue(openApiParameter.Default, dataTypeForList);
-
-                if (dataType.Equals(dataTypeForList, StringComparison.Ordinal))
+                else
                 {
-                    dataTypeForList = "List";
+                    defaultValue = GetDefaultValue(openApiParameter.Default, dataTypeForList);
                 }
 
                 parameterBaseParameters.Add(

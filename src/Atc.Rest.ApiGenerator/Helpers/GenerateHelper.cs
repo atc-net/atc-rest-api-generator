@@ -73,6 +73,7 @@ public static class GenerateHelper
 
     public static bool GenerateServerHost(
         ILoggerFactory loggerFactory,
+        IApiOperationExtractor apiOperationExtractor,
         AspNetOutputType aspNetOutputType,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
         string projectPrefixName,
@@ -104,7 +105,7 @@ public static class GenerateHelper
             removeNamespaceGroupSeparatorInGlobalUsings,
             apiPath,
             domainPath);
-        var serverHostGenerator = new ServerHostGenerator(loggerFactory, nugetPackageReferenceProvider, hostProjectOptions);
+        var serverHostGenerator = new ServerHostGenerator(loggerFactory, apiOperationExtractor, nugetPackageReferenceProvider, hostProjectOptions);
         return serverHostGenerator.Generate();
     }
 

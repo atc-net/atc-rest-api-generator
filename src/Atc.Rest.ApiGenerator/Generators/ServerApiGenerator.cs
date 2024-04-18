@@ -35,13 +35,15 @@ public class ServerApiGenerator
             loggerFactory,
             projectOptions.ApiGeneratorVersion,
             projectOptions.ProjectName,
-            projectOptions.PathForSrcGenerate);
+            projectOptions.PathForSrcGenerate,
+            projectOptions.Document);
 
         serverApiGeneratorMinimalApi = new Framework.Minimal.ProjectGenerator.ServerApiGenerator(
             loggerFactory,
             projectOptions.ApiGeneratorVersion,
             projectOptions.ProjectName,
-            projectOptions.PathForSrcGenerate);
+            projectOptions.PathForSrcGenerate,
+            projectOptions.Document);
 
         // TODO: Optimize codeGeneratorContentHeader & codeGeneratorAttribute
         var codeHeaderGenerator = new GeneratedCodeHeaderGenerator(
@@ -69,13 +71,17 @@ public class ServerApiGenerator
 
         ScaffoldSrc();
 
+        var operationSchemaMappings = apiOperationExtractor.Extract(projectOptions.Document);
+
         if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
         {
             serverApiGeneratorMvc.GenerateAssemblyMarker();
 
             serverApiGeneratorMvc.MaintainGlobalUsings(
                 projectOptions.ApiGroupNames,
-                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
+                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings,
+                operationSchemaMappings,
+                projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody);
         }
         else
         {
@@ -83,12 +89,12 @@ public class ServerApiGenerator
 
             serverApiGeneratorMinimalApi.MaintainGlobalUsings(
                 projectOptions.ApiGroupNames,
-                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
+                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings,
+                operationSchemaMappings,
+                useProblemDetailsAsDefaultBody: false);
         }
 
         CopyApiSpecification();
-
-        var operationSchemaMappings = apiOperationExtractor.Extract(projectOptions.Document);
 
         GenerateModels(projectOptions.Document, operationSchemaMappings);
         GenerateParameters(projectOptions.Document);
@@ -103,12 +109,10 @@ public class ServerApiGenerator
         if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
         {
             GenerateMvcControllers(operationSchemaMappings);
-            GenerateSrcGlobalUsingsForMvc(projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
         }
         else
         {
             GenerateMinimalApiEndpoints(operationSchemaMappings);
-            GenerateSrcGlobalUsingsForMinimalApi(projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
         }
 
         return true;
@@ -666,65 +670,5 @@ public class ServerApiGenerator
             .FirstOrDefault();
 
         return $"{projectOptions.RouteBase}/{routeSuffix}";
-    }
-
-    private void GenerateSrcGlobalUsingsForMvc(
-        bool removeNamespaceGroupSeparatorInGlobalUsings)
-    {
-        var requiredUsings = new List<string>
-        {
-            "System.CodeDom.Compiler",
-            "System.ComponentModel.DataAnnotations",
-            "System.Net",
-            "Microsoft.AspNetCore.Authorization",
-            "Microsoft.AspNetCore.Http",
-            "Microsoft.AspNetCore.Mvc",
-            "Atc.Rest.Results",
-            $"{projectOptions.ProjectName}.Contracts",
-        };
-
-        foreach (var apiGroupName in projectOptions.ApiGroupNames)
-        {
-            requiredUsings.Add($"{projectOptions.ProjectName}.Contracts.{apiGroupName}");
-        }
-
-        GlobalUsingsHelper.CreateOrUpdate(
-            logger,
-            ContentWriterArea.Src,
-            projectOptions.PathForSrcGenerate,
-            requiredUsings,
-            removeNamespaceGroupSeparatorInGlobalUsings);
-    }
-
-    private void GenerateSrcGlobalUsingsForMinimalApi(
-        bool removeNamespaceGroupSeparatorInGlobalUsings)
-    {
-        var requiredUsings = new List<string>
-        {
-            "System.CodeDom.Compiler",
-            "System.ComponentModel.DataAnnotations",
-            "System.Net",
-            "Atc.Rest.Results",
-            "Atc.Rest.MinimalApi.Abstractions",
-            "Atc.Rest.MinimalApi.Filters.Endpoints",
-            "Microsoft.AspNetCore.Authorization",
-            "Microsoft.AspNetCore.Builder",
-            "Microsoft.AspNetCore.Http",
-            "Microsoft.AspNetCore.Http.HttpResults",
-            "Microsoft.AspNetCore.Mvc", // TODO: ????
-            $"{projectOptions.ProjectName}.Contracts",
-        };
-
-        foreach (var apiGroupName in projectOptions.ApiGroupNames)
-        {
-            requiredUsings.Add($"{projectOptions.ProjectName}.Contracts.{apiGroupName}");
-        }
-
-        GlobalUsingsHelper.CreateOrUpdate(
-            logger,
-            ContentWriterArea.Src,
-            projectOptions.PathForSrcGenerate,
-            requiredUsings,
-            removeNamespaceGroupSeparatorInGlobalUsings);
     }
 }
