@@ -60,6 +60,13 @@ public class ServerDomainGenerator
                 projectOptions.ProjectName,
                 projectOptions.ApiGeneratorVersion,
                 projectOptions.PathForSrcGenerate);
+
+            serverDomainGeneratorMinimalApi.GenerateCollectionExtensions(
+                logger,
+                projectOptions.ProjectName,
+                projectOptions.ApiGeneratorVersion,
+                projectOptions.PathForSrcGenerate,
+                projectOptions.Document);
         }
 
         if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)

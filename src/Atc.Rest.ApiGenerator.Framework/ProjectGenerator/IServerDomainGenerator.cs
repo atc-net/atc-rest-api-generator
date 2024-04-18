@@ -7,4 +7,11 @@ public interface IServerDomainGenerator
         string projectName,
         Version projectVersion,
         DirectoryInfo path);
+
+    void GenerateCollectionExtensions(
+        ILogger logger,
+        string projectName,
+        Version projectVersion,
+        DirectoryInfo path,
+        OpenApiDocument openApiDocument);
 }
