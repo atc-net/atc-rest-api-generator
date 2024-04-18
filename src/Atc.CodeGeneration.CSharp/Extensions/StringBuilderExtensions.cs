@@ -253,7 +253,13 @@ public static class StringBuilderExtensions
             .EnsureEnvironmentNewLines()
             .Split(Environment.NewLine);
 
-        for (var i = 0; i < lines.Length; i++)
+        var linesLength = lines.Length;
+        if (string.IsNullOrEmpty(lines[^1]))
+        {
+            linesLength--;
+        }
+
+        for (var i = 0; i < linesLength; i++)
         {
             var line = lines[i];
             if (string.IsNullOrEmpty(line))
@@ -262,7 +268,7 @@ public static class StringBuilderExtensions
             }
             else
             {
-                if (i == lines.Length - 1)
+                if (i == linesLength - 1)
                 {
                     sb.Append(indentSpaces, line);
                 }
@@ -289,14 +295,20 @@ public static class StringBuilderExtensions
         }
         else
         {
-            for (var i = 0; i < lines.Length; i++)
+            var linesLength = lines.Length;
+            if (string.IsNullOrEmpty(lines[^1]))
+            {
+                linesLength--;
+            }
+
+            for (var i = 0; i < linesLength; i++)
             {
                 var line = lines[i];
                 if (i == 0)
                 {
                     sb.AppendLine(indentSpaces, $"=> {line}");
                 }
-                else if (i == lines.Length - 1)
+                else if (i == linesLength - 1)
                 {
                     sb.Append(indentSpaces, $"{line};");
                 }
