@@ -18,7 +18,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
                 projectVersion));
         var codeGeneratorContentHeader = codeHeaderGenerator.Generate();
 
-        var codeGeneratorAttribute = new AttributeParameters(
+        var codeGeneratorAttribute = AttributeParametersFactory.Create(
             "GeneratedCode",
             $"\"{ContentWriterConstants.ApiGeneratorName}\", \"{projectVersion}\"");
 
@@ -28,11 +28,11 @@ public class ServerDomainGenerator : IServerDomainGenerator
             codeGeneratorAttribute,
             "DomainRegistration");
 
-        var contentGeneratorClass = new GenerateContentForClass(
+        var contentGenerator = new GenerateContentForClass(
             new CodeDocumentationTagsGenerator(),
             classParameters);
 
-        var classContent = contentGeneratorClass.Generate();
+        var content = contentGenerator.Generate();
 
         var file = new FileInfo(Path.Combine(
             path.FullName,
@@ -43,6 +43,14 @@ public class ServerDomainGenerator : IServerDomainGenerator
             path,
             file,
             ContentWriterArea.Src,
-            classContent);
+            content);
     }
+
+    public void GenerateCollectionExtensions(
+        ILogger logger,
+        string projectName,
+        Version projectVersion,
+        DirectoryInfo path,
+        OpenApiDocument projectOptionsDocument) =>
+        throw new NotSupportedException($"{nameof(GenerateCollectionExtensions)} is not supported for MVC");
 }

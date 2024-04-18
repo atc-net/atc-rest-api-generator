@@ -1,3 +1,5 @@
+// ReSharper disable ArrangeObjectCreationWhenTypeNotEvident
+// ReSharper disable ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
 namespace Atc.Rest.ApiGenerator.Framework.Minimal.ProjectGenerator;
 
 public class ServerDomainGenerator : IServerDomainGenerator
@@ -32,11 +34,11 @@ public class ServerDomainGenerator : IServerDomainGenerator
             [suppressMessageAvoidEmptyInterfaceAttribute, codeGeneratorAttribute],
             "IDomainAssemblyMarker");
 
-        var contentGeneratorInterface = new GenerateContentForInterface(
+        var contentGenerator = new GenerateContentForInterface(
             new CodeDocumentationTagsGenerator(),
             interfaceParameters);
 
-        var classContent = contentGeneratorInterface.Generate();
+        var content = contentGenerator.Generate();
 
         var file = new FileInfo(
             Path.Combine(
@@ -48,6 +50,6 @@ public class ServerDomainGenerator : IServerDomainGenerator
             path,
             file,
             ContentWriterArea.Src,
-            classContent);
+            content);
     }
 }

@@ -7,6 +7,8 @@ public static class ContentGeneratorServerHandlerParametersFactory
         OpenApiPathItem openApiPath,
         OpenApiOperation openApiOperation)
     {
+        ArgumentNullException.ThrowIfNull(openApiOperation);
+
         var operationName = openApiOperation.GetOperationName();
 
         var hasParameters = openApiPath.HasParameters() ||

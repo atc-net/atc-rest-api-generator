@@ -18,7 +18,7 @@ public class ServerApiGenerator : IServerApiGenerator
                 projectVersion));
         var codeGeneratorContentHeader = codeHeaderGenerator.Generate();
 
-        var codeGeneratorAttribute = new AttributeParameters(
+        var codeGeneratorAttribute = AttributeParametersFactory.Create(
             "GeneratedCode",
             $"\"{ContentWriterConstants.ApiGeneratorName}\", \"{projectVersion}\"");
 
@@ -32,11 +32,11 @@ public class ServerApiGenerator : IServerApiGenerator
             [suppressMessageAvoidEmptyInterfaceAttribute, codeGeneratorAttribute],
             "IApiContractAssemblyMarker");
 
-        var contentGeneratorInterface = new GenerateContentForInterface(
+        var contentGenerator = new GenerateContentForInterface(
             new CodeDocumentationTagsGenerator(),
             interfaceParameters);
 
-        var classContent = contentGeneratorInterface.Generate();
+        var content = contentGenerator.Generate();
 
         var file = new FileInfo(
             Path.Combine(
@@ -48,6 +48,6 @@ public class ServerApiGenerator : IServerApiGenerator
             path,
             file,
             ContentWriterArea.Src,
-            classContent);
+            content);
     }
 }

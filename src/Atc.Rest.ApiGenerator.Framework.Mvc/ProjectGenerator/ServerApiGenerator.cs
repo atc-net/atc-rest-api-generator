@@ -18,7 +18,7 @@ public class ServerApiGenerator : IServerApiGenerator
                 projectVersion));
         var codeGeneratorContentHeader = codeHeaderGenerator.Generate();
 
-        var codeGeneratorAttribute = new AttributeParameters(
+        var codeGeneratorAttribute = AttributeParametersFactory.Create(
             "GeneratedCode",
             $"\"{ContentWriterConstants.ApiGeneratorName}\", \"{projectVersion}\"");
 
@@ -28,11 +28,11 @@ public class ServerApiGenerator : IServerApiGenerator
             codeGeneratorAttribute,
             "ApiRegistration");
 
-        var contentGeneratorClass = new GenerateContentForClass(
+        var contentGenerator = new GenerateContentForClass(
             new CodeDocumentationTagsGenerator(),
             classParameters);
 
-        var classContent = contentGeneratorClass.Generate();
+        var content = contentGenerator.Generate();
 
         var file = new FileInfo(Path.Combine(
             path.FullName,
@@ -43,6 +43,6 @@ public class ServerApiGenerator : IServerApiGenerator
             path,
             file,
             ContentWriterArea.Src,
-            classContent);
+            content);
     }
 }
