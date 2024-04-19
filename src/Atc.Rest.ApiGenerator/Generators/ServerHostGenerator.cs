@@ -13,6 +13,7 @@ public class ServerHostGenerator
 
     private readonly IServerHostGenerator serverHostGeneratorMvc;
     private readonly IServerHostGenerator serverHostGeneratorMinimalApi;
+    private readonly IServerHostTestGenerator? serverHostTestGeneratorMvc;
 
     private readonly string codeGeneratorContentHeader;
     private readonly AttributeParameters codeGeneratorAttribute;
@@ -44,10 +45,20 @@ public class ServerHostGenerator
             projectOptions.PathForSrcGenerate,
             projectOptions.Document);
 
+        if (projectOptions.PathForTestGenerate is not null)
+        {
+            serverHostTestGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerHostTestGenerator(
+                loggerFactory,
+                projectOptions.ApiGeneratorVersion,
+                projectOptions.ProjectName,
+                projectOptions.PathForTestGenerate,
+                projectOptions.Document);
+        }
+
         // TODO: Optimize codeGeneratorContentHeader & codeGeneratorAttribute
         var codeHeaderGenerator = new GeneratedCodeHeaderGenerator(
-            new GeneratedCodeGeneratorParameters(
-                projectOptions.ApiGeneratorVersion));
+        new GeneratedCodeGeneratorParameters(
+            projectOptions.ApiGeneratorVersion));
         codeGeneratorContentHeader = codeHeaderGenerator.Generate();
 
         codeGeneratorAttribute = new AttributeParameters(
@@ -103,10 +114,10 @@ public class ServerHostGenerator
                 GenerateTestEndpoints(projectOptions.Document);
             }
 
-            GenerateTestGlobalUsings(
+            serverHostTestGeneratorMvc?.MaintainGlobalUsings(
+                projectOptions.ApiGroupNames,
                 projectOptions.UsingCodingRules,
                 projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings,
-                projectOptions.Document,
                 operationSchemaMappings);
         }
 
@@ -522,66 +533,5 @@ public class ServerHostGenerator
             ContentWriterArea.Test,
             content,
             overrideIfExist: false);
-    }
-
-    private void GenerateTestGlobalUsings(
-        bool usingCodingRules,
-        bool removeNamespaceGroupSeparatorInGlobalUsings,
-        OpenApiDocument openApiDocument,
-        IList<ApiOperation> operationSchemaMappings)
-    {
-        ArgumentNullException.ThrowIfNull(openApiDocument);
-        ArgumentNullException.ThrowIfNull(operationSchemaMappings);
-
-        var requiredUsings = new List<string>
-        {
-            "System.CodeDom.Compiler",
-            "System.Text",
-            "System.Text.Json",
-            "System.Text.Json.Serialization",
-            "System.Reflection",
-            "Atc.XUnit",
-            "Atc.Rest.Options",
-            "Microsoft.AspNetCore.Hosting",
-            "Microsoft.AspNetCore.Http",
-            "Microsoft.AspNetCore.TestHost",
-            "Microsoft.AspNetCore.Mvc.Testing",
-            "Microsoft.Extensions.Configuration",
-            "Microsoft.Extensions.DependencyInjection",
-            $"{projectOptions.ProjectName}.Generated",
-        };
-
-        if (openApiDocument.IsUsingRequiredForAtcRestResults())
-        {
-            requiredUsings.Add("Atc.Rest.Results");
-        }
-
-        if (operationSchemaMappings.Any(apiOperation => apiOperation.Model.IsShared))
-        {
-            requiredUsings.Add($"{projectOptions.ProjectName}.Generated.Contracts");
-        }
-
-        if (!usingCodingRules)
-        {
-            requiredUsings.Add("AutoFixture");
-            requiredUsings.Add("Xunit");
-        }
-
-        foreach (var apiGroupName in projectOptions.ApiGroupNames)
-        {
-            if (apiGroupName.Equals("Tasks", StringComparison.OrdinalIgnoreCase))
-            {
-                continue;
-            }
-
-            requiredUsings.Add($"{projectOptions.ProjectName}.Generated.Contracts.{apiGroupName}");
-        }
-
-        GlobalUsingsHelper.CreateOrUpdate(
-            logger,
-            ContentWriterArea.Test,
-            projectOptions.PathForTestGenerate!,
-            requiredUsings,
-            removeNamespaceGroupSeparatorInGlobalUsings);
     }
 }

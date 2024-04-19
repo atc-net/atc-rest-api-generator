@@ -13,6 +13,7 @@ public class ServerDomainGenerator
 
     private readonly IServerDomainGenerator serverDomainGeneratorMvc;
     private readonly IServerDomainGenerator serverDomainGeneratorMinimalApi;
+    private readonly IServerDomainTestGenerator? serverDomainTestGeneratorMvc;
 
     public ServerDomainGenerator(
         ILoggerFactory loggerFactory,
@@ -38,6 +39,16 @@ public class ServerDomainGenerator
             projectOptions.ProjectName,
             projectOptions.PathForSrcGenerate,
             projectOptions.Document);
+
+        if (projectOptions.PathForTestGenerate is not null)
+        {
+            serverDomainTestGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerDomainTestGenerator(
+                loggerFactory,
+                projectOptions.ApiGeneratorVersion,
+                projectOptions.ProjectName,
+                projectOptions.PathForTestGenerate,
+                projectOptions.Document);
+        }
     }
 
     public bool Generate()
@@ -99,7 +110,7 @@ public class ServerDomainGenerator
 
             GenerateTestHandlers(projectOptions.Document);
 
-            GenerateTestGlobalUsings(
+            serverDomainTestGeneratorMvc?.MaintainGlobalUsings(
                 projectOptions.UsingCodingRules,
                 projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
         }
@@ -375,24 +386,5 @@ public class ServerDomainGenerator
                 includeApiSpecification: true,
                 usingCodingRules: projectOptions.UsingCodingRules);
         }
-    }
-
-    private void GenerateTestGlobalUsings(
-        bool usingCodingRules,
-        bool removeNamespaceGroupSeparatorInGlobalUsings)
-    {
-        var requiredUsings = new List<string>();
-
-        if (!usingCodingRules)
-        {
-            requiredUsings.Add("Xunit");
-        }
-
-        GlobalUsingsHelper.CreateOrUpdate(
-            logger,
-            ContentWriterArea.Test,
-            projectOptions.PathForTestGenerate!,
-            requiredUsings,
-            removeNamespaceGroupSeparatorInGlobalUsings);
     }
 }
