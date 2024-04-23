@@ -57,15 +57,10 @@ public class ServerDomainGenerator : IServerDomainGenerator
 
         var content = contentGenerator.Generate();
 
-        var file = new FileInfo(
-            Path.Combine(
-                projectPath.FullName,
-                "IDomainAssemblyMarker.cs"));
-
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
             projectPath,
-            file,
+            projectPath.CombineFileInfo("IDomainAssemblyMarker.cs"),
             ContentWriterArea.Src,
             content);
     }
@@ -215,15 +210,10 @@ public class ServerDomainGenerator : IServerDomainGenerator
 
         var content = contentGenerator.Generate();
 
-        var file = new FileInfo(
-            Path.Combine(
-                Path.Combine(projectPath.FullName, "Extensions"),
-                "ServiceCollectionExtensions.cs"));
-
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
             projectPath,
-            file,
+            projectPath.CombineFileInfo("Extensions", "ServiceCollectionExtensions.cs"),
             ContentWriterArea.Src,
             content);
     }

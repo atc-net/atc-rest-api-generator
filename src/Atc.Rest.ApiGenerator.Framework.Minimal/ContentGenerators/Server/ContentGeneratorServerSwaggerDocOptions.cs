@@ -1,4 +1,4 @@
-namespace Atc.Rest.ApiGenerator.Framework.Mvc.ContentGenerators.Server;
+namespace Atc.Rest.ApiGenerator.Framework.Minimal.ContentGenerators.Server;
 
 public sealed class ContentGeneratorServerSwaggerDocOptions : IContentGenerator
 {

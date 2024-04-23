@@ -11,6 +11,8 @@ global using Atc.Rest.ApiGenerator.Framework.Contracts;
 global using Atc.Rest.ApiGenerator.Framework.Contracts.ContentGeneratorsParameters;
 global using Atc.Rest.ApiGenerator.Framework.Contracts.ContentGeneratorsParameters.Server;
 global using Atc.Rest.ApiGenerator.Framework.Contracts.Models;
+global using Atc.Rest.ApiGenerator.Framework.Core.Helpers;
+global using Atc.Rest.ApiGenerator.Framework.Factories.Parameters.Server;
 global using Atc.Rest.ApiGenerator.Framework.Helpers;
 global using Atc.Rest.ApiGenerator.Framework.Minimal.ContentGeneratorsParameters.Server;
 global using Atc.Rest.ApiGenerator.Framework.ProjectGenerator;

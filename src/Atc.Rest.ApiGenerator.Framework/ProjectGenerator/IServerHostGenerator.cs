@@ -11,8 +11,27 @@ namespace Atc.Rest.ApiGenerator.Framework.ProjectGenerator;
 /// </remarks>
 public interface IServerHostGenerator
 {
+    bool UseRestExtended { get; set; }
+
+    void ScaffoldProgramFile();
+
+    void ScaffoldStartupFile();
+
+    void ScaffoldWebConfig();
+
+    void ScaffoldConfigureSwaggerDocOptions();
+
+    void ScaffoldServiceCollectionExtensions();
+
+    void ScaffoldServiceWebApplicationExtensions(
+        SwaggerThemeMode swaggerThemeMode);
+
+    void ScaffoldConfigureSwaggerOptions();
+
     void MaintainGlobalUsings(
         string domainProjectName,
         IList<string> apiGroupNames,
         bool removeNamespaceGroupSeparatorInGlobalUsings);
+
+    void MaintainWwwResources();
 }

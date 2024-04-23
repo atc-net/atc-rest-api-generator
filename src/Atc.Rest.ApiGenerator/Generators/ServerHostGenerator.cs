@@ -36,7 +36,10 @@ public class ServerHostGenerator
             projectOptions.ApiGeneratorVersion,
             projectOptions.ProjectName,
             projectOptions.PathForSrcGenerate,
-            projectOptions.Document);
+            projectOptions.Document)
+        {
+            UseRestExtended = projectOptions.UseRestExtended,
+        };
 
         serverHostGeneratorMinimalApi = new Framework.Minimal.ProjectGenerator.ServerHostGenerator(
             loggerFactory,
@@ -85,10 +88,13 @@ public class ServerHostGenerator
             }
         }
 
-        ScaffoldSrc();
-
         if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
         {
+            serverHostGeneratorMvc.ScaffoldProgramFile();
+            serverHostGeneratorMvc.ScaffoldStartupFile();
+            serverHostGeneratorMvc.ScaffoldWebConfig();
+            serverHostGeneratorMvc.ScaffoldConfigureSwaggerDocOptions();
+
             serverHostGeneratorMvc.MaintainGlobalUsings(
                 projectOptions.ProjectName.Replace(".Api", ".Domain", StringComparison.Ordinal),
                 projectOptions.ApiGroupNames,
@@ -96,11 +102,22 @@ public class ServerHostGenerator
         }
         else
         {
+            serverHostGeneratorMinimalApi.ScaffoldProgramFile();
+            serverHostGeneratorMinimalApi.ScaffoldWebConfig();
+            serverHostGeneratorMinimalApi.ScaffoldConfigureSwaggerDocOptions();
+            serverHostGeneratorMinimalApi.ScaffoldServiceCollectionExtensions();
+            serverHostGeneratorMinimalApi.ScaffoldServiceWebApplicationExtensions(
+                projectOptions.SwaggerThemeMode);
+            serverHostGeneratorMinimalApi.ScaffoldConfigureSwaggerOptions();
+
             serverHostGeneratorMinimalApi.MaintainGlobalUsings(
                 projectOptions.ProjectName.Replace(".Api", ".Domain", StringComparison.Ordinal),
                 projectOptions.ApiGroupNames,
                 projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
+            serverHostGeneratorMinimalApi.MaintainWwwResources();
         }
+
+        ScaffoldSrc();
 
         if (projectOptions.PathForTestGenerate is not null)
         {
@@ -190,16 +207,6 @@ public class ServerHostGenerator
                 projectOptions.ProjectName,
                 projectOptions.PathForSrcGenerate,
                 projectOptions.UseRestExtended);
-
-            ScaffoldProgramFile();
-            ScaffoldStartupFile();
-            ScaffoldWebConfig();
-
-            // TODO: Deviate on minimal API
-            if (projectOptions.UseRestExtended)
-            {
-                ScaffoldConfigureSwaggerDocOptions();
-            }
         }
     }
 
@@ -221,7 +228,7 @@ public class ServerHostGenerator
         var json = resourceStream!.ToStringData();
         json = json.Replace("\"[[PROJECTNAME]]\":", $"\"{projectName}\":", StringComparison.Ordinal);
 
-        var file = new FileInfo(Path.Combine(propertiesPath.FullName, "launchSettings.json"));
+        var file = propertiesPath.CombineFileInfo("launchSettings.json");
 
         if (file.Exists)
         {
@@ -388,90 +395,6 @@ public class ServerHostGenerator
             overrideIfExist: false);
     }
 
-    private void ScaffoldProgramFile()
-    {
-        var fullNamespace = $"{projectOptions.ProjectName}";
-
-        var contentGenerator = new Framework.Mvc.ContentGenerators.Server.ContentGeneratorServerProgram(
-            new ContentGeneratorBaseParameters(fullNamespace));
-
-        var content = contentGenerator.Generate();
-
-        var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "Program.cs"));
-
-        var contentWriter = new ContentWriter(logger);
-        contentWriter.Write(
-            projectOptions.PathForSrcGenerate,
-            file,
-            ContentWriterArea.Src,
-            content,
-            overrideIfExist: false);
-    }
-
-    private void ScaffoldStartupFile()
-    {
-        var fullNamespace = $"{projectOptions.ProjectName}";
-
-        // TODO: Deviate on startup file for minimal api
-        var contentGenerator = new Framework.Mvc.ContentGenerators.Server.ContentGeneratorServerStartup(
-            new ContentGeneratorBaseParameters(fullNamespace));
-
-        var content = contentGenerator.Generate();
-
-        var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "Startup.cs"));
-
-        var contentWriter = new ContentWriter(logger);
-        contentWriter.Write(
-            projectOptions.PathForSrcGenerate,
-            file,
-            ContentWriterArea.Src,
-            content,
-            overrideIfExist: false);
-    }
-
-    private void ScaffoldWebConfig()
-    {
-        var contentGenerator = new Framework.Mvc.ContentGenerators.Server.ContentGeneratorServerWebConfig();
-
-        var content = contentGenerator.Generate();
-
-        var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "web.config"));
-
-        var contentWriter = new ContentWriter(logger);
-        contentWriter.Write(
-            projectOptions.PathForSrcGenerate,
-            file,
-            ContentWriterArea.Src,
-            content,
-            overrideIfExist: false);
-    }
-
-    private void ScaffoldConfigureSwaggerDocOptions()
-    {
-        var fullNamespace = $"{projectOptions.ProjectName}";
-
-        var contentGeneratorServerSwaggerDocOptionsParameters = ContentGeneratorServerSwaggerDocOptionsParameterFactory
-            .Create(
-                fullNamespace,
-                projectOptions.Document.ToSwaggerDocOptionsParameters());
-
-        var contentGenerator = new Framework.Mvc.ContentGenerators.Server.ContentGeneratorServerSwaggerDocOptions(
-            new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-            new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-            contentGeneratorServerSwaggerDocOptionsParameters);
-
-        var content = contentGenerator.Generate();
-
-        var file = new FileInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "ConfigureSwaggerDocOptions.cs"));
-
-        var contentWriter = new ContentWriter(logger);
-        contentWriter.Write(
-            projectOptions.PathForSrcGenerate,
-            file,
-            ContentWriterArea.Src,
-            content);
-    }
-
     private void GenerateTestWebApiStartupFactory()
     {
         var fullNamespace = $"{projectOptions.ProjectName}.Tests";
@@ -487,11 +410,11 @@ public class ServerHostGenerator
 
         var content = contentGenerator.Generate();
 
-        var file = new FileInfo(Path.Combine(projectOptions.PathForTestGenerate!.FullName, "WebApiStartupFactory.cs"));
+        var file = projectOptions.PathForTestGenerate!.CombineFileInfo("WebApiStartupFactory.cs");
 
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
-            projectOptions.PathForTestGenerate,
+            projectOptions.PathForTestGenerate!,
             file,
             ContentWriterArea.Test,
             content);
@@ -508,11 +431,11 @@ public class ServerHostGenerator
 
         var content = contentGenerator.Generate();
 
-        var file = new FileInfo(Path.Combine(projectOptions.PathForTestGenerate!.FullName, "WebApiControllerBaseTest.cs"));
+        var file = projectOptions.PathForTestGenerate!.CombineFileInfo("WebApiControllerBaseTest.cs");
 
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
-            projectOptions.PathForTestGenerate,
+            projectOptions.PathForTestGenerate!,
             file,
             ContentWriterArea.Test,
             content);
@@ -524,11 +447,11 @@ public class ServerHostGenerator
 
         var content = contentGenerator.Generate();
 
-        var file = new FileInfo(Path.Combine(projectOptions.PathForTestGenerate!.FullName, "appsettings.integrationtest.json"));
+        var file = projectOptions.PathForTestGenerate!.CombineFileInfo("appsettings.integrationtest.json");
 
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
-            projectOptions.PathForTestGenerate,
+            projectOptions.PathForTestGenerate!,
             file,
             ContentWriterArea.Test,
             content,

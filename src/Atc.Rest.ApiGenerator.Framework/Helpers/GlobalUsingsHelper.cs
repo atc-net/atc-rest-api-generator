@@ -25,7 +25,6 @@ namespace Atc.Rest.ApiGenerator.Framework.Helpers
                 setSystemFirst: true,
                 addNamespaceSeparator: !removeNamespaceGroupSeparatorInGlobalUsings);
 
-            var globalUsingFile = new FileInfo(Path.Combine(directoryInfo.FullName, "GlobalUsings.cs"));
             if (string.IsNullOrEmpty(content))
             {
                 return;
@@ -33,8 +32,8 @@ namespace Atc.Rest.ApiGenerator.Framework.Helpers
 
             var contentWriter = new ContentWriter(logger);
             contentWriter.Write(
-                globalUsingFile.Directory!,
-                globalUsingFile,
+                directoryInfo,
+                directoryInfo.CombineFileInfo("GlobalUsings.cs"),
                 contentWriterArea,
                 content);
         }

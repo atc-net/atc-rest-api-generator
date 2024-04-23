@@ -57,15 +57,10 @@ public class ServerApiGenerator : IServerApiGenerator
 
         var content = contentGenerator.Generate();
 
-        var file = new FileInfo(
-            Path.Combine(
-                projectPath.FullName,
-                "IApiContractAssemblyMarker.cs"));
-
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
             projectPath,
-            file,
+            projectPath.CombineFileInfo("IApiContractAssemblyMarker.cs"),
             ContentWriterArea.Src,
             content);
     }
@@ -84,16 +79,23 @@ public class ServerApiGenerator : IServerApiGenerator
             "System.CodeDom.Compiler",
             "System.ComponentModel.DataAnnotations",
             "System.Diagnostics.CodeAnalysis",
-            "System.Net",
             "Atc.Rest.Results",
             "Atc.Rest.MinimalApi.Abstractions",
-            "Atc.Rest.MinimalApi.Filters.Endpoints",
-            "Microsoft.AspNetCore.Authorization",
             "Microsoft.AspNetCore.Builder",
             "Microsoft.AspNetCore.Http",
             "Microsoft.AspNetCore.Http.HttpResults",
-            $"{projectName}.Contracts",
+            "Microsoft.AspNetCore.Mvc",
         };
+
+        if (openApiDocument.IsUsingRequiredForSystemNet(useProblemDetailsAsDefaultBody))
+        {
+            requiredUsings.Add("System.Net");
+        }
+
+        if (operationSchemaMappings.Any(apiOperation => apiOperation.Model.IsShared))
+        {
+            requiredUsings.Add($"{projectName}.Contracts");
+        }
 
         requiredUsings.AddRange(apiGroupNames.Select(x => $"{projectName}.Contracts.{x}"));
 

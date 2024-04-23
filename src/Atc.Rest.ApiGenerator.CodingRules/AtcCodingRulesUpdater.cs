@@ -47,10 +47,7 @@ public sealed partial class AtcCodingRulesUpdater : IAtcCodingRulesUpdater
 
     private static bool IsFirstTime(
         DirectoryInfo rootPath)
-    {
-        var file = new FileInfo(Path.Combine(rootPath.FullName, FileNameEditorConfig));
-        return !file.Exists;
-    }
+        => !rootPath.CombineFileInfo(FileNameEditorConfig).Exists;
 
     private void HandleCodingRulesFiles(
         DirectoryInfo outputSrcPath,
@@ -177,7 +174,7 @@ public sealed partial class AtcCodingRulesUpdater : IAtcCodingRulesUpdater
         string area,
         string urlPart)
     {
-        var file = new FileInfo(Path.Combine(path.FullName, FileNameEditorConfig));
+        var file = path.CombineFileInfo(FileNameEditorConfig);
 
         var rawGitUrl = string.IsNullOrEmpty(urlPart)
             ? $"{RawCodingRulesDistributionUrl}/{FileNameEditorConfig}"
@@ -208,7 +205,7 @@ public sealed partial class AtcCodingRulesUpdater : IAtcCodingRulesUpdater
         string area,
         string urlPart)
     {
-        var file = new FileInfo(Path.Combine(path.FullName, FileNameDirectoryBuildProps));
+        var file = path.CombineFileInfo(FileNameDirectoryBuildProps);
 
         var rawGitUrl = string.IsNullOrEmpty(urlPart)
             ? $"{RawCodingRulesDistributionUrl}/{FileNameDirectoryBuildProps}"

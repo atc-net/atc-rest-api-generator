@@ -51,14 +51,10 @@ public class ServerApiGenerator : IServerApiGenerator
 
         var content = contentGenerator.Generate();
 
-        var file = new FileInfo(Path.Combine(
-            projectPath.FullName,
-            "ApiRegistration.cs"));
-
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
             projectPath,
-            file,
+            projectPath.CombineFileInfo("ApiRegistration.cs"),
             ContentWriterArea.Src,
             content);
     }

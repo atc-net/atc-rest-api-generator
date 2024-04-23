@@ -28,6 +28,89 @@ public class ServerHostGenerator : IServerHostGenerator
         this.openApiDocument = openApiDocument;
     }
 
+    public bool UseRestExtended { get; set; }
+
+    public void ScaffoldProgramFile()
+    {
+        var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerProgram(
+            new ContentGeneratorBaseParameters(Namespace: projectName));
+
+        var content = contentGenerator.Generate();
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectPath,
+            projectPath.CombineFileInfo("Program.cs"),
+            ContentWriterArea.Src,
+            content,
+            overrideIfExist: false);
+    }
+
+    public void ScaffoldStartupFile()
+    {
+        var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerStartup(
+            new ContentGeneratorBaseParameters(Namespace: projectName));
+
+        var content = contentGenerator.Generate();
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectPath,
+            projectPath.CombineFileInfo("Startup.cs"),
+            ContentWriterArea.Src,
+            content,
+            overrideIfExist: false);
+    }
+
+    public void ScaffoldWebConfig()
+    {
+        var contentGenerator = new Core.ContentGenerators.Server.ContentGeneratorServerWebConfig();
+
+        var content = contentGenerator.Generate();
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectPath,
+            projectPath.CombineFileInfo("web.config"),
+            ContentWriterArea.Src,
+            content,
+            overrideIfExist: false);
+    }
+
+    public void ScaffoldConfigureSwaggerDocOptions()
+    {
+        var fullNamespace = $"{projectName}";
+
+        var contentGeneratorServerSwaggerDocOptionsParameters = ContentGeneratorServerSwaggerDocOptionsParameterFactory
+            .Create(
+                fullNamespace,
+                openApiDocument.ToSwaggerDocOptionsParameters());
+
+        var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerSwaggerDocOptions(
+            new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
+            new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
+            contentGeneratorServerSwaggerDocOptionsParameters);
+
+        var content = contentGenerator.Generate();
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectPath,
+            projectPath.CombineFileInfo("ConfigureSwaggerDocOptions.cs"),
+            ContentWriterArea.Src,
+            content);
+    }
+
+    public void ScaffoldServiceCollectionExtensions()
+        => throw new NotSupportedException($"{nameof(ScaffoldServiceCollectionExtensions)} is not supported for MVC");
+
+    public void ScaffoldServiceWebApplicationExtensions(
+        SwaggerThemeMode swaggerThemeMode)
+        => throw new NotSupportedException($"{nameof(ScaffoldServiceWebApplicationExtensions)} is not supported for MVC");
+
+    public void ScaffoldConfigureSwaggerOptions()
+        => throw new NotSupportedException($"{nameof(ScaffoldConfigureSwaggerOptions)} is not supported for MVC");
+
     public void MaintainGlobalUsings(
         string domainProjectName,
         IList<string> apiGroupNames,
@@ -44,7 +127,7 @@ public class ServerHostGenerator : IServerHostGenerator
             $"{projectName}.Generated",
         };
 
-        //if (projectOptions.UseRestExtended)
+        if (UseRestExtended)
         {
             requiredUsings.Add("Asp.Versioning.ApiExplorer");
             requiredUsings.Add("Atc.Rest.Extended.Options");
@@ -60,4 +143,7 @@ public class ServerHostGenerator : IServerHostGenerator
             requiredUsings,
             removeNamespaceGroupSeparatorInGlobalUsings);
     }
+
+    public void MaintainWwwResources()
+        => ResourcesHelper.MaintainWwwResources(projectPath);
 }

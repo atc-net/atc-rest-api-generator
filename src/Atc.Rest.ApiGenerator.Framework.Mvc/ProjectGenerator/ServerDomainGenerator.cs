@@ -51,14 +51,10 @@ public class ServerDomainGenerator : IServerDomainGenerator
 
         var content = contentGenerator.Generate();
 
-        var file = new FileInfo(Path.Combine(
-            projectPath.FullName,
-            "DomainRegistration.cs"));
-
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
             projectPath,
-            file,
+            projectPath.CombineFileInfo("DomainRegistration.cs"),
             ContentWriterArea.Src,
             content);
     }
