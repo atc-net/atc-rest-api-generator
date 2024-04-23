@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\wwwroot\favicon.ico" />
+    <None Remove="Resources\wwwroot\swagger-ui\main.js" />
+    <None Remove="Resources\wwwroot\swagger-ui\swagger.png" />
+    <None Remove="Resources\wwwroot\swagger-ui\SwaggerDark.css" />
+    <None Remove="Resources\wwwroot\swagger-ui\SwaggerLight.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\wwwroot\favicon.ico" />
+    <EmbeddedResource Include="Resources\wwwroot\swagger-ui\main.js" />
+    <EmbeddedResource Include="Resources\wwwroot\swagger-ui\swagger.png" />
+    <EmbeddedResource Include="Resources\wwwroot\swagger-ui\SwaggerLight.css" />
+    <EmbeddedResource Include="Resources\wwwroot\swagger-ui\SwaggerDark.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Atc.CodeGeneration.CSharp\Atc.CodeGeneration.CSharp.csproj" />
+  </ItemGroup>
+
+</Project>

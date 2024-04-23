@@ -7,12 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc" Version="2.0.465" />
+    <PackageReference Include="Atc" Version="2.0.472" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Atc.CodeGeneration.CSharp\Atc.CodeGeneration.CSharp.csproj" />
     <ProjectReference Include="..\Atc.Rest.ApiGenerator.Framework.Contracts\Atc.Rest.ApiGenerator.Framework.Contracts.csproj" />
+    <ProjectReference Include="..\Atc.Rest.ApiGenerator.Framework.Core\Atc.Rest.ApiGenerator.Framework.Core.csproj" />
     <ProjectReference Include="..\Atc.Rest.ApiGenerator.Framework\Atc.Rest.ApiGenerator.Framework.csproj" />
   </ItemGroup>
 
