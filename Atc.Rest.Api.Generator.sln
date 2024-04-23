@@ -86,6 +86,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Rest.ApiGenerator.Frame
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Rest.ApiGenerator.CLI.Tests", "test\Atc.Rest.ApiGenerator.CLI.Tests\Atc.Rest.ApiGenerator.CLI.Tests.csproj", "{D75819AA-3092-43F6-80D2-1BF2FCAA92EE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Atc.Rest.ApiGenerator.Framework.Core", "src\Atc.Rest.ApiGenerator.Framework.Core\Atc.Rest.ApiGenerator.Framework.Core.csproj", "{7893455E-B91A-46D6-A50D-CE591043E659}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -188,6 +190,10 @@ Global
 		{D75819AA-3092-43F6-80D2-1BF2FCAA92EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D75819AA-3092-43F6-80D2-1BF2FCAA92EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D75819AA-3092-43F6-80D2-1BF2FCAA92EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7893455E-B91A-46D6-A50D-CE591043E659}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7893455E-B91A-46D6-A50D-CE591043E659}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7893455E-B91A-46D6-A50D-CE591043E659}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7893455E-B91A-46D6-A50D-CE591043E659}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -222,6 +228,7 @@ Global
 		{3F33D1B3-7AD9-44A3-B5F4-048BED3913C8} = {F39DCB66-0A9F-47BA-A916-301EC83F26EA}
 		{8FF7EF9D-DDBB-4D25-B3A5-5E0D11462545} = {F39DCB66-0A9F-47BA-A916-301EC83F26EA}
 		{D75819AA-3092-43F6-80D2-1BF2FCAA92EE} = {F39DCB66-0A9F-47BA-A916-301EC83F26EA}
+		{7893455E-B91A-46D6-A50D-CE591043E659} = {A4F3156B-9E74-4710-ADBC-4628DF389F68}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DFD408B5-CCB3-4B3A-9E3B-DC85C74256B1}
