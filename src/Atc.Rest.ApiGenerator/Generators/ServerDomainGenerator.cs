@@ -55,7 +55,7 @@ public class ServerDomainGenerator
     {
         logger.LogInformation($"{ContentWriterConstants.AreaGenerateCode} Working on server domain generation ({projectOptions.ProjectName})");
 
-        if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
+        if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
         {
             if (!projectOptions.SetPropertiesAfterValidationsOfProjectReferencesPathAndFilesForMvc(logger))
             {
@@ -72,7 +72,7 @@ public class ServerDomainGenerator
 
         ScaffoldSrc();
 
-        if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
+        if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
         {
             serverDomainGeneratorMvc.GenerateAssemblyMarker();
 
@@ -93,7 +93,7 @@ public class ServerDomainGenerator
                 projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
         }
 
-        if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
+        if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
         {
             GenerateSrcMvcHandlers(projectOptions.Document);
         }
@@ -303,7 +303,7 @@ public class ServerDomainGenerator
             }
 
             IList<(string PackageId, string PackageVersion, string? SubElements)>? packageReferencesBaseLineForDomainProject = null;
-            if (projectOptions.AspNetOutputType == AspNetOutputType.MinimalApi)
+            if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.MinimalApi)
             {
                 TaskHelper.RunSync(async () =>
                 {

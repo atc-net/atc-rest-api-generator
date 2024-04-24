@@ -1,10 +1,8 @@
 // ReSharper disable CheckNamespace
 namespace Atc.Rest.ApiGenerator.Framework.Contracts;
 
-public enum SwaggerThemeMode
+public enum AspNetOutputType
 {
-    None,
-    Default,
-    Light,
-    Dark,
+    Mvc,
+    MinimalApi,
 }

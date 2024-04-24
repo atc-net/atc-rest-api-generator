@@ -26,7 +26,7 @@ public class ConfigureSwaggerDocOptions : IConfigureOptions<SwaggerGenOptions>
                 {
                     Version = "1.0",
                     Title = "TestUnit Task Ns Api",
-                    Description = @"TestUnit Task Ns Api - SingleFileVersion",
+                    Description = "TestUnit Task Ns Api - SingleFileVersion",
                     Contact = new OpenApiContact
                     {
                         Name = "atc-net A/S",

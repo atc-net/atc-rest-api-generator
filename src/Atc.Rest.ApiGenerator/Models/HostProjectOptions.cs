@@ -4,7 +4,6 @@ public class HostProjectOptions : BaseProjectOptions
 {
     [SuppressMessage("Major Code Smell", "S107:Methods should not have too many parameters", Justification = "OK.")]
     public HostProjectOptions(
-        AspNetOutputType aspNetOutputType,
         DirectoryInfo projectSrcGeneratePath,
         DirectoryInfo? projectTestGeneratePath,
         OpenApiDocument openApiDocument,
@@ -16,7 +15,6 @@ public class HostProjectOptions : BaseProjectOptions
         DirectoryInfo apiProjectSrcPath,
         DirectoryInfo domainProjectSrcPath)
         : base(
-            aspNetOutputType,
             projectSrcGeneratePath,
             projectTestGeneratePath,
             openApiDocument,
@@ -32,7 +30,6 @@ public class HostProjectOptions : BaseProjectOptions
         ApiProjectSrcPath = apiProjectSrcPath ?? throw new ArgumentNullException(nameof(apiProjectSrcPath));
         DomainProjectSrcPath = domainProjectSrcPath ?? throw new ArgumentNullException(nameof(domainProjectSrcPath));
         UseRestExtended = apiOptions.Generator.UseRestExtended;
-        SwaggerThemeMode = apiOptions.Generator.SwaggerThemeMode;
     }
 
     public DirectoryInfo ApiProjectSrcPath { get; private set; }
@@ -44,8 +41,6 @@ public class HostProjectOptions : BaseProjectOptions
     public FileInfo? DomainProjectSrcCsProj { get; private set; }
 
     public bool UseRestExtended { get; set; }
-
-    public SwaggerThemeMode SwaggerThemeMode { get; set; }
 
     public bool SetPropertiesAfterValidationsOfProjectReferencesPathAndFilesForMvc(
         ILogger logger)

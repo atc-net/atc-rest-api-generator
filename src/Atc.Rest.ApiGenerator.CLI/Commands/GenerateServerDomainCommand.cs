@@ -54,11 +54,9 @@ public class GenerateServerDomainCommand : AsyncCommand<ServerDomainCommandSetti
         var shouldScaffoldCodingRules = CodingRulesHelper.ShouldScaffoldCodingRules(settings.OutputPath, settings.DisableCodingRules);
         var isUsingCodingRules = CodingRulesHelper.IsUsingCodingRules(settings.OutputPath, settings.DisableCodingRules);
 
-        var aspNetOutputType = AspNetOutputType.Mvc;
-
         if (settings.AspNetOutputType.IsSet)
         {
-            aspNetOutputType = settings.AspNetOutputType.Value;
+            apiOptions.Generator.AspNetOutputType = settings.AspNetOutputType.Value;
         }
 
         if (shouldScaffoldCodingRules &&
@@ -79,7 +77,6 @@ public class GenerateServerDomainCommand : AsyncCommand<ServerDomainCommandSetti
 
             if (!GenerateHelper.GenerateServerDomain(
                     loggerFactory,
-                    aspNetOutputType,
                     nugetPackageReferenceProvider,
                     settings.ProjectPrefixName,
                     new DirectoryInfo(settings.OutputPath),

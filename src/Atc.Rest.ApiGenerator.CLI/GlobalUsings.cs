@@ -1,4 +1,3 @@
-global using System;
 global using System.Collections.Concurrent;
 global using System.ComponentModel;
 global using System.Diagnostics;
@@ -16,6 +15,7 @@ global using Atc.Rest.ApiGenerator.CLI.Commands.Attributes;
 global using Atc.Rest.ApiGenerator.CLI.Commands.Settings;
 global using Atc.Rest.ApiGenerator.CLI.Extensions;
 global using Atc.Rest.ApiGenerator.CodingRules;
+global using Atc.Rest.ApiGenerator.Framework.Contracts;
 global using Atc.Rest.ApiGenerator.Framework.Contracts.Options;
 global using Atc.Rest.ApiGenerator.Framework.Readers;
 global using Atc.Rest.ApiGenerator.Helpers;

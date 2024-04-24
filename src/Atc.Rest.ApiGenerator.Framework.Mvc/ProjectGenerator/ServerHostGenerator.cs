@@ -30,7 +30,8 @@ public class ServerHostGenerator : IServerHostGenerator
 
     public bool UseRestExtended { get; set; }
 
-    public void ScaffoldProgramFile()
+    public void ScaffoldProgramFile(
+        SwaggerThemeMode swaggerThemeMode)
     {
         var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerProgram(
             new ContentGeneratorBaseParameters(Namespace: projectName));

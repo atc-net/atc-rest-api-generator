@@ -5,7 +5,6 @@ public static class GenerateHelper
 {
     public static bool GenerateServerApi(
         ILoggerFactory loggerFactory,
-        AspNetOutputType aspNetOutputType,
         IApiOperationExtractor apiOperationExtractor,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
         string projectPrefixName,
@@ -23,7 +22,6 @@ public static class GenerateHelper
         ArgumentNullException.ThrowIfNull(apiOptions);
 
         var projectOptions = new ApiProjectOptions(
-            aspNetOutputType,
             outputPath,
             outputTestPath,
             apiDocumentContainer.Document!,
@@ -39,7 +37,6 @@ public static class GenerateHelper
 
     public static bool GenerateServerDomain(
         ILoggerFactory loggerFactory,
-        AspNetOutputType aspNetOutputType,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
         string projectPrefixName,
         DirectoryInfo outputSourcePath,
@@ -57,7 +54,6 @@ public static class GenerateHelper
         ArgumentNullException.ThrowIfNull(apiPath);
 
         var domainProjectOptions = new DomainProjectOptions(
-            aspNetOutputType,
             outputSourcePath,
             outputTestPath,
             apiDocumentContainer.Document!,
@@ -74,7 +70,6 @@ public static class GenerateHelper
     public static bool GenerateServerHost(
         ILoggerFactory loggerFactory,
         IApiOperationExtractor apiOperationExtractor,
-        AspNetOutputType aspNetOutputType,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
         string projectPrefixName,
         DirectoryInfo outputSourcePath,
@@ -94,7 +89,6 @@ public static class GenerateHelper
         ArgumentNullException.ThrowIfNull(domainPath);
 
         var hostProjectOptions = new HostProjectOptions(
-            aspNetOutputType,
             outputSourcePath,
             outputTestPath,
             apiDocumentContainer.Document!,

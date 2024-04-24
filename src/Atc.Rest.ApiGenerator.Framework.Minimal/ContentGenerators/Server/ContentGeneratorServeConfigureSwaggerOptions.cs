@@ -49,6 +49,8 @@ public class ContentGeneratorServeConfigureSwaggerOptions : IContentGenerator
         sb.AppendLine(4, "private OpenApiInfo CreateInfoForApiVersion(");
         sb.AppendLine(8, "ApiVersionDescription description)");
         sb.AppendLine(4, "{");
+
+        // TODO: Add fix details to the OpenApiInfo
         sb.AppendLine(8, "var text = new StringBuilder(\"An example API to showcase minimal api implementation using the Atc.Rest.MinimalApi Nuget package.\");");
         sb.AppendLine(8, "var info = new OpenApiInfo");
         sb.AppendLine(8, "{");

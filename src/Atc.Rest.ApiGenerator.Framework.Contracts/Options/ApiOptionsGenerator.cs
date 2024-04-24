@@ -2,9 +2,11 @@ namespace Atc.Rest.ApiGenerator.Framework.Contracts.Options;
 
 public class ApiOptionsGenerator
 {
-    public bool UseRestExtended { get; set; } = true;
+    public AspNetOutputType AspNetOutputType { get; set; } = AspNetOutputType.Mvc;
 
-    public SwaggerThemeMode SwaggerThemeMode { get; set; } = SwaggerThemeMode.Dark;
+    public SwaggerThemeMode SwaggerThemeMode { get; set; } = SwaggerThemeMode.None;
+
+    public bool UseRestExtended { get; set; } = true;
 
     public ApiOptionsGeneratorRequest Request { get; set; } = new();
 

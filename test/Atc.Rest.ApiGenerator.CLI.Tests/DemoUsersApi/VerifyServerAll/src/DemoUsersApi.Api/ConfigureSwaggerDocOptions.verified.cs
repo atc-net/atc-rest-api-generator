@@ -26,7 +26,7 @@ public class ConfigureSwaggerDocOptions : IConfigureOptions<SwaggerGenOptions>
                 {
                     Version = "1.0",
                     Title = "Demo Users Api",
-                    Description = @"Demo Users Api - SingleFileVersion",
+                    Description = "Demo Users Api - SingleFileVersion",
                     Contact = new OpenApiContact
                     {
                         Name = "atc-net A/S",

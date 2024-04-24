@@ -73,7 +73,7 @@ public class ServerHostGenerator
     {
         logger.LogInformation($"{ContentWriterConstants.AreaGenerateCode} Working on server host generation ({projectOptions.ProjectName})");
 
-        if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
+        if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
         {
             if (!projectOptions.SetPropertiesAfterValidationsOfProjectReferencesPathAndFilesForMvc(logger))
             {
@@ -88,9 +88,10 @@ public class ServerHostGenerator
             }
         }
 
-        if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
+        if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
         {
-            serverHostGeneratorMvc.ScaffoldProgramFile();
+            serverHostGeneratorMvc.ScaffoldProgramFile(
+                projectOptions.ApiOptions.Generator.SwaggerThemeMode);
             serverHostGeneratorMvc.ScaffoldStartupFile();
             serverHostGeneratorMvc.ScaffoldWebConfig();
             serverHostGeneratorMvc.ScaffoldConfigureSwaggerDocOptions();
@@ -102,12 +103,13 @@ public class ServerHostGenerator
         }
         else
         {
-            serverHostGeneratorMinimalApi.ScaffoldProgramFile();
+            serverHostGeneratorMinimalApi.ScaffoldProgramFile(
+                projectOptions.ApiOptions.Generator.SwaggerThemeMode);
             serverHostGeneratorMinimalApi.ScaffoldWebConfig();
             serverHostGeneratorMinimalApi.ScaffoldConfigureSwaggerDocOptions();
             serverHostGeneratorMinimalApi.ScaffoldServiceCollectionExtensions();
             serverHostGeneratorMinimalApi.ScaffoldServiceWebApplicationExtensions(
-                projectOptions.SwaggerThemeMode);
+                projectOptions.ApiOptions.Generator.SwaggerThemeMode);
             serverHostGeneratorMinimalApi.ScaffoldConfigureSwaggerOptions();
 
             serverHostGeneratorMinimalApi.MaintainGlobalUsings(
@@ -126,7 +128,7 @@ public class ServerHostGenerator
             logger.LogInformation($"{ContentWriterConstants.AreaGenerateTest} Working on server host unit-test generation ({projectOptions.ProjectName}.Tests)");
             ScaffoldTest();
 
-            if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
+            if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
             {
                 GenerateTestEndpoints(projectOptions.Document);
             }
@@ -178,7 +180,7 @@ public class ServerHostGenerator
             IList<(string PackageId, string PackageVersion, string? SubElements)>? packageReferencesBaseLineForHostProject = null;
             TaskHelper.RunSync(async () =>
             {
-                if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
+                if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
                 {
                     packageReferencesBaseLineForHostProject = await nugetPackageReferenceProvider.GetPackageReferencesBaseLineForHostProjectForMvc(projectOptions.UseRestExtended);
                 }

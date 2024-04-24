@@ -11,7 +11,7 @@ public class ContentGeneratorServeWebApplicationExtensions : IContentGenerator
         this.parameters = parameters;
     }
 
-    public SwaggerThemeMode SwaggerThemeMode { get; set; } = SwaggerThemeMode.Dark;
+    public SwaggerThemeMode SwaggerThemeMode { get; set; } = SwaggerThemeMode.None;
 
     public string Generate()
     {
@@ -29,45 +29,49 @@ public class ContentGeneratorServeWebApplicationExtensions : IContentGenerator
         sb.AppendLine(12, "pattern,");
         sb.AppendLine(12, "PatchHttpMethods,");
         sb.AppendLine(12, "handler);");
-        sb.AppendLine();
-        sb.AppendLine(4, "public static IApplicationBuilder AddGlobalErrorHandler(");
-        sb.AppendLine(8, "this WebApplication app)");
-        sb.AppendLine(8, "=> app.UseMiddleware<GlobalErrorHandlingMiddleware>();");
-        sb.AppendLine();
-        sb.AppendLine(4, "public static IApplicationBuilder ConfigureSwaggerUi(");
-        sb.AppendLine(8, "this WebApplication app,");
-        sb.AppendLine(8, "string applicationName)");
-        sb.AppendLine(4, "{");
-        sb.AppendLine(8, "app.UseSwagger();");
-        sb.AppendLine(8, "app.UseSwaggerUI(options =>");
-        sb.AppendLine(8, "{");
-        sb.AppendLine(12, "options.EnableTryItOutByDefault();");
-
-        switch (SwaggerThemeMode)
+        if (SwaggerThemeMode != SwaggerThemeMode.None)
         {
-            case SwaggerThemeMode.Dark:
-                sb.AppendLine(12, "options.InjectStylesheet(\"/swagger-ui/SwaggerDark.css\");");
-                break;
-            case SwaggerThemeMode.Light:
-                sb.AppendLine(12, "options.InjectStylesheet(\"/swagger-ui/SwaggerLight.css\");");
-                break;
-        }
+            sb.AppendLine();
+            sb.AppendLine(4, "public static IApplicationBuilder AddGlobalErrorHandler(");
+            sb.AppendLine(8, "this WebApplication app)");
+            sb.AppendLine(8, "=> app.UseMiddleware<GlobalErrorHandlingMiddleware>();");
+            sb.AppendLine();
+            sb.AppendLine(4, "public static IApplicationBuilder ConfigureSwaggerUi(");
+            sb.AppendLine(8, "this WebApplication app,");
+            sb.AppendLine(8, "string applicationName)");
+            sb.AppendLine(4, "{");
+            sb.AppendLine(8, "app.UseSwagger();");
+            sb.AppendLine(8, "app.UseSwaggerUI(options =>");
+            sb.AppendLine(8, "{");
+            sb.AppendLine(12, "options.EnableTryItOutByDefault();");
 
-        sb.AppendLine(12, "options.InjectJavascript(\"/swagger-ui/main.js\");");
-        sb.AppendLine();
-        sb.AppendLine(12, "var descriptions = app.DescribeApiVersions();");
-        sb.AppendLine(12, "foreach (var (url, name) in");
-        sb.AppendLine(20, "from description in descriptions");
-        sb.AppendLine(20, "let url = $\"/swagger/{description.GroupName}/swagger.json\"");
-        sb.AppendLine(20, "let name = description.GroupName.ToUpperInvariant()");
-        sb.AppendLine(20, "select (url, name))");
-        sb.AppendLine(12, "{");
-        sb.AppendLine(16, "options.SwaggerEndpoint(url, $\"{applicationName} {name}\");");
-        sb.AppendLine(12, "}");
-        sb.AppendLine(8, "});");
-        sb.AppendLine();
-        sb.AppendLine(4, "    return app;");
-        sb.AppendLine(4, "}");
+            switch (SwaggerThemeMode)
+            {
+                case SwaggerThemeMode.Dark:
+                    sb.AppendLine(12, "options.InjectStylesheet(\"/swagger-ui/SwaggerDark.css\");");
+                    break;
+                case SwaggerThemeMode.Light:
+                    sb.AppendLine(12, "options.InjectStylesheet(\"/swagger-ui/SwaggerLight.css\");");
+                    break;
+            }
+
+            sb.AppendLine(12, "options.InjectJavascript(\"/swagger-ui/main.js\");");
+            sb.AppendLine();
+
+            sb.AppendLine(12, "var descriptions = app.DescribeApiVersions();");
+            sb.AppendLine(12, "foreach (var (url, name) in");
+            sb.AppendLine(20, "from description in descriptions");
+            sb.AppendLine(20, "let url = $\"/swagger/{description.GroupName}/swagger.json\"");
+            sb.AppendLine(20, "let name = description.GroupName.ToUpperInvariant()");
+            sb.AppendLine(20, "select (url, name))");
+            sb.AppendLine(12, "{");
+            sb.AppendLine(16, "options.SwaggerEndpoint(url, $\"{applicationName} {name}\");");
+            sb.AppendLine(12, "}");
+            sb.AppendLine(8, "});");
+            sb.AppendLine();
+            sb.AppendLine(4, "    return app;");
+            sb.AppendLine(4, "}");
+        }
         sb.Append('}');
 
         return sb.ToString();

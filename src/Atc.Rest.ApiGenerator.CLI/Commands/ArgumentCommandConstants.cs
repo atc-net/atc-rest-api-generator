@@ -12,6 +12,7 @@ public static class ArgumentCommandConstants
     public const string LongConfigurationOptionsPath = "--optionsPath";
 
     public const string LongConfigurationAspNetOutputType = "--aspnet-output-type";
+    public const string LongConfigurationSwaggerTheme = "--swagger-theme";
 
     public const string LongConfigurationValidateStrictMode = "--validate-strictMode";
     public const string LongConfigurationValidateOperationIdValidation = "--validate-operationIdValidation";

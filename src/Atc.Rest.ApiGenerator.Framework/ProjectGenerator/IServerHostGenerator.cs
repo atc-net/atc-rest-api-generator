@@ -13,7 +13,8 @@ public interface IServerHostGenerator
 {
     bool UseRestExtended { get; set; }
 
-    void ScaffoldProgramFile();
+    void ScaffoldProgramFile(
+        SwaggerThemeMode swaggerThemeMode);
 
     void ScaffoldStartupFile();
 

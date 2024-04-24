@@ -3,7 +3,6 @@ namespace Atc.Rest.ApiGenerator.Models;
 public class ApiProjectOptions : BaseProjectOptions
 {
     public ApiProjectOptions(
-        AspNetOutputType aspNetOutputType,
         DirectoryInfo projectSrcGeneratePath,
         DirectoryInfo? projectTestGeneratePath,
         OpenApiDocument openApiDocument,
@@ -16,7 +15,6 @@ public class ApiProjectOptions : BaseProjectOptions
         bool forClient = false,
         string? clientFolderName = null)
         : base(
-            aspNetOutputType,
             projectSrcGeneratePath,
             projectTestGeneratePath,
             openApiDocument,

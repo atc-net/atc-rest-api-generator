@@ -64,11 +64,14 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
         var shouldScaffoldCodingRules = CodingRulesHelper.ShouldScaffoldCodingRules(outputSlnPath, settings.DisableCodingRules);
         var isUsingCodingRules = CodingRulesHelper.IsUsingCodingRules(outputSlnPath, settings.DisableCodingRules);
 
-        var aspNetOutputType = AspNetOutputType.Mvc;
-
         if (settings.AspNetOutputType.IsSet)
         {
-            aspNetOutputType = settings.AspNetOutputType.Value;
+            apiOptions.Generator.AspNetOutputType = settings.AspNetOutputType.Value;
+        }
+
+        if (settings.SwaggerThemeMode.IsSet)
+        {
+            apiOptions.Generator.SwaggerThemeMode = settings.SwaggerThemeMode.Value;
         }
 
         if (shouldScaffoldCodingRules &&
@@ -89,7 +92,6 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
 
             if (!GenerateHelper.GenerateServerApi(
                 loggerFactory,
-                aspNetOutputType,
                 apiOperationExtractor,
                 nugetPackageReferenceProvider,
                 projectPrefixName,
@@ -105,7 +107,6 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
 
             if (!GenerateHelper.GenerateServerDomain(
                     loggerFactory,
-                    aspNetOutputType,
                     nugetPackageReferenceProvider,
                     projectPrefixName,
                     outputSrcPath,
@@ -122,7 +123,6 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
             if (!GenerateHelper.GenerateServerHost(
                     loggerFactory,
                     apiOperationExtractor,
-                    aspNetOutputType,
                     nugetPackageReferenceProvider,
                     projectPrefixName,
                     outputSrcPath,

@@ -57,11 +57,14 @@ public class GenerateServerHostCommand : AsyncCommand<ServerHostCommandSettings>
         var shouldScaffoldCodingRules = CodingRulesHelper.ShouldScaffoldCodingRules(settings.OutputPath, settings.DisableCodingRules);
         var isUsingCodingRules = CodingRulesHelper.IsUsingCodingRules(settings.OutputPath, settings.DisableCodingRules);
 
-        var aspNetOutputType = AspNetOutputType.Mvc;
-
         if (settings.AspNetOutputType.IsSet)
         {
-            aspNetOutputType = settings.AspNetOutputType.Value;
+            apiOptions.Generator.AspNetOutputType = settings.AspNetOutputType.Value;
+        }
+
+        if (settings.SwaggerThemeMode.IsSet)
+        {
+            apiOptions.Generator.SwaggerThemeMode = settings.SwaggerThemeMode.Value;
         }
 
         if (shouldScaffoldCodingRules &&
@@ -83,7 +86,6 @@ public class GenerateServerHostCommand : AsyncCommand<ServerHostCommandSettings>
             if (!GenerateHelper.GenerateServerHost(
                     loggerFactory,
                     apiOperationExtractor,
-                    aspNetOutputType,
                     nugetPackageReferenceProvider,
                     settings.ProjectPrefixName,
                     new DirectoryInfo(settings.OutputPath),

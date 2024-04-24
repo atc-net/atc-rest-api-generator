@@ -57,11 +57,9 @@ public class GenerateServerApiCommand : AsyncCommand<ServerApiCommandSettings>
         var shouldScaffoldCodingRules = CodingRulesHelper.ShouldScaffoldCodingRules(settings.OutputPath, settings.DisableCodingRules);
         var isUsingCodingRules = CodingRulesHelper.IsUsingCodingRules(settings.OutputPath, settings.DisableCodingRules);
 
-        var aspNetOutputType = AspNetOutputType.Mvc;
-
         if (settings.AspNetOutputType.IsSet)
         {
-            aspNetOutputType = settings.AspNetOutputType.Value;
+            apiOptions.Generator.AspNetOutputType = settings.AspNetOutputType.Value;
         }
 
         if (shouldScaffoldCodingRules &&
@@ -82,7 +80,6 @@ public class GenerateServerApiCommand : AsyncCommand<ServerApiCommandSettings>
 
             if (!GenerateHelper.GenerateServerApi(
                     loggerFactory,
-                    aspNetOutputType,
                     apiOperationExtractor,
                     nugetPackageReferenceProvider,
                     settings.ProjectPrefixName,

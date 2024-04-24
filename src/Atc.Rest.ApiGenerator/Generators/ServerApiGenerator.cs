@@ -60,7 +60,7 @@ public class ServerApiGenerator
     {
         logger.LogInformation($"{ContentWriterConstants.AreaGenerateCode} Working on server api generation ({projectOptions.ProjectName})");
 
-        if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
+        if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
         {
             var isVersionValid = ValidateVersioning();
             if (!isVersionValid)
@@ -73,7 +73,7 @@ public class ServerApiGenerator
 
         var operationSchemaMappings = apiOperationExtractor.Extract(projectOptions.Document);
 
-        if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
+        if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
         {
             serverApiGeneratorMvc.GenerateAssemblyMarker();
 
@@ -99,14 +99,14 @@ public class ServerApiGenerator
         GenerateModels(projectOptions.Document, operationSchemaMappings);
         GenerateParameters(projectOptions.Document);
 
-        if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
+        if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
         {
             GenerateResults(projectOptions.Document);
         }
 
         GenerateInterfaces(projectOptions.Document);
 
-        if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
+        if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
         {
             GenerateMvcControllers(operationSchemaMappings);
         }
@@ -202,7 +202,7 @@ public class ServerApiGenerator
             IList<(string PackageId, string PackageVersion, string? SubElements)>? packageReferencesBaseLineForApiProject = null;
             TaskHelper.RunSync(async () =>
             {
-                if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
+                if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
                 {
                     packageReferencesBaseLineForApiProject = await nugetPackageReferenceProvider.GetPackageReferencesBaseLineForApiProjectForMvc();
                 }
@@ -332,7 +332,7 @@ public class ServerApiGenerator
             : $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
 
         string content;
-        if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
+        if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
         {
             var parameters = ContentGeneratorServerClientModelParametersFactory.CreateForClass(
                 codeGeneratorContentHeader,
@@ -408,7 +408,7 @@ public class ServerApiGenerator
 
                 string modelName;
                 string content;
-                if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
+                if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
                 {
                     var parameterParameters = ContentGeneratorServerParameterParametersFactory.CreateForClass(
                         fullNamespace,
@@ -517,7 +517,7 @@ public class ServerApiGenerator
             {
                 InterfaceParameters interfaceParameters;
 
-                if (projectOptions.AspNetOutputType == AspNetOutputType.Mvc)
+                if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
                 {
                     interfaceParameters = Framework.Mvc.Factories.Parameters.Server.ContentGeneratorServerHandlerInterfaceParametersFactory.Create(
                         codeGeneratorContentHeader,

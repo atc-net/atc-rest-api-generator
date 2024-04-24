@@ -10,6 +10,8 @@ public sealed class ContentGeneratorServerProgram : IContentGenerator
         this.parameters = parameters;
     }
 
+    public SwaggerThemeMode SwaggerThemeMode { get; set; } = SwaggerThemeMode.None;
+
     public string Generate()
     {
         var sb = new StringBuilder();
@@ -34,8 +36,13 @@ public sealed class ContentGeneratorServerProgram : IContentGenerator
         sb.AppendLine();
         sb.AppendLine(8, "services.AddEndpointDefinitions(typeof(IApiContractAssemblyMarker));");
         sb.AppendLine();
-        sb.AppendLine(8, "services.ConfigureSwagger();");
-        sb.AppendLine();
+
+        if (SwaggerThemeMode != SwaggerThemeMode.None)
+        {
+            sb.AppendLine(8, "services.ConfigureSwagger();");
+            sb.AppendLine();
+        }
+
         sb.AppendLine(8, "services.AddCors(corsOptions =>");
         sb.AppendLine(8, "{");
         sb.AppendLine(12, "corsOptions.AddPolicy(\"DemoCorsPolicy\", configurePolicy =>");
@@ -68,10 +75,12 @@ public sealed class ContentGeneratorServerProgram : IContentGenerator
         sb.AppendLine();
         sb.AppendLine(8, "app.UseStaticFiles();");
         sb.AppendLine();
-        sb.AppendLine(8, "if (app.Environment.IsDevelopment())");
-        sb.AppendLine(8, "{");
-        sb.AppendLine(12, "app.ConfigureSwaggerUi(builder.Environment.ApplicationName);");
-        sb.AppendLine(8, "}");
+
+        if (SwaggerThemeMode != SwaggerThemeMode.None)
+        {
+            sb.AppendLine(12, "app.ConfigureSwaggerUi(builder.Environment.ApplicationName);");
+        }
+
         sb.AppendLine();
         sb.AppendLine(8, "app.UseHttpsRedirection();");
         sb.AppendLine(8, "app.UseHsts();");
