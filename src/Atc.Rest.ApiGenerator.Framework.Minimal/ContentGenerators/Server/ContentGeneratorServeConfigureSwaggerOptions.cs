@@ -14,7 +14,7 @@ public class ContentGeneratorServeConfigureSwaggerOptions : IContentGenerator
     {
         var sb = new StringBuilder();
 
-        sb.AppendLine($"namespace {parameters.Namespace};");
+        sb.AppendLine($"namespace {parameters.Namespace}.Options;"); // TODO: Move to constant
         sb.AppendLine();
         sb.AppendLine("public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>");
         sb.AppendLine("{");
@@ -54,7 +54,7 @@ public class ContentGeneratorServeConfigureSwaggerOptions : IContentGenerator
         sb.AppendLine(8, "var text = new StringBuilder(\"An example API to showcase minimal api implementation using the Atc.Rest.MinimalApi Nuget package.\");");
         sb.AppendLine(8, "var info = new OpenApiInfo");
         sb.AppendLine(8, "{");
-        sb.AppendLine(12, "Title = $\"{ environment.ApplicationName} {description.GroupName.ToUpperInvariant()}\",");
+        sb.AppendLine(12, "Title = $\"{environment.ApplicationName} {description.GroupName.ToUpperInvariant()}\",");
         sb.AppendLine(12, "Version = description.ApiVersion.ToString(),");
         sb.AppendLine(12, "Contact = new OpenApiContact { Name = \"atc-net\", Email = \"atcnet.org@gmail.com\" },");
         sb.AppendLine(8, "};");

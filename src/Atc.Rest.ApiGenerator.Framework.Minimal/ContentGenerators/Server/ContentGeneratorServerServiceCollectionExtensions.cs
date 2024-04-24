@@ -14,7 +14,7 @@ public class ContentGeneratorServerServiceCollectionExtensions : IContentGenerat
     {
         var sb = new StringBuilder();
 
-        sb.AppendLine($"namespace {parameters.Namespace};");
+        sb.AppendLine($"namespace {parameters.Namespace}.Extensions;"); // TODO: Move to constant
         sb.AppendLine();
         sb.AppendLine("public static class ServiceCollectionExtensions");
         sb.AppendLine("{");

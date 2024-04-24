@@ -97,7 +97,7 @@ public class ServerHostGenerator : IServerHostGenerator
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
             projectPath,
-            projectPath.CombineFileInfo("ConfigureSwaggerDocOptions.cs"),
+            projectPath.CombineFileInfo("Options", "ConfigureSwaggerDocOptions.cs"),
             ContentWriterArea.Src,
             content);
     }
@@ -126,6 +126,7 @@ public class ServerHostGenerator : IServerHostGenerator
             "System.Reflection",
             domainProjectName,
             $"{projectName}.Generated",
+            $"{projectName}.Options",
         };
 
         if (UseRestExtended)

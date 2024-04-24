@@ -17,6 +17,8 @@ public class ContentGeneratorServeWebApplicationExtensions : IContentGenerator
     {
         var sb = new StringBuilder();
 
+        sb.AppendLine($"namespace {parameters.Namespace}.Extensions;"); // TODO: Move to constant
+        sb.AppendLine();
         sb.AppendLine("public static class WebApplicationExtensions");
         sb.AppendLine("{");
         sb.AppendLine(4, "private static readonly string[] PatchHttpMethods = { \"patch\" };");

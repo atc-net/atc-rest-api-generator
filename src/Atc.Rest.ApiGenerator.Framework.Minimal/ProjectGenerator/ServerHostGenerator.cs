@@ -92,7 +92,7 @@ public class ServerHostGenerator : IServerHostGenerator
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
             projectPath,
-            projectPath.CombineFileInfo("ConfigureSwaggerDocOptions.cs"),
+            projectPath.CombineFileInfo("Options", "ConfigureSwaggerDocOptions.cs"),
             ContentWriterArea.Src,
             content);
     }
@@ -172,7 +172,9 @@ public class ServerHostGenerator : IServerHostGenerator
             "Microsoft.Extensions.Options",
             "Microsoft.OpenApi.Models",
             "Swashbuckle.AspNetCore.SwaggerGen",
+            $"{projectName}.Extensions",
             $"{projectName}.Generated",
+            $"{projectName}.Options",
             $"{projectName}".Replace(".Api", ".Domain", StringComparison.Ordinal),
         };
 

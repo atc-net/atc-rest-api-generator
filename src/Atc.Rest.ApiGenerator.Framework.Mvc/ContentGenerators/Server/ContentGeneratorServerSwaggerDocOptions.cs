@@ -21,7 +21,7 @@ public sealed class ContentGeneratorServerSwaggerDocOptions : IContentGenerator
         var sb = new StringBuilder();
 
         sb.Append(codeHeaderGenerator.Generate());
-        sb.AppendLine($"namespace {parameters.Namespace};");
+        sb.AppendLine($"namespace {parameters.Namespace}.Options;"); // TODO: Move to constant
         sb.AppendLine();
         sb.AppendLine(codeAttributeGenerator.Generate());
         sb.AppendLine("public class ConfigureSwaggerDocOptions : IConfigureOptions<SwaggerGenOptions>");
