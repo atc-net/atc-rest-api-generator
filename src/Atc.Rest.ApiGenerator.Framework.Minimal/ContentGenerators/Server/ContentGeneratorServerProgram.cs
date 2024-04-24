@@ -20,9 +20,12 @@ public sealed class ContentGeneratorServerProgram : IContentGenerator
         sb.AppendLine();
         sb.AppendLine("public static class Program");
         sb.AppendLine("{");
+        sb.AppendLine(4, "[SuppressMessage(\"Design\", \"MA0051:Method is too long\", Justification = \"OK.\")]");
         sb.AppendLine(4, "public static void Main(string[] args)");
         sb.AppendLine(4, "{");
         sb.AppendLine(8, "var builder = WebApplication.CreateBuilder(args);");
+        sb.AppendLine();
+        sb.AppendLine(8, "builder.ConfigureLogging();");
         sb.AppendLine();
         sb.AppendLine(8, "var services = builder.Services;");
         sb.AppendLine();
@@ -55,8 +58,8 @@ public sealed class ContentGeneratorServerProgram : IContentGenerator
         sb.AppendLine(8, "});");
         sb.AppendLine();
         sb.AppendLine(8, "// This enables proper enum as string in Swagger UI");
-        sb.AppendLine(8, "// TODO: services.AddControllers().AddJsonOptions(o => JsonSerializerOptionsFactory.Create().Configure(o));");
-        sb.AppendLine(8, "// TODO: services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(o => JsonSerializerOptionsFactory.Create().Configure(o));");
+        sb.AppendLine(8, "services.AddControllers().AddJsonOptions(o => JsonSerializerOptionsFactory.Create().Configure(o));");
+        sb.AppendLine(8, "services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(o => JsonSerializerOptionsFactory.Create().Configure(o));");
         sb.AppendLine();
         sb.AppendLine(8, "services.AddSingleton(_ => new ValidationFilterOptions");
         sb.AppendLine(8, "{");
@@ -67,7 +70,7 @@ public sealed class ContentGeneratorServerProgram : IContentGenerator
         sb.AppendLine();
         sb.AppendLine(8, "app.UseEndpointDefinitions();");
         sb.AppendLine();
-        sb.AppendLine(8, "// TODO: app.AddGlobalErrorHandler();");
+        sb.AppendLine(8, "app.AddGlobalErrorHandler();");
         sb.AppendLine();
         sb.AppendLine(8, "// Enabling the status code pages middleware, will allow Problem Details to be used in some extra non-exception related framework scenarios,");
         sb.AppendLine(8, "// such as a 404 occurring due to a non-existent route or a 405 occurring due to a caller using an invalid HTTP method on an existing endpoint.");
@@ -78,7 +81,7 @@ public sealed class ContentGeneratorServerProgram : IContentGenerator
 
         if (SwaggerThemeMode != SwaggerThemeMode.None)
         {
-            sb.AppendLine(12, "app.ConfigureSwaggerUi(builder.Environment.ApplicationName);");
+            sb.AppendLine(8, "app.ConfigureSwaggerUi(builder.Environment.ApplicationName);");
         }
 
         sb.AppendLine();
@@ -86,6 +89,12 @@ public sealed class ContentGeneratorServerProgram : IContentGenerator
         sb.AppendLine(8, "app.UseHsts();");
         sb.AppendLine();
         sb.AppendLine(8, "app.UseCors(\"DemoCorsPolicy\");");
+        sb.AppendLine();
+        sb.AppendLine(8, "if (!app.Environment.IsDevelopment())");
+        sb.AppendLine(8, "{");
+        sb.AppendLine(12, "app.UseAuthentication();");
+        sb.AppendLine(12, "app.UseAuthorization();");
+        sb.AppendLine(8, "}");
         sb.AppendLine();
         sb.AppendLine(8, "app.Run();");
         sb.AppendLine(4, "}");

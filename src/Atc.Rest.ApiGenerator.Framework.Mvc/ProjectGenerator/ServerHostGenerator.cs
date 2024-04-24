@@ -30,6 +30,22 @@ public class ServerHostGenerator : IServerHostGenerator
 
     public bool UseRestExtended { get; set; }
 
+    public void ScaffoldJsonSerializerOptionsExtensions()
+        => throw new NotSupportedException($"{nameof(ScaffoldJsonSerializerOptionsExtensions)} is not supported for MVC");
+
+    public void ScaffoldServiceCollectionExtensions()
+        => throw new NotSupportedException($"{nameof(ScaffoldServiceCollectionExtensions)} is not supported for MVC");
+
+    public void ScaffoldWebApplicationBuilderExtensions()
+        => throw new NotSupportedException($"{nameof(ScaffoldWebApplicationBuilderExtensions)} is not supported for MVC");
+
+    public void ScaffoldWebApplicationExtensions(
+        SwaggerThemeMode swaggerThemeMode)
+        => throw new NotSupportedException($"{nameof(ScaffoldWebApplicationExtensions)} is not supported for MVC");
+
+    public void ScaffoldConfigureSwaggerOptions()
+        => throw new NotSupportedException($"{nameof(ScaffoldConfigureSwaggerOptions)} is not supported for MVC");
+
     public void ScaffoldProgramFile(
         SwaggerThemeMode swaggerThemeMode)
     {
@@ -78,7 +94,7 @@ public class ServerHostGenerator : IServerHostGenerator
             overrideIfExist: false);
     }
 
-    public void ScaffoldConfigureSwaggerDocOptions()
+    public void GenerateConfigureSwaggerDocOptions()
     {
         var fullNamespace = $"{projectName}";
 
@@ -87,7 +103,7 @@ public class ServerHostGenerator : IServerHostGenerator
                 fullNamespace,
                 openApiDocument.ToSwaggerDocOptionsParameters());
 
-        var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerSwaggerDocOptions(
+        var contentGenerator = new Core.ContentGenerators.Server.ContentGeneratorServerSwaggerDocOptions(
             new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
             new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
             contentGeneratorServerSwaggerDocOptionsParameters);
@@ -101,16 +117,6 @@ public class ServerHostGenerator : IServerHostGenerator
             ContentWriterArea.Src,
             content);
     }
-
-    public void ScaffoldServiceCollectionExtensions()
-        => throw new NotSupportedException($"{nameof(ScaffoldServiceCollectionExtensions)} is not supported for MVC");
-
-    public void ScaffoldServiceWebApplicationExtensions(
-        SwaggerThemeMode swaggerThemeMode)
-        => throw new NotSupportedException($"{nameof(ScaffoldServiceWebApplicationExtensions)} is not supported for MVC");
-
-    public void ScaffoldConfigureSwaggerOptions()
-        => throw new NotSupportedException($"{nameof(ScaffoldConfigureSwaggerOptions)} is not supported for MVC");
 
     public void MaintainGlobalUsings(
         string domainProjectName,

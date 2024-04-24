@@ -1,5 +1,3 @@
-using Atc.Rest.ApiGenerator.Framework.Contracts;
-
 namespace Atc.Rest.ApiGenerator.Framework.Minimal.ProjectGenerator;
 
 public class ServerHostGenerator : IServerHostGenerator
@@ -34,6 +32,90 @@ public class ServerHostGenerator : IServerHostGenerator
     /// NOTE: This property is not used in MinimalApi
     /// </summary>
     public bool UseRestExtended { get; set; }
+
+    public void ScaffoldJsonSerializerOptionsExtensions()
+    {
+        var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerJsonSerializerOptionsExtensions(
+                               new ContentGeneratorBaseParameters(Namespace: projectName));
+
+        var content = contentGenerator.Generate();
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectPath,
+            projectPath.CombineFileInfo("Extensions", "JsonSerializerOptionsExtensions.cs"),
+            ContentWriterArea.Src,
+            content,
+            overrideIfExist: false);
+    }
+
+    public void ScaffoldServiceCollectionExtensions()
+    {
+        var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerServiceCollectionExtensions(
+            new ContentGeneratorBaseParameters(Namespace: projectName));
+
+        var content = contentGenerator.Generate();
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectPath,
+            projectPath.CombineFileInfo("Extensions", "ServiceCollectionExtensions.cs"),
+            ContentWriterArea.Src,
+            content,
+            overrideIfExist: false);
+    }
+
+    public void ScaffoldWebApplicationBuilderExtensions()
+    {
+        var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerWebApplicationBuilderExtensions(
+            new ContentGeneratorBaseParameters(Namespace: projectName));
+
+        var content = contentGenerator.Generate();
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectPath,
+            projectPath.CombineFileInfo("Extensions", "WebApplicationBuilderExtensions.cs"),
+            ContentWriterArea.Src,
+            content,
+            overrideIfExist: false); // TODO: !!
+    }
+
+    public void ScaffoldWebApplicationExtensions(
+        SwaggerThemeMode swaggerThemeMode)
+    {
+        var contentGenerator = new ContentGenerators.Server.ContentGeneratorServeWebApplicationExtensions(
+            new ContentGeneratorBaseParameters(Namespace: projectName))
+        {
+            SwaggerThemeMode = swaggerThemeMode,
+        };
+
+        var content = contentGenerator.Generate();
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectPath,
+            projectPath.CombineFileInfo("Extensions", "WebApplicationExtensions.cs"),
+            ContentWriterArea.Src,
+            content,
+            overrideIfExist: false);
+    }
+
+    public void ScaffoldConfigureSwaggerOptions()
+    {
+        var contentGenerator = new ContentGenerators.Server.ContentGeneratorServeConfigureSwaggerOptions(
+            new ContentGeneratorBaseParameters(Namespace: projectName));
+
+        var content = contentGenerator.Generate();
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectPath,
+            projectPath.CombineFileInfo("Options", "ConfigureSwaggerOptions.cs"),
+            ContentWriterArea.Src,
+            content,
+            overrideIfExist: false);
+    }
 
     public void ScaffoldProgramFile(
         SwaggerThemeMode swaggerThemeMode)
@@ -73,7 +155,7 @@ public class ServerHostGenerator : IServerHostGenerator
             overrideIfExist: false);
     }
 
-    public void ScaffoldConfigureSwaggerDocOptions()
+    public void GenerateConfigureSwaggerDocOptions()
     {
         var fullNamespace = $"{projectName}";
 
@@ -82,7 +164,7 @@ public class ServerHostGenerator : IServerHostGenerator
                 fullNamespace,
                 openApiDocument.ToSwaggerDocOptionsParameters());
 
-        var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerSwaggerDocOptions(
+        var contentGenerator = new Core.ContentGenerators.Server.ContentGeneratorServerSwaggerDocOptions(
             new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
             new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
             contentGeneratorServerSwaggerDocOptionsParameters);
@@ -97,58 +179,6 @@ public class ServerHostGenerator : IServerHostGenerator
             content);
     }
 
-    public void ScaffoldServiceCollectionExtensions()
-    {
-        var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerServiceCollectionExtensions(
-            new ContentGeneratorBaseParameters(Namespace: projectName));
-
-        var content = contentGenerator.Generate();
-
-        var contentWriter = new ContentWriter(logger);
-        contentWriter.Write(
-            projectPath,
-            projectPath.CombineFileInfo("Extensions", "ServiceCollectionExtensions.cs"),
-            ContentWriterArea.Src,
-            content,
-            overrideIfExist: false);
-    }
-
-    public void ScaffoldServiceWebApplicationExtensions(
-        SwaggerThemeMode swaggerThemeMode)
-    {
-        var contentGenerator = new ContentGenerators.Server.ContentGeneratorServeWebApplicationExtensions(
-            new ContentGeneratorBaseParameters(Namespace: projectName))
-        {
-            SwaggerThemeMode = swaggerThemeMode,
-        };
-
-        var content = contentGenerator.Generate();
-
-        var contentWriter = new ContentWriter(logger);
-        contentWriter.Write(
-            projectPath,
-            projectPath.CombineFileInfo("Extensions", "WebApplicationExtensions.cs"),
-            ContentWriterArea.Src,
-            content,
-            overrideIfExist: false);
-    }
-
-    public void ScaffoldConfigureSwaggerOptions()
-    {
-        var contentGenerator = new ContentGenerators.Server.ContentGeneratorServeConfigureSwaggerOptions(
-            new ContentGeneratorBaseParameters(Namespace: projectName));
-
-        var content = contentGenerator.Generate();
-
-        var contentWriter = new ContentWriter(logger);
-        contentWriter.Write(
-            projectPath,
-            projectPath.CombineFileInfo("Options", "ConfigureSwaggerOptions.cs"),
-            ContentWriterArea.Src,
-            content,
-            overrideIfExist: false);
-    }
-
     public void MaintainGlobalUsings(
         string domainProjectName,
         IList<string> apiGroupNames,
@@ -160,6 +190,7 @@ public class ServerHostGenerator : IServerHostGenerator
         var requiredUsings = new List<string>
         {
             "System.CodeDom.Compiler",
+            "System.Diagnostics.CodeAnalysis",
             "System.Text",
             "Asp.Versioning",
             "Asp.Versioning.ApiExplorer",
@@ -168,7 +199,10 @@ public class ServerHostGenerator : IServerHostGenerator
             "Atc.Rest.MinimalApi.Filters.Swagger",
             "Atc.Rest.MinimalApi.Middleware",
             "Atc.Rest.MinimalApi.Versioning",
+            "Atc.Serialization",
             "FluentValidation",
+            "Microsoft.AspNetCore.HttpLogging",
+            "Microsoft.Extensions.Logging.ApplicationInsights",
             "Microsoft.Extensions.Options",
             "Microsoft.OpenApi.Models",
             "Swashbuckle.AspNetCore.SwaggerGen",

@@ -13,21 +13,25 @@ public interface IServerHostGenerator
 {
     bool UseRestExtended { get; set; }
 
+    void ScaffoldJsonSerializerOptionsExtensions();
+
+    void ScaffoldServiceCollectionExtensions();
+
+    void ScaffoldWebApplicationBuilderExtensions();
+
+    void ScaffoldWebApplicationExtensions(
+        SwaggerThemeMode swaggerThemeMode);
+
+    void GenerateConfigureSwaggerDocOptions();
+
+    void ScaffoldConfigureSwaggerOptions();
+
     void ScaffoldProgramFile(
         SwaggerThemeMode swaggerThemeMode);
 
     void ScaffoldStartupFile();
 
     void ScaffoldWebConfig();
-
-    void ScaffoldConfigureSwaggerDocOptions();
-
-    void ScaffoldServiceCollectionExtensions();
-
-    void ScaffoldServiceWebApplicationExtensions(
-        SwaggerThemeMode swaggerThemeMode);
-
-    void ScaffoldConfigureSwaggerOptions();
 
     void MaintainGlobalUsings(
         string domainProjectName,

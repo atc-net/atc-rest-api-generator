@@ -94,7 +94,8 @@ public class ServerHostGenerator
                 projectOptions.ApiOptions.Generator.SwaggerThemeMode);
             serverHostGeneratorMvc.ScaffoldStartupFile();
             serverHostGeneratorMvc.ScaffoldWebConfig();
-            serverHostGeneratorMvc.ScaffoldConfigureSwaggerDocOptions();
+
+            serverHostGeneratorMvc.GenerateConfigureSwaggerDocOptions();
 
             serverHostGeneratorMvc.MaintainGlobalUsings(
                 projectOptions.ProjectName.Replace(".Api", ".Domain", StringComparison.Ordinal),
@@ -106,11 +107,15 @@ public class ServerHostGenerator
             serverHostGeneratorMinimalApi.ScaffoldProgramFile(
                 projectOptions.ApiOptions.Generator.SwaggerThemeMode);
             serverHostGeneratorMinimalApi.ScaffoldWebConfig();
-            serverHostGeneratorMinimalApi.ScaffoldConfigureSwaggerDocOptions();
+
+            serverHostGeneratorMinimalApi.ScaffoldJsonSerializerOptionsExtensions();
             serverHostGeneratorMinimalApi.ScaffoldServiceCollectionExtensions();
-            serverHostGeneratorMinimalApi.ScaffoldServiceWebApplicationExtensions(
+            serverHostGeneratorMinimalApi.ScaffoldWebApplicationBuilderExtensions();
+            serverHostGeneratorMinimalApi.ScaffoldWebApplicationExtensions(
                 projectOptions.ApiOptions.Generator.SwaggerThemeMode);
             serverHostGeneratorMinimalApi.ScaffoldConfigureSwaggerOptions();
+
+            serverHostGeneratorMinimalApi.GenerateConfigureSwaggerDocOptions();
 
             serverHostGeneratorMinimalApi.MaintainGlobalUsings(
                 projectOptions.ProjectName.Replace(".Api", ".Domain", StringComparison.Ordinal),

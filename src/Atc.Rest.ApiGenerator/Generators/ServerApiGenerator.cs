@@ -529,8 +529,6 @@ public class ServerApiGenerator
                 else
                 {
                     interfaceParameters = Framework.Minimal.Factories.Parameters.Server.ContentGeneratorServerHandlerInterfaceParametersFactory.Create(
-                        ////projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody, // TODO: For MinimalApi - Should we use ProblemDetails or move to "middleware generate a response body"
-                        useProblemDetails: false,
                         codeGeneratorContentHeader,
                         fullNamespace,
                         codeGeneratorAttribute,

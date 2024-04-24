@@ -3,7 +3,6 @@ namespace Atc.Rest.ApiGenerator.Framework.Minimal.Factories.Parameters.Server;
 public static class ContentGeneratorServerHandlerInterfaceParametersFactory
 {
     public static InterfaceParameters Create(
-        bool useProblemDetails,
         string headerContent,
         string @namespace,
         AttributeParameters codeGeneratorAttribute,
@@ -45,7 +44,6 @@ public static class ContentGeneratorServerHandlerInterfaceParametersFactory
                 DefaultValue: "default"));
 
         var returnTypeName = ConstructReturnTypeName(
-            useProblemDetails,
             openApiOperation.Responses);
 
         var methodParameters = new List<MethodParameters>
@@ -83,10 +81,9 @@ public static class ContentGeneratorServerHandlerInterfaceParametersFactory
     }
 
     private static string ConstructReturnTypeName(
-        bool useProblemDetails,
         OpenApiResponses responses)
     {
-        var responseReturnTypes = ExtractResponseReturnTypes(useProblemDetails, responses);
+        var responseReturnTypes = ExtractResponseReturnTypes(responses);
 
         if (responseReturnTypes.Count == 1)
         {
@@ -110,7 +107,6 @@ public static class ContentGeneratorServerHandlerInterfaceParametersFactory
     }
 
     private static List<(HttpStatusCode HttpStatusCode, string? ReturnTypeName)> ExtractResponseReturnTypes(
-        bool useProblemDetails,
         OpenApiResponses responses)
     {
         var result = new List<(HttpStatusCode HttpStatusCode, string? ReturnTypeName)>();
@@ -217,14 +213,10 @@ public static class ContentGeneratorServerHandlerInterfaceParametersFactory
                 case HttpStatusCode.NoContent:
                 case HttpStatusCode.Unauthorized:
                 case HttpStatusCode.Forbidden:
-                    result.Add(useProblemDetails
-                        ? (httpStatusCode, "ProblemDetails")
-                        : (httpStatusCode, null));
+                    result.Add((httpStatusCode, null));
                     break;
                 case HttpStatusCode.BadRequest:
-                    result.Add(useProblemDetails
-                        ? (httpStatusCode, "ValidationProblemDetails")
-                        : (httpStatusCode, "string"));
+                    result.Add((httpStatusCode, "string"));
                     break;
                 case HttpStatusCode.NotFound:
                 case HttpStatusCode.MethodNotAllowed:
@@ -234,9 +226,7 @@ public static class ContentGeneratorServerHandlerInterfaceParametersFactory
                 case HttpStatusCode.BadGateway:
                 case HttpStatusCode.ServiceUnavailable:
                 case HttpStatusCode.GatewayTimeout:
-                    result.Add(useProblemDetails
-                        ? (httpStatusCode, "ProblemDetails")
-                        : (httpStatusCode, "string"));
+                    result.Add((httpStatusCode, "string"));
                     break;
                 default:
                     throw new NotImplementedException($"ResponseType for {(int)httpStatusCode} - {httpStatusCode} is missing.");

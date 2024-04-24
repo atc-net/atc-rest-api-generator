@@ -571,7 +571,7 @@ public static class SolutionAndProjectHelper
         return $"{sb1}{sb2}";
     }
 
-    [SuppressMessage("Maintainability", "CA1508:Avoid dead conditional code", Justification = "OK.")]
+    [SuppressMessage("Major Bug", "S2583:Conditionally executed code should be reachable", Justification = "OK - By design.")]
     private static List<DotnetNugetPackage> GetPackageReferencesThatNeedsToBeUpdated(
         string fileContent)
     {
@@ -587,7 +587,7 @@ public static class SolutionAndProjectHelper
                     // TODO: Cleanup this temp re-write hack!
                     var atcApiNugetClient = new AtcApiNugetClient(NullLogger<AtcApiNugetClient>.Instance);
 
-                    Version? latestVersion = default;
+                    Version? latestVersion = null;
                     TaskHelper.RunSync(async () =>
                     {
                         latestVersion =
@@ -596,8 +596,12 @@ public static class SolutionAndProjectHelper
                                 CancellationToken.None);
                     });
 
-                    if (latestVersion is not null &&
-                        latestVersion.IsNewerThan(version, withinMinorReleaseOnly: true))
+                    if (latestVersion is null)
+                    {
+                        continue;
+                    }
+
+                    if (latestVersion.IsNewerThan(version, withinMinorReleaseOnly: true))
                     {
                         result.Add(
                             new DotnetNugetPackage(

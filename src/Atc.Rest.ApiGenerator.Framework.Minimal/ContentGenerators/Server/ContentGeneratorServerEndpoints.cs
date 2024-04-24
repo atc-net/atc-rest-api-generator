@@ -105,7 +105,6 @@ public sealed class ContentGeneratorServerEndpoints : IContentGenerator
         sb.AppendLine(12, $".WithName(\"{item.Name}\")");
         sb.AppendLine(12, $".WithDescription(\"{description}\")");
         sb.AppendLine(12, $".WithSummary(\"{summary}\");");
-
         
         /*
          TODO:

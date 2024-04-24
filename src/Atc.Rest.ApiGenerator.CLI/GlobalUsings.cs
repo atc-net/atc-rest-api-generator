@@ -19,7 +19,6 @@ global using Atc.Rest.ApiGenerator.Framework.Contracts;
 global using Atc.Rest.ApiGenerator.Framework.Contracts.Options;
 global using Atc.Rest.ApiGenerator.Framework.Readers;
 global using Atc.Rest.ApiGenerator.Helpers;
-global using Atc.Rest.ApiGenerator.Models;
 global using Atc.Rest.ApiGenerator.Nuget.Clients;
 global using Atc.Rest.ApiGenerator.OpenApi.Extractors;
 global using Atc.Rest.ApiGenerator.OpenApi.Factories;
