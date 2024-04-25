@@ -31,14 +31,11 @@ public class ContentGeneratorServeWebApplicationExtensions : IContentGenerator
         sb.AppendLine(12, "pattern,");
         sb.AppendLine(12, "PatchHttpMethods,");
         sb.AppendLine(12, "handler);");
+
         if (SwaggerThemeMode != SwaggerThemeMode.None)
         {
             sb.AppendLine();
-            sb.AppendLine(4, "public static IApplicationBuilder AddGlobalErrorHandler(");
-            sb.AppendLine(8, "this WebApplication app)");
-            sb.AppendLine(8, "=> app.UseMiddleware<GlobalErrorHandlingMiddleware>();");
-            sb.AppendLine();
-            sb.AppendLine(4, "public static IApplicationBuilder ConfigureSwaggerUi(");
+            sb.AppendLine(4, "public static IApplicationBuilder ConfigureSwagger(");
             sb.AppendLine(8, "this WebApplication app,");
             sb.AppendLine(8, "string applicationName)");
             sb.AppendLine(4, "{");

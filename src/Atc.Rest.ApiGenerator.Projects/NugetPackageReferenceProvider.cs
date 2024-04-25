@@ -87,9 +87,9 @@ public class NugetPackageReferenceProvider : INugetPackageReferenceProvider
             new("Asp.Versioning.Http", "8.1.0", null),
             new("Atc", atcVersion, null),
             new("Atc.Rest", atcVersion, null),
-            new("Atc.Rest.MinimalApi", "1.0.60", null),
+            new("Atc.Rest.MinimalApi", "1.0.81", null),
             new("FluentValidation.AspNetCore", "11.3.0", null),
-            new("Microsoft.AspNetCore.OpenApi", "8.0.3", null),
+            new("Microsoft.AspNetCore.OpenApi", "8.0.4", null),
             new("Microsoft.NETCore.Platforms", "7.0.4", null),
         };
 
@@ -116,7 +116,7 @@ public class NugetPackageReferenceProvider : INugetPackageReferenceProvider
 
         var packageReferences = new List<(string, string, string?)>
         {
-            new("Atc.Azure.Options", "3.0.28", null),
+            new("Atc.Azure.Options", "3.0.31", null),
             new("Atc.Rest", atcVersion, null),
         };
 

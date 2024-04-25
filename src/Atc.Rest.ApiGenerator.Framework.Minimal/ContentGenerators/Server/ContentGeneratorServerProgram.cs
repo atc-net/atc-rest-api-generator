@@ -70,7 +70,7 @@ public sealed class ContentGeneratorServerProgram : IContentGenerator
         sb.AppendLine();
         sb.AppendLine(8, "app.UseEndpointDefinitions();");
         sb.AppendLine();
-        sb.AppendLine(8, "app.AddGlobalErrorHandler();");
+        sb.AppendLine(8, "app.UseGlobalErrorHandler();");
         sb.AppendLine();
         sb.AppendLine(8, "// Enabling the status code pages middleware, will allow Problem Details to be used in some extra non-exception related framework scenarios,");
         sb.AppendLine(8, "// such as a 404 occurring due to a non-existent route or a 405 occurring due to a caller using an invalid HTTP method on an existing endpoint.");
@@ -81,7 +81,7 @@ public sealed class ContentGeneratorServerProgram : IContentGenerator
 
         if (SwaggerThemeMode != SwaggerThemeMode.None)
         {
-            sb.AppendLine(8, "app.ConfigureSwaggerUi(builder.Environment.ApplicationName);");
+            sb.AppendLine(8, "app.ConfigureSwagger(builder.Environment.ApplicationName);");
         }
 
         sb.AppendLine();

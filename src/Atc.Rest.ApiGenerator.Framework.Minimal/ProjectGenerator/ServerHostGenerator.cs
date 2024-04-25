@@ -197,7 +197,6 @@ public class ServerHostGenerator : IServerHostGenerator
             "Atc.Rest.MinimalApi.Extensions",
             "Atc.Rest.MinimalApi.Filters.Endpoints",
             "Atc.Rest.MinimalApi.Filters.Swagger",
-            "Atc.Rest.MinimalApi.Middleware",
             "Atc.Rest.MinimalApi.Versioning",
             "Atc.Serialization",
             "FluentValidation",
