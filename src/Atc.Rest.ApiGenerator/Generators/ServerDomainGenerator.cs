@@ -72,6 +72,7 @@ public class ServerDomainGenerator
                 return false;
             }
         }
+
         ScaffoldSrc();
 
         var operationSchemaMappings = apiOperationExtractor.Extract(projectOptions.Document);
@@ -204,7 +205,7 @@ public class ServerDomainGenerator
         // Generate
         var classParameters = Framework.Minimal.Factories.Parameters.Server.ContentGeneratorServerHandlerParametersFactory.Create(
             fullNamespace,
-            $"{projectOptions.ProjectPrefixName}.Api.Generated.{ContentGeneratorConstants.Contracts}",
+            $"Api.Generated.{ContentGeneratorConstants.Contracts}.{apiGroupName}",
             apiPath,
             apiOperation);
 

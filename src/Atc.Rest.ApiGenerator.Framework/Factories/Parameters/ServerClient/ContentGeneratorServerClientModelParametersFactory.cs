@@ -51,7 +51,7 @@ public static class ContentGeneratorServerClientModelParametersFactory
 
         var documentationTags = apiSchemaModel.ExtractDocumentationTags($"{modelName}.");
 
-        var recordParameters = ExtractRecordParameters(apiSchemaModel);
+        var recordParameters = ExtractRecordParameters(modelName, apiSchemaModel);
 
         return new RecordsParameters(
             headerContent,
@@ -250,9 +250,9 @@ public static class ContentGeneratorServerClientModelParametersFactory
     }
 
     private static List<RecordParameters> ExtractRecordParameters(
+        string modelName,
         OpenApiSchema apiSchemaModel)
     {
-        var modelName = apiSchemaModel.GetModelName();
         var documentationTags = apiSchemaModel.ExtractDocumentationTags($"{modelName}.");
 
         return
@@ -277,7 +277,23 @@ public static class ContentGeneratorServerClientModelParametersFactory
         {
             var childModelName = apiSchemaModel.Items.GetModelName();
 
-            // TODO: Handle list
+            parameterBaseParameters.Add(
+             new PropertyParameters(
+                 DocumentationTags: null,
+                 Attributes: null,
+                 AccessModifier: AccessModifiers.Public,
+                 GenericTypeName: "List",
+                 IsGenericListType: true,
+                 TypeName: childModelName,
+                 IsNullableType: false,
+                 IsReferenceType: false,
+                 Name: childModelName + "List",
+                 DefaultValue: null,
+                 UseAutoProperty: true,
+                 UseGet: true,
+                 UseSet: true,
+                 UseExpressionBody: false,
+                 Content: null));
         }
         else
         {

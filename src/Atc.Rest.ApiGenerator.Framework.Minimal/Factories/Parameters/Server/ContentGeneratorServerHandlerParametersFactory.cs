@@ -128,7 +128,7 @@ public static class ContentGeneratorServerHandlerParametersFactory
             if (EndsWithWellKnownSystemTypeName(modelName))
             {
                 // TODO: Hack for now, need to fix this in the future with EnsureModelNameWithNamespaceIfNeeded
-                modelName = $"{contractNamespace}.{modelName}.{modelName}";
+                modelName = $"{contractNamespace}.{modelName}";
             }
 
             switch (httpStatusCode)
