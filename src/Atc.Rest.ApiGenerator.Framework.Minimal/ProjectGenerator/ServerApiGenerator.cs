@@ -94,10 +94,10 @@ public class ServerApiGenerator : IServerApiGenerator
 
         if (operationSchemaMappings.Any(apiOperation => apiOperation.Model.IsShared))
         {
-            requiredUsings.Add($"{projectName}.Contracts");
+            requiredUsings.Add($"{projectName}.{ContentGeneratorConstants.Contracts}");
         }
 
-        requiredUsings.AddRange(apiGroupNames.Select(x => $"{projectName}.Contracts.{x}"));
+        requiredUsings.AddRange(apiGroupNames.Select(x => $"{projectName}.{ContentGeneratorConstants.Contracts}.{x}"));
 
         GlobalUsingsHelper.CreateOrUpdate(
             logger,

@@ -65,7 +65,8 @@ public class ServerDomainGenerator : IServerDomainGenerator
     public void MaintainGlobalUsings(
         string apiProjectName,
         IList<string> apiGroupNames,
-        bool removeNamespaceGroupSeparatorInGlobalUsings)
+        bool removeNamespaceGroupSeparatorInGlobalUsings,
+        IList<ApiOperation> operationSchemaMappings)
     {
         ArgumentNullException.ThrowIfNull(apiProjectName);
         ArgumentNullException.ThrowIfNull(apiGroupNames);
@@ -75,7 +76,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
             "System.CodeDom.Compiler",
         };
 
-        requiredUsings.AddRange(apiGroupNames.Select(x => $"{apiProjectName}.Contracts.{x}"));
+        requiredUsings.AddRange(apiGroupNames.Select(x => $"{apiProjectName}.{ContentGeneratorConstants.Contracts}.{x}"));
 
         GlobalUsingsHelper.CreateOrUpdate(
             logger,

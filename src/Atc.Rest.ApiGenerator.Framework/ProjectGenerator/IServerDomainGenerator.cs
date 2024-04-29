@@ -18,5 +18,6 @@ public interface IServerDomainGenerator
     void MaintainGlobalUsings(
         string apiProjectName,
         IList<string> apiGroupNames,
-        bool removeNamespaceGroupSeparatorInGlobalUsings);
+        bool removeNamespaceGroupSeparatorInGlobalUsings,
+        IList<ApiOperation> operationSchemaMappings);
 }

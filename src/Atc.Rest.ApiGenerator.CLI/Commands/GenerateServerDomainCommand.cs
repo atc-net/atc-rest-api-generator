@@ -4,16 +4,19 @@ public class GenerateServerDomainCommand : AsyncCommand<ServerDomainCommandSetti
 {
     private readonly ILoggerFactory loggerFactory;
     private readonly ILogger<GenerateServerDomainCommand> logger;
+    private readonly IApiOperationExtractor apiOperationExtractor;
     private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
     private readonly IOpenApiDocumentValidator openApiDocumentValidator;
 
     public GenerateServerDomainCommand(
         ILoggerFactory loggerFactory,
+        IApiOperationExtractor apiOperationExtractor,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
         IOpenApiDocumentValidator openApiDocumentValidator)
     {
         this.loggerFactory = loggerFactory;
         logger = loggerFactory.CreateLogger<GenerateServerDomainCommand>();
+        this.apiOperationExtractor = apiOperationExtractor;
         this.nugetPackageReferenceProvider = nugetPackageReferenceProvider;
         this.openApiDocumentValidator = openApiDocumentValidator;
     }
@@ -77,6 +80,7 @@ public class GenerateServerDomainCommand : AsyncCommand<ServerDomainCommandSetti
 
             if (!GenerateHelper.GenerateServerDomain(
                     loggerFactory,
+                    apiOperationExtractor,
                     nugetPackageReferenceProvider,
                     settings.ProjectPrefixName,
                     new DirectoryInfo(settings.OutputPath),

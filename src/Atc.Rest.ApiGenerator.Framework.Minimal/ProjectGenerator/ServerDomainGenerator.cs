@@ -221,7 +221,8 @@ public class ServerDomainGenerator : IServerDomainGenerator
     public void MaintainGlobalUsings(
         string apiProjectName,
         IList<string> apiGroupNames,
-        bool removeNamespaceGroupSeparatorInGlobalUsings)
+        bool removeNamespaceGroupSeparatorInGlobalUsings,
+        IList<ApiOperation> operationSchemaMappings)
     {
         ArgumentNullException.ThrowIfNull(apiGroupNames);
 
@@ -237,7 +238,12 @@ public class ServerDomainGenerator : IServerDomainGenerator
             "Microsoft.Extensions.DependencyInjection",
         };
 
-        requiredUsings.AddRange(apiGroupNames.Select(x => $"{apiProjectName}.Contracts.{x}"));
+        if (operationSchemaMappings.Any(apiOperation => apiOperation.Model.IsShared))
+        {
+            requiredUsings.Add($"{apiProjectName}.{ContentGeneratorConstants.Contracts}");
+        }
+
+        requiredUsings.AddRange(apiGroupNames.Select(x => $"{apiProjectName}.{ContentGeneratorConstants.Contracts}.{x}"));
         requiredUsings.AddRange(apiGroupNames.Select(x => $"{projectName}.{ContentGeneratorConstants.Handlers}.{x}"));
 
         GlobalUsingsHelper.CreateOrUpdate(

@@ -8,6 +8,7 @@ namespace Atc.Rest.ApiGenerator.Generators;
 public class ServerDomainGenerator
 {
     private readonly ILogger logger;
+    private readonly IApiOperationExtractor apiOperationExtractor;
     private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
     private readonly DomainProjectOptions projectOptions;
 
@@ -17,12 +18,14 @@ public class ServerDomainGenerator
 
     public ServerDomainGenerator(
         ILoggerFactory loggerFactory,
+        IApiOperationExtractor apiOperationExtractor,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
         DomainProjectOptions projectOptions)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
 
         logger = loggerFactory.CreateLogger<ServerDomainGenerator>();
+        this.apiOperationExtractor = apiOperationExtractor ?? throw new ArgumentNullException(nameof(apiOperationExtractor));
         this.nugetPackageReferenceProvider = nugetPackageReferenceProvider ?? throw new ArgumentNullException(nameof(nugetPackageReferenceProvider));
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
 
@@ -69,8 +72,9 @@ public class ServerDomainGenerator
                 return false;
             }
         }
-
         ScaffoldSrc();
+
+        var operationSchemaMappings = apiOperationExtractor.Extract(projectOptions.Document);
 
         if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
         {
@@ -79,7 +83,8 @@ public class ServerDomainGenerator
             serverDomainGeneratorMvc.MaintainGlobalUsings(
                 projectOptions.ProjectName.Replace(".Domain", ".Api.Generated", StringComparison.Ordinal),
                 projectOptions.ApiGroupNames,
-                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
+                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings,
+                operationSchemaMappings);
         }
         else
         {
@@ -90,7 +95,8 @@ public class ServerDomainGenerator
             serverDomainGeneratorMinimalApi.MaintainGlobalUsings(
                 projectOptions.ProjectName.Replace(".Domain", ".Api.Generated", StringComparison.Ordinal),
                 projectOptions.ApiGroupNames,
-                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
+                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings,
+                operationSchemaMappings);
         }
 
         if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
@@ -198,6 +204,7 @@ public class ServerDomainGenerator
         // Generate
         var classParameters = Framework.Minimal.Factories.Parameters.Server.ContentGeneratorServerHandlerParametersFactory.Create(
             fullNamespace,
+            $"{projectOptions.ProjectPrefixName}.Api.Generated.{ContentGeneratorConstants.Contracts}",
             apiPath,
             apiOperation);
 

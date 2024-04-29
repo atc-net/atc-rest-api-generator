@@ -107,6 +107,7 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
 
             if (!GenerateHelper.GenerateServerDomain(
                     loggerFactory,
+                    apiOperationExtractor,
                     nugetPackageReferenceProvider,
                     projectPrefixName,
                     outputSrcPath,

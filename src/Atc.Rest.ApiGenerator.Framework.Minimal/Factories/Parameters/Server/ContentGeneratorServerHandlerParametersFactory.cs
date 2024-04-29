@@ -4,6 +4,7 @@ public static class ContentGeneratorServerHandlerParametersFactory
 {
     public static ClassParameters Create(
         string @namespace,
+        string contractNamespace,
         OpenApiPathItem openApiPath,
         OpenApiOperation openApiOperation)
     {
@@ -40,7 +41,7 @@ public static class ContentGeneratorServerHandlerParametersFactory
                 Name: "cancellationToken",
                 DefaultValue: "default"));
 
-        var returnTypeName = ConstructReturnTypeName(openApiOperation.Responses);
+        var returnTypeName = ConstructReturnTypeName(openApiOperation.Responses, contractNamespace);
 
         var methodParameters = new List<MethodParameters>
         {
@@ -76,9 +77,10 @@ public static class ContentGeneratorServerHandlerParametersFactory
 
     // TODO: Duplicate - copied from ContentGeneratorServerHandlerInterfaceParametersFactory
     private static string ConstructReturnTypeName(
-        OpenApiResponses responses)
+        OpenApiResponses responses,
+        string contractNamespace)
     {
-        var responseReturnTypes = ExtractResponseReturnTypes(responses);
+        var responseReturnTypes = ExtractResponseReturnTypes(responses, contractNamespace);
 
         if (responseReturnTypes.Count == 1)
         {
@@ -103,7 +105,8 @@ public static class ContentGeneratorServerHandlerParametersFactory
 
     // TODO: Duplicate - copied from ContentGeneratorServerHandlerInterfaceParametersFactory
     private static List<(HttpStatusCode HttpStatusCode, string? ReturnTypeName)> ExtractResponseReturnTypes(
-        OpenApiResponses responses)
+        OpenApiResponses responses,
+        string contractNamespace)
     {
         var result = new List<(HttpStatusCode HttpStatusCode, string? ReturnTypeName)>();
 
@@ -122,6 +125,11 @@ public static class ContentGeneratorServerHandlerParametersFactory
             // TODO: IsShared..
             ////var isShared = apiOperationSchemaMappings.IsShared(modelName);
             ////modelName = OpenApiDocumentSchemaModelNameResolver.EnsureModelNameWithNamespaceIfNeeded(projectName, apiGroupName, modelName, isShared);
+            if (EndsWithWellKnownSystemTypeName(modelName))
+            {
+                // TODO: Hack for now, need to fix this in the future with EnsureModelNameWithNamespaceIfNeeded
+                modelName = $"{contractNamespace}.{modelName}.{modelName}";
+            }
 
             switch (httpStatusCode)
             {
@@ -294,4 +302,11 @@ public static class ContentGeneratorServerHandlerParametersFactory
         sb.Append(4, "}");
         return sb.ToString();
     }
+
+    private static bool EndsWithWellKnownSystemTypeName(
+        string value)
+        => value.EndsWith("Task", StringComparison.Ordinal) ||
+           value.EndsWith("Tasks", StringComparison.Ordinal) ||
+           value.EndsWith("Endpoint", StringComparison.Ordinal) ||
+           value.EndsWith("EventArgs", StringComparison.Ordinal);
 }

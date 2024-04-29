@@ -37,6 +37,7 @@ public static class GenerateHelper
 
     public static bool GenerateServerDomain(
         ILoggerFactory loggerFactory,
+        IApiOperationExtractor apiOperationExtractor,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
         string projectPrefixName,
         DirectoryInfo outputSourcePath,
@@ -63,7 +64,7 @@ public static class GenerateHelper
             useCodingRules,
             removeNamespaceGroupSeparatorInGlobalUsings,
             apiPath);
-        var serverDomainGenerator = new ServerDomainGenerator(loggerFactory, nugetPackageReferenceProvider, domainProjectOptions);
+        var serverDomainGenerator = new ServerDomainGenerator(loggerFactory, apiOperationExtractor, nugetPackageReferenceProvider, domainProjectOptions);
         return serverDomainGenerator.Generate();
     }
 
