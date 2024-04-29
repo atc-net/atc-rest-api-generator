@@ -6,6 +6,7 @@ global using Asp.Versioning.ApiExplorer;
 global using Atc.Rest.Extended.Options;
 
 global using GenericPaginationApi.Api.Generated;
+global using GenericPaginationApi.Api.Options;
 global using GenericPaginationApi.Domain;
 
 global using Microsoft.Extensions.Options;

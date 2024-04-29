@@ -4,7 +4,7 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace DemoUsersApi.Api;
+namespace DemoUsersApi.Api.Options;
 
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class ConfigureSwaggerDocOptions : IConfigureOptions<SwaggerGenOptions>

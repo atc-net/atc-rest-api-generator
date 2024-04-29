@@ -4,7 +4,7 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace TestUnit.Task.NsApi.Api;
+namespace GenericPaginationApi.Api.Options;
 
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class ConfigureSwaggerDocOptions : IConfigureOptions<SwaggerGenOptions>
@@ -25,8 +25,8 @@ public class ConfigureSwaggerDocOptions : IConfigureOptions<SwaggerGenOptions>
                 new OpenApiInfo
                 {
                     Version = "1.0",
-                    Title = "TestUnit Task Ns Api",
-                    Description = "TestUnit Task Ns Api - SingleFileVersion",
+                    Title = "Generic Pagination Api",
+                    Description = "Generic Pagination Api - SingleFileVersion",
                     Contact = new OpenApiContact
                     {
                         Name = "atc-net A/S",

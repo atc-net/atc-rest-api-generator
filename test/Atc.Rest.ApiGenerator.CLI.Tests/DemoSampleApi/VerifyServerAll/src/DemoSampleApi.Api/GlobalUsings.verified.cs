@@ -6,6 +6,7 @@ global using Asp.Versioning.ApiExplorer;
 global using Atc.Rest.Extended.Options;
 
 global using DemoSampleApi.Api.Generated;
+global using DemoSampleApi.Api.Options;
 global using DemoSampleApi.Domain;
 
 global using Microsoft.Extensions.Options;

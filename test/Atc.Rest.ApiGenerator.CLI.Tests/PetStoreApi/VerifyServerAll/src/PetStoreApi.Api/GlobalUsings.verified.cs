@@ -9,6 +9,7 @@ global using Microsoft.Extensions.Options;
 global using Microsoft.OpenApi.Models;
 
 global using PetStoreApi.Api.Generated;
+global using PetStoreApi.Api.Options;
 global using PetStoreApi.Domain;
 
 global using Swashbuckle.AspNetCore.SwaggerGen;

@@ -4,7 +4,7 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace GenericPaginationApi.Api;
+namespace PetStoreApi.Api.Options;
 
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class ConfigureSwaggerDocOptions : IConfigureOptions<SwaggerGenOptions>
@@ -24,12 +24,11 @@ public class ConfigureSwaggerDocOptions : IConfigureOptions<SwaggerGenOptions>
                 version.GroupName,
                 new OpenApiInfo
                 {
-                    Version = "1.0",
-                    Title = "Generic Pagination Api",
-                    Description = "Generic Pagination Api - SingleFileVersion",
-                    Contact = new OpenApiContact
+                    Version = "1.0.0",
+                    Title = "Swagger Petstore",
+                    License = new OpenApiLicense
                     {
-                        Name = "atc-net A/S",
+                        Name = "MIT",
                     },
                 });
         }
