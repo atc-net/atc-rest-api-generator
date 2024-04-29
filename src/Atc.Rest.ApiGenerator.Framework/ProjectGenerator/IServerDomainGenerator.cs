@@ -15,6 +15,8 @@ public interface IServerDomainGenerator
 
     void GenerateServiceCollectionExtensions();
 
+    void GenerateHandlers();
+
     void MaintainGlobalUsings(
         string apiProjectName,
         IList<string> apiGroupNames,

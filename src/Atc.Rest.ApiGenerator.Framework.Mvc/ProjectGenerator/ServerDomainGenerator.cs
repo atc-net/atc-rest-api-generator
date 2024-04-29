@@ -62,6 +62,41 @@ public class ServerDomainGenerator : IServerDomainGenerator
     public void GenerateServiceCollectionExtensions()
         => throw new NotSupportedException($"{nameof(GenerateServiceCollectionExtensions)} is not supported for MVC");
 
+    public void GenerateHandlers()
+    {
+        foreach (var urlPath in openApiDocument.Paths)
+        {
+            var apiGroupName = urlPath.GetApiGroupName();
+
+            foreach (var openApiOperation in urlPath.Value.Operations)
+            {
+                var fullNamespace = $"{projectName}.{ContentGeneratorConstants.Handlers}.{apiGroupName}";
+
+                var classParameters = Factories.Parameters.Server.ContentGeneratorServerHandlerParametersFactory.Create(
+                    fullNamespace,
+                    urlPath.Value,
+                    openApiOperation.Value);
+
+                var contentGenerator = new GenerateContentForClass(
+                    new CodeDocumentationTagsGenerator(),
+                    classParameters);
+
+                var content = contentGenerator.Generate();
+
+                var contentWriter = new ContentWriter(logger);
+                contentWriter.Write(
+                    projectPath,
+                    projectPath.CombineFileInfo(
+                        ContentGeneratorConstants.Handlers,
+                        apiGroupName,
+                        $"{classParameters.TypeName}.cs"),
+                    ContentWriterArea.Src,
+                    content,
+                    overrideIfExist: false);
+            }
+        }
+    }
+
     public void MaintainGlobalUsings(
         string apiProjectName,
         IList<string> apiGroupNames,

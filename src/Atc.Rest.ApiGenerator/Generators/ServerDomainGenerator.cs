@@ -80,6 +80,7 @@ public class ServerDomainGenerator
         if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
         {
             serverDomainGeneratorMvc.GenerateAssemblyMarker();
+            serverDomainGeneratorMvc.GenerateHandlers();
 
             serverDomainGeneratorMvc.MaintainGlobalUsings(
                 projectOptions.ProjectName.Replace(".Domain", ".Api.Generated", StringComparison.Ordinal),
@@ -90,23 +91,14 @@ public class ServerDomainGenerator
         else
         {
             serverDomainGeneratorMinimalApi.GenerateAssemblyMarker();
-
             serverDomainGeneratorMinimalApi.GenerateServiceCollectionExtensions();
+            serverDomainGeneratorMinimalApi.GenerateHandlers();
 
             serverDomainGeneratorMinimalApi.MaintainGlobalUsings(
                 projectOptions.ProjectName.Replace(".Domain", ".Api.Generated", StringComparison.Ordinal),
                 projectOptions.ApiGroupNames,
                 projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings,
                 operationSchemaMappings);
-        }
-
-        if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
-        {
-            GenerateSrcMvcHandlers(projectOptions.Document);
-        }
-        else
-        {
-            GenerateSrcMinimalApiHandlers(projectOptions.Document);
         }
 
         if (projectOptions.PathForTestGenerate is not null)
@@ -123,112 +115,6 @@ public class ServerDomainGenerator
         }
 
         return true;
-    }
-
-    private void GenerateSrcMvcHandlers(
-        OpenApiDocument document)
-    {
-        ArgumentNullException.ThrowIfNull(projectOptions);
-
-        foreach (var urlPath in document.Paths)
-        {
-            var apiGroupName = urlPath.GetApiGroupName();
-
-            foreach (var openApiOperation in urlPath.Value.Operations)
-            {
-                GenerateSrcMvcHandler(
-                    apiGroupName,
-                    urlPath.Value,
-                    openApiOperation.Value);
-            }
-        }
-    }
-
-    private void GenerateSrcMinimalApiHandlers(
-        OpenApiDocument document)
-    {
-        ArgumentNullException.ThrowIfNull(projectOptions);
-
-        foreach (var urlPath in document.Paths)
-        {
-            var apiGroupName = urlPath.GetApiGroupName();
-
-            foreach (var openApiOperation in urlPath.Value.Operations)
-            {
-                GenerateSrcMinimalApiHandler(apiGroupName, urlPath.Value, openApiOperation.Value);
-            }
-        }
-    }
-
-    private void GenerateSrcMvcHandler(
-        string apiGroupName,
-        OpenApiPathItem apiPath,
-        OpenApiOperation apiOperation)
-    {
-        var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Handlers}.{apiGroupName}";
-
-        // Generate
-        var classParameters = Framework.Mvc.Factories.Parameters.Server.ContentGeneratorServerHandlerParametersFactory.Create(
-            fullNamespace,
-            apiPath,
-            apiOperation);
-
-        var contentGeneratorClass = new GenerateContentForClass(
-            new CodeDocumentationTagsGenerator(),
-            classParameters);
-
-        var classContent = contentGeneratorClass.Generate();
-
-        // Write
-        var file = new FileInfo(
-            Helpers.DirectoryInfoHelper.GetCsFileNameForHandler(
-                projectOptions.PathForSrcHandlers!,
-                apiGroupName,
-                classParameters.TypeName));
-
-        var contentWriter = new ContentWriter(logger);
-        contentWriter.Write(
-            projectOptions.PathForSrcGenerate,
-            file,
-            ContentWriterArea.Src,
-            classContent,
-            overrideIfExist: false);
-    }
-
-    private void GenerateSrcMinimalApiHandler(
-        string apiGroupName,
-        OpenApiPathItem apiPath,
-        OpenApiOperation apiOperation)
-    {
-        var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Handlers}.{apiGroupName}";
-
-        // Generate
-        var classParameters = Framework.Minimal.Factories.Parameters.Server.ContentGeneratorServerHandlerParametersFactory.Create(
-            fullNamespace,
-            $"Api.Generated.{ContentGeneratorConstants.Contracts}.{apiGroupName}",
-            apiPath,
-            apiOperation);
-
-        var contentGeneratorClass = new GenerateContentForClass(
-            new CodeDocumentationTagsGenerator(),
-            classParameters);
-
-        var classContent = contentGeneratorClass.Generate();
-
-        // Write
-        var file = new FileInfo(
-            Helpers.DirectoryInfoHelper.GetCsFileNameForHandler(
-                projectOptions.PathForSrcHandlers!,
-                apiGroupName,
-                classParameters.TypeName));
-
-        var contentWriter = new ContentWriter(logger);
-        contentWriter.Write(
-            projectOptions.PathForSrcGenerate,
-            file,
-            ContentWriterArea.Src,
-            classContent,
-            overrideIfExist: false);
     }
 
     private void GenerateTestHandlers(
