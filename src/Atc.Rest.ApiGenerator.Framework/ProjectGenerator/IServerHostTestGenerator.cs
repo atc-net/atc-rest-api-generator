@@ -20,8 +20,6 @@ public interface IServerHostTestGenerator
     void GenerateWebApiControllerBaseTestFile();
 
     void MaintainGlobalUsings(
-        IList<string> apiGroupNames,
         bool usingCodingRules,
-        bool removeNamespaceGroupSeparatorInGlobalUsings,
-        IList<ApiOperation> operationSchemaMappings);
+        bool removeNamespaceGroupSeparatorInGlobalUsings);
 }

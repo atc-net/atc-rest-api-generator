@@ -31,19 +31,25 @@ public class ServerApiGenerator
         this.nugetPackageReferenceProvider = nugetPackageReferenceProvider ?? throw new ArgumentNullException(nameof(nugetPackageReferenceProvider));
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
 
+        var operationSchemaMappings = apiOperationExtractor.Extract(projectOptions.Document);
+
         serverApiGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerApiGenerator(
             loggerFactory,
             projectOptions.ApiGeneratorVersion,
             projectOptions.ProjectName,
             projectOptions.PathForSrcGenerate,
-            projectOptions.Document);
+            projectOptions.Document,
+            operationSchemaMappings,
+            projectOptions.RouteBase);
 
         serverApiGeneratorMinimalApi = new Framework.Minimal.ProjectGenerator.ServerApiGenerator(
             loggerFactory,
             projectOptions.ApiGeneratorVersion,
             projectOptions.ProjectName,
             projectOptions.PathForSrcGenerate,
-            projectOptions.Document);
+            projectOptions.Document,
+            operationSchemaMappings,
+            projectOptions.RouteBase);
 
         // TODO: Optimize codeGeneratorContentHeader & codeGeneratorAttribute
         var codeHeaderGenerator = new GeneratedCodeHeaderGenerator(
@@ -76,27 +82,34 @@ public class ServerApiGenerator
             serverApiGeneratorMvc.ScaffoldProjectFile();
 
             serverApiGeneratorMvc.GenerateAssemblyMarker();
+            serverApiGeneratorMvc.GenerateModels();
+            serverApiGeneratorMvc.GenerateParameters();
+            serverApiGeneratorMvc.GenerateResults();
+            serverApiGeneratorMvc.GenerateInterfaces();
+            serverApiGeneratorMvc.GenerateEndpoints(
+                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
 
+            serverApiGeneratorMvc.MaintainApiSpecification(projectOptions.DocumentFile);
             serverApiGeneratorMvc.MaintainGlobalUsings(
-                projectOptions.ApiGroupNames,
                 projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings,
-                operationSchemaMappings,
                 projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody);
         }
         else
         {
-            serverApiGeneratorMvc.ScaffoldProjectFile();
+            serverApiGeneratorMinimalApi.ScaffoldProjectFile();
 
             serverApiGeneratorMinimalApi.GenerateAssemblyMarker();
+            serverApiGeneratorMinimalApi.GenerateModels();
+            serverApiGeneratorMinimalApi.GenerateParameters();
+            serverApiGeneratorMinimalApi.GenerateInterfaces();
+            serverApiGeneratorMinimalApi.GenerateEndpoints(
+                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
 
+            serverApiGeneratorMinimalApi.MaintainApiSpecification(projectOptions.DocumentFile);
             serverApiGeneratorMinimalApi.MaintainGlobalUsings(
-                projectOptions.ApiGroupNames,
                 projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings,
-                operationSchemaMappings,
                 useProblemDetailsAsDefaultBody: false);
         }
-
-        CopyApiSpecification();
 
         GenerateModels(projectOptions.Document, operationSchemaMappings);
         GenerateParameters(projectOptions.Document);
@@ -107,15 +120,6 @@ public class ServerApiGenerator
         }
 
         GenerateInterfaces(projectOptions.Document);
-
-        if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
-        {
-            GenerateMvcControllers(operationSchemaMappings);
-        }
-        else
-        {
-            GenerateMinimalApiEndpoints(operationSchemaMappings);
-        }
 
         return true;
     }
@@ -175,31 +179,6 @@ public class ServerApiGenerator
 
         logger.LogError($"     {ValidationRuleNameConstants.ProjectApiGenerated06} - Existing project did not contain a version.");
         return false;
-    }
-
-    private void CopyApiSpecification()
-    {
-        var resourceFolder = new DirectoryInfo(Path.Combine(projectOptions.PathForSrcGenerate.FullName, "Resources"));
-        if (!resourceFolder.Exists)
-        {
-            Directory.CreateDirectory(resourceFolder.FullName);
-        }
-
-        var resourceFile = new FileInfo(Path.Combine(resourceFolder.FullName, "ApiSpecification.yaml"));
-        if (File.Exists(resourceFile.FullName))
-        {
-            File.Delete(resourceFile.FullName);
-        }
-
-        if (projectOptions.DocumentFile.Extension.Equals(".json", StringComparison.OrdinalIgnoreCase))
-        {
-            using var writeFile = new StreamWriter(resourceFile.FullName);
-            projectOptions.Document.SerializeAsV3(new OpenApiYamlWriter(writeFile));
-        }
-        else
-        {
-            File.Copy(projectOptions.DocumentFile.FullName, resourceFile.FullName);
-        }
     }
 
     private void GenerateModels(
@@ -505,83 +484,6 @@ public class ServerApiGenerator
                     ContentWriterArea.Src,
                     content);
             }
-        }
-    }
-
-    private void GenerateMvcControllers(
-        IList<ApiOperation> operationSchemaMappings)
-    {
-        ArgumentNullException.ThrowIfNull(operationSchemaMappings);
-
-        foreach (var apiGroupName in projectOptions.ApiGroupNames)
-        {
-            var controllerParameters = ContentGeneratorServerControllerParametersFactory.Create(
-                operationSchemaMappings,
-                projectOptions.ProjectName,
-                projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
-                $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Endpoints}",
-                apiGroupName,
-                GetRouteByApiGroupName(apiGroupName),
-                projectOptions.Document);
-
-            var contentGenerator = new Framework.Mvc.ContentGenerators.Server.ContentGeneratorServerController(
-                new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-                new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-                new CodeDocumentationTagsGenerator(),
-                controllerParameters);
-
-            var content = contentGenerator.Generate();
-
-            var file = new FileInfo(
-                Helpers.DirectoryInfoHelper.GetCsFileNameForEndpoints(
-                    projectOptions.PathForEndpoints,
-                    controllerParameters.EndpointName));
-
-            var contentWriter = new ContentWriter(logger);
-            contentWriter.Write(
-                projectOptions.PathForSrcGenerate,
-                file,
-                ContentWriterArea.Src,
-                content);
-        }
-    }
-
-    private void GenerateMinimalApiEndpoints(
-        IList<ApiOperation> operationSchemaMappings)
-    {
-        ArgumentNullException.ThrowIfNull(operationSchemaMappings);
-
-        foreach (var apiGroupName in projectOptions.ApiGroupNames)
-        {
-            var endpointParameters = ContentGeneratorServerEndpointParametersFactory.Create(
-                operationSchemaMappings,
-                projectOptions.ProjectName,
-                ////projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody, // TODO: For MinimalApi - Should we use ProblemDetails or move to "middleware generate a response body"
-                useProblemDetailsAsDefaultBody: false,
-                $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Endpoints}",
-                apiGroupName,
-                GetRouteByApiGroupName(apiGroupName),
-                projectOptions.Document);
-
-            var contentGenerator = new Framework.Minimal.ContentGenerators.Server.ContentGeneratorServerEndpoints(
-                new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-                new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-                new CodeDocumentationTagsGenerator(),
-                endpointParameters);
-
-            var content = contentGenerator.Generate();
-
-            var file = new FileInfo(
-                Helpers.DirectoryInfoHelper.GetCsFileNameForEndpoints(
-                    projectOptions.PathForEndpoints,
-                    endpointParameters.EndpointName));
-
-            var contentWriter = new ContentWriter(logger);
-            contentWriter.Write(
-                projectOptions.PathForSrcGenerate,
-                file,
-                ContentWriterArea.Src,
-                content);
         }
     }
 

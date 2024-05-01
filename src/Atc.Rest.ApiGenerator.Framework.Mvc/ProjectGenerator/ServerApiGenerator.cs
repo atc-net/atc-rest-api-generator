@@ -8,25 +8,33 @@ public class ServerApiGenerator : IServerApiGenerator
     private readonly string projectName;
     private readonly DirectoryInfo projectPath;
     private readonly OpenApiDocument openApiDocument;
+    private readonly IList<ApiOperation> operationSchemaMappings;
+    private readonly string routeBase;
 
     public ServerApiGenerator(
         ILoggerFactory loggerFactory,
         Version apiGeneratorVersion,
         string projectName,
         DirectoryInfo projectPath,
-        OpenApiDocument openApiDocument)
+        OpenApiDocument openApiDocument,
+        IList<ApiOperation> operationSchemaMappings,
+        string routeBase)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
         ArgumentNullException.ThrowIfNull(apiGeneratorVersion);
         ArgumentNullException.ThrowIfNull(projectName);
         ArgumentNullException.ThrowIfNull(projectPath);
         ArgumentNullException.ThrowIfNull(openApiDocument);
+        ArgumentNullException.ThrowIfNull(operationSchemaMappings);
+        ArgumentNullException.ThrowIfNull(routeBase);
 
         logger = loggerFactory.CreateLogger<ServerApiGenerator>();
         this.apiGeneratorVersion = apiGeneratorVersion;
         this.projectName = projectName;
         this.projectPath = projectPath;
         this.openApiDocument = openApiDocument;
+        this.operationSchemaMappings = operationSchemaMappings;
+        this.routeBase = routeBase;
     }
 
     public void ScaffoldProjectFile()
@@ -166,15 +174,68 @@ public class ServerApiGenerator : IServerApiGenerator
             content);
     }
 
-    public void MaintainGlobalUsings(
-        IList<string> apiGroupNames,
-        bool removeNamespaceGroupSeparatorInGlobalUsings,
-        IList<ApiOperation> operationSchemaMappings,
+    public void GenerateModels()
+    {
+        // TODO: Implement this.
+    }
+
+    public void GenerateParameters()
+    {
+        // TODO: Implement this.
+    }
+
+    public void GenerateResults()
+    {
+        // TODO: Implement this.
+    }
+
+    public void GenerateInterfaces()
+    {
+        // TODO: Implement this.
+    }
+
+    public void GenerateEndpoints(
         bool useProblemDetailsAsDefaultBody)
     {
-        ArgumentNullException.ThrowIfNull(apiGroupNames);
-        ArgumentNullException.ThrowIfNull(operationSchemaMappings);
+        foreach (var apiGroupName in openApiDocument.GetApiGroupNames())
+        {
+            var controllerParameters = ContentGeneratorServerControllerParametersFactory.Create(
+                operationSchemaMappings,
+                projectName,
+                useProblemDetailsAsDefaultBody,
+                $"{projectName}.{ContentGeneratorConstants.Endpoints}",
+                apiGroupName,
+                GetRouteByApiGroupName(apiGroupName),
+                openApiDocument);
 
+            var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerController(
+                new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
+                new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
+                new CodeDocumentationTagsGenerator(),
+                controllerParameters);
+
+            var content = contentGenerator.Generate();
+
+            var contentWriter = new ContentWriter(logger);
+            contentWriter.Write(
+                projectPath,
+                projectPath.CombineFileInfo(ContentGeneratorConstants.Endpoints, $"{controllerParameters.EndpointName}.cs"),
+                ContentWriterArea.Src,
+                content);
+        }
+    }
+
+    public void MaintainApiSpecification(
+        FileInfo apiSpecificationFile)
+        => ResourcesHelper.CopyApiSpecification(
+            apiSpecificationFile,
+            openApiDocument,
+            projectPath);
+
+    public void MaintainGlobalUsings(
+        bool removeNamespaceGroupSeparatorInGlobalUsings,
+        bool useProblemDetailsAsDefaultBody)
+    {
         var requiredUsings = new List<string>
         {
             "System.CodeDom.Compiler",
@@ -195,6 +256,8 @@ public class ServerApiGenerator : IServerApiGenerator
             requiredUsings.Add($"{projectName}.Contracts");
         }
 
+        var apiGroupNames = openApiDocument.GetApiGroupNames();
+
         requiredUsings.AddRange(apiGroupNames.Select(x => $"{projectName}.Contracts.{x}"));
 
         GlobalUsingsHelper.CreateOrUpdate(
@@ -203,5 +266,21 @@ public class ServerApiGenerator : IServerApiGenerator
             projectPath,
             requiredUsings,
             removeNamespaceGroupSeparatorInGlobalUsings);
+    }
+
+    private string GetRouteByApiGroupName(
+        string apiGroupName)
+    {
+        var (key, _) = openApiDocument.Paths.FirstOrDefault(x => x.IsPathStartingSegmentName(apiGroupName));
+        if (key is null)
+        {
+            throw new NotSupportedException($"{nameof(apiGroupName)} was not found in any route.");
+        }
+
+        var routeSuffix = key
+            .Split('/', StringSplitOptions.RemoveEmptyEntries)
+            .FirstOrDefault();
+
+        return $"{routeBase}/{routeSuffix}";
     }
 }

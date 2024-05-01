@@ -83,7 +83,7 @@ public class ServerHostGenerator : IServerHostGenerator
                         "PackageReference",
                         [
                             new("Include", "Atc.Rest.MinimalApi"),
-                            new("Version", "1.0.65"),
+                            new("Version", "1.0.81"),
                         ],
                         Value: null),
                     new(
@@ -132,6 +132,12 @@ public class ServerHostGenerator : IServerHostGenerator
             overrideIfExist: false);
     }
 
+    public void ScaffoldPropertiesLaunchSettingsFile()
+        => ResourcesHelper.ScaffoldPropertiesLaunchSettingsFile(
+            projectName,
+            projectPath,
+            useExtended: true);
+
     public void ScaffoldJsonSerializerOptionsExtensions()
     {
         var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerJsonSerializerOptionsExtensions(
@@ -177,7 +183,7 @@ public class ServerHostGenerator : IServerHostGenerator
             projectPath.CombineFileInfo("Extensions", "WebApplicationBuilderExtensions.cs"),
             ContentWriterArea.Src,
             content,
-            overrideIfExist: false); // TODO: !!
+            overrideIfExist: false);
     }
 
     public void ScaffoldWebApplicationExtensions(
@@ -279,12 +285,8 @@ public class ServerHostGenerator : IServerHostGenerator
     }
 
     public void MaintainGlobalUsings(
-        IList<string> apiGroupNames,
         bool removeNamespaceGroupSeparatorInGlobalUsings)
     {
-        ArgumentNullException.ThrowIfNull(domainProjectName);
-        ArgumentNullException.ThrowIfNull(apiGroupNames);
-
         var requiredUsings = new List<string>
         {
             "System.CodeDom.Compiler",

@@ -7,7 +7,6 @@ public static class ContentGeneratorServerEndpointParametersFactory
     public static ContentGeneratorServerEndpointParameters Create(
         IList<ApiOperation> operationSchemaMappings,
         string projectName,
-        bool useProblemDetailsAsDefaultBody,
         string @namespace,
         string apiGroupName,
         string route,
@@ -42,7 +41,6 @@ public static class ContentGeneratorServerEndpointParametersFactory
                         apiOperation.Value,
                         apiGroupName,
                         projectName,
-                        useProblemDetailsAsDefaultBody,
                         ShouldUseAuthorization(apiPathAuthenticationRequired, apiOperationAuthenticationRequired)),
                     apiPathAuthenticationRequired,
                     apiPathAuthorizationRoles,
@@ -113,16 +111,15 @@ public static class ContentGeneratorServerEndpointParametersFactory
         OpenApiOperation apiOperation,
         string apiGroupName,
         string projectName,
-        bool useProblemDetailsAsDefaultBody,
         bool shouldUseAuthorization)
     {
         var responseTypes = apiOperation.Responses.GetResponseTypes(
             operationSchemaMappings,
             apiGroupName,
             projectName,
-            useProblemDetailsAsDefaultBody,
+            useProblemDetailsAsDefaultResponseBody: false,
             includeEmptyResponseTypes: true,
-            includeIfNotDefinedValidation: useProblemDetailsAsDefaultBody && apiOperation.HasParametersOrRequestBody(),
+            includeIfNotDefinedValidation: false,
             shouldUseAuthorization,
             includeIfNotDefinedInternalServerError: false);
 

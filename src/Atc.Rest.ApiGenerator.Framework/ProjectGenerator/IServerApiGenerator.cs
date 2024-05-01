@@ -15,9 +15,21 @@ public interface IServerApiGenerator
 
     void GenerateAssemblyMarker();
 
+    void GenerateModels();
+
+    void GenerateParameters();
+
+    void GenerateResults();
+
+    void GenerateInterfaces();
+
+    void GenerateEndpoints(
+        bool useProblemDetailsAsDefaultBody);
+
+    void MaintainApiSpecification(
+        FileInfo apiSpecificationFile);
+
     void MaintainGlobalUsings(
-        IList<string> apiGroupNames,
         bool removeNamespaceGroupSeparatorInGlobalUsings,
-        IList<ApiOperation> operationSchemaMappings,
         bool useProblemDetailsAsDefaultBody);
 }

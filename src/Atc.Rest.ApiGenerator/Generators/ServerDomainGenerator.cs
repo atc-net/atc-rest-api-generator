@@ -30,6 +30,7 @@ public class ServerDomainGenerator
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
 
         var apiProjectName = projectOptions.ProjectName.Replace(".Domain", ".Api.Generated", StringComparison.Ordinal);
+        var operationSchemaMappings = apiOperationExtractor.Extract(projectOptions.Document);
 
         serverDomainGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerDomainGenerator(
             loggerFactory,
@@ -45,7 +46,8 @@ public class ServerDomainGenerator
             projectOptions.ProjectName,
             apiProjectName,
             projectOptions.PathForSrcGenerate,
-            projectOptions.Document);
+            projectOptions.Document,
+            operationSchemaMappings);
 
         if (projectOptions.PathForTestGenerate is not null)
         {
@@ -89,9 +91,7 @@ public class ServerDomainGenerator
             serverDomainGeneratorMvc.GenerateHandlers();
 
             serverDomainGeneratorMvc.MaintainGlobalUsings(
-                projectOptions.ApiGroupNames,
-                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings,
-                operationSchemaMappings);
+                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
 
             if (serverDomainTestGeneratorMvc is not null &&
                 projectOptions.PathForTestGenerate is not null)
@@ -116,9 +116,7 @@ public class ServerDomainGenerator
             serverDomainGeneratorMinimalApi.GenerateHandlers();
 
             serverDomainGeneratorMinimalApi.MaintainGlobalUsings(
-                projectOptions.ApiGroupNames,
-                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings,
-                operationSchemaMappings);
+                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
         }
 
         return true;

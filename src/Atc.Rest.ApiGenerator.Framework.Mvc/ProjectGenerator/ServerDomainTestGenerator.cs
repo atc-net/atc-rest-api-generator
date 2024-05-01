@@ -155,7 +155,7 @@ public class ServerDomainTestGenerator : IServerDomainTestGenerator
             {
                 var fullNamespace = $"{projectName}.{ContentGeneratorConstants.Handlers}.{apiGroupName}";
 
-                var classParameters = Factories.Parameters.Server.ContentGeneratorServerHandlerParametersFactory.CreateForCustomTest(
+                var classParameters = ContentGeneratorServerHandlerParametersFactory.CreateForCustomTest(
                     fullNamespace,
                     openApiOperation.Value);
 

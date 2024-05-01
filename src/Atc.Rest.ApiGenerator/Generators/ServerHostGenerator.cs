@@ -33,6 +33,7 @@ public class ServerHostGenerator
 
         var apiProjectName = projectOptions.ProjectName.Replace(".Api", ".Api.Generated", StringComparison.Ordinal);
         var domainProjectName = projectOptions.ProjectName.Replace(".Api", ".Domain", StringComparison.Ordinal);
+        var operationSchemaMappings = apiOperationExtractor.Extract(projectOptions.Document);
 
         serverHostGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerHostGenerator(
             loggerFactory,
@@ -65,7 +66,8 @@ public class ServerHostGenerator
                 apiProjectName,
                 domainProjectName,
                 projectOptions.PathForTestGenerate,
-                projectOptions.Document);
+                projectOptions.Document,
+                operationSchemaMappings);
         }
 
         // TODO: Optimize codeGeneratorContentHeader & codeGeneratorAttribute
@@ -101,6 +103,7 @@ public class ServerHostGenerator
         if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
         {
             serverHostGeneratorMvc.ScaffoldProjectFile();
+            serverHostGeneratorMvc.ScaffoldPropertiesLaunchSettingsFile();
             serverHostGeneratorMvc.ScaffoldProgramFile(
                 projectOptions.ApiOptions.Generator.SwaggerThemeMode);
             serverHostGeneratorMvc.ScaffoldStartupFile();
@@ -109,18 +112,14 @@ public class ServerHostGenerator
             serverHostGeneratorMvc.GenerateConfigureSwaggerDocOptions();
 
             serverHostGeneratorMvc.MaintainGlobalUsings(
-                projectOptions.ApiGroupNames,
                 projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
 
             if (serverHostTestGeneratorMvc is not null &&
                 projectOptions.PathForTestGenerate is not null)
             {
-                var operationSchemaMappings = apiOperationExtractor.Extract(projectOptions.Document);
-
                 logger.LogInformation($"{ContentWriterConstants.AreaGenerateTest} Working on server host unit-test generation ({projectOptions.ProjectName}.Tests)");
 
                 serverHostTestGeneratorMvc.ScaffoldProjectFile();
-                // TODO: serverHostTestGeneratorMvc.ScaffoldPropertiesLaunchSettingsFile();
                 serverHostTestGeneratorMvc.ScaffoldAppSettingsIntegrationTestFile();
 
                 serverHostTestGeneratorMvc.GenerateWebApiStartupFactoryFile();
@@ -130,15 +129,14 @@ public class ServerHostGenerator
                 GenerateTestEndpoints(projectOptions.Document);
 
                 serverHostTestGeneratorMvc.MaintainGlobalUsings(
-                    projectOptions.ApiGroupNames,
                     projectOptions.UsingCodingRules,
-                    projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings,
-                    operationSchemaMappings);
+                    projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
             }
         }
         else
         {
             serverHostGeneratorMinimalApi.ScaffoldProjectFile();
+            serverHostGeneratorMinimalApi.ScaffoldPropertiesLaunchSettingsFile();
             serverHostGeneratorMinimalApi.ScaffoldProgramFile(
                 projectOptions.ApiOptions.Generator.SwaggerThemeMode);
             serverHostGeneratorMinimalApi.ScaffoldWebConfig();
@@ -153,48 +151,11 @@ public class ServerHostGenerator
             serverHostGeneratorMinimalApi.GenerateConfigureSwaggerDocOptions();
 
             serverHostGeneratorMinimalApi.MaintainGlobalUsings(
-                projectOptions.ApiGroupNames,
                 projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
             serverHostGeneratorMinimalApi.MaintainWwwResources();
         }
 
         return true;
-    }
-
-    // TODO: ??
-    private void ScaffoldPropertiesLaunchSettingsFile(
-        string projectName,
-        DirectoryInfo pathForSrcGenerate,
-        bool useExtended)
-    {
-        var propertiesPath = new DirectoryInfo(Path.Combine(pathForSrcGenerate.FullName, "Properties"));
-        propertiesPath.Create();
-
-        var resourceName = "Atc.Rest.ApiGenerator.Resources.launchSettings.json";
-        if (useExtended)
-        {
-            resourceName = "Atc.Rest.ApiGenerator.Resources.launchSettingsExtended.json";
-        }
-
-        var resourceStream = typeof(ServerHostGenerator).Assembly.GetManifestResourceStream(resourceName);
-        var json = resourceStream!.ToStringData();
-        json = json.Replace("\"[[PROJECTNAME]]\":", $"\"{projectName}\":", StringComparison.Ordinal);
-
-        var file = propertiesPath.CombineFileInfo("launchSettings.json");
-
-        if (file.Exists)
-        {
-            logger.LogTrace($"{EmojisConstants.FileNotUpdated}   {file.FullName} nothing to update");
-        }
-        else
-        {
-            var contentWriter = new ContentWriter(logger);
-            contentWriter.Write(
-                projectOptions.PathForSrcGenerate,
-                file,
-                ContentWriterArea.Src,
-                json);
-        }
     }
 
     private void GenerateTestEndpoints(

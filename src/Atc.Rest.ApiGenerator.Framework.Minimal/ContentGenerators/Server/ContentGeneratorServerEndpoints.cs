@@ -1,6 +1,3 @@
-using ContentGeneratorServerEndpointMethodParameters = Atc.Rest.ApiGenerator.Framework.Minimal.ContentGeneratorsParameters.Server.ContentGeneratorServerEndpointMethodParameters;
-using ContentGeneratorServerEndpointParameters = Atc.Rest.ApiGenerator.Framework.Minimal.ContentGeneratorsParameters.Server.ContentGeneratorServerEndpointParameters;
-
 namespace Atc.Rest.ApiGenerator.Framework.Minimal.ContentGenerators.Server;
 
 public sealed class ContentGeneratorServerEndpoints : IContentGenerator
@@ -106,7 +103,7 @@ public sealed class ContentGeneratorServerEndpoints : IContentGenerator
         sb.AppendLine(12, $".WithName(\"{item.Name}\")");
         sb.AppendLine(12, $".WithDescription(\"{description}\")");
         sb.AppendLine(12, $".WithSummary(\"{summary}\");");
-        
+
         /*
          TODO:
                 usersV1

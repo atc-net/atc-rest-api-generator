@@ -10,6 +10,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
     private readonly string apiProjectName;
     private readonly DirectoryInfo projectPath;
     private readonly OpenApiDocument openApiDocument;
+    private readonly IList<ApiOperation> operationSchemaMappings;
 
     public ServerDomainGenerator(
         ILoggerFactory loggerFactory,
@@ -17,7 +18,8 @@ public class ServerDomainGenerator : IServerDomainGenerator
         string projectName,
         string apiProjectName,
         DirectoryInfo projectPath,
-        OpenApiDocument openApiDocument)
+        OpenApiDocument openApiDocument,
+        IList<ApiOperation> operationSchemaMappings)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
         ArgumentNullException.ThrowIfNull(apiGeneratorVersion);
@@ -25,6 +27,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
         ArgumentNullException.ThrowIfNull(apiProjectName);
         ArgumentNullException.ThrowIfNull(projectPath);
         ArgumentNullException.ThrowIfNull(openApiDocument);
+        ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 
         logger = loggerFactory.CreateLogger<ServerDomainGenerator>();
         this.apiGeneratorVersion = apiGeneratorVersion;
@@ -32,6 +35,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
         this.apiProjectName = apiProjectName;
         this.projectPath = projectPath;
         this.openApiDocument = openApiDocument;
+        this.operationSchemaMappings = operationSchemaMappings;
     }
 
     public void ScaffoldProjectFile()
@@ -331,12 +335,8 @@ public class ServerDomainGenerator : IServerDomainGenerator
     }
 
     public void MaintainGlobalUsings(
-        IList<string> apiGroupNames,
-        bool removeNamespaceGroupSeparatorInGlobalUsings,
-        IList<ApiOperation> operationSchemaMappings)
+        bool removeNamespaceGroupSeparatorInGlobalUsings)
     {
-        ArgumentNullException.ThrowIfNull(apiGroupNames);
-
         var requiredUsings = new List<string>
         {
             "System.CodeDom.Compiler",
@@ -358,6 +358,8 @@ public class ServerDomainGenerator : IServerDomainGenerator
         {
             requiredUsings.Add($"{apiProjectName}.{ContentGeneratorConstants.Contracts}");
         }
+
+        var apiGroupNames = openApiDocument.GetApiGroupNames();
 
         requiredUsings.AddRange(apiGroupNames.Select(x => $"{apiProjectName}.{ContentGeneratorConstants.Contracts}.{x}"));
         requiredUsings.AddRange(apiGroupNames.Select(x => $"{projectName}.{ContentGeneratorConstants.Handlers}.{x}"));

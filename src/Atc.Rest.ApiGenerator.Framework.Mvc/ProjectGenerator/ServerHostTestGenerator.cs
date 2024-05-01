@@ -11,6 +11,7 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
     private readonly string domainProjectName;
     private readonly DirectoryInfo projectPath;
     private readonly OpenApiDocument openApiDocument;
+    private readonly IList<ApiOperation> operationSchemaMappings;
 
     public ServerHostTestGenerator(
         ILoggerFactory loggerFactory,
@@ -20,7 +21,8 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
         string apiProjectName,
         string domainProjectName,
         DirectoryInfo projectPath,
-        OpenApiDocument openApiDocument)
+        OpenApiDocument openApiDocument,
+        IList<ApiOperation> operationSchemaMappings)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
         ArgumentNullException.ThrowIfNull(apiGeneratorVersion);
@@ -30,6 +32,7 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
         ArgumentNullException.ThrowIfNull(domainProjectName);
         ArgumentNullException.ThrowIfNull(projectPath);
         ArgumentNullException.ThrowIfNull(openApiDocument);
+        ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 
         logger = loggerFactory.CreateLogger<ServerHostTestGenerator>();
         this.apiGeneratorVersion = apiGeneratorVersion;
@@ -39,6 +42,7 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
         this.domainProjectName = domainProjectName;
         this.projectPath = projectPath;
         this.openApiDocument = openApiDocument;
+        this.operationSchemaMappings = operationSchemaMappings;
     }
 
     public void ScaffoldProjectFile()
@@ -196,13 +200,9 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
     }
 
     public void MaintainGlobalUsings(
-        IList<string> apiGroupNames,
         bool usingCodingRules,
-        bool removeNamespaceGroupSeparatorInGlobalUsings,
-        IList<ApiOperation> operationSchemaMappings)
+        bool removeNamespaceGroupSeparatorInGlobalUsings)
     {
-        ArgumentNullException.ThrowIfNull(apiGroupNames);
-
         var requiredUsings = new List<string>
             {
                 "System.CodeDom.Compiler",
@@ -236,6 +236,8 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
             requiredUsings.Add("AutoFixture");
             requiredUsings.Add("Xunit");
         }
+
+        var apiGroupNames = openApiDocument.GetApiGroupNames();
 
         foreach (var apiGroupName in apiGroupNames)
         {

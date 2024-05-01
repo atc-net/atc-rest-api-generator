@@ -35,4 +35,3 @@ global using Atc.Rest.ApiGenerator.Projects;
 global using Microsoft.Extensions.Logging;
 global using Microsoft.Extensions.Logging.Abstractions;
 global using Microsoft.OpenApi.Models;
-global using Microsoft.OpenApi.Writers;

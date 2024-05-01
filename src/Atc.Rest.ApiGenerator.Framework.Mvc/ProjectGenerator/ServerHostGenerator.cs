@@ -130,6 +130,12 @@ public class ServerHostGenerator : IServerHostGenerator
             overrideIfExist: false);
     }
 
+    public void ScaffoldPropertiesLaunchSettingsFile()
+        => ResourcesHelper.ScaffoldPropertiesLaunchSettingsFile(
+            projectName,
+            projectPath,
+            useExtended: true);
+
     public void ScaffoldJsonSerializerOptionsExtensions()
         => throw new NotSupportedException($"{nameof(ScaffoldJsonSerializerOptionsExtensions)} is not supported for MVC");
 
@@ -219,12 +225,8 @@ public class ServerHostGenerator : IServerHostGenerator
     }
 
     public void MaintainGlobalUsings(
-        IList<string> apiGroupNames,
         bool removeNamespaceGroupSeparatorInGlobalUsings)
     {
-        ArgumentNullException.ThrowIfNull(domainProjectName);
-        ArgumentNullException.ThrowIfNull(apiGroupNames);
-
         var requiredUsings = new List<string>
         {
             "System.CodeDom.Compiler",

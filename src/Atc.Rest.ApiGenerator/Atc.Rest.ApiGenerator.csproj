@@ -20,11 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\launchSettingsExtended.json" />
-    <EmbeddedResource Include="Resources\launchSettings.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Atc.CodeGeneration.CSharp\Atc.CodeGeneration.CSharp.csproj" />
     <ProjectReference Include="..\Atc.Rest.ApiGenerator.Framework.Contracts\Atc.Rest.ApiGenerator.Framework.Contracts.csproj" />
     <ProjectReference Include="..\Atc.Rest.ApiGenerator.Framework.Minimal\Atc.Rest.ApiGenerator.Framework.Minimal.csproj" />

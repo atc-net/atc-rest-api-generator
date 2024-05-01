@@ -15,6 +15,8 @@ public interface IServerHostGenerator
 
     void ScaffoldProjectFile();
 
+    void ScaffoldPropertiesLaunchSettingsFile();
+
     void ScaffoldJsonSerializerOptionsExtensions();
 
     void ScaffoldServiceCollectionExtensions();
@@ -36,7 +38,6 @@ public interface IServerHostGenerator
     void ScaffoldWebConfig();
 
     void MaintainGlobalUsings(
-        IList<string> apiGroupNames,
         bool removeNamespaceGroupSeparatorInGlobalUsings);
 
     void MaintainWwwResources();

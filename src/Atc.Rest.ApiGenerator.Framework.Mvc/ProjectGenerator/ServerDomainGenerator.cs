@@ -132,7 +132,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
             {
                 var fullNamespace = $"{projectName}.{ContentGeneratorConstants.Handlers}.{apiGroupName}";
 
-                var classParameters = Factories.Parameters.Server.ContentGeneratorServerHandlerParametersFactory.Create(
+                var classParameters = ContentGeneratorServerHandlerParametersFactory.Create(
                     fullNamespace,
                     urlPath.Value,
                     openApiOperation.Value);
@@ -158,17 +158,14 @@ public class ServerDomainGenerator : IServerDomainGenerator
     }
 
     public void MaintainGlobalUsings(
-        IList<string> apiGroupNames,
-        bool removeNamespaceGroupSeparatorInGlobalUsings,
-        IList<ApiOperation> operationSchemaMappings)
+        bool removeNamespaceGroupSeparatorInGlobalUsings)
     {
-        ArgumentNullException.ThrowIfNull(apiProjectName);
-        ArgumentNullException.ThrowIfNull(apiGroupNames);
-
         var requiredUsings = new List<string>
         {
             "System.CodeDom.Compiler",
         };
+
+        var apiGroupNames = openApiDocument.GetApiGroupNames();
 
         requiredUsings.AddRange(apiGroupNames.Select(x => $"{apiProjectName}.{ContentGeneratorConstants.Contracts}.{x}"));
 

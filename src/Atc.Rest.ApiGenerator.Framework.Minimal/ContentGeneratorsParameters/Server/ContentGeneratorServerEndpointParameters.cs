@@ -16,7 +16,7 @@ public record ContentGeneratorServerEndpointMethodParameters(
     string InterfaceName,
     string? ParameterTypeName,
     long? MultipartBodyLengthLimit,
-    List<(HttpStatusCode HttpStatusCode, string ReturnType)> HttpResults,
+    IList<(HttpStatusCode HttpStatusCode, string ReturnType)> HttpResults,
     bool? ApiPathUseAuthorization,
     IEnumerable<string> ApiPathAuthorizationRoles,
     IEnumerable<string> ApiPathAuthenticationSchemes,
