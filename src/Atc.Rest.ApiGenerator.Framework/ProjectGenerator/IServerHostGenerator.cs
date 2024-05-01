@@ -13,6 +13,8 @@ public interface IServerHostGenerator
 {
     bool UseRestExtended { get; set; }
 
+    void ScaffoldProjectFile();
+
     void ScaffoldJsonSerializerOptionsExtensions();
 
     void ScaffoldServiceCollectionExtensions();
@@ -34,7 +36,6 @@ public interface IServerHostGenerator
     void ScaffoldWebConfig();
 
     void MaintainGlobalUsings(
-        string domainProjectName,
         IList<string> apiGroupNames,
         bool removeNamespaceGroupSeparatorInGlobalUsings);
 

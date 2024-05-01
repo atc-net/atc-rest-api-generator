@@ -11,6 +11,14 @@ namespace Atc.Rest.ApiGenerator.Framework.ProjectGenerator;
 /// </remarks>
 public interface IServerHostTestGenerator
 {
+    void ScaffoldProjectFile();
+
+    void ScaffoldAppSettingsIntegrationTestFile();
+
+    void GenerateWebApiStartupFactoryFile();
+
+    void GenerateWebApiControllerBaseTestFile();
+
     void MaintainGlobalUsings(
         IList<string> apiGroupNames,
         bool usingCodingRules,

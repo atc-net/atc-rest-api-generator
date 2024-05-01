@@ -1,3 +1,4 @@
+// ReSharper disable ArrangeObjectCreationWhenTypeNotEvident
 namespace Atc.Rest.ApiGenerator.Framework.Mvc.ProjectGenerator;
 
 public class ServerHostTestGenerator : IServerHostTestGenerator
@@ -5,6 +6,9 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
     private readonly ILogger<ServerHostTestGenerator> logger;
     private readonly Version apiGeneratorVersion;
     private readonly string projectName;
+    private readonly string hostProjectName;
+    private readonly string apiProjectName;
+    private readonly string domainProjectName;
     private readonly DirectoryInfo projectPath;
     private readonly OpenApiDocument openApiDocument;
 
@@ -12,20 +16,183 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
         ILoggerFactory loggerFactory,
         Version apiGeneratorVersion,
         string projectName,
+        string hostProjectName,
+        string apiProjectName,
+        string domainProjectName,
         DirectoryInfo projectPath,
         OpenApiDocument openApiDocument)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
         ArgumentNullException.ThrowIfNull(apiGeneratorVersion);
         ArgumentNullException.ThrowIfNull(projectName);
+        ArgumentNullException.ThrowIfNull(hostProjectName);
+        ArgumentNullException.ThrowIfNull(apiProjectName);
+        ArgumentNullException.ThrowIfNull(domainProjectName);
         ArgumentNullException.ThrowIfNull(projectPath);
         ArgumentNullException.ThrowIfNull(openApiDocument);
 
         logger = loggerFactory.CreateLogger<ServerHostTestGenerator>();
         this.apiGeneratorVersion = apiGeneratorVersion;
         this.projectName = projectName;
+        this.hostProjectName = hostProjectName;
+        this.apiProjectName = apiProjectName;
+        this.domainProjectName = domainProjectName;
         this.projectPath = projectPath;
         this.openApiDocument = openApiDocument;
+    }
+
+    public void ScaffoldProjectFile()
+    {
+        var projectFileParameters = new ProjectFileParameters(
+            "Microsoft.NET.Sdk",
+            [
+                new List<PropertyGroupParameter>
+                {
+                    new("TargetFramework", Attributes: null, "net8.0"),
+                },
+                new List<PropertyGroupParameter>
+                {
+                    new("DocumentationFile", Attributes: null, @$"bin\Debug\net8.0\{projectName}.xml"),
+                    new("NoWarn", Attributes: null, "1573;1591;1701;1702;1712;8618;"),
+                },
+            ],
+            [
+                new List<ItemGroupParameter>
+                {
+                    new(
+                        "PackageReference",
+                        [
+                            new("Include", "Atc.Rest.FluentAssertions"),
+                            new("Version", "2.0.472"),
+                        ],
+                        Value: null),
+                    new(
+                        "PackageReference",
+                        [
+                            new("Include", "Atc.XUnit"),
+                            new("Version", "2.0.472"),
+                        ],
+                        Value: null),
+                    new(
+                        "PackageReference",
+                        [
+                            new("Include", "Microsoft.AspNetCore.Mvc.Testing"),
+                            new("Version", "8.0.4"),
+                        ],
+                        Value: null),
+                    new(
+                        "PackageReference",
+                        [
+                            new("Include", "Microsoft.NET.Test.Sdk"),
+                            new("Version", "17.9.0"),
+                        ],
+                        Value: null),
+                    new(
+                        "PackageReference",
+                        [
+                            new("Include", "xunit"),
+                            new("Version", "2.8.0"),
+                        ],
+                        Value: null),
+                    new(
+                        "PackageReference",
+                        [
+                            new("Include", "xunit.runner.visualstudio"),
+                            new("Version", "2.8.0"),
+                        ],
+                        Value: "<PrivateAssets>all</PrivateAssets><IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>"),
+                },
+                new List<ItemGroupParameter>
+                {
+                    new(
+                        "ProjectReference",
+                        [
+                            new("Include", @$"..\..\src\{hostProjectName}\{hostProjectName}.csproj"),
+                        ],
+                        Value: null),
+                    new(
+                        "ProjectReference",
+                        [
+                            new("Include", @$"..\..\src\{apiProjectName}\{apiProjectName}.csproj"),
+                        ],
+                        Value: null),
+                    new(
+                        "ProjectReference",
+                        [
+                            new("Include", @$"..\..\src\{domainProjectName}\{domainProjectName}.csproj"),
+                        ],
+                        Value: null),
+                },
+
+            ]);
+
+        var contentGenerator = new GenerateContentForProjectFile(
+            projectFileParameters);
+
+        var content = contentGenerator.Generate();
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectPath,
+            projectPath.CombineFileInfo($"{projectName}.csproj"),
+            ContentWriterArea.Src,
+            content,
+            overrideIfExist: false);
+    }
+
+    public void ScaffoldAppSettingsIntegrationTestFile()
+    {
+        var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerAppSettingsIntegrationTest();
+
+        var content = contentGenerator.Generate();
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectPath,
+            projectPath.CombineFileInfo("appsettings.integrationtest.json"),
+            ContentWriterArea.Test,
+            content,
+            overrideIfExist: false);
+    }
+
+    public void GenerateWebApiStartupFactoryFile()
+    {
+        var contentGeneratorServerWebApiStartupFactoryParameters = ContentGeneratorServerWebApiStartupFactoryParametersFactory.Create(
+            projectName);
+
+        var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerWebApiStartupFactory(
+            new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
+            new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
+            new CodeDocumentationTagsGenerator(),
+            contentGeneratorServerWebApiStartupFactoryParameters);
+
+        var content = contentGenerator.Generate();
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectPath,
+            projectPath.CombineFileInfo("WebApiStartupFactory.cs"),
+            ContentWriterArea.Test,
+            content,
+            overrideIfExist: false);
+    }
+
+    public void GenerateWebApiControllerBaseTestFile()
+    {
+        var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerWebApiControllerBaseTest(
+            new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
+            new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
+            new ContentGeneratorBaseParameters(projectName));
+
+        var content = contentGenerator.Generate();
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectPath,
+            projectPath.CombineFileInfo("WebApiControllerBaseTest.cs"),
+            ContentWriterArea.Test,
+            content,
+            overrideIfExist: false);
     }
 
     public void MaintainGlobalUsings(
@@ -51,7 +218,7 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
                 "Microsoft.AspNetCore.Mvc.Testing",
                 "Microsoft.Extensions.Configuration",
                 "Microsoft.Extensions.DependencyInjection",
-                $"{projectName}.Generated",
+                apiProjectName,
             };
 
         if (openApiDocument.IsUsingRequiredForAtcRestResults())
@@ -61,7 +228,7 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
 
         if (operationSchemaMappings.Any(apiOperation => apiOperation.Model.IsShared))
         {
-            requiredUsings.Add($"{projectName}.Generated.Contracts");
+            requiredUsings.Add($"{apiProjectName}.Contracts");
         }
 
         if (!usingCodingRules)
@@ -77,7 +244,7 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
                 continue;
             }
 
-            requiredUsings.Add($"{projectName}.Generated.Contracts.{apiGroupName}");
+            requiredUsings.Add($"{apiProjectName}.Contracts.{apiGroupName}");
         }
 
         GlobalUsingsHelper.CreateOrUpdate(

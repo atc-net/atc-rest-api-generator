@@ -11,6 +11,8 @@ namespace Atc.Rest.ApiGenerator.Framework.ProjectGenerator;
 /// </remarks>
 public interface IServerApiGenerator
 {
+    void ScaffoldProjectFile();
+
     void GenerateAssemblyMarker();
 
     void MaintainGlobalUsings(

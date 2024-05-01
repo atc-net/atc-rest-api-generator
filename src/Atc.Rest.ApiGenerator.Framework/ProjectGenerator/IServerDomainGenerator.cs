@@ -11,6 +11,8 @@ namespace Atc.Rest.ApiGenerator.Framework.ProjectGenerator;
 /// </remarks>
 public interface IServerDomainGenerator
 {
+    void ScaffoldProjectFile();
+
     void GenerateAssemblyMarker();
 
     void GenerateServiceCollectionExtensions();
@@ -18,7 +20,6 @@ public interface IServerDomainGenerator
     void GenerateHandlers();
 
     void MaintainGlobalUsings(
-        string apiProjectName,
         IList<string> apiGroupNames,
         bool removeNamespaceGroupSeparatorInGlobalUsings,
         IList<ApiOperation> operationSchemaMappings);

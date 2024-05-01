@@ -11,6 +11,10 @@ namespace Atc.Rest.ApiGenerator.Framework.ProjectGenerator;
 /// </remarks>
 public interface IServerDomainTestGenerator
 {
+    void ScaffoldProjectFile();
+
+    void GenerateHandlers();
+
     void MaintainGlobalUsings(
         bool usingCodingRules,
         bool removeNamespaceGroupSeparatorInGlobalUsings);

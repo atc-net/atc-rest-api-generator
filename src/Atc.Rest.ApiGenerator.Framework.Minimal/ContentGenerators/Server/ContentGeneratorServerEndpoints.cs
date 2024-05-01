@@ -26,8 +26,6 @@ public sealed class ContentGeneratorServerEndpoints : IContentGenerator
     {
         var sb = new StringBuilder();
 
-        var routeGroupBuilderName = parameters.ApiGroupName.EnsureFirstCharacterToLower();
-
         sb.Append(codeHeaderGenerator.Generate());
         sb.AppendLine($"namespace {parameters.Namespace};");
         sb.AppendLine();
@@ -45,7 +43,7 @@ public sealed class ContentGeneratorServerEndpoints : IContentGenerator
         sb.AppendLine(4, $"internal const string ApiRouteBase = \"{parameters.RouteBase}\";");
         sb.AppendLine();
 
-        AppendDefineEndpoints(sb, routeGroupBuilderName);
+        AppendDefineEndpoints(sb);
 
         AppendRouteHandlers(sb);
 
@@ -57,13 +55,16 @@ public sealed class ContentGeneratorServerEndpoints : IContentGenerator
     }
 
     private void AppendDefineEndpoints(
-        StringBuilder sb,
-        string routeGroupBuilderName)
+        StringBuilder sb)
     {
+        var routeGroupBuilderName = parameters.ApiGroupName.EnsureFirstCharacterToLower();
+
         sb.AppendLine(4, "public void DefineEndpoints(");
         sb.AppendLine(8, "WebApplication app)");
         sb.AppendLine(4, "{");
-        sb.AppendLine(8, $"var {routeGroupBuilderName} = app.MapGroup(ApiRouteBase);");
+        sb.AppendLine(8, $"var {routeGroupBuilderName} = app");
+        sb.AppendLine(12, $".NewVersionedApi(\"{parameters.ApiGroupName}\")");
+        sb.AppendLine(12, ".MapGroup(ApiRouteBase);");
         sb.AppendLine();
 
         for (var i = 0; i < parameters.MethodParameters.Count; i++)

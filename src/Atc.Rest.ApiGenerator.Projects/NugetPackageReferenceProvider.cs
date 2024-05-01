@@ -43,7 +43,7 @@ public class NugetPackageReferenceProvider : INugetPackageReferenceProvider
         packageReferences.Add(("Atc.Rest.Extended", atcVersion, null));
         packageReferences.Add(("FluentValidation.AspNetCore", "11.3.0", null));
         packageReferences.Add(("Microsoft.ApplicationInsights.AspNetCore", "2.22.0", null));
-        packageReferences.Add(("Microsoft.AspNetCore.Authentication.JwtBearer", "8.0.3", null));
+        packageReferences.Add(("Microsoft.AspNetCore.Authentication.JwtBearer", "8.0.4", null));
         packageReferences.Add(("Swashbuckle.AspNetCore", "6.5.0", null));
 
         return packageReferences;
@@ -139,7 +139,7 @@ public class NugetPackageReferenceProvider : INugetPackageReferenceProvider
 
         if (useMvc)
         {
-            packageReferences.Add(("Microsoft.AspNetCore.Mvc.Testing", "8.0.3", null));
+            packageReferences.Add(("Microsoft.AspNetCore.Mvc.Testing", "8.0.4", null));
         }
 
         packageReferences.AddRange(new List<(string, string, string?)>

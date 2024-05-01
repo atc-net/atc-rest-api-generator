@@ -143,7 +143,7 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
                     projectPrefixName,
                     outputSlnPath,
                     outputSrcPath,
-                    outputTestPath))
+                    apiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc ? outputTestPath : null))
             {
                 return ConsoleExitStatusCodes.Failure;
             }
@@ -152,7 +152,7 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
                 !atcCodingRulesUpdater.Scaffold(
                     outputSlnPath,
                     outputSrcPath,
-                    outputTestPath))
+                    apiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc ? outputTestPath : null))
             {
                 return ConsoleExitStatusCodes.Failure;
             }

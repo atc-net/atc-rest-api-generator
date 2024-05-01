@@ -1,5 +1,22 @@
 namespace Atc.CodeGeneration.CSharp.Content;
 
+public record SolutionFileParameters();
+
+public record PropertyGroupParameter(
+    string Key,
+    IList<KeyValuePair<string, string>>? Attributes,
+    string? Value);
+
+public record ItemGroupParameter(
+    string Key,
+    IList<KeyValuePair<string, string>>? Attributes,
+    string? Value);
+
+public record ProjectFileParameters(
+    string ProjectSdK,
+    IList<IList<PropertyGroupParameter>> PropertyGroups,
+    IList<IList<ItemGroupParameter>> ItemGroups);
+
 public record BaseParameters(
     string? HeaderContent,
     string Namespace,

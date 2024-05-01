@@ -31,10 +31,15 @@ public class ServerHostGenerator
         this.nugetPackageReferenceProvider = nugetPackageReferenceProvider ?? throw new ArgumentNullException(nameof(nugetPackageReferenceProvider));
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
 
+        var apiProjectName = projectOptions.ProjectName.Replace(".Api", ".Api.Generated", StringComparison.Ordinal);
+        var domainProjectName = projectOptions.ProjectName.Replace(".Api", ".Domain", StringComparison.Ordinal);
+
         serverHostGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerHostGenerator(
             loggerFactory,
             projectOptions.ApiGeneratorVersion,
             projectOptions.ProjectName,
+            apiProjectName,
+            domainProjectName,
             projectOptions.PathForSrcGenerate,
             projectOptions.Document)
         {
@@ -45,6 +50,8 @@ public class ServerHostGenerator
             loggerFactory,
             projectOptions.ApiGeneratorVersion,
             projectOptions.ProjectName,
+            apiProjectName,
+            domainProjectName,
             projectOptions.PathForSrcGenerate,
             projectOptions.Document);
 
@@ -53,7 +60,10 @@ public class ServerHostGenerator
             serverHostTestGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerHostTestGenerator(
                 loggerFactory,
                 projectOptions.ApiGeneratorVersion,
+                $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Tests}",
                 projectOptions.ProjectName,
+                apiProjectName,
+                domainProjectName,
                 projectOptions.PathForTestGenerate,
                 projectOptions.Document);
         }
@@ -90,6 +100,7 @@ public class ServerHostGenerator
 
         if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
         {
+            serverHostGeneratorMvc.ScaffoldProjectFile();
             serverHostGeneratorMvc.ScaffoldProgramFile(
                 projectOptions.ApiOptions.Generator.SwaggerThemeMode);
             serverHostGeneratorMvc.ScaffoldStartupFile();
@@ -98,12 +109,36 @@ public class ServerHostGenerator
             serverHostGeneratorMvc.GenerateConfigureSwaggerDocOptions();
 
             serverHostGeneratorMvc.MaintainGlobalUsings(
-                projectOptions.ProjectName.Replace(".Api", ".Domain", StringComparison.Ordinal),
                 projectOptions.ApiGroupNames,
                 projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
+
+            if (serverHostTestGeneratorMvc is not null &&
+                projectOptions.PathForTestGenerate is not null)
+            {
+                var operationSchemaMappings = apiOperationExtractor.Extract(projectOptions.Document);
+
+                logger.LogInformation($"{ContentWriterConstants.AreaGenerateTest} Working on server host unit-test generation ({projectOptions.ProjectName}.Tests)");
+
+                serverHostTestGeneratorMvc.ScaffoldProjectFile();
+                // TODO: serverHostTestGeneratorMvc.ScaffoldPropertiesLaunchSettingsFile();
+                serverHostTestGeneratorMvc.ScaffoldAppSettingsIntegrationTestFile();
+
+                serverHostTestGeneratorMvc.GenerateWebApiStartupFactoryFile();
+                serverHostTestGeneratorMvc.GenerateWebApiControllerBaseTestFile();
+
+                // TODO: Move logic to ServerHostTestGenerator
+                GenerateTestEndpoints(projectOptions.Document);
+
+                serverHostTestGeneratorMvc.MaintainGlobalUsings(
+                    projectOptions.ApiGroupNames,
+                    projectOptions.UsingCodingRules,
+                    projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings,
+                    operationSchemaMappings);
+            }
         }
         else
         {
+            serverHostGeneratorMinimalApi.ScaffoldProjectFile();
             serverHostGeneratorMinimalApi.ScaffoldProgramFile(
                 projectOptions.ApiOptions.Generator.SwaggerThemeMode);
             serverHostGeneratorMinimalApi.ScaffoldWebConfig();
@@ -118,105 +153,15 @@ public class ServerHostGenerator
             serverHostGeneratorMinimalApi.GenerateConfigureSwaggerDocOptions();
 
             serverHostGeneratorMinimalApi.MaintainGlobalUsings(
-                projectOptions.ProjectName.Replace(".Api", ".Domain", StringComparison.Ordinal),
                 projectOptions.ApiGroupNames,
                 projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
             serverHostGeneratorMinimalApi.MaintainWwwResources();
         }
 
-        ScaffoldSrc();
-
-        if (projectOptions.PathForTestGenerate is not null)
-        {
-            var operationSchemaMappings = apiOperationExtractor.Extract(projectOptions.Document);
-
-            logger.LogInformation($"{ContentWriterConstants.AreaGenerateTest} Working on server host unit-test generation ({projectOptions.ProjectName}.Tests)");
-            ScaffoldTest();
-
-            if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
-            {
-                GenerateTestEndpoints(projectOptions.Document);
-            }
-
-            serverHostTestGeneratorMvc?.MaintainGlobalUsings(
-                projectOptions.ApiGroupNames,
-                projectOptions.UsingCodingRules,
-                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings,
-                operationSchemaMappings);
-        }
-
         return true;
     }
 
-    private void ScaffoldSrc()
-    {
-        if (!Directory.Exists(projectOptions.PathForSrcGenerate.FullName))
-        {
-            Directory.CreateDirectory(projectOptions.PathForSrcGenerate.FullName);
-        }
-
-        if (projectOptions.PathForSrcGenerate.Exists &&
-            projectOptions.ProjectSrcCsProj.Exists)
-        {
-            var hasUpdates = SolutionAndProjectHelper.EnsureLatestPackageReferencesVersionInProjFile(
-                logger,
-                projectOptions.ProjectSrcCsProj,
-                projectOptions.ProjectSrcCsProjDisplayLocation,
-                ProjectType.ServerHost,
-                isTestProject: false);
-            if (!hasUpdates)
-            {
-                logger.LogDebug($"{EmojisConstants.FileNotUpdated}   No updates for csproj");
-            }
-        }
-        else
-        {
-            var projectReferences = new List<FileInfo>();
-            if (projectOptions.ApiProjectSrcCsProj is not null)
-            {
-                projectReferences.Add(projectOptions.ApiProjectSrcCsProj);
-            }
-
-            if (projectOptions.DomainProjectSrcCsProj is not null)
-            {
-                projectReferences.Add(projectOptions.DomainProjectSrcCsProj);
-            }
-
-            IList<(string PackageId, string PackageVersion, string? SubElements)>? packageReferencesBaseLineForHostProject = null;
-            TaskHelper.RunSync(async () =>
-            {
-                if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
-                {
-                    packageReferencesBaseLineForHostProject = await nugetPackageReferenceProvider.GetPackageReferencesBaseLineForHostProjectForMvc(projectOptions.UseRestExtended);
-                }
-                else
-                {
-                    packageReferencesBaseLineForHostProject = await nugetPackageReferenceProvider.GetPackageReferencesBaseLineForHostProjectForMinimalApi();
-                }
-            });
-
-            SolutionAndProjectHelper.ScaffoldProjFile(
-                logger,
-                projectOptions.ProjectSrcCsProj,
-                projectOptions.ProjectSrcCsProjDisplayLocation,
-                ProjectType.ServerHost,
-                createAsWeb: true,
-                createAsTestProject: false,
-                projectOptions.ProjectName,
-                "net8.0",
-                frameworkReferences: null,
-                packageReferencesBaseLineForHostProject,
-                projectReferences,
-                includeApiSpecification: false,
-                usingCodingRules: projectOptions.UsingCodingRules);
-
-            ScaffoldPropertiesLaunchSettingsFile(
-                projectOptions.ProjectName,
-                projectOptions.PathForSrcGenerate,
-                projectOptions.UseRestExtended);
-        }
-    }
-
+    // TODO: ??
     private void ScaffoldPropertiesLaunchSettingsFile(
         string projectName,
         DirectoryInfo pathForSrcGenerate,
@@ -250,74 +195,6 @@ public class ServerHostGenerator
                 ContentWriterArea.Src,
                 json);
         }
-    }
-
-    private void ScaffoldTest()
-    {
-        if (projectOptions.PathForTestGenerate is null ||
-            projectOptions.ProjectTestCsProj is null)
-        {
-            return;
-        }
-
-        if (projectOptions.PathForTestGenerate.Exists &&
-            projectOptions.ProjectTestCsProj.Exists)
-        {
-            var hasUpdates = SolutionAndProjectHelper.EnsureLatestPackageReferencesVersionInProjFile(
-                logger,
-                projectOptions.ProjectTestCsProj,
-                projectOptions.ProjectTestCsProjDisplayLocation,
-                ProjectType.ServerHost,
-                isTestProject: true);
-            if (!hasUpdates)
-            {
-                logger.LogDebug($"{EmojisConstants.FileNotUpdated}   No updates for csproj");
-            }
-        }
-        else
-        {
-            if (!Directory.Exists(projectOptions.PathForTestGenerate.FullName))
-            {
-                Directory.CreateDirectory(projectOptions.PathForTestGenerate.FullName);
-            }
-
-            var projectReferences = new List<FileInfo>();
-            if (projectOptions.ApiProjectSrcCsProj is not null)
-            {
-                projectReferences.Add(projectOptions.ProjectSrcCsProj);
-                projectReferences.Add(projectOptions.ApiProjectSrcCsProj);
-            }
-
-            if (projectOptions.DomainProjectSrcCsProj is not null)
-            {
-                projectReferences.Add(projectOptions.DomainProjectSrcCsProj);
-            }
-
-            IList<(string PackageId, string PackageVersion, string? SubElements)>? packageReferencesBaseLineForTestProject = null;
-            TaskHelper.RunSync(async () =>
-            {
-                packageReferencesBaseLineForTestProject = await nugetPackageReferenceProvider.GetPackageReferencesBaseLineForTestProject(useMvc: true);
-            });
-
-            SolutionAndProjectHelper.ScaffoldProjFile(
-                logger,
-                projectOptions.ProjectTestCsProj,
-                projectOptions.ProjectTestCsProjDisplayLocation,
-                ProjectType.ServerHost,
-                createAsWeb: false,
-                createAsTestProject: true,
-                $"{projectOptions.ProjectName}.Tests",
-                "net8.0",
-                frameworkReferences: null,
-                packageReferencesBaseLineForTestProject,
-                projectReferences,
-                includeApiSpecification: true,
-                usingCodingRules: projectOptions.UsingCodingRules);
-        }
-
-        GenerateTestWebApiStartupFactory();
-        GenerateTestWebApiControllerBaseTest();
-        ScaffoldAppSettingsIntegrationTest();
     }
 
     private void GenerateTestEndpoints(
@@ -399,69 +276,6 @@ public class ServerHostGenerator
             file,
             ContentWriterArea.Test,
             classContent,
-            overrideIfExist: false);
-    }
-
-    private void GenerateTestWebApiStartupFactory()
-    {
-        var fullNamespace = $"{projectOptions.ProjectName}.Tests";
-
-        var contentGeneratorServerWebApiStartupFactoryParameters = ContentGeneratorServerWebApiStartupFactoryParametersFactory.Create(
-            fullNamespace);
-
-        var contentGenerator = new Framework.Mvc.ContentGenerators.Server.ContentGeneratorServerWebApiStartupFactory(
-            new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-            new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-            new CodeDocumentationTagsGenerator(),
-            contentGeneratorServerWebApiStartupFactoryParameters);
-
-        var content = contentGenerator.Generate();
-
-        var file = projectOptions.PathForTestGenerate!.CombineFileInfo("WebApiStartupFactory.cs");
-
-        var contentWriter = new ContentWriter(logger);
-        contentWriter.Write(
-            projectOptions.PathForTestGenerate!,
-            file,
-            ContentWriterArea.Test,
-            content);
-    }
-
-    private void GenerateTestWebApiControllerBaseTest()
-    {
-        var fullNamespace = $"{projectOptions.ProjectName}.Tests";
-
-        var contentGenerator = new Framework.Mvc.ContentGenerators.Server.ContentGeneratorServerWebApiControllerBaseTest(
-            new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-            new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-            new ContentGeneratorBaseParameters(fullNamespace));
-
-        var content = contentGenerator.Generate();
-
-        var file = projectOptions.PathForTestGenerate!.CombineFileInfo("WebApiControllerBaseTest.cs");
-
-        var contentWriter = new ContentWriter(logger);
-        contentWriter.Write(
-            projectOptions.PathForTestGenerate!,
-            file,
-            ContentWriterArea.Test,
-            content);
-    }
-
-    private void ScaffoldAppSettingsIntegrationTest()
-    {
-        var contentGenerator = new Framework.Mvc.ContentGenerators.Server.ContentGeneratorServerAppSettingsIntegrationTest();
-
-        var content = contentGenerator.Generate();
-
-        var file = projectOptions.PathForTestGenerate!.CombineFileInfo("appsettings.integrationtest.json");
-
-        var contentWriter = new ContentWriter(logger);
-        contentWriter.Write(
-            projectOptions.PathForTestGenerate!,
-            file,
-            ContentWriterArea.Test,
-            content,
             overrideIfExist: false);
     }
 }

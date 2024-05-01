@@ -69,12 +69,12 @@ public class ServerApiGenerator
             }
         }
 
-        ScaffoldSrc();
-
         var operationSchemaMappings = apiOperationExtractor.Extract(projectOptions.Document);
 
         if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
         {
+            serverApiGeneratorMvc.ScaffoldProjectFile();
+
             serverApiGeneratorMvc.GenerateAssemblyMarker();
 
             serverApiGeneratorMvc.MaintainGlobalUsings(
@@ -85,6 +85,8 @@ public class ServerApiGenerator
         }
         else
         {
+            serverApiGeneratorMvc.ScaffoldProjectFile();
+
             serverApiGeneratorMinimalApi.GenerateAssemblyMarker();
 
             serverApiGeneratorMinimalApi.MaintainGlobalUsings(
@@ -173,60 +175,6 @@ public class ServerApiGenerator
 
         logger.LogError($"     {ValidationRuleNameConstants.ProjectApiGenerated06} - Existing project did not contain a version.");
         return false;
-    }
-
-    private void ScaffoldSrc()
-    {
-        if (!Directory.Exists(projectOptions.PathForSrcGenerate.FullName))
-        {
-            Directory.CreateDirectory(projectOptions.PathForSrcGenerate.FullName);
-        }
-
-        if (projectOptions.PathForSrcGenerate.Exists &&
-            projectOptions.ProjectSrcCsProj.Exists)
-        {
-            var hasUpdates = SolutionAndProjectHelper.EnsureLatestPackageReferencesVersionInProjFile(
-                logger,
-                projectOptions.ProjectSrcCsProj,
-                projectOptions.ProjectSrcCsProjDisplayLocation,
-                ProjectType.ServerApi,
-                isTestProject: false);
-
-            if (!hasUpdates)
-            {
-                logger.LogDebug($"{EmojisConstants.FileNotUpdated}   No updates for csproj");
-            }
-        }
-        else
-        {
-            IList<(string PackageId, string PackageVersion, string? SubElements)>? packageReferencesBaseLineForApiProject = null;
-            TaskHelper.RunSync(async () =>
-            {
-                if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
-                {
-                    packageReferencesBaseLineForApiProject = await nugetPackageReferenceProvider.GetPackageReferencesBaseLineForApiProjectForMvc();
-                }
-                else
-                {
-                    packageReferencesBaseLineForApiProject = await nugetPackageReferenceProvider.GetPackageReferencesBaseLineForApiProjectForMinimalApi();
-                }
-            });
-
-            SolutionAndProjectHelper.ScaffoldProjFile(
-                logger,
-                projectOptions.ProjectSrcCsProj,
-                projectOptions.ProjectSrcCsProjDisplayLocation,
-                ProjectType.ServerApi,
-                createAsWeb: false,
-                createAsTestProject: false,
-                projectOptions.ProjectName,
-                "net8.0",
-                new List<string> { "Microsoft.AspNetCore.App" },
-                packageReferencesBaseLineForApiProject,
-                projectReferences: null,
-                includeApiSpecification: true,
-                usingCodingRules: projectOptions.UsingCodingRules);
-        }
     }
 
     private void CopyApiSpecification()
