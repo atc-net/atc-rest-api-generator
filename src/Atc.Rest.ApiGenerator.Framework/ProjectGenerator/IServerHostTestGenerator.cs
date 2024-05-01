@@ -19,6 +19,10 @@ public interface IServerHostTestGenerator
 
     void GenerateWebApiControllerBaseTestFile();
 
+    void GenerateEndpointHandlerStubs();
+
+    void GenerateEndpointTests();
+
     void MaintainGlobalUsings(
         bool usingCodingRules,
         bool removeNamespaceGroupSeparatorInGlobalUsings);

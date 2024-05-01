@@ -199,6 +199,79 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
             overrideIfExist: false);
     }
 
+    public void GenerateEndpointHandlerStubs()
+    {
+        var codeHeaderGenerator = new GeneratedCodeHeaderGenerator(
+            new GeneratedCodeGeneratorParameters(
+                apiGeneratorVersion));
+
+        var codeGeneratorContentHeader = codeHeaderGenerator.Generate();
+
+        var codeGeneratorAttribute = new AttributeParameters(
+            "GeneratedCode",
+            $"\"{ContentWriterConstants.ApiGeneratorName}\", \"{apiGeneratorVersion}\"");
+
+        foreach (var openApiPath in openApiDocument.Paths)
+        {
+            var apiGroupName = openApiPath.GetApiGroupName();
+
+            foreach (var openApiOperation in openApiPath.Value.Operations)
+            {
+                var fullNamespace = $"{projectName}.{ContentGeneratorConstants.Endpoints}.{apiGroupName}";
+
+                var classParameters = ContentGeneratorServerTestEndpointHandlerStubParametersFactory.Create(
+                    codeGeneratorContentHeader,
+                    fullNamespace,
+                    codeGeneratorAttribute,
+                    openApiPath.Value,
+                    openApiOperation.Value);
+
+                var contentGenerator = new GenerateContentForClass(
+                    new CodeDocumentationTagsGenerator(),
+                    classParameters);
+
+                var content = contentGenerator.Generate();
+
+                var contentWriter = new ContentWriter(logger);
+                contentWriter.Write(
+                    projectPath,
+                    projectPath.CombineFileInfo(ContentGeneratorConstants.Endpoints, apiGroupName, $"{classParameters.TypeName}.cs"),
+                    ContentWriterArea.Test,
+                    content);
+            }
+        }
+    }
+
+    public void GenerateEndpointTests()
+    {
+        foreach (var openApiPath in openApiDocument.Paths)
+        {
+            var apiGroupName = openApiPath.GetApiGroupName();
+
+            foreach (var openApiOperation in openApiPath.Value.Operations)
+            {
+                var fullNamespace = $"{projectName}.{ContentGeneratorConstants.Endpoints}.{apiGroupName}";
+
+                var classParameters = ContentGeneratorServerTestEndpointTestsParametersFactory.Create(
+                    fullNamespace,
+                    openApiOperation.Value);
+
+                var contentGenerator = new GenerateContentForClass(
+                    new CodeDocumentationTagsGenerator(),
+                    classParameters);
+
+                var content = contentGenerator.Generate();
+
+                var contentWriter = new ContentWriter(logger);
+                contentWriter.Write(
+                    projectPath,
+                    projectPath.CombineFileInfo(ContentGeneratorConstants.Endpoints, apiGroupName, $"{classParameters.TypeName}.cs"),
+                    ContentWriterArea.Test,
+                    content);
+            }
+        }
+    }
+
     public void MaintainGlobalUsings(
         bool usingCodingRules,
         bool removeNamespaceGroupSeparatorInGlobalUsings)

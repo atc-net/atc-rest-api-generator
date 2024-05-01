@@ -503,20 +503,4 @@ public class ServerApiGenerator
 
         return result;
     }
-
-    private string GetRouteByApiGroupName(
-        string apiGroupName)
-    {
-        var (key, _) = projectOptions.Document.Paths.FirstOrDefault(x => x.IsPathStartingSegmentName(apiGroupName));
-        if (key is null)
-        {
-            throw new NotSupportedException($"{nameof(apiGroupName)} was not found in any route.");
-        }
-
-        var routeSuffix = key
-            .Split('/', StringSplitOptions.RemoveEmptyEntries)
-            .FirstOrDefault();
-
-        return $"{projectOptions.RouteBase}/{routeSuffix}";
-    }
 }

@@ -8,7 +8,6 @@ namespace Atc.Rest.ApiGenerator.Generators;
 public class ServerDomainGenerator
 {
     private readonly ILogger logger;
-    private readonly IApiOperationExtractor apiOperationExtractor;
     private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
     private readonly DomainProjectOptions projectOptions;
 
@@ -25,7 +24,6 @@ public class ServerDomainGenerator
         ArgumentNullException.ThrowIfNull(loggerFactory);
 
         logger = loggerFactory.CreateLogger<ServerDomainGenerator>();
-        this.apiOperationExtractor = apiOperationExtractor ?? throw new ArgumentNullException(nameof(apiOperationExtractor));
         this.nugetPackageReferenceProvider = nugetPackageReferenceProvider ?? throw new ArgumentNullException(nameof(nugetPackageReferenceProvider));
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
 
