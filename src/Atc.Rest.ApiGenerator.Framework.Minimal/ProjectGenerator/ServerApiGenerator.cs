@@ -173,9 +173,7 @@ public class ServerApiGenerator : IServerApiGenerator
     }
 
     public void GenerateResults()
-    {
-        // TODO: Implement this.
-    }
+        => throw new NotSupportedException($"{nameof(GenerateResults)} is not supported for MinimalApi");
 
     public void GenerateInterfaces()
     {
@@ -219,8 +217,7 @@ public class ServerApiGenerator : IServerApiGenerator
         }
     }
 
-    public void GenerateEndpoints(
-        bool useProblemDetailsAsDefaultBody)
+    public void GenerateEndpoints()
     {
         foreach (var apiGroupName in openApiDocument.GetApiGroupNames())
         {
@@ -257,8 +254,7 @@ public class ServerApiGenerator : IServerApiGenerator
             projectPath);
 
     public void MaintainGlobalUsings(
-        bool removeNamespaceGroupSeparatorInGlobalUsings,
-        bool useProblemDetailsAsDefaultBody)
+        bool removeNamespaceGroupSeparatorInGlobalUsings)
     {
         var requiredUsings = new List<string>
         {
@@ -271,11 +267,6 @@ public class ServerApiGenerator : IServerApiGenerator
             "Microsoft.AspNetCore.Http.HttpResults",
             "Microsoft.AspNetCore.Mvc",
         };
-
-        if (openApiDocument.IsUsingRequiredForSystemNet(useProblemDetailsAsDefaultBody))
-        {
-            requiredUsings.Add("System.Net");
-        }
 
         if (openApiDocument.IsUsingRequiredForAtcRestResults())
         {

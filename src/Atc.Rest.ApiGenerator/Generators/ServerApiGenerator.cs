@@ -40,7 +40,10 @@ public class ServerApiGenerator
             projectOptions.PathForSrcGenerate,
             projectOptions.Document,
             operationSchemaMappings,
-            projectOptions.RouteBase);
+            projectOptions.RouteBase)
+        {
+            UseProblemDetailsAsDefaultBody = projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
+        };
 
         serverApiGeneratorMinimalApi = new Framework.Minimal.ProjectGenerator.ServerApiGenerator(
             loggerFactory,
@@ -86,13 +89,11 @@ public class ServerApiGenerator
             serverApiGeneratorMvc.GenerateParameters();
             serverApiGeneratorMvc.GenerateResults();
             serverApiGeneratorMvc.GenerateInterfaces();
-            serverApiGeneratorMvc.GenerateEndpoints(
-                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
+            serverApiGeneratorMvc.GenerateEndpoints();
 
             serverApiGeneratorMvc.MaintainApiSpecification(projectOptions.DocumentFile);
             serverApiGeneratorMvc.MaintainGlobalUsings(
-                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings,
-                projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody);
+                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
         }
         else
         {
@@ -102,22 +103,15 @@ public class ServerApiGenerator
             serverApiGeneratorMinimalApi.GenerateModels();
             serverApiGeneratorMinimalApi.GenerateParameters();
             serverApiGeneratorMinimalApi.GenerateInterfaces();
-            serverApiGeneratorMinimalApi.GenerateEndpoints(
-                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
+            serverApiGeneratorMinimalApi.GenerateEndpoints();
 
             serverApiGeneratorMinimalApi.MaintainApiSpecification(projectOptions.DocumentFile);
             serverApiGeneratorMinimalApi.MaintainGlobalUsings(
-                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings,
-                useProblemDetailsAsDefaultBody: false);
+                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
         }
 
         GenerateModels(projectOptions.Document, operationSchemaMappings);
         GenerateParameters(projectOptions.Document);
-
-        if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
-        {
-            GenerateResults(projectOptions.Document);
-        }
 
         return true;
     }
@@ -382,49 +376,6 @@ public class ServerApiGenerator
                     file,
                     ContentWriterArea.Src,
                     content);
-            }
-        }
-    }
-
-    private void GenerateResults(
-        OpenApiDocument document)
-    {
-        foreach (var openApiPath in document.Paths)
-        {
-            var apiGroupName = openApiPath.GetApiGroupName();
-
-            var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
-
-            foreach (var openApiOperation in openApiPath.Value.Operations)
-            {
-                // Generate
-                var resultParameters = ContentGeneratorServerResultParametersFactory.Create(
-                    fullNamespace,
-                    openApiOperation.Value,
-                    projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody);
-
-                var contentGeneratorResult = new Framework.Mvc.ContentGenerators.Server.ContentGeneratorServerResult(
-                    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-                    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(projectOptions.ApiGeneratorVersion)),
-                    new CodeDocumentationTagsGenerator(),
-                    resultParameters);
-
-                var resultContent = contentGeneratorResult.Generate();
-
-                // Write
-                var file = new FileInfo(
-                    Helpers.DirectoryInfoHelper.GetCsFileNameForContract(
-                        projectOptions.PathForContracts,
-                        apiGroupName,
-                        ContentGeneratorConstants.Results,
-                        resultParameters.ResultName));
-
-                var contentWriter = new ContentWriter(logger);
-                contentWriter.Write(
-                    projectOptions.PathForSrcGenerate,
-                    file,
-                    ContentWriterArea.Src,
-                    resultContent);
             }
         }
     }

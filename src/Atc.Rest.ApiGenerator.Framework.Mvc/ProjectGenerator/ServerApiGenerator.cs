@@ -37,6 +37,8 @@ public class ServerApiGenerator : IServerApiGenerator
         this.routeBase = routeBase;
     }
 
+    public bool UseProblemDetailsAsDefaultBody { get; set; }
+
     public void ScaffoldProjectFile()
     {
         var projectFileParameters = new ProjectFileParameters(
@@ -186,7 +188,35 @@ public class ServerApiGenerator : IServerApiGenerator
 
     public void GenerateResults()
     {
-        // TODO: Implement this.
+        foreach (var openApiPath in openApiDocument.Paths)
+        {
+            var apiGroupName = openApiPath.GetApiGroupName();
+
+            var fullNamespace = $"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
+
+            foreach (var openApiOperation in openApiPath.Value.Operations)
+            {
+                var resultParameters = ContentGeneratorServerResultParametersFactory.Create(
+                    fullNamespace,
+                    openApiOperation.Value,
+                    UseProblemDetailsAsDefaultBody);
+
+                var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerResult(
+                    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
+                    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
+                    new CodeDocumentationTagsGenerator(),
+                    resultParameters);
+
+                var content = contentGenerator.Generate();
+
+                var contentWriter = new ContentWriter(logger);
+                contentWriter.Write(
+                    projectPath,
+                    projectPath.CombineFileInfo(ContentGeneratorConstants.Contracts, apiGroupName, ContentGeneratorConstants.Results, $"{resultParameters.ResultName}.cs"),
+                    ContentWriterArea.Src,
+                    content);
+            }
+        }
     }
 
     public void GenerateInterfaces()
@@ -231,15 +261,14 @@ public class ServerApiGenerator : IServerApiGenerator
         }
     }
 
-    public void GenerateEndpoints(
-        bool useProblemDetailsAsDefaultBody)
+    public void GenerateEndpoints()
     {
         foreach (var apiGroupName in openApiDocument.GetApiGroupNames())
         {
             var controllerParameters = ContentGeneratorServerControllerParametersFactory.Create(
                 operationSchemaMappings,
                 projectName,
-                useProblemDetailsAsDefaultBody,
+                UseProblemDetailsAsDefaultBody,
                 $"{projectName}.{ContentGeneratorConstants.Endpoints}",
                 apiGroupName,
                 GetRouteByApiGroupName(apiGroupName),
@@ -270,8 +299,7 @@ public class ServerApiGenerator : IServerApiGenerator
             projectPath);
 
     public void MaintainGlobalUsings(
-        bool removeNamespaceGroupSeparatorInGlobalUsings,
-        bool useProblemDetailsAsDefaultBody)
+        bool removeNamespaceGroupSeparatorInGlobalUsings)
     {
         var requiredUsings = new List<string>
         {
@@ -283,7 +311,7 @@ public class ServerApiGenerator : IServerApiGenerator
             "Atc.Rest.Results",
         };
 
-        if (openApiDocument.IsUsingRequiredForSystemNet(useProblemDetailsAsDefaultBody))
+        if (openApiDocument.IsUsingRequiredForSystemNet(UseProblemDetailsAsDefaultBody))
         {
             requiredUsings.Add("System.Net");
         }

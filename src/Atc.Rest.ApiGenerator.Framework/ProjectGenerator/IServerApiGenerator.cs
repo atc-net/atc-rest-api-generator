@@ -23,13 +23,11 @@ public interface IServerApiGenerator
 
     void GenerateInterfaces();
 
-    void GenerateEndpoints(
-        bool useProblemDetailsAsDefaultBody);
+    void GenerateEndpoints();
 
     void MaintainApiSpecification(
         FileInfo apiSpecificationFile);
 
     void MaintainGlobalUsings(
-        bool removeNamespaceGroupSeparatorInGlobalUsings,
-        bool useProblemDetailsAsDefaultBody);
+        bool removeNamespaceGroupSeparatorInGlobalUsings);
 }
