@@ -88,6 +88,11 @@ public static class ContentGeneratorServerHandlerInterfaceParametersFactory
         if (responseReturnTypes.Count == 1)
         {
             var (httpStatusCode, returnTypeName) = responseReturnTypes[0];
+            if (httpStatusCode == HttpStatusCode.BadGateway)
+            {
+                return "ProblemHttpResult";
+            }
+
             var responseReturnType = httpStatusCode.ToNormalizedString();
 
             return returnTypeName is null
@@ -98,9 +103,16 @@ public static class ContentGeneratorServerHandlerInterfaceParametersFactory
         var result = new List<string>();
         foreach (var (httpStatusCode, returnTypeName) in responseReturnTypes)
         {
-            result.Add(returnTypeName is null
-                ? httpStatusCode.ToNormalizedString()
-                : $"{httpStatusCode.ToNormalizedString()}<{returnTypeName}>");
+            if (httpStatusCode == HttpStatusCode.BadGateway)
+            {
+                result.Add("ProblemHttpResult");
+            }
+            else
+            {
+                result.Add(returnTypeName is null
+                    ? httpStatusCode.ToNormalizedString()
+                    : $"{httpStatusCode.ToNormalizedString()}<{returnTypeName}>");
+            }
         }
 
         return $"Results<{string.Join(", ", result)}>";

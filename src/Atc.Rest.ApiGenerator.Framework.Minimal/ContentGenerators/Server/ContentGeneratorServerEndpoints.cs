@@ -96,7 +96,8 @@ public sealed class ContentGeneratorServerEndpoints : IContentGenerator
         var summary = item.Name;
 
         sb.AppendLine(8, routeGroupBuilderName);
-        sb.AppendLine(12,
+        sb.AppendLine(
+            12,
             item.RouteSuffix is null
                 ? $".Map{item.OperationTypeRepresentation}(\"/\", {item.Name})"
                 : $".Map{item.OperationTypeRepresentation}(\"{item.RouteSuffix}\", {item.Name})");
@@ -151,13 +152,20 @@ public sealed class ContentGeneratorServerEndpoints : IContentGenerator
                     for (var x = 0; x < item.HttpResults.Count; x++)
                     {
                         var (httpStatusCode, returnType) = item.HttpResults[x];
-                        if (string.IsNullOrEmpty(returnType))
+                        if (httpStatusCode == HttpStatusCode.BadGateway)
                         {
-                            sb.Append($"{httpStatusCode.ToNormalizedString()}");
+                            sb.Append("ProblemHttpResult");
                         }
                         else
                         {
-                            sb.Append($"{httpStatusCode.ToNormalizedString()}<{returnType}>");
+                            if (string.IsNullOrEmpty(returnType))
+                            {
+                                sb.Append($"{httpStatusCode.ToNormalizedString()}");
+                            }
+                            else
+                            {
+                                sb.Append($"{httpStatusCode.ToNormalizedString()}<{returnType}>");
+                            }
                         }
 
                         if (x != item.HttpResults.Count - 1)

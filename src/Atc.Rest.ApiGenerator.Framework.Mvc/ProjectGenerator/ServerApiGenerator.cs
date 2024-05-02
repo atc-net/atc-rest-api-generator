@@ -191,7 +191,44 @@ public class ServerApiGenerator : IServerApiGenerator
 
     public void GenerateInterfaces()
     {
-        // TODO: Implement this.
+        var codeHeaderGenerator = new GeneratedCodeHeaderGenerator(
+             new GeneratedCodeGeneratorParameters(
+                 apiGeneratorVersion));
+        var codeGeneratorContentHeader = codeHeaderGenerator.Generate();
+
+        var codeGeneratorAttribute = new AttributeParameters(
+            "GeneratedCode",
+            $"\"{ContentWriterConstants.ApiGeneratorName}\", \"{apiGeneratorVersion}\"");
+
+        foreach (var openApiPath in openApiDocument.Paths)
+        {
+            var apiGroupName = openApiPath.GetApiGroupName();
+
+            var fullNamespace = $"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
+
+            foreach (var openApiOperation in openApiPath.Value.Operations)
+            {
+                var interfaceParameters = ContentGeneratorServerHandlerInterfaceParametersFactory.Create(
+                    codeGeneratorContentHeader,
+                    fullNamespace,
+                    codeGeneratorAttribute,
+                    openApiPath.Value,
+                    openApiOperation.Value);
+
+                var contentGeneratorInterface = new GenerateContentForInterface(
+                    new CodeDocumentationTagsGenerator(),
+                    interfaceParameters);
+
+                var content = contentGeneratorInterface.Generate();
+
+                var contentWriter = new ContentWriter(logger);
+                contentWriter.Write(
+                    projectPath,
+                    projectPath.CombineFileInfo(ContentGeneratorConstants.Contracts, apiGroupName, ContentGeneratorConstants.Interfaces, $"{interfaceParameters.InterfaceTypeName}.cs"),
+                    ContentWriterArea.Src,
+                    content);
+            }
+        }
     }
 
     public void GenerateEndpoints(

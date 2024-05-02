@@ -348,8 +348,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
             "Microsoft.Extensions.DependencyInjection",
         };
 
-        // TODO: Fix if needed
-        if (false)
+        if (openApiDocument.IsUsingRequiredForAtcRestResults())
         {
             requiredUsings.Add("Atc.Rest.Results");
         }

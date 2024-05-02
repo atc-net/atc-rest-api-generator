@@ -119,8 +119,6 @@ public class ServerApiGenerator
             GenerateResults(projectOptions.Document);
         }
 
-        GenerateInterfaces(projectOptions.Document);
-
         return true;
     }
 
@@ -427,62 +425,6 @@ public class ServerApiGenerator
                     file,
                     ContentWriterArea.Src,
                     resultContent);
-            }
-        }
-    }
-
-    private void GenerateInterfaces(
-        OpenApiDocument document)
-    {
-        foreach (var openApiPath in document.Paths)
-        {
-            var apiGroupName = openApiPath.GetApiGroupName();
-
-            var fullNamespace = $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
-
-            foreach (var openApiOperation in openApiPath.Value.Operations)
-            {
-                InterfaceParameters interfaceParameters;
-
-                if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
-                {
-                    interfaceParameters = Framework.Mvc.Factories.Parameters.Server.ContentGeneratorServerHandlerInterfaceParametersFactory.Create(
-                        codeGeneratorContentHeader,
-                        fullNamespace,
-                        codeGeneratorAttribute,
-                        openApiPath.Value,
-                        openApiOperation.Value);
-                }
-                else
-                {
-                    interfaceParameters = Framework.Minimal.Factories.Parameters.Server.ContentGeneratorServerHandlerInterfaceParametersFactory.Create(
-                        codeGeneratorContentHeader,
-                        fullNamespace,
-                        codeGeneratorAttribute,
-                        openApiPath.Value,
-                        openApiOperation.Value);
-                }
-
-                var contentGeneratorInterface = new GenerateContentForInterface(
-                    new CodeDocumentationTagsGenerator(),
-                    interfaceParameters);
-
-                var content = contentGeneratorInterface.Generate();
-
-                // Write
-                var file = new FileInfo(
-                    Helpers.DirectoryInfoHelper.GetCsFileNameForContract(
-                        projectOptions.PathForContracts,
-                        apiGroupName,
-                        ContentGeneratorConstants.Interfaces,
-                        interfaceParameters.TypeName));
-
-                var contentWriter = new ContentWriter(logger);
-                contentWriter.Write(
-                    projectOptions.PathForSrcGenerate,
-                    file,
-                    ContentWriterArea.Src,
-                    content);
             }
         }
     }

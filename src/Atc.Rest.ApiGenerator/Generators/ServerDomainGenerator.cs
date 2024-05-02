@@ -79,8 +79,6 @@ public class ServerDomainGenerator
             }
         }
 
-        var operationSchemaMappings = apiOperationExtractor.Extract(projectOptions.Document);
-
         if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
         {
             serverDomainGeneratorMvc.ScaffoldProjectFile();
