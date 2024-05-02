@@ -6,3 +6,4 @@ global using Atc.CodeGeneration.CSharp.Content;
 global using Atc.CodeGeneration.CSharp.Content.Factories;
 global using Atc.CodeGeneration.CSharp.Content.Generators;
 global using Atc.CodeGeneration.CSharp.Extensions;
+global using Atc.Rest.ApiGenerator.Framework.Factories.Parameters.ServerClient;

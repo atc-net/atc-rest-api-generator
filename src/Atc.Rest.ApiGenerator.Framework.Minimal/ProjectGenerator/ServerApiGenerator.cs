@@ -10,6 +10,8 @@ public class ServerApiGenerator : IServerApiGenerator
     private readonly OpenApiDocument openApiDocument;
     private readonly IList<ApiOperation> operationSchemaMappings;
     private readonly string routeBase;
+    private readonly string codeGeneratorContentHeader;
+    private readonly AttributeParameters codeGeneratorAttribute;
 
     public ServerApiGenerator(
         ILoggerFactory loggerFactory,
@@ -34,6 +36,13 @@ public class ServerApiGenerator : IServerApiGenerator
         this.openApiDocument = openApiDocument;
         this.operationSchemaMappings = operationSchemaMappings;
         this.routeBase = routeBase;
+
+        codeGeneratorContentHeader = GeneratedCodeHeaderGeneratorFactory
+            .Create(apiGeneratorVersion)
+            .Generate();
+        codeGeneratorAttribute = new AttributeParameters(
+            "GeneratedCode",
+            $"\"{ContentWriterConstants.ApiGeneratorName}\", \"{apiGeneratorVersion}\"");
     }
 
     public void ScaffoldProjectFile()
@@ -129,15 +138,6 @@ public class ServerApiGenerator : IServerApiGenerator
     {
         ArgumentNullException.ThrowIfNull(apiGeneratorVersion);
 
-        var codeHeaderGenerator = new GeneratedCodeHeaderGenerator(
-            new GeneratedCodeGeneratorParameters(
-                apiGeneratorVersion));
-        var codeGeneratorContentHeader = codeHeaderGenerator.Generate();
-
-        var codeGeneratorAttribute = AttributeParametersFactory.Create(
-            "GeneratedCode",
-            $"\"{ContentWriterConstants.ApiGeneratorName}\", \"{apiGeneratorVersion}\"");
-
         var suppressMessageAvoidEmptyInterfaceAttribute = new AttributeParameters(
             "SuppressMessage",
             "\"Design\", \"CA1040:Avoid empty interfaces\", Justification = \"OK.\"");
@@ -164,12 +164,70 @@ public class ServerApiGenerator : IServerApiGenerator
 
     public void GenerateModels()
     {
-        // TODO: Implement this.
+        foreach (var apiGroupName in openApiDocument.GetApiGroupNames())
+        {
+            var apiOperations = operationSchemaMappings
+                .Where(x => x.LocatedArea is ApiSchemaMapLocatedAreaType.Response or ApiSchemaMapLocatedAreaType.RequestBody &&
+                            x.ApiGroupName.Equals(apiGroupName, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            var apiOperationModels = GetDistinctApiOperationModels(apiOperations);
+
+            foreach (var apiOperationModel in apiOperationModels)
+            {
+                var apiSchema = openApiDocument.Components.Schemas.First(x => x.Key.Equals(apiOperationModel.Name, StringComparison.OrdinalIgnoreCase));
+
+                var modelName = apiSchema.Key.EnsureFirstCharacterToUpper();
+
+                if (apiOperationModel.IsEnum)
+                {
+                    GenerateEnumerationType(modelName, apiSchema.Value.GetEnumSchema().Item2);
+                }
+                else
+                {
+                    GenerateModel(modelName, apiSchema.Value, apiGroupName, apiOperationModel.IsShared);
+                }
+            }
+        }
     }
 
     public void GenerateParameters()
     {
-        // TODO: Implement this.
+        foreach (var openApiPath in openApiDocument.Paths)
+        {
+            var apiGroupName = openApiPath.GetApiGroupName();
+
+            var fullNamespace = $"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
+
+            foreach (var openApiOperation in openApiPath.Value.Operations)
+            {
+                if (!openApiPath.Value.HasParameters() &&
+                    !openApiOperation.Value.HasParametersOrRequestBody())
+                {
+                    continue;
+                }
+
+                var parameterParameters = ContentGeneratorServerParameterParametersFactory.CreateForRecord(
+                    fullNamespace,
+                    openApiOperation.Value,
+                    openApiPath.Value.Parameters);
+
+                var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerParameter(
+                    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
+                    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
+                    new CodeDocumentationTagsGenerator(),
+                    parameterParameters);
+
+                var content = contentGenerator.Generate();
+
+                var contentWriter = new ContentWriter(logger);
+                contentWriter.Write(
+                    projectPath,
+                    projectPath.CombineFileInfo(ContentGeneratorConstants.Contracts, apiGroupName, ContentGeneratorConstants.Parameters, $"{parameterParameters.ParameterName}.cs"),
+                    ContentWriterArea.Src,
+                    content);
+            }
+        }
     }
 
     public void GenerateResults()
@@ -177,15 +235,6 @@ public class ServerApiGenerator : IServerApiGenerator
 
     public void GenerateInterfaces()
     {
-        var codeHeaderGenerator = new GeneratedCodeHeaderGenerator(
-            new GeneratedCodeGeneratorParameters(
-                apiGeneratorVersion));
-        var codeGeneratorContentHeader = codeHeaderGenerator.Generate();
-
-        var codeGeneratorAttribute = new AttributeParameters(
-            "GeneratedCode",
-            $"\"{ContentWriterConstants.ApiGeneratorName}\", \"{apiGeneratorVersion}\"");
-
         foreach (var openApiPath in openApiDocument.Paths)
         {
             var apiGroupName = openApiPath.GetApiGroupName();
@@ -304,5 +353,82 @@ public class ServerApiGenerator : IServerApiGenerator
             .FirstOrDefault();
 
         return $"{routeBase}/{routeSuffix}";
+    }
+
+    private void GenerateEnumerationType(
+        string enumerationName,
+        OpenApiSchema openApiSchemaEnumeration)
+    {
+        var fullNamespace = $"{projectName}.{ContentGeneratorConstants.Contracts}";
+
+        var enumParameters = ContentGeneratorServerClientEnumParametersFactory.Create(
+            codeGeneratorContentHeader,
+            fullNamespace,
+            codeGeneratorAttribute,
+            enumerationName,
+            openApiSchemaEnumeration.Enum);
+
+        var contentGenerator = new GenerateContentForEnum(
+            new CodeDocumentationTagsGenerator(),
+            enumParameters);
+
+        var content = contentGenerator.Generate();
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectPath,
+            projectPath.CombineFileInfo(ContentGeneratorConstants.Contracts, ContentGeneratorConstants.SpecialFolderEnumerationTypes, ContentGeneratorConstants.Interfaces, $"{enumerationName}.cs"),
+            ContentWriterArea.Src,
+            content);
+    }
+
+    private void GenerateModel(
+        string modelName,
+        OpenApiSchema apiSchemaModel,
+        string apiGroupName,
+        bool isSharedContract)
+    {
+        var fullNamespace = isSharedContract
+            ? $"{projectName}.{ContentGeneratorConstants.Contracts}"
+            : $"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
+
+        var parameters = ContentGeneratorServerClientModelParametersFactory.CreateForRecord(
+            codeGeneratorContentHeader,
+            fullNamespace,
+            codeGeneratorAttribute,
+            modelName,
+            apiSchemaModel);
+
+        var contentGeneratorRecord = new GenerateContentForRecords(
+            new CodeDocumentationTagsGenerator(),
+            parameters);
+
+        var content = contentGeneratorRecord.Generate();
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectPath,
+            isSharedContract
+                ? projectPath.CombineFileInfo(ContentGeneratorConstants.Contracts, apiGroupName, ContentGeneratorConstants.SpecialFolderSharedModels, $"{modelName}.cs")
+                : projectPath.CombineFileInfo(ContentGeneratorConstants.Contracts, apiGroupName, ContentGeneratorConstants.Models, $"{modelName}.cs"),
+            ContentWriterArea.Src,
+            content);
+    }
+
+    private static List<ApiOperationModel> GetDistinctApiOperationModels(
+        List<ApiOperation> apiOperations)
+    {
+        var result = new List<ApiOperationModel>();
+
+        foreach (var apiOperation in apiOperations)
+        {
+            var apiOperationModel = result.Find(x => x.Name.Equals(apiOperation.Model.Name, StringComparison.Ordinal));
+            if (apiOperationModel is null)
+            {
+                result.Add(apiOperation.Model);
+            }
+        }
+
+        return result;
     }
 }

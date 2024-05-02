@@ -5,12 +5,13 @@ namespace Atc.Rest.ApiGenerator.Framework.Minimal.ProjectGenerator;
 public class ServerDomainGenerator : IServerDomainGenerator
 {
     private readonly ILogger<ServerDomainGenerator> logger;
-    private readonly Version apiGeneratorVersion;
     private readonly string projectName;
     private readonly string apiProjectName;
     private readonly DirectoryInfo projectPath;
     private readonly OpenApiDocument openApiDocument;
     private readonly IList<ApiOperation> operationSchemaMappings;
+    private readonly string codeGeneratorContentHeader;
+    private readonly AttributeParameters codeGeneratorAttribute;
 
     public ServerDomainGenerator(
         ILoggerFactory loggerFactory,
@@ -30,12 +31,17 @@ public class ServerDomainGenerator : IServerDomainGenerator
         ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 
         logger = loggerFactory.CreateLogger<ServerDomainGenerator>();
-        this.apiGeneratorVersion = apiGeneratorVersion;
         this.projectName = projectName;
         this.apiProjectName = apiProjectName;
         this.projectPath = projectPath;
         this.openApiDocument = openApiDocument;
         this.operationSchemaMappings = operationSchemaMappings;
+
+        codeGeneratorContentHeader = GeneratedCodeHeaderGeneratorFactory
+            .Create(apiGeneratorVersion)
+            .Generate();
+        codeGeneratorAttribute = AttributeParametersFactory
+            .CreateGeneratedCode(apiGeneratorVersion);
     }
 
     public void ScaffoldProjectFile()
@@ -112,15 +118,6 @@ public class ServerDomainGenerator : IServerDomainGenerator
 
     public void GenerateAssemblyMarker()
     {
-        var codeHeaderGenerator = new GeneratedCodeHeaderGenerator(
-            new GeneratedCodeGeneratorParameters(
-                apiGeneratorVersion));
-        var codeGeneratorContentHeader = codeHeaderGenerator.Generate();
-
-        var codeGeneratorAttribute = new AttributeParameters(
-            "GeneratedCode",
-            $"\"{ContentWriterConstants.ApiGeneratorName}\", \"{apiGeneratorVersion}\"");
-
         var suppressMessageAvoidEmptyInterfaceAttribute = new AttributeParameters(
             "SuppressMessage",
             "\"Design\", \"CA1040:Avoid empty interfaces\", Justification = \"OK.\"");
@@ -147,16 +144,6 @@ public class ServerDomainGenerator : IServerDomainGenerator
 
     public void GenerateServiceCollectionExtensions()
     {
-        var codeHeaderGenerator = new GeneratedCodeHeaderGenerator(
-            new GeneratedCodeGeneratorParameters(
-                apiGeneratorVersion));
-
-        var codeGeneratorContentHeader = codeHeaderGenerator.Generate();
-
-        var attributes = AttributesParametersFactory.Create(
-            "GeneratedCode",
-            $"\"{ContentWriterConstants.ApiGeneratorName}\", \"{apiGeneratorVersion}\"");
-
         var sbServicesHandlerRegistrations = new StringBuilder();
         foreach (var urlPath in openApiDocument.Paths)
         {
@@ -267,7 +254,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
             codeGeneratorContentHeader,
             Namespace: projectName,
             DocumentationTags: null,
-            Attributes: attributes,
+            Attributes: [codeGeneratorAttribute],
             AccessModifiers.PublicStaticClass,
             ClassTypeName: "ServiceCollectionExtensions",
             GenericTypeName: null,
@@ -308,7 +295,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
             {
                 var fullNamespace = $"{projectName}.{ContentGeneratorConstants.Handlers}.{apiGroupName}";
 
-                var classParameters = Factories.Parameters.Server.ContentGeneratorServerHandlerParametersFactory.Create(
+                var classParameters = ContentGeneratorServerHandlerParametersFactory.Create(
                     fullNamespace,
                     $"Api.Generated.{ContentGeneratorConstants.Contracts}.{apiGroupName}",
                     urlPath.Value,

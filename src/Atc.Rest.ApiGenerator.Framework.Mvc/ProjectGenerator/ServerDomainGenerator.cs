@@ -6,9 +6,10 @@ public class ServerDomainGenerator : IServerDomainGenerator
     private readonly ILogger<ServerDomainGenerator> logger;
     private readonly string projectName;
     private readonly string apiProjectName;
-    private readonly Version apiGeneratorVersion;
     private readonly DirectoryInfo projectPath;
     private readonly OpenApiDocument openApiDocument;
+    private readonly string codeGeneratorContentHeader;
+    private readonly AttributeParameters codeGeneratorAttribute;
 
     public ServerDomainGenerator(
         ILoggerFactory loggerFactory,
@@ -26,11 +27,16 @@ public class ServerDomainGenerator : IServerDomainGenerator
         ArgumentNullException.ThrowIfNull(openApiDocument);
 
         logger = loggerFactory.CreateLogger<ServerDomainGenerator>();
-        this.apiGeneratorVersion = apiGeneratorVersion;
         this.projectName = projectName;
         this.apiProjectName = apiProjectName;
         this.projectPath = projectPath;
         this.openApiDocument = openApiDocument;
+
+        codeGeneratorContentHeader = GeneratedCodeHeaderGeneratorFactory
+            .Create(apiGeneratorVersion)
+            .Generate();
+        codeGeneratorAttribute = AttributeParametersFactory
+            .CreateGeneratedCode(apiGeneratorVersion);
     }
 
     public void ScaffoldProjectFile()
@@ -90,15 +96,6 @@ public class ServerDomainGenerator : IServerDomainGenerator
 
     public void GenerateAssemblyMarker()
     {
-        var codeHeaderGenerator = new GeneratedCodeHeaderGenerator(
-            new GeneratedCodeGeneratorParameters(
-                apiGeneratorVersion));
-        var codeGeneratorContentHeader = codeHeaderGenerator.Generate();
-
-        var codeGeneratorAttribute = AttributeParametersFactory.Create(
-            "GeneratedCode",
-            $"\"{ContentWriterConstants.ApiGeneratorName}\", \"{apiGeneratorVersion}\"");
-
         var classParameters = ClassParametersFactory.Create(
             codeGeneratorContentHeader,
             projectName,

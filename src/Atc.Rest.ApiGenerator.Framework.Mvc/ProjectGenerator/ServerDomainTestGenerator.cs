@@ -7,7 +7,6 @@ public class ServerDomainTestGenerator : IServerDomainTestGenerator
     private readonly string projectName;
     private readonly string apiProjectName;
     private readonly string domainProjectName;
-    private readonly Version apiGeneratorVersion;
     private readonly DirectoryInfo projectPath;
     private readonly OpenApiDocument openApiDocument;
 
@@ -29,7 +28,6 @@ public class ServerDomainTestGenerator : IServerDomainTestGenerator
         ArgumentNullException.ThrowIfNull(openApiDocument);
 
         logger = loggerFactory.CreateLogger<ServerDomainTestGenerator>();
-        this.apiGeneratorVersion = apiGeneratorVersion;
         this.projectName = projectName;
         this.apiProjectName = apiProjectName;
         this.domainProjectName = domainProjectName;

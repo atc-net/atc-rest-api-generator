@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Atc.CodeGeneration.CSharp\Atc.CodeGeneration.CSharp.csproj" />
+    <ProjectReference Include="..\..\src\Atc.Rest.ApiGenerator.Framework\Atc.Rest.ApiGenerator.Framework.csproj" />
   </ItemGroup>
 
 </Project>

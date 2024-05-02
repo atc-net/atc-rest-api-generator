@@ -1,4 +1,5 @@
 // ReSharper disable ArrangeObjectCreationWhenTypeNotEvident
+// ReSharper disable StringLiteralTypo
 namespace Atc.Rest.ApiGenerator.Framework.Mvc.ProjectGenerator;
 
 public class ServerHostTestGenerator : IServerHostTestGenerator
@@ -12,6 +13,8 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
     private readonly DirectoryInfo projectPath;
     private readonly OpenApiDocument openApiDocument;
     private readonly IList<ApiOperation> operationSchemaMappings;
+    private readonly string codeGeneratorContentHeader;
+    private readonly AttributeParameters codeGeneratorAttribute;
 
     public ServerHostTestGenerator(
         ILoggerFactory loggerFactory,
@@ -43,6 +46,12 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
         this.projectPath = projectPath;
         this.openApiDocument = openApiDocument;
         this.operationSchemaMappings = operationSchemaMappings;
+
+        codeGeneratorContentHeader = GeneratedCodeHeaderGeneratorFactory
+            .Create(apiGeneratorVersion)
+            .Generate();
+        codeGeneratorAttribute = AttributeParametersFactory
+            .CreateGeneratedCode(apiGeneratorVersion);
     }
 
     public void ScaffoldProjectFile()
@@ -201,16 +210,6 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
 
     public void GenerateEndpointHandlerStubs()
     {
-        var codeHeaderGenerator = new GeneratedCodeHeaderGenerator(
-            new GeneratedCodeGeneratorParameters(
-                apiGeneratorVersion));
-
-        var codeGeneratorContentHeader = codeHeaderGenerator.Generate();
-
-        var codeGeneratorAttribute = new AttributeParameters(
-            "GeneratedCode",
-            $"\"{ContentWriterConstants.ApiGeneratorName}\", \"{apiGeneratorVersion}\"");
-
         foreach (var openApiPath in openApiDocument.Paths)
         {
             var apiGroupName = openApiPath.GetApiGroupName();

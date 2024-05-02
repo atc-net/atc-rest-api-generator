@@ -38,14 +38,10 @@ public class ClientCSharpApiGenerator
             projectOptions.ClientFolderName);
 
         // TODO: Optimize codeGeneratorContentHeader & codeGeneratorAttribute
-        var codeHeaderGenerator = new GeneratedCodeHeaderGenerator(
-            new GeneratedCodeGeneratorParameters(
-                projectOptions.ApiGeneratorVersion));
-        codeGeneratorContentHeader = codeHeaderGenerator.Generate();
-
-        codeGeneratorAttribute = new AttributeParameters(
-            "GeneratedCode",
-            $"\"{ContentWriterConstants.ApiGeneratorName}\", \"{projectOptions.ApiGeneratorVersion}\"");
+        codeGeneratorContentHeader = GeneratedCodeHeaderGeneratorFactory
+            .Create(projectOptions.ApiGeneratorVersion)
+            .Generate();
+        codeGeneratorAttribute = AttributeParametersFactory.CreateGeneratedCode(projectOptions.ApiGeneratorVersion);
     }
 
     public bool Generate()
