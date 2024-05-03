@@ -159,7 +159,7 @@ public static class GenerateHelper
     }
 
     public static bool GenerateServerCSharpClient(
-        ILogger logger,
+        ILoggerFactory loggerFactory,
         IApiOperationExtractor apiOperationExtractor,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
         string projectPrefixName,
@@ -172,7 +172,7 @@ public static class GenerateHelper
         bool useCodingRules,
         bool removeNamespaceGroupSeparatorInGlobalUsings)
     {
-        ArgumentNullException.ThrowIfNull(logger);
+        ArgumentNullException.ThrowIfNull(loggerFactory);
         ArgumentNullException.ThrowIfNull(projectPrefixName);
         ArgumentNullException.ThrowIfNull(outputPath);
         ArgumentNullException.ThrowIfNull(apiDocumentContainer);
@@ -190,7 +190,7 @@ public static class GenerateHelper
             apiOptions,
             useCodingRules,
             removeNamespaceGroupSeparatorInGlobalUsings);
-        var clientCSharpApiGenerator = new ClientCSharpApiGenerator(logger, apiOperationExtractor, nugetPackageReferenceProvider, clientCSharpApiProjectOptions);
+        var clientCSharpApiGenerator = new Generators.ClientCSharpApiGenerator(loggerFactory, apiOperationExtractor, nugetPackageReferenceProvider, clientCSharpApiProjectOptions);
         return clientCSharpApiGenerator.Generate();
     }
 }

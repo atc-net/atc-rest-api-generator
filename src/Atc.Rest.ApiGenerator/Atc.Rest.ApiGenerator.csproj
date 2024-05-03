@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Atc.CodeGeneration.CSharp\Atc.CodeGeneration.CSharp.csproj" />
+    <ProjectReference Include="..\Atc.Rest.ApiGenerator.Client.CSharp\Atc.Rest.ApiGenerator.Client.CSharp.csproj" />
     <ProjectReference Include="..\Atc.Rest.ApiGenerator.Framework.Contracts\Atc.Rest.ApiGenerator.Framework.Contracts.csproj" />
     <ProjectReference Include="..\Atc.Rest.ApiGenerator.Framework.Minimal\Atc.Rest.ApiGenerator.Framework.Minimal.csproj" />
     <ProjectReference Include="..\Atc.Rest.ApiGenerator.Framework.Mvc\Atc.Rest.ApiGenerator.Framework.Mvc.csproj" />

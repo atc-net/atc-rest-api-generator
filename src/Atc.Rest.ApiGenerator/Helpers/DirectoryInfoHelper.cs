@@ -2,29 +2,6 @@ namespace Atc.Rest.ApiGenerator.Helpers;
 
 public static class DirectoryInfoHelper
 {
-    public static DirectoryInfo GetProjectPath()
-    {
-        var currentDomainBaseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-
-        var projectPath = currentDomainBaseDirectory!
-            .Replace("\\Bin", string.Empty, StringComparison.OrdinalIgnoreCase)
-            .Replace("\\net8.0", string.Empty, StringComparison.OrdinalIgnoreCase)
-            .Replace("\\Debug", string.Empty, StringComparison.OrdinalIgnoreCase)
-            .Replace("\\ApiGenerator", string.Empty, StringComparison.OrdinalIgnoreCase);
-
-        return new DirectoryInfo(projectPath!);
-    }
-
-    public static string GetCsFileNameForEndpoints(
-        DirectoryInfo pathForEndpoints,
-        string modelName)
-    {
-        ArgumentNullException.ThrowIfNull(pathForEndpoints);
-        ArgumentNullException.ThrowIfNull(modelName);
-
-        return Path.Combine(pathForEndpoints.FullName, $"{modelName}.cs");
-    }
-
     public static string GetCsFileNameForContract(
         DirectoryInfo pathForContracts,
         string apiGroupName,
@@ -76,19 +53,5 @@ public static class DirectoryInfoHelper
         ArgumentNullException.ThrowIfNull(modelName);
 
         return Path.Combine(pathForContracts.FullName, $"{modelName}.cs");
-    }
-
-    public static string GetCsFileNameForHandler(
-        DirectoryInfo pathForHandlers,
-        string apiGroupName,
-        string handlerName)
-    {
-        ArgumentNullException.ThrowIfNull(pathForHandlers);
-        ArgumentNullException.ThrowIfNull(apiGroupName);
-        ArgumentNullException.ThrowIfNull(handlerName);
-
-        var a = Path.Combine(pathForHandlers.FullName, apiGroupName);
-        var b = Path.Combine(a, $"{handlerName}.cs");
-        return b;
     }
 }

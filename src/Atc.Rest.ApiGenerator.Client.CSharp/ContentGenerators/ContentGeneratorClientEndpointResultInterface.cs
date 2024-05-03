@@ -1,4 +1,4 @@
-namespace Atc.Rest.ApiGenerator.Framework.Mvc.ContentGenerators.Client;
+namespace Atc.Rest.ApiGenerator.Client.CSharp.ContentGenerators;
 
 public class ContentGeneratorClientEndpointResultInterface : IContentGenerator
 {

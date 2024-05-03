@@ -2,18 +2,20 @@ namespace Atc.Rest.ApiGenerator.CLI.Commands;
 
 public class GenerateClientCSharpCommand : AsyncCommand<ClientApiCommandSettings>
 {
+    private readonly ILoggerFactory loggerFactory;
     private readonly ILogger<GenerateClientCSharpCommand> logger;
     private readonly IApiOperationExtractor apiOperationExtractor;
     private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
     private readonly IOpenApiDocumentValidator openApiDocumentValidator;
 
     public GenerateClientCSharpCommand(
-        ILogger<GenerateClientCSharpCommand> logger,
+        ILoggerFactory loggerFactory,
         IApiOperationExtractor apiOperationExtractor,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
         IOpenApiDocumentValidator openApiDocumentValidator)
     {
-        this.logger = logger;
+        this.loggerFactory = loggerFactory;
+        logger = loggerFactory.CreateLogger<GenerateClientCSharpCommand>();
         this.apiOperationExtractor = apiOperationExtractor;
         this.nugetPackageReferenceProvider = nugetPackageReferenceProvider;
         this.openApiDocumentValidator = openApiDocumentValidator;
@@ -68,7 +70,7 @@ public class GenerateClientCSharpCommand : AsyncCommand<ClientApiCommandSettings
             }
 
             if (!GenerateHelper.GenerateServerCSharpClient(
-                    logger,
+                    loggerFactory,
                     apiOperationExtractor,
                     nugetPackageReferenceProvider,
                     settings.ProjectPrefixName,

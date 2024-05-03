@@ -1,5 +1,5 @@
 // ReSharper disable SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault
-namespace Atc.Rest.ApiGenerator.Framework.Mvc.ContentGenerators.Client;
+namespace Atc.Rest.ApiGenerator.Client.CSharp.ContentGenerators;
 
 public class ContentGeneratorClientEndpointResult : IContentGenerator
 {
