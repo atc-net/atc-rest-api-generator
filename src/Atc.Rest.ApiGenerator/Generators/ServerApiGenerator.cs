@@ -8,7 +8,6 @@ namespace Atc.Rest.ApiGenerator.Generators;
 public class ServerApiGenerator
 {
     private readonly ILogger logger;
-    private readonly IApiOperationExtractor apiOperationExtractor;
     private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
     private readonly ApiProjectOptions projectOptions;
 
@@ -22,9 +21,9 @@ public class ServerApiGenerator
         ApiProjectOptions projectOptions)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
+        ArgumentNullException.ThrowIfNull(apiOperationExtractor);
 
         logger = loggerFactory.CreateLogger<ServerDomainGenerator>();
-        this.apiOperationExtractor = apiOperationExtractor ?? throw new ArgumentNullException(nameof(apiOperationExtractor));
         this.nugetPackageReferenceProvider = nugetPackageReferenceProvider ?? throw new ArgumentNullException(nameof(nugetPackageReferenceProvider));
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
 
@@ -64,8 +63,6 @@ public class ServerApiGenerator
                 return false;
             }
         }
-
-        var operationSchemaMappings = apiOperationExtractor.Extract(projectOptions.Document);
 
         if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
         {

@@ -198,11 +198,21 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
             await Verify(generatedFileContent, settings);
         }
 
-        var outputCsFiles = Directory.GetFiles(outputPath.FullName, "*.cs", SearchOption.AllDirectories);
+        var outputCsFilesWithRelativePath = Directory.GetFiles(outputPath.FullName, "*.cs", SearchOption.AllDirectories)
+            .Select(x => Path.GetRelativePath(outputPath.FullName, x))
+            .ToArray();
+
+        var verifyCsFilesWithRelativePath = verifyCsFiles.Select(x => x.FullName)
+            .Select(x => Path.GetRelativePath(scenarioPath.CombineFileInfo("VerifyServerAll").FullName, x))
+            .ToArray();
+
+        var onlyInOutput = outputCsFilesWithRelativePath.Except(verifyCsFilesWithRelativePath, StringComparer.Ordinal).ToArray();
+        var onlyInVerify = verifyCsFilesWithRelativePath.Except(outputCsFilesWithRelativePath, StringComparer.Ordinal).ToArray();
 
         Assert.True(
-            outputCsFiles.Length == verifyCsFiles.Length,
-            $"Different count on *.cs files, input.count={verifyCsFiles.Length} and output.count={outputCsFiles.Length} for scenario '{scenarioPath.Name}'");
+            outputCsFilesWithRelativePath.Length == verifyCsFilesWithRelativePath.Length,
+            $"Different count on *.cs files, input.count={verifyCsFilesWithRelativePath.Length} and output.count={outputCsFilesWithRelativePath.Length} for scenario '{scenarioPath.Name}'. " +
+            $"\n\nFiles only in output:\n\t{string.Join("\n\t", onlyInOutput)}\n\nFiles only in verify:\n\t{string.Join("\n\t", onlyInVerify)}\n");
     }
 
     private static async Task AssertBuildForServerAll(
