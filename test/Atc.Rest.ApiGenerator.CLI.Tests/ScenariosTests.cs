@@ -211,8 +211,13 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
 
         Assert.True(
             outputCsFilesWithRelativePath.Length == verifyCsFilesWithRelativePath.Length,
-            $"Different count on *.cs files, input.count={verifyCsFilesWithRelativePath.Length} and output.count={outputCsFilesWithRelativePath.Length} for scenario '{scenarioPath.Name}'. " +
-            $"\n\nFiles only in output:\n\t{string.Join("\n\t", onlyInOutput)}\n\nFiles only in verify:\n\t{string.Join("\n\t", onlyInVerify)}\n");
+            $"Different count on *.cs files, " +
+            $"input.count={verifyCsFilesWithRelativePath.Length} and " +
+            $"output.count={outputCsFilesWithRelativePath.Length} for scenario '{scenarioPath.Name}'. " +
+            $"\n\nFiles only in output:" +
+            $"\n\t{string.Join("\n\t", onlyInOutput)}" +
+            $"\n\nFiles only in verify:" +
+            $"\n\t{string.Join("\n\t", onlyInVerify)}\n");
     }
 
     private static async Task AssertBuildForServerAll(
