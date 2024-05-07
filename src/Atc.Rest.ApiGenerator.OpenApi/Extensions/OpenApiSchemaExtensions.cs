@@ -84,10 +84,7 @@ public static class OpenApiSchemaExtensions
     public static string GetSimpleDataTypeFromCustomPagination(
         this OpenApiSchema schema)
     {
-        if (schema is null)
-        {
-            throw new ArgumentNullException(nameof(schema));
-        }
+        ArgumentNullException.ThrowIfNull(schema);
 
         var customPaginationItemsSchema = schema.GetCustomPaginationItemsSchema();
         return customPaginationItemsSchema is null
@@ -161,10 +158,7 @@ public static class OpenApiSchemaExtensions
     public static bool IsTypeCustomPagination(
         this OpenApiSchema schema)
     {
-        if (schema is null)
-        {
-            throw new ArgumentNullException(nameof(schema));
-        }
+        ArgumentNullException.ThrowIfNull(schema);
 
         if (schema.AllOf.Count == 2)
         {

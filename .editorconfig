@@ -511,6 +511,9 @@ dotnet_diagnostic.CA1002.severity = suggestion		# Do not expose generic lists - 
 dotnet_diagnostic.CA1054.severity = suggestion		# URI parameters should not be strings - https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1054
 dotnet_diagnostic.CA1056.severity = suggestion		# URI properties should not be strings - https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1056
 dotnet_diagnostic.CA1848.severity = suggestion		# Use the LoggerMessage delegates - https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1848
+dotnet_diagnostic.CA1859.severity = suggestion		# https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1859
+dotnet_diagnostic.CA1860.severity = suggestion		# https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1860
+dotnet_diagnostic.CA1861.severity = suggestion		# https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1861
 dotnet_diagnostic.CA2254.severity = suggestion		# Template should be a static expression - https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2254
 
 dotnet_diagnostic.S1172.severity = none				# False positive
