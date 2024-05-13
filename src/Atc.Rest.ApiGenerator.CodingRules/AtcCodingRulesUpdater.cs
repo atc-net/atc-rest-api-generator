@@ -20,13 +20,13 @@ public sealed partial class AtcCodingRulesUpdater : IAtcCodingRulesUpdater
     }
 
     public bool Scaffold(
-        string outputSlnPath,
-        DirectoryInfo outputSrcPath,
-        DirectoryInfo? outputTestPath)
+        string slnPath,
+        DirectoryInfo srcPath,
+        DirectoryInfo? testPath)
     {
-        var rootPath = outputSlnPath.EndsWith(".sln", StringComparison.OrdinalIgnoreCase)
-            ? new FileInfo(outputSlnPath).Directory
-            : new DirectoryInfo(outputSlnPath);
+        var rootPath = slnPath.EndsWith(".sln", StringComparison.OrdinalIgnoreCase)
+            ? new FileInfo(slnPath).Directory
+            : new DirectoryInfo(slnPath);
 
         if (rootPath is null)
         {
@@ -38,9 +38,9 @@ public sealed partial class AtcCodingRulesUpdater : IAtcCodingRulesUpdater
             return true;
         }
 
-        HandleCodingRulesFiles(outputSrcPath, outputTestPath, rootPath);
-        HandleEditorConfigFiles(outputSrcPath, outputTestPath, rootPath);
-        HandleDirectoryBuildPropsFiles(outputSrcPath, outputTestPath, rootPath);
+        HandleCodingRulesFiles(srcPath, testPath, rootPath);
+        HandleEditorConfigFiles(srcPath, testPath, rootPath);
+        HandleDirectoryBuildPropsFiles(srcPath, testPath, rootPath);
 
         return true;
     }

@@ -105,55 +105,77 @@ public static class GenerateHelper
     }
 
     public static bool GenerateServerSln(
-        ILogger logger,
+        ILoggerFactory loggerFactory,
         string projectPrefixName,
         string outputSlnPath,
-        DirectoryInfo outputSourcePath,
-        DirectoryInfo? outputTestPath)
+        DirectoryInfo srcPath,
+        DirectoryInfo? testPath,
+        AspNetOutputType aspNetOutputType)
     {
-        ArgumentNullException.ThrowIfNull(logger);
+        ArgumentNullException.ThrowIfNull(loggerFactory);
         ArgumentNullException.ThrowIfNull(projectPrefixName);
         ArgumentNullException.ThrowIfNull(outputSlnPath);
-        ArgumentNullException.ThrowIfNull(outputSourcePath);
+        ArgumentNullException.ThrowIfNull(srcPath);
 
         var projectName = projectPrefixName
             .Replace(" ", ".", StringComparison.Ordinal)
             .Replace("-", ".", StringComparison.Ordinal)
             .Trim();
 
-        var apiPath = new DirectoryInfo(Path.Combine(outputSourcePath.FullName, $"{projectName}.Api.Generated"));
-        var domainPath = new DirectoryInfo(Path.Combine(outputSourcePath.FullName, $"{projectName}.Domain"));
-        var hostPath = new DirectoryInfo(Path.Combine(outputSourcePath.FullName, $"{projectName}.Api"));
+        var rootPath = outputSlnPath.EndsWith(".sln", StringComparison.OrdinalIgnoreCase)
+            ? new FileInfo(outputSlnPath).Directory!
+            : new DirectoryInfo(outputSlnPath);
 
-        var slnFile = outputSlnPath.EndsWith(".sln", StringComparison.OrdinalIgnoreCase)
-            ? new FileInfo(outputSlnPath)
-            : new FileInfo(Path.Combine(outputSlnPath, $"{projectName}.sln"));
+        IServerGenerator serverGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerGenerator(
+            loggerFactory,
+            projectName,
+            rootPath,
+            srcPath,
+            testPath);
 
-        if (outputTestPath is not null)
+        IServerGenerator serverGeneratorMinimalApi = new Framework.Minimal.ProjectGenerator.ServerGenerator(
+            loggerFactory,
+            projectName,
+            rootPath,
+            srcPath,
+            testPath);
+
+        if (aspNetOutputType == AspNetOutputType.Mvc)
         {
-            var domainTestPath = new DirectoryInfo(Path.Combine(outputTestPath.FullName, $"{projectName}.Domain"));
-            var hostTestPath = new DirectoryInfo(Path.Combine(outputTestPath.FullName, $"{projectName}.Api"));
-
-            SolutionAndProjectHelper.ScaffoldSlnFile(
-                logger,
-                slnFile,
-                projectName,
-                apiPath,
-                domainPath,
-                hostPath,
-                domainTestPath,
-                hostTestPath);
-
-            return true;
+            serverGeneratorMvc.ScaffoldSolutionFile();
+            serverGeneratorMvc.ScaffoldSolutionDotSettingsFile();
+        }
+        else
+        {
+            serverGeneratorMinimalApi.ScaffoldSolutionFile();
+            serverGeneratorMinimalApi.ScaffoldSolutionDotSettingsFile();
         }
 
-        SolutionAndProjectHelper.ScaffoldSlnFile(
-            logger,
-            slnFile,
-            projectName,
-            apiPath,
-            domainPath,
-            hostPath);
+        ////if (outputTestPath is not null)
+        ////{
+        ////    var domainTestPath = new DirectoryInfo(Path.Combine(outputTestPath.FullName, $"{projectName}.Domain"));
+        ////    var hostTestPath = new DirectoryInfo(Path.Combine(outputTestPath.FullName, $"{projectName}.Api"));
+
+        ////    SolutionAndProjectHelper.ScaffoldSlnFile(
+        ////        loggerFactory,
+        ////        slnFile,
+        ////        projectName,
+        ////        apiPath,
+        ////        domainPath,
+        ////        hostPath,
+        ////        domainTestPath,
+        ////        hostTestPath);
+
+        ////    return true;
+        ////}
+
+        ////SolutionAndProjectHelper.ScaffoldSlnFile(
+        ////    loggerFactory,
+        ////    slnFile,
+        ////    projectName,
+        ////    apiPath,
+        ////    domainPath,
+        ////    hostPath);
 
         return true;
     }

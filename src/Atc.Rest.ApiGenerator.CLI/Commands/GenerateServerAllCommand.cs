@@ -139,11 +139,12 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
             }
 
             if (!GenerateHelper.GenerateServerSln(
-                    logger,
+                    loggerFactory,
                     projectPrefixName,
                     outputSlnPath,
                     outputSrcPath,
-                    apiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc ? outputTestPath : null))
+                    outputTestPath,
+                    apiOptions.Generator.AspNetOutputType))
             {
                 return ConsoleExitStatusCodes.Failure;
             }

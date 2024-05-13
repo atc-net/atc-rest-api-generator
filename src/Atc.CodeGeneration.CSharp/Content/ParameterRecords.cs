@@ -1,6 +1,20 @@
 namespace Atc.CodeGeneration.CSharp.Content;
 
-public record SolutionFileParameters();
+public record SolutionConfigurationParameters(
+    Guid ConfigurationId);
+
+public record SolutionProjectParameters(
+    Guid ProjectTypeId,
+    string Name,
+    string RelativePath,
+    Guid ConfigurationId);
+
+public record SolutionFileParameters(
+    Guid SolutionId,
+    IList<SolutionConfigurationParameters> Configurations,
+    IList<SolutionProjectParameters> Projects);
+
+public record SolutionDotSettingsFileParameters();
 
 public record PropertyGroupParameter(
     string Key,
