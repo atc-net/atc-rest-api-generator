@@ -36,7 +36,7 @@ public static class ContentGeneratorClientEndpointParametersFactory
         {
             successResponseStatusCode = successResponseStatusCodes[0];
 
-            if (successResponseStatusCode is not HttpStatusCode.Accepted or HttpStatusCode.NoContent)
+            if (successResponseStatusCode is not (HttpStatusCode.Accepted or HttpStatusCode.NoContent))
             {
                 modelSchema = openApiOperation.Responses.GetSchemaForStatusCode(successResponseStatusCode.Value);
                 successResponseName = GetSuccessResponseName(projectName, apiGroupName, modelSchema);

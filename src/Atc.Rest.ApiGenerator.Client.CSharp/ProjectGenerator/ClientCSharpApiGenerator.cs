@@ -55,6 +55,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
                 new List<PropertyGroupParameter>
                 {
                     new("TargetFramework", Attributes: null, "net8.0"),
+                    new("Nullable", Attributes: null, "enable"),
                     new("IsPackable", Attributes: null, "false"),
                 },
                 new List<PropertyGroupParameter>
@@ -144,8 +145,8 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
             var apiGroupName = openApiPath.GetApiGroupName();
 
             var fullNamespace = string.IsNullOrEmpty(ClientFolderName)
-                ? $"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}.{ContentGeneratorConstants.Parameters}"
-                : $"{projectName}.{ClientFolderName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}.{ContentGeneratorConstants.Parameters}";
+                ? $"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}.{ContentGeneratorConstants.RequestParameters}"
+                : $"{projectName}.{ClientFolderName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}.{ContentGeneratorConstants.RequestParameters}";
 
             foreach (var apiOperation in openApiPath.Value.Operations)
             {
@@ -171,7 +172,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
                 var contentWriter = new ContentWriter(logger);
                 contentWriter.Write(
                     projectPath,
-                    projectPath.CombineFileInfo(ContentGeneratorConstants.Contracts, apiGroupName, ContentGeneratorConstants.Parameters, $"{parameterParameters.ParameterName}.cs"),
+                    projectPath.CombineFileInfo(ContentGeneratorConstants.Contracts, apiGroupName, ContentGeneratorConstants.RequestParameters, $"{parameterParameters.ParameterName}.cs"),
                     ContentWriterArea.Src,
                     content);
             }
@@ -269,8 +270,8 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
             {
                 var endpointResultInterfaceParameters = ContentGeneratorClientEndpointResultInterfaceParametersFactory.Create(
                     UseProblemDetailsAsDefaultBody,
-                    apiGroupName,
                     projectName,
+                    apiGroupName,
                     fullNamespace,
                     openApiPath.Value,
                     openApiOperation.Value);
@@ -353,6 +354,11 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
             requiredUsings.Add("System");
         }
 
+        if (true) // TODO: Add check for using example ".Any()"
+        {
+            requiredUsings.Add("System.Linq");
+        }
+
         if (true) // TODO: Add check for using example List
         {
             requiredUsings.Add("System.Collections.Generic");
@@ -365,12 +371,47 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
 
         if (operationSchemaMappings.Any(apiOperation => apiOperation.Model.IsShared))
         {
-            requiredUsings.Add($"{projectName}.Contracts");
+            requiredUsings.Add($"{projectName}.{ContentGeneratorConstants.Contracts}");
         }
 
         var apiGroupNames = openApiDocument.GetApiGroupNames();
+        foreach (var openApiPath in openApiDocument.Paths)
+        {
+            var apiGroupName = openApiPath.GetApiGroupName();
+            foreach (var openApiOperation in openApiPath.Value.Operations)
+            {
+                if (!openApiPath.Value.HasParameters() &&
+                    !openApiOperation.Value.HasParametersOrRequestBody())
+                {
+                    continue;
+                }
 
-        requiredUsings.AddRange(apiGroupNames.Select(x => $"{projectName}.Contracts.{x}"));
+                requiredUsings.Add($"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}.{ContentGeneratorConstants.RequestParameters}");
+            }
+        }
+
+        foreach (var apiGroupName in apiGroupNames)
+        {
+            var apiOperations = operationSchemaMappings
+                .Where(x => x.LocatedArea is ApiSchemaMapLocatedAreaType.Response or ApiSchemaMapLocatedAreaType.RequestBody &&
+                            x.ApiGroupName.Equals(apiGroupName, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            var apiOperationModels = GetDistinctApiOperationModels(apiOperations);
+
+            foreach (var apiOperationModel in apiOperationModels)
+            {
+                if (apiOperationModel.IsEnum ||
+                    apiOperationModel.IsShared)
+                {
+                    continue;
+                }
+
+                requiredUsings.Add($"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}");
+            }
+        }
+
+        requiredUsings.AddRange(apiGroupNames.Select(x => $"{projectName}.{ContentGeneratorConstants.Endpoints}.{x}.{ContentGeneratorConstants.Interfaces}"));
 
         GlobalUsingsHelper.CreateOrUpdate(
             logger,
@@ -415,7 +456,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
     {
         var fullNamespace = isSharedContract
             ? $"{projectName}.{ContentGeneratorConstants.Contracts}"
-            : $"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}.{ContentGeneratorConstants.RequestParameters}";
+            : $"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
 
         var parameters = ContentGeneratorServerClientModelParametersFactory.CreateForClass(
             codeGeneratorContentHeader,
@@ -435,7 +476,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
             projectPath,
             isSharedContract
                 ? projectPath.CombineFileInfo(ContentGeneratorConstants.Contracts, ContentGeneratorConstants.SpecialFolderSharedModels, $"{modelName}.cs")
-                : projectPath.CombineFileInfo(ContentGeneratorConstants.Contracts, apiGroupName, ContentGeneratorConstants.RequestParameters, $"{modelName}.cs"),
+                : projectPath.CombineFileInfo(ContentGeneratorConstants.Contracts, apiGroupName, $"{modelName}.cs"),
             ContentWriterArea.Src,
             content);
     }
