@@ -4,7 +4,7 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace DemoUsersApi.ApiClient.Generated.Endpoints;
+namespace DemoUsersApi.ApiClient.Generated.Endpoints.Users.Interfaces;
 
 /// <summary>
 /// Interface for Client Endpoint.

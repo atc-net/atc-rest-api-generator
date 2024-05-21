@@ -4,7 +4,7 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace DemoSampleApi.ApiClient.Generated.Endpoints;
+namespace DemoSampleApi.ApiClient.Generated.Endpoints.Tasks;
 
 /// <summary>
 /// Client Endpoint.
@@ -37,7 +37,7 @@ public class GetTasksEndpoint : IGetTasksEndpoint
         using var response = await client.SendAsync(requestMessage, cancellationToken);
 
         var responseBuilder = httpMessageFactory.FromResponse(response);
-        responseBuilder.AddSuccessResponse<List<Contracts.Task>>(HttpStatusCode.OK);
+        responseBuilder.AddSuccessResponse<List<Contracts.Tasks.Task>>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse(HttpStatusCode.Unauthorized);
         responseBuilder.AddErrorResponse(HttpStatusCode.Forbidden);
         responseBuilder.AddErrorResponse<string>(HttpStatusCode.InternalServerError);

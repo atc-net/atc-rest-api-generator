@@ -4,7 +4,7 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace GenericPaginationApi.ApiClient.Generated.Endpoints;
+namespace GenericPaginationApi.ApiClient.Generated.Endpoints.Cats;
 
 /// <summary>
 /// Client Endpoint result.

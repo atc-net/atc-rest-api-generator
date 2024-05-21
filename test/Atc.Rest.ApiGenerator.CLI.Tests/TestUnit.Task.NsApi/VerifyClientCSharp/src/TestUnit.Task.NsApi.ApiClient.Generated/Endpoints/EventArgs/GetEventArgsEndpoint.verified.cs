@@ -4,7 +4,7 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace TestUnit.Task.NsApi.ApiClient.Generated.Endpoints;
+namespace TestUnit.Task.NsApi.ApiClient.Generated.Endpoints.EventArgs;
 
 /// <summary>
 /// Client Endpoint.
@@ -37,7 +37,7 @@ public class GetEventArgsEndpoint : IGetEventArgsEndpoint
         using var response = await client.SendAsync(requestMessage, cancellationToken);
 
         var responseBuilder = httpMessageFactory.FromResponse(response);
-        responseBuilder.AddSuccessResponse<List<Contracts.EventArgs>>(HttpStatusCode.OK);
+        responseBuilder.AddSuccessResponse<List<Contracts.EventArgs.EventArgs>>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse(HttpStatusCode.Unauthorized);
         responseBuilder.AddErrorResponse(HttpStatusCode.Forbidden);
         responseBuilder.AddErrorResponse<string>(HttpStatusCode.InternalServerError);

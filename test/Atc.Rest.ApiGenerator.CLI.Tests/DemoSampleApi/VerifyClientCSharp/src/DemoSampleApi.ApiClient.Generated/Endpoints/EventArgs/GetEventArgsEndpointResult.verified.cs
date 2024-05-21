@@ -4,7 +4,7 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace DemoSampleApi.ApiClient.Generated.Endpoints;
+namespace DemoSampleApi.ApiClient.Generated.Endpoints.EventArgs;
 
 /// <summary>
 /// Client Endpoint result.
@@ -31,8 +31,8 @@ public class GetEventArgsEndpointResult : EndpointResponse, IGetEventArgsEndpoin
     public bool IsInternalServerError
         => StatusCode == HttpStatusCode.InternalServerError;
 
-    public List<Contracts.EventArgs> OkContent
-        => IsOk && ContentObject is List<Contracts.EventArgs> result
+    public List<Contracts.EventArgs.EventArgs> OkContent
+        => IsOk && ContentObject is List<Contracts.EventArgs.EventArgs> result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsOk property first.");
 

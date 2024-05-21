@@ -4,7 +4,7 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace DemoSampleApi.ApiClient.Generated.Endpoints;
+namespace DemoSampleApi.ApiClient.Generated.Endpoints.Tasks;
 
 /// <summary>
 /// Client Endpoint result.
@@ -31,8 +31,8 @@ public class GetTasksEndpointResult : EndpointResponse, IGetTasksEndpointResult
     public bool IsInternalServerError
         => StatusCode == HttpStatusCode.InternalServerError;
 
-    public List<Contracts.Task> OkContent
-        => IsOk && ContentObject is List<Contracts.Task> result
+    public List<Contracts.Tasks.Task> OkContent
+        => IsOk && ContentObject is List<Contracts.Tasks.Task> result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsOk property first.");
 

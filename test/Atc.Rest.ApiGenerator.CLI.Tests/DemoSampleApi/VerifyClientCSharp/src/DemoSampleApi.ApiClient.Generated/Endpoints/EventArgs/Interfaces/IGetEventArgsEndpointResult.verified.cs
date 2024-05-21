@@ -4,7 +4,7 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace DemoSampleApi.ApiClient.Generated.Endpoints;
+namespace DemoSampleApi.ApiClient.Generated.Endpoints.EventArgs.Interfaces;
 
 /// <summary>
 /// Interface for Client Endpoint Result.
@@ -22,7 +22,7 @@ public interface IGetEventArgsEndpointResult : IEndpointResponse
 
     bool IsInternalServerError { get; }
 
-    List<Contracts.EventArgs> OkContent { get; }
+    List<Contracts.EventArgs.EventArgs> OkContent { get; }
 
     string InternalServerErrorContent { get; }
 }

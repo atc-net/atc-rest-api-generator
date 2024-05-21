@@ -4,7 +4,7 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace TestUnit.Task.NsApi.ApiClient.Generated.Endpoints;
+namespace TestUnit.Task.NsApi.ApiClient.Generated.Endpoints.TestUnits;
 
 /// <summary>
 /// Client Endpoint.
@@ -41,7 +41,7 @@ public class ListTestUnitsEndpoint : IListTestUnitsEndpoint
         using var response = await client.SendAsync(requestMessage, cancellationToken);
 
         var responseBuilder = httpMessageFactory.FromResponse(response);
-        responseBuilder.AddSuccessResponse<PaginationResult<Contracts.TestUnit>>(HttpStatusCode.OK);
+        responseBuilder.AddSuccessResponse<PaginationResult<Contracts.TestUnits.TestUnit>>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse<ValidationProblemDetails>(HttpStatusCode.BadRequest);
         responseBuilder.AddErrorResponse(HttpStatusCode.Unauthorized);
         responseBuilder.AddErrorResponse(HttpStatusCode.Forbidden);

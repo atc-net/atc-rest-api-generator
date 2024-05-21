@@ -4,7 +4,7 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace DemoSampleApi.ApiClient.Generated.Contracts;
+namespace DemoSampleApi.ApiClient.Generated.Contracts.Orders.RequestParameters;
 
 /// <summary>
 /// Parameters for operation request.
