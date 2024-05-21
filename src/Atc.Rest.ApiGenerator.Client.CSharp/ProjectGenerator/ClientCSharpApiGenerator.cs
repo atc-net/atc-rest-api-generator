@@ -43,7 +43,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
 
     public string? ClientFolderName { get; set; }
 
-    public string HttpClientName { get; set; }
+    public string HttpClientName { get; set; } = "DefaultHttpClient";
 
     public bool UseProblemDetailsAsDefaultBody { get; set; }
 
