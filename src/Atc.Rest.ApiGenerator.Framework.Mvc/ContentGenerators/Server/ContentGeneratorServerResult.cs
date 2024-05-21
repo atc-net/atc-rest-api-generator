@@ -292,58 +292,44 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
         }
     }
 
+    [SuppressMessage("Design", "MA0076:Do not use implicit culture-sensitive ToString in interpolated strings", Justification = "OK.")]
     private static void AppendMethodContentWithoutProblemDetails(
         StringBuilder sb,
         ContentGeneratorServerResultMethodParameters item,
         string resultName)
     {
-        switch (item.HttpStatusCode)
+        if (item.HttpStatusCode.HasMvcWellDefinedObjectResultClassForStatusCode())
         {
-            case HttpStatusCode.Created:
-                sb.AppendLine(4, $"public static {resultName} Created()");
-                sb.AppendLine(8, $"=> new {resultName}(new StatusCodeResult(StatusCodes.Status201Created));");
-                break;
-            case HttpStatusCode.Accepted:
-                sb.AppendLine(4, $"public static {resultName} Accepted()");
-                sb.AppendLine(8, $"=> new {resultName}(new AcceptedResult());");
-                break;
-            case HttpStatusCode.NoContent:
-                sb.AppendLine(4, $"public static {resultName} NoContent()");
-                sb.AppendLine(8, $"=> new {resultName}(new NoContentResult());");
-                break;
-            case HttpStatusCode.NotModified:
-                sb.AppendLine(4, $"public static {resultName} NotModified()");
-                sb.AppendLine(8, $"=> new {resultName}(new StatusCodeResult(StatusCodes.Status304NotModified));");
-                break;
-            case HttpStatusCode.BadRequest:
-                sb.AppendLine(4, $"public static {resultName} BadRequest(string message)");
-                sb.AppendLine(8, $"=> new {resultName}(new BadRequestObjectResult(message));");
-                break;
-            case HttpStatusCode.Unauthorized:
-                sb.AppendLine(4, $"public static {resultName} Unauthorized()");
-                sb.AppendLine(8, $"=> new {resultName}(new UnauthorizedResult());");
-                break;
-            case HttpStatusCode.NotFound:
-                sb.AppendLine(4, $"public static {resultName} NotFound(string? message = null)");
-                sb.AppendLine(8, $"=> new {resultName}(new NotFoundObjectResult(message));");
-                break;
-            case HttpStatusCode.Conflict:
-                sb.AppendLine(4, $"public static {resultName} Conflict(string? error = null)");
-                sb.AppendLine(8, $"=> new {resultName}(new ConflictObjectResult(error));");
-                break;
-            case HttpStatusCode.Forbidden:
-            case HttpStatusCode.MethodNotAllowed:
-            case HttpStatusCode.InternalServerError:
-            case HttpStatusCode.NotImplemented:
-            case HttpStatusCode.BadGateway:
-            case HttpStatusCode.ServiceUnavailable:
-            case HttpStatusCode.GatewayTimeout:
-                sb.AppendLine(4, $"public static {resultName} {item.HttpStatusCode}(string? message = null)");
-                sb.AppendLine(8, $"=> new {resultName}(new ContentResult {{ StatusCode = (int)HttpStatusCode.{item.HttpStatusCode}, Content = message }} );");
-                break;
-            default:
-                sb.AppendLine($"// TODO: Not Implemented with WithoutProblemDetails for {item.HttpStatusCode}.");
-                break;
+            sb.AppendLine(
+                4,
+                item.HttpStatusCode.IsMvcWellDefinedObjectResultClassForStatusCodeUsingNotNullMessage()
+                    ? $"public static {resultName} {item.HttpStatusCode}(string message)"
+                    : $"public static {resultName} {item.HttpStatusCode}(string? message = null)");
+            sb.AppendLine(8, $"=> new {resultName}(new {item.HttpStatusCode}ObjectResult(message));");
+            return;
         }
+
+        if (item.HttpStatusCode.UseMvcWellDefinedStatusCodeResultClassForStatusCode())
+        {
+            sb.AppendLine(4, $"public static {resultName} {item.HttpStatusCode}()");
+            sb.AppendLine(8, $"=> new {resultName}(new StatusCodeResult(StatusCodes.Status{(int)item.HttpStatusCode}{item.HttpStatusCode}));");
+            return;
+        }
+
+        if (item.HttpStatusCode.UseMvcWellDefinedContentResultClassForStatusCode())
+        {
+            sb.AppendLine(4, $"public static {resultName} {item.HttpStatusCode}(string? message = null)");
+            sb.AppendLine(8, $"=> new {resultName}(new ContentResult {{ StatusCode = StatusCodes.Status{(int)item.HttpStatusCode}{item.HttpStatusCode}, Content = message }} );");
+            return;
+        }
+
+        if (item.HttpStatusCode.HasMvcWellDefinedResultClassForStatusCode())
+        {
+            sb.AppendLine(4, $"public static {resultName} {item.HttpStatusCode}()");
+            sb.AppendLine(8, $"=> new {resultName}(new {item.HttpStatusCode}Result());");
+            return;
+        }
+
+        sb.AppendLine($"// TODO: Not Implemented with WithoutProblemDetails for {item.HttpStatusCode}.");
     }
 }
