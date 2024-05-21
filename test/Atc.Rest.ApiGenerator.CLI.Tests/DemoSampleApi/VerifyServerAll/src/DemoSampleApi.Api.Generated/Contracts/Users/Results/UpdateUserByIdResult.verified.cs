@@ -37,8 +37,8 @@ public class UpdateUserByIdResult : ResultBase
     /// <summary>
     /// 409 - Conflict response.
     /// </summary>
-    public static UpdateUserByIdResult Conflict(string? error = null)
-        => new UpdateUserByIdResult(new ConflictObjectResult(error));
+    public static UpdateUserByIdResult Conflict(string? message = null)
+        => new UpdateUserByIdResult(new ConflictObjectResult(message));
 
     /// <summary>
     /// Performs an implicit conversion from UpdateUserByIdResult to ActionResult.
