@@ -1,21 +1,11 @@
 global using System.Diagnostics.CodeAnalysis;
 global using System.Net;
-global using System.Text;
 
-global using Atc.CodeDocumentation.CodeComment;
-global using Atc.CodeGeneration.CSharp.Content;
-global using Atc.CodeGeneration.CSharp.Content.Generators;
 global using Atc.Console.Spectre;
-global using Atc.DotNet;
 global using Atc.Helpers;
-global using Atc.Rest.ApiGenerator.Client.CSharp.ContentGenerators;
 global using Atc.Rest.ApiGenerator.Client.CSharp.ProjectGenerator;
-global using Atc.Rest.ApiGenerator.Framework.ContentGenerators;
 global using Atc.Rest.ApiGenerator.Framework.Contracts;
-global using Atc.Rest.ApiGenerator.Framework.Contracts.ContentGeneratorsParameters;
 global using Atc.Rest.ApiGenerator.Framework.Contracts.Options;
-global using Atc.Rest.ApiGenerator.Framework.Factories.Parameters.Client;
-global using Atc.Rest.ApiGenerator.Framework.Factories.Parameters.ServerClient;
 global using Atc.Rest.ApiGenerator.Framework.ProjectGenerator;
 global using Atc.Rest.ApiGenerator.Framework.Writers;
 global using Atc.Rest.ApiGenerator.Generators;
