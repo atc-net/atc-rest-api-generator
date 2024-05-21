@@ -13,9 +13,7 @@ global using Atc.Rest.Client.Builder;
 
 global using GenericPaginationApi.ApiClient.Generated.Contracts;
 global using GenericPaginationApi.ApiClient.Generated.Contracts.Cats;
-global using GenericPaginationApi.ApiClient.Generated.Contracts.Cats.RequestParameters;
 global using GenericPaginationApi.ApiClient.Generated.Contracts.Dogs;
-global using GenericPaginationApi.ApiClient.Generated.Contracts.Dogs.RequestParameters;
 global using GenericPaginationApi.ApiClient.Generated.Endpoints.Cats.Interfaces;
 global using GenericPaginationApi.ApiClient.Generated.Endpoints.Dogs.Interfaces;
 

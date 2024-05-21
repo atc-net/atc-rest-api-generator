@@ -4,7 +4,7 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace GenericPaginationApi.ApiClient.Generated.Contracts.Dogs.RequestParameters;
+namespace GenericPaginationApi.ApiClient.Generated.Contracts.Dogs;
 
 /// <summary>
 /// Parameters for operation request.

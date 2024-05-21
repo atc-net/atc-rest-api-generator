@@ -11,8 +11,8 @@ global using System.Threading.Tasks;
 global using Atc.Rest.Client;
 global using Atc.Rest.Client.Builder;
 
+global using DemoUsersApi.ApiClient.Generated.Contracts;
 global using DemoUsersApi.ApiClient.Generated.Contracts.Users;
-global using DemoUsersApi.ApiClient.Generated.Contracts.Users.RequestParameters;
 global using DemoUsersApi.ApiClient.Generated.Endpoints.Users.Interfaces;
 
 global using Microsoft.AspNetCore.Mvc;

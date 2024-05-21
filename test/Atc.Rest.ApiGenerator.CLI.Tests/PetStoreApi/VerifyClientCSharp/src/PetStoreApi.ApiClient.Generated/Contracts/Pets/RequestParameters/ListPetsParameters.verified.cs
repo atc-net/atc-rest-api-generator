@@ -4,7 +4,7 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace PetStoreApi.ApiClient.Generated.Contracts.Pets.RequestParameters;
+namespace PetStoreApi.ApiClient.Generated.Contracts.Pets;
 
 /// <summary>
 /// Parameters for operation request.

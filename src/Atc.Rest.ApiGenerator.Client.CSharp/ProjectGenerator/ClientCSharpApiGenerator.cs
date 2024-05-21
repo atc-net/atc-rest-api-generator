@@ -1,4 +1,6 @@
 // ReSharper disable ArrangeObjectCreationWhenTypeNotEvident
+// ReSharper disable ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
+// ReSharper disable ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
 namespace Atc.Rest.ApiGenerator.Client.CSharp.ProjectGenerator;
 
 public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
@@ -145,8 +147,8 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
             var apiGroupName = openApiPath.GetApiGroupName();
 
             var fullNamespace = string.IsNullOrEmpty(ClientFolderName)
-                ? $"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}.{ContentGeneratorConstants.RequestParameters}"
-                : $"{projectName}.{ClientFolderName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}.{ContentGeneratorConstants.RequestParameters}";
+                ? $"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}"
+                : $"{projectName}.{ClientFolderName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
 
             foreach (var apiOperation in openApiPath.Value.Operations)
             {
@@ -369,7 +371,8 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
             requiredUsings.Add("Microsoft.AspNetCore.Http");
         }
 
-        if (operationSchemaMappings.Any(apiOperation => apiOperation.Model.IsShared))
+        if (operationSchemaMappings.Any(apiOperation => apiOperation.Model.IsEnum ||
+                                                        apiOperation.Model.IsShared))
         {
             requiredUsings.Add($"{projectName}.{ContentGeneratorConstants.Contracts}");
         }
@@ -386,7 +389,11 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
                     continue;
                 }
 
-                requiredUsings.Add($"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}.{ContentGeneratorConstants.RequestParameters}");
+                var requiredUsing = $"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
+                if (!requiredUsings.Contains(requiredUsing, StringComparer.CurrentCulture))
+                {
+                    requiredUsings.Add(requiredUsing);
+                }
             }
         }
 
@@ -407,7 +414,11 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
                     continue;
                 }
 
-                requiredUsings.Add($"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}");
+                var requiredUsing = $"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
+                if (!requiredUsings.Contains(requiredUsing, StringComparer.CurrentCulture))
+                {
+                    requiredUsings.Add(requiredUsing);
+                }
             }
         }
 

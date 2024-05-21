@@ -14,5 +14,4 @@ global using Atc.Rest.Client.Builder;
 global using Microsoft.AspNetCore.Mvc;
 
 global using PetStoreApi.ApiClient.Generated.Contracts.Pets;
-global using PetStoreApi.ApiClient.Generated.Contracts.Pets.RequestParameters;
 global using PetStoreApi.ApiClient.Generated.Endpoints.Pets.Interfaces;

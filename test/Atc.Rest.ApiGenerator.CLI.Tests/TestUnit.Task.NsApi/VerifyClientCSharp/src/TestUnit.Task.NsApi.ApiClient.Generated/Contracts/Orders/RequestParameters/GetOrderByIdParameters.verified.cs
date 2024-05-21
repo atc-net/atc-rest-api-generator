@@ -4,7 +4,7 @@
 // Changes to this file may cause incorrect behavior and will be lost if
 // the code is regenerated.
 //------------------------------------------------------------------------------
-namespace TestUnit.Task.NsApi.ApiClient.Generated.Contracts.Orders.RequestParameters;
+namespace TestUnit.Task.NsApi.ApiClient.Generated.Contracts.Orders;
 
 /// <summary>
 /// Parameters for operation request.
