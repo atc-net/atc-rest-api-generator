@@ -27,6 +27,7 @@ public class ClientCSharpApiGenerator
 
         clientCSharpApiGenerator = new Client.CSharp.ProjectGenerator.ClientCSharpApiGenerator(
             loggerFactory,
+            nugetPackageReferenceProvider,
             projectOptions.ApiGeneratorVersion,
             projectOptions.ProjectName,
             projectOptions.PathForSrcGenerate,
@@ -39,11 +40,11 @@ public class ClientCSharpApiGenerator
         };
     }
 
-    public bool Generate()
+    public async Task<bool> Generate()
     {
         logger.LogInformation($"{ContentWriterConstants.AreaGenerateCode} Working on client api generation ({projectOptions.ProjectName})");
 
-        clientCSharpApiGenerator.ScaffoldProjectFile();
+        await clientCSharpApiGenerator.ScaffoldProjectFile();
 
         clientCSharpApiGenerator.GenerateModels();
 

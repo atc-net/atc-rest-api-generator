@@ -4,19 +4,26 @@ public interface INugetPackageReferenceProvider
 {
     Task<Version> GetAtcApiGeneratorVersion();
 
-    Task<IList<(string PackageId, string PackageVersion, string? SubElements)>> GetPackageReferencesBaseLineForHostProjectForMvc(
+    Task<IList<(string PackageId, string PackageVersion)>> GetPackageReferencesForHostProjectForMvc(
             bool useRestExtended);
 
-    Task<IList<(string PackageId, string PackageVersion, string? SubElements)>> GetPackageReferencesBaseLineForHostProjectForMinimalApi();
+    Task<IList<(string PackageId, string PackageVersion)>> GetPackageReferencesForHostProjectForMinimalApi();
 
-    Task<IList<(string PackageId, string PackageVersion, string? SubElements)>> GetPackageReferencesBaseLineForApiProjectForMvc();
+    Task<IList<(string PackageId, string PackageVersion)>> GetPackageReferencesForApiProjectForMvc();
 
-    Task<IList<(string PackageId, string PackageVersion, string? SubElements)>> GetPackageReferencesBaseLineForApiProjectForMinimalApi();
+    Task<IList<(string PackageId, string PackageVersion)>> GetPackageReferencesForApiProjectForMinimalApi();
 
-    Task<IList<(string PackageId, string PackageVersion, string? SubElements)>> GetPackageReferencesBaseLineForApiClientProject();
+    Task<IList<(string PackageId, string PackageVersion)>?> GetPackageReferencesForDomainProjectForMvc();
 
-    Task<IList<(string PackageId, string PackageVersion, string? SubElements)>?> GetPackageReferencesBaseLineForDomainProjectForMinimalApi();
+    Task<IList<(string PackageId, string PackageVersion)>?> GetPackageReferencesForDomainProjectForMinimalApi();
 
-    Task<IList<(string PackageId, string PackageVersion, string? SubElements)>> GetPackageReferencesBaseLineForTestProject(
-            bool useMvc);
+    Task<IList<(string PackageId, string PackageVersion, string? SubElements)>> GetPackageReferencesForApiClientProject();
+
+    Task<IList<(string PackageId, string PackageVersion, string? SubElements)>> GetPackageReferencesForTestHostProjectForMvc();
+
+    Task<IList<(string PackageId, string PackageVersion, string? SubElements)>> GetPackageReferencesForTestHostProjectForMinimalApi();
+
+    Task<IList<(string PackageId, string PackageVersion, string? SubElements)>> GetPackageReferencesForTestDomainProjectForMvc();
+
+    Task<IList<(string PackageId, string PackageVersion, string? SubElements)>> GetPackageReferencesForTestDomainProjectForMinimalApi();
 }

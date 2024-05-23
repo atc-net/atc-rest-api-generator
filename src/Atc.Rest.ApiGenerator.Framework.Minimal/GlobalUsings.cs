@@ -20,6 +20,6 @@ global using Atc.Rest.ApiGenerator.Framework.Minimal.Factories.Parameters.Server
 global using Atc.Rest.ApiGenerator.Framework.ProjectGenerator;
 global using Atc.Rest.ApiGenerator.Framework.Writers;
 global using Atc.Rest.ApiGenerator.OpenApi.Extensions;
-
+global using Atc.Rest.ApiGenerator.Projects;
 global using Microsoft.Extensions.Logging;
 global using Microsoft.OpenApi.Models;

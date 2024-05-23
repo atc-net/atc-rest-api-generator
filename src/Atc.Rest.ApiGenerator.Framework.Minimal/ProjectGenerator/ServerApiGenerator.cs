@@ -4,6 +4,7 @@ namespace Atc.Rest.ApiGenerator.Framework.Minimal.ProjectGenerator;
 public class ServerApiGenerator : IServerApiGenerator
 {
     private readonly ILogger<ServerApiGenerator> logger;
+    private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
     private readonly Version apiGeneratorVersion;
     private readonly string projectName;
     private readonly DirectoryInfo projectPath;
@@ -15,6 +16,7 @@ public class ServerApiGenerator : IServerApiGenerator
 
     public ServerApiGenerator(
         ILoggerFactory loggerFactory,
+        INugetPackageReferenceProvider nugetPackageReferenceProvider,
         Version apiGeneratorVersion,
         string projectName,
         DirectoryInfo projectPath,
@@ -23,6 +25,7 @@ public class ServerApiGenerator : IServerApiGenerator
         string routeBase)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
+        ArgumentNullException.ThrowIfNull(nugetPackageReferenceProvider);
         ArgumentNullException.ThrowIfNull(apiGeneratorVersion);
         ArgumentNullException.ThrowIfNull(projectName);
         ArgumentNullException.ThrowIfNull(projectPath);
@@ -30,6 +33,7 @@ public class ServerApiGenerator : IServerApiGenerator
         ArgumentNullException.ThrowIfNull(routeBase);
 
         logger = loggerFactory.CreateLogger<ServerApiGenerator>();
+        this.nugetPackageReferenceProvider = nugetPackageReferenceProvider;
         this.apiGeneratorVersion = apiGeneratorVersion;
         this.projectName = projectName;
         this.projectPath = projectPath;
@@ -45,79 +49,37 @@ public class ServerApiGenerator : IServerApiGenerator
             $"\"{ContentWriterConstants.ApiGeneratorName}\", \"{apiGeneratorVersion}\"");
     }
 
-    public void ScaffoldProjectFile()
+    public async Task ScaffoldProjectFile()
     {
+        var packageReferences = await nugetPackageReferenceProvider.GetPackageReferencesForApiProjectForMinimalApi();
+
+        var itemGroupPackageReferences = packageReferences
+            .Select(packageReference => new ItemGroupParameter(
+                "PackageReference",
+                [
+                    new("Include", packageReference.PackageId),
+                    new("Version", packageReference.PackageVersion),
+                ],
+                Value: null))
+            .ToList();
+
         var projectFileParameters = new ProjectFileParameters(
             "Microsoft.NET.Sdk",
             [
-                new List<PropertyGroupParameter>
-                {
+                [
                     new("TargetFramework", Attributes: null, "net8.0"),
                     new("IsPackable", Attributes: null, "false"),
-                },
-                new List<PropertyGroupParameter>
-                {
+                ],
+                [
                     new("GenerateDocumentationFile", Attributes: null, "true"),
-                },
-                new List<PropertyGroupParameter>
-                {
+                ],
+                [
                     new("DocumentationFile", Attributes: null, @$"bin\Debug\net8.0\{projectName}.xml"),
                     new("NoWarn", Attributes: null, "1573;1591;1701;1702;1712;8618;"),
-                },
+                ],
             ],
             [
-                new List<ItemGroupParameter>
-                {
-                    new(
-                        "PackageReference",
-                        [
-                            new("Include", "Asp.Versioning.Http"),
-                            new("Version", "8.1.0"),
-                        ],
-                        Value: null),
-                    new(
-                        "PackageReference",
-                        [
-                            new("Include", "Atc"),
-                            new("Version", "2.0.472"),
-                        ],
-                        Value: null),
-                    new(
-                        "PackageReference",
-                        [
-                            new("Include", "Atc.Rest"),
-                            new("Version", "2.0.472"),
-                        ],
-                        Value: null),
-                    new(
-                        "PackageReference",
-                        [
-                            new("Include", "Atc.Rest.MinimalApi"),
-                            new("Version", "1.0.81"),
-                        ],
-                        Value: null),
-                    new(
-                        "PackageReference",
-                        [
-                            new("Include", "FluentValidation.AspNetCore"),
-                            new("Version", "11.3.0"),
-                        ],
-                        Value: null),
-                    new(
-                        "PackageReference",
-                        [
-                            new("Include", "Microsoft.AspNetCore.OpenApi"),
-                            new("Version", "8.0.4"),
-                        ],
-                        Value: null),
-                    new(
-                        "PackageReference",
-                        [
-                            new("Include", "Microsoft.NETCore.Platforms"),
-                            new("Version", "7.0.4"),
-                        ],
-                        Value: null),
-                },
+                itemGroupPackageReferences,
             ]);
 
         var contentGenerator = new GenerateContentForProjectFile(

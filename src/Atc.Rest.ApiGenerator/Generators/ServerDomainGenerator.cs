@@ -8,7 +8,6 @@ namespace Atc.Rest.ApiGenerator.Generators;
 public class ServerDomainGenerator
 {
     private readonly ILogger logger;
-    private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
     private readonly DomainProjectOptions projectOptions;
 
     private readonly IServerDomainGenerator serverDomainGeneratorMvc;
@@ -22,9 +21,10 @@ public class ServerDomainGenerator
         DomainProjectOptions projectOptions)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
+        ArgumentNullException.ThrowIfNull(apiOperationExtractor);
+        ArgumentNullException.ThrowIfNull(nugetPackageReferenceProvider);
 
         logger = loggerFactory.CreateLogger<ServerDomainGenerator>();
-        this.nugetPackageReferenceProvider = nugetPackageReferenceProvider ?? throw new ArgumentNullException(nameof(nugetPackageReferenceProvider));
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
 
         var apiProjectName = projectOptions.ProjectName.Replace(".Domain", ".Api.Generated", StringComparison.Ordinal);
@@ -32,6 +32,7 @@ public class ServerDomainGenerator
 
         serverDomainGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerDomainGenerator(
             loggerFactory,
+            nugetPackageReferenceProvider,
             projectOptions.ApiGeneratorVersion,
             projectOptions.ProjectName,
             apiProjectName,
@@ -40,6 +41,7 @@ public class ServerDomainGenerator
 
         serverDomainGeneratorMinimalApi = new Framework.Minimal.ProjectGenerator.ServerDomainGenerator(
             loggerFactory,
+            nugetPackageReferenceProvider,
             projectOptions.ApiGeneratorVersion,
             projectOptions.ProjectName,
             apiProjectName,
@@ -51,6 +53,7 @@ public class ServerDomainGenerator
         {
             serverDomainTestGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerDomainTestGenerator(
                 loggerFactory,
+                nugetPackageReferenceProvider,
                 projectOptions.ApiGeneratorVersion,
                 $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Tests}",
                 apiProjectName,
@@ -60,7 +63,7 @@ public class ServerDomainGenerator
         }
     }
 
-    public bool Generate()
+    public async Task<bool> Generate()
     {
         logger.LogInformation($"{ContentWriterConstants.AreaGenerateCode} Working on server domain generation ({projectOptions.ProjectName})");
 
@@ -81,7 +84,7 @@ public class ServerDomainGenerator
 
         if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
         {
-            serverDomainGeneratorMvc.ScaffoldProjectFile();
+            await serverDomainGeneratorMvc.ScaffoldProjectFile();
 
             serverDomainGeneratorMvc.GenerateAssemblyMarker();
             serverDomainGeneratorMvc.GenerateHandlers();
@@ -94,7 +97,7 @@ public class ServerDomainGenerator
             {
                 logger.LogInformation($"{ContentWriterConstants.AreaGenerateTest} Working on server domain unit-test generation ({projectOptions.ProjectName}.Tests)");
 
-                serverDomainTestGeneratorMvc.ScaffoldProjectFile();
+                await serverDomainTestGeneratorMvc.ScaffoldProjectFile();
 
                 serverDomainTestGeneratorMvc.GenerateHandlers();
 
@@ -105,7 +108,7 @@ public class ServerDomainGenerator
         }
         else
         {
-            serverDomainGeneratorMinimalApi.ScaffoldProjectFile();
+            await serverDomainGeneratorMinimalApi.ScaffoldProjectFile();
 
             serverDomainGeneratorMinimalApi.GenerateAssemblyMarker();
             serverDomainGeneratorMinimalApi.GenerateServiceCollectionExtensions();

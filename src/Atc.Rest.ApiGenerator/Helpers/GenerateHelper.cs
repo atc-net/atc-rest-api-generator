@@ -32,7 +32,14 @@ public static class GenerateHelper
             useCodingRules,
             removeNamespaceGroupSeparatorInGlobalUsings);
         var serverApiGenerator = new ServerApiGenerator(loggerFactory, apiOperationExtractor, nugetPackageReferenceProvider, projectOptions);
-        return serverApiGenerator.Generate();
+
+        var generateResult = false;
+        TaskHelper.RunSync(async () =>
+        {
+            generateResult = await serverApiGenerator.Generate();
+        });
+
+        return generateResult;
     }
 
     public static bool GenerateServerDomain(
@@ -65,7 +72,14 @@ public static class GenerateHelper
             removeNamespaceGroupSeparatorInGlobalUsings,
             apiPath);
         var serverDomainGenerator = new ServerDomainGenerator(loggerFactory, apiOperationExtractor, nugetPackageReferenceProvider, domainProjectOptions);
-        return serverDomainGenerator.Generate();
+
+        var generateResult = false;
+        TaskHelper.RunSync(async () =>
+        {
+            generateResult = await serverDomainGenerator.Generate();
+        });
+
+        return generateResult;
     }
 
     public static bool GenerateServerHost(
@@ -101,7 +115,14 @@ public static class GenerateHelper
             apiPath,
             domainPath);
         var serverHostGenerator = new ServerHostGenerator(loggerFactory, apiOperationExtractor, nugetPackageReferenceProvider, hostProjectOptions);
-        return serverHostGenerator.Generate();
+
+        var generateResult = false;
+        TaskHelper.RunSync(async () =>
+        {
+            generateResult = await serverHostGenerator.Generate();
+        });
+
+        return generateResult;
     }
 
     public static bool GenerateServerSln(
@@ -213,6 +234,13 @@ public static class GenerateHelper
             useCodingRules,
             removeNamespaceGroupSeparatorInGlobalUsings);
         var clientCSharpApiGenerator = new Generators.ClientCSharpApiGenerator(loggerFactory, apiOperationExtractor, nugetPackageReferenceProvider, clientCSharpApiProjectOptions);
-        return clientCSharpApiGenerator.Generate();
+
+        var generateResult = false;
+        TaskHelper.RunSync(async () =>
+        {
+            generateResult = await clientCSharpApiGenerator.Generate();
+        });
+
+        return generateResult;
     }
 }

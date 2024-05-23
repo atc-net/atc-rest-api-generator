@@ -6,6 +6,7 @@ namespace Atc.Rest.ApiGenerator.Client.CSharp.ProjectGenerator;
 public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
 {
     private readonly ILogger<ClientCSharpApiGenerator> logger;
+    private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
     private readonly Version apiGeneratorVersion;
     private readonly string projectName;
     private readonly DirectoryInfo projectPath;
@@ -16,6 +17,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
 
     public ClientCSharpApiGenerator(
         ILoggerFactory loggerFactory,
+        INugetPackageReferenceProvider nugetPackageReferenceProvider,
         Version apiGeneratorVersion,
         string projectName,
         DirectoryInfo projectPath,
@@ -23,6 +25,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
         IList<ApiOperation> operationSchemaMappings)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
+        ArgumentNullException.ThrowIfNull(nugetPackageReferenceProvider);
         ArgumentNullException.ThrowIfNull(apiGeneratorVersion);
         ArgumentNullException.ThrowIfNull(projectName);
         ArgumentNullException.ThrowIfNull(projectPath);
@@ -30,6 +33,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
         ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 
         logger = loggerFactory.CreateLogger<ClientCSharpApiGenerator>();
+        this.nugetPackageReferenceProvider = nugetPackageReferenceProvider;
         this.apiGeneratorVersion = apiGeneratorVersion;
         this.projectName = projectName;
         this.projectPath = projectPath;
@@ -49,52 +53,38 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
 
     public bool UseProblemDetailsAsDefaultBody { get; set; }
 
-    public void ScaffoldProjectFile()
+    public async Task ScaffoldProjectFile()
     {
+        var packageReferences = await nugetPackageReferenceProvider.GetPackageReferencesForApiClientProject();
+
+        var itemGroupPackageReferences = packageReferences
+            .Select(packageReference => new ItemGroupParameter(
+                "PackageReference",
+                [
+                    new("Include", packageReference.PackageId),
+                    new("Version", packageReference.PackageVersion),
+                ],
+                Value: null))
+            .ToList();
+
         var projectFileParameters = new ProjectFileParameters(
             "Microsoft.NET.Sdk",
             [
-                new List<PropertyGroupParameter>
-                {
+                [
                     new("TargetFramework", Attributes: null, "net8.0"),
                     new("Nullable", Attributes: null, "enable"),
                     new("IsPackable", Attributes: null, "false"),
-                },
-                new List<PropertyGroupParameter>
-                {
+                ],
+                [
                     new("GenerateDocumentationFile", Attributes: null, "true"),
-                },
-                new List<PropertyGroupParameter>
-                {
+                ],
+                [
                     new("DocumentationFile", Attributes: null, @$"bin\Debug\net8.0\{projectName}.xml"),
                     new("NoWarn", Attributes: null, "1573;1591;1701;1702;1712;8618;"),
-                },
+                ],
             ],
             [
-                new List<ItemGroupParameter>
-                {
-                    new(
-                        "PackageReference",
-                        [
-                            new("Include", "Atc"),
-                            new("Version", "2.0.472"),
-                        ],
-                        Value: null),
-                    new(
-                        "PackageReference",
-                        [
-                            new("Include", "Atc.Rest"),
-                            new("Version", "2.0.472"),
-                        ],
-                        Value: null),
-                    new(
-                        "PackageReference",
-                        [
-                            new("Include", "Atc.Rest.Client"),
-                            new("Version", "1.0.36"),
-                        ],
-                        Value: null),
-                },
+                itemGroupPackageReferences,
             ]);
 
         var contentGenerator = new GenerateContentForProjectFile(
@@ -351,17 +341,17 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
             "Microsoft.AspNetCore.Mvc",
         };
 
-        if (true) // TODO: Add check for using example Guid
+        if (openApiDocument.IsUsingRequiredForSystem())
         {
             requiredUsings.Add("System");
         }
 
-        if (true) // TODO: Add check for using example ".Any()"
+        if (openApiDocument.IsUsingRequiredForSystemLinq())
         {
             requiredUsings.Add("System.Linq");
         }
 
-        if (true) // TODO: Add check for using example List
+        if (openApiDocument.IsUsingRequiredForSystemCollectionGeneric())
         {
             requiredUsings.Add("System.Collections.Generic");
         }

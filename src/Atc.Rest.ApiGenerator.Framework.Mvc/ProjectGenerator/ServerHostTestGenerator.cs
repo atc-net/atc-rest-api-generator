@@ -5,6 +5,7 @@ namespace Atc.Rest.ApiGenerator.Framework.Mvc.ProjectGenerator;
 public class ServerHostTestGenerator : IServerHostTestGenerator
 {
     private readonly ILogger<ServerHostTestGenerator> logger;
+    private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
     private readonly Version apiGeneratorVersion;
     private readonly string projectName;
     private readonly string hostProjectName;
@@ -18,6 +19,7 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
 
     public ServerHostTestGenerator(
         ILoggerFactory loggerFactory,
+        INugetPackageReferenceProvider nugetPackageReferenceProvider,
         Version apiGeneratorVersion,
         string projectName,
         string hostProjectName,
@@ -28,6 +30,7 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
         IList<ApiOperation> operationSchemaMappings)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
+        ArgumentNullException.ThrowIfNull(nugetPackageReferenceProvider);
         ArgumentNullException.ThrowIfNull(apiGeneratorVersion);
         ArgumentNullException.ThrowIfNull(projectName);
         ArgumentNullException.ThrowIfNull(hostProjectName);
@@ -38,6 +41,7 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
         ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 
         logger = loggerFactory.CreateLogger<ServerHostTestGenerator>();
+        this.nugetPackageReferenceProvider = nugetPackageReferenceProvider;
         this.apiGeneratorVersion = apiGeneratorVersion;
         this.projectName = projectName;
         this.hostProjectName = hostProjectName;
@@ -54,69 +58,34 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
             .CreateGeneratedCode(apiGeneratorVersion);
     }
 
-    public void ScaffoldProjectFile()
+    public async Task ScaffoldProjectFile()
     {
+        var packageReferences = await nugetPackageReferenceProvider.GetPackageReferencesForTestHostProjectForMvc();
+
+        var itemGroupPackageReferences = packageReferences
+            .Select(packageReference => new ItemGroupParameter(
+                "PackageReference",
+                [
+                    new("Include", packageReference.PackageId),
+                    new("Version", packageReference.PackageVersion),
+                ],
+                Value: null))
+            .ToList();
+
         var projectFileParameters = new ProjectFileParameters(
             "Microsoft.NET.Sdk",
             [
-                new List<PropertyGroupParameter>
-                {
+                [
                     new("TargetFramework", Attributes: null, "net8.0"),
-                },
-                new List<PropertyGroupParameter>
-                {
+                ],
+                [
                     new("DocumentationFile", Attributes: null, @$"bin\Debug\net8.0\{projectName}.xml"),
                     new("NoWarn", Attributes: null, "1573;1591;1701;1702;1712;8618;"),
-                },
+                ],
             ],
             [
-                new List<ItemGroupParameter>
-                {
-                    new(
-                        "PackageReference",
-                        [
-                            new("Include", "Atc.Rest.FluentAssertions"),
-                            new("Version", "2.0.472"),
-                        ],
-                        Value: null),
-                    new(
-                        "PackageReference",
-                        [
-                            new("Include", "Atc.XUnit"),
-                            new("Version", "2.0.472"),
-                        ],
-                        Value: null),
-                    new(
-                        "PackageReference",
-                        [
-                            new("Include", "Microsoft.AspNetCore.Mvc.Testing"),
-                            new("Version", "8.0.4"),
-                        ],
-                        Value: null),
-                    new(
-                        "PackageReference",
-                        [
-                            new("Include", "Microsoft.NET.Test.Sdk"),
-                            new("Version", "17.9.0"),
-                        ],
-                        Value: null),
-                    new(
-                        "PackageReference",
-                        [
-                            new("Include", "xunit"),
-                            new("Version", "2.8.0"),
-                        ],
-                        Value: null),
-                    new(
-                        "PackageReference",
-                        [
-                            new("Include", "xunit.runner.visualstudio"),
-                            new("Version", "2.8.0"),
-                        ],
-                        Value: "<PrivateAssets>all</PrivateAssets><IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>"),
-                },
-                new List<ItemGroupParameter>
-                {
+                itemGroupPackageReferences,
+                [
                     new(
                         "ProjectReference",
                         [
@@ -135,7 +104,7 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
                             new("Include", @$"..\..\src\{domainProjectName}\{domainProjectName}.csproj"),
                         ],
                         Value: null),
-                },
+                ],
 
             ]);
 

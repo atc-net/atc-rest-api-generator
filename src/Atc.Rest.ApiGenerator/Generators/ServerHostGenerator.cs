@@ -7,7 +7,6 @@ namespace Atc.Rest.ApiGenerator.Generators;
 public class ServerHostGenerator
 {
     private readonly ILogger logger;
-    private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
     private readonly HostProjectOptions projectOptions;
 
     private readonly IServerHostGenerator serverHostGeneratorMvc;
@@ -21,9 +20,10 @@ public class ServerHostGenerator
         HostProjectOptions projectOptions)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
+        ArgumentNullException.ThrowIfNull(apiOperationExtractor);
+        ArgumentNullException.ThrowIfNull(nugetPackageReferenceProvider);
 
         logger = loggerFactory.CreateLogger<ServerDomainGenerator>();
-        this.nugetPackageReferenceProvider = nugetPackageReferenceProvider ?? throw new ArgumentNullException(nameof(nugetPackageReferenceProvider));
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
 
         var apiProjectName = projectOptions.ProjectName.Replace(".Api", ".Api.Generated", StringComparison.Ordinal);
@@ -32,6 +32,7 @@ public class ServerHostGenerator
 
         serverHostGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerHostGenerator(
             loggerFactory,
+            nugetPackageReferenceProvider,
             projectOptions.ApiGeneratorVersion,
             projectOptions.ProjectName,
             apiProjectName,
@@ -44,6 +45,7 @@ public class ServerHostGenerator
 
         serverHostGeneratorMinimalApi = new Framework.Minimal.ProjectGenerator.ServerHostGenerator(
             loggerFactory,
+            nugetPackageReferenceProvider,
             projectOptions.ApiGeneratorVersion,
             projectOptions.ProjectName,
             apiProjectName,
@@ -55,6 +57,7 @@ public class ServerHostGenerator
         {
             serverHostTestGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerHostTestGenerator(
                 loggerFactory,
+                nugetPackageReferenceProvider,
                 projectOptions.ApiGeneratorVersion,
                 $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Tests}",
                 projectOptions.ProjectName,
@@ -66,7 +69,7 @@ public class ServerHostGenerator
         }
     }
 
-    public bool Generate()
+    public async Task<bool> Generate()
     {
         logger.LogInformation($"{ContentWriterConstants.AreaGenerateCode} Working on server host generation ({projectOptions.ProjectName})");
 
@@ -87,7 +90,7 @@ public class ServerHostGenerator
 
         if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
         {
-            serverHostGeneratorMvc.ScaffoldProjectFile();
+            await serverHostGeneratorMvc.ScaffoldProjectFile();
             serverHostGeneratorMvc.ScaffoldPropertiesLaunchSettingsFile();
             serverHostGeneratorMvc.ScaffoldProgramFile(
                 projectOptions.ApiOptions.Generator.SwaggerThemeMode);
@@ -104,7 +107,7 @@ public class ServerHostGenerator
             {
                 logger.LogInformation($"{ContentWriterConstants.AreaGenerateTest} Working on server host unit-test generation ({projectOptions.ProjectName}.Tests)");
 
-                serverHostTestGeneratorMvc.ScaffoldProjectFile();
+                await serverHostTestGeneratorMvc.ScaffoldProjectFile();
                 serverHostTestGeneratorMvc.ScaffoldAppSettingsIntegrationTestFile();
 
                 serverHostTestGeneratorMvc.GenerateWebApiStartupFactoryFile();
@@ -119,7 +122,7 @@ public class ServerHostGenerator
         }
         else
         {
-            serverHostGeneratorMinimalApi.ScaffoldProjectFile();
+            await serverHostGeneratorMinimalApi.ScaffoldProjectFile();
             serverHostGeneratorMinimalApi.ScaffoldPropertiesLaunchSettingsFile();
             serverHostGeneratorMinimalApi.ScaffoldProgramFile(
                 projectOptions.ApiOptions.Generator.SwaggerThemeMode);

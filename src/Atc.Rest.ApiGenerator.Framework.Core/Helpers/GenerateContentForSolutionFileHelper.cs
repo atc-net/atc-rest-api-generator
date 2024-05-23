@@ -11,6 +11,8 @@ public static class GenerateContentForSolutionFileHelper
         DirectoryInfo srcPath,
         DirectoryInfo? testPath)
     {
+        ArgumentNullException.ThrowIfNull(rootPath);
+
         var hostName = $"{projectName}.Api";
         var hostFile = srcPath.CombineFileInfo(hostName, $"{hostName}.csproj");
         var hostRelativePath = GetProjectReference(rootPath, hostFile);

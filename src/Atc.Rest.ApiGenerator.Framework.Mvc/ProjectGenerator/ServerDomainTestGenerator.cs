@@ -4,6 +4,7 @@ namespace Atc.Rest.ApiGenerator.Framework.Mvc.ProjectGenerator;
 public class ServerDomainTestGenerator : IServerDomainTestGenerator
 {
     private readonly ILogger<ServerDomainTestGenerator> logger;
+    private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
     private readonly string projectName;
     private readonly string apiProjectName;
     private readonly string domainProjectName;
@@ -12,6 +13,7 @@ public class ServerDomainTestGenerator : IServerDomainTestGenerator
 
     public ServerDomainTestGenerator(
         ILoggerFactory loggerFactory,
+        INugetPackageReferenceProvider nugetPackageReferenceProvider,
         Version apiGeneratorVersion,
         string projectName,
         string apiProjectName,
@@ -20,6 +22,7 @@ public class ServerDomainTestGenerator : IServerDomainTestGenerator
         OpenApiDocument openApiDocument)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
+        ArgumentNullException.ThrowIfNull(nugetPackageReferenceProvider);
         ArgumentNullException.ThrowIfNull(apiGeneratorVersion);
         ArgumentNullException.ThrowIfNull(projectName);
         ArgumentNullException.ThrowIfNull(apiProjectName);
@@ -28,6 +31,7 @@ public class ServerDomainTestGenerator : IServerDomainTestGenerator
         ArgumentNullException.ThrowIfNull(openApiDocument);
 
         logger = loggerFactory.CreateLogger<ServerDomainTestGenerator>();
+        this.nugetPackageReferenceProvider = nugetPackageReferenceProvider;
         this.projectName = projectName;
         this.apiProjectName = apiProjectName;
         this.domainProjectName = domainProjectName;
@@ -35,85 +39,30 @@ public class ServerDomainTestGenerator : IServerDomainTestGenerator
         this.openApiDocument = openApiDocument;
     }
 
-    public void ScaffoldProjectFile()
+    public async Task ScaffoldProjectFile()
     {
+        var packageReferences = await nugetPackageReferenceProvider.GetPackageReferencesForTestDomainProjectForMvc();
+
+        var itemGroupPackageReferences = packageReferences
+            .Select(packageReference => new ItemGroupParameter(
+                "PackageReference",
+                [
+                    new("Include", packageReference.PackageId),
+                    new("Version", packageReference.PackageVersion),
+                ],
+                Value: packageReference.SubElements))
+            .ToList();
+
         var projectFileParameters = new ProjectFileParameters(
             "Microsoft.NET.Sdk",
             [
-                new List<PropertyGroupParameter>
-                {
+                [
                     new("TargetFramework", Attributes: null, "net8.0"),
-                },
+                ],
             ],
             [
-                new List<ItemGroupParameter>
-                {
-                    new(
-                        "PackageReference",
-                        [
-                            new("Include", "Atc.XUnit"),
-                            new("Version", "2.0.472"),
-                        ],
-                        Value: null),
-                    new(
-                        "PackageReference",
-                        [
-                            new("Include", "AutoFixture"),
-                            new("Version", "4.18.1"),
-                        ],
-                        Value: null),
-                    new(
-                        "PackageReference",
-                        [
-                            new("Include", "AutoFixture.AutoNSubstitute"),
-                            new("Version", "4.18.1"),
-                        ],
-                        Value: null),
-                    new(
-                        "PackageReference",
-                        [
-                            new("Include", "AutoFixture.Xunit2"),
-                            new("Version", "4.18.1"),
-                        ],
-                        Value: null),
-                    new(
-                        "PackageReference",
-                        [
-                            new("Include", "FluentAssertions"),
-                            new("Version", "6.12.0"),
-                        ],
-                        Value: null),
-                    new(
-                        "PackageReference",
-                        [
-                            new("Include", "Microsoft.NET.Test.Sdk"),
-                            new("Version", "17.9.0"),
-                        ],
-                        Value: null),
-                    new(
-                        "PackageReference",
-                        [
-                            new("Include", "NSubstitute"),
-                            new("Version", "5.1.0"),
-                        ],
-                        Value: null),
-                    new(
-                        "PackageReference",
-                        [
-                            new("Include", "xunit"),
-                            new("Version", "2.8.0"),
-                        ],
-                        Value: null),
-                    new(
-                        "PackageReference",
-                        [
-                            new("Include", "xunit.runner.visualstudio"),
-                            new("Version", "2.8.0"),
-                        ],
-                        Value: "<PrivateAssets>all</PrivateAssets><IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>"),
-                },
-                new List<ItemGroupParameter>
-                {
+                itemGroupPackageReferences,
+                [
                     new(
                         "ProjectReference",
                         [
@@ -126,7 +75,7 @@ public class ServerDomainTestGenerator : IServerDomainTestGenerator
                             new("Include", @$"..\..\src\{domainProjectName}\{domainProjectName}.csproj"),
                         ],
                         Value: null),
-                },
+                ],
             ]);
 
         var contentGenerator = new GenerateContentForProjectFile(

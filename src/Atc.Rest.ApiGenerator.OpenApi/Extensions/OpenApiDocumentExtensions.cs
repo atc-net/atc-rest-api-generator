@@ -1,6 +1,7 @@
 // ReSharper disable InvertIf
 // ReSharper disable LoopCanBeConvertedToQuery
 // ReSharper disable ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
+// ReSharper disable ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
 namespace Atc.Rest.ApiGenerator.OpenApi.Extensions;
 
 public static class OpenApiDocumentExtensions
@@ -112,6 +113,75 @@ public static class OpenApiDocumentExtensions
         }
 
         return serverUrl;
+    }
+
+    public static bool IsUsingRequiredForSystem(
+        this OpenApiDocument openApiDocument)
+    {
+        foreach (var openApiPath in openApiDocument.Paths)
+        {
+            foreach (var apiOperation in openApiPath.Value.Operations)
+            {
+                foreach (var response in apiOperation.Value.Responses.Values)
+                {
+                    foreach (var mediaType in response.Content.Values)
+                    {
+                        foreach (var schemaProperty in mediaType.Schema.Properties)
+                        {
+                            if (schemaProperty.Value.IsFormatTypeUuid())
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public static bool IsUsingRequiredForSystemCollectionGeneric(
+        this OpenApiDocument openApiDocument)
+    {
+        foreach (var openApiPath in openApiDocument.Paths)
+        {
+            foreach (var apiOperation in openApiPath.Value.Operations)
+            {
+                foreach (var response in apiOperation.Value.Responses.Values)
+                {
+                    foreach (var mediaType in response.Content.Values)
+                    {
+                        if (mediaType.Schema.IsTypeArray())
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public static bool IsUsingRequiredForSystemLinq(
+        this OpenApiDocument openApiDocument)
+    {
+        foreach (var openApiPath in openApiDocument.Paths)
+        {
+            foreach (var apiOperation in openApiPath.Value.Operations)
+            {
+                foreach (var parameter in apiOperation.Value.Parameters)
+                {
+                    if (parameter.Schema.IsTypeArray())
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     public static bool IsUsingRequiredForSystemNet(

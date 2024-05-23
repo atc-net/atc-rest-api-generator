@@ -31,6 +31,7 @@ public class ServerApiGenerator
 
         serverApiGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerApiGenerator(
             loggerFactory,
+            nugetPackageReferenceProvider,
             projectOptions.ApiGeneratorVersion,
             projectOptions.ProjectName,
             projectOptions.PathForSrcGenerate,
@@ -43,6 +44,7 @@ public class ServerApiGenerator
 
         serverApiGeneratorMinimalApi = new Framework.Minimal.ProjectGenerator.ServerApiGenerator(
             loggerFactory,
+            nugetPackageReferenceProvider,
             projectOptions.ApiGeneratorVersion,
             projectOptions.ProjectName,
             projectOptions.PathForSrcGenerate,
@@ -51,7 +53,7 @@ public class ServerApiGenerator
             projectOptions.RouteBase);
     }
 
-    public bool Generate()
+    public async Task<bool> Generate()
     {
         logger.LogInformation($"{ContentWriterConstants.AreaGenerateCode} Working on server api generation ({projectOptions.ProjectName})");
 
@@ -66,7 +68,7 @@ public class ServerApiGenerator
 
         if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
         {
-            serverApiGeneratorMvc.ScaffoldProjectFile();
+            await serverApiGeneratorMvc.ScaffoldProjectFile();
 
             serverApiGeneratorMvc.GenerateAssemblyMarker();
             serverApiGeneratorMvc.GenerateModels();
@@ -81,7 +83,7 @@ public class ServerApiGenerator
         }
         else
         {
-            serverApiGeneratorMinimalApi.ScaffoldProjectFile();
+            await serverApiGeneratorMinimalApi.ScaffoldProjectFile();
 
             serverApiGeneratorMinimalApi.GenerateAssemblyMarker();
             serverApiGeneratorMinimalApi.GenerateModels();

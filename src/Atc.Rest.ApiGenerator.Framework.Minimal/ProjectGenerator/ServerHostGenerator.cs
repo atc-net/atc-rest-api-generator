@@ -4,6 +4,7 @@ namespace Atc.Rest.ApiGenerator.Framework.Minimal.ProjectGenerator;
 public class ServerHostGenerator : IServerHostGenerator
 {
     private readonly ILogger<ServerHostGenerator> logger;
+    private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
     private readonly Version apiGeneratorVersion;
     private readonly string projectName;
     private readonly string apiProjectName;
@@ -13,6 +14,7 @@ public class ServerHostGenerator : IServerHostGenerator
 
     public ServerHostGenerator(
         ILoggerFactory loggerFactory,
+        INugetPackageReferenceProvider nugetPackageReferenceProvider,
         Version apiGeneratorVersion,
         string projectName,
         string apiProjectName,
@@ -21,6 +23,7 @@ public class ServerHostGenerator : IServerHostGenerator
         OpenApiDocument openApiDocument)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
+        ArgumentNullException.ThrowIfNull(nugetPackageReferenceProvider);
         ArgumentNullException.ThrowIfNull(apiGeneratorVersion);
         ArgumentNullException.ThrowIfNull(projectName);
         ArgumentNullException.ThrowIfNull(apiProjectName);
@@ -29,6 +32,7 @@ public class ServerHostGenerator : IServerHostGenerator
         ArgumentNullException.ThrowIfNull(openApiDocument);
 
         logger = loggerFactory.CreateLogger<ServerHostGenerator>();
+        this.nugetPackageReferenceProvider = nugetPackageReferenceProvider;
         this.apiGeneratorVersion = apiGeneratorVersion;
         this.projectName = projectName;
         this.apiProjectName = apiProjectName;
@@ -42,67 +46,38 @@ public class ServerHostGenerator : IServerHostGenerator
     /// </summary>
     public bool UseRestExtended { get; set; }
 
-    public void ScaffoldProjectFile()
+    public async Task ScaffoldProjectFile()
     {
+        var packageReferences = await nugetPackageReferenceProvider.GetPackageReferencesForHostProjectForMinimalApi();
+
+        var itemGroupPackageReferences = packageReferences
+            .Select(packageReference => new ItemGroupParameter(
+                "PackageReference",
+                [
+                    new("Include", packageReference.PackageId),
+                    new("Version", packageReference.PackageVersion),
+                ],
+                Value: null))
+            .ToList();
+
         var projectFileParameters = new ProjectFileParameters(
             "Microsoft.NET.Sdk.Web",
             [
-                new List<PropertyGroupParameter>
-                {
+                [
                     new("TargetFramework", Attributes: null, "net8.0"),
                     new("IsPackable", Attributes: null, "false"),
-                },
-                new List<PropertyGroupParameter>
-                {
+                ],
+                [
                     new("GenerateDocumentationFile", Attributes: null, "true"),
-                },
-                new List<PropertyGroupParameter>
-                {
+                ],
+                [
                     new("DocumentationFile", Attributes: null, @$"bin\Debug\net8.0\{projectName}.xml"),
                     new("NoWarn", Attributes: null, "1573;1591;1701;1702;1712;8618;"),
-                },
+                ],
             ],
             [
-                new List<ItemGroupParameter>
-                {
-                    new(
-                        "PackageReference",
-                        [
-                            new("Include", "Asp.Versioning.Http"),
-                            new("Version", "8.1.0"),
-                        ],
-                        Value: null),
-                    new(
-                        "PackageReference",
-                        [
-                            new("Include", "Atc"),
-                            new("Version", "2.0.472"),
-                        ],
-                        Value: null),
-                    new(
-                        "PackageReference",
-                        [
-                            new("Include", "Atc.Rest.MinimalApi"),
-                            new("Version", "1.0.81"),
-                        ],
-                        Value: null),
-                    new(
-                        "PackageReference",
-                        [
-                            new("Include", "Microsoft.NETCore.Platforms"),
-                            new("Version", "7.0.4"),
-                        ],
-                        Value: null),
-                    new(
-                        "PackageReference",
-                        [
-                            new("Include", "Swashbuckle.AspNetCore"),
-                            new("Version", "6.5.0"),
-                        ],
-                        Value: null),
-                },
-                new List<ItemGroupParameter>
-                {
+                itemGroupPackageReferences,
+                [
                     new(
                         "ProjectReference",
                         [
@@ -115,7 +90,7 @@ public class ServerHostGenerator : IServerHostGenerator
                             new("Include", @$"..\{domainProjectName}\{domainProjectName}.csproj"),
                         ],
                         Value: null),
-                },
+                ],
             ]);
 
         var contentGenerator = new GenerateContentForProjectFile(
