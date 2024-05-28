@@ -41,15 +41,13 @@ public static class ContentGeneratorServerHandlerParametersFactory
                 Name: "cancellationToken",
                 DefaultValue: "default"));
 
-        var returnTypeName = ConstructReturnTypeName(openApiOperation.Responses, contractNamespace);
-
         var methodParameters = new List<MethodParameters>
         {
             new(
                 DocumentationTags: null,
                 Attributes: null,
                 AccessModifier: AccessModifiers.Public,
-                ReturnTypeName: returnTypeName,
+                ReturnTypeName: $"{operationName}{ContentGeneratorConstants.Result}",
                 ReturnGenericTypeName: "Task",
                 Name: "ExecuteAsync",
                 Parameters: methodParametersParameters,
@@ -85,9 +83,14 @@ public static class ContentGeneratorServerHandlerParametersFactory
         if (responseReturnTypes.Count == 1)
         {
             var (httpStatusCode, returnTypeName) = responseReturnTypes[0];
-            if (httpStatusCode == HttpStatusCode.BadGateway)
+            if (httpStatusCode.UseMinimalApiWellDefinedProblemHttpResultClassForStatusCode())
             {
                 return "ProblemHttpResult";
+            }
+
+            if (httpStatusCode == HttpStatusCode.Forbidden)
+            {
+                return "ForbidHttpResult";
             }
 
             var responseReturnType = httpStatusCode.ToNormalizedString();
@@ -97,12 +100,23 @@ public static class ContentGeneratorServerHandlerParametersFactory
                 : $"{responseReturnType}<{returnTypeName}>";
         }
 
+        var isProblemHttpResultAdded = false;
         var result = new List<string>();
         foreach (var (httpStatusCode, returnTypeName) in responseReturnTypes)
         {
-            if (httpStatusCode == HttpStatusCode.BadGateway)
+            if (httpStatusCode.UseMinimalApiWellDefinedProblemHttpResultClassForStatusCode())
             {
+                if (isProblemHttpResultAdded)
+                {
+                    continue;
+                }
+
                 result.Add("ProblemHttpResult");
+                isProblemHttpResultAdded = true;
+            }
+            else if (httpStatusCode == HttpStatusCode.Forbidden)
+            {
+                result.Add("ForbidHttpResult");
             }
             else
             {
@@ -137,7 +151,8 @@ public static class ContentGeneratorServerHandlerParametersFactory
             // TODO: IsShared..
             ////var isShared = apiOperationSchemaMappings.IsShared(modelName);
             ////modelName = OpenApiDocumentSchemaModelNameResolver.EnsureModelNameWithNamespaceIfNeeded(projectName, apiGroupName, modelName, isShared);
-            if (EndsWithWellKnownSystemTypeName(modelName))
+            if (EndsWithWellKnownSystemTypeName(modelName) ||
+                contractNamespace.EndsWith($".{modelName}", StringComparison.Ordinal))
             {
                 // TODO: Hack for now, need to fix this in the future with EnsureModelNameWithNamespaceIfNeeded
                 modelName = $"{contractNamespace}.{modelName}";

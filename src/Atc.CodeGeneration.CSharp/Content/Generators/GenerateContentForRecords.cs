@@ -30,7 +30,17 @@ public class GenerateContentForRecords : IContentGenerator
         {
             var recordParameters = parameters.Parameters[i];
 
-            sb.Append($"{recordParameters.AccessModifier.GetDescription()} {recordParameters.Name}");
+            if (recordParameters.Parameters is not null &&
+                recordParameters.Parameters.Any(x => x.IsGenericListType &&
+                                                     x.TypeName.Equals("T", StringComparison.Ordinal)))
+            {
+                sb.Append($"{recordParameters.AccessModifier.GetDescription()} {recordParameters.Name}<T>");
+            }
+            else
+            {
+                sb.Append($"{recordParameters.AccessModifier.GetDescription()} {recordParameters.Name}");
+            }
+
             if (recordParameters.Parameters is null ||
                 !recordParameters.Parameters.Any())
             {

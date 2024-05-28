@@ -88,6 +88,7 @@ public class ServerApiGenerator
             serverApiGeneratorMinimalApi.GenerateAssemblyMarker();
             serverApiGeneratorMinimalApi.GenerateModels();
             serverApiGeneratorMinimalApi.GenerateParameters();
+            serverApiGeneratorMinimalApi.GenerateResults();
             serverApiGeneratorMinimalApi.GenerateInterfaces();
             serverApiGeneratorMinimalApi.GenerateEndpoints();
 

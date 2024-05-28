@@ -95,32 +95,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
             overrideIfExist: false);
     }
 
-    public void GenerateAssemblyMarker()
-    {
-        var classParameters = ClassParametersFactory.Create(
-            codeGeneratorContentHeader,
-            projectName,
-            codeGeneratorAttribute,
-            "DomainRegistration");
-
-        var contentGenerator = new GenerateContentForClass(
-            new CodeDocumentationTagsGenerator(),
-            classParameters);
-
-        var content = contentGenerator.Generate();
-
-        var contentWriter = new ContentWriter(logger);
-        contentWriter.Write(
-            projectPath,
-            projectPath.CombineFileInfo("DomainRegistration.cs"),
-            ContentWriterArea.Src,
-            content);
-    }
-
-    public void GenerateServiceCollectionExtensions()
-        => throw new NotSupportedException($"{nameof(GenerateServiceCollectionExtensions)} is not supported for MVC");
-
-    public void GenerateHandlers()
+    public void ScaffoldHandlers()
     {
         foreach (var urlPath in openApiDocument.Paths)
         {
@@ -154,6 +129,31 @@ public class ServerDomainGenerator : IServerDomainGenerator
             }
         }
     }
+
+    public void GenerateAssemblyMarker()
+    {
+        var classParameters = ClassParametersFactory.Create(
+            codeGeneratorContentHeader,
+            projectName,
+            codeGeneratorAttribute,
+            "DomainRegistration");
+
+        var contentGenerator = new GenerateContentForClass(
+            new CodeDocumentationTagsGenerator(),
+            classParameters);
+
+        var content = contentGenerator.Generate();
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectPath,
+            projectPath.CombineFileInfo("DomainRegistration.cs"),
+            ContentWriterArea.Src,
+            content);
+    }
+
+    public void GenerateServiceCollectionExtensions()
+        => throw new NotSupportedException($"{nameof(GenerateServiceCollectionExtensions)} is not supported for MVC");
 
     public void MaintainGlobalUsings(
         bool removeNamespaceGroupSeparatorInGlobalUsings)

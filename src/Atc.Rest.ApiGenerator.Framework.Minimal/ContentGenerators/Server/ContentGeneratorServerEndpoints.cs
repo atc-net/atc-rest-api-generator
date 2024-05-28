@@ -141,54 +141,7 @@ public sealed class ContentGeneratorServerEndpoints : IContentGenerator
         {
             var item = parameters.MethodParameters[i];
 
-            sb.Append(4, "internal Task<");
-
-            switch (item.HttpResults.Count)
-            {
-                case > 1:
-                {
-                    sb.Append("Results<");
-
-                    for (var x = 0; x < item.HttpResults.Count; x++)
-                    {
-                        var (httpStatusCode, returnType) = item.HttpResults[x];
-                        if (httpStatusCode == HttpStatusCode.BadGateway)
-                        {
-                            sb.Append("ProblemHttpResult");
-                        }
-                        else
-                        {
-                            if (string.IsNullOrEmpty(returnType))
-                            {
-                                sb.Append($"{httpStatusCode.ToNormalizedString()}");
-                            }
-                            else
-                            {
-                                sb.Append($"{httpStatusCode.ToNormalizedString()}<{returnType}>");
-                            }
-                        }
-
-                        if (x != item.HttpResults.Count - 1)
-                        {
-                            sb.Append(", ");
-                        }
-                    }
-
-                    sb.Append('>');
-                    break;
-                }
-
-                case 1:
-                {
-                    var (httpStatusCode, returnType) = item.HttpResults[0];
-
-                    sb.Append($"{httpStatusCode.ToNormalizedString()}<{returnType}>");
-                    break;
-                }
-            }
-
-            sb.AppendLine($"> {item.Name}(");
-
+            sb.AppendLine(4, $"internal Task<{item.ResultName}> {item.Name}(");
             sb.AppendLine(8, $"[FromServices] {item.InterfaceName} handler,");
 
             if (!string.IsNullOrEmpty(item.ParameterTypeName))

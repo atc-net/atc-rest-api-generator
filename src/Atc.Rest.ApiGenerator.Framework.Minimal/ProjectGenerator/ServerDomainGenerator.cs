@@ -111,6 +111,42 @@ public class ServerDomainGenerator : IServerDomainGenerator
             overrideIfExist: false);
     }
 
+    public void ScaffoldHandlers()
+    {
+        foreach (var urlPath in openApiDocument.Paths)
+        {
+            var apiGroupName = urlPath.GetApiGroupName();
+
+            foreach (var openApiOperation in urlPath.Value.Operations)
+            {
+                var fullNamespace = $"{projectName}.{ContentGeneratorConstants.Handlers}.{apiGroupName}";
+
+                var classParameters = ContentGeneratorServerHandlerParametersFactory.Create(
+                    fullNamespace,
+                    $"Api.Generated.{ContentGeneratorConstants.Contracts}.{apiGroupName}",
+                    urlPath.Value,
+                    openApiOperation.Value);
+
+                var contentGenerator = new GenerateContentForClass(
+                    new CodeDocumentationTagsGenerator(),
+                    classParameters);
+
+                var content = contentGenerator.Generate();
+
+                var contentWriter = new ContentWriter(logger);
+                contentWriter.Write(
+                    projectPath,
+                    projectPath.CombineFileInfo(
+                        ContentGeneratorConstants.Handlers,
+                        apiGroupName,
+                        $"{classParameters.TypeName}.cs"),
+                    ContentWriterArea.Src,
+                    content,
+                    overrideIfExist: false);
+            }
+        }
+    }
+
     public void GenerateAssemblyMarker()
     {
         var suppressMessageAvoidEmptyInterfaceAttribute = new AttributeParameters(
@@ -280,42 +316,6 @@ public class ServerDomainGenerator : IServerDomainGenerator
             content);
     }
 
-    public void GenerateHandlers()
-    {
-        foreach (var urlPath in openApiDocument.Paths)
-        {
-            var apiGroupName = urlPath.GetApiGroupName();
-
-            foreach (var openApiOperation in urlPath.Value.Operations)
-            {
-                var fullNamespace = $"{projectName}.{ContentGeneratorConstants.Handlers}.{apiGroupName}";
-
-                var classParameters = ContentGeneratorServerHandlerParametersFactory.Create(
-                    fullNamespace,
-                    $"Api.Generated.{ContentGeneratorConstants.Contracts}.{apiGroupName}",
-                    urlPath.Value,
-                    openApiOperation.Value);
-
-                var contentGenerator = new GenerateContentForClass(
-                    new CodeDocumentationTagsGenerator(),
-                    classParameters);
-
-                var content = contentGenerator.Generate();
-
-                var contentWriter = new ContentWriter(logger);
-                contentWriter.Write(
-                    projectPath,
-                    projectPath.CombineFileInfo(
-                        ContentGeneratorConstants.Handlers,
-                        apiGroupName,
-                        $"{classParameters.TypeName}.cs"),
-                    ContentWriterArea.Src,
-                    content,
-                    overrideIfExist: false);
-            }
-        }
-    }
-
     public void MaintainGlobalUsings(
         bool removeNamespaceGroupSeparatorInGlobalUsings)
     {
@@ -325,20 +325,9 @@ public class ServerDomainGenerator : IServerDomainGenerator
             "System.Diagnostics.CodeAnalysis",
             "Atc.Azure.Options",
             "Atc.Azure.Options.Environment",
-            "Microsoft.AspNetCore.Http.HttpResults",
             "Microsoft.Extensions.Configuration",
             "Microsoft.Extensions.DependencyInjection",
         };
-
-        if (openApiDocument.IsUsingRequiredForAtcRestResults())
-        {
-            requiredUsings.Add("Atc.Rest.Results");
-        }
-
-        if (operationSchemaMappings.Any(apiOperation => apiOperation.Model.IsShared))
-        {
-            requiredUsings.Add($"{apiProjectName}.{ContentGeneratorConstants.Contracts}");
-        }
 
         var apiGroupNames = openApiDocument.GetApiGroupNames();
 

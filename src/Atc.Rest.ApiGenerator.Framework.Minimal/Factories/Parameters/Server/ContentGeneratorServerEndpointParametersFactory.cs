@@ -36,12 +36,7 @@ public static class ContentGeneratorServerEndpointParametersFactory
                     InterfaceName: $"I{operationName}{ContentGeneratorConstants.Handler}",
                     ParameterTypeName: GetParameterTypeName(operationName, apiPathData, apiOperation.Value),
                     MultipartBodyLengthLimit: GetMultipartBodyLengthLimit(apiOperation.Value),
-                    HttpResults: GetHttpResults(
-                        operationSchemaMappings,
-                        apiOperation.Value,
-                        apiGroupName,
-                        projectName,
-                        ShouldUseAuthorization(apiPathAuthenticationRequired, apiOperationAuthenticationRequired)),
+                    ResultName: $"{operationName}{ContentGeneratorConstants.Result}",
                     apiPathAuthenticationRequired,
                     apiPathAuthorizationRoles,
                     apiPathAuthenticationSchemes,
@@ -104,47 +99,5 @@ public static class ContentGeneratorServerEndpointParametersFactory
         }
 
         return null;
-    }
-
-    private static List<(HttpStatusCode HttpStatusCode, string ReturnType)> GetHttpResults(
-        IList<ApiOperation> operationSchemaMappings,
-        OpenApiOperation apiOperation,
-        string apiGroupName,
-        string projectName,
-        bool shouldUseAuthorization)
-    {
-        var responseTypes = apiOperation.Responses.GetResponseTypes(
-            operationSchemaMappings,
-            apiGroupName,
-            projectName,
-            useProblemDetailsAsDefaultResponseBody: false,
-            includeEmptyResponseTypes: true,
-            includeIfNotDefinedValidation: false,
-            shouldUseAuthorization,
-            includeIfNotDefinedInternalServerError: false);
-
-        return responseTypes
-            .Where(x => x.Item1 != HttpStatusCode.Forbidden && x.Item1 != HttpStatusCode.Unauthorized)
-            .Select(tuple => (HttpStatusCode: tuple.Item1, ReturnType: tuple.Item2))
-            .ToList();
-    }
-
-    private static bool ShouldUseAuthorization(
-        bool? apiPathAuthenticationRequired,
-        bool? apiOperationAuthenticationRequired)
-    {
-        var shouldUseAuthorization = true;
-
-        if (apiPathAuthenticationRequired.HasValue && !apiPathAuthenticationRequired.Value)
-        {
-            shouldUseAuthorization = false;
-        }
-
-        if (shouldUseAuthorization && apiOperationAuthenticationRequired.HasValue && !apiOperationAuthenticationRequired.Value)
-        {
-            shouldUseAuthorization = false;
-        }
-
-        return shouldUseAuthorization;
     }
 }

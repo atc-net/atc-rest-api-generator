@@ -13,7 +13,7 @@ public interface IServerDomainTestGenerator
 {
     Task ScaffoldProjectFile();
 
-    void GenerateHandlers();
+    void ScaffoldHandlers();
 
     void MaintainGlobalUsings(
         bool usingCodingRules,

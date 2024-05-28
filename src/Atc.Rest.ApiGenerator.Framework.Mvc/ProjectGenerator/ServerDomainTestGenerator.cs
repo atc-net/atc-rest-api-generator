@@ -92,7 +92,7 @@ public class ServerDomainTestGenerator : IServerDomainTestGenerator
             overrideIfExist: false);
     }
 
-    public void GenerateHandlers()
+    public void ScaffoldHandlers()
     {
         foreach (var urlPath in openApiDocument.Paths)
         {

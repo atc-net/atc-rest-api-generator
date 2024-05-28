@@ -29,12 +29,14 @@ public static class HttpStatusCodeExtensions
 
     public static bool UseMvcWellDefinedContentResultClassForStatusCode(
         this HttpStatusCode httpStatusCode)
-        => httpStatusCode is
-            HttpStatusCode.Forbidden or
-            HttpStatusCode.MethodNotAllowed or
-            HttpStatusCode.InternalServerError or
-            HttpStatusCode.NotImplemented or
-            HttpStatusCode.BadGateway or
-            HttpStatusCode.ServiceUnavailable or
-            HttpStatusCode.GatewayTimeout;
+        => httpStatusCode.IsServerError() ||
+           httpStatusCode is
+               HttpStatusCode.Forbidden or
+               HttpStatusCode.MethodNotAllowed;
+
+    public static bool UseMinimalApiWellDefinedProblemHttpResultClassForStatusCode(
+        this HttpStatusCode httpStatusCode)
+        => httpStatusCode.IsServerError() ||
+           httpStatusCode is
+               HttpStatusCode.MethodNotAllowed;
 }

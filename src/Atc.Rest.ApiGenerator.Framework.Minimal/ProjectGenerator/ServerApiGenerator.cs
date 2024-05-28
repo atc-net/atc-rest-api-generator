@@ -193,7 +193,36 @@ public class ServerApiGenerator : IServerApiGenerator
     }
 
     public void GenerateResults()
-        => throw new NotSupportedException($"{nameof(GenerateResults)} is not supported for MinimalApi");
+    {
+        foreach (var openApiPath in openApiDocument.Paths)
+        {
+            var apiGroupName = openApiPath.GetApiGroupName();
+
+            var fullNamespace = $"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
+
+            foreach (var openApiOperation in openApiPath.Value.Operations)
+            {
+                var resultParameters = ContentGeneratorServerResultParametersFactory.Create(
+                    fullNamespace,
+                    openApiOperation.Value);
+
+                var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerResult(
+                    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
+                    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
+                    new CodeDocumentationTagsGenerator(),
+                    resultParameters);
+
+                var content = contentGenerator.Generate();
+
+                var contentWriter = new ContentWriter(logger);
+                contentWriter.Write(
+                    projectPath,
+                    projectPath.CombineFileInfo(ContentGeneratorConstants.Contracts, apiGroupName, ContentGeneratorConstants.Results, $"{resultParameters.ResultName}.cs"),
+                    ContentWriterArea.Src,
+                    content);
+            }
+        }
+    }
 
     public void GenerateInterfaces()
     {
@@ -272,21 +301,16 @@ public class ServerApiGenerator : IServerApiGenerator
             "System.CodeDom.Compiler",
             "System.ComponentModel.DataAnnotations",
             "System.Diagnostics.CodeAnalysis",
+            "System.Net",
             "Atc.Rest.MinimalApi.Abstractions",
             "Microsoft.AspNetCore.Builder",
             "Microsoft.AspNetCore.Http",
-            "Microsoft.AspNetCore.Http.HttpResults",
             "Microsoft.AspNetCore.Mvc",
         };
 
         if (openApiDocument.IsUsingRequiredForAtcRestResults())
         {
             requiredUsings.Add("Atc.Rest.Results");
-        }
-
-        if (operationSchemaMappings.Any(apiOperation => apiOperation.Model.IsShared))
-        {
-            requiredUsings.Add($"{projectName}.{ContentGeneratorConstants.Contracts}");
         }
 
         var apiGroupNames = openApiDocument.GetApiGroupNames();

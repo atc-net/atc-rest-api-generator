@@ -13,11 +13,11 @@ public interface IServerDomainGenerator
 {
     Task ScaffoldProjectFile();
 
+    void ScaffoldHandlers();
+
     void GenerateAssemblyMarker();
 
     void GenerateServiceCollectionExtensions();
-
-    void GenerateHandlers();
 
     void MaintainGlobalUsings(
         bool removeNamespaceGroupSeparatorInGlobalUsings);

@@ -85,9 +85,9 @@ public class ServerDomainGenerator
         if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
         {
             await serverDomainGeneratorMvc.ScaffoldProjectFile();
+            serverDomainGeneratorMvc.ScaffoldHandlers();
 
             serverDomainGeneratorMvc.GenerateAssemblyMarker();
-            serverDomainGeneratorMvc.GenerateHandlers();
 
             serverDomainGeneratorMvc.MaintainGlobalUsings(
                 projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
@@ -99,7 +99,7 @@ public class ServerDomainGenerator
 
                 await serverDomainTestGeneratorMvc.ScaffoldProjectFile();
 
-                serverDomainTestGeneratorMvc.GenerateHandlers();
+                serverDomainTestGeneratorMvc.ScaffoldHandlers();
 
                 serverDomainTestGeneratorMvc.MaintainGlobalUsings(
                     projectOptions.UsingCodingRules,
@@ -109,10 +109,10 @@ public class ServerDomainGenerator
         else
         {
             await serverDomainGeneratorMinimalApi.ScaffoldProjectFile();
+            serverDomainGeneratorMinimalApi.ScaffoldHandlers();
 
             serverDomainGeneratorMinimalApi.GenerateAssemblyMarker();
             serverDomainGeneratorMinimalApi.GenerateServiceCollectionExtensions();
-            serverDomainGeneratorMinimalApi.GenerateHandlers();
 
             serverDomainGeneratorMinimalApi.MaintainGlobalUsings(
                 projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
