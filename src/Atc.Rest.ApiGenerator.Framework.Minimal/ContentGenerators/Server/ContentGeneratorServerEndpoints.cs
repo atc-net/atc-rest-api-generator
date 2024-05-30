@@ -103,7 +103,43 @@ public sealed class ContentGeneratorServerEndpoints : IContentGenerator
                 : $".Map{item.OperationTypeRepresentation}(\"{item.RouteSuffix}\", {item.Name})");
         sb.AppendLine(12, $".WithName(\"{item.Name}\")");
         sb.AppendLine(12, $".WithDescription(\"{description}\")");
-        sb.AppendLine(12, $".WithSummary(\"{summary}\");");
+        sb.AppendLine(12, $".WithSummary(\"{summary}\")");
+
+        for (var i = 0; i < item.HttpResults.Count; i++)
+        {
+            var (httpStatusCode, returnType) = item.HttpResults[i];
+
+            sb.Append(12, ".Produces");
+
+            switch (httpStatusCode)
+            {
+                case HttpStatusCode.OK:
+                    sb.Append($"<{returnType}>()");
+                    break;
+                case HttpStatusCode.BadRequest:
+                case HttpStatusCode.NotFound:
+                case HttpStatusCode.Conflict:
+                case HttpStatusCode.BadGateway:
+                    sb.Append($"<{returnType}>(StatusCodes.Status{(int)httpStatusCode}{httpStatusCode})");
+                    break;
+                case HttpStatusCode.NotImplemented:
+                case HttpStatusCode.InternalServerError:
+                    sb.Append($"Problem(StatusCodes.Status{(int)httpStatusCode}{httpStatusCode})");
+                    break;
+                default:
+                    sb.Append("-NotImplemented");
+                    break;
+            }
+
+            if (i == item.HttpResults.Count - 1)
+            {
+                sb.AppendLine(";");
+            }
+            else
+            {
+                sb.AppendLine();
+            }
+        }
 
         /*
          TODO:

@@ -315,6 +315,8 @@ public class ServerApiGenerator : IServerApiGenerator
 
         var apiGroupNames = openApiDocument.GetApiGroupNames();
 
+        requiredUsings.Add($"{projectName}.{ContentGeneratorConstants.Contracts}");
+
         requiredUsings.AddRange(apiGroupNames.Select(x => $"{projectName}.{ContentGeneratorConstants.Contracts}.{x}"));
 
         GlobalUsingsHelper.CreateOrUpdate(
