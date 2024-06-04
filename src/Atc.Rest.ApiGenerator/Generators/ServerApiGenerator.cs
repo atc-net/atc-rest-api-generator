@@ -37,10 +37,8 @@ public class ServerApiGenerator
             projectOptions.PathForSrcGenerate,
             projectOptions.Document,
             operationSchemaMappings,
-            projectOptions.RouteBase)
-        {
-            UseProblemDetailsAsDefaultBody = projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
-        };
+            projectOptions.RouteBase,
+            projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody);
 
         serverApiGeneratorMinimalApi = new Framework.Minimal.ProjectGenerator.ServerApiGenerator(
             loggerFactory,
@@ -50,7 +48,8 @@ public class ServerApiGenerator
             projectOptions.PathForSrcGenerate,
             projectOptions.Document,
             operationSchemaMappings,
-            projectOptions.RouteBase);
+            projectOptions.RouteBase,
+            projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody);
     }
 
     public async Task<bool> Generate()

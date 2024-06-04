@@ -30,5 +30,7 @@ public static class ArgumentCommandConstants
     public const string LongServerOutputApiPath = "--apiPath";
     public const string LongServerOutputDomainPath = "--domainPath";
     public const string LongServerDisableCodingRules = "--disableCodingRules";
+
+    public const string LongUseProblemDetailsAsDefaultResponseBody = "--useProblemDetailsAsDefaultResponseBody";
     public const string LongRemoveNamespaceGroupSeparatorInGlobalUsings = "--removeNamespaceGroupSeparatorInGlobalUsings";
 }

@@ -1,3 +1,4 @@
+// ReSharper disable InvertIf
 namespace Atc.Rest.ApiGenerator.CLI;
 
 [SuppressMessage("Info Code Smell", "S4457:Split this method into two", Justification = "OK for now.")]
@@ -114,6 +115,24 @@ public static class ApiOptionsHelper
         if (settings.ModelPropertyNameCasingStyle.IsSet)
         {
             apiOptions.Validation.ModelPropertyNameCasingStyle = settings.ModelPropertyNameCasingStyle.Value;
+        }
+
+        if (settings is ServerAllCommandSettings serverAllCommandSettings)
+        {
+            if (serverAllCommandSettings.AspNetOutputType.IsSet)
+            {
+                apiOptions.Generator.AspNetOutputType = serverAllCommandSettings.AspNetOutputType.Value;
+            }
+
+            if (serverAllCommandSettings.SwaggerThemeMode.IsSet)
+            {
+                apiOptions.Generator.SwaggerThemeMode = serverAllCommandSettings.SwaggerThemeMode.Value;
+            }
+
+            if (serverAllCommandSettings.UseProblemDetailsAsDefaultResponseBody)
+            {
+                apiOptions.Generator.Response.UseProblemDetailsAsDefaultBody = serverAllCommandSettings.UseProblemDetailsAsDefaultResponseBody;
+            }
         }
     }
 }
