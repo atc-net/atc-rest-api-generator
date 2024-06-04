@@ -10,6 +10,8 @@ public sealed class ApiOperationModel
 
     public bool UsesIFormFile { get; set; }
 
+    public ApiAuthorizeModel? Authorization { get; set; }
+
     public override string ToString()
         => $"{nameof(Name)}: {Name}, {nameof(IsEnum)}: {IsEnum}, {nameof(IsShared)}: {IsShared}, {nameof(UsesIFormFile)}: {UsesIFormFile}";
 }

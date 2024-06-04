@@ -13,6 +13,7 @@ public class ServerApiGenerator : IServerApiGenerator
     private readonly string routeBase;
     private readonly string codeGeneratorContentHeader;
     private readonly AttributeParameters codeGeneratorAttribute;
+    private readonly bool useProblemDetailsAsDefaultResponseBody;
 
     public ServerApiGenerator(
         ILoggerFactory loggerFactory,
@@ -22,7 +23,8 @@ public class ServerApiGenerator : IServerApiGenerator
         DirectoryInfo projectPath,
         OpenApiDocument openApiDocument,
         IList<ApiOperation> operationSchemaMappings,
-        string routeBase)
+        string routeBase,
+        bool useProblemDetailsAsDefaultResponseBody)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
         ArgumentNullException.ThrowIfNull(nugetPackageReferenceProvider);
@@ -40,6 +42,7 @@ public class ServerApiGenerator : IServerApiGenerator
         this.openApiDocument = openApiDocument;
         this.operationSchemaMappings = operationSchemaMappings;
         this.routeBase = routeBase;
+        this.useProblemDetailsAsDefaultResponseBody = useProblemDetailsAsDefaultResponseBody;
 
         codeGeneratorContentHeader = GeneratedCodeHeaderGeneratorFactory
             .Create(apiGeneratorVersion)
@@ -210,7 +213,8 @@ public class ServerApiGenerator : IServerApiGenerator
                     new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
                     new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
                     new CodeDocumentationTagsGenerator(),
-                    resultParameters);
+                    resultParameters,
+                    useProblemDetailsAsDefaultResponseBody);
 
                 var content = contentGenerator.Generate();
 
@@ -267,13 +271,15 @@ public class ServerApiGenerator : IServerApiGenerator
                 $"{projectName}.{ContentGeneratorConstants.Endpoints}",
                 apiGroupName,
                 GetRouteByApiGroupName(apiGroupName),
+                ContentGeneratorConstants.EndpointDefinition,
                 openApiDocument);
 
             var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerEndpoints(
                 new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
                 new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
                 new CodeDocumentationTagsGenerator(),
-                endpointParameters);
+                endpointParameters,
+                useProblemDetailsAsDefaultResponseBody);
 
             var content = contentGenerator.Generate();
 
@@ -301,7 +307,6 @@ public class ServerApiGenerator : IServerApiGenerator
             "System.CodeDom.Compiler",
             "System.ComponentModel.DataAnnotations",
             "System.Diagnostics.CodeAnalysis",
-            "System.Net",
             "Atc.Rest.MinimalApi.Abstractions",
             "Microsoft.AspNetCore.Builder",
             "Microsoft.AspNetCore.Http",
@@ -313,8 +318,15 @@ public class ServerApiGenerator : IServerApiGenerator
             requiredUsings.Add("Atc.Rest.Results");
         }
 
+        //// TODO: Check for any use ??
+        //requiredUsings.Add("System.Net");
+
+        // TODO: Check for any use of operations parameters
+        requiredUsings.Add("Atc.Rest.MinimalApi.Filters.Endpoints");
+
         var apiGroupNames = openApiDocument.GetApiGroupNames();
 
+        // TODO: Check for any use ??
         requiredUsings.Add($"{projectName}.{ContentGeneratorConstants.Contracts}");
 
         requiredUsings.AddRange(apiGroupNames.Select(x => $"{projectName}.{ContentGeneratorConstants.Contracts}.{x}"));

@@ -7,113 +7,45 @@ public static class ContentGeneratorServerResultParametersFactory
 {
     public static ContentGeneratorServerResultParameters Create(
         string @namespace,
-        OpenApiOperation openApiOperation,
-        bool useProblemDetailsAsDefaultBody)
+        OpenApiOperation openApiOperation)
     {
         ArgumentNullException.ThrowIfNull(openApiOperation);
 
         var operationName = openApiOperation.GetOperationName();
         var httpStatusCodes = openApiOperation.Responses.GetHttpStatusCodes();
 
-        var schemaTypeForImplicitOperator = SchemaType.None;
+        // TODO: ???
         string? modelNameForImplicitOperator = null;
-        string? simpleDataTypeNameForImplicitOperator = null;
 
         // Methods
         var methodParameters = new List<ContentGeneratorServerResultMethodParameters>();
-        string? genericDataTypeName = null;
+        var responseModels = openApiOperation.ExtractApiOperationResponseModels().ToList();
 
-        foreach (var httpStatusCode in httpStatusCodes)
+        foreach (var responseModel in responseModels.OrderBy(x => x.StatusCode))
         {
-            // TODO: Refactor to method
-            var useProblemDetails = openApiOperation.Responses.IsSchemaTypeProblemDetailsForStatusCode(httpStatusCode);
-            if (!useProblemDetails &&
-                useProblemDetailsAsDefaultBody)
-            {
-                useProblemDetails = true;
-            }
-
-            var schemaType = GetSchemaType(openApiOperation, httpStatusCode);
-            if (httpStatusCode is HttpStatusCode.OK or HttpStatusCode.Created)
-            {
-                schemaTypeForImplicitOperator = schemaType;
-            }
-
-            var simpleDataTypeName = GetSimpleDataTypeName(schemaType, openApiOperation, httpStatusCode);
-            var modelSchemaForStatusCode = openApiOperation.GetModelSchemaFromResponse();
-            var modelNameForStatusCode = openApiOperation.Responses.GetModelNameForStatusCode(httpStatusCode);
-            if (httpStatusCode is HttpStatusCode.OK or HttpStatusCode.Created)
-            {
-                if (!string.IsNullOrEmpty(simpleDataTypeName))
-                {
-                    if ("Object".Equals(simpleDataTypeName, StringComparison.Ordinal))
-                    {
-                        simpleDataTypeName = "object";
-                    }
-
-                    simpleDataTypeNameForImplicitOperator = simpleDataTypeName;
-                }
-                else if (!string.IsNullOrEmpty(modelNameForStatusCode))
-                {
-                    modelNameForImplicitOperator = modelNameForStatusCode;
-                }
-                else
-                {
-                    if (simpleDataTypeNameForImplicitOperator is null &&
-                        schemaType == SchemaType.SimpleTypeCustomPagedList &&
-                        modelSchemaForStatusCode is not null)
-                    {
-                        var customPaginationSchema = modelSchemaForStatusCode.GetCustomPaginationSchema();
-                        var customPaginationItemsSchema = modelSchemaForStatusCode.GetCustomPaginationItemsSchema();
-                        if (customPaginationSchema is not null &&
-                            customPaginationItemsSchema is not null)
-                        {
-                            genericDataTypeName = customPaginationSchema.GetDataType();
-                            simpleDataTypeNameForImplicitOperator = customPaginationItemsSchema.GetDataType();
-                        }
-                    }
-                    else if (modelNameForImplicitOperator is null &&
-                             schemaType == SchemaType.ComplexTypeCustomPagedList &&
-                             modelSchemaForStatusCode is not null)
-                    {
-                        var customPaginationSchema = modelSchemaForStatusCode.GetCustomPaginationSchema();
-                        var customPaginationItemsSchema = modelSchemaForStatusCode.GetCustomPaginationItemsSchema();
-                        if (customPaginationSchema is not null &&
-                            customPaginationItemsSchema is not null)
-                        {
-                            genericDataTypeName = customPaginationSchema.GetDataType();
-                            modelNameForImplicitOperator = customPaginationItemsSchema.GetModelName();
-                            modelNameForStatusCode = modelNameForImplicitOperator;
-                        }
-                    }
-                }
-            }
-
+            var httpStatusCode = responseModel.StatusCode;
             var documentationTags = new CodeDocumentationTags($"{(int)httpStatusCode} - {httpStatusCode.ToNormalizedString()} response.");
 
-            methodParameters.Add(new ContentGeneratorServerResultMethodParameters(
-                httpStatusCode,
-                schemaType,
-                UsesProblemDetails: useProblemDetails,
-                ModelName: modelNameForStatusCode,
-                documentationTags,
-                UsesBinaryResponse: httpStatusCode == HttpStatusCode.OK
-                    ? openApiOperation.Responses.IsSchemaUsingBinaryFormatForOkResponse()
-                    : null,
-                SimpleDataTypeName: simpleDataTypeName,
-                GenericDataTypeName: genericDataTypeName));
+            methodParameters.Add(
+                new ContentGeneratorServerResultMethodParameters(
+                    documentationTags,
+                    responseModel));
         }
 
         ContentGeneratorServerResultImplicitOperatorParameters? implicitOperatorParameters = null;
 
         if (ShouldAppendImplicitOperatorContent(httpStatusCodes, modelNameForImplicitOperator, openApiOperation.Responses.IsSchemaUsingBinaryFormatForOkResponse()))
         {
+            var responseModel = responseModels.FirstOrDefault(x => x.StatusCode == HttpStatusCode.OK) ??
+                                responseModels.FirstOrDefault(x => x.StatusCode == HttpStatusCode.Created);
+
+            var collectionDataType = responseModel?.CollectionDataType;
+            var dataType = responseModel?.DataType;
+
             // Implicit Operator
             implicitOperatorParameters = new ContentGeneratorServerResultImplicitOperatorParameters(
-                SchemaType: schemaTypeForImplicitOperator,
-                modelNameForImplicitOperator,
-                simpleDataTypeNameForImplicitOperator,
-                GenericDataTypeName: genericDataTypeName);
+                CollectionDataType: collectionDataType,
+                DataType: dataType);
         }
 
         return new ContentGeneratorServerResultParameters(
@@ -164,77 +96,5 @@ public static class ContentGeneratorServerResultParametersFactory
         }
 
         return true;
-    }
-
-    private static SchemaType GetSchemaType(
-        OpenApiOperation openApiOperation,
-        HttpStatusCode httpStatusCode)
-    {
-        var schema = openApiOperation.Responses.GetSchemaForStatusCode(httpStatusCode);
-        if (schema is null)
-        {
-            return SchemaType.None;
-        }
-
-        var modelName = openApiOperation.Responses.GetModelNameForStatusCode(httpStatusCode);
-        if (!string.IsNullOrEmpty(modelName))
-        {
-            if (schema.IsTypeArray())
-            {
-                return SchemaType.ComplexTypeList;
-            }
-
-            if (schema.IsTypePagination())
-            {
-                return SchemaType.ComplexTypePagedList;
-            }
-
-            return SchemaType.ComplexType;
-        }
-
-        if (schema.IsTypeArray() && schema.HasItemsWithSimpleDataType())
-        {
-            return SchemaType.SimpleTypeList;
-        }
-
-        if (schema.IsTypePagination() && schema.HasPaginationItemsWithSimpleDataType())
-        {
-            return SchemaType.SimpleTypePagedList;
-        }
-
-        if (schema.IsTypeCustomPagination())
-        {
-            var customPaginationItemsSchema = schema.GetCustomPaginationItemsSchema();
-            if (customPaginationItemsSchema is not null &&
-                customPaginationItemsSchema.Items.IsSimpleDataType())
-            {
-                return SchemaType.SimpleTypeCustomPagedList;
-            }
-
-            return SchemaType.ComplexTypeCustomPagedList;
-        }
-
-        return SchemaType.SimpleType;
-    }
-
-    private static string? GetSimpleDataTypeName(
-        SchemaType schemaType,
-        OpenApiOperation openApiOperation,
-        HttpStatusCode httpStatusCode)
-    {
-        var schema = openApiOperation.Responses.GetSchemaForStatusCode(httpStatusCode);
-        if (schema is null)
-        {
-            return null;
-        }
-
-        return schemaType switch
-        {
-            SchemaType.SimpleType => schema.GetDataType(),
-            SchemaType.SimpleTypeList => schema.GetSimpleDataTypeFromArray(),
-            SchemaType.SimpleTypePagedList => schema.GetSimpleDataTypeFromPagination(),
-            SchemaType.SimpleTypeCustomPagedList => schema.GetSimpleDataTypeFromCustomPagination(),
-            _ => null,
-        };
     }
 }

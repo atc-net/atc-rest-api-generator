@@ -130,6 +130,23 @@ public static class OpenApiSchemaExtensions
         return $"{customPaginationTypeName}<{itemTypeName}>";
     }
 
+    public static string? GetCollectionDataType(
+        this OpenApiSchema schema)
+    {
+        if (schema.IsArray())
+        {
+            return NameConstants.List;
+        }
+
+        if (schema.IsTypePagination() ||
+            schema.IsTypeCustomPagination())
+        {
+            return NameConstants.Pagination + ContentGeneratorConstants.Result;
+        }
+
+        return null;
+    }
+
     public static bool IsModelOfTypeArray(
         this OpenApiSchema apiSchema,
         IDictionary<string, OpenApiSchema> modelSchemas)

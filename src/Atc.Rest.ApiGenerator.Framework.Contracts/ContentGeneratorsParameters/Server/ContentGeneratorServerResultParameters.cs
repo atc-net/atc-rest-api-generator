@@ -9,17 +9,9 @@ public record ContentGeneratorServerResultParameters(
     ContentGeneratorServerResultImplicitOperatorParameters? ImplicitOperatorParameters);
 
 public record ContentGeneratorServerResultMethodParameters(
-    HttpStatusCode HttpStatusCode,
-    SchemaType SchemaType,
-    bool UsesProblemDetails,
-    string? ModelName,
     CodeDocumentationTags DocumentationTags,
-    bool? UsesBinaryResponse,
-    string? SimpleDataTypeName,
-    string? GenericDataTypeName);
+    ApiOperationResponseModel ResponseModel);
 
 public record ContentGeneratorServerResultImplicitOperatorParameters(
-    SchemaType SchemaType,
-    string? ModelName,
-    string? SimpleDataTypeName,
-    string? GenericDataTypeName);
+    string? CollectionDataType,
+    string? DataType);

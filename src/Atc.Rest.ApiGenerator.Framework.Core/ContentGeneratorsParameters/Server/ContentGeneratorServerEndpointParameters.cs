@@ -1,4 +1,4 @@
-namespace Atc.Rest.ApiGenerator.Framework.Minimal.ContentGeneratorsParameters.Server;
+namespace Atc.Rest.ApiGenerator.Framework.Core.ContentGeneratorsParameters.Server;
 
 public record ContentGeneratorServerEndpointParameters(
     string Namespace,
@@ -6,6 +6,7 @@ public record ContentGeneratorServerEndpointParameters(
     string RouteBase,
     CodeDocumentationTags DocumentationTags,
     string EndpointName,
+    ApiAuthorizeModel? Authorization,
     IList<ContentGeneratorServerEndpointMethodParameters> MethodParameters);
 
 public record ContentGeneratorServerEndpointMethodParameters(
@@ -17,10 +18,5 @@ public record ContentGeneratorServerEndpointMethodParameters(
     string? ParameterTypeName,
     long? MultipartBodyLengthLimit,
     string ResultName,
-    List<(HttpStatusCode HttpStatusCode, string ReturnType)> HttpResults,
-    bool? ApiPathUseAuthorization,
-    IEnumerable<string> ApiPathAuthorizationRoles,
-    IEnumerable<string> ApiPathAuthenticationSchemes,
-    bool? ApiOperationUseAuthorization,
-    IEnumerable<string> ApiOperationAuthorizationRoles,
-    IEnumerable<string> ApiOperationAuthenticationSchemes);
+    ApiAuthorizeModel? Authorization,
+    IEnumerable<ApiOperationResponseModel> ResponseModels);

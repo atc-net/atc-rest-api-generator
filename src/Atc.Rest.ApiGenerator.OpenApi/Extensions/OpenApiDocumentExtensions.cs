@@ -6,6 +6,27 @@ namespace Atc.Rest.ApiGenerator.OpenApi.Extensions;
 
 public static class OpenApiDocumentExtensions
 {
+    public static IEnumerable<ApiOperationResponseModel> ExtractApiOperationResponseModels(
+        this OpenApiDocument openApiDocument)
+    {
+        var result = new List<ApiOperationResponseModel>();
+
+        foreach (var apiPath in openApiDocument.Paths)
+        {
+            var apiGroupName = apiPath.GetApiGroupName();
+
+            foreach (var apiOperation in apiPath.Value.Operations)
+            {
+                foreach (var responseModel in apiOperation.Value.ExtractApiOperationResponseModels())
+                {
+                    result.Add(responseModel with { GroupName = apiGroupName });
+                }
+            }
+        }
+
+        return result;
+    }
+
     public static bool IsSpecificationUsingAuthorization(
         this OpenApiDocument openApiDocument)
     {

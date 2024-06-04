@@ -6,17 +6,20 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
     private readonly GeneratedCodeAttributeGenerator codeAttributeGenerator;
     private readonly CodeDocumentationTagsGenerator codeDocumentationTagsGenerator;
     private readonly ContentGeneratorServerResultParameters parameters;
+    private readonly bool useProblemDetailsAsDefaultResponseBody;
 
     public ContentGeneratorServerResult(
         GeneratedCodeHeaderGenerator codeHeaderGenerator,
         GeneratedCodeAttributeGenerator codeAttributeGenerator,
         CodeDocumentationTagsGenerator codeDocumentationTagsGenerator,
-        ContentGeneratorServerResultParameters parameters)
+        ContentGeneratorServerResultParameters parameters,
+        bool useProblemDetailsAsDefaultResponseBody)
     {
         this.codeHeaderGenerator = codeHeaderGenerator;
         this.codeAttributeGenerator = codeAttributeGenerator;
         this.codeDocumentationTagsGenerator = codeDocumentationTagsGenerator;
         this.parameters = parameters;
+        this.useProblemDetailsAsDefaultResponseBody = useProblemDetailsAsDefaultResponseBody;
     }
 
     public string Generate()
@@ -74,13 +77,225 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
             sb.Append(codeDocumentationTagsGenerator.GenerateTags(4, item.DocumentationTags));
         }
 
-        if (item.HttpStatusCode == HttpStatusCode.OK)
+        if (item.ResponseModel.StatusCode == HttpStatusCode.OK)
         {
             AppendMethodContentStatusCodeOk(sb, item, resultName);
         }
         else
         {
-            AppendMethodContentForOtherStatusCodesThenOk(sb, item, resultName);
+            if (useProblemDetailsAsDefaultResponseBody)
+            {
+                AppendMethodContentForOtherStatusCodesThenOkWithProblemDetails(sb, item, resultName);
+            }
+            else
+            {
+                AppendMethodContentForOtherStatusCodesThenOkWithoutProblemDetails(sb, item, resultName);
+            }
+        }
+    }
+
+    private void AppendMethodContentStatusCodeOk(
+        StringBuilder sb,
+        ContentGeneratorServerResultMethodParameters item,
+        string resultName)
+    {
+        // TODO: byte[] bytes, string fileName
+
+        if (string.IsNullOrEmpty(item.ResponseModel.DataType))
+        {
+            sb.AppendLine(4, $"public static {resultName} Ok(string? message = null)");
+            sb.AppendLine(8, "=> new(TypedResults.Ok(message));");
+            return;
+        }
+
+        sb.AppendLine(
+                4,
+                string.IsNullOrEmpty(item.ResponseModel.CollectionDataType)
+                    ? $"public static {resultName} Ok({item.ResponseModel.DataType} result)"
+                    : $"public static {resultName} Ok({item.ResponseModel.CollectionDataType}<{item.ResponseModel.DataType}> result)");
+        sb.AppendLine(8, "=> new(TypedResults.Ok(result));");
+    }
+
+    private void AppendMethodContentForOtherStatusCodesThenOkWithProblemDetails(
+        StringBuilder sb,
+        ContentGeneratorServerResultMethodParameters item,
+        string resultName)
+    {
+        switch (item.ResponseModel.StatusCode)
+        {
+            case HttpStatusCode.OK:
+                throw new InvalidOperationException("This should not happen.");
+            case HttpStatusCode.BadRequest:
+                sb.AppendLine(4, $"public static {resultName} {item.ResponseModel.StatusCode.ToNormalizedString()}(string? message = null, IDictionary<string, string[]>? errors = null)");
+                sb.AppendLine(8, $"=> new(Results.ValidationProblem(errors ?? new Dictionary<string, string[]>(), message, null, StatusCodes.{item.ResponseModel.StatusCode.ToStatusCodesConstant()}));");
+                break;
+            case HttpStatusCode.Accepted:
+            case HttpStatusCode.Created:
+                sb.AppendLine(4, $"public static {resultName} {item.ResponseModel.StatusCode.ToNormalizedString()}(string? uri = null)");
+                sb.AppendLine(8, $"=> new(Results.Problem(uri, null, StatusCodes.{item.ResponseModel.StatusCode.ToStatusCodesConstant()}));");
+                break;
+            case HttpStatusCode.NotFound:
+            case HttpStatusCode.Conflict:
+                sb.AppendLine(4, $"public static {resultName} {item.ResponseModel.StatusCode.ToNormalizedString()}(string? message = null)");
+                sb.AppendLine(8, $"=> new(Results.Problem(message, null, StatusCodes.{item.ResponseModel.StatusCode.ToStatusCodesConstant()}));");
+                break;
+            case HttpStatusCode.EarlyHints:
+                sb.AppendLine(4, $"public static {resultName} {item.ResponseModel.StatusCode.ToNormalizedString()}()");
+                sb.AppendLine(8, $"=> new(Results.Problem(null, null, {(int)HttpStatusCode.EarlyHints}));");
+                break;
+            case HttpStatusCode.Continue:
+            case HttpStatusCode.SwitchingProtocols:
+            case HttpStatusCode.Processing:
+            case HttpStatusCode.NonAuthoritativeInformation:
+            case HttpStatusCode.NoContent:
+            case HttpStatusCode.ResetContent:
+            case HttpStatusCode.PartialContent:
+            case HttpStatusCode.MultiStatus:
+            case HttpStatusCode.AlreadyReported:
+            case HttpStatusCode.IMUsed:
+            case HttpStatusCode.MultipleChoices:
+            case HttpStatusCode.MovedPermanently:
+            case HttpStatusCode.Found:
+            case HttpStatusCode.SeeOther:
+            case HttpStatusCode.NotModified:
+            case HttpStatusCode.UseProxy:
+            case HttpStatusCode.Unused:
+            case HttpStatusCode.RedirectKeepVerb:
+            case HttpStatusCode.PermanentRedirect:
+            case HttpStatusCode.Unauthorized:
+            case HttpStatusCode.PaymentRequired:
+            case HttpStatusCode.Forbidden:
+            case HttpStatusCode.MethodNotAllowed:
+            case HttpStatusCode.NotAcceptable:
+            case HttpStatusCode.ProxyAuthenticationRequired:
+            case HttpStatusCode.RequestTimeout:
+            case HttpStatusCode.Gone:
+            case HttpStatusCode.LengthRequired:
+            case HttpStatusCode.PreconditionFailed:
+            case HttpStatusCode.RequestEntityTooLarge:
+            case HttpStatusCode.RequestUriTooLong:
+            case HttpStatusCode.UnsupportedMediaType:
+            case HttpStatusCode.RequestedRangeNotSatisfiable:
+            case HttpStatusCode.ExpectationFailed:
+            case HttpStatusCode.MisdirectedRequest:
+            case HttpStatusCode.UnprocessableEntity:
+            case HttpStatusCode.Locked:
+            case HttpStatusCode.FailedDependency:
+            case HttpStatusCode.UpgradeRequired:
+            case HttpStatusCode.PreconditionRequired:
+            case HttpStatusCode.TooManyRequests:
+            case HttpStatusCode.RequestHeaderFieldsTooLarge:
+            case HttpStatusCode.UnavailableForLegalReasons:
+            case HttpStatusCode.InternalServerError:
+            case HttpStatusCode.NotImplemented:
+            case HttpStatusCode.BadGateway:
+            case HttpStatusCode.ServiceUnavailable:
+            case HttpStatusCode.GatewayTimeout:
+            case HttpStatusCode.HttpVersionNotSupported:
+            case HttpStatusCode.VariantAlsoNegotiates:
+            case HttpStatusCode.InsufficientStorage:
+            case HttpStatusCode.LoopDetected:
+            case HttpStatusCode.NotExtended:
+            case HttpStatusCode.NetworkAuthenticationRequired:
+                sb.AppendLine(4, $"public static {resultName} {item.ResponseModel.StatusCode.ToNormalizedString()}()");
+                sb.AppendLine(8, $"=> new(Results.Problem(null, null, StatusCodes.{item.ResponseModel.StatusCode.ToStatusCodesConstant()}));");
+                break;
+            default:
+                sb.AppendLine(4, $"// TODO: Not Implemented for {item.ResponseModel.StatusCode}.");
+                break;
+        }
+    }
+
+    private void AppendMethodContentForOtherStatusCodesThenOkWithoutProblemDetails(
+        StringBuilder sb,
+        ContentGeneratorServerResultMethodParameters item,
+        string resultName)
+    {
+        switch (item.ResponseModel.StatusCode)
+        {
+            case HttpStatusCode.OK:
+                throw new InvalidOperationException("This should not happen.");
+            case HttpStatusCode.Forbidden:
+                sb.AppendLine(4, $"public static {resultName} {item.ResponseModel.StatusCode.ToNormalizedString()}()");
+                sb.AppendLine(8, "=> new(TypedResults.Forbid());");
+                break;
+            case HttpStatusCode.NoContent:
+            case HttpStatusCode.Unauthorized:
+                sb.AppendLine(4, $"public static {resultName} {item.ResponseModel.StatusCode.ToNormalizedString()}()");
+                sb.AppendLine(8, $"=> new(TypedResults.{item.ResponseModel.StatusCode}());");
+                break;
+            case HttpStatusCode.Accepted:
+            case HttpStatusCode.Created:
+                sb.AppendLine(4, $"public static {resultName} {item.ResponseModel.StatusCode.ToNormalizedString()}(string? uri = null)");
+                sb.AppendLine(8, $"=> new(TypedResults.{item.ResponseModel.StatusCode}(uri));");
+                break;
+            case HttpStatusCode.BadRequest:
+            case HttpStatusCode.NotFound:
+            case HttpStatusCode.Conflict:
+                sb.AppendLine(4, $"public static {resultName} {item.ResponseModel.StatusCode.ToNormalizedString()}(string? message = null)");
+                sb.AppendLine(8, $"=> new(TypedResults.{item.ResponseModel.StatusCode}(message));");
+                break;
+            case HttpStatusCode.EarlyHints:
+                sb.AppendLine(4, $"public static {resultName} {item.ResponseModel.StatusCode.ToNormalizedString()}()");
+                sb.AppendLine(8, $"=> new(Results.StatusCode({(int)HttpStatusCode.EarlyHints}));");
+                break;
+            case HttpStatusCode.Continue:
+            case HttpStatusCode.SwitchingProtocols:
+            case HttpStatusCode.Processing:
+            case HttpStatusCode.NonAuthoritativeInformation:
+            case HttpStatusCode.ResetContent:
+            case HttpStatusCode.PartialContent:
+            case HttpStatusCode.MultiStatus:
+            case HttpStatusCode.AlreadyReported:
+            case HttpStatusCode.IMUsed:
+            case HttpStatusCode.MultipleChoices:
+            case HttpStatusCode.MovedPermanently:
+            case HttpStatusCode.Found:
+            case HttpStatusCode.SeeOther:
+            case HttpStatusCode.NotModified:
+            case HttpStatusCode.UseProxy:
+            case HttpStatusCode.Unused:
+            case HttpStatusCode.RedirectKeepVerb:
+            case HttpStatusCode.PermanentRedirect:
+            case HttpStatusCode.PaymentRequired:
+            case HttpStatusCode.MethodNotAllowed:
+            case HttpStatusCode.NotAcceptable:
+            case HttpStatusCode.ProxyAuthenticationRequired:
+            case HttpStatusCode.RequestTimeout:
+            case HttpStatusCode.Gone:
+            case HttpStatusCode.LengthRequired:
+            case HttpStatusCode.PreconditionFailed:
+            case HttpStatusCode.RequestEntityTooLarge:
+            case HttpStatusCode.RequestUriTooLong:
+            case HttpStatusCode.UnsupportedMediaType:
+            case HttpStatusCode.RequestedRangeNotSatisfiable:
+            case HttpStatusCode.ExpectationFailed:
+            case HttpStatusCode.MisdirectedRequest:
+            case HttpStatusCode.UnprocessableEntity:
+            case HttpStatusCode.Locked:
+            case HttpStatusCode.FailedDependency:
+            case HttpStatusCode.UpgradeRequired:
+            case HttpStatusCode.PreconditionRequired:
+            case HttpStatusCode.TooManyRequests:
+            case HttpStatusCode.RequestHeaderFieldsTooLarge:
+            case HttpStatusCode.UnavailableForLegalReasons:
+            case HttpStatusCode.InternalServerError:
+            case HttpStatusCode.NotImplemented:
+            case HttpStatusCode.BadGateway:
+            case HttpStatusCode.ServiceUnavailable:
+            case HttpStatusCode.GatewayTimeout:
+            case HttpStatusCode.HttpVersionNotSupported:
+            case HttpStatusCode.VariantAlsoNegotiates:
+            case HttpStatusCode.InsufficientStorage:
+            case HttpStatusCode.LoopDetected:
+            case HttpStatusCode.NotExtended:
+            case HttpStatusCode.NetworkAuthenticationRequired:
+                sb.AppendLine(4, $"public static {resultName} {item.ResponseModel.StatusCode.ToNormalizedString()}()");
+                sb.AppendLine(8, $"=> new(Results.StatusCode(StatusCodes.{item.ResponseModel.StatusCode.ToStatusCodesConstant()}));");
+                break;
+            default:
+                sb.AppendLine(4, $"// TODO: Not Implemented for {item.ResponseModel.StatusCode}.");
+                break;
         }
     }
 
@@ -93,134 +308,11 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
             return;
         }
 
-        if (item.ImplicitOperatorParameters.SchemaType == SchemaType.SimpleType &&
-            "object".Equals(item.ImplicitOperatorParameters.SimpleDataTypeName, StringComparison.Ordinal))
-        {
-            return;
-        }
-
         sb.AppendLine();
         sb.AppendLine(4, "/// <summary>");
         sb.AppendLine(4, $"/// Performs an implicit conversion from {item.ResultName} to IResult.");
         sb.AppendLine(4, "/// </summary>");
         sb.AppendLine(4, $"public static IResult ToIResult({item.ResultName} result)");
         sb.AppendLine(8, "=> result.Result;");
-    }
-
-    private static void AppendMethodContentStatusCodeOk(
-        StringBuilder sb,
-        ContentGeneratorServerResultMethodParameters item,
-        string resultName)
-    {
-        if (item.UsesBinaryResponse.HasValue &&
-            item.UsesBinaryResponse.Value)
-        {
-            AppendMethodContentStatusCodeOkForBinary(sb, resultName);
-        }
-        else
-        {
-            if (string.IsNullOrEmpty(item.ModelName))
-            {
-                switch (item.SchemaType)
-                {
-                    case SchemaType.None:
-                        sb.AppendLine(4, $"public static {resultName} Ok(string? message = null)");
-                        sb.AppendLine(8, "=> new(TypedResults.Ok(message));");
-                        break;
-                    case SchemaType.SimpleType:
-                        sb.AppendLine(4, $"public static {resultName} Ok({item.SimpleDataTypeName} response)");
-                        sb.AppendLine(8, "=> new(TypedResults.Ok(response));");
-                        break;
-                    case SchemaType.SimpleTypeList:
-                        sb.AppendLine(4, $"public static {resultName} Ok(IEnumerable<{item.SimpleDataTypeName}> result)");
-                        sb.AppendLine(8, $"=> new(TypedResults.Ok(result ?? Enumerable.Empty<{item.SimpleDataTypeName}>()));");
-                        break;
-                    case SchemaType.SimpleTypePagedList:
-                        sb.AppendLine(4, $"public static {resultName} Ok(Pagination<{item.SimpleDataTypeName}> result)");
-                        sb.AppendLine(8, "=> new(TypedResults.Ok(result));");
-                        break;
-                    case SchemaType.SimpleTypeCustomPagedList:
-                        sb.AppendLine(4, $"public static {resultName} Ok({item.GenericDataTypeName}<{item.SimpleDataTypeName}> result)");
-                        sb.AppendLine(8, "=> new(TypedResults.Ok(result));");
-                        break;
-                    default:
-                        sb.AppendLine("//// TODO: This is unexpected when we do not have a model-name!"); // TODO: Remove eventually
-                        break;
-                }
-            }
-            else
-            {
-                switch (item.SchemaType)
-                {
-                    case SchemaType.ComplexType:
-                        sb.AppendLine(4, $"public static {resultName} Ok({item.ModelName} result)");
-                        sb.AppendLine(8, "=> new(TypedResults.Ok(result));");
-                        break;
-                    case SchemaType.ComplexTypeList:
-                        sb.AppendLine(4, $"public static {resultName} Ok(IEnumerable<{item.ModelName}> result)");
-                        sb.AppendLine(8, "=> new(TypedResults.Ok(result));");
-                        break;
-                    case SchemaType.ComplexTypePagedList:
-                        sb.AppendLine(4, $"public static {resultName} Ok(Pagination<{item.ModelName}> result)");
-                        sb.AppendLine(8, "=> new(TypedResults.Ok(result));");
-                        break;
-                    case SchemaType.ComplexTypeCustomPagedList:
-                        sb.AppendLine(4, $"public static {resultName} Ok({item.GenericDataTypeName}<{item.ModelName}> result)");
-                        sb.AppendLine(8, "=> new(TypedResults.Ok(result));");
-                        break;
-                    default:
-                        sb.AppendLine("//// TODO: This is unexpected when we have a model-name!"); // TODO: Remove eventually
-                        break;
-                }
-            }
-        }
-    }
-
-    private static void AppendMethodContentStatusCodeOkForBinary(
-        StringBuilder sb,
-        string resultName)
-    {
-        sb.AppendLine(4, $"public static {resultName} Ok(byte[] bytes, string fileName)");
-        sb.AppendLine(8, $"=> new {resultName}(HEST.GRIS(bytes, fileName));");
-    }
-
-    private void AppendMethodContentForOtherStatusCodesThenOk(
-        StringBuilder sb,
-        ContentGeneratorServerResultMethodParameters item,
-        string resultName)
-    {
-        switch (item.HttpStatusCode)
-        {
-            case HttpStatusCode.NoContent:
-            case HttpStatusCode.Unauthorized:
-                sb.AppendLine(4, $"public static {resultName} {item.HttpStatusCode}()");
-                sb.AppendLine(8, $"=> new(TypedResults.{item.HttpStatusCode}());");
-                break;
-            case HttpStatusCode.Created:
-            case HttpStatusCode.Accepted:
-            case HttpStatusCode.BadRequest:
-            case HttpStatusCode.NotFound:
-            case HttpStatusCode.Conflict:
-                sb.AppendLine(4, $"public static {resultName} {item.HttpStatusCode}(string? message = null)");
-                sb.AppendLine(8, $"=> new(TypedResults.{item.HttpStatusCode}(message));");
-                break;
-            case HttpStatusCode.Forbidden:
-                sb.AppendLine(4, $"public static {resultName} Forbid()");
-                sb.AppendLine(8, "=> new(TypedResults.Forbid());");
-                break;
-            case HttpStatusCode.NotModified:
-            case HttpStatusCode.MethodNotAllowed:
-            case HttpStatusCode.InternalServerError:
-            case HttpStatusCode.NotImplemented:
-            case HttpStatusCode.BadGateway:
-            case HttpStatusCode.ServiceUnavailable:
-            case HttpStatusCode.GatewayTimeout:
-                sb.AppendLine(4, $"public static {resultName} {item.HttpStatusCode}(string? message = null)");
-                sb.AppendLine(8, $"=> new(TypedResults.Problem(new ProblemDetails {{ Detail = message, Status = (int)HttpStatusCode.{item.HttpStatusCode} }}));");
-                break;
-            default:
-                sb.AppendLine($"// TODO: Not Implemented for {item.HttpStatusCode}.");
-                break;
-        }
     }
 }

@@ -13,6 +13,7 @@ public class ServerApiGenerator : IServerApiGenerator
     private readonly string routeBase;
     private readonly string codeGeneratorContentHeader;
     private readonly AttributeParameters codeGeneratorAttribute;
+    private readonly bool useProblemDetailsAsDefaultResponseBody;
 
     public ServerApiGenerator(
         ILoggerFactory loggerFactory,
@@ -22,7 +23,8 @@ public class ServerApiGenerator : IServerApiGenerator
         DirectoryInfo projectPath,
         OpenApiDocument openApiDocument,
         IList<ApiOperation> operationSchemaMappings,
-        string routeBase)
+        string routeBase,
+        bool useProblemDetailsAsDefaultResponseBody)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
         ArgumentNullException.ThrowIfNull(nugetPackageReferenceProvider);
@@ -41,6 +43,7 @@ public class ServerApiGenerator : IServerApiGenerator
         this.openApiDocument = openApiDocument;
         this.operationSchemaMappings = operationSchemaMappings;
         this.routeBase = routeBase;
+        this.useProblemDetailsAsDefaultResponseBody = useProblemDetailsAsDefaultResponseBody;
 
         codeGeneratorContentHeader = GeneratedCodeHeaderGeneratorFactory
             .Create(apiGeneratorVersion)
@@ -48,8 +51,6 @@ public class ServerApiGenerator : IServerApiGenerator
         codeGeneratorAttribute = AttributeParametersFactory
             .CreateGeneratedCode(apiGeneratorVersion);
     }
-
-    public bool UseProblemDetailsAsDefaultBody { get; set; }
 
     public async Task ScaffoldProjectFile()
     {
@@ -222,14 +223,14 @@ public class ServerApiGenerator : IServerApiGenerator
             {
                 var resultParameters = ContentGeneratorServerResultParametersFactory.Create(
                     fullNamespace,
-                    openApiOperation.Value,
-                    UseProblemDetailsAsDefaultBody);
+                    openApiOperation.Value);
 
                 var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerResult(
                     new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
                     new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
                     new CodeDocumentationTagsGenerator(),
-                    resultParameters);
+                    resultParameters,
+                    useProblemDetailsAsDefaultResponseBody);
 
                 var content = contentGenerator.Generate();
 
@@ -280,20 +281,21 @@ public class ServerApiGenerator : IServerApiGenerator
     {
         foreach (var apiGroupName in openApiDocument.GetApiGroupNames())
         {
-            var controllerParameters = ContentGeneratorServerControllerParametersFactory.Create(
+            var controllerParameters = ContentGeneratorServerEndpointParametersFactory.Create(
                 operationSchemaMappings,
                 projectName,
-                UseProblemDetailsAsDefaultBody,
                 $"{projectName}.{ContentGeneratorConstants.Endpoints}",
                 apiGroupName,
                 GetRouteByApiGroupName(apiGroupName),
+                ContentGeneratorConstants.Controller,
                 openApiDocument);
 
             var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerController(
                 new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
                 new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
                 new CodeDocumentationTagsGenerator(),
-                controllerParameters);
+                controllerParameters,
+                useProblemDetailsAsDefaultResponseBody);
 
             var content = contentGenerator.Generate();
 
@@ -326,7 +328,8 @@ public class ServerApiGenerator : IServerApiGenerator
             "Atc.Rest.Results",
         };
 
-        if (openApiDocument.IsUsingRequiredForSystemNet(UseProblemDetailsAsDefaultBody))
+        //// TODO: Check for any use ??
+        //if (openApiDocument.IsUsingRequiredForSystemNet(useProblemDetailsAsDefaultResponseBody))
         {
             requiredUsings.Add("System.Net");
         }
