@@ -162,9 +162,11 @@ public sealed class ContentGeneratorServerController : IContentGenerator
         var responseModels = item.ResponseModels
             .AppendUnauthorizedIfNeeded(item.Authorization)
             .AppendForbiddenIfNeeded(item.Authorization)
-            .AppendBadRequestIfNeeded(item.ParameterTypeName);
+            .AppendBadRequestIfNeeded(item.ParameterTypeName)
+            .OrderBy(x => x.StatusCode)
+            .ToList();
 
-        foreach (var responseModel in responseModels.OrderBy(x => x.StatusCode))
+        foreach (var responseModel in responseModels)
         {
             switch (responseModel.StatusCode)
             {
@@ -263,9 +265,11 @@ public sealed class ContentGeneratorServerController : IContentGenerator
         var responseModels = item.ResponseModels
             .AppendUnauthorizedIfNeeded(item.Authorization)
             .AppendForbiddenIfNeeded(item.Authorization)
-            .AppendBadRequestIfNeeded(item.ParameterTypeName);
+            .AppendBadRequestIfNeeded(item.ParameterTypeName)
+            .OrderBy(x => x.StatusCode)
+            .ToList();
 
-        foreach (var responseModel in responseModels.OrderBy(x => x.StatusCode))
+        foreach (var responseModel in responseModels)
         {
             switch (responseModel.StatusCode)
             {

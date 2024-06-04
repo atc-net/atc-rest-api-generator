@@ -318,6 +318,11 @@ public class ServerApiGenerator : IServerApiGenerator
             requiredUsings.Add("Atc.Rest.Results");
         }
 
+        // TODO: if (openApiDocument.IsUsingRequiredForMicrosoftAspNetCoreAuthorization())
+        {
+            requiredUsings.Add("Microsoft.AspNetCore.Authorization");
+        }
+
         //// TODO: Check for any use ??
         //requiredUsings.Add("System.Net");
 
