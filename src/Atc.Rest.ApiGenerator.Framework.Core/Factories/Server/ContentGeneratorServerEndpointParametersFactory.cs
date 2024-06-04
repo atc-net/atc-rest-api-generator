@@ -28,6 +28,7 @@ public static class ContentGeneratorServerEndpointParametersFactory
                     OperationTypeRepresentation: apiOperation.Key.ToString(),
                     Name: operationName,
                     DocumentationTags: apiOperation.Value.ExtractDocumentationTags(),
+                    Description: apiOperation.Value.Description,
                     RouteSuffix: GetRouteSuffix(apiPath),
                     InterfaceName: $"I{operationName}{ContentGeneratorConstants.Handler}",
                     ParameterTypeName: GetParameterTypeName(operationName, apiPathData, apiOperation.Value),

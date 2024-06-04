@@ -13,6 +13,7 @@ public record ContentGeneratorServerEndpointMethodParameters(
     string OperationTypeRepresentation,
     string Name,
     CodeDocumentationTags DocumentationTags,
+    string? Description,
     string? RouteSuffix,
     string InterfaceName,
     string? ParameterTypeName,

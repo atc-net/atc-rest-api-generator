@@ -97,14 +97,6 @@ public sealed class ContentGeneratorServerEndpoints : IContentGenerator
         string routeGroupBuilderName,
         ContentGeneratorServerEndpointMethodParameters item)
     {
-        var description = item.DocumentationTags.Summary
-            .Replace("Description: ", string.Empty, StringComparison.Ordinal)
-            .Replace($"Operation: {item.Name}.", string.Empty, StringComparison.Ordinal)
-            .Replace(Environment.NewLine, string.Empty, StringComparison.Ordinal)
-            .Trim();
-
-        var summary = item.Name;
-
         sb.AppendLine(8, routeGroupBuilderName);
         sb.AppendLine(
             12,
@@ -112,8 +104,34 @@ public sealed class ContentGeneratorServerEndpoints : IContentGenerator
                 ? $".Map{item.OperationTypeRepresentation}(\"/\", {item.Name})"
                 : $".Map{item.OperationTypeRepresentation}(\"{item.RouteSuffix}\", {item.Name})");
         sb.AppendLine(12, $".WithName(\"{item.Name}\")");
-        sb.AppendLine(12, $".WithDescription(\"{description}\")");
-        sb.AppendLine(12, $".WithSummary(\"{summary}\")");
+
+        if (!string.IsNullOrEmpty(item.DocumentationTags.Summary))
+        {
+            var summary = item.DocumentationTags.Summary;
+            var indexOfOperation = summary.IndexOf("Operation: ", StringComparison.Ordinal);
+            if (indexOfOperation > 0)
+            {
+                summary = summary[..indexOfOperation];
+            }
+
+            summary = summary
+                .Replace("Description: ", string.Empty, StringComparison.Ordinal)
+                .Replace(Environment.NewLine, string.Empty, StringComparison.Ordinal)
+                .Trim()
+                .EnsureEndsWithDot();
+
+            sb.AppendLine(12, $".WithSummary(\"{summary.EnsureEndsWithDot()}\")");
+        }
+
+        if (!string.IsNullOrEmpty(item.Description))
+        {
+            var description = item.Description
+                .Replace(Environment.NewLine, string.Empty, StringComparison.Ordinal)
+                .Trim()
+                .EnsureEndsWithDot();
+
+            sb.AppendLine(12, $".WithDescription(\"{description}\")");
+        }
 
         if (!string.IsNullOrEmpty(item.ParameterTypeName))
         {
