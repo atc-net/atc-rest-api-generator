@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc" Version="2.0.472" />
+    <PackageReference Include="Atc" Version="2.0.478" />
   </ItemGroup>
 
   <ItemGroup>

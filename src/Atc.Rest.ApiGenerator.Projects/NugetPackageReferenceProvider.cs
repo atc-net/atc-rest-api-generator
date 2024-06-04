@@ -23,14 +23,14 @@ public class NugetPackageReferenceProvider(
         { "FluentValidation.AspNetCore", "11.3.0" },
         { "Microsoft.ApplicationInsights.AspNetCore", "2.22.0" },
         { "Microsoft.AspNetCore.Authentication.JwtBearer", "8.0.4" },
-        { "Microsoft.AspNetCore.OpenApi", "8.0.4" },
-        { "Microsoft.AspNetCore.Mvc.Testing", "8.0.4" },
+        { "Microsoft.AspNetCore.OpenApi", "8.0.6" },
+        { "Microsoft.AspNetCore.Mvc.Testing", "8.0.6" },
         { "Microsoft.NETCore.Platforms", "7.0.4" },
-        { "Microsoft.NET.Test.Sdk", "17.9.0" },
+        { "Microsoft.NET.Test.Sdk", "17.10.0" },
         { "NSubstitute", "5.1.0" },
-        { "Swashbuckle.AspNetCore", "6.5.0" },
-        { "xunit", "2.8.0" },
-        { "xunit.runner.visualstudio", "2.8.0" },
+        { "Swashbuckle.AspNetCore", "6.6.2" },
+        { "xunit", "2.8.1" },
+        { "xunit.runner.visualstudio", "2.8.1" },
     };
 
     public async Task<Version> GetAtcApiGeneratorVersion()

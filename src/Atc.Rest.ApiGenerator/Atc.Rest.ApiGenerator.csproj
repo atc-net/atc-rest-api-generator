@@ -8,12 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc" Version="2.0.472" />
-    <PackageReference Include="Atc.CodeAnalysis.CSharp" Version="2.0.472" />
-    <PackageReference Include="Atc.Console.Spectre" Version="2.0.472" />
-    <PackageReference Include="Atc.DotNet" Version="2.0.472" />
-    <PackageReference Include="Atc.OpenApi" Version="2.0.472" />
-    <PackageReference Include="Atc.Rest.Client" Version="1.0.55" />
+    <PackageReference Include="Atc" Version="2.0.478" />
+    <PackageReference Include="Atc.CodeAnalysis.CSharp" Version="2.0.478" />
+    <PackageReference Include="Atc.Console.Spectre" Version="2.0.478" />
+    <PackageReference Include="Atc.DotNet" Version="2.0.478" />
+    <PackageReference Include="Atc.OpenApi" Version="2.0.478" />
+    <PackageReference Include="Atc.Rest.Client" Version="1.0.69" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.2" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
     <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.6.14" />
