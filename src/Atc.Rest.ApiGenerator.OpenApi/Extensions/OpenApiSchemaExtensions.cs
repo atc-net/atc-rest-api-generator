@@ -141,7 +141,7 @@ public static class OpenApiSchemaExtensions
         if (schema.IsTypePagination() ||
             schema.IsTypeCustomPagination())
         {
-            return NameConstants.Pagination + ContentGeneratorConstants.Result;
+            return NameConstants.Pagination;
         }
 
         return null;

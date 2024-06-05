@@ -22,7 +22,9 @@ public static class ContentGeneratorServerEndpointParametersFactory
             {
                 var operationName = apiOperation.Value.GetOperationName();
                 var endpointAuthorization = apiOperation.Value.ExtractApiOperationAuthorization(apiPathData);
-                var responseModels = apiOperation.Value.ExtractApiOperationResponseModels();
+                var responseModels = apiOperation.Value
+                    .ExtractApiOperationResponseModels()
+                    .AdjustNamespacesIfNeeded(operationSchemaMappings);
 
                 methodParameters.Add(new ContentGeneratorServerEndpointMethodParameters(
                     OperationTypeRepresentation: apiOperation.Key.ToString(),

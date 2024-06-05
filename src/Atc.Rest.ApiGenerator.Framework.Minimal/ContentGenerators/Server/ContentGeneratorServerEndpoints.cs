@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace Atc.Rest.ApiGenerator.Framework.Minimal.ContentGenerators.Server;
 
 public sealed class ContentGeneratorServerEndpoints : IContentGenerator
@@ -197,19 +199,7 @@ public sealed class ContentGeneratorServerEndpoints : IContentGenerator
             switch (responseModel.StatusCode)
             {
                 case HttpStatusCode.OK:
-                    if (responseModel.DataType is null)
-                    {
-                        sb.Append(12, ".Produces<string?>()");
-                    }
-                    else
-                    {
-                        sb.Append(
-                            12,
-                            string.IsNullOrEmpty(responseModel.CollectionDataType)
-                                ? $".Produces<{responseModel.DataType}>()"
-                                : $".Produces<{responseModel.CollectionDataType}<{responseModel.DataType}>>()");
-                    }
-
+                    AppendProducesForOk(sb, responseModel);
                     break;
                 case HttpStatusCode.BadRequest:
                     sb.Append(12, ".ProducesValidationProblem()");
@@ -311,19 +301,7 @@ public sealed class ContentGeneratorServerEndpoints : IContentGenerator
             switch (responseModel.StatusCode)
             {
                 case HttpStatusCode.OK:
-                    if (responseModel.DataType is null)
-                    {
-                        sb.Append(12, ".Produces<string?>()");
-                    }
-                    else
-                    {
-                        sb.Append(
-                            12,
-                            string.IsNullOrEmpty(responseModel.CollectionDataType)
-                                ? $".Produces<{responseModel.DataType}>()"
-                                : $".Produces<{responseModel.CollectionDataType}<{responseModel.DataType}>>()");
-                    }
-
+                    AppendProducesForOk(sb, responseModel);
                     break;
                 case HttpStatusCode.Accepted:
                 case HttpStatusCode.Created:
@@ -405,6 +383,31 @@ public sealed class ContentGeneratorServerEndpoints : IContentGenerator
             else
             {
                 sb.AppendLine();
+            }
+        }
+    }
+
+    private static void AppendProducesForOk(
+        StringBuilder sb,
+        ApiOperationResponseModel responseModel)
+    {
+        if (responseModel.DataType is null)
+        {
+            sb.Append(12, ".Produces<string?>()");
+        }
+        else
+        {
+            if (string.IsNullOrEmpty(responseModel.CollectionDataType))
+            {
+                sb.Append(12, $".Produces<{responseModel.DataType}>()");
+            }
+            else
+            {
+                sb.AppendLine(
+                    4,
+                    responseModel.CollectionDataType == "List"
+                        ? $".Produces<IEnumerable<{responseModel.DataType}>>()"
+                        : $".Produces<{responseModel.CollectionDataType}<{responseModel.DataType}>>()");
             }
         }
     }

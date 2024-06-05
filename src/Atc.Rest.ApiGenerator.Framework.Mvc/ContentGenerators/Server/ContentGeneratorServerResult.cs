@@ -97,9 +97,12 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
         ContentGeneratorServerResultMethodParameters item,
         string resultName)
     {
-        // TODO: byte[] bytes, string fileName
-        ////    sb.AppendLine(4, $"public static {resultName} Ok(byte[] bytes, string fileName)");
-        ////    sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateFileContentResult)}(bytes, fileName));");
+        if (item.ResponseModel.MediaType == MediaTypeNames.Application.Octet)
+        {
+            sb.AppendLine(4, $"public static {resultName} Ok(byte[] bytes, string fileName)");
+            sb.AppendLine(8, $"=> new {resultName}(ResultFactory.CreateFileContentResult(bytes, fileName));");
+            return;
+        }
 
         if (string.IsNullOrEmpty(item.ResponseModel.DataType))
         {
@@ -115,7 +118,7 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
             return;
         }
 
-        if (item.ResponseModel.DataType == NameConstants.List)
+        if (item.ResponseModel.CollectionDataType == NameConstants.List)
         {
             sb.AppendLine(4, $"public static {resultName} Ok(IEnumerable<{item.ResponseModel.DataType}> response)");
             sb.AppendLine(8, $"=> new {resultName}(new OkObjectResult(response ?? Enumerable.Empty<{item.ResponseModel.DataType}>()));");
@@ -139,7 +142,7 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
             case HttpStatusCode.Accepted:
             case HttpStatusCode.Created:
                 sb.AppendLine(4, $"public static {resultName} {item.ResponseModel.StatusCode.ToNormalizedString()}(string? uri = null)");
-                sb.AppendLine(8, $"=> new {resultName}(new {item.ResponseModel.StatusCode.ToNormalizedString()}ObjectResult(uri));");
+                sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResult)}({nameof(HttpStatusCode)}.{item.ResponseModel.StatusCode}, uri));");
                 break;
             case HttpStatusCode.BadRequest:
                 sb.AppendLine(4, $"public static {resultName} {item.ResponseModel.StatusCode.ToNormalizedString()}(string? message = null)");
@@ -226,7 +229,7 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
             case HttpStatusCode.Accepted:
             case HttpStatusCode.Created:
                 sb.AppendLine(4, $"public static {resultName} {item.ResponseModel.StatusCode.ToNormalizedString()}(string? uri = null)");
-                sb.AppendLine(8, $"=> new {resultName}(new {item.ResponseModel.StatusCode.ToNormalizedString()}ObjectResult(uri));");
+                sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResult)}({nameof(HttpStatusCode)}.{item.ResponseModel.StatusCode}, uri));");
                 break;
             case HttpStatusCode.BadRequest:
             case HttpStatusCode.NotFound:

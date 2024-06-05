@@ -109,7 +109,7 @@ public sealed class ContentGeneratorServerController : IContentGenerator
         }
     }
 
-    private static void AppendMethodContentAuthorizationIfNeeded(
+    private void AppendMethodContentAuthorizationIfNeeded(
         StringBuilder sb,
         ContentGeneratorServerEndpointMethodParameters item)
     {
@@ -120,7 +120,21 @@ public sealed class ContentGeneratorServerController : IContentGenerator
 
         if (item.Authorization.UseAllowAnonymous)
         {
+            if (parameters.Authorization is not null &&
+                parameters.Authorization.UseAllowAnonymous)
+            {
+                return;
+            }
+
             sb.AppendLine(4, "[AllowAnonymous]");
+            return;
+        }
+
+        if (parameters.Authorization is not null &&
+            !parameters.Authorization.UseAllowAnonymous &&
+            (item.Authorization.Roles is null || item.Authorization.Roles.Count == 0) &&
+            (item.Authorization.AuthenticationSchemes is null || item.Authorization.AuthenticationSchemes.Count == 0))
+        {
             return;
         }
 
@@ -171,19 +185,7 @@ public sealed class ContentGeneratorServerController : IContentGenerator
             switch (responseModel.StatusCode)
             {
                 case HttpStatusCode.OK:
-                    if (responseModel.DataType is null)
-                    {
-                        sb.AppendLine(4, $"[ProducesResponseType(typeof(string), StatusCodes.{responseModel.StatusCode.ToStatusCodesConstant()})]");
-                    }
-                    else
-                    {
-                        sb.AppendLine(
-                            4,
-                            string.IsNullOrEmpty(responseModel.CollectionDataType)
-                                ? $"[ProducesResponseType(typeof({responseModel.DataType}), StatusCodes.{responseModel.StatusCode.ToStatusCodesConstant()})]"
-                                : $"[ProducesResponseType(typeof({responseModel.CollectionDataType}<{responseModel.DataType}>), StatusCodes.{responseModel.StatusCode.ToStatusCodesConstant()})]");
-                    }
-
+                    AppendProducesForOk(sb, responseModel);
                     break;
                 case HttpStatusCode.BadRequest:
                     sb.AppendLine(4, $"[ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.{responseModel.StatusCode.ToStatusCodesConstant()})]");
@@ -274,19 +276,7 @@ public sealed class ContentGeneratorServerController : IContentGenerator
             switch (responseModel.StatusCode)
             {
                 case HttpStatusCode.OK:
-                    if (responseModel.DataType is null)
-                    {
-                        sb.AppendLine(4, $"[ProducesResponseType(typeof(string), StatusCodes.{responseModel.StatusCode.ToStatusCodesConstant()})]");
-                    }
-                    else
-                    {
-                        sb.AppendLine(
-                            4,
-                            string.IsNullOrEmpty(responseModel.CollectionDataType)
-                                ? $"[ProducesResponseType(typeof({responseModel.DataType}), StatusCodes.{responseModel.StatusCode.ToStatusCodesConstant()})]"
-                                : $"[ProducesResponseType(typeof({responseModel.CollectionDataType}<{responseModel.DataType}>), StatusCodes.{responseModel.StatusCode.ToStatusCodesConstant()})]");
-                    }
-
+                    AppendProducesForOk(sb, responseModel);
                     break;
                 case HttpStatusCode.BadRequest:
                     sb.AppendLine(4, $"[ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.{responseModel.StatusCode.ToStatusCodesConstant()})]");
@@ -359,6 +349,35 @@ public sealed class ContentGeneratorServerController : IContentGenerator
                 default:
                     sb.AppendLine(4, $"// TODO: Not Implemented for {responseModel.StatusCode}.");
                     break;
+            }
+        }
+    }
+
+    private static void AppendProducesForOk(
+        StringBuilder sb,
+        ApiOperationResponseModel responseModel)
+    {
+        if (responseModel.MediaType == MediaTypeNames.Application.Octet)
+        {
+            sb.AppendLine(4, $"[ProducesResponseType(typeof(byte[]), StatusCodes.{responseModel.StatusCode.ToStatusCodesConstant()})]");
+        }
+        else if (responseModel.DataType is null)
+        {
+            sb.AppendLine(4, $"[ProducesResponseType(typeof(string), StatusCodes.{responseModel.StatusCode.ToStatusCodesConstant()})]");
+        }
+        else
+        {
+            if (string.IsNullOrEmpty(responseModel.CollectionDataType))
+            {
+                sb.AppendLine(4, $"[ProducesResponseType(typeof({responseModel.DataType}), StatusCodes.{responseModel.StatusCode.ToStatusCodesConstant()})]");
+            }
+            else
+            {
+                sb.AppendLine(
+                    4,
+                    responseModel.CollectionDataType == "List"
+                        ? $"[ProducesResponseType(typeof(IEnumerable<{responseModel.DataType}>), StatusCodes.{responseModel.StatusCode.ToStatusCodesConstant()})]"
+                        : $"[ProducesResponseType(typeof({responseModel.CollectionDataType}<{responseModel.DataType}>), StatusCodes.{responseModel.StatusCode.ToStatusCodesConstant()})]");
             }
         }
     }

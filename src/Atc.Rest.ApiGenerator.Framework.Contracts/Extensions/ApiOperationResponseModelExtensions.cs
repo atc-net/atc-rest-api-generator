@@ -84,4 +84,53 @@ public static class ApiOperationResponseModelExtensions
 
         return models;
     }
+
+    public static IEnumerable<ApiOperationResponseModel> AdjustNamespacesIfNeeded(
+        this IEnumerable<ApiOperationResponseModel> responseModels,
+        IList<ApiOperation> operationSchemaMappings)
+    {
+        if (responseModels is null)
+        {
+            return Array.Empty<ApiOperationResponseModel>();
+        }
+
+        var models = new List<ApiOperationResponseModel>();
+        foreach (var model in responseModels)
+        {
+            if (model.DataType is not null &&
+                IsWellKnownSystemTypeName(model.DataType))
+            {
+                var operationSchemaMapping = operationSchemaMappings.First(x => x.Model.Name == model.DataType);
+                if (operationSchemaMapping.Model.IsShared)
+                {
+                    models.Add(
+                        model with
+                        {
+                            DataType = $"{ContentGeneratorConstants.Contracts}.{model.DataType}",
+                        });
+                }
+                else
+                {
+                    models.Add(
+                        model with
+                        {
+                            DataType = $"{ContentGeneratorConstants.Contracts}.{operationSchemaMapping.ApiGroupName}.{model.DataType}",
+                        });
+                }
+            }
+            else
+            {
+                models.Add(model);
+            }
+        }
+
+        return models;
+    }
+
+    private static bool IsWellKnownSystemTypeName(
+        string value)
+        => value.EndsWith("Task", StringComparison.Ordinal) ||
+           value.EndsWith("Tasks", StringComparison.Ordinal) ||
+           value.EndsWith("Endpoint", StringComparison.Ordinal) ||
+           value.EndsWith("EventArgs", StringComparison.Ordinal);
 }
