@@ -19,13 +19,13 @@ public class PostUserResult : ResultBase
     /// <summary>
     /// 201 - Created response.
     /// </summary>
-    public static PostUserResult Created()
-        => new PostUserResult(new StatusCodeResult(StatusCodes.Status201Created));
+    public static PostUserResult Created(string? uri = null)
+        => new PostUserResult(ResultFactory.CreateContentResult(HttpStatusCode.Created, uri));
 
     /// <summary>
     /// 400 - BadRequest response.
     /// </summary>
-    public static PostUserResult BadRequest(string message)
+    public static PostUserResult BadRequest(string? message = null)
         => new PostUserResult(new BadRequestObjectResult(message));
 
     /// <summary>

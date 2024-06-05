@@ -38,7 +38,7 @@ public class PatchOrdersIdResult : ResultBase
     /// 502 - BadGateway response.
     /// </summary>
     public static PatchOrdersIdResult BadGateway(string? message = null)
-        => new PatchOrdersIdResult(ResultFactory.CreateContentResultWithProblemDetails(HttpStatusCode.BadGateway, message));
+        => new PatchOrdersIdResult(ResultFactory.CreateContentResult(HttpStatusCode.BadGateway, message));
 
     /// <summary>
     /// Performs an implicit conversion from PatchOrdersIdResult to ActionResult.

@@ -13,7 +13,7 @@ namespace DemoSampleApi.Api.Generated.Endpoints;
 [ApiController]
 [Route("/api/v1/addresses")]
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
-public class AddressesController : ControllerBase
+public sealed class AddressesController : ControllerBase
 {
     /// <summary>
     /// Description: Get addresses by postal code.
@@ -21,8 +21,8 @@ public class AddressesController : ControllerBase
     /// </summary>
     [HttpGet("{postalCode}")]
     [ProducesResponseType(typeof(IEnumerable<Address>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     public async Task<ActionResult> GetAddressesByPostalCodes(
         GetAddressesByPostalCodesParameters parameters,

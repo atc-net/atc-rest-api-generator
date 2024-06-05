@@ -25,7 +25,7 @@ public class GetUserByEmailResult : ResultBase
     /// <summary>
     /// 400 - BadRequest response.
     /// </summary>
-    public static GetUserByEmailResult BadRequest(string message)
+    public static GetUserByEmailResult BadRequest(string? message = null)
         => new GetUserByEmailResult(new BadRequestObjectResult(message));
 
     /// <summary>

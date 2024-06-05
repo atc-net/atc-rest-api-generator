@@ -25,7 +25,7 @@ public class UpdateMyTestGenderResult : ResultBase
     /// <summary>
     /// 400 - BadRequest response.
     /// </summary>
-    public static UpdateMyTestGenderResult BadRequest(string message)
+    public static UpdateMyTestGenderResult BadRequest(string? message = null)
         => new UpdateMyTestGenderResult(new BadRequestObjectResult(message));
 
     /// <summary>

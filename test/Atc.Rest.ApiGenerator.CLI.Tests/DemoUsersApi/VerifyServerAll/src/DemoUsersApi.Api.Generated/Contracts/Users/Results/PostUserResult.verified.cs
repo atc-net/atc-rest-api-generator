@@ -25,7 +25,7 @@ public class PostUserResult : ResultBase
     /// <summary>
     /// 400 - BadRequest response.
     /// </summary>
-    public static PostUserResult BadRequest(string message)
+    public static PostUserResult BadRequest(string? message = null)
         => new PostUserResult(new BadRequestObjectResult(message));
 
     /// <summary>

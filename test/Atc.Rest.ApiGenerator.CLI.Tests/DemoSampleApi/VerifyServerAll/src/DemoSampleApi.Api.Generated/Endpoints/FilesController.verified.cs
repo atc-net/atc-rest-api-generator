@@ -13,7 +13,7 @@ namespace DemoSampleApi.Api.Generated.Endpoints;
 [ApiController]
 [Route("/api/v1/files")]
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
-public class FilesController : ControllerBase
+public sealed class FilesController : ControllerBase
 {
     /// <summary>
     /// Description: Upload multi files as form data.
@@ -24,7 +24,6 @@ public class FilesController : ControllerBase
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult> UploadMultiFilesAsFormData(
         UploadMultiFilesAsFormDataParameters parameters,
         [FromServices] IUploadMultiFilesAsFormDataHandler handler,
@@ -40,7 +39,6 @@ public class FilesController : ControllerBase
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult> UploadSingleFileAsFormData(
         UploadSingleFileAsFormDataParameters parameters,
         [FromServices] IUploadSingleFileAsFormDataHandler handler,
@@ -54,9 +52,8 @@ public class FilesController : ControllerBase
     [HttpPost("form-data/singleObject")]
     [RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue)]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult> UploadSingleObjectWithFileAsFormData(
         UploadSingleObjectWithFileAsFormDataParameters parameters,
         [FromServices] IUploadSingleObjectWithFileAsFormDataHandler handler,
@@ -70,9 +67,8 @@ public class FilesController : ControllerBase
     [HttpPost("form-data/singleObjectMultiFile")]
     [RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue)]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult> UploadSingleObjectWithFilesAsFormData(
         UploadSingleObjectWithFilesAsFormDataParameters parameters,
         [FromServices] IUploadSingleObjectWithFilesAsFormDataHandler handler,
@@ -85,8 +81,8 @@ public class FilesController : ControllerBase
     /// </summary>
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(byte[]), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     public async Task<ActionResult> GetFileById(
         GetFileByIdParameters parameters,

@@ -25,7 +25,7 @@ public class UpdateUserByIdResult : ResultBase
     /// <summary>
     /// 400 - BadRequest response.
     /// </summary>
-    public static UpdateUserByIdResult BadRequest(string message)
+    public static UpdateUserByIdResult BadRequest(string? message = null)
         => new UpdateUserByIdResult(new BadRequestObjectResult(message));
 
     /// <summary>
