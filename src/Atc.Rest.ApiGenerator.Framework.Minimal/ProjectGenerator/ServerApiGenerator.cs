@@ -318,16 +318,15 @@ public class ServerApiGenerator : IServerApiGenerator
             requiredUsings.Add("Atc.Rest.Results");
         }
 
-        // TODO: if (openApiDocument.IsUsingRequiredForMicrosoftAspNetCoreAuthorization())
+        if (openApiDocument.IsUsingRequiredForMicrosoftAspNetCoreAuthorization())
         {
             requiredUsings.Add("Microsoft.AspNetCore.Authorization");
         }
 
-        //// TODO: Check for any use ??
-        //requiredUsings.Add("System.Net");
-
-        // TODO: Check for any use of operations parameters
-        requiredUsings.Add("Atc.Rest.MinimalApi.Filters.Endpoints");
+        if (openApiDocument.IsUsingRequiredForAtcRestMinimalApiFiltersEndpoints())
+        {
+            requiredUsings.Add("Atc.Rest.MinimalApi.Filters.Endpoints");
+        }
 
         var apiGroupNames = openApiDocument.GetApiGroupNames();
 

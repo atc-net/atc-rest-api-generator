@@ -27,30 +27,6 @@ public static class OpenApiDocumentExtensions
         return result;
     }
 
-    public static bool IsSpecificationUsingAuthorization(
-        this OpenApiDocument openApiDocument)
-    {
-        foreach (var openApiPath in openApiDocument.Paths)
-        {
-            var apiPathAuthentication = openApiPath.Value.Extensions.ExtractAuthenticationRequired();
-            if (apiPathAuthentication is not null && apiPathAuthentication.Value)
-            {
-                return true;
-            }
-
-            foreach (var openApiOperation in openApiPath.Value.Operations)
-            {
-                var apiOperationAuthentication = openApiOperation.Value.Extensions.ExtractAuthenticationRequired();
-                if (apiOperationAuthentication is not null && apiOperationAuthentication.Value)
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
     public static bool HasAllPathsAuthenticationRequiredSet(
         this OpenApiDocument openApiDocument,
         string area)
@@ -205,42 +181,6 @@ public static class OpenApiDocumentExtensions
         return false;
     }
 
-    public static bool IsUsingRequiredForSystemNet(
-        this OpenApiDocument openApiDocument,
-        bool useProblemDetailsAsDefaultBody)
-    {
-        foreach (var path in openApiDocument.Paths)
-        {
-            foreach (var openApiOperation in path.Value.Operations.Values)
-            {
-                foreach (var response in openApiOperation.Responses.OrderBy(x => x.Key, StringComparer.Ordinal))
-                {
-                    if (!Enum.TryParse(typeof(HttpStatusCode), response.Key, out var parsedType))
-                    {
-                        continue;
-                    }
-
-                    var httpStatusCode = (HttpStatusCode)parsedType;
-                    if (httpStatusCode == HttpStatusCode.OK)
-                    {
-                        continue;
-                    }
-
-                    var useProblemDetails = openApiOperation.Responses.IsSchemaTypeProblemDetailsForStatusCode(httpStatusCode);
-                    if (!useProblemDetails &&
-                        !useProblemDetailsAsDefaultBody)
-                    {
-                        continue;
-                    }
-
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
     public static bool IsUsingRequiredForAtcRestResults(
         this OpenApiDocument openApiDocument)
     {
@@ -269,6 +209,53 @@ public static class OpenApiDocumentExtensions
 
                     return true;
                 }
+            }
+        }
+
+        return false;
+    }
+
+    public static bool IsUsingRequiredForAtcRestMinimalApiFiltersEndpoints(
+        this OpenApiDocument openApiDocument)
+    {
+        // TODO: Check for any use of operations parameters
+        return true;
+    }
+
+    public static bool IsUsingRequiredForMicrosoftAspNetCoreAuthorization(
+        this OpenApiDocument openApiDocument)
+    {
+        foreach (var openApiPath in openApiDocument.Paths)
+        {
+            var isAuthenticationRequired = openApiPath.Value.Extensions.ExtractAuthenticationRequired();
+            if (isAuthenticationRequired is not null && isAuthenticationRequired.Value)
+            {
+                return true;
+            }
+
+            foreach (var openApiOperation in openApiPath.Value.Operations)
+            {
+                var isOperationAuthenticationRequired = openApiOperation.Value.Extensions.ExtractAuthenticationRequired();
+                if (isOperationAuthenticationRequired is not null && isOperationAuthenticationRequired.Value)
+                {
+                    return true;
+                }
+
+                var operationAuthenticationRoles = openApiPath.Value.Extensions.ExtractAuthorizationRoles();
+                var operationAuthenticationSchemes = openApiPath.Value.Extensions.ExtractAuthenticationSchemes();
+                if (operationAuthenticationRoles is not null && operationAuthenticationRoles.Count > 0 &&
+                    operationAuthenticationSchemes is not null && operationAuthenticationSchemes.Count > 0)
+                {
+                    return true;
+                }
+            }
+
+            var authenticationRoles = openApiPath.Value.Extensions.ExtractAuthorizationRoles();
+            var authenticationSchemes = openApiPath.Value.Extensions.ExtractAuthenticationSchemes();
+            if (authenticationRoles is not null && authenticationRoles.Count > 0 &&
+                authenticationSchemes is not null && authenticationSchemes.Count > 0)
+            {
+                return true;
             }
         }
 

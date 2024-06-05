@@ -284,7 +284,7 @@ public sealed class ContentGeneratorServerEndpoints : IContentGenerator
                     break;
             }
 
-            if (responseModel == item.ResponseModels.Last())
+            if (responseModel == responseModels[^1])
             {
                 sb.AppendLine(";");
             }
@@ -398,7 +398,7 @@ public sealed class ContentGeneratorServerEndpoints : IContentGenerator
                     break;
             }
 
-            if (responseModel == responseModels.Last())
+            if (responseModel == responseModels[^1])
             {
                 sb.AppendLine(";");
             }
