@@ -180,16 +180,19 @@ public static class OpenApiOperationExtensions
 
                         if (apiMediaType.Value.Schema.IsTypeCustomPagination())
                         {
-                            var customPaginationSchema = apiMediaType.Value.Schema.GetCustomPaginationItemsSchema();
-                            if (customPaginationSchema is not null)
+                            var customPaginationItemsSchema = apiMediaType.Value.Schema.GetCustomPaginationItemsSchema();
+                            if (customPaginationItemsSchema is not null)
                             {
-                                dataType = customPaginationSchema.GetModelName();
+                                dataType = customPaginationItemsSchema.GetModelName();
                                 if (dataType.Length == 0 && apiMediaType.Value.Schema.IsSimpleDataType())
                                 {
                                     dataType = apiMediaType.Value.Schema.GetDataType();
                                 }
 
-                                collectionDataType = NameConstants.Pagination + ContentGeneratorConstants.Result;
+                                var customPaginationSchema = apiMediaType.Value.Schema.GetCustomPaginationSchema();
+                                collectionDataType = customPaginationSchema is not null
+                                    ? customPaginationSchema.GetDataType()
+                                    : NameConstants.Pagination + ContentGeneratorConstants.Result;
                             }
                         }
                     }

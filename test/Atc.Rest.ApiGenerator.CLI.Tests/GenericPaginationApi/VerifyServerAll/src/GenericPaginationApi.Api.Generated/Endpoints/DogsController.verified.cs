@@ -13,7 +13,7 @@ namespace GenericPaginationApi.Api.Generated.Endpoints;
 [ApiController]
 [Route("/api/v1/dogs")]
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
-public class DogsController : ControllerBase
+public sealed class DogsController : ControllerBase
 {
     /// <summary>
     /// Description: Find all dogs.
@@ -23,7 +23,6 @@ public class DogsController : ControllerBase
     [ProducesResponseType(typeof(PaginatedResult<Dog>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult> GetDogs(
         GetDogsParameters parameters,
         [FromServices] IGetDogsHandler handler,

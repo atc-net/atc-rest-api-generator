@@ -13,7 +13,7 @@ namespace PetStoreApi.Api.Generated.Endpoints;
 [ApiController]
 [Route("/v1/pets")]
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
-public class PetsController : ControllerBase
+public sealed class PetsController : ControllerBase
 {
     /// <summary>
     /// Description: List all pets.
@@ -23,7 +23,6 @@ public class PetsController : ControllerBase
     [ProducesResponseType(typeof(IEnumerable<Pet>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult> ListPets(
         ListPetsParameters parameters,
         [FromServices] IListPetsHandler handler,
@@ -37,7 +36,6 @@ public class PetsController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(string), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult> CreatePets(
         [FromServices] ICreatePetsHandler handler,
         CancellationToken cancellationToken)
@@ -51,7 +49,6 @@ public class PetsController : ControllerBase
     [ProducesResponseType(typeof(Pet), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult> ShowPetById(
         ShowPetByIdParameters parameters,
         [FromServices] IShowPetByIdHandler handler,

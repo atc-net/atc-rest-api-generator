@@ -13,17 +13,15 @@ namespace DemoUsersApi.Api.Generated.Endpoints;
 [ApiController]
 [Route("/api/v1/users")]
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
-public class UsersController : ControllerBase
+public sealed class UsersController : ControllerBase
 {
     /// <summary>
     /// Description: Get all users.
     /// Operation: GetUsers.
     /// </summary>
-    [Authorize]
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<User>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
     public async Task<ActionResult> GetUsers(
         [FromServices] IGetUsersHandler handler,
@@ -34,12 +32,10 @@ public class UsersController : ControllerBase
     /// Description: Create a new user.
     /// Operation: PostUser.
     /// </summary>
-    [Authorize]
     [HttpPost]
     [ProducesResponseType(typeof(string), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
     public async Task<ActionResult> PostUser(
         PostUserParameters parameters,
@@ -53,8 +49,8 @@ public class UsersController : ControllerBase
     /// </summary>
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
     public async Task<ActionResult> GetUserById(
@@ -69,9 +65,8 @@ public class UsersController : ControllerBase
     /// </summary>
     [HttpPut("{id}")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
     public async Task<ActionResult> UpdateUserById(
@@ -86,8 +81,8 @@ public class UsersController : ControllerBase
     /// </summary>
     [HttpDelete("{id}")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
     public async Task<ActionResult> DeleteUserById(

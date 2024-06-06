@@ -13,7 +13,7 @@ namespace GenericPaginationApi.Api.Generated.Endpoints;
 [ApiController]
 [Route("/api/v1/cats")]
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
-public class CatsController : ControllerBase
+public sealed class CatsController : ControllerBase
 {
     /// <summary>
     /// Description: Find all cats.
@@ -23,7 +23,6 @@ public class CatsController : ControllerBase
     [ProducesResponseType(typeof(PaginatedResult<Cat>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult> GetCats(
         GetCatsParameters parameters,
         [FromServices] IGetCatsHandler handler,
