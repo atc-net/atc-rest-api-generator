@@ -17,7 +17,7 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
     [InlineData("DemoSample")]
     [InlineData("ExampleWithAllResponseTypes")]
     [InlineData("ExampleWithGenericPagination")]
-    [InlineData("ExampleWithNamespaceWithTask")]
+    [InlineData("ExampleWithNsWithTask")]
     [InlineData("ExampleWithUsers")]
     [InlineData("PetStore")]
     public async Task ValidateYamlSpecificationByScenario(
@@ -50,12 +50,14 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
     }
 
     [Theory]
+    [InlineData("DemoSample", AspNetOutputType.Mvc, false)]
+    [InlineData("DemoSample", AspNetOutputType.Mvc, true)]
     [InlineData("ExampleWithAllResponseTypes", AspNetOutputType.Mvc, false)]
     [InlineData("ExampleWithAllResponseTypes", AspNetOutputType.Mvc, true)]
     [InlineData("ExampleWithGenericPagination", AspNetOutputType.Mvc, false)]
     [InlineData("ExampleWithGenericPagination", AspNetOutputType.Mvc, true)]
-    [InlineData("ExampleWithNamespaceWithTask", AspNetOutputType.Mvc, false)]
-    [InlineData("ExampleWithNamespaceWithTask", AspNetOutputType.Mvc, true)]
+    [InlineData("ExampleWithNsWithTask", AspNetOutputType.Mvc, false)]
+    [InlineData("ExampleWithNsWithTask", AspNetOutputType.Mvc, true)]
     [InlineData("ExampleWithUsers", AspNetOutputType.Mvc, false)]
     [InlineData("ExampleWithUsers", AspNetOutputType.Mvc, true)]
     [InlineData("PetStore", AspNetOutputType.Mvc, false)]
@@ -82,33 +84,46 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
         await AssertBuildForServerAll(outputPath, scenarioPath);
     }
 
-    // TODO: Fix and enable
-    ////[Theory]
-    ////[InlineData("DemoSampleApi")]
-    ////[InlineData("DemoUsersApi")]
-    ////[InlineData("GenericPaginationApi")]
-    ////[InlineData("PetStoreApi")]
-    ////[InlineData("TestUnit.Task.NsApi")]
-    ////public async Task GenerateVerifyAndBuildForClientCSharpByScenario(
-    ////    string scenarioName)
-    ////{
-    ////    // Arrange
-    ////    var scenarioPath = CollectScenarioPaths().First(x => x.Name == scenarioName);
+    [Theory]
+    [InlineData("DemoSample", false)]
+    [InlineData("DemoSample", true)]
+    [InlineData("ExampleWithAllResponseTypes", false)]
+    [InlineData("ExampleWithAllResponseTypes", true)]
+    [InlineData("ExampleWithGenericPagination", false)]
+    [InlineData("ExampleWithGenericPagination", true)]
+    [InlineData("ExampleWithNsWithTask", false)]
+    [InlineData("ExampleWithNsWithTask", true)]
+    [InlineData("ExampleWithUsers", false)]
+    [InlineData("ExampleWithUsers", true)]
+    [InlineData("PetStore", false)]
+    [InlineData("PetStore", true)]
+    public async Task GenerateVerifyAndBuildForClientCSharpByScenario(
+        string scenarioName,
+        bool useProblemDetailsAsDefaultResponseBody)
+    {
+        // Arrange
+        var scenarioPath = CollectScenarioPaths().First(x => x.Name == scenarioName);
 
-    ////    var specificationFile = GetYamlSpecificationPath(scenarioPath.FullName);
+        var specificationFile = GetYamlSpecificationPath(scenarioPath.FullName);
 
-    ////    // Act & Assert
-    ////    await AssertGenerateForClientCSharp(WorkingPath, scenarioPath, specificationFile);
-    ////    await AssertVerifyCsFilesForClientCSharp(WorkingPath, scenarioPath);
-    ////}
+        var outputPath = GetOutputPath(WorkingPath, scenarioPath, aspNetOutputType: null, useProblemDetailsAsDefaultResponseBody);
+        if (Directory.Exists(outputPath.FullName))
+        {
+            Directory.Delete(outputPath.FullName, recursive: true);
+        }
+
+        // Act & Assert
+        await AssertGenerateForClientCSharp(outputPath, scenarioPath, specificationFile, useProblemDetailsAsDefaultResponseBody);
+        await AssertVerifyCsFilesForClientCSharp(outputPath, scenarioPath, useProblemDetailsAsDefaultResponseBody);
+    }
 
     ////[Fact]
     [Fact(Skip = "Only use it for prepare verify files")]
     public void PrepareVerifyServerAllCsFilesFromGeneratedOutput()
     {
-        const string scenarioName = "PetStore";
+        const string scenarioName = "DemoSample";
         const AspNetOutputType aspNetOutputType = AspNetOutputType.Mvc;
-        const bool useProblemDetailsAsDefaultResponseBody = true;
+        const bool useProblemDetailsAsDefaultResponseBody = false;
 
         var scenarioPath = CollectScenarioPaths().First(x => x.Name == scenarioName);
 
@@ -123,6 +138,30 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
             : "WOPD";
 
         var verifyPath = new DirectoryInfo(Path.Combine(scenarioPath.FullName, "VerifyServerAll", $"{aspNetOutputType}_{suffix}"));
+
+        CopyAndRenameCsFilesToVerified(outputPath, verifyPath);
+    }
+
+    ////[Fact]
+    [Fact(Skip = "Only use it for prepare verify files")]
+    public void PrepareVerifySClientCsFilesFromGeneratedOutput()
+    {
+        const string scenarioName = "DemoSample";
+        const bool useProblemDetailsAsDefaultResponseBody = true;
+
+        var scenarioPath = CollectScenarioPaths().First(x => x.Name == scenarioName);
+
+        var outputPath = GetOutputPath(WorkingPath, scenarioPath, aspNetOutputType: null, useProblemDetailsAsDefaultResponseBody);
+        if (!outputPath.Exists)
+        {
+            return;
+        }
+
+        var suffix = useProblemDetailsAsDefaultResponseBody
+            ? "WPD"
+            : "WOPD";
+
+        var verifyPath = new DirectoryInfo(Path.Combine(scenarioPath.FullName, "VerifyClient", suffix));
 
         CopyAndRenameCsFilesToVerified(outputPath, verifyPath);
     }
@@ -216,7 +255,7 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
             sbCommands.Append(" --useProblemDetailsAsDefaultResponseBody");
         }
 
-        sbCommands.Append(" --verbose ");
+        sbCommands.Append(" --verbose");
 
         var (isSuccessful, output) = await ProcessHelper.Execute(cliExeFile!, sbCommands.ToString());
 
@@ -299,63 +338,92 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
             $"BuildErrors: {string.Join(" # ", buildErrors)} for scenario '{scenarioPath.Name}'");
     }
 
-    //private static async Task AssertGenerateForClientCSharp(
-    //    DirectoryInfo workingPath,
-    //    DirectoryInfo scenarioPath,
-    //    FileInfo specificationFile)
-    //{
-    //    var outputPath = GetOutputPath(workingPath, scenarioPath);
+    private static async Task AssertGenerateForClientCSharp(
+        DirectoryInfo outputPath,
+        DirectoryInfo scenarioPath,
+        FileInfo specificationFile,
+        bool useProblemDetailsAsDefaultResponseBody)
+    {
+        var sbCommands = new StringBuilder();
+        sbCommands.Append("generate client csharp");
+        sbCommands.Append(" --specificationPath ");
+        sbCommands.Append(specificationFile.FullName);
+        sbCommands.Append(" --projectPrefixName ");
+        sbCommands.Append(scenarioPath.Name);
+        sbCommands.Append(" --outputPath ");
+        sbCommands.Append(Path.Combine(outputPath.FullName, "src"));
+        if (useProblemDetailsAsDefaultResponseBody)
+        {
+            sbCommands.Append(" --useProblemDetailsAsDefaultResponseBody");
+        }
 
-    //    var (isSuccessful, output) = await ProcessHelper.Execute(
-    //        cliExeFile!,
-    //        "generate client csharp " +
-    //        $"--specificationPath {specificationFile.FullName} " +
-    //        $"--projectPrefixName {scenarioPath.Name} " +
-    //        $"--outputPath {Path.Combine(outputPath.FullName, "src")} " +
-    //        "--verbose");
+        sbCommands.Append(" --verbose");
 
-    //    Assert.True(
-    //        isSuccessful,
-    //        $"CLI output is not successful for scenario '{scenarioPath.Name}'");
+        var (isSuccessful, output) = await ProcessHelper.Execute(cliExeFile!, sbCommands.ToString());
 
-    //    var outputLines = output
-    //        .EnsureEnvironmentNewLines()
-    //        .Split(
-    //            Environment.NewLine,
-    //            StringSplitOptions.RemoveEmptyEntries);
+        Assert.True(
+            isSuccessful,
+            $"CLI output is not successful for scenario '{scenarioPath.Name}'");
 
-    //    Assert.True(
-    //        outputLines[^1].Contains("Done", StringComparison.Ordinal),
-    //        $"CLI output is missing 'Done' for scenario '{scenarioPath.Name}'");
-    //}
+        var outputLines = output
+            .EnsureEnvironmentNewLines()
+            .Split(
+                Environment.NewLine,
+                StringSplitOptions.RemoveEmptyEntries);
 
-    //private static async Task AssertVerifyCsFilesForClientCSharp(
-    //    DirectoryInfo workingPath,
-    //    DirectoryInfo scenarioPath)
-    //{
-    //    var verifyCsFiles = GetVerifyClientCSharpCsFilesForScenario(scenarioPath);
-    //    var outputPath = GetOutputPath(workingPath, scenarioPath);
+        Assert.True(
+            outputLines[^1].Contains("Done", StringComparison.Ordinal),
+            $"CLI output is missing 'Done' for scenario '{scenarioPath.Name}'");
+    }
 
-    //    foreach (var verifyFile in verifyCsFiles)
-    //    {
-    //        var generatedFile = GetClientCSharpGeneratedFileForScenario(scenarioPath, verifyFile, outputPath);
+    private static async Task AssertVerifyCsFilesForClientCSharp(
+        DirectoryInfo outputPath,
+        DirectoryInfo scenarioPath,
+        bool useProblemDetailsAsDefaultResponseBody)
+    {
+        var suffix = useProblemDetailsAsDefaultResponseBody
+            ? "WPD"
+            : "WOPD";
 
-    //        Assert.True(
-    //            generatedFile.Exists,
-    //            $"File not generated: {generatedFile.FullName}");
+        var verifyPath = new DirectoryInfo(Path.Combine(scenarioPath.FullName, "VerifyClient", suffix));
 
-    //        var generatedFileContent = await ReadGeneratedFile(generatedFile);
-    //        var settings = GetVerifySettings(verifyFile, generatedFile);
+        var verifyCsFiles = GetVerifyCsFilesForScenario(verifyPath);
 
-    //        await Verify(generatedFileContent, settings);
-    //    }
+        foreach (var verifyFile in verifyCsFiles)
+        {
+            var generatedFile = GetGeneratedFileForScenario(verifyPath, verifyFile, outputPath);
 
-    //    var outputCsFiles = Directory.GetFiles(outputPath.FullName, "*.cs", SearchOption.AllDirectories);
+            Assert.True(
+                generatedFile.Exists,
+                $"File not generated: {generatedFile.FullName}");
 
-    //    Assert.True(
-    //        outputCsFiles.Length == verifyCsFiles.Length,
-    //        $"Different count on *.cs files, input.count={verifyCsFiles.Length} and output.count={outputCsFiles.Length} for scenario '{scenarioPath.Name}'");
-    //}
+            var generatedFileContent = await ReadGeneratedFile(generatedFile);
+            var settings = GetVerifySettings(verifyFile, generatedFile);
+
+            await Verify(generatedFileContent, settings);
+        }
+
+        var outputCsFilesWithRelativePath = Directory.GetFiles(outputPath.FullName, "*.cs", SearchOption.AllDirectories)
+            .Select(x => Path.GetRelativePath(outputPath.FullName, x))
+            .ToArray();
+
+        var verifyCsFilesWithRelativePath = verifyCsFiles.Select(x => x.FullName)
+            .Select(x => Path.GetRelativePath(scenarioPath.CombineFileInfo("VerifyServerAll", suffix).FullName, x))
+            .ToArray();
+
+        var onlyInOutput = outputCsFilesWithRelativePath.Except(verifyCsFilesWithRelativePath, StringComparer.Ordinal).ToArray();
+        var onlyInVerify = verifyCsFilesWithRelativePath.Except(outputCsFilesWithRelativePath, StringComparer.Ordinal).ToArray();
+
+        Assert.True(
+            outputCsFilesWithRelativePath.Length == verifyCsFilesWithRelativePath.Length,
+            $"Different count on *.cs files, " +
+            $"verify.count={verifyCsFilesWithRelativePath.Length} and " +
+            $"generated.count={outputCsFilesWithRelativePath.Length} for scenario '{scenarioPath.Name}'. " +
+            $"\n\nFiles only in output:" +
+            $"\n\t{string.Join("\n\t", onlyInOutput)}" +
+            $"\n\nFiles only in verify:" +
+            $"\n\t{string.Join("\n\t", onlyInVerify)}\n");
+    }
 
     public Task InitializeAsync()
     {

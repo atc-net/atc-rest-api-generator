@@ -57,7 +57,7 @@ public abstract class ScenarioIntegrationTestBase : IntegrationTestCliBase
     public static DirectoryInfo GetOutputPath(
         DirectoryInfo workingPath,
         DirectoryInfo scenario,
-        AspNetOutputType aspNetOutputType,
+        AspNetOutputType? aspNetOutputType,
         bool useProblemDetailsAsDefaultResponseBody)
     {
         ArgumentNullException.ThrowIfNull(workingPath);
@@ -66,6 +66,14 @@ public abstract class ScenarioIntegrationTestBase : IntegrationTestCliBase
         var suffix = useProblemDetailsAsDefaultResponseBody
             ? "WithProblemDetails"
             : "WithoutProblemDetails";
+
+        if (aspNetOutputType is null)
+        {
+            return new DirectoryInfo(
+                Path.Combine(
+                    workingPath.FullName,
+                    $"{scenario.Name}_Client_{suffix}"));
+        }
 
         return new DirectoryInfo(
             Path.Combine(

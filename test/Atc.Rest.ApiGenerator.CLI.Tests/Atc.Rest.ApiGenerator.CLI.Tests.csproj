@@ -9,20 +9,41 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Scenarios\DemoSample\VerifyClient\**" />
+    <Compile Remove="Scenarios\DemoSample\VerifyServerAll\**" />
+    <Compile Remove="Scenarios\ExampleWithAllResponseTypes\VerifyClient\**" />
     <Compile Remove="Scenarios\ExampleWithAllResponseTypes\VerifyServerAll\**" />
+    <Compile Remove="Scenarios\ExampleWithGenericPagination\VerifyClient\**" />
     <Compile Remove="Scenarios\ExampleWithGenericPagination\VerifyServerAll\**" />
-    <Compile Remove="Scenarios\ExampleWithNamespaceWithTask\VerifyServerAll\**" />
+    <Compile Remove="Scenarios\ExampleWithNsWithTask\VerifyClient\**" />
+    <Compile Remove="Scenarios\ExampleWithNsWithTask\VerifyServerAll\**" />
+    <Compile Remove="Scenarios\ExampleWithUsers\VerifyClient\**" />
     <Compile Remove="Scenarios\ExampleWithUsers\VerifyServerAll\**" />
+    <Compile Remove="Scenarios\PetStore\VerifyClient\**" />
     <Compile Remove="Scenarios\PetStore\VerifyServerAll\**" />
+    <EmbeddedResource Remove="Scenarios\DemoSample\VerifyClient\**" />
+    <EmbeddedResource Remove="Scenarios\DemoSample\VerifyServerAll\**" />
+    <EmbeddedResource Remove="Scenarios\ExampleWithAllResponseTypes\VerifyClient\**" />
     <EmbeddedResource Remove="Scenarios\ExampleWithAllResponseTypes\VerifyServerAll\**" />
+    <EmbeddedResource Remove="Scenarios\ExampleWithGenericPagination\VerifyClient\**" />
     <EmbeddedResource Remove="Scenarios\ExampleWithGenericPagination\VerifyServerAll\**" />
-    <EmbeddedResource Remove="Scenarios\ExampleWithNamespaceWithTask\VerifyServerAll\**" />
+    <EmbeddedResource Remove="Scenarios\ExampleWithNsWithTask\VerifyClient\**" />
+    <EmbeddedResource Remove="Scenarios\ExampleWithNsWithTask\VerifyServerAll\**" />
+    <EmbeddedResource Remove="Scenarios\ExampleWithUsers\VerifyClient\**" />
     <EmbeddedResource Remove="Scenarios\ExampleWithUsers\VerifyServerAll\**" />
+    <EmbeddedResource Remove="Scenarios\PetStore\VerifyClient\**" />
     <EmbeddedResource Remove="Scenarios\PetStore\VerifyServerAll\**" />
+    <None Remove="Scenarios\DemoSample\VerifyClient\**" />
+    <None Remove="Scenarios\DemoSample\VerifyServerAll\**" />
+    <None Remove="Scenarios\ExampleWithAllResponseTypes\VerifyClient\**" />
     <None Remove="Scenarios\ExampleWithAllResponseTypes\VerifyServerAll\**" />
+    <None Remove="Scenarios\ExampleWithGenericPagination\VerifyClient\**" />
     <None Remove="Scenarios\ExampleWithGenericPagination\VerifyServerAll\**" />
-    <None Remove="Scenarios\ExampleWithNamespaceWithTask\VerifyServerAll\**" />
+    <None Remove="Scenarios\ExampleWithNsWithTask\VerifyClient\**" />
+    <None Remove="Scenarios\ExampleWithNsWithTask\VerifyServerAll\**" />
+    <None Remove="Scenarios\ExampleWithUsers\VerifyClient\**" />
     <None Remove="Scenarios\ExampleWithUsers\VerifyServerAll\**" />
+    <None Remove="Scenarios\PetStore\VerifyClient\**" />
     <None Remove="Scenarios\PetStore\VerifyServerAll\**" />
   </ItemGroup>
 
