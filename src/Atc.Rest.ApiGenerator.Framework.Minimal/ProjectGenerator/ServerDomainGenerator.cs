@@ -10,7 +10,6 @@ public class ServerDomainGenerator : IServerDomainGenerator
     private readonly string apiProjectName;
     private readonly DirectoryInfo projectPath;
     private readonly OpenApiDocument openApiDocument;
-    private readonly IList<ApiOperation> operationSchemaMappings;
     private readonly string codeGeneratorContentHeader;
     private readonly AttributeParameters codeGeneratorAttribute;
 
@@ -21,8 +20,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
         string projectName,
         string apiProjectName,
         DirectoryInfo projectPath,
-        OpenApiDocument openApiDocument,
-        IList<ApiOperation> operationSchemaMappings)
+        OpenApiDocument openApiDocument)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
         ArgumentNullException.ThrowIfNull(nugetPackageReferenceProvider);
@@ -31,7 +29,6 @@ public class ServerDomainGenerator : IServerDomainGenerator
         ArgumentNullException.ThrowIfNull(apiProjectName);
         ArgumentNullException.ThrowIfNull(projectPath);
         ArgumentNullException.ThrowIfNull(openApiDocument);
-        ArgumentNullException.ThrowIfNull(operationSchemaMappings);
 
         logger = loggerFactory.CreateLogger<ServerDomainGenerator>();
         this.nugetPackageReferenceProvider = nugetPackageReferenceProvider;
@@ -39,7 +36,6 @@ public class ServerDomainGenerator : IServerDomainGenerator
         this.apiProjectName = apiProjectName;
         this.projectPath = projectPath;
         this.openApiDocument = openApiDocument;
-        this.operationSchemaMappings = operationSchemaMappings;
 
         codeGeneratorContentHeader = GeneratedCodeHeaderGeneratorFactory
             .Create(apiGeneratorVersion)

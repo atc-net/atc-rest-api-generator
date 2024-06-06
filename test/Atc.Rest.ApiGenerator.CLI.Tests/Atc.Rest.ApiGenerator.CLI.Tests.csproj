@@ -9,6 +9,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Scenarios\ExampleWithAllResponseTypes\VerifyServerAll\**" />
+    <Compile Remove="Scenarios\ExampleWithGenericPagination\VerifyServerAll\**" />
+    <Compile Remove="Scenarios\ExampleWithNamespaceWithTask\VerifyServerAll\**" />
+    <Compile Remove="Scenarios\ExampleWithUsers\VerifyServerAll\**" />
+    <Compile Remove="Scenarios\PetStore\VerifyServerAll\**" />
+    <EmbeddedResource Remove="Scenarios\ExampleWithAllResponseTypes\VerifyServerAll\**" />
+    <EmbeddedResource Remove="Scenarios\ExampleWithGenericPagination\VerifyServerAll\**" />
+    <EmbeddedResource Remove="Scenarios\ExampleWithNamespaceWithTask\VerifyServerAll\**" />
+    <EmbeddedResource Remove="Scenarios\ExampleWithUsers\VerifyServerAll\**" />
+    <EmbeddedResource Remove="Scenarios\PetStore\VerifyServerAll\**" />
+    <None Remove="Scenarios\ExampleWithAllResponseTypes\VerifyServerAll\**" />
+    <None Remove="Scenarios\ExampleWithGenericPagination\VerifyServerAll\**" />
+    <None Remove="Scenarios\ExampleWithNamespaceWithTask\VerifyServerAll\**" />
+    <None Remove="Scenarios\ExampleWithUsers\VerifyServerAll\**" />
+    <None Remove="Scenarios\PetStore\VerifyServerAll\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Atc.DotNet" Version="2.0.478" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.1" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
@@ -30,19 +48,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Atc.Rest.ApiGenerator.CLI\Atc.Rest.ApiGenerator.CLI.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="**\*.verified.cs" />
-    <Compile Remove="**\*.received.cs" />
-    <Compile Remove="MyCompany.ProductionUnit.Task.NamespaceApi\**" />
-    <None Include="**\*.verified.cs" />
-    <None Include="**\*.received.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Remove="MyCompany.ProductionUnit.Task.NamespaceApi\**" />
-    <None Remove="MyCompany.ProductionUnit.Task.NamespaceApi\**" />
   </ItemGroup>
 
 </Project>

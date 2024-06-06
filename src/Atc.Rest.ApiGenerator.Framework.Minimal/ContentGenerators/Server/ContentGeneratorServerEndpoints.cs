@@ -1,5 +1,3 @@
-using System.Text;
-
 namespace Atc.Rest.ApiGenerator.Framework.Minimal.ContentGenerators.Server;
 
 public sealed class ContentGeneratorServerEndpoints : IContentGenerator

@@ -28,7 +28,6 @@ public class ServerDomainGenerator
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
 
         var apiProjectName = projectOptions.ProjectName.Replace(".Domain", ".Api.Generated", StringComparison.Ordinal);
-        var operationSchemaMappings = apiOperationExtractor.Extract(projectOptions.Document);
 
         serverDomainGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerDomainGenerator(
             loggerFactory,
@@ -46,8 +45,7 @@ public class ServerDomainGenerator
             projectOptions.ProjectName,
             apiProjectName,
             projectOptions.PathForSrcGenerate,
-            projectOptions.Document,
-            operationSchemaMappings);
+            projectOptions.Document);
 
         if (projectOptions.PathForTestGenerate is not null)
         {
