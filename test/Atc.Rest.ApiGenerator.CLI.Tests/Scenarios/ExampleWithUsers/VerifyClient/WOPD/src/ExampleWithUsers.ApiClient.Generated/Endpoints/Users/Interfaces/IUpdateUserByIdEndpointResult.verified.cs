@@ -14,27 +14,24 @@ namespace ExampleWithUsers.ApiClient.Generated.Endpoints.Users.Interfaces;
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface IUpdateUserByIdEndpointResult : IEndpointResponse
 {
+
     bool IsOk { get; }
 
     bool IsBadRequest { get; }
 
     bool IsUnauthorized { get; }
 
-    bool IsForbidden { get; }
-
     bool IsNotFound { get; }
 
     bool IsConflict { get; }
 
-    bool IsInternalServerError { get; }
+    string? OkContent { get; }
 
-    string OkContent { get; }
+    string? BadRequestContent { get; }
 
-    ValidationProblemDetails BadRequestContent { get; }
+    string? UnauthorizedContent { get; }
 
-    string NotFoundContent { get; }
+    string? NotFoundContent { get; }
 
-    string ConflictContent { get; }
-
-    string InternalServerErrorContent { get; }
+    string? ConflictContent { get; }
 }

@@ -25,7 +25,7 @@ public class GetUserByEmailEndpoint : IGetUserByEmailEndpoint
         this.httpMessageFactory = httpMessageFactory;
     }
 
-    public async Task<IGetUserByEmailEndpointResult> ExecuteAsync(
+    public async Task<GetUserByEmailEndpointResult> ExecuteAsync(
         GetUserByEmailParameters parameters,
         string httpClientName = "DemoSample-ApiClient",
         CancellationToken cancellationToken = default)
@@ -41,12 +41,9 @@ public class GetUserByEmailEndpoint : IGetUserByEmailEndpoint
         var responseBuilder = httpMessageFactory.FromResponse(response);
         responseBuilder.AddSuccessResponse<User>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse<ValidationProblemDetails>(HttpStatusCode.BadRequest);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Unauthorized);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Forbidden);
-        responseBuilder.AddErrorResponse(HttpStatusCode.NotFound);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Conflict);
-        responseBuilder.AddErrorResponse<string>(HttpStatusCode.InternalServerError);
-
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.Unauthorized);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.NotFound);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.Conflict);
         return await responseBuilder.BuildResponseAsync(x => new GetUserByEmailEndpointResult(x), cancellationToken);
     }
 }

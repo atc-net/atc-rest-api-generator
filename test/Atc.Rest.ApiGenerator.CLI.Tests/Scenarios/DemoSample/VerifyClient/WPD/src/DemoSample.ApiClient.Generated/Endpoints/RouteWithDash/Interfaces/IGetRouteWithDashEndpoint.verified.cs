@@ -19,7 +19,7 @@ public interface IGetRouteWithDashEndpoint
     /// </summary>
     /// <param name="httpClientName">The http client name.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<IGetRouteWithDashEndpointResult> ExecuteAsync(
+    Task<GetRouteWithDashEndpointResult> ExecuteAsync(
         string httpClientName = "DemoSample-ApiClient",
         CancellationToken cancellationToken = default);
 }

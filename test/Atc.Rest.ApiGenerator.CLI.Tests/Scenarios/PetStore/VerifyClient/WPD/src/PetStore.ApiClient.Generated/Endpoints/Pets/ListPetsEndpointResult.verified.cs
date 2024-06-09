@@ -28,14 +28,8 @@ public class ListPetsEndpointResult : EndpointResponse, IListPetsEndpointResult
     public bool IsUnauthorized
         => StatusCode == HttpStatusCode.Unauthorized;
 
-    public bool IsForbidden
-        => StatusCode == HttpStatusCode.Forbidden;
-
-    public bool IsInternalServerError
-        => StatusCode == HttpStatusCode.InternalServerError;
-
-    public List<Pet> OkContent
-        => IsOk && ContentObject is List<Pet> result
+    public IEnumerable<Pet> OkContent
+        => IsOk && ContentObject is IEnumerable<Pet> result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsOk property first.");
 
@@ -44,8 +38,8 @@ public class ListPetsEndpointResult : EndpointResponse, IListPetsEndpointResult
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsBadRequest property first.");
 
-    public string InternalServerErrorContent
-        => IsInternalServerError && ContentObject is string result
+    public ProblemDetails UnauthorizedContent
+        => IsUnauthorized && ContentObject is ProblemDetails result
             ? result
-            : throw new InvalidOperationException("Content is not the expected type - please use the IsInternalServerError property first.");
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsUnauthorized property first.");
 }

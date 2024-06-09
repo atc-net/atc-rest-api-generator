@@ -25,19 +25,13 @@ public class GetTasksEndpointResult : EndpointResponse, IGetTasksEndpointResult
     public bool IsUnauthorized
         => StatusCode == HttpStatusCode.Unauthorized;
 
-    public bool IsForbidden
-        => StatusCode == HttpStatusCode.Forbidden;
-
-    public bool IsInternalServerError
-        => StatusCode == HttpStatusCode.InternalServerError;
-
-    public List<Contracts.Tasks.Task> OkContent
-        => IsOk && ContentObject is List<Contracts.Tasks.Task> result
+    public IEnumerable<Task> OkContent
+        => IsOk && ContentObject is IEnumerable<Task> result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsOk property first.");
 
-    public string InternalServerErrorContent
-        => IsInternalServerError && ContentObject is string result
+    public ProblemDetails UnauthorizedContent
+        => IsUnauthorized && ContentObject is ProblemDetails result
             ? result
-            : throw new InvalidOperationException("Content is not the expected type - please use the IsInternalServerError property first.");
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsUnauthorized property first.");
 }

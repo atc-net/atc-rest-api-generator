@@ -20,7 +20,7 @@ public interface IUploadMultiFilesAsFormDataEndpoint
     /// <param name="parameters">The parameters.</param>
     /// <param name="httpClientName">The http client name.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<IUploadMultiFilesAsFormDataEndpointResult> ExecuteAsync(
+    Task<UploadMultiFilesAsFormDataEndpointResult> ExecuteAsync(
         UploadMultiFilesAsFormDataParameters parameters,
         string httpClientName = "DemoSample-ApiClient",
         CancellationToken cancellationToken = default);

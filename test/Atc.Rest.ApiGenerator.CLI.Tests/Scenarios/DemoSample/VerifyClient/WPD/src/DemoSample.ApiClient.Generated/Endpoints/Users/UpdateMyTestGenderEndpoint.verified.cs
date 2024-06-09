@@ -25,7 +25,7 @@ public class UpdateMyTestGenderEndpoint : IUpdateMyTestGenderEndpoint
         this.httpMessageFactory = httpMessageFactory;
     }
 
-    public async Task<IUpdateMyTestGenderEndpointResult> ExecuteAsync(
+    public async Task<UpdateMyTestGenderEndpointResult> ExecuteAsync(
         UpdateMyTestGenderParameters parameters,
         string httpClientName = "DemoSample-ApiClient",
         CancellationToken cancellationToken = default)
@@ -41,14 +41,11 @@ public class UpdateMyTestGenderEndpoint : IUpdateMyTestGenderEndpoint
         using var response = await client.SendAsync(requestMessage, cancellationToken);
 
         var responseBuilder = httpMessageFactory.FromResponse(response);
-        responseBuilder.AddSuccessResponse<string>(HttpStatusCode.OK);
+        responseBuilder.AddSuccessResponse<string?>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse<ValidationProblemDetails>(HttpStatusCode.BadRequest);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Unauthorized);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Forbidden);
-        responseBuilder.AddErrorResponse(HttpStatusCode.NotFound);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Conflict);
-        responseBuilder.AddErrorResponse<string>(HttpStatusCode.InternalServerError);
-
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.Unauthorized);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.NotFound);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.Conflict);
         return await responseBuilder.BuildResponseAsync(x => new UpdateMyTestGenderEndpointResult(x), cancellationToken);
     }
 }

@@ -14,23 +14,20 @@ namespace DemoSample.ApiClient.Generated.Endpoints.Orders.Interfaces;
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface IGetOrdersEndpointResult : IEndpointResponse
 {
+
     bool IsOk { get; }
 
     bool IsBadRequest { get; }
 
     bool IsUnauthorized { get; }
 
-    bool IsForbidden { get; }
-
     bool IsNotFound { get; }
 
-    bool IsInternalServerError { get; }
-
-    Order OkContent { get; }
+    Pagination<Order> OkContent { get; }
 
     ValidationProblemDetails BadRequestContent { get; }
 
-    string NotFoundContent { get; }
+    ProblemDetails UnauthorizedContent { get; }
 
-    string InternalServerErrorContent { get; }
+    ProblemDetails NotFoundContent { get; }
 }

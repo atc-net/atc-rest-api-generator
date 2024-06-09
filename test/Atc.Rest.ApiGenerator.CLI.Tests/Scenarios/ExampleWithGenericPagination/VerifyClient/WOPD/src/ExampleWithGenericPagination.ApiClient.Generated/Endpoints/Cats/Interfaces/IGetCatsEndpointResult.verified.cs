@@ -14,19 +14,16 @@ namespace ExampleWithGenericPagination.ApiClient.Generated.Endpoints.Cats.Interf
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface IGetCatsEndpointResult : IEndpointResponse
 {
+
     bool IsOk { get; }
 
     bool IsBadRequest { get; }
 
     bool IsUnauthorized { get; }
 
-    bool IsForbidden { get; }
-
-    bool IsInternalServerError { get; }
-
     PaginatedResult<Cat> OkContent { get; }
 
-    ValidationProblemDetails BadRequestContent { get; }
+    string? BadRequestContent { get; }
 
-    string InternalServerErrorContent { get; }
+    string? UnauthorizedContent { get; }
 }

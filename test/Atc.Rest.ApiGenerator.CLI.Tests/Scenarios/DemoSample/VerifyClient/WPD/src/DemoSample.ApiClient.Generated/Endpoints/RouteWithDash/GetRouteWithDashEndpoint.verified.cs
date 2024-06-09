@@ -25,7 +25,7 @@ public class GetRouteWithDashEndpoint : IGetRouteWithDashEndpoint
         this.httpMessageFactory = httpMessageFactory;
     }
 
-    public async Task<IGetRouteWithDashEndpointResult> ExecuteAsync(
+    public async Task<GetRouteWithDashEndpointResult> ExecuteAsync(
         string httpClientName = "DemoSample-ApiClient",
         CancellationToken cancellationToken = default)
     {
@@ -37,11 +37,8 @@ public class GetRouteWithDashEndpoint : IGetRouteWithDashEndpoint
         using var response = await client.SendAsync(requestMessage, cancellationToken);
 
         var responseBuilder = httpMessageFactory.FromResponse(response);
-        responseBuilder.AddSuccessResponse<string>(HttpStatusCode.OK);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Unauthorized);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Forbidden);
-        responseBuilder.AddErrorResponse<string>(HttpStatusCode.InternalServerError);
-
+        responseBuilder.AddSuccessResponse<string?>(HttpStatusCode.OK);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.Unauthorized);
         return await responseBuilder.BuildResponseAsync(x => new GetRouteWithDashEndpointResult(x), cancellationToken);
     }
 }

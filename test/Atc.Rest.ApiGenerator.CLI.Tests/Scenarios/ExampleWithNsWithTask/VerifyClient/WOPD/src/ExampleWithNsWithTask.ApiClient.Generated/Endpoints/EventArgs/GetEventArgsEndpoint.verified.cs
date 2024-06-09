@@ -25,7 +25,7 @@ public class GetEventArgsEndpoint : IGetEventArgsEndpoint
         this.httpMessageFactory = httpMessageFactory;
     }
 
-    public async Task<IGetEventArgsEndpointResult> ExecuteAsync(
+    public async Task<GetEventArgsEndpointResult> ExecuteAsync(
         string httpClientName = "ExampleWithNsWithTask-ApiClient",
         CancellationToken cancellationToken = default)
     {
@@ -37,11 +37,8 @@ public class GetEventArgsEndpoint : IGetEventArgsEndpoint
         using var response = await client.SendAsync(requestMessage, cancellationToken);
 
         var responseBuilder = httpMessageFactory.FromResponse(response);
-        responseBuilder.AddSuccessResponse<List<Contracts.EventArgs.EventArgs>>(HttpStatusCode.OK);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Unauthorized);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Forbidden);
-        responseBuilder.AddErrorResponse<string>(HttpStatusCode.InternalServerError);
-
+        responseBuilder.AddSuccessResponse<IEnumerable<EventArgs>>(HttpStatusCode.OK);
+        responseBuilder.AddErrorResponse<string>(HttpStatusCode.Unauthorized);
         return await responseBuilder.BuildResponseAsync(x => new GetEventArgsEndpointResult(x), cancellationToken);
     }
 }

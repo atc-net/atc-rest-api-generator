@@ -20,7 +20,7 @@ public interface IGetFileByIdEndpoint
     /// <param name="parameters">The parameters.</param>
     /// <param name="httpClientName">The http client name.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<IGetFileByIdEndpointResult> ExecuteAsync(
+    Task<GetFileByIdEndpointResult> ExecuteAsync(
         GetFileByIdParameters parameters,
         string httpClientName = "DemoSample-ApiClient",
         CancellationToken cancellationToken = default);

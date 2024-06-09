@@ -25,7 +25,7 @@ public class CreateItemEndpoint : ICreateItemEndpoint
         this.httpMessageFactory = httpMessageFactory;
     }
 
-    public async Task<ICreateItemEndpointResult> ExecuteAsync(
+    public async Task<CreateItemEndpointResult> ExecuteAsync(
         CreateItemParameters parameters,
         string httpClientName = "DemoSample-ApiClient",
         CancellationToken cancellationToken = default)
@@ -39,12 +39,9 @@ public class CreateItemEndpoint : ICreateItemEndpoint
         using var response = await client.SendAsync(requestMessage, cancellationToken);
 
         var responseBuilder = httpMessageFactory.FromResponse(response);
-        responseBuilder.AddSuccessResponse<string>(HttpStatusCode.OK);
+        responseBuilder.AddSuccessResponse<string?>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse<ValidationProblemDetails>(HttpStatusCode.BadRequest);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Unauthorized);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Forbidden);
-        responseBuilder.AddErrorResponse<string>(HttpStatusCode.InternalServerError);
-
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.Unauthorized);
         return await responseBuilder.BuildResponseAsync(x => new CreateItemEndpointResult(x), cancellationToken);
     }
 }

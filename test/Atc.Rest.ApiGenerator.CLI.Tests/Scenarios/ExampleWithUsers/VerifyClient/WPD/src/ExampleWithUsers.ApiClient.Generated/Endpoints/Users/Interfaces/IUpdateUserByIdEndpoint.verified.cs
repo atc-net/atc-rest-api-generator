@@ -20,7 +20,7 @@ public interface IUpdateUserByIdEndpoint
     /// <param name="parameters">The parameters.</param>
     /// <param name="httpClientName">The http client name.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<IUpdateUserByIdEndpointResult> ExecuteAsync(
+    Task<UpdateUserByIdEndpointResult> ExecuteAsync(
         UpdateUserByIdParameters parameters,
         string httpClientName = "ExampleWithUsers-ApiClient",
         CancellationToken cancellationToken = default);

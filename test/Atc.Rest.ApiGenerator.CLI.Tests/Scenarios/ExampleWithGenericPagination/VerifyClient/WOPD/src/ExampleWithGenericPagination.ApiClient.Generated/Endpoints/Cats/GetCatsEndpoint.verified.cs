@@ -25,7 +25,7 @@ public class GetCatsEndpoint : IGetCatsEndpoint
         this.httpMessageFactory = httpMessageFactory;
     }
 
-    public async Task<IGetCatsEndpointResult> ExecuteAsync(
+    public async Task<GetCatsEndpointResult> ExecuteAsync(
         GetCatsParameters parameters,
         string httpClientName = "ExampleWithGenericPagination-ApiClient",
         CancellationToken cancellationToken = default)
@@ -43,10 +43,7 @@ public class GetCatsEndpoint : IGetCatsEndpoint
         var responseBuilder = httpMessageFactory.FromResponse(response);
         responseBuilder.AddSuccessResponse<PaginatedResult<Cat>>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse<ValidationProblemDetails>(HttpStatusCode.BadRequest);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Unauthorized);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Forbidden);
-        responseBuilder.AddErrorResponse<string>(HttpStatusCode.InternalServerError);
-
+        responseBuilder.AddErrorResponse<string>(HttpStatusCode.Unauthorized);
         return await responseBuilder.BuildResponseAsync(x => new GetCatsEndpointResult(x), cancellationToken);
     }
 }

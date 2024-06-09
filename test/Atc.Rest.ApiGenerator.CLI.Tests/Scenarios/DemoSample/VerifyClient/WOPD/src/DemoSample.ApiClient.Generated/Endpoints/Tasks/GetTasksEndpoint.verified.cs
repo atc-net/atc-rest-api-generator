@@ -25,7 +25,7 @@ public class GetTasksEndpoint : IGetTasksEndpoint
         this.httpMessageFactory = httpMessageFactory;
     }
 
-    public async Task<IGetTasksEndpointResult> ExecuteAsync(
+    public async Task<GetTasksEndpointResult> ExecuteAsync(
         string httpClientName = "DemoSample-ApiClient",
         CancellationToken cancellationToken = default)
     {
@@ -37,11 +37,8 @@ public class GetTasksEndpoint : IGetTasksEndpoint
         using var response = await client.SendAsync(requestMessage, cancellationToken);
 
         var responseBuilder = httpMessageFactory.FromResponse(response);
-        responseBuilder.AddSuccessResponse<List<Contracts.Tasks.Task>>(HttpStatusCode.OK);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Unauthorized);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Forbidden);
-        responseBuilder.AddErrorResponse<string>(HttpStatusCode.InternalServerError);
-
+        responseBuilder.AddSuccessResponse<IEnumerable<Task>>(HttpStatusCode.OK);
+        responseBuilder.AddErrorResponse<string>(HttpStatusCode.Unauthorized);
         return await responseBuilder.BuildResponseAsync(x => new GetTasksEndpointResult(x), cancellationToken);
     }
 }

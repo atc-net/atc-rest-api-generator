@@ -14,15 +14,12 @@ namespace DemoSample.ApiClient.Generated.Endpoints.RouteWithDash.Interfaces;
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface IGetRouteWithDashEndpointResult : IEndpointResponse
 {
+
     bool IsOk { get; }
 
     bool IsUnauthorized { get; }
 
-    bool IsForbidden { get; }
+    string? OkContent { get; }
 
-    bool IsInternalServerError { get; }
-
-    string OkContent { get; }
-
-    string InternalServerErrorContent { get; }
+    string? UnauthorizedContent { get; }
 }

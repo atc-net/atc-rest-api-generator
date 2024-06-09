@@ -25,27 +25,21 @@ public class GetUsersEndpointResult : EndpointResponse, IGetUsersEndpointResult
     public bool IsUnauthorized
         => StatusCode == HttpStatusCode.Unauthorized;
 
-    public bool IsForbidden
-        => StatusCode == HttpStatusCode.Forbidden;
-
     public bool IsConflict
         => StatusCode == HttpStatusCode.Conflict;
 
-    public bool IsInternalServerError
-        => StatusCode == HttpStatusCode.InternalServerError;
-
-    public List<User> OkContent
-        => IsOk && ContentObject is List<User> result
+    public IEnumerable<User> OkContent
+        => IsOk && ContentObject is IEnumerable<User> result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsOk property first.");
 
-    public string ConflictContent
-        => IsConflict && ContentObject is string result
+    public ProblemDetails UnauthorizedContent
+        => IsUnauthorized && ContentObject is ProblemDetails result
+            ? result
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsUnauthorized property first.");
+
+    public ProblemDetails ConflictContent
+        => IsConflict && ContentObject is ProblemDetails result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsConflict property first.");
-
-    public string InternalServerErrorContent
-        => IsInternalServerError && ContentObject is string result
-            ? result
-            : throw new InvalidOperationException("Content is not the expected type - please use the IsInternalServerError property first.");
 }

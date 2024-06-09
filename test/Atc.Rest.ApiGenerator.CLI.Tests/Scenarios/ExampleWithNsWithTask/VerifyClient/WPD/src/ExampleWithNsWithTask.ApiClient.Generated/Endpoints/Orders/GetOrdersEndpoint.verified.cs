@@ -25,7 +25,7 @@ public class GetOrdersEndpoint : IGetOrdersEndpoint
         this.httpMessageFactory = httpMessageFactory;
     }
 
-    public async Task<IGetOrdersEndpointResult> ExecuteAsync(
+    public async Task<GetOrdersEndpointResult> ExecuteAsync(
         GetOrdersParameters parameters,
         string httpClientName = "ExampleWithNsWithTask-ApiClient",
         CancellationToken cancellationToken = default)
@@ -43,11 +43,8 @@ public class GetOrdersEndpoint : IGetOrdersEndpoint
         var responseBuilder = httpMessageFactory.FromResponse(response);
         responseBuilder.AddSuccessResponse<PaginationResult<Order>>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse<ValidationProblemDetails>(HttpStatusCode.BadRequest);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Unauthorized);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Forbidden);
-        responseBuilder.AddErrorResponse(HttpStatusCode.NotFound);
-        responseBuilder.AddErrorResponse<string>(HttpStatusCode.InternalServerError);
-
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.Unauthorized);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.NotFound);
         return await responseBuilder.BuildResponseAsync(x => new GetOrdersEndpointResult(x), cancellationToken);
     }
 }

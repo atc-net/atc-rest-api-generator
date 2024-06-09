@@ -25,7 +25,7 @@ public class PatchOrdersIdEndpoint : IPatchOrdersIdEndpoint
         this.httpMessageFactory = httpMessageFactory;
     }
 
-    public async Task<IPatchOrdersIdEndpointResult> ExecuteAsync(
+    public async Task<PatchOrdersIdEndpointResult> ExecuteAsync(
         PatchOrdersIdParameters parameters,
         string httpClientName = "DemoSample-ApiClient",
         CancellationToken cancellationToken = default)
@@ -44,15 +44,13 @@ public class PatchOrdersIdEndpoint : IPatchOrdersIdEndpoint
         using var response = await client.SendAsync(requestMessage, cancellationToken);
 
         var responseBuilder = httpMessageFactory.FromResponse(response);
-        responseBuilder.AddSuccessResponse<string>(HttpStatusCode.OK);
+        responseBuilder.AddSuccessResponse<string?>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse<ValidationProblemDetails>(HttpStatusCode.BadRequest);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Unauthorized);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Forbidden);
-        responseBuilder.AddErrorResponse(HttpStatusCode.NotFound);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Conflict);
-        responseBuilder.AddErrorResponse<string>(HttpStatusCode.InternalServerError);
-        responseBuilder.AddErrorResponse(HttpStatusCode.BadGateway);
-
+        responseBuilder.AddErrorResponse<string>(HttpStatusCode.Unauthorized);
+        responseBuilder.AddErrorResponse<string>(HttpStatusCode.Forbidden);
+        responseBuilder.AddErrorResponse<string>(HttpStatusCode.NotFound);
+        responseBuilder.AddErrorResponse<string>(HttpStatusCode.Conflict);
+        responseBuilder.AddErrorResponse<string>(HttpStatusCode.BadGateway);
         return await responseBuilder.BuildResponseAsync(x => new PatchOrdersIdEndpointResult(x), cancellationToken);
     }
 }

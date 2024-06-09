@@ -20,7 +20,7 @@ public interface IGetUserByIdEndpoint
     /// <param name="parameters">The parameters.</param>
     /// <param name="httpClientName">The http client name.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<IGetUserByIdEndpointResult> ExecuteAsync(
+    Task<GetUserByIdEndpointResult> ExecuteAsync(
         GetUserByIdParameters parameters,
         string httpClientName = "DemoSample-ApiClient",
         CancellationToken cancellationToken = default);

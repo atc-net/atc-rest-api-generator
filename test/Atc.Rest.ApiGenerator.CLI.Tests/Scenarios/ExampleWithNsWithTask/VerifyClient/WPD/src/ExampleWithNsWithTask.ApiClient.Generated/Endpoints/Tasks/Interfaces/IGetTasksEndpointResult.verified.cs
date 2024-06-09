@@ -14,15 +14,12 @@ namespace ExampleWithNsWithTask.ApiClient.Generated.Endpoints.Tasks.Interfaces;
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface IGetTasksEndpointResult : IEndpointResponse
 {
+
     bool IsOk { get; }
 
     bool IsUnauthorized { get; }
 
-    bool IsForbidden { get; }
+    IEnumerable<Task> OkContent { get; }
 
-    bool IsInternalServerError { get; }
-
-    List<Contracts.Tasks.Task> OkContent { get; }
-
-    string InternalServerErrorContent { get; }
+    ProblemDetails UnauthorizedContent { get; }
 }

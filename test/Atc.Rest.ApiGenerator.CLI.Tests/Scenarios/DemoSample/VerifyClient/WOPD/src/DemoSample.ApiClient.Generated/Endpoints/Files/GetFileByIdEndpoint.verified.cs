@@ -25,7 +25,7 @@ public class GetFileByIdEndpoint : IGetFileByIdEndpoint
         this.httpMessageFactory = httpMessageFactory;
     }
 
-    public async Task<IGetFileByIdEndpointResult> ExecuteAsync(
+    public async Task<GetFileByIdEndpointResult> ExecuteAsync(
         GetFileByIdParameters parameters,
         string httpClientName = "DemoSample-ApiClient",
         CancellationToken cancellationToken = default)
@@ -39,13 +39,10 @@ public class GetFileByIdEndpoint : IGetFileByIdEndpoint
         using var response = await client.SendAsync(requestMessage, cancellationToken);
 
         var responseBuilder = httpMessageFactory.FromResponse(response);
-        responseBuilder.AddSuccessResponse<string>(HttpStatusCode.OK);
+        responseBuilder.AddSuccessResponse<byte[]>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse<ValidationProblemDetails>(HttpStatusCode.BadRequest);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Unauthorized);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Forbidden);
-        responseBuilder.AddErrorResponse(HttpStatusCode.NotFound);
-        responseBuilder.AddErrorResponse<string>(HttpStatusCode.InternalServerError);
-
+        responseBuilder.AddErrorResponse<string>(HttpStatusCode.Unauthorized);
+        responseBuilder.AddErrorResponse<string>(HttpStatusCode.NotFound);
         return await responseBuilder.BuildResponseAsync(x => new GetFileByIdEndpointResult(x), cancellationToken);
     }
 }

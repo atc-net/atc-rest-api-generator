@@ -14,15 +14,12 @@ namespace DemoSample.ApiClient.Generated.Endpoints.EventArgs.Interfaces;
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface IGetEventArgsEndpointResult : IEndpointResponse
 {
+
     bool IsOk { get; }
 
     bool IsUnauthorized { get; }
 
-    bool IsForbidden { get; }
+    IEnumerable<EventArgs> OkContent { get; }
 
-    bool IsInternalServerError { get; }
-
-    List<Contracts.EventArgs.EventArgs> OkContent { get; }
-
-    string InternalServerErrorContent { get; }
+    ProblemDetails UnauthorizedContent { get; }
 }

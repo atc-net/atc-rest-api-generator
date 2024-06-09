@@ -25,7 +25,7 @@ public class ShowPetByIdEndpoint : IShowPetByIdEndpoint
         this.httpMessageFactory = httpMessageFactory;
     }
 
-    public async Task<IShowPetByIdEndpointResult> ExecuteAsync(
+    public async Task<ShowPetByIdEndpointResult> ExecuteAsync(
         ShowPetByIdParameters parameters,
         string httpClientName = "PetStore-ApiClient",
         CancellationToken cancellationToken = default)
@@ -41,10 +41,7 @@ public class ShowPetByIdEndpoint : IShowPetByIdEndpoint
         var responseBuilder = httpMessageFactory.FromResponse(response);
         responseBuilder.AddSuccessResponse<Pet>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse<ValidationProblemDetails>(HttpStatusCode.BadRequest);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Unauthorized);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Forbidden);
-        responseBuilder.AddErrorResponse<string>(HttpStatusCode.InternalServerError);
-
+        responseBuilder.AddErrorResponse<string>(HttpStatusCode.Unauthorized);
         return await responseBuilder.BuildResponseAsync(x => new ShowPetByIdEndpointResult(x), cancellationToken);
     }
 }

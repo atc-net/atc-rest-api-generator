@@ -25,7 +25,7 @@ public class GetAddressesByPostalCodesEndpoint : IGetAddressesByPostalCodesEndpo
         this.httpMessageFactory = httpMessageFactory;
     }
 
-    public async Task<IGetAddressesByPostalCodesEndpointResult> ExecuteAsync(
+    public async Task<GetAddressesByPostalCodesEndpointResult> ExecuteAsync(
         GetAddressesByPostalCodesParameters parameters,
         string httpClientName = "DemoSample-ApiClient",
         CancellationToken cancellationToken = default)
@@ -39,13 +39,10 @@ public class GetAddressesByPostalCodesEndpoint : IGetAddressesByPostalCodesEndpo
         using var response = await client.SendAsync(requestMessage, cancellationToken);
 
         var responseBuilder = httpMessageFactory.FromResponse(response);
-        responseBuilder.AddSuccessResponse<List<Address>>(HttpStatusCode.OK);
+        responseBuilder.AddSuccessResponse<IEnumerable<Address>>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse<ValidationProblemDetails>(HttpStatusCode.BadRequest);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Unauthorized);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Forbidden);
-        responseBuilder.AddErrorResponse(HttpStatusCode.NotFound);
-        responseBuilder.AddErrorResponse<string>(HttpStatusCode.InternalServerError);
-
+        responseBuilder.AddErrorResponse<string>(HttpStatusCode.Unauthorized);
+        responseBuilder.AddErrorResponse<string>(HttpStatusCode.NotFound);
         return await responseBuilder.BuildResponseAsync(x => new GetAddressesByPostalCodesEndpointResult(x), cancellationToken);
     }
 }

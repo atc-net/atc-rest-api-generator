@@ -20,7 +20,7 @@ public interface IDeleteUserByIdEndpoint
     /// <param name="parameters">The parameters.</param>
     /// <param name="httpClientName">The http client name.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<IDeleteUserByIdEndpointResult> ExecuteAsync(
+    Task<DeleteUserByIdEndpointResult> ExecuteAsync(
         DeleteUserByIdParameters parameters,
         string httpClientName = "ExampleWithUsers-ApiClient",
         CancellationToken cancellationToken = default);

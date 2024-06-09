@@ -20,7 +20,7 @@ public interface IGetCatsEndpoint
     /// <param name="parameters">The parameters.</param>
     /// <param name="httpClientName">The http client name.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<IGetCatsEndpointResult> ExecuteAsync(
+    Task<GetCatsEndpointResult> ExecuteAsync(
         GetCatsParameters parameters,
         string httpClientName = "ExampleWithGenericPagination-ApiClient",
         CancellationToken cancellationToken = default);

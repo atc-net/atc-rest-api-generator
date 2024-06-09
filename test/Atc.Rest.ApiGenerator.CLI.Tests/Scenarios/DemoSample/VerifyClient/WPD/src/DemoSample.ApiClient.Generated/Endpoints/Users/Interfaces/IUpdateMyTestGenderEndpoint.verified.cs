@@ -20,7 +20,7 @@ public interface IUpdateMyTestGenderEndpoint
     /// <param name="parameters">The parameters.</param>
     /// <param name="httpClientName">The http client name.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<IUpdateMyTestGenderEndpointResult> ExecuteAsync(
+    Task<UpdateMyTestGenderEndpointResult> ExecuteAsync(
         UpdateMyTestGenderParameters parameters,
         string httpClientName = "DemoSample-ApiClient",
         CancellationToken cancellationToken = default);

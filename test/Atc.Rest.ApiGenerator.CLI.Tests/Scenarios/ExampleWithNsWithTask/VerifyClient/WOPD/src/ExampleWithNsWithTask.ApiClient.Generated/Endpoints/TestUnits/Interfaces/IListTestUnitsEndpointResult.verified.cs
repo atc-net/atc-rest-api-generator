@@ -14,19 +14,16 @@ namespace ExampleWithNsWithTask.ApiClient.Generated.Endpoints.TestUnits.Interfac
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface IListTestUnitsEndpointResult : IEndpointResponse
 {
+
     bool IsOk { get; }
 
     bool IsBadRequest { get; }
 
     bool IsUnauthorized { get; }
 
-    bool IsForbidden { get; }
-
-    bool IsInternalServerError { get; }
-
     PaginationResult<TestUnit> OkContent { get; }
 
-    ValidationProblemDetails BadRequestContent { get; }
+    string? BadRequestContent { get; }
 
-    string InternalServerErrorContent { get; }
+    string? UnauthorizedContent { get; }
 }

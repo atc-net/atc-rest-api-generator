@@ -14,19 +14,16 @@ namespace DemoSample.ApiClient.Generated.Endpoints.Items.Interfaces;
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface ICreateItemEndpointResult : IEndpointResponse
 {
+
     bool IsOk { get; }
 
     bool IsBadRequest { get; }
 
     bool IsUnauthorized { get; }
 
-    bool IsForbidden { get; }
+    string? OkContent { get; }
 
-    bool IsInternalServerError { get; }
+    string? BadRequestContent { get; }
 
-    string OkContent { get; }
-
-    ValidationProblemDetails BadRequestContent { get; }
-
-    string InternalServerErrorContent { get; }
+    string? UnauthorizedContent { get; }
 }

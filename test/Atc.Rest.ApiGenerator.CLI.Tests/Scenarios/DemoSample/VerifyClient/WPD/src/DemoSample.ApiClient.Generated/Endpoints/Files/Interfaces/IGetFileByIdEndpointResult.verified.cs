@@ -14,23 +14,20 @@ namespace DemoSample.ApiClient.Generated.Endpoints.Files.Interfaces;
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface IGetFileByIdEndpointResult : IEndpointResponse
 {
+
     bool IsOk { get; }
 
     bool IsBadRequest { get; }
 
     bool IsUnauthorized { get; }
 
-    bool IsForbidden { get; }
-
     bool IsNotFound { get; }
 
-    bool IsInternalServerError { get; }
-
-    string OkContent { get; }
+    byte[] OkContent { get; }
 
     ValidationProblemDetails BadRequestContent { get; }
 
-    string NotFoundContent { get; }
+    ProblemDetails UnauthorizedContent { get; }
 
-    string InternalServerErrorContent { get; }
+    ProblemDetails NotFoundContent { get; }
 }

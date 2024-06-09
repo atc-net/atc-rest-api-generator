@@ -20,7 +20,7 @@ public interface IGetAddressesByPostalCodesEndpoint
     /// <param name="parameters">The parameters.</param>
     /// <param name="httpClientName">The http client name.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<IGetAddressesByPostalCodesEndpointResult> ExecuteAsync(
+    Task<GetAddressesByPostalCodesEndpointResult> ExecuteAsync(
         GetAddressesByPostalCodesParameters parameters,
         string httpClientName = "DemoSample-ApiClient",
         CancellationToken cancellationToken = default);

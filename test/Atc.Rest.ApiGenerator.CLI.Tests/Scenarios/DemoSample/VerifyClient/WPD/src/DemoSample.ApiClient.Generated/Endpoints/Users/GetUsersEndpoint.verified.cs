@@ -25,7 +25,7 @@ public class GetUsersEndpoint : IGetUsersEndpoint
         this.httpMessageFactory = httpMessageFactory;
     }
 
-    public async Task<IGetUsersEndpointResult> ExecuteAsync(
+    public async Task<GetUsersEndpointResult> ExecuteAsync(
         string httpClientName = "DemoSample-ApiClient",
         CancellationToken cancellationToken = default)
     {
@@ -37,12 +37,9 @@ public class GetUsersEndpoint : IGetUsersEndpoint
         using var response = await client.SendAsync(requestMessage, cancellationToken);
 
         var responseBuilder = httpMessageFactory.FromResponse(response);
-        responseBuilder.AddSuccessResponse<List<User>>(HttpStatusCode.OK);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Unauthorized);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Forbidden);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Conflict);
-        responseBuilder.AddErrorResponse<string>(HttpStatusCode.InternalServerError);
-
+        responseBuilder.AddSuccessResponse<IEnumerable<User>>(HttpStatusCode.OK);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.Unauthorized);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.Conflict);
         return await responseBuilder.BuildResponseAsync(x => new GetUsersEndpointResult(x), cancellationToken);
     }
 }

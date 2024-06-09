@@ -14,23 +14,20 @@ namespace ExampleWithNsWithTask.ApiClient.Generated.Endpoints.EventArgs.Interfac
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface IGetEventArgByIdEndpointResult : IEndpointResponse
 {
+
     bool IsOk { get; }
 
     bool IsBadRequest { get; }
 
     bool IsUnauthorized { get; }
 
-    bool IsForbidden { get; }
-
     bool IsNotFound { get; }
 
-    bool IsInternalServerError { get; }
-
-    Contracts.EventArgs.EventArgs OkContent { get; }
+    EventArgs OkContent { get; }
 
     ValidationProblemDetails BadRequestContent { get; }
 
-    string NotFoundContent { get; }
+    ProblemDetails UnauthorizedContent { get; }
 
-    string InternalServerErrorContent { get; }
+    ProblemDetails NotFoundContent { get; }
 }

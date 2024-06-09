@@ -25,7 +25,7 @@ public class UploadSingleObjectWithFileAsFormDataEndpoint : IUploadSingleObjectW
         this.httpMessageFactory = httpMessageFactory;
     }
 
-    public async Task<IUploadSingleObjectWithFileAsFormDataEndpointResult> ExecuteAsync(
+    public async Task<UploadSingleObjectWithFileAsFormDataEndpointResult> ExecuteAsync(
         UploadSingleObjectWithFileAsFormDataParameters parameters,
         string httpClientName = "DemoSample-ApiClient",
         CancellationToken cancellationToken = default)
@@ -39,12 +39,9 @@ public class UploadSingleObjectWithFileAsFormDataEndpoint : IUploadSingleObjectW
         using var response = await client.SendAsync(requestMessage, cancellationToken);
 
         var responseBuilder = httpMessageFactory.FromResponse(response);
-        responseBuilder.AddSuccessResponse<string>(HttpStatusCode.OK);
+        responseBuilder.AddSuccessResponse<string?>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse<ValidationProblemDetails>(HttpStatusCode.BadRequest);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Unauthorized);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Forbidden);
-        responseBuilder.AddErrorResponse<string>(HttpStatusCode.InternalServerError);
-
+        responseBuilder.AddErrorResponse<string>(HttpStatusCode.Unauthorized);
         return await responseBuilder.BuildResponseAsync(x => new UploadSingleObjectWithFileAsFormDataEndpointResult(x), cancellationToken);
     }
 }

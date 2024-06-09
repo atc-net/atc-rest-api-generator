@@ -28,32 +28,26 @@ public class GetAddressesByPostalCodesEndpointResult : EndpointResponse, IGetAdd
     public bool IsUnauthorized
         => StatusCode == HttpStatusCode.Unauthorized;
 
-    public bool IsForbidden
-        => StatusCode == HttpStatusCode.Forbidden;
-
     public bool IsNotFound
         => StatusCode == HttpStatusCode.NotFound;
 
-    public bool IsInternalServerError
-        => StatusCode == HttpStatusCode.InternalServerError;
-
-    public List<Address> OkContent
-        => IsOk && ContentObject is List<Address> result
+    public IEnumerable<Address> OkContent
+        => IsOk && ContentObject is IEnumerable<Address> result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsOk property first.");
 
-    public ValidationProblemDetails BadRequestContent
-        => IsBadRequest && ContentObject is ValidationProblemDetails result
+    public string? BadRequestContent
+        => IsBadRequest && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsBadRequest property first.");
 
-    public string NotFoundContent
+    public string? UnauthorizedContent
+        => IsUnauthorized && ContentObject is string result
+            ? result
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsUnauthorized property first.");
+
+    public string? NotFoundContent
         => IsNotFound && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsNotFound property first.");
-
-    public string InternalServerErrorContent
-        => IsInternalServerError && ContentObject is string result
-            ? result
-            : throw new InvalidOperationException("Content is not the expected type - please use the IsInternalServerError property first.");
 }

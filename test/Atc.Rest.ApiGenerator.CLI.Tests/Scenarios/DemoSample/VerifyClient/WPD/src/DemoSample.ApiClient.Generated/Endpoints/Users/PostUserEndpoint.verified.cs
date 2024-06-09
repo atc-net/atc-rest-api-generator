@@ -25,7 +25,7 @@ public class PostUserEndpoint : IPostUserEndpoint
         this.httpMessageFactory = httpMessageFactory;
     }
 
-    public async Task<IPostUserEndpointResult> ExecuteAsync(
+    public async Task<PostUserEndpointResult> ExecuteAsync(
         PostUserParameters parameters,
         string httpClientName = "DemoSample-ApiClient",
         CancellationToken cancellationToken = default)
@@ -39,13 +39,10 @@ public class PostUserEndpoint : IPostUserEndpoint
         using var response = await client.SendAsync(requestMessage, cancellationToken);
 
         var responseBuilder = httpMessageFactory.FromResponse(response);
-        responseBuilder.AddSuccessResponse<string>(HttpStatusCode.Created);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.Created);
         responseBuilder.AddErrorResponse<ValidationProblemDetails>(HttpStatusCode.BadRequest);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Unauthorized);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Forbidden);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Conflict);
-        responseBuilder.AddErrorResponse<string>(HttpStatusCode.InternalServerError);
-
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.Unauthorized);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.Conflict);
         return await responseBuilder.BuildResponseAsync(x => new PostUserEndpointResult(x), cancellationToken);
     }
 }

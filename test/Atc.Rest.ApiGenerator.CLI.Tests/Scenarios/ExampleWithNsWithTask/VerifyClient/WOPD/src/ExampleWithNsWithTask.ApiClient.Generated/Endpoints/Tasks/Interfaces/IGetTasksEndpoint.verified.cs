@@ -19,7 +19,7 @@ public interface IGetTasksEndpoint
     /// </summary>
     /// <param name="httpClientName">The http client name.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<IGetTasksEndpointResult> ExecuteAsync(
+    Task<GetTasksEndpointResult> ExecuteAsync(
         string httpClientName = "ExampleWithNsWithTask-ApiClient",
         CancellationToken cancellationToken = default);
 }

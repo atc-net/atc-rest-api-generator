@@ -20,7 +20,7 @@ public interface IListTestUnitsEndpoint
     /// <param name="parameters">The parameters.</param>
     /// <param name="httpClientName">The http client name.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<IListTestUnitsEndpointResult> ExecuteAsync(
+    Task<ListTestUnitsEndpointResult> ExecuteAsync(
         ListTestUnitsParameters parameters,
         string httpClientName = "ExampleWithNsWithTask-ApiClient",
         CancellationToken cancellationToken = default);

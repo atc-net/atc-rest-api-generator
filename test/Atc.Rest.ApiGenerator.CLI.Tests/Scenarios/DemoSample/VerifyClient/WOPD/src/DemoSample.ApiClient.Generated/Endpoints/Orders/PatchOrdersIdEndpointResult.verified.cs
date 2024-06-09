@@ -37,38 +37,40 @@ public class PatchOrdersIdEndpointResult : EndpointResponse, IPatchOrdersIdEndpo
     public bool IsConflict
         => StatusCode == HttpStatusCode.Conflict;
 
-    public bool IsInternalServerError
-        => StatusCode == HttpStatusCode.InternalServerError;
-
     public bool IsBadGateway
         => StatusCode == HttpStatusCode.BadGateway;
 
-    public string OkContent
+    public string? OkContent
         => IsOk && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsOk property first.");
 
-    public ValidationProblemDetails BadRequestContent
-        => IsBadRequest && ContentObject is ValidationProblemDetails result
+    public string? BadRequestContent
+        => IsBadRequest && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsBadRequest property first.");
 
-    public string NotFoundContent
+    public string? UnauthorizedContent
+        => IsUnauthorized && ContentObject is string result
+            ? result
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsUnauthorized property first.");
+
+    public string? ForbiddenContent
+        => IsForbidden && ContentObject is string result
+            ? result
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsForbidden property first.");
+
+    public string? NotFoundContent
         => IsNotFound && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsNotFound property first.");
 
-    public string ConflictContent
+    public string? ConflictContent
         => IsConflict && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsConflict property first.");
 
-    public string InternalServerErrorContent
-        => IsInternalServerError && ContentObject is string result
-            ? result
-            : throw new InvalidOperationException("Content is not the expected type - please use the IsInternalServerError property first.");
-
-    public string BadGatewayContent
+    public string? BadGatewayContent
         => IsBadGateway && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsBadGateway property first.");

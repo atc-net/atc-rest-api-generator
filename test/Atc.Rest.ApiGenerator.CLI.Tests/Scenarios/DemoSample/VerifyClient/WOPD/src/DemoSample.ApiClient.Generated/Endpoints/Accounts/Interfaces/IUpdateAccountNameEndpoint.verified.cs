@@ -20,7 +20,7 @@ public interface IUpdateAccountNameEndpoint
     /// <param name="parameters">The parameters.</param>
     /// <param name="httpClientName">The http client name.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<IUpdateAccountNameEndpointResult> ExecuteAsync(
+    Task<UpdateAccountNameEndpointResult> ExecuteAsync(
         UpdateAccountNameParameters parameters,
         string httpClientName = "DemoSample-ApiClient",
         CancellationToken cancellationToken = default);

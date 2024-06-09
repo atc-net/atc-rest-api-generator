@@ -19,7 +19,7 @@ public interface IGetEventArgsEndpoint
     /// </summary>
     /// <param name="httpClientName">The http client name.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<IGetEventArgsEndpointResult> ExecuteAsync(
+    Task<GetEventArgsEndpointResult> ExecuteAsync(
         string httpClientName = "DemoSample-ApiClient",
         CancellationToken cancellationToken = default);
 }

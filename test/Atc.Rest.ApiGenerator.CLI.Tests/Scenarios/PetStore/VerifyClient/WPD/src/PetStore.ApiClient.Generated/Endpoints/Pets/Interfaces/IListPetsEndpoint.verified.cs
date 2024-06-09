@@ -20,7 +20,7 @@ public interface IListPetsEndpoint
     /// <param name="parameters">The parameters.</param>
     /// <param name="httpClientName">The http client name.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<IListPetsEndpointResult> ExecuteAsync(
+    Task<ListPetsEndpointResult> ExecuteAsync(
         ListPetsParameters parameters,
         string httpClientName = "PetStore-ApiClient",
         CancellationToken cancellationToken = default);

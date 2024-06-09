@@ -20,7 +20,7 @@ public interface IUploadSingleObjectWithFileAsFormDataEndpoint
     /// <param name="parameters">The parameters.</param>
     /// <param name="httpClientName">The http client name.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<IUploadSingleObjectWithFileAsFormDataEndpointResult> ExecuteAsync(
+    Task<UploadSingleObjectWithFileAsFormDataEndpointResult> ExecuteAsync(
         UploadSingleObjectWithFileAsFormDataParameters parameters,
         string httpClientName = "DemoSample-ApiClient",
         CancellationToken cancellationToken = default);

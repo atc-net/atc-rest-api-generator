@@ -14,19 +14,16 @@ namespace DemoSample.ApiClient.Generated.Endpoints.Files.Interfaces;
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface IUploadSingleObjectWithFileAsFormDataEndpointResult : IEndpointResponse
 {
+
     bool IsOk { get; }
 
     bool IsBadRequest { get; }
 
     bool IsUnauthorized { get; }
 
-    bool IsForbidden { get; }
-
-    bool IsInternalServerError { get; }
-
-    string OkContent { get; }
+    string? OkContent { get; }
 
     ValidationProblemDetails BadRequestContent { get; }
 
-    string InternalServerErrorContent { get; }
+    ProblemDetails UnauthorizedContent { get; }
 }

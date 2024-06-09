@@ -28,12 +28,6 @@ public class GetCatsEndpointResult : EndpointResponse, IGetCatsEndpointResult
     public bool IsUnauthorized
         => StatusCode == HttpStatusCode.Unauthorized;
 
-    public bool IsForbidden
-        => StatusCode == HttpStatusCode.Forbidden;
-
-    public bool IsInternalServerError
-        => StatusCode == HttpStatusCode.InternalServerError;
-
     public PaginatedResult<Cat> OkContent
         => IsOk && ContentObject is PaginatedResult<Cat> result
             ? result
@@ -44,8 +38,8 @@ public class GetCatsEndpointResult : EndpointResponse, IGetCatsEndpointResult
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsBadRequest property first.");
 
-    public string InternalServerErrorContent
-        => IsInternalServerError && ContentObject is string result
+    public ProblemDetails UnauthorizedContent
+        => IsUnauthorized && ContentObject is ProblemDetails result
             ? result
-            : throw new InvalidOperationException("Content is not the expected type - please use the IsInternalServerError property first.");
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsUnauthorized property first.");
 }

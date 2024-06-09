@@ -25,7 +25,7 @@ public class UpdateItemEndpoint : IUpdateItemEndpoint
         this.httpMessageFactory = httpMessageFactory;
     }
 
-    public async Task<IUpdateItemEndpointResult> ExecuteAsync(
+    public async Task<UpdateItemEndpointResult> ExecuteAsync(
         UpdateItemParameters parameters,
         string httpClientName = "DemoSample-ApiClient",
         CancellationToken cancellationToken = default)
@@ -42,10 +42,7 @@ public class UpdateItemEndpoint : IUpdateItemEndpoint
         var responseBuilder = httpMessageFactory.FromResponse(response);
         responseBuilder.AddSuccessResponse<Guid>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse<ValidationProblemDetails>(HttpStatusCode.BadRequest);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Unauthorized);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Forbidden);
-        responseBuilder.AddErrorResponse<string>(HttpStatusCode.InternalServerError);
-
+        responseBuilder.AddErrorResponse<string>(HttpStatusCode.Unauthorized);
         return await responseBuilder.BuildResponseAsync(x => new UpdateItemEndpointResult(x), cancellationToken);
     }
 }

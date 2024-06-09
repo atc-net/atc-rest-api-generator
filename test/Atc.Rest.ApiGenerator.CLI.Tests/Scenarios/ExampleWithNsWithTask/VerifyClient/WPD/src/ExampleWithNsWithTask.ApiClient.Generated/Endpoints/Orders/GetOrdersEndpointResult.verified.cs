@@ -28,14 +28,8 @@ public class GetOrdersEndpointResult : EndpointResponse, IGetOrdersEndpointResul
     public bool IsUnauthorized
         => StatusCode == HttpStatusCode.Unauthorized;
 
-    public bool IsForbidden
-        => StatusCode == HttpStatusCode.Forbidden;
-
     public bool IsNotFound
         => StatusCode == HttpStatusCode.NotFound;
-
-    public bool IsInternalServerError
-        => StatusCode == HttpStatusCode.InternalServerError;
 
     public PaginationResult<Order> OkContent
         => IsOk && ContentObject is PaginationResult<Order> result
@@ -47,13 +41,13 @@ public class GetOrdersEndpointResult : EndpointResponse, IGetOrdersEndpointResul
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsBadRequest property first.");
 
-    public string NotFoundContent
-        => IsNotFound && ContentObject is string result
+    public ProblemDetails UnauthorizedContent
+        => IsUnauthorized && ContentObject is ProblemDetails result
+            ? result
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsUnauthorized property first.");
+
+    public ProblemDetails NotFoundContent
+        => IsNotFound && ContentObject is ProblemDetails result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsNotFound property first.");
-
-    public string InternalServerErrorContent
-        => IsInternalServerError && ContentObject is string result
-            ? result
-            : throw new InvalidOperationException("Content is not the expected type - please use the IsInternalServerError property first.");
 }

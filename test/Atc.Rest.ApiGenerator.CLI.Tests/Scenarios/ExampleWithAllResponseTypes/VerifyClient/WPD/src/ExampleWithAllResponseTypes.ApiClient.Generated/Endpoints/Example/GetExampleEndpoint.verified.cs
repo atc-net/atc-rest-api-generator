@@ -25,7 +25,7 @@ public class GetExampleEndpoint : IGetExampleEndpoint
         this.httpMessageFactory = httpMessageFactory;
     }
 
-    public async Task<IGetExampleEndpointResult> ExecuteAsync(
+    public async Task<GetExampleEndpointResult> ExecuteAsync(
         GetExampleParameters parameters,
         string httpClientName = "ExampleWithAllResponseTypes-ApiClient",
         CancellationToken cancellationToken = default)
@@ -39,57 +39,67 @@ public class GetExampleEndpoint : IGetExampleEndpoint
         using var response = await client.SendAsync(requestMessage, cancellationToken);
 
         var responseBuilder = httpMessageFactory.FromResponse(response);
-        responseBuilder.AddSuccessResponse(HttpStatusCode.);
-        responseBuilder.AddErrorResponse(HttpStatusCode.MultipleChoices);
-        responseBuilder.AddErrorResponse(HttpStatusCode.MovedPermanently);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Found);
-        responseBuilder.AddErrorResponse(HttpStatusCode.SeeOther);
-        responseBuilder.AddErrorResponse(HttpStatusCode.NotModified);
-        responseBuilder.AddErrorResponse(HttpStatusCode.UseProxy);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Unused);
-        responseBuilder.AddErrorResponse(HttpStatusCode.RedirectKeepVerb);
-        responseBuilder.AddErrorResponse(HttpStatusCode.PermanentRedirect);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.Continue);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.SwitchingProtocols);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.Processing);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.EarlyHints);
+        responseBuilder.AddSuccessResponse<ExampleModel>(HttpStatusCode.OK);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.Created);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.Accepted);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.NonAuthoritativeInformation);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.NoContent);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.ResetContent);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.PartialContent);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.MultiStatus);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.AlreadyReported);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.IMUsed);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.MultipleChoices);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.MovedPermanently);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.Found);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.SeeOther);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.NotModified);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.UseProxy);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.Unused);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.RedirectKeepVerb);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.PermanentRedirect);
         responseBuilder.AddErrorResponse<ValidationProblemDetails>(HttpStatusCode.BadRequest);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Unauthorized);
-        responseBuilder.AddErrorResponse(HttpStatusCode.PaymentRequired);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Forbidden);
-        responseBuilder.AddErrorResponse(HttpStatusCode.NotFound);
-        responseBuilder.AddErrorResponse(HttpStatusCode.MethodNotAllowed);
-        responseBuilder.AddErrorResponse(HttpStatusCode.NotAcceptable);
-        responseBuilder.AddErrorResponse(HttpStatusCode.ProxyAuthenticationRequired);
-        responseBuilder.AddErrorResponse(HttpStatusCode.RequestTimeout);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Conflict);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Gone);
-        responseBuilder.AddErrorResponse(HttpStatusCode.LengthRequired);
-        responseBuilder.AddErrorResponse(HttpStatusCode.PreconditionFailed);
-        responseBuilder.AddErrorResponse(HttpStatusCode.RequestEntityTooLarge);
-        responseBuilder.AddErrorResponse(HttpStatusCode.RequestUriTooLong);
-        responseBuilder.AddErrorResponse(HttpStatusCode.UnsupportedMediaType);
-        responseBuilder.AddErrorResponse(HttpStatusCode.RequestedRangeNotSatisfiable);
-        responseBuilder.AddErrorResponse(HttpStatusCode.ExpectationFailed);
-        responseBuilder.AddErrorResponse(HttpStatusCode.418);
-        responseBuilder.AddErrorResponse(HttpStatusCode.MisdirectedRequest);
-        responseBuilder.AddErrorResponse(HttpStatusCode.UnprocessableEntity);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Locked);
-        responseBuilder.AddErrorResponse(HttpStatusCode.FailedDependency);
-        responseBuilder.AddErrorResponse(HttpStatusCode.425);
-        responseBuilder.AddErrorResponse(HttpStatusCode.UpgradeRequired);
-        responseBuilder.AddErrorResponse(HttpStatusCode.PreconditionRequired);
-        responseBuilder.AddErrorResponse(HttpStatusCode.TooManyRequests);
-        responseBuilder.AddErrorResponse(HttpStatusCode.RequestHeaderFieldsTooLarge);
-        responseBuilder.AddErrorResponse(HttpStatusCode.UnavailableForLegalReasons);
-        responseBuilder.AddErrorResponse<string>(HttpStatusCode.InternalServerError);
-        responseBuilder.AddErrorResponse(HttpStatusCode.NotImplemented);
-        responseBuilder.AddErrorResponse(HttpStatusCode.BadGateway);
-        responseBuilder.AddErrorResponse(HttpStatusCode.ServiceUnavailable);
-        responseBuilder.AddErrorResponse(HttpStatusCode.GatewayTimeout);
-        responseBuilder.AddErrorResponse(HttpStatusCode.HttpVersionNotSupported);
-        responseBuilder.AddErrorResponse(HttpStatusCode.VariantAlsoNegotiates);
-        responseBuilder.AddErrorResponse(HttpStatusCode.InsufficientStorage);
-        responseBuilder.AddErrorResponse(HttpStatusCode.LoopDetected);
-        responseBuilder.AddErrorResponse(HttpStatusCode.NotExtended);
-        responseBuilder.AddErrorResponse(HttpStatusCode.NetworkAuthenticationRequired);
-
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.Unauthorized);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.PaymentRequired);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.Forbidden);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.NotFound);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.MethodNotAllowed);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.NotAcceptable);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.ProxyAuthenticationRequired);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.RequestTimeout);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.Conflict);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.Gone);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.LengthRequired);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.PreconditionFailed);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.RequestEntityTooLarge);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.RequestUriTooLong);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.UnsupportedMediaType);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.RequestedRangeNotSatisfiable);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.ExpectationFailed);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.MisdirectedRequest);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.UnprocessableEntity);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.Locked);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.FailedDependency);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.UpgradeRequired);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.PreconditionRequired);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.TooManyRequests);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.RequestHeaderFieldsTooLarge);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.UnavailableForLegalReasons);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.InternalServerError);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.NotImplemented);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.BadGateway);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.ServiceUnavailable);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.GatewayTimeout);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.HttpVersionNotSupported);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.VariantAlsoNegotiates);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.InsufficientStorage);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.LoopDetected);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.NotExtended);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.NetworkAuthenticationRequired);
         return await responseBuilder.BuildResponseAsync(x => new GetExampleEndpointResult(x), cancellationToken);
     }
 }

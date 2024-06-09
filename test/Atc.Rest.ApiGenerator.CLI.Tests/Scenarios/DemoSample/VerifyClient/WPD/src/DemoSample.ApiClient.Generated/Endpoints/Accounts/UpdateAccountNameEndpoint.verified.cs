@@ -25,7 +25,7 @@ public class UpdateAccountNameEndpoint : IUpdateAccountNameEndpoint
         this.httpMessageFactory = httpMessageFactory;
     }
 
-    public async Task<IUpdateAccountNameEndpointResult> ExecuteAsync(
+    public async Task<UpdateAccountNameEndpointResult> ExecuteAsync(
         UpdateAccountNameParameters parameters,
         string httpClientName = "DemoSample-ApiClient",
         CancellationToken cancellationToken = default)
@@ -40,12 +40,9 @@ public class UpdateAccountNameEndpoint : IUpdateAccountNameEndpoint
         using var response = await client.SendAsync(requestMessage, cancellationToken);
 
         var responseBuilder = httpMessageFactory.FromResponse(response);
-        responseBuilder.AddSuccessResponse<string>(HttpStatusCode.OK);
+        responseBuilder.AddSuccessResponse<string?>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse<ValidationProblemDetails>(HttpStatusCode.BadRequest);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Unauthorized);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Forbidden);
-        responseBuilder.AddErrorResponse<string>(HttpStatusCode.InternalServerError);
-
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.Unauthorized);
         return await responseBuilder.BuildResponseAsync(x => new UpdateAccountNameEndpointResult(x), cancellationToken);
     }
 }

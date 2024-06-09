@@ -20,7 +20,7 @@ public interface IGetExampleEndpoint
     /// <param name="parameters">The parameters.</param>
     /// <param name="httpClientName">The http client name.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<IGetExampleEndpointResult> ExecuteAsync(
+    Task<GetExampleEndpointResult> ExecuteAsync(
         GetExampleParameters parameters,
         string httpClientName = "ExampleWithAllResponseTypes-ApiClient",
         CancellationToken cancellationToken = default);

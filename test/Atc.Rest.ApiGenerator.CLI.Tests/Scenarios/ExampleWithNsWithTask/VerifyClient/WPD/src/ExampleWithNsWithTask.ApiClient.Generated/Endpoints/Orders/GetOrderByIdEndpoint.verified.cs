@@ -25,7 +25,7 @@ public class GetOrderByIdEndpoint : IGetOrderByIdEndpoint
         this.httpMessageFactory = httpMessageFactory;
     }
 
-    public async Task<IGetOrderByIdEndpointResult> ExecuteAsync(
+    public async Task<GetOrderByIdEndpointResult> ExecuteAsync(
         GetOrderByIdParameters parameters,
         string httpClientName = "ExampleWithNsWithTask-ApiClient",
         CancellationToken cancellationToken = default)
@@ -42,11 +42,8 @@ public class GetOrderByIdEndpoint : IGetOrderByIdEndpoint
         var responseBuilder = httpMessageFactory.FromResponse(response);
         responseBuilder.AddSuccessResponse<Order>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse<ValidationProblemDetails>(HttpStatusCode.BadRequest);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Unauthorized);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Forbidden);
-        responseBuilder.AddErrorResponse(HttpStatusCode.NotFound);
-        responseBuilder.AddErrorResponse<string>(HttpStatusCode.InternalServerError);
-
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.Unauthorized);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.NotFound);
         return await responseBuilder.BuildResponseAsync(x => new GetOrderByIdEndpointResult(x), cancellationToken);
     }
 }

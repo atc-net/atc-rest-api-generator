@@ -211,6 +211,7 @@ public class ContentGeneratorClientEndpointResult : IContentGenerator
             switch (responseModel.StatusCode)
             {
                 case HttpStatusCode.OK:
+                    sb.AppendLine();
                     AppendMethodContentStatusCodeOk(sb, responseModel);
                     break;
                 case HttpStatusCode.BadRequest:
@@ -309,6 +310,7 @@ public class ContentGeneratorClientEndpointResult : IContentGenerator
             switch (responseModel.StatusCode)
             {
                 case HttpStatusCode.OK:
+                    sb.AppendLine();
                     AppendMethodContentStatusCodeOk(sb, responseModel);
                     break;
                 case HttpStatusCode.EarlyHints:

@@ -19,8 +19,47 @@ public class GetExampleEndpointResult : EndpointResponse, IGetExampleEndpointRes
     {
     }
 
+    public bool IsContinue
+        => StatusCode == HttpStatusCode.Continue;
+
+    public bool IsSwitchingProtocols
+        => StatusCode == HttpStatusCode.SwitchingProtocols;
+
+    public bool IsProcessing
+        => StatusCode == HttpStatusCode.Processing;
+
+    public bool IsEarlyHints
+        => StatusCode == HttpStatusCode.EarlyHints;
+
     public bool IsOk
         => StatusCode == HttpStatusCode.OK;
+
+    public bool IsCreated
+        => StatusCode == HttpStatusCode.Created;
+
+    public bool IsAccepted
+        => StatusCode == HttpStatusCode.Accepted;
+
+    public bool IsNonAuthoritativeInformation
+        => StatusCode == HttpStatusCode.NonAuthoritativeInformation;
+
+    public bool IsNoContent
+        => StatusCode == HttpStatusCode.NoContent;
+
+    public bool IsResetContent
+        => StatusCode == HttpStatusCode.ResetContent;
+
+    public bool IsPartialContent
+        => StatusCode == HttpStatusCode.PartialContent;
+
+    public bool IsMultiStatus
+        => StatusCode == HttpStatusCode.MultiStatus;
+
+    public bool IsAlreadyReported
+        => StatusCode == HttpStatusCode.AlreadyReported;
+
+    public bool IsImUsed
+        => StatusCode == HttpStatusCode.IMUsed;
 
     public bool IsMultipleChoices
         => StatusCode == HttpStatusCode.MultipleChoices;
@@ -103,9 +142,6 @@ public class GetExampleEndpointResult : EndpointResponse, IGetExampleEndpointRes
     public bool IsExpectationFailed
         => StatusCode == HttpStatusCode.ExpectationFailed;
 
-    public bool Is418
-        => StatusCode == HttpStatusCode.418;
-
     public bool IsMisdirectedRequest
         => StatusCode == HttpStatusCode.MisdirectedRequest;
 
@@ -117,9 +153,6 @@ public class GetExampleEndpointResult : EndpointResponse, IGetExampleEndpointRes
 
     public bool IsFailedDependency
         => StatusCode == HttpStatusCode.FailedDependency;
-
-    public bool Is425
-        => StatusCode == HttpStatusCode.425;
 
     public bool IsUpgradeRequired
         => StatusCode == HttpStatusCode.UpgradeRequired;
@@ -169,237 +202,302 @@ public class GetExampleEndpointResult : EndpointResponse, IGetExampleEndpointRes
     public bool IsNetworkAuthenticationRequired
         => StatusCode == HttpStatusCode.NetworkAuthenticationRequired;
 
+    public string? ContinueContent
+        => IsContinue && ContentObject is string result
+            ? result
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsContinue property first.");
+
+    public string? SwitchingProtocolsContent
+        => IsSwitchingProtocols && ContentObject is string result
+            ? result
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsSwitchingProtocols property first.");
+
+    public string? ProcessingContent
+        => IsProcessing && ContentObject is string result
+            ? result
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsProcessing property first.");
+
     public ExampleModel OkContent
         => IsOk && ContentObject is ExampleModel result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsOk property first.");
 
-    public string MultipleChoicesContent
+    public string? CreatedContent
+        => IsCreated && ContentObject is string result
+            ? result
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsCreated property first.");
+
+    public string? AcceptedContent
+        => IsAccepted && ContentObject is string result
+            ? result
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsAccepted property first.");
+
+    public string? NonAuthoritativeInformationContent
+        => IsNonAuthoritativeInformation && ContentObject is string result
+            ? result
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsNonAuthoritativeInformation property first.");
+
+    public string? NoContentContent
+        => IsNoContent && ContentObject is string result
+            ? result
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsNoContent property first.");
+
+    public string? ResetContentContent
+        => IsResetContent && ContentObject is string result
+            ? result
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsResetContent property first.");
+
+    public string? PartialContentContent
+        => IsPartialContent && ContentObject is string result
+            ? result
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsPartialContent property first.");
+
+    public string? MultiStatusContent
+        => IsMultiStatus && ContentObject is string result
+            ? result
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsMultiStatus property first.");
+
+    public string? AlreadyReportedContent
+        => IsAlreadyReported && ContentObject is string result
+            ? result
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsAlreadyReported property first.");
+
+    public string? ImUsedContent
+        => IsImUsed && ContentObject is string result
+            ? result
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsImUsed property first.");
+
+    public string? MultipleChoicesContent
         => IsMultipleChoices && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsMultipleChoices property first.");
 
-    public string MovedPermanentlyContent
+    public string? MovedPermanentlyContent
         => IsMovedPermanently && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsMovedPermanently property first.");
 
-    public string FoundContent
+    public string? FoundContent
         => IsFound && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsFound property first.");
 
-    public string SeeOtherContent
+    public string? SeeOtherContent
         => IsSeeOther && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsSeeOther property first.");
 
-    public string UseProxyContent
+    public string? NotModifiedContent
+        => IsNotModified && ContentObject is string result
+            ? result
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsNotModified property first.");
+
+    public string? UseProxyContent
         => IsUseProxy && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsUseProxy property first.");
 
-    public string UnusedContent
+    public string? UnusedContent
         => IsUnused && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsUnused property first.");
 
-    public string RedirectKeepVerbContent
+    public string? RedirectKeepVerbContent
         => IsRedirectKeepVerb && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsRedirectKeepVerb property first.");
 
-    public string PermanentRedirectContent
+    public string? PermanentRedirectContent
         => IsPermanentRedirect && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsPermanentRedirect property first.");
 
-    public ValidationProblemDetails BadRequestContent
-        => IsBadRequest && ContentObject is ValidationProblemDetails result
+    public string? BadRequestContent
+        => IsBadRequest && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsBadRequest property first.");
 
-    public string PaymentRequiredContent
+    public string? UnauthorizedContent
+        => IsUnauthorized && ContentObject is string result
+            ? result
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsUnauthorized property first.");
+
+    public string? PaymentRequiredContent
         => IsPaymentRequired && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsPaymentRequired property first.");
 
-    public string NotFoundContent
+    public string? ForbiddenContent
+        => IsForbidden && ContentObject is string result
+            ? result
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsForbidden property first.");
+
+    public string? NotFoundContent
         => IsNotFound && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsNotFound property first.");
 
-    public string MethodNotAllowedContent
+    public string? MethodNotAllowedContent
         => IsMethodNotAllowed && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsMethodNotAllowed property first.");
 
-    public string NotAcceptableContent
+    public string? NotAcceptableContent
         => IsNotAcceptable && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsNotAcceptable property first.");
 
-    public string ProxyAuthenticationRequiredContent
+    public string? ProxyAuthenticationRequiredContent
         => IsProxyAuthenticationRequired && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsProxyAuthenticationRequired property first.");
 
-    public string RequestTimeoutContent
+    public string? RequestTimeoutContent
         => IsRequestTimeout && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsRequestTimeout property first.");
 
-    public string ConflictContent
+    public string? ConflictContent
         => IsConflict && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsConflict property first.");
 
-    public string GoneContent
+    public string? GoneContent
         => IsGone && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsGone property first.");
 
-    public string LengthRequiredContent
+    public string? LengthRequiredContent
         => IsLengthRequired && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsLengthRequired property first.");
 
-    public string PreconditionFailedContent
+    public string? PreconditionFailedContent
         => IsPreconditionFailed && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsPreconditionFailed property first.");
 
-    public string RequestEntityTooLargeContent
+    public string? RequestEntityTooLargeContent
         => IsRequestEntityTooLarge && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsRequestEntityTooLarge property first.");
 
-    public string RequestUriTooLongContent
+    public string? RequestUriTooLongContent
         => IsRequestUriTooLong && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsRequestUriTooLong property first.");
 
-    public string UnsupportedMediaTypeContent
+    public string? UnsupportedMediaTypeContent
         => IsUnsupportedMediaType && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsUnsupportedMediaType property first.");
 
-    public string RequestedRangeNotSatisfiableContent
+    public string? RequestedRangeNotSatisfiableContent
         => IsRequestedRangeNotSatisfiable && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsRequestedRangeNotSatisfiable property first.");
 
-    public string ExpectationFailedContent
+    public string? ExpectationFailedContent
         => IsExpectationFailed && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsExpectationFailed property first.");
 
-    public string 418Content
-        => Is418 && ContentObject is string result
-            ? result
-            : throw new InvalidOperationException("Content is not the expected type - please use the Is418 property first.");
-
-    public string MisdirectedRequestContent
+    public string? MisdirectedRequestContent
         => IsMisdirectedRequest && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsMisdirectedRequest property first.");
 
-    public string UnprocessableEntityContent
+    public string? UnprocessableEntityContent
         => IsUnprocessableEntity && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsUnprocessableEntity property first.");
 
-    public string LockedContent
+    public string? LockedContent
         => IsLocked && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsLocked property first.");
 
-    public string FailedDependencyContent
+    public string? FailedDependencyContent
         => IsFailedDependency && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsFailedDependency property first.");
 
-    public string 425Content
-        => Is425 && ContentObject is string result
-            ? result
-            : throw new InvalidOperationException("Content is not the expected type - please use the Is425 property first.");
-
-    public string UpgradeRequiredContent
+    public string? UpgradeRequiredContent
         => IsUpgradeRequired && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsUpgradeRequired property first.");
 
-    public string PreconditionRequiredContent
+    public string? PreconditionRequiredContent
         => IsPreconditionRequired && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsPreconditionRequired property first.");
 
-    public string TooManyRequestsContent
+    public string? TooManyRequestsContent
         => IsTooManyRequests && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsTooManyRequests property first.");
 
-    public string RequestHeaderFieldsTooLargeContent
+    public string? RequestHeaderFieldsTooLargeContent
         => IsRequestHeaderFieldsTooLarge && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsRequestHeaderFieldsTooLarge property first.");
 
-    public string UnavailableForLegalReasonsContent
+    public string? UnavailableForLegalReasonsContent
         => IsUnavailableForLegalReasons && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsUnavailableForLegalReasons property first.");
 
-    public string InternalServerErrorContent
+    public string? InternalServerErrorContent
         => IsInternalServerError && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsInternalServerError property first.");
 
-    public string NotImplementedContent
+    public string? NotImplementedContent
         => IsNotImplemented && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsNotImplemented property first.");
 
-    public string BadGatewayContent
+    public string? BadGatewayContent
         => IsBadGateway && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsBadGateway property first.");
 
-    public string ServiceUnavailableContent
+    public string? ServiceUnavailableContent
         => IsServiceUnavailable && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsServiceUnavailable property first.");
 
-    public string GatewayTimeoutContent
+    public string? GatewayTimeoutContent
         => IsGatewayTimeout && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsGatewayTimeout property first.");
 
-    public string HttpVersionNotSupportedContent
+    public string? HttpVersionNotSupportedContent
         => IsHttpVersionNotSupported && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsHttpVersionNotSupported property first.");
 
-    public string VariantAlsoNegotiatesContent
+    public string? VariantAlsoNegotiatesContent
         => IsVariantAlsoNegotiates && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsVariantAlsoNegotiates property first.");
 
-    public string InsufficientStorageContent
+    public string? InsufficientStorageContent
         => IsInsufficientStorage && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsInsufficientStorage property first.");
 
-    public string LoopDetectedContent
+    public string? LoopDetectedContent
         => IsLoopDetected && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsLoopDetected property first.");
 
-    public string NotExtendedContent
+    public string? NotExtendedContent
         => IsNotExtended && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsNotExtended property first.");
 
-    public string NetworkAuthenticationRequiredContent
+    public string? NetworkAuthenticationRequiredContent
         => IsNetworkAuthenticationRequired && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsNetworkAuthenticationRequired property first.");

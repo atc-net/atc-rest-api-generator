@@ -19,7 +19,7 @@ public interface ICreatePetsEndpoint
     /// </summary>
     /// <param name="httpClientName">The http client name.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<ICreatePetsEndpointResult> ExecuteAsync(
+    Task<CreatePetsEndpointResult> ExecuteAsync(
         string httpClientName = "PetStore-ApiClient",
         CancellationToken cancellationToken = default);
 }

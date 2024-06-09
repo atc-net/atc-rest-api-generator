@@ -14,19 +14,16 @@ namespace PetStore.ApiClient.Generated.Endpoints.Pets.Interfaces;
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface IListPetsEndpointResult : IEndpointResponse
 {
+
     bool IsOk { get; }
 
     bool IsBadRequest { get; }
 
     bool IsUnauthorized { get; }
 
-    bool IsForbidden { get; }
+    IEnumerable<Pet> OkContent { get; }
 
-    bool IsInternalServerError { get; }
+    string? BadRequestContent { get; }
 
-    List<Pet> OkContent { get; }
-
-    ValidationProblemDetails BadRequestContent { get; }
-
-    string InternalServerErrorContent { get; }
+    string? UnauthorizedContent { get; }
 }

@@ -25,7 +25,7 @@ public class GetEventArgByIdEndpoint : IGetEventArgByIdEndpoint
         this.httpMessageFactory = httpMessageFactory;
     }
 
-    public async Task<IGetEventArgByIdEndpointResult> ExecuteAsync(
+    public async Task<GetEventArgByIdEndpointResult> ExecuteAsync(
         GetEventArgByIdParameters parameters,
         string httpClientName = "ExampleWithNsWithTask-ApiClient",
         CancellationToken cancellationToken = default)
@@ -39,13 +39,10 @@ public class GetEventArgByIdEndpoint : IGetEventArgByIdEndpoint
         using var response = await client.SendAsync(requestMessage, cancellationToken);
 
         var responseBuilder = httpMessageFactory.FromResponse(response);
-        responseBuilder.AddSuccessResponse<Contracts.EventArgs.EventArgs>(HttpStatusCode.OK);
+        responseBuilder.AddSuccessResponse<EventArgs>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse<ValidationProblemDetails>(HttpStatusCode.BadRequest);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Unauthorized);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Forbidden);
-        responseBuilder.AddErrorResponse(HttpStatusCode.NotFound);
-        responseBuilder.AddErrorResponse<string>(HttpStatusCode.InternalServerError);
-
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.Unauthorized);
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.NotFound);
         return await responseBuilder.BuildResponseAsync(x => new GetEventArgByIdEndpointResult(x), cancellationToken);
     }
 }

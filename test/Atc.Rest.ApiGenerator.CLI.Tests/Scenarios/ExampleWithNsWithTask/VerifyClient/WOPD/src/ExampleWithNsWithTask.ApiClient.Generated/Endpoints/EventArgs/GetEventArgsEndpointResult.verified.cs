@@ -25,19 +25,13 @@ public class GetEventArgsEndpointResult : EndpointResponse, IGetEventArgsEndpoin
     public bool IsUnauthorized
         => StatusCode == HttpStatusCode.Unauthorized;
 
-    public bool IsForbidden
-        => StatusCode == HttpStatusCode.Forbidden;
-
-    public bool IsInternalServerError
-        => StatusCode == HttpStatusCode.InternalServerError;
-
-    public List<Contracts.EventArgs.EventArgs> OkContent
-        => IsOk && ContentObject is List<Contracts.EventArgs.EventArgs> result
+    public IEnumerable<EventArgs> OkContent
+        => IsOk && ContentObject is IEnumerable<EventArgs> result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsOk property first.");
 
-    public string InternalServerErrorContent
-        => IsInternalServerError && ContentObject is string result
+    public string? UnauthorizedContent
+        => IsUnauthorized && ContentObject is string result
             ? result
-            : throw new InvalidOperationException("Content is not the expected type - please use the IsInternalServerError property first.");
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsUnauthorized property first.");
 }

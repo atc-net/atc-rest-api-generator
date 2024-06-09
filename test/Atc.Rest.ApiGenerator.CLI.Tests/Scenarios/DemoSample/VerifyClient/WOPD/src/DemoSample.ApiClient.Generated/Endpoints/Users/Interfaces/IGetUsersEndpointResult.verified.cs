@@ -14,19 +14,16 @@ namespace DemoSample.ApiClient.Generated.Endpoints.Users.Interfaces;
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface IGetUsersEndpointResult : IEndpointResponse
 {
+
     bool IsOk { get; }
 
     bool IsUnauthorized { get; }
 
-    bool IsForbidden { get; }
-
     bool IsConflict { get; }
 
-    bool IsInternalServerError { get; }
+    IEnumerable<User> OkContent { get; }
 
-    List<User> OkContent { get; }
+    string? UnauthorizedContent { get; }
 
-    string ConflictContent { get; }
-
-    string InternalServerErrorContent { get; }
+    string? ConflictContent { get; }
 }

@@ -14,7 +14,34 @@ namespace ExampleWithAllResponseTypes.ApiClient.Generated.Endpoints.Example.Inte
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface IGetExampleEndpointResult : IEndpointResponse
 {
+
+    bool IsContinue { get; }
+
+    bool IsSwitchingProtocols { get; }
+
+    bool IsProcessing { get; }
+
+    bool IsEarlyHints { get; }
+
     bool IsOk { get; }
+
+    bool IsCreated { get; }
+
+    bool IsAccepted { get; }
+
+    bool IsNonAuthoritativeInformation { get; }
+
+    bool IsNoContent { get; }
+
+    bool IsResetContent { get; }
+
+    bool IsPartialContent { get; }
+
+    bool IsMultiStatus { get; }
+
+    bool IsAlreadyReported { get; }
+
+    bool IsImUsed { get; }
 
     bool IsMultipleChoices { get; }
 
@@ -70,8 +97,6 @@ public interface IGetExampleEndpointResult : IEndpointResponse
 
     bool IsExpectationFailed { get; }
 
-    bool Is418 { get; }
-
     bool IsMisdirectedRequest { get; }
 
     bool IsUnprocessableEntity { get; }
@@ -79,8 +104,6 @@ public interface IGetExampleEndpointResult : IEndpointResponse
     bool IsLocked { get; }
 
     bool IsFailedDependency { get; }
-
-    bool Is425 { get; }
 
     bool IsUpgradeRequired { get; }
 
@@ -114,97 +137,123 @@ public interface IGetExampleEndpointResult : IEndpointResponse
 
     bool IsNetworkAuthenticationRequired { get; }
 
+    string? ContinueContent { get; }
+
+    string? SwitchingProtocolsContent { get; }
+
+    string? ProcessingContent { get; }
+
     ExampleModel OkContent { get; }
 
-    string MultipleChoicesContent { get; }
+    string? CreatedContent { get; }
 
-    string MovedPermanentlyContent { get; }
+    string? AcceptedContent { get; }
 
-    string FoundContent { get; }
+    string? NonAuthoritativeInformationContent { get; }
 
-    string SeeOtherContent { get; }
+    string? NoContentContent { get; }
 
-    string UseProxyContent { get; }
+    string? ResetContentContent { get; }
 
-    string UnusedContent { get; }
+    string? PartialContentContent { get; }
 
-    string RedirectKeepVerbContent { get; }
+    string? MultiStatusContent { get; }
 
-    string PermanentRedirectContent { get; }
+    string? AlreadyReportedContent { get; }
 
-    ValidationProblemDetails BadRequestContent { get; }
+    string? ImUsedContent { get; }
 
-    string PaymentRequiredContent { get; }
+    string? MultipleChoicesContent { get; }
 
-    string NotFoundContent { get; }
+    string? MovedPermanentlyContent { get; }
 
-    string MethodNotAllowedContent { get; }
+    string? FoundContent { get; }
 
-    string NotAcceptableContent { get; }
+    string? SeeOtherContent { get; }
 
-    string ProxyAuthenticationRequiredContent { get; }
+    string? NotModifiedContent { get; }
 
-    string RequestTimeoutContent { get; }
+    string? UseProxyContent { get; }
 
-    string ConflictContent { get; }
+    string? UnusedContent { get; }
 
-    string GoneContent { get; }
+    string? RedirectKeepVerbContent { get; }
 
-    string LengthRequiredContent { get; }
+    string? PermanentRedirectContent { get; }
 
-    string PreconditionFailedContent { get; }
+    string? BadRequestContent { get; }
 
-    string RequestEntityTooLargeContent { get; }
+    string? UnauthorizedContent { get; }
 
-    string RequestUriTooLongContent { get; }
+    string? PaymentRequiredContent { get; }
 
-    string UnsupportedMediaTypeContent { get; }
+    string? ForbiddenContent { get; }
 
-    string RequestedRangeNotSatisfiableContent { get; }
+    string? NotFoundContent { get; }
 
-    string ExpectationFailedContent { get; }
+    string? MethodNotAllowedContent { get; }
 
-    string 418Content { get; }
+    string? NotAcceptableContent { get; }
 
-    string MisdirectedRequestContent { get; }
+    string? ProxyAuthenticationRequiredContent { get; }
 
-    string UnprocessableEntityContent { get; }
+    string? RequestTimeoutContent { get; }
 
-    string LockedContent { get; }
+    string? ConflictContent { get; }
 
-    string FailedDependencyContent { get; }
+    string? GoneContent { get; }
 
-    string 425Content { get; }
+    string? LengthRequiredContent { get; }
 
-    string UpgradeRequiredContent { get; }
+    string? PreconditionFailedContent { get; }
 
-    string PreconditionRequiredContent { get; }
+    string? RequestEntityTooLargeContent { get; }
 
-    string TooManyRequestsContent { get; }
+    string? RequestUriTooLongContent { get; }
 
-    string RequestHeaderFieldsTooLargeContent { get; }
+    string? UnsupportedMediaTypeContent { get; }
 
-    string UnavailableForLegalReasonsContent { get; }
+    string? RequestedRangeNotSatisfiableContent { get; }
 
-    string InternalServerErrorContent { get; }
+    string? ExpectationFailedContent { get; }
 
-    string NotImplementedContent { get; }
+    string? MisdirectedRequestContent { get; }
 
-    string BadGatewayContent { get; }
+    string? UnprocessableEntityContent { get; }
 
-    string ServiceUnavailableContent { get; }
+    string? LockedContent { get; }
 
-    string GatewayTimeoutContent { get; }
+    string? FailedDependencyContent { get; }
 
-    string HttpVersionNotSupportedContent { get; }
+    string? UpgradeRequiredContent { get; }
 
-    string VariantAlsoNegotiatesContent { get; }
+    string? PreconditionRequiredContent { get; }
 
-    string InsufficientStorageContent { get; }
+    string? TooManyRequestsContent { get; }
 
-    string LoopDetectedContent { get; }
+    string? RequestHeaderFieldsTooLargeContent { get; }
 
-    string NotExtendedContent { get; }
+    string? UnavailableForLegalReasonsContent { get; }
 
-    string NetworkAuthenticationRequiredContent { get; }
+    string? InternalServerErrorContent { get; }
+
+    string? NotImplementedContent { get; }
+
+    string? BadGatewayContent { get; }
+
+    string? ServiceUnavailableContent { get; }
+
+    string? GatewayTimeoutContent { get; }
+
+    string? HttpVersionNotSupportedContent { get; }
+
+    string? VariantAlsoNegotiatesContent { get; }
+
+    string? InsufficientStorageContent { get; }
+
+    string? LoopDetectedContent { get; }
+
+    string? NotExtendedContent { get; }
+
+    string? NetworkAuthenticationRequiredContent { get; }
 }

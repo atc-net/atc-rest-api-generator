@@ -14,23 +14,20 @@ namespace DemoSample.ApiClient.Generated.Endpoints.Addresses.Interfaces;
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface IGetAddressesByPostalCodesEndpointResult : IEndpointResponse
 {
+
     bool IsOk { get; }
 
     bool IsBadRequest { get; }
 
     bool IsUnauthorized { get; }
 
-    bool IsForbidden { get; }
-
     bool IsNotFound { get; }
 
-    bool IsInternalServerError { get; }
+    IEnumerable<Address> OkContent { get; }
 
-    List<Address> OkContent { get; }
+    string? BadRequestContent { get; }
 
-    ValidationProblemDetails BadRequestContent { get; }
+    string? UnauthorizedContent { get; }
 
-    string NotFoundContent { get; }
-
-    string InternalServerErrorContent { get; }
+    string? NotFoundContent { get; }
 }

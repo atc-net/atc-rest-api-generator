@@ -14,19 +14,16 @@ namespace ExampleWithGenericPagination.ApiClient.Generated.Endpoints.Dogs.Interf
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface IGetDogsEndpointResult : IEndpointResponse
 {
+
     bool IsOk { get; }
 
     bool IsBadRequest { get; }
 
     bool IsUnauthorized { get; }
 
-    bool IsForbidden { get; }
-
-    bool IsInternalServerError { get; }
-
     PaginatedResult<Dog> OkContent { get; }
 
-    ValidationProblemDetails BadRequestContent { get; }
+    string? BadRequestContent { get; }
 
-    string InternalServerErrorContent { get; }
+    string? UnauthorizedContent { get; }
 }

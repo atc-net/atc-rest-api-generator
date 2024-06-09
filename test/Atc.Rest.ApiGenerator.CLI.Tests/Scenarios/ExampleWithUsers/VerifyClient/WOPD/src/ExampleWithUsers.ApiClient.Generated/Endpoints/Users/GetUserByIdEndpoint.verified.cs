@@ -25,7 +25,7 @@ public class GetUserByIdEndpoint : IGetUserByIdEndpoint
         this.httpMessageFactory = httpMessageFactory;
     }
 
-    public async Task<IGetUserByIdEndpointResult> ExecuteAsync(
+    public async Task<GetUserByIdEndpointResult> ExecuteAsync(
         GetUserByIdParameters parameters,
         string httpClientName = "ExampleWithUsers-ApiClient",
         CancellationToken cancellationToken = default)
@@ -41,12 +41,9 @@ public class GetUserByIdEndpoint : IGetUserByIdEndpoint
         var responseBuilder = httpMessageFactory.FromResponse(response);
         responseBuilder.AddSuccessResponse<User>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse<ValidationProblemDetails>(HttpStatusCode.BadRequest);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Unauthorized);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Forbidden);
-        responseBuilder.AddErrorResponse(HttpStatusCode.NotFound);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Conflict);
-        responseBuilder.AddErrorResponse<string>(HttpStatusCode.InternalServerError);
-
+        responseBuilder.AddErrorResponse<string>(HttpStatusCode.Unauthorized);
+        responseBuilder.AddErrorResponse<string>(HttpStatusCode.NotFound);
+        responseBuilder.AddErrorResponse<string>(HttpStatusCode.Conflict);
         return await responseBuilder.BuildResponseAsync(x => new GetUserByIdEndpointResult(x), cancellationToken);
     }
 }

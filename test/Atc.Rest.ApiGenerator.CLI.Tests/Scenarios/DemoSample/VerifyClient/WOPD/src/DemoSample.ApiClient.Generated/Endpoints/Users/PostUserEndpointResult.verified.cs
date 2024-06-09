@@ -19,8 +19,8 @@ public class PostUserEndpointResult : EndpointResponse, IPostUserEndpointResult
     {
     }
 
-    public bool IsOk
-        => StatusCode == HttpStatusCode.OK;
+    public bool IsCreated
+        => StatusCode == HttpStatusCode.Created;
 
     public bool IsBadRequest
         => StatusCode == HttpStatusCode.BadRequest;
@@ -28,32 +28,26 @@ public class PostUserEndpointResult : EndpointResponse, IPostUserEndpointResult
     public bool IsUnauthorized
         => StatusCode == HttpStatusCode.Unauthorized;
 
-    public bool IsForbidden
-        => StatusCode == HttpStatusCode.Forbidden;
-
     public bool IsConflict
         => StatusCode == HttpStatusCode.Conflict;
 
-    public bool IsInternalServerError
-        => StatusCode == HttpStatusCode.InternalServerError;
-
-    public string OkContent
-        => IsOk && ContentObject is string result
+    public string? CreatedContent
+        => IsCreated && ContentObject is string result
             ? result
-            : throw new InvalidOperationException("Content is not the expected type - please use the IsOk property first.");
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsCreated property first.");
 
-    public ValidationProblemDetails BadRequestContent
-        => IsBadRequest && ContentObject is ValidationProblemDetails result
+    public string? BadRequestContent
+        => IsBadRequest && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsBadRequest property first.");
 
-    public string ConflictContent
+    public string? UnauthorizedContent
+        => IsUnauthorized && ContentObject is string result
+            ? result
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsUnauthorized property first.");
+
+    public string? ConflictContent
         => IsConflict && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsConflict property first.");
-
-    public string InternalServerErrorContent
-        => IsInternalServerError && ContentObject is string result
-            ? result
-            : throw new InvalidOperationException("Content is not the expected type - please use the IsInternalServerError property first.");
 }

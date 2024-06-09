@@ -25,7 +25,7 @@ public class ListTestUnitsEndpoint : IListTestUnitsEndpoint
         this.httpMessageFactory = httpMessageFactory;
     }
 
-    public async Task<IListTestUnitsEndpointResult> ExecuteAsync(
+    public async Task<ListTestUnitsEndpointResult> ExecuteAsync(
         ListTestUnitsParameters parameters,
         string httpClientName = "ExampleWithNsWithTask-ApiClient",
         CancellationToken cancellationToken = default)
@@ -43,10 +43,7 @@ public class ListTestUnitsEndpoint : IListTestUnitsEndpoint
         var responseBuilder = httpMessageFactory.FromResponse(response);
         responseBuilder.AddSuccessResponse<PaginationResult<TestUnit>>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse<ValidationProblemDetails>(HttpStatusCode.BadRequest);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Unauthorized);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Forbidden);
-        responseBuilder.AddErrorResponse<string>(HttpStatusCode.InternalServerError);
-
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.Unauthorized);
         return await responseBuilder.BuildResponseAsync(x => new ListTestUnitsEndpointResult(x), cancellationToken);
     }
 }

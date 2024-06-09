@@ -14,6 +14,7 @@ namespace DemoSample.ApiClient.Generated.Endpoints.Orders.Interfaces;
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public interface IPatchOrdersIdEndpointResult : IEndpointResponse
 {
+
     bool IsOk { get; }
 
     bool IsBadRequest { get; }
@@ -26,19 +27,19 @@ public interface IPatchOrdersIdEndpointResult : IEndpointResponse
 
     bool IsConflict { get; }
 
-    bool IsInternalServerError { get; }
-
     bool IsBadGateway { get; }
 
-    string OkContent { get; }
+    string? OkContent { get; }
 
-    ValidationProblemDetails BadRequestContent { get; }
+    string? BadRequestContent { get; }
 
-    string NotFoundContent { get; }
+    string? UnauthorizedContent { get; }
 
-    string ConflictContent { get; }
+    string? ForbiddenContent { get; }
 
-    string InternalServerErrorContent { get; }
+    string? NotFoundContent { get; }
 
-    string BadGatewayContent { get; }
+    string? ConflictContent { get; }
+
+    string? BadGatewayContent { get; }
 }

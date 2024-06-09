@@ -25,7 +25,7 @@ public class ListPetsEndpoint : IListPetsEndpoint
         this.httpMessageFactory = httpMessageFactory;
     }
 
-    public async Task<IListPetsEndpointResult> ExecuteAsync(
+    public async Task<ListPetsEndpointResult> ExecuteAsync(
         ListPetsParameters parameters,
         string httpClientName = "PetStore-ApiClient",
         CancellationToken cancellationToken = default)
@@ -39,12 +39,9 @@ public class ListPetsEndpoint : IListPetsEndpoint
         using var response = await client.SendAsync(requestMessage, cancellationToken);
 
         var responseBuilder = httpMessageFactory.FromResponse(response);
-        responseBuilder.AddSuccessResponse<List<Pet>>(HttpStatusCode.OK);
+        responseBuilder.AddSuccessResponse<IEnumerable<Pet>>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse<ValidationProblemDetails>(HttpStatusCode.BadRequest);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Unauthorized);
-        responseBuilder.AddErrorResponse(HttpStatusCode.Forbidden);
-        responseBuilder.AddErrorResponse<string>(HttpStatusCode.InternalServerError);
-
+        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.Unauthorized);
         return await responseBuilder.BuildResponseAsync(x => new ListPetsEndpointResult(x), cancellationToken);
     }
 }
