@@ -64,6 +64,29 @@ public static class ApiOperationResponseModelExtensions
 
     public static IEnumerable<ApiOperationResponseModel> AppendBadRequestIfNeeded(
         this IEnumerable<ApiOperationResponseModel> responseModels,
+        bool hasParameterType)
+    {
+        var models = responseModels.ToList();
+
+        if (hasParameterType &&
+            models.TrueForAll(x => x.StatusCode != HttpStatusCode.BadRequest))
+        {
+            models.Add(
+                new ApiOperationResponseModel(
+                    HttpStatusCode.BadRequest,
+                    OperationName: "DummyOperation",
+                    GroupName: null,
+                    MediaType: null,
+                    CollectionDataType: null,
+                    DataType: null,
+                    Description: null));
+        }
+
+        return models;
+    }
+
+    public static IEnumerable<ApiOperationResponseModel> AppendBadRequestIfNeeded(
+        this IEnumerable<ApiOperationResponseModel> responseModels,
         string? parameterTypeName)
     {
         var models = responseModels.ToList();

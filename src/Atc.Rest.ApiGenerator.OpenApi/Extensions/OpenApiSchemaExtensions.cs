@@ -81,55 +81,6 @@ public static class OpenApiSchemaExtensions
         return apiSchemaForItems.Value.Value;
     }
 
-    public static string GetSimpleDataTypeFromCustomPagination(
-        this OpenApiSchema schema)
-    {
-        ArgumentNullException.ThrowIfNull(schema);
-
-        var customPaginationItemsSchema = schema.GetCustomPaginationItemsSchema();
-        return customPaginationItemsSchema is null
-            ? string.Empty
-            : customPaginationItemsSchema.GetDataType();
-    }
-
-    public static string? GetCustomPaginationGenericTypeWithItemType(
-        this OpenApiSchema schema,
-        string projectName,
-        string apiGroupName,
-        bool isClient = false)
-    {
-        if (!schema.IsTypeCustomPagination())
-        {
-            return null;
-        }
-
-        var customPaginationSchema = schema.GetCustomPaginationSchema();
-        var customPaginationItemsSchema = schema.GetCustomPaginationItemsSchema();
-        if (customPaginationSchema is null ||
-            customPaginationItemsSchema is null)
-        {
-            return null;
-        }
-
-        string? itemTypeName;
-        if (customPaginationItemsSchema.IsSimpleDataType())
-        {
-            itemTypeName = customPaginationItemsSchema.GetDataType();
-        }
-        else
-        {
-            itemTypeName = OpenApiDocumentSchemaModelNameResolver.EnsureModelNameWithNamespaceIfNeeded(
-                projectName,
-                apiGroupName,
-                customPaginationItemsSchema.GetModelName(),
-                isShared: false,
-                isClient);
-        }
-
-        var customPaginationTypeName = customPaginationSchema.GetModelName();
-        return $"{customPaginationTypeName}<{itemTypeName}>";
-    }
-
     public static string? GetCollectionDataType(
         this OpenApiSchema schema)
     {

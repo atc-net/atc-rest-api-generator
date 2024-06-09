@@ -3,17 +3,12 @@ namespace Atc.Rest.ApiGenerator.Framework.Contracts.ContentGeneratorsParameters.
 public record ContentGeneratorClientEndpointResultInterfaceParameters(
     string Namespace,
     string OperationName,
-    CodeDocumentationTags DocumentationTagsForClass,
+    CodeDocumentationTags DocumentationTags,
     string InterfaceName,
     string InheritInterfaceName,
-    string? SuccessResponseName,
-    bool UseProblemDetailsAsDefaultBody,
-    bool UseListForModel,
-    IList<ContentGeneratorClientEndpointResultInterfaceErrorResponsesParameters> ErrorResponses);
-
-public record ContentGeneratorClientEndpointResultInterfaceErrorResponsesParameters(
-    string ResponseType,
-    HttpStatusCode StatusCode);
+    bool HasParameterType,
+    ApiAuthorizeModel? Authorization,
+    IList<ApiOperationResponseModel> ResponseModels);
 
 public record ContentGeneratorClientEndpointResultInterfaceParametersParameters(
     string Name,

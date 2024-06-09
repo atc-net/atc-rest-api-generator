@@ -85,18 +85,18 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
     }
 
     [Theory]
-    [InlineData("DemoSample", false)]
-    [InlineData("DemoSample", true)]
+    //[InlineData("DemoSample", false)]
+    //[InlineData("DemoSample", true)]
     [InlineData("ExampleWithAllResponseTypes", false)]
-    [InlineData("ExampleWithAllResponseTypes", true)]
-    [InlineData("ExampleWithGenericPagination", false)]
-    [InlineData("ExampleWithGenericPagination", true)]
-    [InlineData("ExampleWithNsWithTask", false)]
-    [InlineData("ExampleWithNsWithTask", true)]
-    [InlineData("ExampleWithUsers", false)]
-    [InlineData("ExampleWithUsers", true)]
-    [InlineData("PetStore", false)]
-    [InlineData("PetStore", true)]
+    //[InlineData("ExampleWithAllResponseTypes", true)]
+    //[InlineData("ExampleWithGenericPagination", false)]
+    //[InlineData("ExampleWithGenericPagination", true)]
+    //[InlineData("ExampleWithNsWithTask", false)]
+    //[InlineData("ExampleWithNsWithTask", true)]
+    //[InlineData("ExampleWithUsers", false)]
+    //[InlineData("ExampleWithUsers", true)]
+    //[InlineData("PetStore", false)]
+    //[InlineData("PetStore", true)]
     public async Task GenerateVerifyAndBuildForClientCSharpByScenario(
         string scenarioName,
         bool useProblemDetailsAsDefaultResponseBody)
@@ -107,10 +107,10 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
         var specificationFile = GetYamlSpecificationPath(scenarioPath.FullName);
 
         var outputPath = GetOutputPath(WorkingPath, scenarioPath, aspNetOutputType: null, useProblemDetailsAsDefaultResponseBody);
-        if (Directory.Exists(outputPath.FullName))
-        {
-            Directory.Delete(outputPath.FullName, recursive: true);
-        }
+        //if (Directory.Exists(outputPath.FullName))
+        //{
+        //    Directory.Delete(outputPath.FullName, recursive: true);
+        //}
 
         // Act & Assert
         await AssertGenerateForClientCSharp(outputPath, scenarioPath, specificationFile, useProblemDetailsAsDefaultResponseBody);

@@ -32,11 +32,11 @@ public class ClientCSharpApiGenerator
             projectOptions.ProjectName,
             projectOptions.PathForSrcGenerate,
             projectOptions.Document,
-            operationSchemaMappings)
+            operationSchemaMappings,
+            projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody)
         {
             HttpClientName = projectOptions.HttpClientName,
             ClientFolderName = projectOptions.ClientFolderName,
-            UseProblemDetailsAsDefaultBody = projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
         };
     }
 

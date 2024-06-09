@@ -117,21 +117,66 @@ public static class ApiOptionsHelper
             apiOptions.Validation.ModelPropertyNameCasingStyle = settings.ModelPropertyNameCasingStyle.Value;
         }
 
-        if (settings is ServerAllCommandSettings serverAllCommandSettings)
+        switch (settings)
         {
-            if (serverAllCommandSettings.AspNetOutputType.IsSet)
+            case ServerAllCommandSettings serverAllCommandSettings:
             {
-                apiOptions.Generator.AspNetOutputType = serverAllCommandSettings.AspNetOutputType.Value;
-            }
+                if (serverAllCommandSettings.AspNetOutputType.IsSet)
+                {
+                    apiOptions.Generator.AspNetOutputType = serverAllCommandSettings.AspNetOutputType.Value;
+                }
 
-            if (serverAllCommandSettings.SwaggerThemeMode.IsSet)
-            {
-                apiOptions.Generator.SwaggerThemeMode = serverAllCommandSettings.SwaggerThemeMode.Value;
-            }
+                if (serverAllCommandSettings.SwaggerThemeMode.IsSet)
+                {
+                    apiOptions.Generator.SwaggerThemeMode = serverAllCommandSettings.SwaggerThemeMode.Value;
+                }
 
-            if (serverAllCommandSettings.UseProblemDetailsAsDefaultResponseBody)
+                if (serverAllCommandSettings.UseProblemDetailsAsDefaultResponseBody)
+                {
+                    apiOptions.Generator.Response.UseProblemDetailsAsDefaultBody = serverAllCommandSettings.UseProblemDetailsAsDefaultResponseBody;
+                }
+
+                break;
+            }
+            case ServerHostCommandSettings serverHostCommandSettings:
             {
-                apiOptions.Generator.Response.UseProblemDetailsAsDefaultBody = serverAllCommandSettings.UseProblemDetailsAsDefaultResponseBody;
+                if (serverHostCommandSettings.AspNetOutputType.IsSet)
+                {
+                    apiOptions.Generator.AspNetOutputType = serverHostCommandSettings.AspNetOutputType.Value;
+                }
+
+                if (serverHostCommandSettings.SwaggerThemeMode.IsSet)
+                {
+                    apiOptions.Generator.SwaggerThemeMode = serverHostCommandSettings.SwaggerThemeMode.Value;
+                } 
+                if (serverHostCommandSettings.UseProblemDetailsAsDefaultResponseBody)
+                {
+                    apiOptions.Generator.Response.UseProblemDetailsAsDefaultBody = serverHostCommandSettings.UseProblemDetailsAsDefaultResponseBody;
+                }
+
+                break;
+            }
+            case ServerApiCommandSettings serverApiCommandSettings:
+            {
+                if (serverApiCommandSettings.UseProblemDetailsAsDefaultResponseBody)
+                {
+                    apiOptions.Generator.Response.UseProblemDetailsAsDefaultBody = serverApiCommandSettings.UseProblemDetailsAsDefaultResponseBody;
+                }
+
+                break;
+            }
+            case ServerDomainCommandSettings serverDomainCommandSettings:
+            {
+                break;
+            }
+            case ClientApiCommandSettings clientApiCommandSettings:
+            {
+                if (clientApiCommandSettings.UseProblemDetailsAsDefaultResponseBody)
+                {
+                    apiOptions.Generator.Response.UseProblemDetailsAsDefaultBody = clientApiCommandSettings.UseProblemDetailsAsDefaultResponseBody;
+                }
+
+                break;
             }
         }
     }

@@ -150,7 +150,7 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
                 break;
             case HttpStatusCode.EarlyHints:
                 sb.AppendLine(4, $"public static {resultName} {item.ResponseModel.StatusCode.ToNormalizedString()}()");
-                sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResultWithProblemDetails)}({nameof(HttpStatusCode)}.{item.ResponseModel.StatusCode}, null));");
+                sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResultWithProblemDetails)}({nameof(HttpStatusCode)}.{item.ResponseModel.StatusCode}));");
                 break;
             case HttpStatusCode.Continue:
             case HttpStatusCode.SwitchingProtocols:
@@ -239,7 +239,7 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
                 break;
             case HttpStatusCode.EarlyHints:
                 sb.AppendLine(4, $"public static {resultName} {item.ResponseModel.StatusCode.ToNormalizedString()}()");
-                sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResult)}({nameof(HttpStatusCode)}.{item.ResponseModel.StatusCode}, null));");
+                sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResult)}({nameof(HttpStatusCode)}.{item.ResponseModel.StatusCode}, string? message = null));");
                 break;
             case HttpStatusCode.Continue:
             case HttpStatusCode.SwitchingProtocols:

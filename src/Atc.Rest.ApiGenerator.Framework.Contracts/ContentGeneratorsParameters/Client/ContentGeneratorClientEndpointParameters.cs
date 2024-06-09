@@ -4,22 +4,16 @@ public record ContentGeneratorClientEndpointParameters(
     string Namespace,
     string HttpMethod,
     string OperationName,
-    CodeDocumentationTags DocumentationTagsForClass,
+    CodeDocumentationTags DocumentationTags,
     string HttpClientName,
     string UrlPath,
     string EndpointName,
     string InterfaceName,
     string ResultName,
     string? ParameterName,
-    string? SuccessResponseName,
-    HttpStatusCode? SuccessResponseStatusCode,
-    bool UseListForModel,
-    IList<ContentGeneratorClientEndpointErrorResponsesParameters> ErrorResponses,
+    ApiAuthorizeModel? Authorization,
+    IList<ApiOperationResponseModel> ResponseModels,
     IList<ContentGeneratorClientEndpointParametersParameters>? Parameters);
-
-public record ContentGeneratorClientEndpointErrorResponsesParameters(
-    string ResponseType,
-    HttpStatusCode StatusCode);
 
 public record ContentGeneratorClientEndpointParametersParameters(
     string Name,

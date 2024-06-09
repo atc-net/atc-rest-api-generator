@@ -15,8 +15,6 @@ public interface IClientCSharpApiGenerator
 
     string HttpClientName { get; set; }
 
-    bool UseProblemDetailsAsDefaultBody { get; set; }
-
     Task ScaffoldProjectFile();
 
     void GenerateModels();

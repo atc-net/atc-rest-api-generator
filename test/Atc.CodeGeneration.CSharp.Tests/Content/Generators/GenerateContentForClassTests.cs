@@ -623,7 +623,7 @@ namespace XXX.ApiClient.Generated.Endpoints;
 /// Operation: CreateLocation.
 /// </summary>
 [GeneratedCode(""ApiGenerator"", ""X.X.X.X"")]
-public class CreateLocationEndpointResult : EndpointResponse, ICreateLocationEndpointResult
+public class CreateLocationEndpointResult : EndpointResponse
 {
     public CreateLocationEndpointResult(EndpointResponse response)
         : base(response)

@@ -1,4 +1,6 @@
 // ReSharper disable SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault
+// ReSharper disable ConvertIfStatementToSwitchStatement
+// ReSharper disable ConvertIfStatementToConditionalTernaryExpression
 namespace Atc.Rest.ApiGenerator.Client.CSharp.ContentGenerators;
 
 public class ContentGeneratorClientEndpoint : IContentGenerator
@@ -7,17 +9,20 @@ public class ContentGeneratorClientEndpoint : IContentGenerator
     private readonly GeneratedCodeAttributeGenerator codeAttributeGenerator;
     private readonly CodeDocumentationTagsGenerator codeDocumentationTagsGenerator;
     private readonly ContentGeneratorClientEndpointParameters parameters;
+    private readonly bool useProblemDetailsAsDefaultResponseBody;
 
     public ContentGeneratorClientEndpoint(
         GeneratedCodeHeaderGenerator codeHeaderGenerator,
         GeneratedCodeAttributeGenerator codeAttributeGenerator,
         CodeDocumentationTagsGenerator codeDocumentationTagsGenerator,
-        ContentGeneratorClientEndpointParameters parameters)
+        ContentGeneratorClientEndpointParameters parameters,
+        bool useProblemDetailsAsDefaultResponseBody)
     {
         this.codeHeaderGenerator = codeHeaderGenerator;
         this.codeAttributeGenerator = codeAttributeGenerator;
         this.codeDocumentationTagsGenerator = codeDocumentationTagsGenerator;
         this.parameters = parameters;
+        this.useProblemDetailsAsDefaultResponseBody = useProblemDetailsAsDefaultResponseBody;
     }
 
     public string Generate()
@@ -27,9 +32,9 @@ public class ContentGeneratorClientEndpoint : IContentGenerator
         sb.Append(codeHeaderGenerator.Generate());
         sb.AppendLine($"namespace {parameters.Namespace};");
         sb.AppendLine();
-        if (codeDocumentationTagsGenerator.ShouldGenerateTags(parameters.DocumentationTagsForClass))
+        if (codeDocumentationTagsGenerator.ShouldGenerateTags(parameters.DocumentationTags))
         {
-            sb.Append(codeDocumentationTagsGenerator.GenerateTags(0, parameters.DocumentationTagsForClass));
+            sb.Append(codeDocumentationTagsGenerator.GenerateTags(0, parameters.DocumentationTags));
         }
 
         sb.AppendLine(codeAttributeGenerator.Generate());
@@ -46,7 +51,7 @@ public class ContentGeneratorClientEndpoint : IContentGenerator
         sb.AppendLine(8, "this.httpMessageFactory = httpMessageFactory;");
         sb.AppendLine(4, "}");
         sb.AppendLine();
-        sb.AppendLine(4, $"public async Task<I{parameters.ResultName}> ExecuteAsync(");
+        sb.AppendLine(4, $"public async Task<{parameters.ResultName}> ExecuteAsync(");
         if (parameters.ParameterName is not null)
         {
             sb.AppendLine(8, $"{parameters.ParameterName} parameters,");
@@ -95,34 +100,131 @@ public class ContentGeneratorClientEndpoint : IContentGenerator
         sb.AppendLine();
         sb.AppendLine(8, "var responseBuilder = httpMessageFactory.FromResponse(response);");
 
-        if (string.IsNullOrEmpty(parameters.SuccessResponseName))
+        var responseModels = parameters.ResponseModels
+            .AppendUnauthorizedIfNeeded(parameters.Authorization)
+            .AppendForbiddenIfNeeded(parameters.Authorization)
+            .AppendBadRequestIfNeeded(parameters.ParameterName)
+            .OrderBy(x => x.StatusCode)
+            .ToList();
+
+        foreach (var responseModel in responseModels)
         {
-            sb.AppendLine(8, $"responseBuilder.AddSuccessResponse(HttpStatusCode.{parameters.SuccessResponseStatusCode});");
-        }
-        else
-        {
-            sb.AppendLine(
-                8,
-                parameters.UseListForModel
-                    ? $"responseBuilder.AddSuccessResponse<List<{parameters.SuccessResponseName}>>(HttpStatusCode.OK);"
-                    : $"responseBuilder.AddSuccessResponse<{parameters.SuccessResponseName}>(HttpStatusCode.{parameters.SuccessResponseStatusCode});");
+            switch (responseModel.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                    AppendAddSuccessResponseForStatusCodeOk(sb, responseModel);
+                    break;
+                case HttpStatusCode.BadRequest:
+                    sb.AppendLine(8, $"responseBuilder.AddErrorResponse<ValidationProblemDetails>(HttpStatusCode.{responseModel.StatusCode.ToNormalizedString()});");
+                    break;
+                case HttpStatusCode.Continue:
+                case HttpStatusCode.SwitchingProtocols:
+                case HttpStatusCode.Processing:
+                case HttpStatusCode.EarlyHints:
+                case HttpStatusCode.Created:
+                case HttpStatusCode.Accepted:
+                case HttpStatusCode.NonAuthoritativeInformation:
+                case HttpStatusCode.NoContent:
+                case HttpStatusCode.ResetContent:
+                case HttpStatusCode.PartialContent:
+                case HttpStatusCode.MultiStatus:
+                case HttpStatusCode.AlreadyReported:
+                case HttpStatusCode.IMUsed:
+                case HttpStatusCode.Ambiguous:
+                case HttpStatusCode.Moved:
+                case HttpStatusCode.Found:
+                case HttpStatusCode.RedirectMethod:
+                case HttpStatusCode.NotModified:
+                case HttpStatusCode.UseProxy:
+                case HttpStatusCode.Unused:
+                case HttpStatusCode.RedirectKeepVerb:
+                case HttpStatusCode.PermanentRedirect:
+                case HttpStatusCode.Unauthorized:
+                case HttpStatusCode.PaymentRequired:
+                case HttpStatusCode.Forbidden:
+                case HttpStatusCode.NotFound:
+                case HttpStatusCode.MethodNotAllowed:
+                case HttpStatusCode.NotAcceptable:
+                case HttpStatusCode.ProxyAuthenticationRequired:
+                case HttpStatusCode.RequestTimeout:
+                case HttpStatusCode.Conflict:
+                case HttpStatusCode.Gone:
+                case HttpStatusCode.LengthRequired:
+                case HttpStatusCode.PreconditionFailed:
+                case HttpStatusCode.RequestEntityTooLarge:
+                case HttpStatusCode.RequestUriTooLong:
+                case HttpStatusCode.UnsupportedMediaType:
+                case HttpStatusCode.RequestedRangeNotSatisfiable:
+                case HttpStatusCode.ExpectationFailed:
+                case HttpStatusCode.MisdirectedRequest:
+                case HttpStatusCode.UnprocessableEntity:
+                case HttpStatusCode.Locked:
+                case HttpStatusCode.FailedDependency:
+                case HttpStatusCode.UpgradeRequired:
+                case HttpStatusCode.PreconditionRequired:
+                case HttpStatusCode.TooManyRequests:
+                case HttpStatusCode.RequestHeaderFieldsTooLarge:
+                case HttpStatusCode.UnavailableForLegalReasons:
+                case HttpStatusCode.InternalServerError:
+                case HttpStatusCode.NotImplemented:
+                case HttpStatusCode.BadGateway:
+                case HttpStatusCode.ServiceUnavailable:
+                case HttpStatusCode.GatewayTimeout:
+                case HttpStatusCode.HttpVersionNotSupported:
+                case HttpStatusCode.VariantAlsoNegotiates:
+                case HttpStatusCode.InsufficientStorage:
+                case HttpStatusCode.LoopDetected:
+                case HttpStatusCode.NotExtended:
+                case HttpStatusCode.NetworkAuthenticationRequired:
+                    sb.AppendLine(
+                        8,
+                        useProblemDetailsAsDefaultResponseBody
+                            ? $"responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.{responseModel.StatusCode});"
+                            : $"responseBuilder.AddErrorResponse<string>(HttpStatusCode.{responseModel.StatusCode});");
+                    break;
+                default:
+                    sb.AppendLine(4, $"// TODO: Not Implemented for {responseModel.StatusCode}.");
+                    break;
+            }
         }
 
-        foreach (var item in parameters.ErrorResponses)
-        {
-            sb.AppendLine(
-                8,
-                string.IsNullOrEmpty(item.ResponseType)
-                    ? $"responseBuilder.AddErrorResponse(HttpStatusCode.{item.StatusCode});"
-                    : $"responseBuilder.AddErrorResponse<{item.ResponseType}>(HttpStatusCode.{item.StatusCode});");
-        }
-
-        sb.AppendLine();
         sb.AppendLine(8, $"return await responseBuilder.BuildResponseAsync(x => new {parameters.ResultName}(x), cancellationToken);");
         sb.AppendLine(4, "}");
         sb.Append('}');
 
         return sb.ToString();
+    }
+
+    private void AppendAddSuccessResponseForStatusCodeOk(
+        StringBuilder sb,
+        ApiOperationResponseModel responseModel)
+    {
+        if (responseModel.MediaType == MediaTypeNames.Application.Octet)
+        {
+            sb.AppendLine(8, "responseBuilder.AddSuccessResponse<byte[]>(HttpStatusCode.OK);");
+            return;
+        }
+
+        if (string.IsNullOrEmpty(responseModel.DataType))
+        {
+            sb.AppendLine(8, "responseBuilder.AddSuccessResponse<string?>(HttpStatusCode.OK);");
+            return;
+        }
+
+        if (responseModel.CollectionDataType is null)
+        {
+            sb.AppendLine(8, $"responseBuilder.AddSuccessResponse<{responseModel.DataType}>(HttpStatusCode.OK);");
+            return;
+        }
+
+        if (responseModel.CollectionDataType == NameConstants.List)
+        {
+            sb.AppendLine(8, $"responseBuilder.AddSuccessResponse<IEnumerable<{responseModel.DataType}>>(HttpStatusCode.OK);");
+        }
+        else
+        {
+            sb.AppendLine(8, $"responseBuilder.AddSuccessResponse<{responseModel.CollectionDataType}<{responseModel.DataType}>>(HttpStatusCode.OK);");
+        }
     }
 
     private static void AppendParameterForParameterLocation(

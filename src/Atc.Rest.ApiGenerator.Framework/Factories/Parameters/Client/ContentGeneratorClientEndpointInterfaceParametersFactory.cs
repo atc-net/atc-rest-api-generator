@@ -68,7 +68,7 @@ public static class ContentGeneratorClientEndpointInterfaceParametersFactory
                     @return: null),
                 Attributes: null,
                 AccessModifier: AccessModifiers.None,
-                ReturnTypeName: $"I{operationName}{ContentGeneratorConstants.EndpointResult}",
+                ReturnTypeName: $"{operationName}{ContentGeneratorConstants.EndpointResult}",
                 ReturnGenericTypeName: "Task",
                 Name: "ExecuteAsync",
                 Parameters: methodParametersParameters,

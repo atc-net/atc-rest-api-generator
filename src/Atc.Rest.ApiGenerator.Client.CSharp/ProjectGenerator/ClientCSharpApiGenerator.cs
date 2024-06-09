@@ -14,6 +14,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
     private readonly IList<ApiOperation> operationSchemaMappings;
     private readonly string codeGeneratorContentHeader;
     private readonly AttributeParameters codeGeneratorAttribute;
+    private readonly bool useProblemDetailsAsDefaultResponseBody;
 
     public ClientCSharpApiGenerator(
         ILoggerFactory loggerFactory,
@@ -22,7 +23,8 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
         string projectName,
         DirectoryInfo projectPath,
         OpenApiDocument openApiDocument,
-        IList<ApiOperation> operationSchemaMappings)
+        IList<ApiOperation> operationSchemaMappings,
+        bool useProblemDetailsAsDefaultResponseBody)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
         ArgumentNullException.ThrowIfNull(nugetPackageReferenceProvider);
@@ -39,6 +41,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
         this.projectPath = projectPath;
         this.openApiDocument = openApiDocument;
         this.operationSchemaMappings = operationSchemaMappings;
+        this.useProblemDetailsAsDefaultResponseBody = useProblemDetailsAsDefaultResponseBody;
 
         codeGeneratorContentHeader = GeneratedCodeHeaderGeneratorFactory
             .Create(apiGeneratorVersion)
@@ -50,8 +53,6 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
     public string? ClientFolderName { get; set; }
 
     public string HttpClientName { get; set; } = "DefaultHttpClient";
-
-    public bool UseProblemDetailsAsDefaultBody { get; set; }
 
     public async Task ScaffoldProjectFile()
     {
@@ -220,7 +221,6 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
                 var endpointParameters = ContentGeneratorClientEndpointParametersFactory.Create(
-                    UseProblemDetailsAsDefaultBody,
                     projectName,
                     apiGroupName,
                     fullNamespace,
@@ -234,7 +234,8 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
                     new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
                     new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
                     new CodeDocumentationTagsGenerator(),
-                    endpointParameters);
+                    endpointParameters,
+                    useProblemDetailsAsDefaultResponseBody);
 
                 var content = contentGenerator.Generate();
 
@@ -261,7 +262,6 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
                 var endpointResultInterfaceParameters = ContentGeneratorClientEndpointResultInterfaceParametersFactory.Create(
-                    UseProblemDetailsAsDefaultBody,
                     projectName,
                     apiGroupName,
                     fullNamespace,
@@ -272,7 +272,8 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
                     new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
                     new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
                     new CodeDocumentationTagsGenerator(),
-                    endpointResultInterfaceParameters);
+                    endpointResultInterfaceParameters,
+                    useProblemDetailsAsDefaultResponseBody);
 
                 var content = contentGenerator.Generate();
 
@@ -299,11 +300,9 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
                 var endpointResultParameters = ContentGeneratorClientEndpointResultParametersFactory.Create(
-                    UseProblemDetailsAsDefaultBody,
                     projectName,
                     apiGroupName,
                     fullNamespace,
-                    UseProblemDetailsAsDefaultBody,
                     openApiPath.Value,
                     openApiOperation.Value);
 
@@ -311,7 +310,8 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
                     new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
                     new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
                     new CodeDocumentationTagsGenerator(),
-                    endpointResultParameters);
+                    endpointResultParameters,
+                    useProblemDetailsAsDefaultResponseBody);
 
                 var content = contentGenerator.Generate();
 
@@ -332,6 +332,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
         {
             "System.CodeDom.Compiler",
             "System.ComponentModel.DataAnnotations",
+            "System",
             "System.Net",
             "System.Net.Http",
             "System.Threading",
@@ -340,11 +341,6 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
             "Atc.Rest.Client.Builder",
             "Microsoft.AspNetCore.Mvc",
         };
-
-        if (openApiDocument.IsUsingRequiredForSystem())
-        {
-            requiredUsings.Add("System");
-        }
 
         if (openApiDocument.IsUsingRequiredForSystemLinq())
         {
