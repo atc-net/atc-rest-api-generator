@@ -141,7 +141,7 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
                 break;
             case HttpStatusCode.EarlyHints:
                 sb.AppendLine(4, $"public static {resultName} {item.ResponseModel.StatusCode.ToNormalizedString()}()");
-                sb.AppendLine(8, $"=> new(Results.Problem(message, null, {(int)HttpStatusCode.EarlyHints}));");
+                sb.AppendLine(8, $"=> new(Results.Problem(null, null, {(int)HttpStatusCode.EarlyHints}));");
                 break;
             case HttpStatusCode.Continue:
             case HttpStatusCode.SwitchingProtocols:

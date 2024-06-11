@@ -1,5 +1,5 @@
 // ReSharper disable ArrangeObjectCreationWhenTypeNotEvident
-namespace Atc.Rest.ApiGenerator.Framework.Mvc.ProjectGenerator;
+namespace Atc.Rest.ApiGenerator.Framework.Core.ProjectGenerator;
 
 public class ServerDomainTestGenerator : IServerDomainTestGenerator
 {
@@ -102,7 +102,7 @@ public class ServerDomainTestGenerator : IServerDomainTestGenerator
             {
                 var fullNamespace = $"{projectName}.{ContentGeneratorConstants.Handlers}.{apiGroupName}";
 
-                var classParameters = ContentGeneratorServerHandlerParametersFactory.CreateForCustomTest(
+                var classParameters = ContentGeneratorServerHandlerParametersTestFactory.CreateForCustomTest(
                     fullNamespace,
                     openApiOperation.Value);
 
@@ -130,12 +130,10 @@ public class ServerDomainTestGenerator : IServerDomainTestGenerator
         bool usingCodingRules,
         bool removeNamespaceGroupSeparatorInGlobalUsings)
     {
-        var requiredUsings = new List<string>();
-
-        if (!usingCodingRules)
+        var requiredUsings = new List<string>
         {
-            requiredUsings.Add("Xunit");
-        }
+            "Xunit"
+        };
 
         GlobalUsingsHelper.CreateOrUpdate(
             logger,

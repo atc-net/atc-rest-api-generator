@@ -12,6 +12,7 @@ public class ServerHostGenerator
     private readonly IServerHostGenerator serverHostGeneratorMvc;
     private readonly IServerHostGenerator serverHostGeneratorMinimalApi;
     private readonly IServerHostTestGenerator? serverHostTestGeneratorMvc;
+    private readonly IServerHostTestGenerator? serverHostTestGeneratorMinimalApi;
 
     public ServerHostGenerator(
         ILoggerFactory loggerFactory,
@@ -56,6 +57,18 @@ public class ServerHostGenerator
         if (projectOptions.PathForTestGenerate is not null)
         {
             serverHostTestGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerHostTestGenerator(
+                loggerFactory,
+                nugetPackageReferenceProvider,
+                projectOptions.ApiGeneratorVersion,
+                $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Tests}",
+                projectOptions.ProjectName,
+                apiProjectName,
+                domainProjectName,
+                projectOptions.PathForTestGenerate,
+                projectOptions.Document,
+                operationSchemaMappings);
+
+            serverHostTestGeneratorMinimalApi = new Framework.Minimal.ProjectGenerator.ServerHostTestGenerator(
                 loggerFactory,
                 nugetPackageReferenceProvider,
                 projectOptions.ApiGeneratorVersion,
@@ -140,6 +153,24 @@ public class ServerHostGenerator
             serverHostGeneratorMinimalApi.MaintainGlobalUsings(
                 projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
             serverHostGeneratorMinimalApi.MaintainWwwResources();
+
+            if (serverHostTestGeneratorMinimalApi is not null &&
+                projectOptions.PathForTestGenerate is not null)
+            {
+                logger.LogInformation($"{ContentWriterConstants.AreaGenerateTest} Working on server host unit-test generation ({projectOptions.ProjectName}.Tests)");
+
+                await serverHostTestGeneratorMinimalApi.ScaffoldProjectFile();
+                serverHostTestGeneratorMinimalApi.ScaffoldAppSettingsIntegrationTestFile();
+
+                serverHostTestGeneratorMinimalApi.GenerateWebApiStartupFactoryFile();
+                serverHostTestGeneratorMinimalApi.GenerateWebApiControllerBaseTestFile();
+                serverHostTestGeneratorMinimalApi.GenerateEndpointHandlerStubs();
+                serverHostTestGeneratorMinimalApi.GenerateEndpointTests();
+
+                serverHostTestGeneratorMinimalApi.MaintainGlobalUsings(
+                    projectOptions.UsingCodingRules,
+                    projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
+            }
         }
 
         return true;

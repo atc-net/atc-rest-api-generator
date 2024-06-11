@@ -148,7 +148,8 @@ public static class ApiOptionsHelper
                 if (serverHostCommandSettings.SwaggerThemeMode.IsSet)
                 {
                     apiOptions.Generator.SwaggerThemeMode = serverHostCommandSettings.SwaggerThemeMode.Value;
-                } 
+                }
+
                 if (serverHostCommandSettings.UseProblemDetailsAsDefaultResponseBody)
                 {
                     apiOptions.Generator.Response.UseProblemDetailsAsDefaultBody = serverHostCommandSettings.UseProblemDetailsAsDefaultResponseBody;
@@ -165,7 +166,7 @@ public static class ApiOptionsHelper
 
                 break;
             }
-            case ServerDomainCommandSettings serverDomainCommandSettings:
+            case ServerDomainCommandSettings:
             {
                 break;
             }

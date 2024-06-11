@@ -328,6 +328,9 @@ public class ServerApiGenerator : IServerApiGenerator
             requiredUsings.Add("Atc.Rest.MinimalApi.Filters.Endpoints");
         }
 
+        // TODO: Check for any use ??
+        requiredUsings.Add("Microsoft.AspNetCore.Authorization");
+
         var apiGroupNames = openApiDocument.GetApiGroupNames();
 
         // TODO: Check for any use ??

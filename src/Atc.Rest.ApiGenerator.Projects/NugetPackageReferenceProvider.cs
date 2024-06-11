@@ -183,9 +183,20 @@ public class NugetPackageReferenceProvider(
 
     public async Task<IList<(string PackageId, string PackageVersion, string? SubElements)>> GetPackageReferencesForTestHostProjectForMinimalApi()
     {
-        var packageReferences = new List<(string, string, string?)>();
+        var atcVersion = await GetAtcVersionAsString3();
 
-        await Task.CompletedTask;
+        var packageReferences = new List<(string, string, string?)>
+        {
+            new("Atc.Rest.FluentAssertions", atcVersion, null),
+            new("Atc.XUnit", atcVersion, null),
+            new("AutoFixture", PackageDefaultVersions["AutoFixture"], null),
+            new("AutoFixture.AutoNSubstitute", PackageDefaultVersions["AutoFixture.AutoNSubstitute"], null),
+            new("AutoFixture.Xunit2", PackageDefaultVersions["AutoFixture.Xunit2"], null),
+            new("FluentAssertions", PackageDefaultVersions["FluentAssertions"], null),
+            new("Microsoft.NET.Test.Sdk", PackageDefaultVersions["Microsoft.NET.Test.Sdk"], null),
+            new("xunit", PackageDefaultVersions["xunit"], null),
+            new("xunit.runner.visualstudio", PackageDefaultVersions["xunit.runner.visualstudio"], "<PrivateAssets>all</PrivateAssets>\n<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>"),
+        };
 
         return packageReferences;
     }

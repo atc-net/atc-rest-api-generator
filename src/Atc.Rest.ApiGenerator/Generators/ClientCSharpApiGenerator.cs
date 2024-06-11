@@ -5,7 +5,6 @@ namespace Atc.Rest.ApiGenerator.Generators;
 public class ClientCSharpApiGenerator
 {
     private readonly ILogger logger;
-    private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
     private readonly ClientCSharpApiProjectOptions projectOptions;
 
     private readonly IClientCSharpApiGenerator clientCSharpApiGenerator;
@@ -20,7 +19,6 @@ public class ClientCSharpApiGenerator
         ArgumentNullException.ThrowIfNull(apiOperationExtractor);
 
         logger = loggerFactory.CreateLogger<ServerDomainGenerator>();
-        this.nugetPackageReferenceProvider = nugetPackageReferenceProvider ?? throw new ArgumentNullException(nameof(nugetPackageReferenceProvider));
         this.projectOptions = projectOptions ?? throw new ArgumentNullException(nameof(projectOptions));
 
         var operationSchemaMappings = apiOperationExtractor.Extract(projectOptions.Document);

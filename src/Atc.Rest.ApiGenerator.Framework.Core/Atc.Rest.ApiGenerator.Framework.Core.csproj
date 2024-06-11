@@ -28,6 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Atc.CodeGeneration.CSharp\Atc.CodeGeneration.CSharp.csproj" />
     <ProjectReference Include="..\Atc.Rest.ApiGenerator.Framework\Atc.Rest.ApiGenerator.Framework.csproj" />
+    <ProjectReference Include="..\Atc.Rest.ApiGenerator.Projects\Atc.Rest.ApiGenerator.Projects.csproj" />
   </ItemGroup>
 
 </Project>

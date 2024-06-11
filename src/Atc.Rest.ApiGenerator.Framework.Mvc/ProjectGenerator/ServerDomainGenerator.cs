@@ -4,7 +4,6 @@ namespace Atc.Rest.ApiGenerator.Framework.Mvc.ProjectGenerator;
 public class ServerDomainGenerator : IServerDomainGenerator
 {
     private readonly ILogger<ServerDomainGenerator> logger;
-    private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
     private readonly string projectName;
     private readonly string apiProjectName;
     private readonly DirectoryInfo projectPath;
@@ -14,7 +13,6 @@ public class ServerDomainGenerator : IServerDomainGenerator
 
     public ServerDomainGenerator(
         ILoggerFactory loggerFactory,
-        INugetPackageReferenceProvider nugetPackageReferenceProvider,
         Version apiGeneratorVersion,
         string projectName,
         string apiProjectName,
@@ -22,7 +20,6 @@ public class ServerDomainGenerator : IServerDomainGenerator
         OpenApiDocument openApiDocument)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
-        ArgumentNullException.ThrowIfNull(nugetPackageReferenceProvider);
         ArgumentNullException.ThrowIfNull(apiGeneratorVersion);
         ArgumentNullException.ThrowIfNull(projectName);
         ArgumentNullException.ThrowIfNull(apiProjectName);
@@ -30,7 +27,6 @@ public class ServerDomainGenerator : IServerDomainGenerator
         ArgumentNullException.ThrowIfNull(openApiDocument);
 
         logger = loggerFactory.CreateLogger<ServerDomainGenerator>();
-        this.nugetPackageReferenceProvider = nugetPackageReferenceProvider;
         this.projectName = projectName;
         this.apiProjectName = apiProjectName;
         this.projectPath = projectPath;

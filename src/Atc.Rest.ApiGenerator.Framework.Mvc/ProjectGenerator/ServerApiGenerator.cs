@@ -322,7 +322,6 @@ public class ServerApiGenerator : IServerApiGenerator
         {
             "System.CodeDom.Compiler",
             "System.ComponentModel.DataAnnotations",
-            "Microsoft.AspNetCore.Authorization",
             "Microsoft.AspNetCore.Http",
             "Microsoft.AspNetCore.Mvc",
             "Atc.Rest.Results",
@@ -333,6 +332,9 @@ public class ServerApiGenerator : IServerApiGenerator
         {
             requiredUsings.Add("System.Net");
         }
+
+        // TODO: Check for any use ??
+        requiredUsings.Add("Microsoft.AspNetCore.Authorization");
 
         if (operationSchemaMappings.Any(apiOperation => apiOperation.Model.IsShared))
         {

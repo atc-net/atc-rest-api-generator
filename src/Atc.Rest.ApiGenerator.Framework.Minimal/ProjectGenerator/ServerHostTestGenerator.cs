@@ -1,6 +1,4 @@
-// ReSharper disable ArrangeObjectCreationWhenTypeNotEvident
-// ReSharper disable StringLiteralTypo
-namespace Atc.Rest.ApiGenerator.Framework.Mvc.ProjectGenerator;
+namespace Atc.Rest.ApiGenerator.Framework.Minimal.ProjectGenerator;
 
 public class ServerHostTestGenerator : IServerHostTestGenerator
 {
@@ -60,7 +58,7 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
 
     public async Task ScaffoldProjectFile()
     {
-        var packageReferences = await nugetPackageReferenceProvider.GetPackageReferencesForTestHostProjectForMvc();
+        var packageReferences = await nugetPackageReferenceProvider.GetPackageReferencesForTestHostProjectForMinimalApi();
 
         var itemGroupPackageReferences = packageReferences
             .Select(packageReference => new ItemGroupParameter(
@@ -124,57 +122,60 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
 
     public void ScaffoldAppSettingsIntegrationTestFile()
     {
-        var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerAppSettingsIntegrationTest();
+        // TODO: Implement if needed
+        ////var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerAppSettingsIntegrationTest();
 
-        var content = contentGenerator.Generate();
+        ////var content = contentGenerator.Generate();
 
-        var contentWriter = new ContentWriter(logger);
-        contentWriter.Write(
-            projectPath,
-            projectPath.CombineFileInfo("appsettings.integrationtest.json"),
-            ContentWriterArea.Test,
-            content,
-            overrideIfExist: false);
+        ////var contentWriter = new ContentWriter(logger);
+        ////contentWriter.Write(
+        ////    projectPath,
+        ////    projectPath.CombineFileInfo("appsettings.integrationtest.json"),
+        ////    ContentWriterArea.Test,
+        ////    content,
+        ////    overrideIfExist: false);
     }
 
     public void GenerateWebApiStartupFactoryFile()
     {
-        var contentGeneratorServerWebApiStartupFactoryParameters = ContentGeneratorServerWebApiStartupFactoryParametersFactory.Create(
-            projectName);
+        // TODO: Implement if needed
+        ////var contentGeneratorServerWebApiStartupFactoryParameters = ContentGeneratorServerWebApiStartupFactoryParametersFactory.Create(
+        ////    projectName);
 
-        var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerWebApiStartupFactory(
-            new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
-            new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
-            new CodeDocumentationTagsGenerator(),
-            contentGeneratorServerWebApiStartupFactoryParameters);
+        ////var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerWebApiStartupFactory(
+        ////    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
+        ////    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
+        ////    new CodeDocumentationTagsGenerator(),
+        ////    contentGeneratorServerWebApiStartupFactoryParameters);
 
-        var content = contentGenerator.Generate();
+        ////var content = contentGenerator.Generate();
 
-        var contentWriter = new ContentWriter(logger);
-        contentWriter.Write(
-            projectPath,
-            projectPath.CombineFileInfo("WebApiStartupFactory.cs"),
-            ContentWriterArea.Test,
-            content,
-            overrideIfExist: false);
+        ////var contentWriter = new ContentWriter(logger);
+        ////contentWriter.Write(
+        ////    projectPath,
+        ////    projectPath.CombineFileInfo("WebApiStartupFactory.cs"),
+        ////    ContentWriterArea.Test,
+        ////    content,
+        ////    overrideIfExist: false);
     }
 
     public void GenerateWebApiControllerBaseTestFile()
     {
-        var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerWebApiControllerBaseTest(
-            new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
-            new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
-            new ContentGeneratorBaseParameters(projectName));
+        // TODO: Implement if needed
+        ////var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerWebApiControllerBaseTest(
+        ////    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
+        ////    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
+        ////    new ContentGeneratorBaseParameters(projectName));
 
-        var content = contentGenerator.Generate();
+        ////var content = contentGenerator.Generate();
 
-        var contentWriter = new ContentWriter(logger);
-        contentWriter.Write(
-            projectPath,
-            projectPath.CombineFileInfo("WebApiControllerBaseTest.cs"),
-            ContentWriterArea.Test,
-            content,
-            overrideIfExist: false);
+        ////var contentWriter = new ContentWriter(logger);
+        ////contentWriter.Write(
+        ////    projectPath,
+        ////    projectPath.CombineFileInfo("WebApiControllerBaseTest.cs"),
+        ////    ContentWriterArea.Test,
+        ////    content,
+        ////    overrideIfExist: false);
     }
 
     public void GenerateEndpointHandlerStubs()
@@ -212,32 +213,33 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
 
     public void GenerateEndpointTests()
     {
-        foreach (var openApiPath in openApiDocument.Paths)
-        {
-            var apiGroupName = openApiPath.GetApiGroupName();
+        // TODO: Implement then WebApiControllerBaseTest and WebApiStartupFactory is implemented
+        ////foreach (var openApiPath in openApiDocument.Paths)
+        ////{
+        ////    var apiGroupName = openApiPath.GetApiGroupName();
 
-            foreach (var openApiOperation in openApiPath.Value.Operations)
-            {
-                var fullNamespace = $"{projectName}.{ContentGeneratorConstants.Endpoints}.{apiGroupName}";
+        ////    foreach (var openApiOperation in openApiPath.Value.Operations)
+        ////    {
+        ////        var fullNamespace = $"{projectName}.{ContentGeneratorConstants.Endpoints}.{apiGroupName}";
 
-                var classParameters = ContentGeneratorServerTestEndpointTestsParametersFactory.Create(
-                    fullNamespace,
-                    openApiOperation.Value);
+        ////        var classParameters = ContentGeneratorServerTestEndpointTestsParametersFactory.Create(
+        ////            fullNamespace,
+        ////            openApiOperation.Value);
 
-                var contentGenerator = new GenerateContentForClass(
-                    new CodeDocumentationTagsGenerator(),
-                    classParameters);
+        ////        var contentGenerator = new GenerateContentForClass(
+        ////            new CodeDocumentationTagsGenerator(),
+        ////            classParameters);
 
-                var content = contentGenerator.Generate();
+        ////        var content = contentGenerator.Generate();
 
-                var contentWriter = new ContentWriter(logger);
-                contentWriter.Write(
-                    projectPath,
-                    projectPath.CombineFileInfo(ContentGeneratorConstants.Endpoints, apiGroupName, $"{classParameters.TypeName}.cs"),
-                    ContentWriterArea.Test,
-                    content);
-            }
-        }
+        ////        var contentWriter = new ContentWriter(logger);
+        ////        contentWriter.Write(
+        ////            projectPath,
+        ////            projectPath.CombineFileInfo(ContentGeneratorConstants.Endpoints, apiGroupName, $"{classParameters.TypeName}.cs"),
+        ////            ContentWriterArea.Test,
+        ////            content);
+        ////    }
+        ////}
     }
 
     public void MaintainGlobalUsings(
@@ -256,8 +258,6 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
                 "AutoFixture",
                 "Microsoft.AspNetCore.Hosting",
                 "Microsoft.AspNetCore.Http",
-                "Microsoft.AspNetCore.TestHost",
-                "Microsoft.AspNetCore.Mvc.Testing",
                 "Microsoft.Extensions.Configuration",
                 "Microsoft.Extensions.DependencyInjection",
                 "Xunit",
@@ -273,9 +273,6 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
         {
             requiredUsings.Add($"{apiProjectName}.Contracts");
         }
-
-        requiredUsings.Add("AutoFixture");
-        requiredUsings.Add("Xunit");
 
         var apiGroupNames = openApiDocument.GetApiGroupNames();
 

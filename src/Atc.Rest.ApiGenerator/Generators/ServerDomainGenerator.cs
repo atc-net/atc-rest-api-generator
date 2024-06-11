@@ -12,7 +12,7 @@ public class ServerDomainGenerator
 
     private readonly IServerDomainGenerator serverDomainGeneratorMvc;
     private readonly IServerDomainGenerator serverDomainGeneratorMinimalApi;
-    private readonly IServerDomainTestGenerator? serverDomainTestGeneratorMvc;
+    private readonly IServerDomainTestGenerator? serverDomainTestGenerator;
 
     public ServerDomainGenerator(
         ILoggerFactory loggerFactory,
@@ -31,7 +31,6 @@ public class ServerDomainGenerator
 
         serverDomainGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerDomainGenerator(
             loggerFactory,
-            nugetPackageReferenceProvider,
             projectOptions.ApiGeneratorVersion,
             projectOptions.ProjectName,
             apiProjectName,
@@ -49,7 +48,7 @@ public class ServerDomainGenerator
 
         if (projectOptions.PathForTestGenerate is not null)
         {
-            serverDomainTestGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerDomainTestGenerator(
+            serverDomainTestGenerator = new Framework.Core.ProjectGenerator.ServerDomainTestGenerator(
                 loggerFactory,
                 nugetPackageReferenceProvider,
                 projectOptions.ApiGeneratorVersion,
@@ -89,20 +88,6 @@ public class ServerDomainGenerator
 
             serverDomainGeneratorMvc.MaintainGlobalUsings(
                 projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
-
-            if (serverDomainTestGeneratorMvc is not null &&
-                projectOptions.PathForTestGenerate is not null)
-            {
-                logger.LogInformation($"{ContentWriterConstants.AreaGenerateTest} Working on server domain unit-test generation ({projectOptions.ProjectName}.Tests)");
-
-                await serverDomainTestGeneratorMvc.ScaffoldProjectFile();
-
-                serverDomainTestGeneratorMvc.ScaffoldHandlers();
-
-                serverDomainTestGeneratorMvc.MaintainGlobalUsings(
-                    projectOptions.UsingCodingRules,
-                    projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
-            }
         }
         else
         {
@@ -113,6 +98,20 @@ public class ServerDomainGenerator
             serverDomainGeneratorMinimalApi.GenerateServiceCollectionExtensions();
 
             serverDomainGeneratorMinimalApi.MaintainGlobalUsings(
+                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
+        }
+
+        if (serverDomainTestGenerator is not null &&
+            projectOptions.PathForTestGenerate is not null)
+        {
+            logger.LogInformation($"{ContentWriterConstants.AreaGenerateTest} Working on server domain unit-test generation ({projectOptions.ProjectName}.Tests)");
+
+            await serverDomainTestGenerator.ScaffoldProjectFile();
+
+            serverDomainTestGenerator.ScaffoldHandlers();
+
+            serverDomainTestGenerator.MaintainGlobalUsings(
+                projectOptions.UsingCodingRules,
                 projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
         }
 
