@@ -1,3 +1,4 @@
+global using System;
 global using System.ComponentModel.DataAnnotations;
 global using System.Net;
 global using System.Net.Mime;
@@ -8,20 +9,19 @@ global using Atc.CodeGeneration.CSharp.Content;
 global using Atc.CodeGeneration.CSharp.Content.Factories;
 global using Atc.CodeGeneration.CSharp.Content.Generators;
 global using Atc.Rest.ApiGenerator.Framework.ContentGenerators;
+global using Atc.Rest.ApiGenerator.Framework.ContentGeneratorsParameters.Server;
 global using Atc.Rest.ApiGenerator.Framework.Contracts;
 global using Atc.Rest.ApiGenerator.Framework.Contracts.ContentGeneratorsParameters;
 global using Atc.Rest.ApiGenerator.Framework.Contracts.ContentGeneratorsParameters.Server;
 global using Atc.Rest.ApiGenerator.Framework.Contracts.Extensions;
 global using Atc.Rest.ApiGenerator.Framework.Contracts.Models;
-global using Atc.Rest.ApiGenerator.Framework.Core.ContentGeneratorsParameters.Server;
-global using Atc.Rest.ApiGenerator.Framework.Core.Factories.Server;
-global using Atc.Rest.ApiGenerator.Framework.Core.Helpers;
-global using Atc.Rest.ApiGenerator.Framework.Core.Providers;
 global using Atc.Rest.ApiGenerator.Framework.Factories.Parameters.Server;
 global using Atc.Rest.ApiGenerator.Framework.Factories.Parameters.ServerClient;
+global using Atc.Rest.ApiGenerator.Framework.Factories.Server;
 global using Atc.Rest.ApiGenerator.Framework.Helpers;
 global using Atc.Rest.ApiGenerator.Framework.Mvc.Factories.Parameters.Server;
 global using Atc.Rest.ApiGenerator.Framework.ProjectGenerator;
+global using Atc.Rest.ApiGenerator.Framework.Providers;
 global using Atc.Rest.ApiGenerator.Framework.Writers;
 global using Atc.Rest.ApiGenerator.OpenApi.Extensions;
 

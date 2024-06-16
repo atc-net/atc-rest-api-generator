@@ -1,4 +1,4 @@
-namespace Atc.Rest.ApiGenerator.Framework.Core.ContentGenerators.Server;
+namespace Atc.Rest.ApiGenerator.Framework.ContentGenerators.Server;
 
 public sealed class ContentGeneratorServerWebConfig : IContentGenerator
 {

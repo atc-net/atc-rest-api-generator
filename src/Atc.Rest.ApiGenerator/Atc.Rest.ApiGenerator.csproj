@@ -25,6 +25,7 @@
     <ProjectReference Include="..\Atc.Rest.ApiGenerator.Framework.Contracts\Atc.Rest.ApiGenerator.Framework.Contracts.csproj" />
     <ProjectReference Include="..\Atc.Rest.ApiGenerator.Framework.Minimal\Atc.Rest.ApiGenerator.Framework.Minimal.csproj" />
     <ProjectReference Include="..\Atc.Rest.ApiGenerator.Framework.Mvc\Atc.Rest.ApiGenerator.Framework.Mvc.csproj" />
+    <ProjectReference Include="..\Atc.Rest.ApiGenerator.Nuget\Atc.Rest.ApiGenerator.Nuget.csproj" />
     <ProjectReference Include="..\Atc.Rest.ApiGenerator.OpenApi\Atc.Rest.ApiGenerator.OpenApi.csproj" />
   </ItemGroup>
 

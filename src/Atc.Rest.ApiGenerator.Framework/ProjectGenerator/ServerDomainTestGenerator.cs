@@ -1,5 +1,5 @@
 // ReSharper disable ArrangeObjectCreationWhenTypeNotEvident
-namespace Atc.Rest.ApiGenerator.Framework.Core.ProjectGenerator;
+namespace Atc.Rest.ApiGenerator.Framework.ProjectGenerator;
 
 public class ServerDomainTestGenerator : IServerDomainTestGenerator
 {

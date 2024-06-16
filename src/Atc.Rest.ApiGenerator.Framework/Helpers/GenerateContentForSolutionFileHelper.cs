@@ -1,5 +1,5 @@
 // ReSharper disable ArrangeObjectCreationWhenTypeNotEvident
-namespace Atc.Rest.ApiGenerator.Framework.Core.Helpers;
+namespace Atc.Rest.ApiGenerator.Framework.Helpers;
 
 public static class GenerateContentForSolutionFileHelper
 {

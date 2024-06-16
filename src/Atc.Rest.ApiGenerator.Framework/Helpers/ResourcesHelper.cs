@@ -1,8 +1,8 @@
-namespace Atc.Rest.ApiGenerator.Framework.Core.Helpers;
+namespace Atc.Rest.ApiGenerator.Framework.Helpers;
 
 public static class ResourcesHelper
 {
-    private const string NamespaceToRemoveForWwwRoot = "Atc.Rest.ApiGenerator.Framework.Core.Resources.wwwroot.";
+    private const string NamespaceToRemoveForWwwRoot = "Atc.Rest.ApiGenerator.Framework.Resources.wwwroot.";
 
     public static void ScaffoldPropertiesLaunchSettingsFile(
         string projectName,
@@ -15,10 +15,10 @@ public static class ResourcesHelper
             return;
         }
 
-        var resourceName = "Atc.Rest.ApiGenerator.Framework.Core.Resources.launchSettings.json";
+        var resourceName = "Atc.Rest.ApiGenerator.Framework.Resources.launchSettings.json";
         if (useExtended)
         {
-            resourceName = "Atc.Rest.ApiGenerator.Framework.Core.Resources.launchSettingsExtended.json";
+            resourceName = "Atc.Rest.ApiGenerator.Framework.Resources.launchSettingsExtended.json";
         }
 
         var resourceStream = typeof(ResourcesHelper).Assembly.GetManifestResourceStream(resourceName);

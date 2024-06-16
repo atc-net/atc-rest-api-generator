@@ -6,6 +6,26 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\launchSettings.json" />
+    <None Remove="Resources\launchSettingsExtended.json" />
+    <None Remove="Resources\wwwroot\favicon.ico" />
+    <None Remove="Resources\wwwroot\swagger-ui\main.js" />
+    <None Remove="Resources\wwwroot\swagger-ui\swagger.png" />
+    <None Remove="Resources\wwwroot\swagger-ui\SwaggerDark.css" />
+    <None Remove="Resources\wwwroot\swagger-ui\SwaggerLight.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\launchSettings.json" />
+    <EmbeddedResource Include="Resources\launchSettingsExtended.json" />
+    <EmbeddedResource Include="Resources\wwwroot\favicon.ico" />
+    <EmbeddedResource Include="Resources\wwwroot\swagger-ui\main.js" />
+    <EmbeddedResource Include="Resources\wwwroot\swagger-ui\swagger.png" />
+    <EmbeddedResource Include="Resources\wwwroot\swagger-ui\SwaggerDark.css" />
+    <EmbeddedResource Include="Resources\wwwroot\swagger-ui\SwaggerLight.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Atc" Version="2.0.478" />
     <PackageReference Include="Atc.DotNet" Version="2.0.478" />
     <PackageReference Include="Atc.OpenApi" Version="2.0.478" />
@@ -15,6 +35,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Atc.CodeGeneration.CSharp\Atc.CodeGeneration.CSharp.csproj" />
     <ProjectReference Include="..\Atc.Rest.ApiGenerator.Framework.Contracts\Atc.Rest.ApiGenerator.Framework.Contracts.csproj" />
+    <ProjectReference Include="..\Atc.Rest.ApiGenerator.Nuget\Atc.Rest.ApiGenerator.Nuget.csproj" />
     <ProjectReference Include="..\Atc.Rest.ApiGenerator.OpenApi\Atc.Rest.ApiGenerator.OpenApi.csproj" />
   </ItemGroup>
 

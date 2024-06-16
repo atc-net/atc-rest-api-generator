@@ -1,4 +1,4 @@
-namespace Atc.Rest.ApiGenerator.Framework.Core.Providers;
+namespace Atc.Rest.ApiGenerator.Framework.Providers;
 
 public interface INugetPackageReferenceProvider
 {

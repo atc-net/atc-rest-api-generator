@@ -17,7 +17,7 @@ global using Atc.Rest.ApiGenerator.CLI.Extensions;
 global using Atc.Rest.ApiGenerator.CodingRules;
 global using Atc.Rest.ApiGenerator.Framework.Contracts;
 global using Atc.Rest.ApiGenerator.Framework.Contracts.Options;
-global using Atc.Rest.ApiGenerator.Framework.Core.Providers;
+global using Atc.Rest.ApiGenerator.Framework.Providers;
 global using Atc.Rest.ApiGenerator.Framework.Readers;
 global using Atc.Rest.ApiGenerator.Helpers;
 global using Atc.Rest.ApiGenerator.Nuget.Clients;

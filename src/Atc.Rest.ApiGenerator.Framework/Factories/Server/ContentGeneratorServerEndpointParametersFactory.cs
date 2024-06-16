@@ -1,4 +1,4 @@
-namespace Atc.Rest.ApiGenerator.Framework.Core.Factories.Server;
+namespace Atc.Rest.ApiGenerator.Framework.Factories.Server;
 
 public static class ContentGeneratorServerEndpointParametersFactory
 {

@@ -49,7 +49,7 @@ public class ServerDomainGenerator
 
         if (projectOptions.PathForTestGenerate is not null)
         {
-            serverDomainTestGenerator = new Framework.Core.ProjectGenerator.ServerDomainTestGenerator(
+            serverDomainTestGenerator = new Framework.ProjectGenerator.ServerDomainTestGenerator(
                 loggerFactory,
                 nugetPackageReferenceProvider,
                 projectOptions.ApiGeneratorVersion,

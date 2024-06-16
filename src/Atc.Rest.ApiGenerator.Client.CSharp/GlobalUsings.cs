@@ -13,11 +13,12 @@ global using Atc.Rest.ApiGenerator.Framework.Contracts.ContentGeneratorsParamete
 global using Atc.Rest.ApiGenerator.Framework.Contracts.ContentGeneratorsParameters.Client;
 global using Atc.Rest.ApiGenerator.Framework.Contracts.Extensions;
 global using Atc.Rest.ApiGenerator.Framework.Contracts.Models;
-global using Atc.Rest.ApiGenerator.Framework.Core.Providers;
 global using Atc.Rest.ApiGenerator.Framework.Factories.Parameters.Client;
 global using Atc.Rest.ApiGenerator.Framework.Factories.Parameters.ServerClient;
 global using Atc.Rest.ApiGenerator.Framework.Helpers;
+global using Atc.Rest.ApiGenerator.Framework.Providers;
 global using Atc.Rest.ApiGenerator.Framework.Writers;
 global using Atc.Rest.ApiGenerator.OpenApi.Extensions;
+
 global using Microsoft.Extensions.Logging;
 global using Microsoft.OpenApi.Models;
