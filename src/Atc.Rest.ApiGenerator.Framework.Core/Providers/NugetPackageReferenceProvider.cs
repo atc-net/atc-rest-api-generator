@@ -1,4 +1,4 @@
-namespace Atc.Rest.ApiGenerator.Projects;
+namespace Atc.Rest.ApiGenerator.Framework.Core.Providers;
 
 [SuppressMessage("Major Code Smell", "S4144:Methods should not have identical implementations", Justification = "OK - for now")]
 public class NugetPackageReferenceProvider(

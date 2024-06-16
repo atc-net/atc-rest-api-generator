@@ -3,6 +3,7 @@
 // ReSharper disable SuggestBaseTypeForParameter
 // ReSharper disable ReturnTypeCanBeEnumerable.Local
 // ReSharper disable ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
+
 namespace Atc.Rest.ApiGenerator.Generators;
 
 public class ServerDomainGenerator

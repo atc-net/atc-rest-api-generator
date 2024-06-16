@@ -16,6 +16,7 @@ global using Atc.Rest.ApiGenerator.Framework.Contracts.Models;
 global using Atc.Rest.ApiGenerator.Framework.Core.ContentGeneratorsParameters.Server;
 global using Atc.Rest.ApiGenerator.Framework.Core.Factories.Server;
 global using Atc.Rest.ApiGenerator.Framework.Core.Helpers;
+global using Atc.Rest.ApiGenerator.Framework.Core.Providers;
 global using Atc.Rest.ApiGenerator.Framework.Factories.Parameters.Server;
 global using Atc.Rest.ApiGenerator.Framework.Factories.Parameters.ServerClient;
 global using Atc.Rest.ApiGenerator.Framework.Helpers;
@@ -23,7 +24,6 @@ global using Atc.Rest.ApiGenerator.Framework.Mvc.Factories.Parameters.Server;
 global using Atc.Rest.ApiGenerator.Framework.ProjectGenerator;
 global using Atc.Rest.ApiGenerator.Framework.Writers;
 global using Atc.Rest.ApiGenerator.OpenApi.Extensions;
-global using Atc.Rest.ApiGenerator.Projects;
 
 global using Microsoft.Extensions.Logging;
 global using Microsoft.OpenApi.Models;

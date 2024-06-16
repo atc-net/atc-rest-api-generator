@@ -119,6 +119,7 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
 
     ////[Fact]
     [Fact(Skip = "Only use it for prepare verify files")]
+    [SuppressMessage("Major Bug", "S2583:Conditionally executed code should be reachable", Justification = "OK.")]
     public void PrepareVerifyServerAllCsFilesFromGeneratedOutput()
     {
         const string scenarioName = "DemoSample";
@@ -144,6 +145,7 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
 
     ////[Fact]
     [Fact(Skip = "Only use it for prepare verify files")]
+    [SuppressMessage("Major Bug", "S2583:Conditionally executed code should be reachable", Justification = "OK.")]
     public void PrepareVerifySClientCsFilesFromGeneratedOutput()
     {
         const string scenarioName = "PetStore";
