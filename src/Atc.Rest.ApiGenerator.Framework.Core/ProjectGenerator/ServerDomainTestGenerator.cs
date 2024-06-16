@@ -132,7 +132,7 @@ public class ServerDomainTestGenerator : IServerDomainTestGenerator
     {
         var requiredUsings = new List<string>
         {
-            "Xunit"
+            "Xunit",
         };
 
         GlobalUsingsHelper.CreateOrUpdate(
