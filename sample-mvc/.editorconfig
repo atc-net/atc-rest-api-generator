@@ -1,0 +1,51 @@
+# ATC coding rules - https://github.com/atc-net/atc-coding-rules
+# Version: 1.0.0
+# Updated: 25-09-2023
+# Location: sample
+# Distribution: DotNet8
+# Inspired by: https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/code-style-rule-options
+
+##########################################
+# Code Analyzers Rules
+##########################################
+[*.{cs,csx,cake}]
+
+# AsyncFixer
+# http://www.asyncfixer.com
+
+
+# Asyncify
+# https://github.com/hvanbakel/Asyncify-CSharp
+
+
+# Meziantou
+# https://www.meziantou.net/enforcing-asynchronous-code-good-practices-using-a-roslyn-analyzer.htm
+
+
+# Microsoft - Code Analysis
+# https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/
+
+
+# Microsoft - Compiler Errors
+# https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-messages/
+
+
+# Microsoft - FxCop
+# https://github.com/dotnet/roslyn-analyzers
+
+
+# SecurityCodeScan
+# https://security-code-scan.github.io/
+
+
+# StyleCop
+# https://github.com/DotNetAnalyzers/StyleCopAnalyzers
+
+# SonarAnalyzer.CSharp
+# https://rules.sonarsource.com/csharp
+
+dotnet_diagnostic.S1075.severity = none             # Refactor your code not to use hardcoded absolute paths or URIs
+
+##########################################
+# Custom - Code Analyzers Rules
+##########################################

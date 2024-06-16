@@ -327,11 +327,8 @@ public class ServerApiGenerator : IServerApiGenerator
             "Atc.Rest.Results",
         };
 
-        //// TODO: Check for any use ??
-        //if (openApiDocument.IsUsingRequiredForSystemNet(useProblemDetailsAsDefaultResponseBody))
-        {
-            requiredUsings.Add("System.Net");
-        }
+        // TODO: Check for any use ??
+        requiredUsings.Add("System.Net");
 
         // TODO: Check for any use ??
         requiredUsings.Add("Microsoft.AspNetCore.Authorization");

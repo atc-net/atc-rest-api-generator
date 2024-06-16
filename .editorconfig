@@ -1,6 +1,6 @@
 # ATC coding rules - https://github.com/atc-net/atc-coding-rules
-# Version: 1.0.0
-# Updated: 25-09-2023
+# Version: 1.0.1
+# Updated: 03-06-2024
 # Location: Root
 # Distribution: DotNet8
 # Inspired by: https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/code-style-rule-options
@@ -464,10 +464,45 @@ dotnet_diagnostic.MA0048.severity = error           # https://github.com/atc-net
 dotnet_diagnostic.CA1014.severity = none            # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/MicrosoftCodeAnalysis/CA1014.md
 dotnet_diagnostic.CA1068.severity = error           # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/MicrosoftCodeAnalysis/CA1068.md
 dotnet_diagnostic.CA1305.severity = error
+dotnet_diagnostic.CA1510.severity = suggestion      # Use ArgumentNullException throw helper
+dotnet_diagnostic.CA1511.severity = suggestion      # Use ArgumentException throw helper
+dotnet_diagnostic.CA1512.severity = suggestion      # Use ArgumentOutOfRangeException throw helper
+dotnet_diagnostic.CA1513.severity = suggestion      # Use ObjectDisposedException throw helper
+dotnet_diagnostic.CA1514.severity = error           # Avoid redundant length argument
 dotnet_diagnostic.CA1707.severity = error           # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/MicrosoftCodeAnalysis/CA1707.md
 dotnet_diagnostic.CA1812.severity = none
 dotnet_diagnostic.CA1822.severity = suggestion
+dotnet_diagnostic.CA1849.severity = error           # Call async methods when in an async method
+dotnet_diagnostic.CA1854.severity = suggestion      # Prefer the 'IDictionary.TryGetValue(TKey, out TValue)' method
+dotnet_diagnostic.CA1855.severity = suggestion      # Prefer 'Clear' over 'Fill'
+dotnet_diagnostic.CA1856.severity = error           # Incorrect usage of ConstantExpected attribute
+dotnet_diagnostic.CA1857.severity = suggestion      # A constant is expected for the parameter
+dotnet_diagnostic.CA1858.severity = suggestion      # Use 'StartsWith' instead of 'IndexOf'
+dotnet_diagnostic.CA1859.severity = suggestion      # Use concrete types when possible for improved performance
+dotnet_diagnostic.CA1860.severity = suggestion      # Avoid using 'Enumerable.Any()' extension method
+dotnet_diagnostic.CA1861.severity = suggestion      # Avoid constant arrays as arguments
+dotnet_diagnostic.CA1862.severity = error           # Use the 'StringComparison' method overloads to perform case-insensitive string comparisons
+dotnet_diagnostic.CA1863.severity = suggestion      # Use 'CompositeFormat'
+dotnet_diagnostic.CA1864.severity = suggestion      # Prefer the 'IDictionary.TryAdd(TKey, TValue)' method
+dotnet_diagnostic.CA1865.severity = suggestion      # Use char overload
+dotnet_diagnostic.CA1866.severity = suggestion      # Use char overload
+dotnet_diagnostic.CA1867.severity = suggestion      # Use char overload
+dotnet_diagnostic.CA1868.severity = suggestion      # Unnecessary call to 'Contains(item)'
+dotnet_diagnostic.CA1869.severity = suggestion      # Cache and reuse 'JsonSerializerOptions' instances
+dotnet_diagnostic.CA1870.severity = suggestion      # Use a cached 'SearchValues' instance
 dotnet_diagnostic.CA2007.severity = suggestion      # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/MicrosoftCodeAnalysis/CA2007.md
+dotnet_diagnostic.CA2017.severity = error           # Parameter count mismatch
+dotnet_diagnostic.CA2018.severity = error           # The count argument to Buffer.BlockCopy should specify the number of bytes to copy
+dotnet_diagnostic.CA2019.severity = error           # ThreadStatic fields should not use inline initialization
+dotnet_diagnostic.CA2021.severity = error           # Don't call Enumerable.Cast<T> or Enumerable.OfType<T> with incompatible types
+dotnet_diagnostic.CA2250.severity = suggestion      # Use ThrowIfCancellationRequested
+dotnet_diagnostic.CA2252.severity = suggestion      # Opt-in to preview features should be used with caution
+dotnet_diagnostic.CA2253.severity = error           # Named placeholders should not be numeric values
+dotnet_diagnostic.CA2254.severity = suggestion      # Template should be a static expression
+dotnet_diagnostic.CA2255.severity = suggestion      # The ModuleInitializer attribute should not be used in libraries
+dotnet_diagnostic.CA2259.severity = error           # Ensure ThreadStatic is only used with static fields
+dotnet_diagnostic.CA2260.severity = error           # Implement generic math interfaces correctly
+dotnet_diagnostic.CA2261.severity = error           # Do not use ConfigureAwaitOptions.SuppressThrowing with Task<TResult>
 dotnet_diagnostic.IDE0005.severity = warning        # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/MicrosoftCodeAnalysis/IDE0005.md
 dotnet_diagnostic.IDE0058.severity = none           # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/MicrosoftCodeAnalysis/IDE0058.md
 
