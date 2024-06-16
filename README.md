@@ -25,7 +25,7 @@
 ```mermaid
 flowchart TB;
     CLI[Atc.Rest.ApiGenerator.CLI]
-    Contracts[Atc.Rest.ApiGenerator.Contract];
+    Contracts[Atc.Rest.ApiGenerator.Contracts];
     ApiGenerator[Atc.Rest.ApiGenerator];
     CodingRules[Atc.Rest.ApiGenerator.CodingRules]
     ClientCSharp[Atc.Rest.ApiGenerator.Client.CSharp];
@@ -54,26 +54,26 @@ flowchart TB;
     ApiGenerator --> ClientCSharp;
     ApiGenerator --> ServerMvc;
     ApiGenerator --> ServerMinimal;
-    ApiGenerator ..-> Contracts;
+    ApiGenerator .-> Contracts;
    
     ClientCSharp --> Framework;
-    ClientCSharp ..-> Contracts;
-    ClientCSharp ..-> CSharpGenerator;
+    ClientCSharp .-> Contracts;
+    ClientCSharp .-> CSharpGenerator;
 
     ServerMvc --> Framework;
-    ServerMvc ..-> Contracts;
-    ServerMvc ..-> CSharpGenerator;
+    ServerMvc .-> Contracts;
+    ServerMvc .-> CSharpGenerator;
 
     ServerMinimal --> Framework;
-    ServerMinimal ..-> Contracts;
-    ServerMinimal ..-> CSharpGenerator;
+    ServerMinimal .-> Contracts;
+    ServerMinimal .-> CSharpGenerator;
 
     Framework --> Nuget;
     Framework --> OpenApi;
-    Framework ---> Contracts;
-    Framework ---> CSharpGenerator;
+    Framework .-> Contracts;
+    Framework --> CSharpGenerator;
 
-    OpenApi ..-> Contract;
+    OpenApi ..-> Contracts;
 ```
 
 ## CLI Tool
