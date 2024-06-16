@@ -1,4 +1,5 @@
 // ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
+
 namespace Atc.Rest.ApiGenerator.Framework.Minimal.ContentGenerators.Server;
 
 public class ContentGeneratorServeWebApplicationExtensions : IContentGenerator

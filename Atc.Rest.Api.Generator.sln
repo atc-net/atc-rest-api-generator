@@ -24,7 +24,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Rest.ApiGenerator.Frame
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Rest.ApiGenerator.Framework.Mvc.Tests", "test\Atc.Rest.ApiGenerator.Framework.Mvc.Tests\Atc.Rest.ApiGenerator.Framework.Mvc.Tests.csproj", "{108216D7-4552-4397-AC5A-5C3346D65BFB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Rest.ApiGenerator.Framework.Contracts", "src\Atc.Rest.ApiGenerator.Framework.Contracts\Atc.Rest.ApiGenerator.Framework.Contracts.csproj", "{DEA4D5EC-DD8A-48D6-B859-55D95F46CC06}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Rest.ApiGenerator.Contracts", "src\Atc.Rest.ApiGenerator.Contracts\Atc.Rest.ApiGenerator.Contracts.csproj", "{DEA4D5EC-DD8A-48D6-B859-55D95F46CC06}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Rest.ApiGenerator.OpenApi", "src\Atc.Rest.ApiGenerator.OpenApi\Atc.Rest.ApiGenerator.OpenApi.csproj", "{EE12FAB6-FEA2-4819-ABAF-B38319325F35}"
 EndProject
@@ -42,7 +42,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Rest.ApiGenerator.Codin
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Rest.ApiGenerator.Nuget.Tests", "test\Atc.Rest.ApiGenerator.Nuget.Tests\Atc.Rest.ApiGenerator.Nuget.Tests.csproj", "{3F33D1B3-7AD9-44A3-B5F4-048BED3913C8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Rest.ApiGenerator.Framework.Contracts.Tests", "test\Atc.Rest.ApiGenerator.Framework.Contracts.Tests\Atc.Rest.ApiGenerator.Framework.Contracts.Tests.csproj", "{8FF7EF9D-DDBB-4D25-B3A5-5E0D11462545}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Rest.ApiGenerator.Contracts.Tests", "test\Atc.Rest.ApiGenerator.Contracts.Tests\Atc.Rest.ApiGenerator.Contracts.Tests.csproj", "{8FF7EF9D-DDBB-4D25-B3A5-5E0D11462545}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Rest.ApiGenerator.CLI.Tests", "test\Atc.Rest.ApiGenerator.CLI.Tests\Atc.Rest.ApiGenerator.CLI.Tests.csproj", "{D75819AA-3092-43F6-80D2-1BF2FCAA92EE}"
 EndProject

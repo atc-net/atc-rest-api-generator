@@ -1,6 +1,7 @@
 // ReSharper disable ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
 // ReSharper disable InvertIf
 // ReSharper disable TailRecursiveCall
+
 namespace Atc.Rest.ApiGenerator.OpenApi.Extractors;
 
 public sealed class ApiOperationExtractor : IApiOperationExtractor

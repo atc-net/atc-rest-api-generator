@@ -1,4 +1,5 @@
 // ReSharper disable ArrangeObjectCreationWhenTypeNotEvident
+
 namespace Atc.Rest.ApiGenerator.Framework.Minimal.ProjectGenerator;
 
 public class ServerHostGenerator : IServerHostGenerator

@@ -1,1 +1,0 @@
-global using Atc.Rest.ApiGenerator.Framework.Contracts.Resolver;

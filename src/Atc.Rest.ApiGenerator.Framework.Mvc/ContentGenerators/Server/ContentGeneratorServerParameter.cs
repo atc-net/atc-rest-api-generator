@@ -1,6 +1,7 @@
 // ReSharper disable StringLiteralTypo
 // ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
 // ReSharper disable ConvertIfStatementToConditionalTernaryExpression
+
 namespace Atc.Rest.ApiGenerator.Framework.Mvc.ContentGenerators.Server;
 
 public sealed class ContentGeneratorServerParameter : IContentGenerator

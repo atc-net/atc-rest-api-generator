@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <NoWarn>CA1014</NoWarn>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -12,8 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Atc.CodeGeneration.CSharp\Atc.CodeGeneration.CSharp.csproj" />
-    <ProjectReference Include="..\Atc.Rest.ApiGenerator.Framework.Contracts\Atc.Rest.ApiGenerator.Framework.Contracts.csproj" />
-    <ProjectReference Include="..\Atc.Rest.ApiGenerator.Framework\Atc.Rest.ApiGenerator.Framework.csproj" />
+    <ProjectReference Include="..\Atc.Rest.ApiGenerator.Contracts\Atc.Rest.ApiGenerator.Contracts.csproj" />
     <ProjectReference Include="..\Atc.Rest.ApiGenerator.Framework\Atc.Rest.ApiGenerator.Framework.csproj" />
   </ItemGroup>
 

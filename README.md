@@ -2,6 +2,7 @@
 
 # ATC-NET REST API Generator
 
+
 ## Breaking changes
 
 ![Breaking Changes](https://img.shields.io/static/v1?color=ff9900&style=for-the-badge&label=&message=Breaking%20changes%20From%20Version%201.x%20to%202.x)
@@ -412,6 +413,78 @@ components:
   responses: {}
   securitySchemes: {}
 ```
+
+## Project dependency graph
+
+```mermaid
+flowchart TB;
+    CLI[Atc.Rest.ApiGenerator.CLI]
+    Contract[Atc.Rest.ApiGenerator.Framework.Contract];
+    ApiGenerator[Atc.Rest.ApiGenerator];
+    CodingRules[Atc.Rest.ApiGenerator.CodingRules]
+    ClientCSharp[Atc.Rest.ApiGenerator.Client.CSharp];
+    ServerMvc[Atc.Rest.ApiGenerator.Framework.Mvc];
+    ServerMinimal[Atc.Rest.ApiGenerator.Framework.Minimal];
+    Framework[Atc.Rest.ApiGenerator.Framework];
+    Nuget[Atc.Rest.ApiGenerator.Nuget];
+    CSharpGenerator[Atc.CodeGeneration.CSharp];
+    OpenApi[Atc.Rest.ApiGenerator.OpenApi];
+
+    style CLI fill:#007FFF;
+    style Contract fill:#57A64A;
+    style ApiGenerator fill:#;
+    style CodingRules fill:#;
+    style ClientCSharp fill:#B35A2D;
+    style ServerMvc fill:#B35A2D;
+    style ServerMinimal fill:#B35A2D;
+    style Framework fill:#;
+    style Nuget fill:#;
+    style CSharpGenerator fill:#;
+    style OpenApi fill:#;
+
+    CLI --> ApiGenerator;
+    CLI --> CodingRules;
+    
+    ApiGenerator --> ClientCSharp;
+    ApiGenerator --> ServerMvc;
+    ApiGenerator --> ServerMinimal;
+    ApiGenerator ..-> Contract;
+   
+    ClientCSharp --> Framework;
+    ClientCSharp ..-> Contract;
+    ClientCSharp ..-> CSharpGenerator;
+
+    ServerMvc --> Framework;
+    ServerMvc ..-> Contract;
+    ServerMvc ..-> CSharpGenerator;
+
+    ServerMinimal --> Framework;
+    ServerMinimal ..-> Contract;
+    ServerMinimal ..-> CSharpGenerator;
+
+    Framework --> Nuget;
+    Framework --> OpenApi;
+    Framework ---> Contract;
+    Framework ---> CSharpGenerator;
+
+    OpenApi ..-> Contract;
+```
+
+## Projects responsibility
+
+| Project | Responsibility |
+|---------|----------------|
+| Atc.Rest.ApiGenerator.CLI | CLI tool that use Atc.Rest.ApiGenerator to create/update a project specified by a OpenApi 3.0.x specification YAML file |
+| Atc.Rest.ApiGenerator | WebApi C# code generator using a OpenApi 3.0.x specification YAML file |
+| Atc.Rest.ApiGenerator.CodingRules | Create/update atc coding rules for the generated code |
+| Atc.Rest.ApiGenerator.Framework.Contract | Shared contracts and interfaces for the generated code. |
+| Atc.Rest.ApiGenerator.Framework.Mvc | Provides support for generating ASP.NET MVC / Controller based REST API server implementations. |
+| Atc.Rest.ApiGenerator.Framework.Minimal | Provides support for generating MinimalAPI based REST server implementations. |
+| Atc.Rest.ApiGenerator.Client.CSharp | Generates C# client code for interacting with the generated REST APIs. |
+| Atc.Rest.ApiGenerator.Framework | Shared framework components and utilities for the API generator projects. |
+| Atc.Rest.ApiGenerator.OpenApi | Handles OpenAPI specification parsing and manipulation for the API generator. |
+| Atc.Rest.ApiGenerator.Nuget | Manages NuGet packages required by the generated code and frameworks. |
+| Atc.CodeGeneration.CSharp | Provides utilities and functionalities for generating C# code. |
 
 ## How to contribute
 
