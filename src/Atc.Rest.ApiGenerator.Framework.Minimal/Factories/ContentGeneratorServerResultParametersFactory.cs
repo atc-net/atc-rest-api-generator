@@ -2,7 +2,7 @@
 // ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
 // ReSharper disable InvertIf
 // ReSharper disable LoopCanBeConvertedToQuery
-namespace Atc.Rest.ApiGenerator.Framework.Minimal.Factories.Parameters.Server;
+namespace Atc.Rest.ApiGenerator.Framework.Minimal.Factories;
 
 public static class ContentGeneratorServerResultParametersFactory
 {

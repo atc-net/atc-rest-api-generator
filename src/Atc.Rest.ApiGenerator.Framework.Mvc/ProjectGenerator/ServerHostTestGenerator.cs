@@ -124,7 +124,7 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
 
     public void ScaffoldAppSettingsIntegrationTestFile()
     {
-        var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerAppSettingsIntegrationTest();
+        var contentGenerator = new ContentGenerators.ContentGeneratorServerAppSettingsIntegrationTest();
 
         var content = contentGenerator.Generate();
 
@@ -142,7 +142,7 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
         var contentGeneratorServerWebApiStartupFactoryParameters = ContentGeneratorServerWebApiStartupFactoryParametersFactory.Create(
             projectName);
 
-        var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerWebApiStartupFactory(
+        var contentGenerator = new ContentGenerators.ContentGeneratorServerWebApiStartupFactory(
             new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
             new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
             new CodeDocumentationTagsGenerator(),
@@ -161,7 +161,7 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
 
     public void GenerateWebApiControllerBaseTestFile()
     {
-        var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerWebApiControllerBaseTest(
+        var contentGenerator = new ContentGenerators.ContentGeneratorServerWebApiControllerBaseTest(
             new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
             new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
             new ContentGeneratorBaseParameters(projectName));

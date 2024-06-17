@@ -1,4 +1,4 @@
-namespace Atc.Rest.ApiGenerator.Framework.Minimal.ContentGenerators.Server;
+namespace Atc.Rest.ApiGenerator.Framework.Minimal.ContentGenerators;
 
 public class ContentGeneratorServerWebApplicationBuilderExtensions : IContentGenerator
 {

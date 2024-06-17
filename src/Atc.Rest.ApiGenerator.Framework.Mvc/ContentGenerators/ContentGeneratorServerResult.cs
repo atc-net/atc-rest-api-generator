@@ -1,8 +1,7 @@
 // ReSharper disable SwitchStatementHandlesSomeKnownEnumValuesWithDefault
 // ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
 // ReSharper disable ConvertIfStatementToReturnStatement
-
-namespace Atc.Rest.ApiGenerator.Framework.Mvc.ContentGenerators.Server;
+namespace Atc.Rest.ApiGenerator.Framework.Mvc.ContentGenerators;
 
 public sealed class ContentGeneratorServerResult : IContentGenerator
 {

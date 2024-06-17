@@ -1,4 +1,4 @@
-namespace Atc.Rest.ApiGenerator.Framework.Minimal.Factories.Parameters.Server;
+namespace Atc.Rest.ApiGenerator.Framework.Minimal.Factories;
 
 public static class ContentGeneratorServerHandlerInterfaceParametersFactory
 {

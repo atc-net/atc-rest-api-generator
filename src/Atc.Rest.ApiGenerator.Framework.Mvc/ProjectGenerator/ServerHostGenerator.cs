@@ -1,5 +1,4 @@
 // ReSharper disable ArrangeObjectCreationWhenTypeNotEvident
-
 namespace Atc.Rest.ApiGenerator.Framework.Mvc.ProjectGenerator;
 
 public class ServerHostGenerator : IServerHostGenerator
@@ -131,7 +130,7 @@ public class ServerHostGenerator : IServerHostGenerator
     public void ScaffoldProgramFile(
         SwaggerThemeMode swaggerThemeMode)
     {
-        var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerProgram(
+        var contentGenerator = new ContentGenerators.ContentGeneratorServerProgram(
             new ContentGeneratorBaseParameters(Namespace: projectName));
 
         var content = contentGenerator.Generate();
@@ -147,7 +146,7 @@ public class ServerHostGenerator : IServerHostGenerator
 
     public void ScaffoldStartupFile()
     {
-        var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerStartup(
+        var contentGenerator = new ContentGenerators.ContentGeneratorServerStartup(
             new ContentGeneratorBaseParameters(Namespace: projectName));
 
         var content = contentGenerator.Generate();

@@ -19,7 +19,7 @@ global using Atc.Rest.ApiGenerator.Framework.Factories.Parameters.Server;
 global using Atc.Rest.ApiGenerator.Framework.Factories.Parameters.ServerClient;
 global using Atc.Rest.ApiGenerator.Framework.Factories.Server;
 global using Atc.Rest.ApiGenerator.Framework.Helpers;
-global using Atc.Rest.ApiGenerator.Framework.Mvc.Factories.Parameters.Server;
+global using Atc.Rest.ApiGenerator.Framework.Mvc.Factories;
 global using Atc.Rest.ApiGenerator.Framework.ProjectGenerator;
 global using Atc.Rest.ApiGenerator.Framework.Providers;
 global using Atc.Rest.ApiGenerator.Framework.Writers;

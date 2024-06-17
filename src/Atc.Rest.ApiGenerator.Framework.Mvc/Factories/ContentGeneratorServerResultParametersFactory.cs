@@ -1,7 +1,7 @@
 // ReSharper disable ConvertIfStatementToReturnStatement
 // ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
 // ReSharper disable InvertIf
-namespace Atc.Rest.ApiGenerator.Framework.Mvc.Factories.Parameters.Server;
+namespace Atc.Rest.ApiGenerator.Framework.Mvc.Factories;
 
 public static class ContentGeneratorServerResultParametersFactory
 {

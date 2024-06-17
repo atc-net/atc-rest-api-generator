@@ -1,22 +1,20 @@
-namespace Atc.Rest.ApiGenerator.Framework.Mvc.Factories.Parameters.Server;
+namespace Atc.Rest.ApiGenerator.Framework.Mvc.Factories;
 
-public static class ContentGeneratorServerHandlerInterfaceParametersFactory
+public static class ContentGeneratorServerHandlerParametersFactory
 {
-    public static InterfaceParameters Create(
-        string headerContent,
+    public static ClassParameters Create(
         string @namespace,
-        AttributeParameters codeGeneratorAttribute,
         OpenApiPathItem openApiPath,
         OpenApiOperation openApiOperation)
     {
         var operationName = openApiOperation.GetOperationName();
 
-        var methodParametersAttributes = new Dictionary<string, string>(StringComparer.Ordinal);
+        var hasParameters = openApiPath.HasParameters() ||
+                            openApiOperation.HasParametersOrRequestBody();
+
         var methodParametersParameters = new List<ParameterBaseParameters>();
-        if (openApiPath.HasParameters() ||
-            openApiOperation.HasParametersOrRequestBody())
+        if (hasParameters)
         {
-            methodParametersAttributes.Add("parameters", "The parameters.");
             methodParametersParameters.Add(
                 new ParameterBaseParameters(
                     Attributes: null,
@@ -29,7 +27,6 @@ public static class ContentGeneratorServerHandlerInterfaceParametersFactory
                     DefaultValue: null));
         }
 
-        methodParametersAttributes.Add("cancellationToken", "The cancellation token.");
         methodParametersParameters.Add(
             new ParameterBaseParameters(
                 Attributes: null,
@@ -44,34 +41,47 @@ public static class ContentGeneratorServerHandlerInterfaceParametersFactory
         var methodParameters = new List<MethodParameters>
         {
             new(
-                DocumentationTags: new CodeDocumentationTags(
-                    "Execute method",
-                    parameters: methodParametersAttributes,
-                    remark: null,
-                    code: null,
-                    example: null,
-                    exceptions: null,
-                    @return: null),
+                DocumentationTags: null,
                 Attributes: null,
-                AccessModifier: AccessModifiers.None,
+                AccessModifier: AccessModifiers.Public,
                 ReturnTypeName: $"{operationName}{ContentGeneratorConstants.Result}",
                 ReturnGenericTypeName: "Task",
                 Name: "ExecuteAsync",
                 Parameters: methodParametersParameters,
                 AlwaysBreakDownParameters: true,
                 UseExpressionBody: false,
-                Content: null),
+                Content: GenerateContentExecuteMethod(hasParameters, operationName)),
         };
 
-        return new InterfaceParameters(
-            headerContent,
+        return new ClassParameters(
+            HeaderContent: null,
             @namespace,
-            DocumentationTags: openApiOperation.ExtractDocumentationTagsForHandlerInterface(),
-            new List<AttributeParameters> { codeGeneratorAttribute },
-            AccessModifiers.Public,
-            InterfaceTypeName: $"I{operationName}{ContentGeneratorConstants.Handler}",
+            openApiOperation.ExtractDocumentationTagsForHandler(),
+            Attributes: null,
+            AccessModifiers.PublicClass,
+            ClassTypeName: $"{operationName}{ContentGeneratorConstants.Handler}",
+            GenericTypeName: null,
+            InheritedClassTypeName: $"I{operationName}{ContentGeneratorConstants.Handler}",
+            InheritedGenericClassTypeName: null,
             InheritedInterfaceTypeName: null,
+            Constructors: null,
             Properties: null,
-            Methods: methodParameters);
+            Methods: methodParameters,
+            GenerateToStringMethod: false);
+    }
+
+    private static string GenerateContentExecuteMethod(
+        bool hasParameters,
+        string operationName)
+    {
+        var sb = new StringBuilder();
+        if (hasParameters)
+        {
+            sb.AppendLine("ArgumentNullException.ThrowIfNull(parameters);");
+            sb.AppendLine();
+        }
+
+        sb.Append($"throw new NotImplementedException(\"Add logic here for {operationName}{ContentGeneratorConstants.Handler}\");");
+        return sb.ToString();
     }
 }

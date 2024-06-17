@@ -177,7 +177,7 @@ public class ServerApiGenerator : IServerApiGenerator
                     openApiOperation.Value,
                     openApiPath.Value.Parameters);
 
-                var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerParameter(
+                var contentGenerator = new ContentGenerators.ContentGeneratorServerParameter(
                     new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
                     new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
                     new CodeDocumentationTagsGenerator(),
@@ -209,7 +209,7 @@ public class ServerApiGenerator : IServerApiGenerator
                     fullNamespace,
                     openApiOperation.Value);
 
-                var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerResult(
+                var contentGenerator = new ContentGenerators.ContentGeneratorServerResult(
                     new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
                     new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
                     new CodeDocumentationTagsGenerator(),
@@ -274,7 +274,7 @@ public class ServerApiGenerator : IServerApiGenerator
                 ContentGeneratorConstants.EndpointDefinition,
                 openApiDocument);
 
-            var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerEndpoints(
+            var contentGenerator = new ContentGenerators.ContentGeneratorServerEndpoints(
                 new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
                 new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
                 new CodeDocumentationTagsGenerator(),
