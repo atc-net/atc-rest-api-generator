@@ -115,7 +115,7 @@ public class ServerHostGenerator : IServerHostGenerator
 
     public void ScaffoldJsonSerializerOptionsExtensions()
     {
-        var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerJsonSerializerOptionsExtensions(
+        var contentGenerator = new ContentGenerators.ContentGeneratorServerJsonSerializerOptionsExtensions(
                                new ContentGeneratorBaseParameters(Namespace: projectName));
 
         var content = contentGenerator.Generate();
@@ -131,7 +131,7 @@ public class ServerHostGenerator : IServerHostGenerator
 
     public void ScaffoldServiceCollectionExtensions()
     {
-        var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerServiceCollectionExtensions(
+        var contentGenerator = new ContentGenerators.ContentGeneratorServerServiceCollectionExtensions(
             new ContentGeneratorBaseParameters(Namespace: projectName));
 
         var content = contentGenerator.Generate();
@@ -147,7 +147,7 @@ public class ServerHostGenerator : IServerHostGenerator
 
     public void ScaffoldWebApplicationBuilderExtensions()
     {
-        var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerWebApplicationBuilderExtensions(
+        var contentGenerator = new ContentGenerators.ContentGeneratorServerWebApplicationBuilderExtensions(
             new ContentGeneratorBaseParameters(Namespace: projectName));
 
         var content = contentGenerator.Generate();
@@ -164,7 +164,7 @@ public class ServerHostGenerator : IServerHostGenerator
     public void ScaffoldWebApplicationExtensions(
         SwaggerThemeMode swaggerThemeMode)
     {
-        var contentGenerator = new ContentGenerators.Server.ContentGeneratorServeWebApplicationExtensions(
+        var contentGenerator = new ContentGenerators.ContentGeneratorServeWebApplicationExtensions(
             new ContentGeneratorBaseParameters(Namespace: projectName))
         {
             SwaggerThemeMode = swaggerThemeMode,
@@ -183,7 +183,7 @@ public class ServerHostGenerator : IServerHostGenerator
 
     public void ScaffoldConfigureSwaggerOptions()
     {
-        var contentGenerator = new ContentGenerators.Server.ContentGeneratorServeConfigureSwaggerOptions(
+        var contentGenerator = new ContentGenerators.ContentGeneratorServeConfigureSwaggerOptions(
             new ContentGeneratorBaseParameters(Namespace: projectName));
 
         var content = contentGenerator.Generate();
@@ -200,7 +200,7 @@ public class ServerHostGenerator : IServerHostGenerator
     public void ScaffoldProgramFile(
         SwaggerThemeMode swaggerThemeMode)
     {
-        var contentGenerator = new ContentGenerators.Server.ContentGeneratorServerProgram(
+        var contentGenerator = new ContentGenerators.ContentGeneratorServerProgram(
             new ContentGeneratorBaseParameters(Namespace: projectName))
         {
             SwaggerThemeMode = swaggerThemeMode,
