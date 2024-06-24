@@ -75,7 +75,7 @@ public sealed class ContentGeneratorClientParameter : IContentGenerator
                     sb.AppendLine(4, "[EmailAddress]");
                     break;
                 case RegularExpressionAttribute regularExpressionAttribute:
-                    sb.AppendLine(4, $"[RegularExpression(\"{regularExpressionAttribute.Pattern}\")]");
+                    sb.AppendLine(4, $"[RegularExpression({regularExpressionAttribute.GetEscapedPattern()})]");
                     break;
                 case StringLengthAttribute stringLengthAttribute:
                     sb.AppendLine(4, $"[StringLength({stringLengthAttribute.MaximumLength})]");

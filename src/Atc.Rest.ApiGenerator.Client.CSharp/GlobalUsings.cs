@@ -6,6 +6,7 @@ global using System.Text;
 global using Atc.CodeDocumentation.CodeComment;
 global using Atc.CodeGeneration.CSharp.Content;
 global using Atc.CodeGeneration.CSharp.Content.Generators;
+global using Atc.CodeGeneration.CSharp.Extensions;
 global using Atc.Rest.ApiGenerator.Client.CSharp.ContentGenerators;
 global using Atc.Rest.ApiGenerator.Contracts;
 global using Atc.Rest.ApiGenerator.Contracts.ContentGeneratorsParameters;
