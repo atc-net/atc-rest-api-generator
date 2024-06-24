@@ -328,6 +328,12 @@ public class ServerApiGenerator : IServerApiGenerator
             "Microsoft.AspNetCore.Mvc",
         };
 
+        if (openApiDocument.IsUsingRequiredForSystemTextJsonSerializationAndSystemRuntimeSerialization())
+        {
+            requiredUsings.Add("System.Runtime.Serialization");
+            requiredUsings.Add("System.Text.Json.Serialization");
+        }
+
         if (openApiDocument.IsUsingRequiredForAtcRestResults())
         {
             requiredUsings.Add("Atc.Rest.Results");

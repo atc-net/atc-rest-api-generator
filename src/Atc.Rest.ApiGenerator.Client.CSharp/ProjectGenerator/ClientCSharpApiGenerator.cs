@@ -377,6 +377,12 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
             requiredUsings.Add("System.Collections.Generic");
         }
 
+        if (openApiDocument.IsUsingRequiredForSystemTextJsonSerializationAndSystemRuntimeSerialization())
+        {
+            requiredUsings.Add("System.Runtime.Serialization");
+            requiredUsings.Add("System.Text.Json.Serialization");
+        }
+
         if (operationSchemaMappings.FirstOrDefault(x => x.Model.UsesIFormFile) is not null)
         {
             requiredUsings.Add("Microsoft.AspNetCore.Http");
@@ -449,8 +455,8 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
     }
 
     private void GenerateEnumerationType(
-    string enumerationName,
-    OpenApiSchema openApiSchemaEnumeration)
+        string enumerationName,
+        OpenApiSchema openApiSchemaEnumeration)
     {
         var fullNamespace = $"{projectName}.{ContentGeneratorConstants.Contracts}";
 

@@ -345,6 +345,12 @@ public class ServerApiGenerator : IServerApiGenerator
         // TODO: Check for any use ??
         requiredUsings.Add("System.Net");
 
+        if (openApiDocument.IsUsingRequiredForSystemTextJsonSerializationAndSystemRuntimeSerialization())
+        {
+            requiredUsings.Add("System.Runtime.Serialization");
+            requiredUsings.Add("System.Text.Json.Serialization");
+        }
+
         // TODO: Check for any use ??
         requiredUsings.Add("Microsoft.AspNetCore.Authorization");
 
