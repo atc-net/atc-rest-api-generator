@@ -199,6 +199,43 @@ public static class OpenApiDocumentExtensions
         return false;
     }
 
+    public static bool IsUsingRequiredForSystemTextJsonSerializationAndSystemRuntimeSerialization(
+        this OpenApiDocument openApiDocument)
+    {
+        foreach (var openApiPath in openApiDocument.Paths)
+        {
+            foreach (var openApiOperation in openApiPath.Value.Operations)
+            {
+                if (openApiOperation.Value.Deprecated)
+                {
+                    continue;
+                }
+
+                foreach (var parameter in openApiOperation.Value.Parameters)
+                {
+                    if (parameter.Schema.IsSchemaEnum())
+                    {
+                        foreach (var openApiAny in parameter.Schema.Enum)
+                        {
+                            if (openApiAny is not OpenApiString openApiString)
+                            {
+                                continue;
+                            }
+
+                            if (openApiString.Value.IsFirstCharacterLowerCase() ||
+                                openApiString.Value.Contains('-', StringComparison.Ordinal))
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
     public static bool IsUsingRequiredForAtcRestResults(
         this OpenApiDocument openApiDocument)
     {
