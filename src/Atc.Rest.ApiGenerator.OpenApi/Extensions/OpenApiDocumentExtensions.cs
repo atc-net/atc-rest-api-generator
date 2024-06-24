@@ -117,9 +117,14 @@ public static class OpenApiDocumentExtensions
     {
         foreach (var openApiPath in openApiDocument.Paths)
         {
-            foreach (var apiOperation in openApiPath.Value.Operations)
+            foreach (var openApiOperation in openApiPath.Value.Operations)
             {
-                foreach (var response in apiOperation.Value.Responses.Values)
+                if (openApiOperation.Value.Deprecated)
+                {
+                    continue;
+                }
+
+                foreach (var response in openApiOperation.Value.Responses.Values)
                 {
                     foreach (var mediaType in response.Content.Values)
                     {

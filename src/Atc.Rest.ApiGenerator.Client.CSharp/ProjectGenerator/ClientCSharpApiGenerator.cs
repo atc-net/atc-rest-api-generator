@@ -141,9 +141,14 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
                 ? $"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}"
                 : $"{projectName}.{ClientFolderName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
 
-            foreach (var apiOperation in openApiPath.Value.Operations)
+            foreach (var openApiOperation in openApiPath.Value.Operations)
             {
-                if (!apiOperation.Value.HasParametersOrRequestBody() &&
+                if (openApiOperation.Value.Deprecated)
+                {
+                    continue;
+                }
+
+                if (!openApiOperation.Value.HasParametersOrRequestBody() &&
                     !openApiPath.Value.HasParameters())
                 {
                     continue;
@@ -151,7 +156,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
 
                 var parameterParameters = ContentGeneratorClientParameterParametersFactory.Create(
                     fullNamespace,
-                    apiOperation.Value,
+                    openApiOperation.Value,
                     openApiPath.Value.Parameters);
 
                 var contentGenerator = new ContentGeneratorClientParameter(
@@ -184,6 +189,11 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
+                if (openApiOperation.Value.Deprecated)
+                {
+                    continue;
+                }
+
                 var interfaceParameters = ContentGeneratorClientEndpointInterfaceParametersFactory.Create(
                     codeGeneratorContentHeader,
                     fullNamespace,
@@ -220,6 +230,11 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
+                if (openApiOperation.Value.Deprecated)
+                {
+                    continue;
+                }
+
                 var endpointParameters = ContentGeneratorClientEndpointParametersFactory.Create(
                     projectName,
                     apiGroupName,
@@ -261,6 +276,11 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
+                if (openApiOperation.Value.Deprecated)
+                {
+                    continue;
+                }
+
                 var endpointResultInterfaceParameters = ContentGeneratorClientEndpointResultInterfaceParametersFactory.Create(
                     projectName,
                     apiGroupName,
@@ -299,6 +319,11 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
+                if (openApiOperation.Value.Deprecated)
+                {
+                    continue;
+                }
+
                 var endpointResultParameters = ContentGeneratorClientEndpointResultParametersFactory.Create(
                     projectName,
                     apiGroupName,
@@ -369,6 +394,11 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
             var apiGroupName = openApiPath.GetApiGroupName();
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
+                if (openApiOperation.Value.Deprecated)
+                {
+                    continue;
+                }
+
                 if (!openApiPath.Value.HasParameters() &&
                     !openApiOperation.Value.HasParametersOrRequestBody())
                 {

@@ -182,6 +182,11 @@ public class ServerApiGenerator : IServerApiGenerator
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
+                if (openApiOperation.Value.Deprecated)
+                {
+                    continue;
+                }
+
                 if (!openApiPath.Value.HasParameters() &&
                     !openApiOperation.Value.HasParametersOrRequestBody())
                 {
@@ -221,6 +226,11 @@ public class ServerApiGenerator : IServerApiGenerator
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
+                if (openApiOperation.Value.Deprecated)
+                {
+                    continue;
+                }
+
                 var resultParameters = ContentGeneratorServerResultParametersFactory.Create(
                     fullNamespace,
                     openApiOperation.Value);
@@ -254,6 +264,11 @@ public class ServerApiGenerator : IServerApiGenerator
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
+                if (openApiOperation.Value.Deprecated)
+                {
+                    continue;
+                }
+
                 var interfaceParameters = ContentGeneratorServerHandlerInterfaceParametersFactory.Create(
                     codeGeneratorContentHeader,
                     fullNamespace,

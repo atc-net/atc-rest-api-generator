@@ -185,6 +185,11 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
+                if (openApiOperation.Value.Deprecated)
+                {
+                    continue;
+                }
+
                 var fullNamespace = $"{projectName}.{ContentGeneratorConstants.Endpoints}.{apiGroupName}";
 
                 var classParameters = ContentGeneratorServerTestEndpointHandlerStubParametersFactory.Create(
@@ -218,6 +223,11 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
+                if (openApiOperation.Value.Deprecated)
+                {
+                    continue;
+                }
+
                 var fullNamespace = $"{projectName}.{ContentGeneratorConstants.Endpoints}.{apiGroupName}";
 
                 var classParameters = ContentGeneratorServerTestEndpointTestsParametersFactory.Create(

@@ -186,6 +186,11 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
+                if (openApiOperation.Value.Deprecated)
+                {
+                    continue;
+                }
+
                 var fullNamespace = $"{projectName}.{ContentGeneratorConstants.Endpoints}.{apiGroupName}";
 
                 var classParameters = ContentGeneratorServerTestEndpointHandlerStubParametersFactory.Create(
@@ -216,6 +221,11 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
         // TODO: Implement then WebApiControllerBaseTest and WebApiStartupFactory is implemented
         ////foreach (var openApiPath in openApiDocument.Paths)
         ////{
+        ////    if (openApiOperation.Value.Deprecated)
+        ////    {
+        ////        continue;
+        ////    }
+        //// 
         ////    var apiGroupName = openApiPath.GetApiGroupName();
 
         ////    foreach (var openApiOperation in openApiPath.Value.Operations)
