@@ -63,7 +63,14 @@ public sealed class ApiOperation
 
     private static string ExtractApiGroupName(
         string path)
-        => path
-            .Split('/', StringSplitOptions.RemoveEmptyEntries)[0]
-            .PascalCase(removeSeparators: true);
+    {
+        var sa = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
+        return sa.Length switch
+        {
+            0 => "Root",
+            > 2 when sa[0].Equals("api", StringComparison.OrdinalIgnoreCase) &&
+                     sa[1].StartsWith("v", StringComparison.OrdinalIgnoreCase) => sa[2].PascalCase(removeSeparators: true),
+            _ => sa[0].PascalCase(removeSeparators: true),
+        };
+    }
 }
