@@ -106,7 +106,10 @@ public static class OpenApiDocumentExtensions
                 .Replace("http://", string.Empty, StringComparison.OrdinalIgnoreCase)
                 .Replace("https://", string.Empty, StringComparison.OrdinalIgnoreCase);
 
-            return temp.Substring(temp.IndexOf('/', StringComparison.Ordinal));
+            var indexOfSlash = temp.IndexOf('/', StringComparison.Ordinal);
+            return indexOfSlash == -1
+                ? string.Empty
+                : temp[indexOfSlash..];
         }
 
         return serverUrl;
@@ -148,9 +151,14 @@ public static class OpenApiDocumentExtensions
     {
         foreach (var openApiPath in openApiDocument.Paths)
         {
-            foreach (var apiOperation in openApiPath.Value.Operations)
+            foreach (var openApiOperation in openApiPath.Value.Operations)
             {
-                foreach (var response in apiOperation.Value.Responses.Values)
+                if (openApiOperation.Value.Deprecated)
+                {
+                    continue;
+                }
+
+                foreach (var response in openApiOperation.Value.Responses.Values)
                 {
                     foreach (var mediaType in response.Content.Values)
                     {
@@ -171,9 +179,14 @@ public static class OpenApiDocumentExtensions
     {
         foreach (var openApiPath in openApiDocument.Paths)
         {
-            foreach (var apiOperation in openApiPath.Value.Operations)
+            foreach (var openApiOperation in openApiPath.Value.Operations)
             {
-                foreach (var parameter in apiOperation.Value.Parameters)
+                if (openApiOperation.Value.Deprecated)
+                {
+                    continue;
+                }
+
+                foreach (var parameter in openApiOperation.Value.Parameters)
                 {
                     if (parameter.Schema.IsTypeArray())
                     {
@@ -240,6 +253,11 @@ public static class OpenApiDocumentExtensions
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
+                if (openApiOperation.Value.Deprecated)
+                {
+                    continue;
+                }
+
                 var isOperationAuthenticationRequired = openApiOperation.Value.Extensions.ExtractAuthenticationRequired();
                 if (isOperationAuthenticationRequired is not null && isOperationAuthenticationRequired.Value)
                 {
