@@ -2,13 +2,18 @@ namespace Atc.Rest.ApiGenerator.OpenApi.Extensions;
 
 public static class OpenApiPathsExtensions
 {
+    [SuppressMessage("Naming", "CA1867:Use 'string.Method(char)' instead of 'string.Method(string)' for string with single char", Justification = "OK.")]
     public static string GetApiGroupName(
         this KeyValuePair<string, OpenApiPathItem> apiPath)
     {
         var sa = apiPath.Key.Split('/', StringSplitOptions.RemoveEmptyEntries);
-        return sa.Length == 0
-            ? "Root"
-            : sa[0].PascalCase(removeSeparators: true);
+        return sa.Length switch
+        {
+            0 => "Root",
+            > 2 when sa[0].Equals("api", StringComparison.OrdinalIgnoreCase) &&
+                     sa[1].StartsWith("v", StringComparison.OrdinalIgnoreCase) => sa[2].PascalCase(removeSeparators: true),
+            _ => sa[0].PascalCase(removeSeparators: true),
+        };
     }
 
     public static ApiAuthorizeModel? ExtractApiPathAuthorization(
