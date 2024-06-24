@@ -12,6 +12,8 @@ public static class OpenApiAnyExtensions
 
         return openApiAny switch
         {
+            OpenApiDouble apiDouble => apiDouble.Value.ToString("N"),
+            OpenApiFloat apiFloat => apiFloat.Value.ToString("N"),
             OpenApiInteger apiInteger => apiInteger.Value.ToString(),
             OpenApiString apiString => string.IsNullOrEmpty(apiString.Value) ? "string.Empty" : $"{apiString.Value}",
             OpenApiBoolean { Value: true } => "true",
