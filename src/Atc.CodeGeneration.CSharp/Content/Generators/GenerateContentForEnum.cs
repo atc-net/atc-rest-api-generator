@@ -19,6 +19,8 @@ public class GenerateContentForEnum : IContentGenerator
     {
         var contentWriter = new GenerateContentWriter(codeDocumentationTagsGenerator);
 
+        var useJsonStringEnumConverter = UseJsonStringEnumConverter(parameters.Values);
+
         var sb = new StringBuilder();
         sb.Append(
             contentWriter.GenerateTopOfType(
@@ -26,6 +28,11 @@ public class GenerateContentForEnum : IContentGenerator
                 parameters.Namespace,
                 parameters.DocumentationTags,
                 GetAttributeParametersList()));
+
+        if (useJsonStringEnumConverter)
+        {
+            sb.AppendLine("[JsonConverter(typeof(JsonStringEnumConverter))]");
+        }
 
         sb.Append($"{parameters.AccessModifier.GetDescription()} enum ");
         sb.AppendLine($"{parameters.EnumTypeName}");
@@ -41,7 +48,20 @@ public class GenerateContentForEnum : IContentGenerator
 
             var sbLine = new StringBuilder();
 
-            sbLine.Append(parametersValue.Name);
+            if (useJsonStringEnumConverter)
+            {
+                sbLine.AppendLine($"[EnumMember(Value = \"{parametersValue.Name}\")]");
+                sbLine.Append(4, parametersValue.Name.PascalCase(removeSeparators: true));
+                if (parameters.Values.Last() != parametersValue)
+                {
+                    sbLine.AppendLine();
+                }
+            }
+            else
+            {
+                sbLine.Append(parametersValue.Name);
+            }
+
             if (parametersValue.Value is not null)
             {
                 sbLine.Append($" = {parametersValue.Value}");
@@ -71,4 +91,9 @@ public class GenerateContentForEnum : IContentGenerator
 
         return attributeParameters;
     }
+
+    private static bool UseJsonStringEnumConverter(
+        IList<EnumValueParameters> parametersValues)
+        => parametersValues.Any(x => x.Name.IsFirstCharacterLowerCase() ||
+                                     x.Name.Contains('-', StringComparison.Ordinal));
 }
