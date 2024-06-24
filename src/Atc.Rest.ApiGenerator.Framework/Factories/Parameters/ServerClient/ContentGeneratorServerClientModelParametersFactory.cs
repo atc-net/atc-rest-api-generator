@@ -101,7 +101,9 @@ public static class ContentGeneratorServerClientModelParametersFactory
 
         if (apiSchemaModel.Properties.Count == 0)
         {
-            var childModelName = apiSchemaModel.Items.GetModelName();
+            var childModelName = apiSchemaModel.Items is null
+                ? apiSchemaModel.GetModelName()
+                : apiSchemaModel.Items.GetModelName();
 
             var documentationTags = new CodeDocumentationTags($"A list of {childModelName}.");
 
@@ -144,9 +146,14 @@ public static class ContentGeneratorServerClientModelParametersFactory
                 }
                 else
                 {
-                    dataType = openApiParameter.AnyOf.Count == 1
-                        ? openApiParameter.AnyOf[0].GetDataType()
-                        : openApiParameter.GetDataType();
+                    if (openApiParameter.AnyOf.Count == 1)
+                    {
+                    }
+                    //dataType = openApiParameter.AnyOf.Count == 1
+                    //    ? openApiParameter.AnyOf[0].GetDataType()
+                    //    : openApiParameter.GetDataType();
+
+                    dataType = openApiParameter.GetDataType();
 
                     if ("Object".Equals(dataType, StringComparison.Ordinal) &&
                         openApiParameter.AdditionalProperties is not null)
@@ -316,9 +323,14 @@ public static class ContentGeneratorServerClientModelParametersFactory
                 }
                 else
                 {
-                    dataType = openApiParameter.AnyOf.Count == 1
-                        ? openApiParameter.AnyOf[0].GetDataType()
-                        : openApiParameter.GetDataType();
+                    if (openApiParameter.AnyOf.Count == 1)
+                    {
+                    }
+                    //dataType = openApiParameter.AnyOf.Count == 1
+                    //    ? openApiParameter.AnyOf[0].GetDataType()
+                    //    : openApiParameter.GetDataType();
+
+                    dataType = openApiParameter.GetDataType();
                 }
 
                 var isSimpleType = useListForDataType
