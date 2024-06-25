@@ -59,7 +59,7 @@ public class OpenApiDocumentValidator : IOpenApiDocumentValidator
                 .ToList();
 
             logger.LogKeyValueItems(validationErrors);
-            return false;
+            return logCategory != LogCategoryType.Error;
         }
 
         if (apiDocumentContainer.Diagnostic.SpecificationVersion == OpenApiSpecVersion.OpenApi2_0)
@@ -85,7 +85,7 @@ public class OpenApiDocumentValidator : IOpenApiDocumentValidator
         AddIndentationToLogItemKeys(logItems);
 
         logger.LogKeyValueItems(logItems);
-        return logItems.TrueForAll(x => x.LogCategory != LogCategoryType.Error);
+        return !validationOptions.StrictMode || logItems.TrueForAll(x => x.LogCategory != LogCategoryType.Error);
     }
 
     private void ValidateSecurity(
