@@ -4,16 +4,16 @@ public static class RegularExpressionAttributeExtensions
 {
     public static string GetEscapedPattern(
         this RegularExpressionAttribute regularExpressionAttribute,
-        bool ensureQuote = true)
+        bool ensureQuotes = true)
     {
         ArgumentNullException.ThrowIfNull(regularExpressionAttribute);
 
         if (!regularExpressionAttribute.Pattern.Contains(@"\\", StringComparison.Ordinal))
         {
-            return SymbolDisplay.FormatLiteral(regularExpressionAttribute.Pattern, quote: ensureQuote);
+            return SymbolDisplay.FormatLiteral(regularExpressionAttribute.Pattern, quote: ensureQuotes);
         }
 
-        if (ensureQuote &&
+        if (ensureQuotes &&
             !regularExpressionAttribute.Pattern.StartsWith('"') &&
             !regularExpressionAttribute.Pattern.EndsWith('"'))
         {
