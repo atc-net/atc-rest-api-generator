@@ -243,7 +243,7 @@ public static class OpenApiDocumentExtensions
         {
             foreach (var openApiOperation in path.Value.Operations.Values)
             {
-                foreach (var response in openApiOperation.Responses.OrderBy(x => x.Key, StringComparer.Ordinal))
+                foreach (var response in openApiOperation.Responses.OrderBy(x => x.GetFormattedKey(), StringComparer.Ordinal))
                 {
                     if (!Enum.TryParse(typeof(HttpStatusCode), response.Key, out var parsedType))
                     {

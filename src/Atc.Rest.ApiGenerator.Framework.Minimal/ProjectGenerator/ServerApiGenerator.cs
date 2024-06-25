@@ -132,17 +132,16 @@ public class ServerApiGenerator : IServerApiGenerator
         foreach (var apiGroupName in openApiDocument.GetApiGroupNames())
         {
             var apiOperations = operationSchemaMappings
-                .Where(x => x.LocatedArea is ApiSchemaMapLocatedAreaType.Response or ApiSchemaMapLocatedAreaType.RequestBody &&
-                            x.ApiGroupName.Equals(apiGroupName, StringComparison.OrdinalIgnoreCase))
+                .Where(x => x.ApiGroupName.Equals(apiGroupName, StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
             var apiOperationModels = GetDistinctApiOperationModels(apiOperations);
 
             foreach (var apiOperationModel in apiOperationModels)
             {
-                var apiSchema = openApiDocument.Components.Schemas.First(x => x.Key.Equals(apiOperationModel.Name, StringComparison.OrdinalIgnoreCase));
+                var apiSchema = openApiDocument.Components.Schemas.First(x => x.GetFormattedKey().Equals(apiOperationModel.Name, StringComparison.OrdinalIgnoreCase));
 
-                var modelName = apiSchema.Key.EnsureFirstCharacterToUpper();
+                var modelName = apiSchema.GetFormattedKey();
 
                 if (apiOperationModel.IsEnum)
                 {

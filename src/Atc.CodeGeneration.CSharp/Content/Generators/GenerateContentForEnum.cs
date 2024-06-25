@@ -50,11 +50,15 @@ public class GenerateContentForEnum : IContentGenerator
 
             if (useJsonStringEnumConverter)
             {
-                sbLine.AppendLine($"[EnumMember(Value = \"{parametersValue.Name}\")]");
-                sbLine.Append(4, parametersValue.Name.PascalCase(removeSeparators: true));
-                if (parameters.Values.Last() != parametersValue)
+                if ("*".Equals(parametersValue.Name, StringComparison.Ordinal))
                 {
-                    sbLine.AppendLine();
+                    sbLine.AppendLine("[EnumMember(Value = \"*\")]");
+                    sbLine.Append(4, "None");
+                }
+                else
+                {
+                    sbLine.AppendLine($"[EnumMember(Value = \"{parametersValue.Name}\")]");
+                    sbLine.Append(4, parametersValue.Name.PascalCase(removeSeparators: true));
                 }
             }
             else
@@ -69,6 +73,12 @@ public class GenerateContentForEnum : IContentGenerator
 
             sbLine.Append(',');
             sb.AppendLine(4, sbLine.ToString());
+
+            if (useJsonStringEnumConverter &&
+                parameters.Values.Last() != parametersValue)
+            {
+                sb.AppendLine();
+            }
         }
 
         sb.Append('}');

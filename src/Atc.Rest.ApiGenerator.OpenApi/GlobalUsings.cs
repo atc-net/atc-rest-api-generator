@@ -11,6 +11,7 @@ global using Atc.Rest.ApiGenerator.Contracts.ContentGeneratorsParameters.Server;
 global using Atc.Rest.ApiGenerator.Contracts.Models;
 global using Atc.Rest.ApiGenerator.Contracts.Options;
 global using Atc.Rest.ApiGenerator.OpenApi.Extensions;
+global using Atc.Rest.ApiGenerator.OpenApi.Extractors;
 global using Atc.Rest.ApiGenerator.OpenApi.Factories;
 global using Atc.Rest.ApiGenerator.OpenApi.Models;
 

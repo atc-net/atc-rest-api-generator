@@ -133,6 +133,7 @@ public record PropertyParameters(
     string TypeName,
     bool IsNullableType,
     string Name,
+    string? JsonName,
     string? DefaultValue,
     bool IsReferenceType,
     bool IsGenericListType,

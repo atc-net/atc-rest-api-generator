@@ -175,6 +175,11 @@ public class GenerateContentWriter
             sb.AppendAttributesAsLines(4, usePropertyPrefix: false, parameters.Attributes);
         }
 
+        if (parameters.JsonName is not null)
+        {
+            sb.AppendLine(4, $"[JsonPropertyName(\"{parameters.JsonName}\")]");
+        }
+
         sb.Append("    ");
         if (parameters.AccessModifier != AccessModifiers.None)
         {

@@ -1,4 +1,3 @@
-global using System;
 global using System.ComponentModel.DataAnnotations;
 global using System.Net;
 global using System.Net.Mime;
@@ -25,6 +24,6 @@ global using Atc.Rest.ApiGenerator.Framework.ProjectGenerator;
 global using Atc.Rest.ApiGenerator.Framework.Providers;
 global using Atc.Rest.ApiGenerator.Framework.Writers;
 global using Atc.Rest.ApiGenerator.OpenApi.Extensions;
-global using Microsoft.CodeAnalysis.CSharp;
+
 global using Microsoft.Extensions.Logging;
 global using Microsoft.OpenApi.Models;

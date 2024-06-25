@@ -25,7 +25,7 @@ public static class OpenApiParameterExtensions
             summery = apiParameter.Description;
         }
 
-        return summery.EnsureEndsWithDot();
+        return summery.EnsureFormatForDocumentationTag();
     }
 
     public static string? ExtractDocumentationTagRemark(

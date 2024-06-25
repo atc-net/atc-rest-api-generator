@@ -5,6 +5,8 @@ namespace Atc.Rest.ApiGenerator.OpenApi.Extractors;
 
 public sealed class ApiOperationExtractor : IApiOperationExtractor
 {
+    public static readonly char[] ModelNameSeparators = { ' ', '-', '_', '.' };
+
     public IList<ApiOperation> Extract(
         OpenApiDocument apiDocument)
     {
@@ -54,6 +56,17 @@ public sealed class ApiOperationExtractor : IApiOperationExtractor
                         parentApiSchema: null,
                         result);
                 }
+            }
+            else
+            {
+                CollectSchema(
+                    componentsSchemas,
+                    apiSchema: apiParameter.Schema,
+                    locatedArea: ApiSchemaMapLocatedAreaType.Parameter,
+                    apiPath.Key,
+                    httpOperation: apiOperation.HttpOperationType,
+                    parentApiSchema: null,
+                    result);
             }
         }
     }
@@ -167,7 +180,7 @@ public sealed class ApiOperationExtractor : IApiOperationExtractor
             return;
         }
 
-        var apiOperation = new ApiOperation(schemaKey, locatedArea, apiPath, httpOperation, parentApiSchema);
+        var apiOperation = new ApiOperation(schemaKey.PascalCase(), locatedArea, apiPath, httpOperation, parentApiSchema);
         if (result.Exists(x => x.Equals(apiOperation)))
         {
             return;
@@ -236,7 +249,7 @@ public sealed class ApiOperationExtractor : IApiOperationExtractor
 
         result.Add(subApiOperation);
 
-        var subApiSchema = componentsSchemas.Single(x => x.Key.Equals(subSchemaKey, StringComparison.OrdinalIgnoreCase)).Value;
+        var subApiSchema = componentsSchemas.Single(x => x.GetFormattedKey().Equals(subSchemaKey, StringComparison.OrdinalIgnoreCase)).Value;
         if (subApiSchema.Properties.Any())
         {
             Collect(
@@ -275,7 +288,7 @@ public sealed class ApiOperationExtractor : IApiOperationExtractor
             return;
         }
 
-        var subApiSchema = componentsSchemas.Single(x => x.Key.Equals(schemaKey, StringComparison.OrdinalIgnoreCase)).Value;
+        var subApiSchema = componentsSchemas.Single(x => x.GetFormattedKey().Equals(schemaKey, StringComparison.OrdinalIgnoreCase)).Value;
 
         Collect(
             componentsSchemas,
@@ -315,29 +328,29 @@ public sealed class ApiOperationExtractor : IApiOperationExtractor
         var schemaKey = string.Empty;
         if (apiSchema.Reference?.Id is not null)
         {
-            schemaKey = apiSchema.Reference.Id.EnsureFirstCharacterToUpper();
+            schemaKey = apiSchema.Reference.Id.PascalCase(ModelNameSeparators, removeSeparators: true);
         }
         else if (apiSchema.IsArray())
         {
-            schemaKey = apiSchema.Items.Reference.Id.EnsureFirstCharacterToUpper();
+            schemaKey = apiSchema.Items.Reference.Id.PascalCase(ModelNameSeparators, removeSeparators: true);
             apiSchema = apiSchema.Items;
         }
         else if (apiSchema.OneOf.Any() &&
                  apiSchema.OneOf[0].Reference?.Id is not null)
         {
-            schemaKey = apiSchema.OneOf[0].Reference.Id.EnsureFirstCharacterToUpper();
+            schemaKey = apiSchema.OneOf[0].Reference.Id.PascalCase(ModelNameSeparators, removeSeparators: true);
             apiSchema = apiSchema.OneOf[0];
         }
         else if (apiSchema.AnyOf.Any() &&
                  apiSchema.AnyOf[0].Reference?.Id is not null)
         {
-            schemaKey = apiSchema.AnyOf[0].Reference.Id.EnsureFirstCharacterToUpper();
+            schemaKey = apiSchema.AnyOf[0].Reference.Id.PascalCase(ModelNameSeparators, removeSeparators: true);
             apiSchema = apiSchema.AnyOf[0];
         }
         else if (apiSchema.AllOf.Any() &&
                  apiSchema.AllOf[0].Reference?.Id is not null)
         {
-            schemaKey = apiSchema.AllOf[0].Reference.Id.EnsureFirstCharacterToUpper();
+            schemaKey = apiSchema.AllOf[0].Reference.Id.PascalCase(ModelNameSeparators, removeSeparators: true);
             apiSchema = apiSchema.AllOf[0];
         }
         else if (apiSchema.IsTypePagination())

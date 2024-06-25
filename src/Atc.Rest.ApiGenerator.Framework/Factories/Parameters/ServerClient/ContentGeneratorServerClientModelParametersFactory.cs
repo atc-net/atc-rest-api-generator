@@ -1,5 +1,6 @@
 // ReSharper disable MergeIntoPattern
 // ReSharper disable ConvertIfStatementToReturnStatement
+// ReSharper disable InvertIf
 namespace Atc.Rest.ApiGenerator.Framework.Factories.Parameters.ServerClient;
 
 public static class ContentGeneratorServerClientModelParametersFactory
@@ -12,10 +13,11 @@ public static class ContentGeneratorServerClientModelParametersFactory
         OpenApiSchema apiSchemaModel)
     {
         ArgumentNullException.ThrowIfNull(apiSchemaModel);
+        ArgumentNullException.ThrowIfNull(modelName);
 
         var documentationTags = apiSchemaModel.ExtractDocumentationTags($"{modelName}.");
 
-        var propertiesParameters = ExtractPropertiesParameters(apiSchemaModel);
+        var propertiesParameters = ExtractPropertiesParameters(apiSchemaModel, modelName);
 
         string? genericTypeName = null;
         if (propertiesParameters.Any(x => x.TypeName == "T"))
@@ -75,13 +77,21 @@ public static class ContentGeneratorServerClientModelParametersFactory
     }
 
     private static string? GetDefaultValue(
-        IOpenApiAny? initializer,
+        OpenApiSchema schema,
         string? dataTypeForList)
     {
-        if (initializer is not null ||
+        if (schema.Default is not null ||
             string.IsNullOrEmpty(dataTypeForList))
         {
-            return initializer.GetDefaultValueAsString();
+            if (schema.IsSchemaEnum())
+            {
+                var value = schema.Default.GetDefaultValueAsString();
+                return value is null
+                    ? null
+                    : $"{schema.GetModelName()}.{value.Replace("\"", string.Empty, StringComparison.Ordinal).EnsureFirstCharacterToUpper()}";
+            }
+
+            return schema.Default.GetDefaultValueAsString();
         }
 
         if ("List".Equals(dataTypeForList, StringComparison.Ordinal))
@@ -93,7 +103,8 @@ public static class ContentGeneratorServerClientModelParametersFactory
     }
 
     private static List<PropertyParameters> ExtractPropertiesParameters(
-        OpenApiSchema apiSchemaModel)
+        OpenApiSchema apiSchemaModel,
+        string modelName)
     {
         var propertiesParameters = new List<PropertyParameters>();
 
@@ -118,6 +129,7 @@ public static class ContentGeneratorServerClientModelParametersFactory
                     IsNullableType: false,
                     IsReferenceType: false,
                     Name: childModelName + "List",
+                    JsonName: null,
                     DefaultValue: $"new List<{childModelName}>()",
                     UseAutoProperty: true,
                     UseGet: true,
@@ -146,13 +158,6 @@ public static class ContentGeneratorServerClientModelParametersFactory
                 }
                 else
                 {
-                    if (openApiParameter.AnyOf.Count == 1)
-                    {
-                    }
-                    //dataType = openApiParameter.AnyOf.Count == 1
-                    //    ? openApiParameter.AnyOf[0].GetDataType()
-                    //    : openApiParameter.GetDataType();
-
                     dataType = openApiParameter.GetDataType();
 
                     if ("Object".Equals(dataType, StringComparison.Ordinal) &&
@@ -202,11 +207,19 @@ public static class ContentGeneratorServerClientModelParametersFactory
                     dataTypeForList = "List";
                 }
 
-                var defaultValue = GetDefaultValue(openApiParameter.Default, dataTypeForList);
+                var defaultValue = GetDefaultValue(openApiParameter, dataTypeForList);
 
                 if (dataType.Equals(dataTypeForList, StringComparison.Ordinal))
                 {
                     dataTypeForList = "List";
+                }
+
+                var name = apiSchema.Key.EnsureFirstCharacterToUpper();
+                string? jsonName = null;
+                if (modelName.Equals(name, StringComparison.OrdinalIgnoreCase))
+                {
+                    name = $"{name}Property";
+                    jsonName = apiSchema.Key;
                 }
 
                 propertiesParameters.Add(
@@ -223,7 +236,8 @@ public static class ContentGeneratorServerClientModelParametersFactory
                         TypeName: dataType,
                         IsNullableType: openApiParameter.Nullable,
                         IsReferenceType: !isSimpleType,
-                        Name: apiSchema.Key.EnsureFirstCharacterToUpper(),
+                        Name: name,
+                        JsonName: jsonName,
                         DefaultValue: defaultValue,
                         UseAutoProperty: true,
                         UseGet: true,
@@ -295,6 +309,7 @@ public static class ContentGeneratorServerClientModelParametersFactory
                  IsNullableType: false,
                  IsReferenceType: false,
                  Name: childModelName + "List",
+                 JsonName: null,
                  DefaultValue: null,
                  UseAutoProperty: true,
                  UseGet: true,
@@ -323,13 +338,6 @@ public static class ContentGeneratorServerClientModelParametersFactory
                 }
                 else
                 {
-                    if (openApiParameter.AnyOf.Count == 1)
-                    {
-                    }
-                    //dataType = openApiParameter.AnyOf.Count == 1
-                    //    ? openApiParameter.AnyOf[0].GetDataType()
-                    //    : openApiParameter.GetDataType();
-
                     dataType = openApiParameter.GetDataType();
                 }
 
@@ -364,7 +372,7 @@ public static class ContentGeneratorServerClientModelParametersFactory
                 }
                 else
                 {
-                    defaultValue = GetDefaultValue(openApiParameter.Default, dataTypeForList);
+                    defaultValue = GetDefaultValue(openApiParameter, dataTypeForList);
                 }
 
                 parameterBaseParameters.Add(
@@ -379,7 +387,7 @@ public static class ContentGeneratorServerClientModelParametersFactory
                         TypeName: dataType,
                         IsNullableType: openApiParameter.Nullable,
                         IsReferenceType: !isSimpleType,
-                        Name: apiSchema.Key.EnsureFirstCharacterToUpper(),
+                        Name: apiSchema.GetFormattedKey(),
                         DefaultValue: defaultValue));
             }
         }

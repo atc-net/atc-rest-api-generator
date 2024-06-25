@@ -107,17 +107,16 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
         foreach (var apiGroupName in openApiDocument.GetApiGroupNames())
         {
             var apiOperations = operationSchemaMappings
-                .Where(x => x.LocatedArea is ApiSchemaMapLocatedAreaType.Response or ApiSchemaMapLocatedAreaType.RequestBody &&
-                            x.ApiGroupName.Equals(apiGroupName, StringComparison.OrdinalIgnoreCase))
+                .Where(x => x.ApiGroupName.Equals(apiGroupName, StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
             var apiOperationModels = GetDistinctApiOperationModels(apiOperations);
 
             foreach (var apiOperationModel in apiOperationModels)
             {
-                var apiSchema = openApiDocument.Components.Schemas.First(x => x.Key.Equals(apiOperationModel.Name, StringComparison.OrdinalIgnoreCase));
+                var apiSchema = openApiDocument.Components.Schemas.First(x => x.GetFormattedKey().Equals(apiOperationModel.Name, StringComparison.OrdinalIgnoreCase));
 
-                var modelName = apiSchema.Key.EnsureFirstCharacterToUpper();
+                var modelName = apiSchema.GetFormattedKey();
 
                 if (apiOperationModel.IsEnum)
                 {
@@ -388,6 +387,11 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
             requiredUsings.Add("Microsoft.AspNetCore.Http");
         }
 
+        if (openApiDocument.IsUsingRequiredForAtcRestResults())
+        {
+            requiredUsings.Add("Atc.Rest.Results");
+        }
+
         if (operationSchemaMappings.Any(apiOperation => apiOperation.Model.IsEnum ||
                                                         apiOperation.Model.IsShared))
         {
@@ -422,8 +426,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
         foreach (var apiGroupName in apiGroupNames)
         {
             var apiOperations = operationSchemaMappings
-                .Where(x => x.LocatedArea is ApiSchemaMapLocatedAreaType.Response or ApiSchemaMapLocatedAreaType.RequestBody &&
-                            x.ApiGroupName.Equals(apiGroupName, StringComparison.OrdinalIgnoreCase))
+                .Where(x => x.ApiGroupName.Equals(apiGroupName, StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
             var apiOperationModels = GetDistinctApiOperationModels(apiOperations);

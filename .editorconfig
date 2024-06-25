@@ -571,6 +571,7 @@ dotnet_diagnostic.S2629.Severity = none
 dotnet_diagnostic.S3267.severity = none				# Loop should be simplified by calling Select(x => x.Value)) - We dont like this rule because of readability/maintainability
 dotnet_diagnostic.S3878.Severity = none
 dotnet_diagnostic.S6605.Severity = none
+dotnet_diagnostic.S6608.Severity = none				# Indexing at Count-1 should be used instead of the "Enumerable" extension method "Last"
 dotnet_diagnostic.S6667.Severity = none
 
 dotnet_diagnostic.SA1010.severity = none     		# Opening square brackets should not be preceded by a space

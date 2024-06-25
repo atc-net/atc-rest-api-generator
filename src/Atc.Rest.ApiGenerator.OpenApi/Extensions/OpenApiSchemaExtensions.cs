@@ -106,7 +106,7 @@ public static class OpenApiSchemaExtensions
         if (modelType is null &&
             apiSchema.Reference?.Id is not null)
         {
-            var (key, value) = modelSchemas.FirstOrDefault(x => x.Key.Equals(apiSchema.Reference.Id, StringComparison.OrdinalIgnoreCase));
+            var (key, value) = modelSchemas.FirstOrDefault(x => x.GetFormattedKey().Equals(apiSchema.Reference.Id, StringComparison.OrdinalIgnoreCase));
             if (key is not null)
             {
                 return value.Type is not null &&
@@ -133,13 +133,23 @@ public static class OpenApiSchemaExtensions
             if (schema.AllOf[0].Reference?.Id is null &&
                 schema.AllOf[1].Reference?.Id is not null)
             {
-                return true;
+                var dataType = schema.AllOf[1].Reference?.Id.PascalCase(ApiOperationExtractor.ModelNameSeparators, removeSeparators: true);
+                if (dataType is not null &&
+                    dataType.Contains(NameConstants.Pagination, StringComparison.Ordinal))
+                {
+                    return true;
+                }
             }
 
             if (schema.AllOf[0].Reference?.Id is not null &&
                 schema.AllOf[1].Reference?.Id is null)
             {
-                return true;
+                var dataType = schema.AllOf[0].Reference?.Id.PascalCase(ApiOperationExtractor.ModelNameSeparators, removeSeparators: true);
+                if (dataType is not null &&
+                    dataType.Contains(NameConstants.Pagination, StringComparison.Ordinal))
+                {
+                    return true;
+                }
             }
         }
 
@@ -179,7 +189,7 @@ public static class OpenApiSchemaExtensions
             summery = defaultSummary;
         }
 
-        return summery.EnsureEndsWithDot();
+        return summery.EnsureFormatForDocumentationTag();
     }
 
     public static string? ExtractDocumentationTagRemark(
