@@ -88,7 +88,7 @@ public static class ContentGeneratorServerClientModelParametersFactory
                 var value = schema.Default.GetDefaultValueAsString();
                 return value is null
                     ? null
-                    : $"{schema.GetModelName()}.{value.Replace("\"", string.Empty, StringComparison.Ordinal).EnsureFirstCharacterToUpper()}";
+                    : $"{schema.GetModelName()}.{value.EnsureFirstCharacterToUpper()}";
             }
 
             return schema.Default.GetDefaultValueAsString();

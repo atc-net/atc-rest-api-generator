@@ -38,7 +38,7 @@ public class GetExampleResult : ResultBase
     /// 103 - EarlyHints response.
     /// </summary>
     public static GetExampleResult EarlyHints()
-        => new GetExampleResult(ResultFactory.CreateContentResultWithProblemDetails(HttpStatusCode.EarlyHints, null));
+        => new GetExampleResult(ResultFactory.CreateContentResultWithProblemDetails(HttpStatusCode.EarlyHints));
 
     /// <summary>
     /// 200 - Ok response.

@@ -135,7 +135,8 @@ public static class OpenApiSchemaExtensions
             {
                 var dataType = schema.AllOf[1].Reference?.Id.PascalCase(ApiOperationExtractor.ModelNameSeparators, removeSeparators: true);
                 if (dataType is not null &&
-                    dataType.Contains(NameConstants.Pagination, StringComparison.Ordinal))
+                    (dataType.Contains(NameConstants.Pagination, StringComparison.Ordinal) ||
+                    dataType.Contains("Paginated", StringComparison.Ordinal)))
                 {
                     return true;
                 }
@@ -146,7 +147,8 @@ public static class OpenApiSchemaExtensions
             {
                 var dataType = schema.AllOf[0].Reference?.Id.PascalCase(ApiOperationExtractor.ModelNameSeparators, removeSeparators: true);
                 if (dataType is not null &&
-                    dataType.Contains(NameConstants.Pagination, StringComparison.Ordinal))
+                    (dataType.Contains(NameConstants.Pagination, StringComparison.Ordinal) ||
+                    dataType.Contains("Paginated", StringComparison.Ordinal)))
                 {
                     return true;
                 }

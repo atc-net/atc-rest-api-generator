@@ -2,6 +2,7 @@ namespace Atc.CodeGeneration.CSharp.Content.Generators;
 
 public class GenerateContentForSolutionDotSettingsFile : IContentGenerator
 {
+    [SuppressMessage("X", "S4487: Remove this unread private field 'xxx' or refactor the code to use its value", Justification = "OK - WIP")]
     private readonly SolutionDotSettingsFileParameters parameters;
 
     public GenerateContentForSolutionDotSettingsFile(

@@ -14,6 +14,7 @@ public record SolutionFileParameters(
     IList<SolutionConfigurationParameters> Configurations,
     IList<SolutionProjectParameters> Projects);
 
+[SuppressMessage("X", "S2094: Remove this empty record, write its code or make it an interface", Justification = "OK - WIP")]
 public record SolutionDotSettingsFileParameters();
 
 public record PropertyGroupParameter(

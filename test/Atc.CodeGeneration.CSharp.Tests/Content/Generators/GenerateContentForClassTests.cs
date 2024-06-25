@@ -883,7 +883,7 @@ public class CreateLocationEndpointResult : EndpointResponse
             GenericTypeName: null,
             InheritedClassTypeName: "EndpointResponse",
             InheritedGenericClassTypeName: null,
-            InheritedInterfaceTypeName: "ICreateLocationEndpointResult",
+            InheritedInterfaceTypeName: null,
             Constructors: constructorParameters,
             Properties: propertyParameters,
             Methods: null,

@@ -4,7 +4,6 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
 {
     private readonly ILogger<ServerHostTestGenerator> logger;
     private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
-    private readonly Version apiGeneratorVersion;
     private readonly string projectName;
     private readonly string hostProjectName;
     private readonly string apiProjectName;
@@ -40,7 +39,6 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
 
         logger = loggerFactory.CreateLogger<ServerHostTestGenerator>();
         this.nugetPackageReferenceProvider = nugetPackageReferenceProvider;
-        this.apiGeneratorVersion = apiGeneratorVersion;
         this.projectName = projectName;
         this.hostProjectName = hostProjectName;
         this.apiProjectName = apiProjectName;
@@ -225,7 +223,7 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
         ////    {
         ////        continue;
         ////    }
-        //// 
+        ////
         ////    var apiGroupName = openApiPath.GetApiGroupName();
 
         ////    foreach (var openApiOperation in openApiPath.Value.Operations)
