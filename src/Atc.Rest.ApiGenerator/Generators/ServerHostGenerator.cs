@@ -66,7 +66,8 @@ public class ServerHostGenerator
                 domainProjectName,
                 projectOptions.PathForTestGenerate,
                 projectOptions.Document,
-                operationSchemaMappings);
+                operationSchemaMappings,
+                projectOptions.ApiOptions.IncludeDeprecated);
 
             serverHostTestGeneratorMinimalApi = new Framework.Minimal.ProjectGenerator.ServerHostTestGenerator(
                 loggerFactory,

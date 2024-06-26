@@ -4,5 +4,6 @@ public interface IOpenApiDocumentValidator
 {
     bool IsValid(
         ApiOptionsValidation apiOptionsValidation,
+        bool includeDeprecated,
         OpenApiDocumentContainer apiDocumentContainer);
 }

@@ -16,6 +16,7 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
     private readonly IList<ApiOperation> operationSchemaMappings;
     private readonly string codeGeneratorContentHeader;
     private readonly AttributeParameters codeGeneratorAttribute;
+    private readonly bool includeDeprecated;
 
     public ServerHostTestGenerator(
         ILoggerFactory loggerFactory,
@@ -27,7 +28,8 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
         string domainProjectName,
         DirectoryInfo projectPath,
         OpenApiDocument openApiDocument,
-        IList<ApiOperation> operationSchemaMappings)
+        IList<ApiOperation> operationSchemaMappings,
+        bool includeDeprecated)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
         ArgumentNullException.ThrowIfNull(nugetPackageReferenceProvider);
@@ -50,6 +52,7 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
         this.projectPath = projectPath;
         this.openApiDocument = openApiDocument;
         this.operationSchemaMappings = operationSchemaMappings;
+        this.includeDeprecated = includeDeprecated;
 
         codeGeneratorContentHeader = GeneratedCodeHeaderGeneratorFactory
             .Create(apiGeneratorVersion)
@@ -185,7 +188,7 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
-                if (openApiOperation.Value.Deprecated)
+                if (openApiOperation.Value.Deprecated && !includeDeprecated)
                 {
                     continue;
                 }
@@ -223,7 +226,7 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
-                if (openApiOperation.Value.Deprecated)
+                if (openApiOperation.Value.Deprecated && !includeDeprecated)
                 {
                     continue;
                 }

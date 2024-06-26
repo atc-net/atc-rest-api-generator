@@ -23,6 +23,7 @@ public class OpenApiDocumentValidator : IOpenApiDocumentValidator
 
     public bool IsValid(
         ApiOptionsValidation apiOptionsValidation,
+        bool includeDeprecated,
         OpenApiDocumentContainer apiDocumentContainer)
     {
         logger.LogInformation($"{AreaValidationEmoji} Working on validation");
@@ -38,7 +39,7 @@ public class OpenApiDocumentValidator : IOpenApiDocumentValidator
         }
 
         return IsValidUsingMicrosoftOpenApi(apiDocumentContainer) &&
-               IsValidUsingAtcOptions(apiOptionsValidation, apiDocumentContainer);
+               IsValidUsingAtcOptions(apiOptionsValidation, includeDeprecated, apiDocumentContainer);
     }
 
     private bool IsValidUsingMicrosoftOpenApi(
@@ -73,11 +74,12 @@ public class OpenApiDocumentValidator : IOpenApiDocumentValidator
 
     private bool IsValidUsingAtcOptions(
         ApiOptionsValidation validationOptions,
+        bool includeDeprecated,
         OpenApiDocumentContainer apiDocumentContainer)
     {
         ValidateSecurity(apiDocumentContainer.Document!);
         ValidateServers(apiDocumentContainer.Document!.Servers);
-        ValidateSchemas(validationOptions, apiDocumentContainer.Document!.Components.Schemas.Values);
+        ValidateSchemas(validationOptions, includeDeprecated, apiDocumentContainer.Document!.Components.Schemas.Values);
         ValidateOperations(validationOptions, apiDocumentContainer.Document.Paths, apiDocumentContainer.Document!.Components.Schemas);
         ValidatePathsAndOperations(apiDocumentContainer.Document!.Paths);
         ValidateOperationsParametersAndResponses(apiDocumentContainer.Document!.Paths.Values);
@@ -311,6 +313,7 @@ public class OpenApiDocumentValidator : IOpenApiDocumentValidator
 
     private void ValidateSchemas(
         ApiOptionsValidation validationOptions,
+        bool includeDeprecated,
         IEnumerable<OpenApiSchema> schemas)
     {
         foreach (var schema in schemas)
@@ -345,7 +348,7 @@ public class OpenApiDocumentValidator : IOpenApiDocumentValidator
 
                     foreach (var (key, value) in schema.Properties)
                     {
-                        if (value.Deprecated)
+                        if (value.Deprecated && !includeDeprecated)
                         {
                             continue;
                         }

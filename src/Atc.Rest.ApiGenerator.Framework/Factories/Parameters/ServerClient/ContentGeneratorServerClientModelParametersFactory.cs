@@ -10,14 +10,15 @@ public static class ContentGeneratorServerClientModelParametersFactory
         string @namespace,
         AttributeParameters codeGeneratorAttribute,
         string modelName,
-        OpenApiSchema apiSchemaModel)
+        OpenApiSchema apiSchemaModel,
+        bool includeDeprecated)
     {
         ArgumentNullException.ThrowIfNull(apiSchemaModel);
         ArgumentNullException.ThrowIfNull(modelName);
 
         var documentationTags = apiSchemaModel.ExtractDocumentationTags($"{modelName}.");
 
-        var propertiesParameters = ExtractPropertiesParameters(apiSchemaModel, modelName);
+        var propertiesParameters = ExtractPropertiesParameters(apiSchemaModel, modelName, includeDeprecated);
 
         string? genericTypeName = null;
         if (propertiesParameters.Any(x => x.TypeName == "T"))
@@ -47,13 +48,14 @@ public static class ContentGeneratorServerClientModelParametersFactory
         string @namespace,
         AttributeParameters codeGeneratorAttribute,
         string modelName,
-        OpenApiSchema apiSchemaModel)
+        OpenApiSchema apiSchemaModel,
+        bool includeDeprecated)
     {
         ArgumentNullException.ThrowIfNull(apiSchemaModel);
 
         var documentationTags = apiSchemaModel.ExtractDocumentationTags($"{modelName}.");
 
-        var recordParameters = ExtractRecordParameters(modelName, apiSchemaModel);
+        var recordParameters = ExtractRecordParameters(modelName, apiSchemaModel, includeDeprecated);
 
         return new RecordsParameters(
             headerContent,
@@ -104,7 +106,8 @@ public static class ContentGeneratorServerClientModelParametersFactory
 
     private static List<PropertyParameters> ExtractPropertiesParameters(
         OpenApiSchema apiSchemaModel,
-        string modelName)
+        string modelName,
+        bool includeDeprecated)
     {
         var propertiesParameters = new List<PropertyParameters>();
 
@@ -143,7 +146,7 @@ public static class ContentGeneratorServerClientModelParametersFactory
             {
                 var openApiParameter = apiSchema.Value;
 
-                if(openApiParameter.Deprecated)
+                if (openApiParameter.Deprecated && !includeDeprecated)
                 {
                     continue;
                 }
@@ -277,7 +280,8 @@ public static class ContentGeneratorServerClientModelParametersFactory
 
     private static List<RecordParameters> ExtractRecordParameters(
         string modelName,
-        OpenApiSchema apiSchemaModel)
+        OpenApiSchema apiSchemaModel,
+        bool includeDeprecated)
     {
         var documentationTags = apiSchemaModel.ExtractDocumentationTags($"{modelName}.");
 
@@ -287,13 +291,14 @@ public static class ContentGeneratorServerClientModelParametersFactory
                 documentationTags,
                 AccessModifiers.PublicRecord,
                 Name: modelName,
-                Parameters: ExtractRecordParameterBaseParameters(apiSchemaModel))
+                Parameters: ExtractRecordParameterBaseParameters(apiSchemaModel, includeDeprecated))
 
         ];
     }
 
     private static List<ParameterBaseParameters> ExtractRecordParameterBaseParameters(
-        OpenApiSchema apiSchemaModel)
+        OpenApiSchema apiSchemaModel,
+        bool includeDeprecated)
     {
         var parameterBaseParameters = new List<ParameterBaseParameters>();
 
@@ -328,7 +333,7 @@ public static class ContentGeneratorServerClientModelParametersFactory
             {
                 var openApiParameter = apiSchema.Value;
 
-                if (openApiParameter.Deprecated)
+                if (openApiParameter.Deprecated && !includeDeprecated)
                 {
                     continue;
                 }

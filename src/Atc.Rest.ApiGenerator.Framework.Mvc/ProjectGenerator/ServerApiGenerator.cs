@@ -14,6 +14,7 @@ public class ServerApiGenerator : IServerApiGenerator
     private readonly string codeGeneratorContentHeader;
     private readonly AttributeParameters codeGeneratorAttribute;
     private readonly bool useProblemDetailsAsDefaultResponseBody;
+    private readonly bool includeDeprecated;
 
     public ServerApiGenerator(
         ILoggerFactory loggerFactory,
@@ -24,7 +25,8 @@ public class ServerApiGenerator : IServerApiGenerator
         OpenApiDocument openApiDocument,
         IList<ApiOperation> operationSchemaMappings,
         string routeBase,
-        bool useProblemDetailsAsDefaultResponseBody)
+        bool useProblemDetailsAsDefaultResponseBody,
+        bool includeDeprecated)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
         ArgumentNullException.ThrowIfNull(nugetPackageReferenceProvider);
@@ -44,6 +46,7 @@ public class ServerApiGenerator : IServerApiGenerator
         this.operationSchemaMappings = operationSchemaMappings;
         this.routeBase = routeBase;
         this.useProblemDetailsAsDefaultResponseBody = useProblemDetailsAsDefaultResponseBody;
+        this.includeDeprecated = includeDeprecated;
 
         codeGeneratorContentHeader = GeneratedCodeHeaderGeneratorFactory
             .Create(apiGeneratorVersion)
@@ -181,7 +184,7 @@ public class ServerApiGenerator : IServerApiGenerator
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
-                if (openApiOperation.Value.Deprecated)
+                if (openApiOperation.Value.Deprecated && !includeDeprecated)
                 {
                     continue;
                 }
@@ -225,7 +228,7 @@ public class ServerApiGenerator : IServerApiGenerator
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
-                if (openApiOperation.Value.Deprecated)
+                if (openApiOperation.Value.Deprecated && !includeDeprecated)
                 {
                     continue;
                 }
@@ -263,7 +266,7 @@ public class ServerApiGenerator : IServerApiGenerator
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
-                if (openApiOperation.Value.Deprecated)
+                if (openApiOperation.Value.Deprecated && !includeDeprecated)
                 {
                     continue;
                 }
@@ -344,7 +347,7 @@ public class ServerApiGenerator : IServerApiGenerator
         // TODO: Check for any use ??
         requiredUsings.Add("System.Net");
 
-        if (openApiDocument.IsUsingRequiredForSystemTextJsonSerializationAndSystemRuntimeSerialization())
+        if (openApiDocument.IsUsingRequiredForSystemTextJsonSerializationAndSystemRuntimeSerialization(includeDeprecated))
         {
             requiredUsings.Add("System.Runtime.Serialization");
             requiredUsings.Add("System.Text.Json.Serialization");
@@ -428,7 +431,8 @@ public class ServerApiGenerator : IServerApiGenerator
             fullNamespace,
             codeGeneratorAttribute,
             modelName,
-            apiSchemaModel);
+            apiSchemaModel,
+            includeDeprecated);
 
         var contentGeneratorClass = new GenerateContentForClass(
             new CodeDocumentationTagsGenerator(),

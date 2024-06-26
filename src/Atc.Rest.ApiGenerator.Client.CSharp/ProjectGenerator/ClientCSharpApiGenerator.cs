@@ -15,6 +15,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
     private readonly string codeGeneratorContentHeader;
     private readonly AttributeParameters codeGeneratorAttribute;
     private readonly bool useProblemDetailsAsDefaultResponseBody;
+    private readonly bool includeDeprecated;
 
     public ClientCSharpApiGenerator(
         ILoggerFactory loggerFactory,
@@ -24,7 +25,8 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
         DirectoryInfo projectPath,
         OpenApiDocument openApiDocument,
         IList<ApiOperation> operationSchemaMappings,
-        bool useProblemDetailsAsDefaultResponseBody)
+        bool useProblemDetailsAsDefaultResponseBody,
+        bool includeDeprecated)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
         ArgumentNullException.ThrowIfNull(nugetPackageReferenceProvider);
@@ -42,6 +44,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
         this.openApiDocument = openApiDocument;
         this.operationSchemaMappings = operationSchemaMappings;
         this.useProblemDetailsAsDefaultResponseBody = useProblemDetailsAsDefaultResponseBody;
+        this.includeDeprecated = includeDeprecated;
 
         codeGeneratorContentHeader = GeneratedCodeHeaderGeneratorFactory
             .Create(apiGeneratorVersion)
@@ -142,7 +145,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
-                if (openApiOperation.Value.Deprecated)
+                if (openApiOperation.Value.Deprecated && !includeDeprecated)
                 {
                     continue;
                 }
@@ -188,7 +191,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
-                if (openApiOperation.Value.Deprecated)
+                if (openApiOperation.Value.Deprecated && !includeDeprecated)
                 {
                     continue;
                 }
@@ -229,7 +232,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
-                if (openApiOperation.Value.Deprecated)
+                if (openApiOperation.Value.Deprecated && !includeDeprecated)
                 {
                     continue;
                 }
@@ -275,7 +278,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
-                if (openApiOperation.Value.Deprecated)
+                if (openApiOperation.Value.Deprecated && !includeDeprecated)
                 {
                     continue;
                 }
@@ -318,7 +321,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
-                if (openApiOperation.Value.Deprecated)
+                if (openApiOperation.Value.Deprecated && !includeDeprecated)
                 {
                     continue;
                 }
@@ -366,17 +369,17 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
             "Microsoft.AspNetCore.Mvc",
         };
 
-        if (openApiDocument.IsUsingRequiredForSystemLinq())
+        if (openApiDocument.IsUsingRequiredForSystemLinq(includeDeprecated))
         {
             requiredUsings.Add("System.Linq");
         }
 
-        if (openApiDocument.IsUsingRequiredForSystemCollectionGeneric())
+        if (openApiDocument.IsUsingRequiredForSystemCollectionGeneric(includeDeprecated))
         {
             requiredUsings.Add("System.Collections.Generic");
         }
 
-        if (openApiDocument.IsUsingRequiredForSystemTextJsonSerializationAndSystemRuntimeSerialization())
+        if (openApiDocument.IsUsingRequiredForSystemTextJsonSerializationAndSystemRuntimeSerialization(includeDeprecated))
         {
             requiredUsings.Add("System.Runtime.Serialization");
             requiredUsings.Add("System.Text.Json.Serialization");
@@ -404,7 +407,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
             var apiGroupName = openApiPath.GetApiGroupName();
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
-                if (openApiOperation.Value.Deprecated)
+                if (openApiOperation.Value.Deprecated && !includeDeprecated)
                 {
                     continue;
                 }
@@ -499,7 +502,8 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
             fullNamespace,
             codeGeneratorAttribute,
             modelName,
-            apiSchemaModel);
+            apiSchemaModel,
+            includeDeprecated);
 
         var contentGeneratorClass = new GenerateContentForClass(
             new CodeDocumentationTagsGenerator(),

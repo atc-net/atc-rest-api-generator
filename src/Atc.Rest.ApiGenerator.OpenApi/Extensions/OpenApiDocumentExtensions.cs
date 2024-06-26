@@ -116,13 +116,14 @@ public static class OpenApiDocumentExtensions
     }
 
     public static bool IsUsingRequiredForSystem(
-        this OpenApiDocument openApiDocument)
+        this OpenApiDocument openApiDocument,
+        bool includeDeprecated)
     {
         foreach (var openApiPath in openApiDocument.Paths)
         {
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
-                if (openApiOperation.Value.Deprecated)
+                if (openApiOperation.Value.Deprecated && !includeDeprecated)
                 {
                     continue;
                 }
@@ -133,7 +134,7 @@ public static class OpenApiDocumentExtensions
                     {
                         foreach (var schemaProperty in mediaType.Schema.Properties)
                         {
-                            if (schemaProperty.Value.Deprecated)
+                            if (schemaProperty.Value.Deprecated && !includeDeprecated)
                             {
                                 continue;
                             }
@@ -152,13 +153,14 @@ public static class OpenApiDocumentExtensions
     }
 
     public static bool IsUsingRequiredForSystemCollectionGeneric(
-        this OpenApiDocument openApiDocument)
+        this OpenApiDocument openApiDocument,
+        bool includeDeprecated)
     {
         foreach (var openApiPath in openApiDocument.Paths)
         {
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
-                if (openApiOperation.Value.Deprecated)
+                if (openApiOperation.Value.Deprecated && !includeDeprecated)
                 {
                     continue;
                 }
@@ -180,13 +182,14 @@ public static class OpenApiDocumentExtensions
     }
 
     public static bool IsUsingRequiredForSystemLinq(
-        this OpenApiDocument openApiDocument)
+        this OpenApiDocument openApiDocument,
+        bool includeDeprecated)
     {
         foreach (var openApiPath in openApiDocument.Paths)
         {
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
-                if (openApiOperation.Value.Deprecated)
+                if (openApiOperation.Value.Deprecated && !includeDeprecated)
                 {
                     continue;
                 }
@@ -205,13 +208,14 @@ public static class OpenApiDocumentExtensions
     }
 
     public static bool IsUsingRequiredForSystemTextJsonSerializationAndSystemRuntimeSerialization(
-        this OpenApiDocument openApiDocument)
+        this OpenApiDocument openApiDocument,
+        bool includeDeprecated)
     {
         foreach (var openApiPath in openApiDocument.Paths)
         {
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
-                if (openApiOperation.Value.Deprecated)
+                if (openApiOperation.Value.Deprecated && !includeDeprecated)
                 {
                     continue;
                 }
@@ -283,7 +287,8 @@ public static class OpenApiDocumentExtensions
     }
 
     public static bool IsUsingRequiredForMicrosoftAspNetCoreAuthorization(
-        this OpenApiDocument openApiDocument)
+        this OpenApiDocument openApiDocument,
+        bool includeDeprecated)
     {
         foreach (var openApiPath in openApiDocument.Paths)
         {
@@ -295,7 +300,7 @@ public static class OpenApiDocumentExtensions
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
-                if (openApiOperation.Value.Deprecated)
+                if (openApiOperation.Value.Deprecated && !includeDeprecated)
                 {
                     continue;
                 }

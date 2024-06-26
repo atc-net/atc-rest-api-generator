@@ -8,6 +8,8 @@ public class ApiOptionsGenerator
 
     public bool UseRestExtended { get; set; } = true;
 
+    public bool IncludeDeprecated { get; set; }
+
     public ApiOptionsGeneratorRequest Request { get; set; } = new();
 
     public ApiOptionsGeneratorResponse Response { get; set; } = new();

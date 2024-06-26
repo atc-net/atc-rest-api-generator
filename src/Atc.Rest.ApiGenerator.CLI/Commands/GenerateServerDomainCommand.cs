@@ -73,6 +73,7 @@ public class GenerateServerDomainCommand : AsyncCommand<ServerDomainCommandSetti
         {
             if (!openApiDocumentValidator.IsValid(
                     apiOptions.Validation,
+                    apiOptions.IncludeDeprecated,
                     apiDocumentContainer))
             {
                 return ConsoleExitStatusCodes.Failure;

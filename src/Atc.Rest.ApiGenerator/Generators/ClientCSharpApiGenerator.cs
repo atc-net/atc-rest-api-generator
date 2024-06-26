@@ -31,7 +31,8 @@ public class ClientCSharpApiGenerator
             projectOptions.PathForSrcGenerate,
             projectOptions.Document,
             operationSchemaMappings,
-            projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody)
+            projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
+            projectOptions.ApiOptions.Generator.IncludeDeprecated)
         {
             HttpClientName = projectOptions.HttpClientName,
             ClientFolderName = projectOptions.ClientFolderName,
