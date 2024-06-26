@@ -28,8 +28,8 @@ public class GenerateContentForSolutionFile : IContentGenerator
 
         sb.AppendLine("Global");
         sb.AppendLine(4, "GlobalSection(SolutionConfigurationPlatforms) = preSolution");
-        sb.AppendLine(8, "Debug |Any CPU = Debug|Any CPU");
-        sb.AppendLine(8, "Release |Any CPU = Release|Any CPU");
+        sb.AppendLine(8, "Debug|Any CPU = Debug|Any CPU");
+        sb.AppendLine(8, "Release|Any CPU = Release|Any CPU");
         sb.AppendLine(4, "EndGlobalSection");
         sb.AppendLine(4, "GlobalSection(ProjectConfigurationPlatforms) = postSolution");
 
