@@ -147,7 +147,14 @@ public sealed class ContentGeneratorServerParameter : IContentGenerator
             }
             else
             {
-                sb.AppendLine($" {{ get; set; }} = {item.DefaultValueInitializer};");
+                if (item.DataType.Equals("string", StringComparison.Ordinal))
+                {
+                    sb.AppendLine($" {{ get; set; }} = \"{item.DefaultValueInitializer}\";");
+                }
+                else
+                {
+                    sb.AppendLine($" {{ get; set; }} = {item.DefaultValueInitializer};");
+                }
             }
         }
     }
