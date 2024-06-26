@@ -312,8 +312,15 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
             .Select(x => Path.GetRelativePath(scenarioPath.CombineFileInfo("VerifyServerAll", $"{aspNetOutputType}_{suffix}").FullName, x))
             .ToArray();
 
-        var onlyInOutput = outputCsFilesWithRelativePath.Except(verifyCsFilesWithRelativePath, StringComparer.Ordinal).ToArray();
-        var onlyInVerify = verifyCsFilesWithRelativePath.Except(outputCsFilesWithRelativePath, StringComparer.Ordinal).ToArray();
+        var onlyInOutput = outputCsFilesWithRelativePath
+            .Except(verifyCsFilesWithRelativePath, StringComparer.Ordinal)
+            .OrderBy(x => x, StringComparer.Ordinal)
+            .ToArray();
+
+        var onlyInVerify = verifyCsFilesWithRelativePath
+            .Except(outputCsFilesWithRelativePath, StringComparer.Ordinal)
+            .OrderBy(x => x, StringComparer.Ordinal)
+            .ToArray();
 
         Assert.True(
             outputCsFilesWithRelativePath.Length == verifyCsFilesWithRelativePath.Length,

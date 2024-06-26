@@ -7,6 +7,8 @@ global using System.Text.Json.Serialization;
 global using Atc.Rest.Options;
 global using Atc.XUnit;
 
+global using AutoFixture;
+
 global using ExampleWithNsWithTask.Api.Generated;
 global using ExampleWithNsWithTask.Api.Generated.Contracts;
 global using ExampleWithNsWithTask.Api.Generated.Contracts.EventArgs;
@@ -19,3 +21,5 @@ global using Microsoft.AspNetCore.Mvc.Testing;
 global using Microsoft.AspNetCore.TestHost;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
+
+global using Xunit;
