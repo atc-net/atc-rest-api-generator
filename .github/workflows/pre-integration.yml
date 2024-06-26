@@ -94,7 +94,7 @@ jobs:
         run: curl -O https://petstore3.swagger.io/api/v3/openapi.yaml
 
       - name: ⚙️ Generate Code
-        run: dotnet run -- generate server all -p "Swagger Petstore" -s ../../openapi.yaml --outputSlnPath ../../petstore3/ --outputSrcPath ../../petstore3/src --outputTestPath ../../petstore3/test --optionsPath ../../sample-mvc/Demo.ApiDesign/ApiGeneratorOptions.json --disableCodingRules -v
+        run: dotnet run -- generate server all -p "Swagger Petstore" -s ../../openapi.yaml --outputSlnPath ../../petstore3/ --outputSrcPath ../../petstore3/src --outputTestPath ../../petstore3/test --optionsPath ../../ApiGeneratorOptions.json --disableCodingRules --verbose
         working-directory: src/Atc.Rest.ApiGenerator.CLI
 
       - name: 🛠️ Build Generated Code
