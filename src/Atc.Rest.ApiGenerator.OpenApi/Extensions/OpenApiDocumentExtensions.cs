@@ -231,7 +231,7 @@ public static class OpenApiDocumentExtensions
                                 continue;
                             }
 
-                            if (openApiString.Value.IsFirstCharacterLowerCase() ||
+                            if ((!parameter.Schema.Type.Equals("string", StringComparison.Ordinal) && openApiString.Value.IsFirstCharacterLowerCase()) ||
                                 openApiString.Value.Contains('-', StringComparison.Ordinal))
                             {
                                 return true;
