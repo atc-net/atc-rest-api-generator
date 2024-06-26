@@ -58,7 +58,7 @@ jobs:
         run: dotnet build -c Release --no-restore /p:UseSourceLink=true
 
       - name: 🧪 Run unit tests
-        run: dotnet test -c Release --no-build
+        run: dotnet test -c Release --no-build --filter "Category!=Integration"
 
   smoke-tests:
     strategy:

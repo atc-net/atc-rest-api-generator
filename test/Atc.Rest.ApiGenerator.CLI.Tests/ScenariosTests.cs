@@ -4,6 +4,7 @@ namespace Atc.Rest.ApiGenerator.CLI.Tests;
 
 [UsesVerify]
 [Collection("Sequential-Scenarios")]
+[Trait(Traits.Category, Traits.Categories.Integration)]
 public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
 {
     private static readonly DirectoryInfo WorkingPath = new(
