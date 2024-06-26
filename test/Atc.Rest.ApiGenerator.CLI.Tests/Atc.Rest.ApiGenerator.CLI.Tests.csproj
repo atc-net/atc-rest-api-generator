@@ -11,8 +11,8 @@
   <ItemGroup>
     <Compile Remove="Scenarios\DemoSample\VerifyClient\**" />
     <Compile Remove="Scenarios\DemoSample\VerifyServerAll\**" />
-    <Compile Remove="Scenarios\ExampleWithAllResponseTypes\VerifyClient\**" />
-    <Compile Remove="Scenarios\ExampleWithAllResponseTypes\VerifyServerAll\**" />
+    <Compile Remove="Scenarios\ExampleWithAllRespTypes\VerifyClient\**" />
+    <Compile Remove="Scenarios\ExampleWithAllRespTypes\VerifyServerAll\**" />
     <Compile Remove="Scenarios\ExampleWithGenericPagination\VerifyClient\**" />
     <Compile Remove="Scenarios\ExampleWithGenericPagination\VerifyServerAll\**" />
     <Compile Remove="Scenarios\ExampleWithNsWithTask\VerifyClient\**" />
@@ -23,8 +23,8 @@
     <Compile Remove="Scenarios\PetStore\VerifyServerAll\**" />
     <EmbeddedResource Remove="Scenarios\DemoSample\VerifyClient\**" />
     <EmbeddedResource Remove="Scenarios\DemoSample\VerifyServerAll\**" />
-    <EmbeddedResource Remove="Scenarios\ExampleWithAllResponseTypes\VerifyClient\**" />
-    <EmbeddedResource Remove="Scenarios\ExampleWithAllResponseTypes\VerifyServerAll\**" />
+    <EmbeddedResource Remove="Scenarios\ExampleWithAllRespTypes\VerifyClient\**" />
+    <EmbeddedResource Remove="Scenarios\ExampleWithAllRespTypes\VerifyServerAll\**" />
     <EmbeddedResource Remove="Scenarios\ExampleWithGenericPagination\VerifyClient\**" />
     <EmbeddedResource Remove="Scenarios\ExampleWithGenericPagination\VerifyServerAll\**" />
     <EmbeddedResource Remove="Scenarios\ExampleWithNsWithTask\VerifyClient\**" />
@@ -35,8 +35,8 @@
     <EmbeddedResource Remove="Scenarios\PetStore\VerifyServerAll\**" />
     <None Remove="Scenarios\DemoSample\VerifyClient\**" />
     <None Remove="Scenarios\DemoSample\VerifyServerAll\**" />
-    <None Remove="Scenarios\ExampleWithAllResponseTypes\VerifyClient\**" />
-    <None Remove="Scenarios\ExampleWithAllResponseTypes\VerifyServerAll\**" />
+    <None Remove="Scenarios\ExampleWithAllRespTypes\VerifyClient\**" />
+    <None Remove="Scenarios\ExampleWithAllRespTypes\VerifyServerAll\**" />
     <None Remove="Scenarios\ExampleWithGenericPagination\VerifyClient\**" />
     <None Remove="Scenarios\ExampleWithGenericPagination\VerifyServerAll\**" />
     <None Remove="Scenarios\ExampleWithNsWithTask\VerifyClient\**" />
