@@ -143,6 +143,11 @@ public static class ContentGeneratorServerClientModelParametersFactory
             {
                 var openApiParameter = apiSchema.Value;
 
+                if(openApiParameter.Deprecated)
+                {
+                    continue;
+                }
+
                 var useListForDataType = openApiParameter.IsTypeArray();
 
                 string? dataType = null;
@@ -322,6 +327,11 @@ public static class ContentGeneratorServerClientModelParametersFactory
             foreach (var apiSchema in apiSchemaModel.Properties)
             {
                 var openApiParameter = apiSchema.Value;
+
+                if (openApiParameter.Deprecated)
+                {
+                    continue;
+                }
 
                 var useListForDataType = openApiParameter.IsTypeArray();
 

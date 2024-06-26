@@ -345,6 +345,11 @@ public class OpenApiDocumentValidator : IOpenApiDocumentValidator
 
                     foreach (var (key, value) in schema.Properties)
                     {
+                        if (value.Deprecated)
+                        {
+                            continue;
+                        }
+
                         if (string.IsNullOrEmpty(key))
                         {
                             logItems.Add(logItemFactory.Create(logCategory, ValidationRuleNameConstants.Schema12, $"Missing key/name for one or more properties on object type '{schema.Reference.ReferenceV3}'."));

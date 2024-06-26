@@ -133,6 +133,11 @@ public static class OpenApiDocumentExtensions
                     {
                         foreach (var schemaProperty in mediaType.Schema.Properties)
                         {
+                            if (schemaProperty.Value.Deprecated)
+                            {
+                                continue;
+                            }
+
                             if (schemaProperty.Value.IsFormatTypeUuid())
                             {
                                 return true;
