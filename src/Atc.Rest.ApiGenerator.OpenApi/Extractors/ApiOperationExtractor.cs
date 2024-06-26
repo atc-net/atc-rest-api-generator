@@ -142,41 +142,43 @@ public sealed class ApiOperationExtractor : IApiOperationExtractor
             return;
         }
 
+        if (apiSchema.IsTypeCustomPagination())
+        {
+            var apiSchemaForCustomPagination = apiSchema.GetCustomPaginationSchema();
+            var apiSchemaForCustomPaginationItems = apiSchema.GetCustomPaginationItemsSchema();
+            if (apiSchemaForCustomPagination is not null &&
+                apiSchemaForCustomPaginationItems is not null)
+            {
+                var consolidateSchemaForCustomPaginationItems = ConsolidateSchemaObjectTypes(apiSchemaForCustomPaginationItems);
+                CollectSchema(
+                    componentsSchemas,
+                    consolidateSchemaForCustomPaginationItems.Item2,
+                    locatedArea,
+                    apiPath,
+                    httpOperation,
+                    parentApiSchema,
+                    result);
+
+                var consolidateSchemaForCustomPagination = ConsolidateSchemaObjectTypes(apiSchemaForCustomPagination);
+                CollectSchema(
+                    componentsSchemas,
+                    consolidateSchemaForCustomPagination.Item2,
+                    locatedArea,
+                    apiPath,
+                    httpOperation,
+                    parentApiSchema,
+                    result);
+            }
+
+            return;
+        }
+
         (var schemaKey, apiSchema) = ConsolidateSchemaObjectTypes(apiSchema);
 
-        if (schemaKey.Length == 0 ||
+        if (string.IsNullOrEmpty(schemaKey) ||
             schemaKey == "ProblemDetails" ||
             schemaKey.Equals(NameConstants.Pagination, StringComparison.OrdinalIgnoreCase))
         {
-            if (apiSchema.IsTypeCustomPagination())
-            {
-                var apiSchemaForCustomPagination = apiSchema.GetCustomPaginationSchema();
-                var apiSchemaForCustomPaginationItems = apiSchema.GetCustomPaginationItemsSchema();
-                if (apiSchemaForCustomPagination is not null &&
-                    apiSchemaForCustomPaginationItems is not null)
-                {
-                    var consolidateSchemaForCustomPaginationItems = ConsolidateSchemaObjectTypes(apiSchemaForCustomPaginationItems);
-                    CollectSchema(
-                        componentsSchemas,
-                        consolidateSchemaForCustomPaginationItems.Item2,
-                        locatedArea,
-                        apiPath,
-                        httpOperation,
-                        parentApiSchema,
-                        result);
-
-                    var consolidateSchemaForCustomPagination = ConsolidateSchemaObjectTypes(apiSchemaForCustomPagination);
-                    CollectSchema(
-                        componentsSchemas,
-                        consolidateSchemaForCustomPagination.Item2,
-                        locatedArea,
-                        apiPath,
-                        httpOperation,
-                        parentApiSchema,
-                        result);
-                }
-            }
-
             return;
         }
 
