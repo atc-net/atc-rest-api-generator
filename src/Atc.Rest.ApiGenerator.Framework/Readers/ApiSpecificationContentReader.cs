@@ -38,27 +38,40 @@ public class ApiSpecificationContentReader : IApiSpecificationContentReader
         }
         else
         {
-            // Find all yaml files, except files starting with '.' as example '.spectral.yaml'
-            var docFiles = Directory
-                .GetFiles(specificationPath, "*.yaml", SearchOption.AllDirectories)
-                .Where(x => !x.Contains("\\.", StringComparison.Ordinal))
-                .ToArray();
-
-            if (docFiles.Length == 0)
+            if (specificationPath.StartsWith("http", StringComparison.CurrentCultureIgnoreCase))
             {
-                // No yaml, then try all json files
-                docFiles = Directory
-                    .GetFiles(specificationPath, "*.json", SearchOption.AllDirectories)
+                apiDocFile = HttpClientHelper.DownloadToTempFile(logger, specificationPath);
+
+                if (apiDocFile is null ||
+                    !apiDocFile.Exists)
+                {
+                    throw new IOException("Api file don't exist.");
+                }
+            }
+            else
+            {
+                // Find all yaml files, except files starting with '.' as example '.spectral.yaml'
+                var docFiles = Directory
+                    .GetFiles(specificationPath, "*.yaml", SearchOption.AllDirectories)
                     .Where(x => !x.Contains("\\.", StringComparison.Ordinal))
                     .ToArray();
-            }
 
-            apiDocFile = docFiles.Length switch
-            {
-                0 => throw new IOException("Api specification file don't exist in folder."),
-                1 => new FileInfo(docFiles[0]),
-                _ => CreateCombineApiDocumentFile(specificationPath),
-            };
+                if (docFiles.Length == 0)
+                {
+                    // No yaml, then try all json files
+                    docFiles = Directory
+                        .GetFiles(specificationPath, "*.json", SearchOption.AllDirectories)
+                        .Where(x => !x.Contains("\\.", StringComparison.Ordinal))
+                        .ToArray();
+                }
+
+                apiDocFile = docFiles.Length switch
+                {
+                    0 => throw new IOException("Api specification file don't exist in folder."),
+                    1 => new FileInfo(docFiles[0]),
+                    _ => CreateCombineApiDocumentFile(specificationPath),
+                };
+            }
         }
 
         if (apiDocFile is not { Exists: true })
