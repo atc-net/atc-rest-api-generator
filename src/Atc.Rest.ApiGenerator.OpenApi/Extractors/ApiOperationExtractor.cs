@@ -113,7 +113,7 @@ public sealed class ApiOperationExtractor : IApiOperationExtractor
 
             if (apiResponse.Value.Content.Keys.Count > 0)
             {
-                foreach (var apiMediaType in apiResponse.Value.Content)
+                foreach (var apiMediaType in apiResponse.Value.Content.Where(x => x.Key.Equals(MediaTypeNames.Application.Json, StringComparison.OrdinalIgnoreCase)))
                 {
                     CollectSchema(
                         componentsSchemas,
