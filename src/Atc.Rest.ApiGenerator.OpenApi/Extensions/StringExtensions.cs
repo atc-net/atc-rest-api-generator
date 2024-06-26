@@ -25,6 +25,21 @@ public static class StringExtensions
                 .Replace(">", "&gt;", StringComparison.OrdinalIgnoreCase);
         }
 
+        while (value.Contains("  ", StringComparison.Ordinal))
+        {
+            value = value.Replace("  ", " ", StringComparison.Ordinal);
+        }
+
+        while (value.Contains("\n ", StringComparison.Ordinal))
+        {
+            value = value.Replace("\n ", "\n", StringComparison.Ordinal);
+        }
+
+        if (value.EndsWith("\n", StringComparison.Ordinal))
+        {
+            value = value[..^1];
+        }
+
         return value.EnsureEndsWithDot();
     }
 }
