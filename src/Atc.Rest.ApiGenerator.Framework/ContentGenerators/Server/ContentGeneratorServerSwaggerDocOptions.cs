@@ -54,7 +54,11 @@ public sealed class ContentGeneratorServerSwaggerDocOptions : IContentGenerator
 
         if (!string.IsNullOrWhiteSpace(parameters.SwaggerDocOptions.Description))
         {
-            sb.AppendLine(20, $"Description = \"{parameters.SwaggerDocOptions.Description}\",");
+            sb.AppendLine(
+                20,
+                parameters.SwaggerDocOptions.Description.Contains('\n', StringComparison.Ordinal)
+                    ? $"Description = @\"{parameters.SwaggerDocOptions.Description}\","
+                    : $"Description = \"{parameters.SwaggerDocOptions.Description}\",");
         }
 
         if (!string.IsNullOrWhiteSpace(parameters.SwaggerDocOptions.ContactName) ||
