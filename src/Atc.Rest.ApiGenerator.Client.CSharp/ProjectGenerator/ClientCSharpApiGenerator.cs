@@ -395,8 +395,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
             requiredUsings.Add("Atc.Rest.Results");
         }
 
-        if (operationSchemaMappings.Any(apiOperation => apiOperation.Model.IsEnum ||
-                                                        apiOperation.Model.IsShared))
+        if (operationSchemaMappings.Any(apiOperation => apiOperation.Model.IsShared))
         {
             requiredUsings.Add($"{projectName}.{ContentGeneratorConstants.Contracts}");
         }
