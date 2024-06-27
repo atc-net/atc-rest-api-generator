@@ -19,7 +19,6 @@ public class ServerGenerator : IServerGenerator
         ArgumentNullException.ThrowIfNull(projectName);
         ArgumentNullException.ThrowIfNull(rootPath);
         ArgumentNullException.ThrowIfNull(srcPath);
-        ArgumentNullException.ThrowIfNull(testPath);
 
         logger = loggerFactory.CreateLogger<ServerGenerator>();
         this.projectName = projectName;
