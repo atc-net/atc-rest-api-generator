@@ -119,27 +119,27 @@ public static class OpenApiDocumentExtensions
         this OpenApiDocument openApiDocument,
         bool includeDeprecated)
     {
-        foreach (var openApiPath in openApiDocument.Paths)
+        foreach (var apiPathPair in openApiDocument.Paths)
         {
-            foreach (var openApiOperation in openApiPath.Value.Operations)
+            foreach (var apiOperationPair in apiPathPair.Value.Operations)
             {
-                if (openApiOperation.Value.Deprecated && !includeDeprecated)
+                if (apiOperationPair.Value.Deprecated && !includeDeprecated)
                 {
                     continue;
                 }
 
-                foreach (var response in openApiOperation.Value.Responses.Values)
+                foreach (var response in apiOperationPair.Value.Responses.Values)
                 {
                     foreach (var mediaType in response.Content.Values)
                     {
-                        foreach (var schemaProperty in mediaType.Schema.Properties)
+                        foreach (var propertyApiSchemaPair in mediaType.Schema.Properties)
                         {
-                            if (schemaProperty.Value.Deprecated && !includeDeprecated)
+                            if (propertyApiSchemaPair.Value.Deprecated && !includeDeprecated)
                             {
                                 continue;
                             }
 
-                            if (schemaProperty.Value.IsFormatTypeUuid())
+                            if (propertyApiSchemaPair.Value.IsFormatTypeUuid())
                             {
                                 return true;
                             }
@@ -156,22 +156,62 @@ public static class OpenApiDocumentExtensions
         this OpenApiDocument openApiDocument,
         bool includeDeprecated)
     {
-        foreach (var openApiPath in openApiDocument.Paths)
+        foreach (var apiPathPair in openApiDocument.Paths)
         {
-            foreach (var openApiOperation in openApiPath.Value.Operations)
+            foreach (var apiOperationPair in apiPathPair.Value.Operations)
             {
-                if (openApiOperation.Value.Deprecated && !includeDeprecated)
+                if (apiOperationPair.Value.Deprecated && !includeDeprecated)
                 {
                     continue;
                 }
 
-                foreach (var response in openApiOperation.Value.Responses.Values)
+                foreach (var apiParameter in apiPathPair.Value.Parameters)
                 {
-                    foreach (var mediaType in response.Content.Values)
+                    if (apiParameter.Schema.IsTypeArray())
                     {
-                        if (mediaType.Schema.IsTypeArray())
+                        return true;
+                    }
+                }
+
+                foreach (var apiParameter in apiOperationPair.Value.Parameters)
+                {
+                    if (apiParameter.Schema.IsTypeArray())
+                    {
+                        return true;
+                    }
+                }
+
+                foreach (var apiResponse in apiOperationPair.Value.Responses.Values)
+                {
+                    foreach (var apiMediaType in apiResponse.Content.Values)
+                    {
+                        if (apiMediaType.Schema.IsTypeArray())
                         {
                             return true;
+                        }
+
+                        foreach (var propertyApiSchemaPair in apiMediaType.Schema.Properties)
+                        {
+                            if (propertyApiSchemaPair.IsTypeArray())
+                            {
+                                return true;
+                            }
+
+                            foreach (var oneOfApiSchema in propertyApiSchemaPair.Value.OneOf)
+                            {
+                                if (oneOfApiSchema.IsTypeArray())
+                                {
+                                    return true;
+                                }
+
+                                foreach (var oneOfPropertyApiSchemaPair in oneOfApiSchema.Properties)
+                                {
+                                    if (oneOfPropertyApiSchemaPair.IsTypeArray())
+                                    {
+                                        return true;
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -185,18 +225,18 @@ public static class OpenApiDocumentExtensions
         this OpenApiDocument openApiDocument,
         bool includeDeprecated)
     {
-        foreach (var openApiPath in openApiDocument.Paths)
+        foreach (var apiPathPair in openApiDocument.Paths)
         {
-            foreach (var openApiOperation in openApiPath.Value.Operations)
+            foreach (var apiOperationPair in apiPathPair.Value.Operations)
             {
-                if (openApiOperation.Value.Deprecated && !includeDeprecated)
+                if (apiOperationPair.Value.Deprecated && !includeDeprecated)
                 {
                     continue;
                 }
 
-                foreach (var parameter in openApiOperation.Value.Parameters)
+                foreach (var apiParameter in apiOperationPair.Value.Parameters)
                 {
-                    if (parameter.Schema.IsTypeArray())
+                    if (apiParameter.Schema.IsTypeArray())
                     {
                         return true;
                     }
@@ -211,27 +251,27 @@ public static class OpenApiDocumentExtensions
         this OpenApiDocument openApiDocument,
         bool includeDeprecated)
     {
-        foreach (var openApiPath in openApiDocument.Paths)
+        foreach (var apiPathPair in openApiDocument.Paths)
         {
-            foreach (var openApiOperation in openApiPath.Value.Operations)
+            foreach (var apiOperationPair in apiPathPair.Value.Operations)
             {
-                if (openApiOperation.Value.Deprecated && !includeDeprecated)
+                if (apiOperationPair.Value.Deprecated && !includeDeprecated)
                 {
                     continue;
                 }
 
-                foreach (var parameter in openApiOperation.Value.Parameters)
+                foreach (var apiParameter in apiOperationPair.Value.Parameters)
                 {
-                    if (parameter.Schema.IsSchemaEnum())
+                    if (apiParameter.Schema.IsSchemaEnum())
                     {
-                        foreach (var openApiAny in parameter.Schema.Enum)
+                        foreach (var apiAny in apiParameter.Schema.Enum)
                         {
-                            if (openApiAny is not OpenApiString openApiString)
+                            if (apiAny is not OpenApiString openApiString)
                             {
                                 continue;
                             }
 
-                            if ((!parameter.Schema.Type.Equals("string", StringComparison.Ordinal) && openApiString.Value.IsFirstCharacterLowerCase()) ||
+                            if ((!apiParameter.Schema.Type.Equals("string", StringComparison.Ordinal) && openApiString.Value.IsFirstCharacterLowerCase()) ||
                                 openApiString.Value.Contains('-', StringComparison.Ordinal))
                             {
                                 return true;
@@ -248,13 +288,13 @@ public static class OpenApiDocumentExtensions
     public static bool IsUsingRequiredForAtcRestResults(
         this OpenApiDocument openApiDocument)
     {
-        foreach (var path in openApiDocument.Paths)
+        foreach (var apiPathPair in openApiDocument.Paths)
         {
-            foreach (var openApiOperation in path.Value.Operations.Values)
+            foreach (var openApiOperation in apiPathPair.Value.Operations.Values)
             {
-                foreach (var response in openApiOperation.Responses.OrderBy(x => x.GetFormattedKey(), StringComparer.Ordinal))
+                foreach (var responsePair in openApiOperation.Responses.OrderBy(x => x.GetFormattedKey(), StringComparer.Ordinal))
                 {
-                    if (!Enum.TryParse(typeof(HttpStatusCode), response.Key, out var parsedType))
+                    if (!Enum.TryParse(typeof(HttpStatusCode), responsePair.Key, out var parsedType))
                     {
                         continue;
                     }
@@ -298,14 +338,14 @@ public static class OpenApiDocumentExtensions
                 return true;
             }
 
-            foreach (var openApiOperation in openApiPath.Value.Operations)
+            foreach (var apiOperationPair in openApiPath.Value.Operations)
             {
-                if (openApiOperation.Value.Deprecated && !includeDeprecated)
+                if (apiOperationPair.Value.Deprecated && !includeDeprecated)
                 {
                     continue;
                 }
 
-                var isOperationAuthenticationRequired = openApiOperation.Value.Extensions.ExtractAuthenticationRequired();
+                var isOperationAuthenticationRequired = apiOperationPair.Value.Extensions.ExtractAuthenticationRequired();
                 if (isOperationAuthenticationRequired is not null && isOperationAuthenticationRequired.Value)
                 {
                     return true;
