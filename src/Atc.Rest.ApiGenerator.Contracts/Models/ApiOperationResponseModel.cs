@@ -7,4 +7,5 @@ public record ApiOperationResponseModel(
     string? MediaType,
     string? CollectionDataType,
     string? DataType,
-    string? Description);
+    string? Description,
+    string? Namespace);

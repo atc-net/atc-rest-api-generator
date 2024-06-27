@@ -161,19 +161,21 @@ public class ContentGeneratorClientEndpointResultInterface : IContentGenerator
             return;
         }
 
+        var dataType = responseModel.GetQualifiedDataType();
+
         if (responseModel.CollectionDataType is null)
         {
-            sb.AppendLine(4, $"{responseModel.DataType} OkContent {{ get; }}");
+            sb.AppendLine(4, $"{dataType} OkContent {{ get; }}");
             return;
         }
 
         if (responseModel.CollectionDataType == NameConstants.List)
         {
-            sb.AppendLine(4, $"IEnumerable<{responseModel.DataType}> OkContent {{ get; }}");
+            sb.AppendLine(4, $"IEnumerable<{dataType}> OkContent {{ get; }}");
         }
         else
         {
-            sb.AppendLine(4, $"{responseModel.CollectionDataType}<{responseModel.DataType}> OkContent {{ get; }}");
+            sb.AppendLine(4, $"{responseModel.CollectionDataType}<{dataType}> OkContent {{ get; }}");
         }
     }
 

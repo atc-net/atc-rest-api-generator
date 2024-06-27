@@ -171,10 +171,12 @@ public class ContentGeneratorClientEndpointResult : IContentGenerator
             return;
         }
 
+        var dataType = responseModel.GetQualifiedDataType();
+
         if (responseModel.CollectionDataType is null)
         {
-            sb.AppendLine(4, $"public {responseModel.DataType} OkContent");
-            sb.AppendLine(8, $"=> IsOk && ContentObject is {responseModel.DataType} result");
+            sb.AppendLine(4, $"public {dataType} OkContent");
+            sb.AppendLine(8, $"=> IsOk && ContentObject is {dataType} result");
             sb.AppendLine(12, "? result");
             sb.AppendLine(12, ": throw new InvalidOperationException(\"Content is not the expected type - please use the IsOk property first.\");");
             return;
@@ -182,15 +184,15 @@ public class ContentGeneratorClientEndpointResult : IContentGenerator
 
         if (responseModel.CollectionDataType == NameConstants.List)
         {
-            sb.AppendLine(4, $"public IEnumerable<{responseModel.DataType}> OkContent");
-            sb.AppendLine(8, $"=> IsOk && ContentObject is IEnumerable<{responseModel.DataType}> result");
+            sb.AppendLine(4, $"public IEnumerable<{dataType}> OkContent");
+            sb.AppendLine(8, $"=> IsOk && ContentObject is IEnumerable<{dataType}> result");
             sb.AppendLine(12, "? result");
             sb.AppendLine(12, ": throw new InvalidOperationException(\"Content is not the expected type - please use the IsOk property first.\");");
         }
         else
         {
-            sb.AppendLine(4, $"public {responseModel.CollectionDataType}<{responseModel.DataType}> OkContent");
-            sb.AppendLine(8, $"=> IsOk && ContentObject is {responseModel.CollectionDataType}<{responseModel.DataType}> result");
+            sb.AppendLine(4, $"public {responseModel.CollectionDataType}<{dataType}> OkContent");
+            sb.AppendLine(8, $"=> IsOk && ContentObject is {responseModel.CollectionDataType}<{dataType}> result");
             sb.AppendLine(12, "? result");
             sb.AppendLine(12, ": throw new InvalidOperationException(\"Content is not the expected type - please use the IsOk property first.\");");
         }

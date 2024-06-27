@@ -395,17 +395,19 @@ public sealed class ContentGeneratorServerEndpoints : IContentGenerator
         }
         else
         {
+            var dataType = responseModel.GetQualifiedDataType();
+
             if (string.IsNullOrEmpty(responseModel.CollectionDataType))
             {
-                sb.Append(12, $".Produces<{responseModel.DataType}>()");
+                sb.Append(12, $".Produces<{dataType}>()");
             }
             else
             {
                 sb.AppendLine(
                     4,
                     responseModel.CollectionDataType == "List"
-                        ? $".Produces<IEnumerable<{responseModel.DataType}>>()"
-                        : $".Produces<{responseModel.CollectionDataType}<{responseModel.DataType}>>()");
+                        ? $".Produces<IEnumerable<{dataType}>>()"
+                        : $".Produces<{responseModel.CollectionDataType}<{dataType}>>()");
             }
         }
     }
