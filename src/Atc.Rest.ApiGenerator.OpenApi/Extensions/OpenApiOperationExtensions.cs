@@ -133,7 +133,8 @@ public static class OpenApiOperationExtensions
     }
 
     public static IEnumerable<ApiOperationResponseModel> ExtractApiOperationResponseModels(
-        this OpenApiOperation apiOperation)
+        this OpenApiOperation apiOperation,
+        string? @namespace = null)
     {
         var result = new List<ApiOperationResponseModel>();
 
@@ -154,11 +155,12 @@ public static class OpenApiOperationExtensions
                         MediaType: null,
                         CollectionDataType: null,
                         DataType: null,
-                        Description: apiResponse.Value.Description));
+                        Description: apiResponse.Value.Description,
+                        Namespace: null));
             }
             else
             {
-                foreach (var apiMediaType in apiResponse.Value.Content.Where(x => x.Key.Equals(MediaTypeNames.Application.Json, StringComparison.OrdinalIgnoreCase)))
+                foreach (var apiMediaType in apiResponse.Value.Content.Where(x => !x.Key.Equals(MediaTypeNames.Application.Xml, StringComparison.OrdinalIgnoreCase)))
                 {
                     if (!apiResponse.Key.TryParseToHttpStatusCode(out var httpStatusCode))
                     {
@@ -209,7 +211,8 @@ public static class OpenApiOperationExtensions
                             MediaType: apiMediaType.Key,
                             CollectionDataType: collectionDataType,
                             DataType: dataType,
-                            Description: apiResponse.Value.Description));
+                            Description: apiResponse.Value.Description,
+                            Namespace: @namespace));
                 }
             }
         }

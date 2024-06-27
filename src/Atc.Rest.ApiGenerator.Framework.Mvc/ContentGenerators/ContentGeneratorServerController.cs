@@ -367,17 +367,19 @@ public sealed class ContentGeneratorServerController : IContentGenerator
         }
         else
         {
+            var dataType = responseModel.GetQualifiedDataType();
+
             if (string.IsNullOrEmpty(responseModel.CollectionDataType))
             {
-                sb.AppendLine(4, $"[ProducesResponseType(typeof({responseModel.DataType}), StatusCodes.{responseModel.StatusCode.ToStatusCodesConstant()})]");
+                sb.AppendLine(4, $"[ProducesResponseType(typeof({dataType}), StatusCodes.{responseModel.StatusCode.ToStatusCodesConstant()})]");
             }
             else
             {
                 sb.AppendLine(
                     4,
                     responseModel.CollectionDataType == "List"
-                        ? $"[ProducesResponseType(typeof(IEnumerable<{responseModel.DataType}>), StatusCodes.{responseModel.StatusCode.ToStatusCodesConstant()})]"
-                        : $"[ProducesResponseType(typeof({responseModel.CollectionDataType}<{responseModel.DataType}>), StatusCodes.{responseModel.StatusCode.ToStatusCodesConstant()})]");
+                        ? $"[ProducesResponseType(typeof(IEnumerable<{dataType}>), StatusCodes.{responseModel.StatusCode.ToStatusCodesConstant()})]"
+                        : $"[ProducesResponseType(typeof({responseModel.CollectionDataType}<{dataType}>), StatusCodes.{responseModel.StatusCode.ToStatusCodesConstant()})]");
             }
         }
     }

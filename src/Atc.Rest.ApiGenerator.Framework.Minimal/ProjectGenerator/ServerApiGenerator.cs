@@ -354,11 +354,12 @@ public class ServerApiGenerator : IServerApiGenerator
         // TODO: Check for any use ??
         requiredUsings.Add("Microsoft.AspNetCore.Authorization");
 
+        if (operationSchemaMappings.Any(apiOperation => apiOperation.Model.IsShared))
+        {
+            requiredUsings.Add($"{projectName}.{ContentGeneratorConstants.Contracts}");
+        }
+
         var apiGroupNames = openApiDocument.GetApiGroupNames();
-
-        // TODO: Check for any use ??
-        requiredUsings.Add($"{projectName}.{ContentGeneratorConstants.Contracts}");
-
         requiredUsings.AddRange(apiGroupNames.Select(x => $"{projectName}.{ContentGeneratorConstants.Contracts}.{x}"));
 
         GlobalUsingsHelper.CreateOrUpdate(

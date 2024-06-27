@@ -58,7 +58,6 @@ public class NugetPackageReferenceProvider(
                 ("Asp.Versioning.Http", PackageDefaultVersions["Asp.Versioning.Http"]),
                 ("Atc", atcVersion),
                 ("Atc.Rest.Extended", atcVersion),
-                ("Atc.Rest.MinimalApi", "1.0.81"),
                 ("Microsoft.NETCore.Platforms", PackageDefaultVersions["Microsoft.NETCore.Platforms"]),
                 ("Swashbuckle.AspNetCore", PackageDefaultVersions["Swashbuckle.AspNetCore"]),
             };

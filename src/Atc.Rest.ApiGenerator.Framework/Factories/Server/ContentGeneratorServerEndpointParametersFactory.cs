@@ -11,6 +11,7 @@ public static class ContentGeneratorServerEndpointParametersFactory
         string endpointSuffixName,
         OpenApiDocument openApiDocument)
     {
+        var modelNamespace = $"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
         var methodParameters = new List<ContentGeneratorServerEndpointMethodParameters>();
 
         ApiAuthorizeModel? controllerAuthorization = null;
@@ -23,7 +24,7 @@ public static class ContentGeneratorServerEndpointParametersFactory
                 var operationName = apiOperation.Value.GetOperationName();
                 var endpointAuthorization = apiOperation.Value.ExtractApiOperationAuthorization(apiPathData);
                 var responseModels = apiOperation.Value
-                    .ExtractApiOperationResponseModels()
+                    .ExtractApiOperationResponseModels(modelNamespace)
                     .AdjustNamespacesIfNeeded(operationSchemaMappings);
 
                 methodParameters.Add(new ContentGeneratorServerEndpointMethodParameters(

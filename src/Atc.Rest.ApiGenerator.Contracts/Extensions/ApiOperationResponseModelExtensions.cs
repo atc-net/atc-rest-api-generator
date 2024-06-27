@@ -2,6 +2,26 @@ namespace Atc.Rest.ApiGenerator.Contracts.Extensions;
 
 public static class ApiOperationResponseModelExtensions
 {
+    public static string? GetQualifiedDataType(
+        this ApiOperationResponseModel responseModel)
+    {
+        ArgumentNullException.ThrowIfNull(responseModel);
+
+        if (string.IsNullOrEmpty(responseModel.DataType))
+        {
+            return null;
+        }
+
+        var dataType = responseModel.DataType;
+        if (responseModel.Namespace is not null &&
+            responseModel.Namespace.EndsWith(responseModel.DataType, StringComparison.Ordinal))
+        {
+            dataType = $"{responseModel.Namespace}.{dataType}";
+        }
+
+        return dataType;
+    }
+
     public static IEnumerable<ApiOperationResponseModel> AppendUnauthorizedIfNeeded(
         this IEnumerable<ApiOperationResponseModel> responseModels,
         ApiAuthorizeModel? authorization)
@@ -24,7 +44,8 @@ public static class ApiOperationResponseModelExtensions
                     MediaType: null,
                     CollectionDataType: null,
                     DataType: null,
-                    Description: null));
+                    Description: null,
+                    Namespace: null));
         }
 
         return models;
@@ -56,7 +77,8 @@ public static class ApiOperationResponseModelExtensions
                     MediaType: null,
                     CollectionDataType: null,
                     DataType: null,
-                    Description: null));
+                    Description: null,
+                    Namespace: null));
         }
 
         return models;
@@ -79,7 +101,8 @@ public static class ApiOperationResponseModelExtensions
                     MediaType: null,
                     CollectionDataType: null,
                     DataType: null,
-                    Description: null));
+                    Description: null,
+                    Namespace: null));
         }
 
         return models;
@@ -102,7 +125,8 @@ public static class ApiOperationResponseModelExtensions
                     MediaType: null,
                     CollectionDataType: null,
                     DataType: null,
-                    Description: null));
+                    Description: null,
+                    Namespace: null));
         }
 
         return models;
