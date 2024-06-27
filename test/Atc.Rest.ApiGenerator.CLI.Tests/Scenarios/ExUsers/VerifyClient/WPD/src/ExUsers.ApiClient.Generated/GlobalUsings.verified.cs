@@ -10,7 +10,6 @@ global using System.Threading.Tasks;
 global using Atc.Rest.Client;
 global using Atc.Rest.Client.Builder;
 
-global using ExUsers.ApiClient.Generated.Contracts;
 global using ExUsers.ApiClient.Generated.Contracts.Users;
 global using ExUsers.ApiClient.Generated.Endpoints.Users.Interfaces;
 
