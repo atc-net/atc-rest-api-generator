@@ -81,56 +81,21 @@ public static class OpenApiSchemaExtensions
         return apiSchemaForItems.Value.Value;
     }
 
-    public static string GetSimpleDataTypeFromCustomPagination(
+    public static string? GetCollectionDataType(
         this OpenApiSchema schema)
     {
-        if (schema is null)
+        if (schema.IsArray())
         {
-            throw new ArgumentNullException(nameof(schema));
+            return NameConstants.List;
         }
 
-        var customPaginationItemsSchema = schema.GetCustomPaginationItemsSchema();
-        return customPaginationItemsSchema is null
-            ? string.Empty
-            : customPaginationItemsSchema.GetDataType();
-    }
-
-    public static string? GetCustomPaginationGenericTypeWithItemType(
-        this OpenApiSchema schema,
-        string projectName,
-        string apiGroupName,
-        bool isClient = false)
-    {
-        if (!schema.IsTypeCustomPagination())
+        if (schema.IsTypePagination() ||
+            schema.IsTypeCustomPagination())
         {
-            return null;
+            return NameConstants.Pagination;
         }
 
-        var customPaginationSchema = schema.GetCustomPaginationSchema();
-        var customPaginationItemsSchema = schema.GetCustomPaginationItemsSchema();
-        if (customPaginationSchema is null ||
-            customPaginationItemsSchema is null)
-        {
-            return null;
-        }
-
-        string? itemTypeName;
-        if (customPaginationItemsSchema.IsSimpleDataType())
-        {
-            itemTypeName = customPaginationItemsSchema.GetDataType();
-        }
-        else
-        {
-            itemTypeName = OpenApiDocumentSchemaModelNameResolver.EnsureModelNameWithNamespaceIfNeeded(
-                projectName,
-                apiGroupName,
-                customPaginationItemsSchema.GetModelName(),
-                isShared: false,
-                isClient);
-        }
-
-        var customPaginationTypeName = customPaginationSchema.GetModelName();
-        return $"{customPaginationTypeName}<{itemTypeName}>";
+        return null;
     }
 
     public static bool IsModelOfTypeArray(
@@ -141,7 +106,7 @@ public static class OpenApiSchemaExtensions
         if (modelType is null &&
             apiSchema.Reference?.Id is not null)
         {
-            var (key, value) = modelSchemas.FirstOrDefault(x => x.Key.Equals(apiSchema.Reference.Id, StringComparison.OrdinalIgnoreCase));
+            var (key, value) = modelSchemas.FirstOrDefault(x => x.GetFormattedKey().Equals(apiSchema.Reference.Id, StringComparison.OrdinalIgnoreCase));
             if (key is not null)
             {
                 return value.Type is not null &&
@@ -161,23 +126,32 @@ public static class OpenApiSchemaExtensions
     public static bool IsTypeCustomPagination(
         this OpenApiSchema schema)
     {
-        if (schema is null)
-        {
-            throw new ArgumentNullException(nameof(schema));
-        }
+        ArgumentNullException.ThrowIfNull(schema);
 
         if (schema.AllOf.Count == 2)
         {
             if (schema.AllOf[0].Reference?.Id is null &&
                 schema.AllOf[1].Reference?.Id is not null)
             {
-                return true;
+                var dataType = schema.AllOf[1].Reference?.Id.PascalCase(ApiOperationExtractor.ModelNameSeparators, removeSeparators: true);
+                if (dataType is not null &&
+                    (dataType.Contains(NameConstants.Pagination, StringComparison.Ordinal) ||
+                    dataType.Contains("Paginated", StringComparison.Ordinal)))
+                {
+                    return true;
+                }
             }
 
             if (schema.AllOf[0].Reference?.Id is not null &&
                 schema.AllOf[1].Reference?.Id is null)
             {
-                return true;
+                var dataType = schema.AllOf[0].Reference?.Id.PascalCase(ApiOperationExtractor.ModelNameSeparators, removeSeparators: true);
+                if (dataType is not null &&
+                    (dataType.Contains(NameConstants.Pagination, StringComparison.Ordinal) ||
+                    dataType.Contains("Paginated", StringComparison.Ordinal)))
+                {
+                    return true;
+                }
             }
         }
 
@@ -217,7 +191,7 @@ public static class OpenApiSchemaExtensions
             summery = defaultSummary;
         }
 
-        return summery.EnsureEndsWithDot();
+        return summery.EnsureFormatForDocumentationTag();
     }
 
     public static string? ExtractDocumentationTagRemark(

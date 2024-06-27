@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 🛒 Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.PAT_WORKFLOWS }}
@@ -27,10 +27,10 @@ jobs:
         with:
           setAllVars: true
 
-      - name: ⚙️ Setup dotnet 6.0.x
-        uses: actions/setup-dotnet@v1
+      - name: ⚙️ Setup dotnet 8.0.x
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: '8.0.x'
 
       - name: 🧹 Clean
         run: dotnet clean -c Release && dotnet nuget locals all --clear

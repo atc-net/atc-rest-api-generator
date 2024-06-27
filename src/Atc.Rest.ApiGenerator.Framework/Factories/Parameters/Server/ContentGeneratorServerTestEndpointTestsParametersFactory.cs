@@ -22,6 +22,7 @@ public static class ContentGeneratorServerTestEndpointTestsParametersFactory
                     new(
                         GenericTypeName: null,
                         TypeName: "WebApiStartupFactory",
+                        IsNullableType: false,
                         Name: "fixture",
                         DefaultValue: null,
                         PassToInheritedClass: true,
@@ -54,7 +55,7 @@ public static class ContentGeneratorServerTestEndpointTestsParametersFactory
                 AttributeParametersFactory.Create("Collection", "\"Sequential-Endpoints\""),
                 AttributeParametersFactory.Create("Trait", "Traits.Category, Traits.Categories.Integration"),
             },
-            AccessModifiers.Public,
+            AccessModifiers.PublicClass,
             ClassTypeName: $"{operationName}{ContentGeneratorConstants.Tests}",
             GenericTypeName: null,
             InheritedClassTypeName: "WebApiControllerBaseTest",

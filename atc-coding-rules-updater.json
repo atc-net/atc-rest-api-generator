@@ -1,7 +1,25 @@
 {
-  "projectTarget": "DotNet5",
-	"mappings": {
-		"src": { "paths": [ "src" ] },
-		"test": { "paths": [ "test" ] }
-	}
+  "projectTarget": "DotNet8",
+  "useLatestMinorNugetVersion": true,
+  "useTemporarySuppressions": false,
+  "temporarySuppressionAsExcel": false,
+  "analyzerProviderCollectingMode": "LocalCache",
+  "mappings": {
+    "sample": {
+      "paths": [
+        "sample-minimal",
+        "sample-mvc"
+      ]
+    },
+    "src": {
+      "paths": [
+        "src"
+      ]
+    },
+    "test": {
+      "paths": [
+        "test"
+      ]
+    }
+  }
 }

@@ -2,6 +2,7 @@ namespace Atc.Rest.ApiGenerator.CLI.Commands;
 
 public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
 {
+    private readonly ILoggerFactory loggerFactory;
     private readonly ILogger<GenerateServerAllCommand> logger;
     private readonly IApiOperationExtractor apiOperationExtractor;
     private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
@@ -9,13 +10,14 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
     private readonly IOpenApiDocumentValidator openApiDocumentValidator;
 
     public GenerateServerAllCommand(
-        ILogger<GenerateServerAllCommand> logger,
+        ILoggerFactory loggerFactory,
         IApiOperationExtractor apiOperationExtractor,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
         IAtcCodingRulesUpdater atcCodingRulesUpdater,
         IOpenApiDocumentValidator openApiDocumentValidator)
     {
-        this.logger = logger;
+        this.loggerFactory = loggerFactory;
+        logger = loggerFactory.CreateLogger<GenerateServerAllCommand>();
         this.apiOperationExtractor = apiOperationExtractor;
         this.nugetPackageReferenceProvider = nugetPackageReferenceProvider;
         this.atcCodingRulesUpdater = atcCodingRulesUpdater;
@@ -62,6 +64,16 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
         var shouldScaffoldCodingRules = CodingRulesHelper.ShouldScaffoldCodingRules(outputSlnPath, settings.DisableCodingRules);
         var isUsingCodingRules = CodingRulesHelper.IsUsingCodingRules(outputSlnPath, settings.DisableCodingRules);
 
+        if (settings.AspNetOutputType.IsSet)
+        {
+            apiOptions.Generator.AspNetOutputType = settings.AspNetOutputType.Value;
+        }
+
+        if (settings.SwaggerThemeMode.IsSet)
+        {
+            apiOptions.Generator.SwaggerThemeMode = settings.SwaggerThemeMode.Value;
+        }
+
         if (shouldScaffoldCodingRules &&
             !NetworkInformationHelper.HasHttpConnection())
         {
@@ -73,28 +85,30 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
         {
             if (!openApiDocumentValidator.IsValid(
                     apiOptions.Validation,
+                    apiOptions.IncludeDeprecated,
                     apiDocumentContainer))
             {
                 return ConsoleExitStatusCodes.Failure;
             }
 
             if (!GenerateHelper.GenerateServerApi(
-                    logger,
-                    apiOperationExtractor,
-                    nugetPackageReferenceProvider,
-                    projectPrefixName,
-                    outputSrcPath,
-                    outputTestPath,
-                    apiDocumentContainer,
-                    apiOptions,
-                    isUsingCodingRules,
-                    settings.RemoveNamespaceGroupSeparatorInGlobalUsings))
+                loggerFactory,
+                apiOperationExtractor,
+                nugetPackageReferenceProvider,
+                projectPrefixName,
+                outputSrcPath,
+                outputTestPath,
+                apiDocumentContainer,
+                apiOptions,
+                isUsingCodingRules,
+                settings.RemoveNamespaceGroupSeparatorInGlobalUsings))
             {
                 return ConsoleExitStatusCodes.Failure;
             }
 
             if (!GenerateHelper.GenerateServerDomain(
-                    logger,
+                    loggerFactory,
+                    apiOperationExtractor,
                     nugetPackageReferenceProvider,
                     projectPrefixName,
                     outputSrcPath,
@@ -109,7 +123,8 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
             }
 
             if (!GenerateHelper.GenerateServerHost(
-                    logger,
+                    loggerFactory,
+                    apiOperationExtractor,
                     nugetPackageReferenceProvider,
                     projectPrefixName,
                     outputSrcPath,
@@ -125,11 +140,12 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
             }
 
             if (!GenerateHelper.GenerateServerSln(
-                    logger,
+                    loggerFactory,
                     projectPrefixName,
                     outputSlnPath,
                     outputSrcPath,
-                    outputTestPath))
+                    outputTestPath,
+                    apiOptions.Generator.AspNetOutputType))
             {
                 return ConsoleExitStatusCodes.Failure;
             }
@@ -138,7 +154,7 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
                 !atcCodingRulesUpdater.Scaffold(
                     outputSlnPath,
                     outputSrcPath,
-                    outputTestPath))
+                    apiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc ? outputTestPath : null))
             {
                 return ConsoleExitStatusCodes.Failure;
             }

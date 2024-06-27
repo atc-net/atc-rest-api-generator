@@ -1,20 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc" Version="2.0.360" />
-    <PackageReference Include="Atc.CodeDocumentation" Version="2.0.360" />
-    <PackageReference Include="Atc.OpenApi" Version="2.0.360" />
-    <PackageReference Include="Microsoft.OpenApi" Version="1.6.9" />
-    <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.6.9" />
+    <PackageReference Include="Atc" Version="2.0.488" />
+    <PackageReference Include="Atc.CodeDocumentation" Version="2.0.488" />
+    <PackageReference Include="Atc.OpenApi" Version="2.0.488" />
+    <PackageReference Include="Microsoft.OpenApi" Version="1.6.15" />
+    <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.6.15" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Atc.Rest.ApiGenerator.Framework.Contracts\Atc.Rest.ApiGenerator.Framework.Contracts.csproj" />
+    <ProjectReference Include="..\Atc.Rest.ApiGenerator.Contracts\Atc.Rest.ApiGenerator.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

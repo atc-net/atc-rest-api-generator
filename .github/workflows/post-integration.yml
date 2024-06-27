@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 🛒 Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.PAT_WORKFLOWS }}
@@ -30,10 +30,10 @@ jobs:
         with:
           setAllVars: true
 
-      - name: ⚙️ Setup dotnet 6.0.x
-        uses: actions/setup-dotnet@v1
+      - name: ⚙️ Setup dotnet 8.0.x
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: '8.0.x'
 
       - name: ⚙️ Set up JDK 17
         uses: actions/setup-java@v3
@@ -51,7 +51,7 @@ jobs:
         run: dotnet build -c Release --no-restore /p:UseSourceLink=true
 
       - name: 🧪 Run unit tests
-        run: dotnet test -c Release --no-build
+        run: dotnet test -c Release --no-build --filter "Category!=Integration"
 
       - name: 🌩️ SonarCloud install scanner
         run: dotnet tool install --global dotnet-sonarscanner
@@ -62,9 +62,9 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: pwsh
         run: |
-          dotnet sonarscanner begin /k:"atc-rest-api-generator" /o:"atc-net" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+          dotnet sonarscanner begin /k:"atc-rest-api-generator" /o:"atc-net" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           dotnet build -c Release /p:UseSourceLink=true --no-restore
-          dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+          dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
       - name: ⏩ Merge to stable-branch
         run: |

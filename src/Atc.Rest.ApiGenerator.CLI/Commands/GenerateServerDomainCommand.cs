@@ -2,16 +2,21 @@ namespace Atc.Rest.ApiGenerator.CLI.Commands;
 
 public class GenerateServerDomainCommand : AsyncCommand<ServerDomainCommandSettings>
 {
+    private readonly ILoggerFactory loggerFactory;
     private readonly ILogger<GenerateServerDomainCommand> logger;
+    private readonly IApiOperationExtractor apiOperationExtractor;
     private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
     private readonly IOpenApiDocumentValidator openApiDocumentValidator;
 
     public GenerateServerDomainCommand(
-        ILogger<GenerateServerDomainCommand> logger,
+        ILoggerFactory loggerFactory,
+        IApiOperationExtractor apiOperationExtractor,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
         IOpenApiDocumentValidator openApiDocumentValidator)
     {
-        this.logger = logger;
+        this.loggerFactory = loggerFactory;
+        logger = loggerFactory.CreateLogger<GenerateServerDomainCommand>();
+        this.apiOperationExtractor = apiOperationExtractor;
         this.nugetPackageReferenceProvider = nugetPackageReferenceProvider;
         this.openApiDocumentValidator = openApiDocumentValidator;
     }
@@ -52,6 +57,11 @@ public class GenerateServerDomainCommand : AsyncCommand<ServerDomainCommandSetti
         var shouldScaffoldCodingRules = CodingRulesHelper.ShouldScaffoldCodingRules(settings.OutputPath, settings.DisableCodingRules);
         var isUsingCodingRules = CodingRulesHelper.IsUsingCodingRules(settings.OutputPath, settings.DisableCodingRules);
 
+        if (settings.AspNetOutputType.IsSet)
+        {
+            apiOptions.Generator.AspNetOutputType = settings.AspNetOutputType.Value;
+        }
+
         if (shouldScaffoldCodingRules &&
             !NetworkInformationHelper.HasHttpConnection())
         {
@@ -63,13 +73,15 @@ public class GenerateServerDomainCommand : AsyncCommand<ServerDomainCommandSetti
         {
             if (!openApiDocumentValidator.IsValid(
                     apiOptions.Validation,
+                    apiOptions.IncludeDeprecated,
                     apiDocumentContainer))
             {
                 return ConsoleExitStatusCodes.Failure;
             }
 
             if (!GenerateHelper.GenerateServerDomain(
-                    logger,
+                    loggerFactory,
+                    apiOperationExtractor,
                     nugetPackageReferenceProvider,
                     settings.ProjectPrefixName,
                     new DirectoryInfo(settings.OutputPath),

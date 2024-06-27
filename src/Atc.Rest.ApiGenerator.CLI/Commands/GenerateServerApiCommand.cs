@@ -2,18 +2,20 @@ namespace Atc.Rest.ApiGenerator.CLI.Commands;
 
 public class GenerateServerApiCommand : AsyncCommand<ServerApiCommandSettings>
 {
+    private readonly ILoggerFactory loggerFactory;
     private readonly ILogger<GenerateServerApiCommand> logger;
     private readonly IApiOperationExtractor apiOperationExtractor;
     private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
     private readonly IOpenApiDocumentValidator openApiDocumentValidator;
 
     public GenerateServerApiCommand(
-        ILogger<GenerateServerApiCommand> logger,
+        ILoggerFactory loggerFactory,
         IApiOperationExtractor apiOperationExtractor,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
         IOpenApiDocumentValidator openApiDocumentValidator)
     {
-        this.logger = logger;
+        this.loggerFactory = loggerFactory;
+        logger = loggerFactory.CreateLogger<GenerateServerApiCommand>();
         this.apiOperationExtractor = apiOperationExtractor;
         this.nugetPackageReferenceProvider = nugetPackageReferenceProvider;
         this.openApiDocumentValidator = openApiDocumentValidator;
@@ -55,6 +57,11 @@ public class GenerateServerApiCommand : AsyncCommand<ServerApiCommandSettings>
         var shouldScaffoldCodingRules = CodingRulesHelper.ShouldScaffoldCodingRules(settings.OutputPath, settings.DisableCodingRules);
         var isUsingCodingRules = CodingRulesHelper.IsUsingCodingRules(settings.OutputPath, settings.DisableCodingRules);
 
+        if (settings.AspNetOutputType.IsSet)
+        {
+            apiOptions.Generator.AspNetOutputType = settings.AspNetOutputType.Value;
+        }
+
         if (shouldScaffoldCodingRules &&
             !NetworkInformationHelper.HasHttpConnection())
         {
@@ -66,13 +73,14 @@ public class GenerateServerApiCommand : AsyncCommand<ServerApiCommandSettings>
         {
             if (!openApiDocumentValidator.IsValid(
                     apiOptions.Validation,
+                    apiOptions.IncludeDeprecated,
                     apiDocumentContainer))
             {
                 return ConsoleExitStatusCodes.Failure;
             }
 
             if (!GenerateHelper.GenerateServerApi(
-                    logger,
+                    loggerFactory,
                     apiOperationExtractor,
                     nugetPackageReferenceProvider,
                     settings.ProjectPrefixName,

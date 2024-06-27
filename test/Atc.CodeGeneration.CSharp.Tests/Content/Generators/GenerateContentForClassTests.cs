@@ -40,8 +40,10 @@ public class UpdateAccountRequest
                 GenericTypeName: null,
                 IsGenericListType: false,
                 TypeName: "string",
+                IsNullableType: false,
                 IsReferenceType: false,
                 Name: "Name",
+                JsonName: null,
                 DefaultValue: null,
                 UseAutoProperty: true,
                 UseGet: true,
@@ -55,7 +57,7 @@ public class UpdateAccountRequest
             Namespace: "Demo.Api.Generated.Contracts.Accounts",
             DocumentationTags: documentationTags,
             Attributes: AttributesWithGeneratedCode,
-            AccessModifier: AccessModifiers.Public,
+            AccessModifier: AccessModifiers.PublicClass,
             ClassTypeName: "UpdateAccountRequest",
             GenericTypeName: null,
             InheritedClassTypeName: null,
@@ -130,8 +132,10 @@ public class UpdateAccountNameParameters
                 GenericTypeName: null,
                 IsGenericListType: false,
                 TypeName: "Guid",
+                IsNullableType: false,
                 IsReferenceType: false,
                 Name: "AccountId",
+                JsonName: null,
                 DefaultValue: null,
                 UseAutoProperty: true,
                 UseGet: true,
@@ -148,8 +152,10 @@ public class UpdateAccountNameParameters
                 GenericTypeName: null,
                 IsGenericListType: false,
                 TypeName: "string",
+                IsNullableType: false,
                 IsReferenceType: false,
                 Name: "Name",
+                JsonName: null,
                 DefaultValue: null,
                 UseAutoProperty: true,
                 UseGet: true,
@@ -163,7 +169,7 @@ public class UpdateAccountNameParameters
             Namespace: "Demo.Api.Generated.Contracts.Accounts",
             DocumentationTags: documentationTags,
             Attributes: AttributesWithGeneratedCode,
-            AccessModifier: AccessModifiers.Public,
+            AccessModifier: AccessModifiers.PublicClass,
             ClassTypeName: "UpdateAccountNameParameters",
             GenericTypeName: null,
             InheritedClassTypeName: null,
@@ -244,7 +250,7 @@ public class AccountsController : ControllerBase
             new("Authorize", null),
             new("ApiController", null),
             new("Route", "\"/api/v1/accounts\""),
-            AttributesWithGeneratedCode.First(),
+            AttributesWithGeneratedCode[0],
         };
 
         var methodParameters = new List<MethodParameters>
@@ -265,9 +271,9 @@ public class AccountsController : ControllerBase
                 Name: "UpdateAccountName",
                 Parameters: new List<ParameterBaseParameters>
                 {
-                    new(null, null, false, "UpdateAccountNameParameters", true, "parameters", null),
-                    new(new List<AttributeParameters> { new("FromServices", null) }, null, false, "IUpdateAccountNameHandler", true, "handler", null),
-                    new(null, null, false, "CancellationToken", false, "cancellationToken", null),
+                    new(null, null, false, "UpdateAccountNameParameters", false, true, "parameters", null),
+                    new(new List<AttributeParameters> { new("FromServices", null) }, null, false, "IUpdateAccountNameHandler", false, true, "handler", null),
+                    new(null, null, false, "CancellationToken", false, false, "cancellationToken", null),
                 },
                 AlwaysBreakDownParameters: false,
                 UseExpressionBody: true,
@@ -288,9 +294,9 @@ public class AccountsController : ControllerBase
                 Name: "SetAccountName",
                 Parameters: new List<ParameterBaseParameters>
                 {
-                    new(null, null, false, "SetAccountNameParameters", true, "parameters", null),
-                    new(new List<AttributeParameters> { new("FromServices", null) }, null, false, "ISetAccountNameHandler", true, "handler", null),
-                    new(null, null, false, "CancellationToken", false, "cancellationToken", null),
+                    new(null, null, false, "SetAccountNameParameters", false, true, "parameters", null),
+                    new(new List<AttributeParameters> { new("FromServices", null) }, null, false, "ISetAccountNameHandler", false, true, "handler", null),
+                    new(null, null, false, "CancellationToken", false, false, "cancellationToken", null),
                 },
                 AlwaysBreakDownParameters: false,
                 UseExpressionBody: true,
@@ -302,7 +308,7 @@ public class AccountsController : ControllerBase
             Namespace: "Demo.Api.Generated.Endpoints",
             DocumentationTags: documentationTags,
             Attributes: attributes,
-            AccessModifier: AccessModifiers.Public,
+            AccessModifier: AccessModifiers.PublicClass,
             ClassTypeName: "AccountsController",
             GenericTypeName: null,
             InheritedClassTypeName: "ControllerBase",
@@ -374,6 +380,7 @@ public class UpdateAccountNameResult : ResultBase
                     new(
                         GenericTypeName: null,
                         TypeName: "ActionResult",
+                        IsNullableType: false,
                         Name: "result",
                         DefaultValue: null,
                         PassToInheritedClass: true,
@@ -391,7 +398,7 @@ public class UpdateAccountNameResult : ResultBase
                 ReturnGenericTypeName: null,
                 ReturnTypeName: "UpdateAccountNameResult",
                 Name: "Ok",
-                Parameters: new List<ParameterBaseParameters> { new(null, null, false, "string?", false, "message", "null") },
+                Parameters: new List<ParameterBaseParameters> { new(null, null, false, "string", true, false, "message", "null") },
                 AlwaysBreakDownParameters: false,
                 UseExpressionBody: true,
                 Content: "new UpdateAccountNameResult(new OkObjectResult(message))"),
@@ -402,7 +409,7 @@ public class UpdateAccountNameResult : ResultBase
                 ReturnGenericTypeName: null,
                 ReturnTypeName: null,
                 Name: "UpdateAccountNameResult",
-                Parameters: new List<ParameterBaseParameters> { new(null, null, false, "string", false, "response", null) },
+                Parameters: new List<ParameterBaseParameters> { new(null, null, false, "string", false, false, "response", null) },
                 AlwaysBreakDownParameters: false,
                 UseExpressionBody: true,
                 Content: "Ok(response)"),
@@ -413,7 +420,7 @@ public class UpdateAccountNameResult : ResultBase
             Namespace: "Demo.Api.Generated.Contracts.Accounts",
             DocumentationTags: documentationTags,
             Attributes: AttributesWithGeneratedCode,
-            AccessModifier: AccessModifiers.Public,
+            AccessModifier: AccessModifiers.PublicClass,
             ClassTypeName: "UpdateAccountNameResult",
             GenericTypeName: null,
             InheritedClassTypeName: "ResultBase",
@@ -469,7 +476,7 @@ public class CreateLocationEndpoint : ICreateLocationEndpoint
         CreateLocationParameters parameters,
         CancellationToken cancellationToken = default)
     {
-        var client = factory.CreateClient(""ERUT-ApiClient"");
+        var client = factory.CreateClient(""ApiClient"");
 
         var requestBuilder = httpMessageFactory.FromTemplate(""/api/v1/locations"");
         requestBuilder.WithBody(parameters.Request);
@@ -492,7 +499,7 @@ public class CreateLocationEndpoint : ICreateLocationEndpoint
             "Client Endpoint.\r\nDescription: Create a new location.\r\nOperation: CreateLocation.");
 
         const string executeMethodContent =
-            @"var client = factory.CreateClient(""ERUT-ApiClient"");
+            @"var client = factory.CreateClient(""ApiClient"");
 
 var requestBuilder = httpMessageFactory.FromTemplate(""/api/v1/locations"");
 requestBuilder.WithBody(parameters.Request);
@@ -522,6 +529,7 @@ return await responseBuilder.BuildResponseAsync(x => new CreateLocationEndpointR
                     new(
                         GenericTypeName: null,
                         TypeName: "IHttpClientFactory",
+                        IsNullableType: false,
                         Name: "factory",
                         DefaultValue: null,
                         PassToInheritedClass: false,
@@ -530,6 +538,7 @@ return await responseBuilder.BuildResponseAsync(x => new CreateLocationEndpointR
                     new(
                         GenericTypeName: null,
                         TypeName: "IHttpMessageFactory",
+                        IsNullableType: false,
                         Name: "httpMessageFactory",
                         DefaultValue: null,
                         PassToInheritedClass: false,
@@ -554,6 +563,7 @@ return await responseBuilder.BuildResponseAsync(x => new CreateLocationEndpointR
                         GenericTypeName: null,
                         IsGenericListType: false,
                         TypeName: "CreateLocationParameters",
+                        IsNullableType: false,
                         IsReferenceType: true,
                         Name: "parameters",
                         DefaultValue: null),
@@ -562,6 +572,7 @@ return await responseBuilder.BuildResponseAsync(x => new CreateLocationEndpointR
                         GenericTypeName: null,
                         IsGenericListType: false,
                         TypeName: "CancellationToken",
+                        IsNullableType: false,
                         IsReferenceType: true,
                         Name: "cancellationToken",
                         DefaultValue: "default"),
@@ -576,7 +587,7 @@ return await responseBuilder.BuildResponseAsync(x => new CreateLocationEndpointR
             Namespace: "XXX.ApiClient.Generated.Endpoints",
             DocumentationTags: documentationTags,
             Attributes: AttributesWithGeneratedCode,
-            AccessModifier: AccessModifiers.Public,
+            AccessModifier: AccessModifiers.PublicClass,
             ClassTypeName: "CreateLocationEndpoint",
             GenericTypeName: null,
             InheritedClassTypeName: "ICreateLocationEndpoint",
@@ -615,7 +626,7 @@ namespace XXX.ApiClient.Generated.Endpoints;
 /// Operation: CreateLocation.
 /// </summary>
 [GeneratedCode(""ApiGenerator"", ""X.X.X.X"")]
-public class CreateLocationEndpointResult : EndpointResponse, ICreateLocationEndpointResult
+public class CreateLocationEndpointResult : EndpointResponse
 {
     public CreateLocationEndpointResult(EndpointResponse response)
         : base(response)
@@ -679,6 +690,7 @@ public class CreateLocationEndpointResult : EndpointResponse, ICreateLocationEnd
                     new(
                         GenericTypeName: null,
                         TypeName: "EndpointResponse",
+                        IsNullableType: false,
                         Name: "response",
                         DefaultValue: null,
                         PassToInheritedClass: true,
@@ -696,8 +708,10 @@ public class CreateLocationEndpointResult : EndpointResponse, ICreateLocationEnd
                 GenericTypeName: null,
                 IsGenericListType: false,
                 TypeName: "bool",
+                IsNullableType: false,
                 IsReferenceType: false,
                 Name: "IsOk",
+                JsonName: null,
                 DefaultValue: null,
                 UseAutoProperty: false,
                 UseGet: false,
@@ -711,8 +725,10 @@ public class CreateLocationEndpointResult : EndpointResponse, ICreateLocationEnd
                 GenericTypeName: null,
                 IsGenericListType: false,
                 TypeName: "bool",
+                IsNullableType: false,
                 IsReferenceType: false,
                 Name: "IsBadRequest",
+                JsonName: null,
                 DefaultValue: null,
                 UseAutoProperty: false,
                 UseGet: false,
@@ -726,8 +742,10 @@ public class CreateLocationEndpointResult : EndpointResponse, ICreateLocationEnd
                 GenericTypeName: null,
                 IsGenericListType: false,
                 TypeName: "bool",
+                IsNullableType: false,
                 IsReferenceType: false,
                 Name: "IsUnauthorized",
+                JsonName: null,
                 DefaultValue: null,
                 UseAutoProperty: false,
                 UseGet: false,
@@ -741,8 +759,10 @@ public class CreateLocationEndpointResult : EndpointResponse, ICreateLocationEnd
                 GenericTypeName: null,
                 IsGenericListType: false,
                 TypeName: "bool",
+                IsNullableType: false,
                 IsReferenceType: false,
                 Name: "IsForbidden",
+                JsonName: null,
                 DefaultValue: null,
                 UseAutoProperty: false,
                 UseGet: false,
@@ -756,8 +776,10 @@ public class CreateLocationEndpointResult : EndpointResponse, ICreateLocationEnd
                 GenericTypeName: null,
                 IsGenericListType: false,
                 TypeName: "bool",
+                IsNullableType: false,
                 IsReferenceType: false,
                 Name: "IsInternalServerError",
+                JsonName: null,
                 DefaultValue: null,
                 UseAutoProperty: false,
                 UseGet: false,
@@ -771,8 +793,10 @@ public class CreateLocationEndpointResult : EndpointResponse, ICreateLocationEnd
                 GenericTypeName: null,
                 IsGenericListType: false,
                 TypeName: "Location",
+                IsNullableType: false,
                 IsReferenceType: false,
                 Name: "OkContent",
+                JsonName: null,
                 DefaultValue: null,
                 UseAutoProperty: false,
                 UseGet: false,
@@ -786,8 +810,10 @@ public class CreateLocationEndpointResult : EndpointResponse, ICreateLocationEnd
                 GenericTypeName: null,
                 IsGenericListType: false,
                 TypeName: "ValidationProblemDetails",
+                IsNullableType: false,
                 IsReferenceType: false,
                 Name: "BadRequestContent",
+                JsonName: null,
                 DefaultValue: null,
                 UseAutoProperty: false,
                 UseGet: false,
@@ -801,8 +827,10 @@ public class CreateLocationEndpointResult : EndpointResponse, ICreateLocationEnd
                 GenericTypeName: null,
                 IsGenericListType: false,
                 TypeName: "ProblemDetails",
+                IsNullableType: false,
                 IsReferenceType: false,
                 Name: "UnauthorizedContent",
+                JsonName: null,
                 DefaultValue: null,
                 UseAutoProperty: false,
                 UseGet: false,
@@ -816,8 +844,10 @@ public class CreateLocationEndpointResult : EndpointResponse, ICreateLocationEnd
                 GenericTypeName: null,
                 IsGenericListType: false,
                 TypeName: "ProblemDetails",
+                IsNullableType: false,
                 IsReferenceType: false,
                 Name: "ForbiddenContent",
+                JsonName: null,
                 DefaultValue: null,
                 UseAutoProperty: false,
                 UseGet: false,
@@ -831,8 +861,10 @@ public class CreateLocationEndpointResult : EndpointResponse, ICreateLocationEnd
                 GenericTypeName: null,
                 IsGenericListType: false,
                 TypeName: "ProblemDetails",
+                IsNullableType: false,
                 IsReferenceType: false,
                 Name: "InternalServerErrorContent",
+                JsonName: null,
                 DefaultValue: null,
                 UseAutoProperty: false,
                 UseGet: false,
@@ -846,12 +878,12 @@ public class CreateLocationEndpointResult : EndpointResponse, ICreateLocationEnd
             Namespace: "XXX.ApiClient.Generated.Endpoints",
             DocumentationTags: documentationTags,
             Attributes: AttributesWithGeneratedCode,
-            AccessModifier: AccessModifiers.Public,
+            AccessModifier: AccessModifiers.PublicClass,
             ClassTypeName: "CreateLocationEndpointResult",
             GenericTypeName: null,
             InheritedClassTypeName: "EndpointResponse",
             InheritedGenericClassTypeName: null,
-            InheritedInterfaceTypeName: "ICreateLocationEndpointResult",
+            InheritedInterfaceTypeName: null,
             Constructors: constructorParameters,
             Properties: propertyParameters,
             Methods: null,

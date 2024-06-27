@@ -41,6 +41,7 @@ public class ValidateSchemaCommand : AsyncCommand<BaseSchemaCommandSettings>
         {
             if (!openApiDocumentValidator.IsValid(
                     apiOptions.Validation,
+                    apiOptions.IncludeDeprecated,
                     apiDocumentContainer))
             {
                 return ConsoleExitStatusCodes.Failure;

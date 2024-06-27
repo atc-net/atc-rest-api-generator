@@ -29,6 +29,7 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
                     GenericTypeName: null,
                     IsGenericListType: false,
                     TypeName: $"{operationName}{ContentGeneratorConstants.Parameters}",
+                    IsNullableType: false,
                     IsReferenceType: true,
                     Name: "parameters",
                     DefaultValue: null));
@@ -40,6 +41,7 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
                 GenericTypeName: null,
                 IsGenericListType: false,
                 TypeName: "CancellationToken",
+                IsNullableType: false,
                 IsReferenceType: true,
                 Name: "cancellationToken",
                 DefaultValue: "default"));
@@ -68,7 +70,7 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
             @namespace,
             DocumentationTags: null,
             new List<AttributeParameters> { codeGeneratorAttribute },
-            AccessModifiers.Public,
+            AccessModifiers.PublicClass,
             ClassTypeName: $"{operationName}{ContentGeneratorConstants.HandlerStub}",
             GenericTypeName: null,
             InheritedClassTypeName: inheritedClassTypeName,

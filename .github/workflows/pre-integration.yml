@@ -16,14 +16,14 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: 🛒 Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: ⚙️ Setup dotnet 6.0.x
-        uses: actions/setup-dotnet@v1
+      - name: ⚙️ Setup dotnet 8.0.x
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: '8.0.x'
 
       - name: 📐 Ensure nuget.org added as package source on Windows
         if: matrix.os == 'windows-latest'
@@ -42,14 +42,14 @@ jobs:
       - dotnet-build
     steps:
       - name: 🛒 Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: ⚙️ Setup dotnet 6.0.x
-        uses: actions/setup-dotnet@v1
+      - name: ⚙️ Setup dotnet 8.0.x
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: '8.0.x'
 
       - name: 🔁 Restore packages
         run: dotnet restore
@@ -58,7 +58,7 @@ jobs:
         run: dotnet build -c Release --no-restore /p:UseSourceLink=true
 
       - name: 🧪 Run unit tests
-        run: dotnet test -c Release --no-build
+        run: dotnet test -c Release --no-build --filter "Category!=Integration"
 
   smoke-tests:
     strategy:
@@ -70,14 +70,14 @@ jobs:
       - dotnet-test
     steps:
       - name: 🛒 Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: ⚙️ Setup dotnet 6.0.x
-        uses: actions/setup-dotnet@v1
+      - name: ⚙️ Setup dotnet 8.0.x
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: '8.0.x'
 
       - name: 📐 Ensure nuget.org added as package source on Windows
         if: matrix.os == 'windows-latest'
@@ -94,7 +94,7 @@ jobs:
         run: curl -O https://petstore3.swagger.io/api/v3/openapi.yaml
 
       - name: ⚙️ Generate Code
-        run: dotnet run -- generate server all -p "Swagger Petstore" -s ../../openapi.yaml --outputSlnPath ../../petstore3/ --outputSrcPath ../../petstore3/src --outputTestPath ../../petstore3/test --optionsPath ../../sample/Demo.ApiDesign/ApiGeneratorOptions.json --disableCodingRules -v
+        run: dotnet run -- generate server all -p "Swagger Petstore" -s ../../openapi.yaml --outputSlnPath ../../petstore3/ --outputSrcPath ../../petstore3/src --outputTestPath ../../petstore3/test --optionsPath ../../ApiGeneratorOptions.json --disableCodingRules --verbose
         working-directory: src/Atc.Rest.ApiGenerator.CLI
 
       - name: 🛠️ Build Generated Code

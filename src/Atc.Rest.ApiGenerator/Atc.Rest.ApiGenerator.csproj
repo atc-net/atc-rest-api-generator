@@ -1,35 +1,29 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <PackageId>Atc.Rest.ApiGenerator</PackageId>
     <PackageTags>rest;api;netstandard;generator</PackageTags>
     <Description>Atc.Rest.ApiGenerator is a WebApi C# code generator using a OpenApi 3.0.x specification YAML file.</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc" Version="2.0.360" />
-    <PackageReference Include="Atc.CodeAnalysis.CSharp" Version="2.0.360" />
-    <PackageReference Include="Atc.Console.Spectre" Version="2.0.360" />
-    <PackageReference Include="Atc.DotNet" Version="2.0.360" />
-    <PackageReference Include="Atc.OpenApi" Version="2.0.360" />
-    <PackageReference Include="Atc.Rest.Client" Version="1.0.55" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.7.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
-    <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.6.9" />
+    <PackageReference Include="Atc" Version="2.0.488" />
+    <PackageReference Include="Atc.CodeAnalysis.CSharp" Version="2.0.488" />
+    <PackageReference Include="Atc.Console.Spectre" Version="2.0.488" />
+    <PackageReference Include="Atc.DotNet" Version="2.0.488" />
+    <PackageReference Include="Atc.OpenApi" Version="2.0.488" />
+    <PackageReference Include="Atc.Rest.Client" Version="1.0.69" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.10.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.6.15" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\launchSettingsExtended.json" />
-    <EmbeddedResource Include="Resources\launchSettings.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Atc.CodeGeneration.CSharp\Atc.CodeGeneration.CSharp.csproj" />
-    <ProjectReference Include="..\Atc.Rest.ApiGenerator.Framework.Contracts\Atc.Rest.ApiGenerator.Framework.Contracts.csproj" />
+    <ProjectReference Include="..\Atc.Rest.ApiGenerator.Client.CSharp\Atc.Rest.ApiGenerator.Client.CSharp.csproj" />
+    <ProjectReference Include="..\Atc.Rest.ApiGenerator.Contracts\Atc.Rest.ApiGenerator.Contracts.csproj" />
+    <ProjectReference Include="..\Atc.Rest.ApiGenerator.Framework.Minimal\Atc.Rest.ApiGenerator.Framework.Minimal.csproj" />
     <ProjectReference Include="..\Atc.Rest.ApiGenerator.Framework.Mvc\Atc.Rest.ApiGenerator.Framework.Mvc.csproj" />
-    <ProjectReference Include="..\Atc.Rest.ApiGenerator.OpenApi\Atc.Rest.ApiGenerator.OpenApi.csproj" />
-    <ProjectReference Include="..\Atc.Rest.ApiGenerator.Projects\Atc.Rest.ApiGenerator.Projects.csproj" />
   </ItemGroup>
 
 </Project>

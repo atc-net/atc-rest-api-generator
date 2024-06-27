@@ -4,7 +4,7 @@ namespace Atc.Rest.ApiGenerator.Helpers;
 public static class GenerateHelper
 {
     public static bool GenerateServerApi(
-        ILogger logger,
+        ILoggerFactory loggerFactory,
         IApiOperationExtractor apiOperationExtractor,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
         string projectPrefixName,
@@ -15,7 +15,6 @@ public static class GenerateHelper
         bool useCodingRules,
         bool removeNamespaceGroupSeparatorInGlobalUsings)
     {
-        ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(apiOperationExtractor);
         ArgumentNullException.ThrowIfNull(projectPrefixName);
         ArgumentNullException.ThrowIfNull(outputPath);
@@ -32,12 +31,20 @@ public static class GenerateHelper
             apiOptions,
             useCodingRules,
             removeNamespaceGroupSeparatorInGlobalUsings);
-        var serverApiGenerator = new ServerApiGenerator(logger, apiOperationExtractor, nugetPackageReferenceProvider, projectOptions);
-        return serverApiGenerator.Generate();
+        var serverApiGenerator = new ServerApiGenerator(loggerFactory, apiOperationExtractor, nugetPackageReferenceProvider, projectOptions);
+
+        var generateResult = false;
+        TaskHelper.RunSync(async () =>
+        {
+            generateResult = await serverApiGenerator.Generate();
+        });
+
+        return generateResult;
     }
 
     public static bool GenerateServerDomain(
-        ILogger logger,
+        ILoggerFactory loggerFactory,
+        IApiOperationExtractor apiOperationExtractor,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
         string projectPrefixName,
         DirectoryInfo outputSourcePath,
@@ -48,7 +55,6 @@ public static class GenerateHelper
         bool removeNamespaceGroupSeparatorInGlobalUsings,
         DirectoryInfo apiPath)
     {
-        ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(projectPrefixName);
         ArgumentNullException.ThrowIfNull(outputSourcePath);
         ArgumentNullException.ThrowIfNull(apiDocumentContainer);
@@ -65,12 +71,20 @@ public static class GenerateHelper
             useCodingRules,
             removeNamespaceGroupSeparatorInGlobalUsings,
             apiPath);
-        var serverDomainGenerator = new ServerDomainGenerator(logger, nugetPackageReferenceProvider, domainProjectOptions);
-        return serverDomainGenerator.Generate();
+        var serverDomainGenerator = new ServerDomainGenerator(loggerFactory, apiOperationExtractor, nugetPackageReferenceProvider, domainProjectOptions);
+
+        var generateResult = false;
+        TaskHelper.RunSync(async () =>
+        {
+            generateResult = await serverDomainGenerator.Generate();
+        });
+
+        return generateResult;
     }
 
     public static bool GenerateServerHost(
-        ILogger logger,
+        ILoggerFactory loggerFactory,
+        IApiOperationExtractor apiOperationExtractor,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
         string projectPrefixName,
         DirectoryInfo outputSourcePath,
@@ -82,7 +96,6 @@ public static class GenerateHelper
         DirectoryInfo apiPath,
         DirectoryInfo domainPath)
     {
-        ArgumentNullException.ThrowIfNull(logger);
         ArgumentNullException.ThrowIfNull(projectPrefixName);
         ArgumentNullException.ThrowIfNull(outputSourcePath);
         ArgumentNullException.ThrowIfNull(apiDocumentContainer);
@@ -101,66 +114,95 @@ public static class GenerateHelper
             removeNamespaceGroupSeparatorInGlobalUsings,
             apiPath,
             domainPath);
-        var serverHostGenerator = new ServerHostGenerator(logger, nugetPackageReferenceProvider, hostProjectOptions);
-        return serverHostGenerator.Generate();
+        var serverHostGenerator = new ServerHostGenerator(loggerFactory, apiOperationExtractor, nugetPackageReferenceProvider, hostProjectOptions);
+
+        var generateResult = false;
+        TaskHelper.RunSync(async () =>
+        {
+            generateResult = await serverHostGenerator.Generate();
+        });
+
+        return generateResult;
     }
 
     public static bool GenerateServerSln(
-        ILogger logger,
+        ILoggerFactory loggerFactory,
         string projectPrefixName,
         string outputSlnPath,
-        DirectoryInfo outputSourcePath,
-        DirectoryInfo? outputTestPath)
+        DirectoryInfo srcPath,
+        DirectoryInfo? testPath,
+        AspNetOutputType aspNetOutputType)
     {
-        ArgumentNullException.ThrowIfNull(logger);
+        ArgumentNullException.ThrowIfNull(loggerFactory);
         ArgumentNullException.ThrowIfNull(projectPrefixName);
         ArgumentNullException.ThrowIfNull(outputSlnPath);
-        ArgumentNullException.ThrowIfNull(outputSourcePath);
+        ArgumentNullException.ThrowIfNull(srcPath);
 
         var projectName = projectPrefixName
             .Replace(" ", ".", StringComparison.Ordinal)
             .Replace("-", ".", StringComparison.Ordinal)
             .Trim();
 
-        var apiPath = new DirectoryInfo(Path.Combine(outputSourcePath.FullName, $"{projectName}.Api.Generated"));
-        var domainPath = new DirectoryInfo(Path.Combine(outputSourcePath.FullName, $"{projectName}.Domain"));
-        var hostPath = new DirectoryInfo(Path.Combine(outputSourcePath.FullName, $"{projectName}.Api"));
+        var rootPath = outputSlnPath.EndsWith(".sln", StringComparison.OrdinalIgnoreCase)
+            ? new FileInfo(outputSlnPath).Directory!
+            : new DirectoryInfo(outputSlnPath);
 
-        var slnFile = outputSlnPath.EndsWith(".sln", StringComparison.OrdinalIgnoreCase)
-            ? new FileInfo(outputSlnPath)
-            : new FileInfo(Path.Combine(outputSlnPath, $"{projectName}.sln"));
+        IServerGenerator serverGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerGenerator(
+            loggerFactory,
+            projectName,
+            rootPath,
+            srcPath,
+            testPath);
 
-        if (outputTestPath is not null)
+        IServerGenerator serverGeneratorMinimalApi = new Framework.Minimal.ProjectGenerator.ServerGenerator(
+            loggerFactory,
+            projectName,
+            rootPath,
+            srcPath,
+            testPath);
+
+        if (aspNetOutputType == AspNetOutputType.Mvc)
         {
-            var domainTestPath = new DirectoryInfo(Path.Combine(outputTestPath.FullName, $"{projectName}.Domain"));
-            var hostTestPath = new DirectoryInfo(Path.Combine(outputTestPath.FullName, $"{projectName}.Api"));
-
-            SolutionAndProjectHelper.ScaffoldSlnFile(
-                logger,
-                slnFile,
-                projectName,
-                apiPath,
-                domainPath,
-                hostPath,
-                domainTestPath,
-                hostTestPath);
-
-            return true;
+            serverGeneratorMvc.ScaffoldSolutionFile();
+            serverGeneratorMvc.ScaffoldSolutionDotSettingsFile();
+        }
+        else
+        {
+            serverGeneratorMinimalApi.ScaffoldSolutionFile();
+            serverGeneratorMinimalApi.ScaffoldSolutionDotSettingsFile();
         }
 
-        SolutionAndProjectHelper.ScaffoldSlnFile(
-            logger,
-            slnFile,
-            projectName,
-            apiPath,
-            domainPath,
-            hostPath);
+        ////if (outputTestPath is not null)
+        ////{
+        ////    var domainTestPath = new DirectoryInfo(Path.Combine(outputTestPath.FullName, $"{projectName}.Domain"));
+        ////    var hostTestPath = new DirectoryInfo(Path.Combine(outputTestPath.FullName, $"{projectName}.Api"));
+
+        ////    SolutionAndProjectHelper.ScaffoldSlnFile(
+        ////        loggerFactory,
+        ////        slnFile,
+        ////        projectName,
+        ////        apiPath,
+        ////        domainPath,
+        ////        hostPath,
+        ////        domainTestPath,
+        ////        hostTestPath);
+
+        ////    return true;
+        ////}
+
+        ////SolutionAndProjectHelper.ScaffoldSlnFile(
+        ////    loggerFactory,
+        ////    slnFile,
+        ////    projectName,
+        ////    apiPath,
+        ////    domainPath,
+        ////    hostPath);
 
         return true;
     }
 
     public static bool GenerateServerCSharpClient(
-        ILogger logger,
+        ILoggerFactory loggerFactory,
         IApiOperationExtractor apiOperationExtractor,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
         string projectPrefixName,
@@ -173,7 +215,7 @@ public static class GenerateHelper
         bool useCodingRules,
         bool removeNamespaceGroupSeparatorInGlobalUsings)
     {
-        ArgumentNullException.ThrowIfNull(logger);
+        ArgumentNullException.ThrowIfNull(loggerFactory);
         ArgumentNullException.ThrowIfNull(projectPrefixName);
         ArgumentNullException.ThrowIfNull(outputPath);
         ArgumentNullException.ThrowIfNull(apiDocumentContainer);
@@ -191,7 +233,14 @@ public static class GenerateHelper
             apiOptions,
             useCodingRules,
             removeNamespaceGroupSeparatorInGlobalUsings);
-        var clientCSharpApiGenerator = new ClientCSharpApiGenerator(logger, apiOperationExtractor, nugetPackageReferenceProvider, clientCSharpApiProjectOptions);
-        return clientCSharpApiGenerator.Generate();
+        var clientCSharpApiGenerator = new Generators.ClientCSharpApiGenerator(loggerFactory, apiOperationExtractor, nugetPackageReferenceProvider, clientCSharpApiProjectOptions);
+
+        var generateResult = false;
+        TaskHelper.RunSync(async () =>
+        {
+            generateResult = await clientCSharpApiGenerator.Generate();
+        });
+
+        return generateResult;
     }
 }

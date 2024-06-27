@@ -5,6 +5,8 @@ namespace Atc.Rest.ApiGenerator.OpenApi.Extractors;
 
 public sealed class ApiOperationExtractor : IApiOperationExtractor
 {
+    public static readonly char[] ModelNameSeparators = { ' ', '-', '_', '.' };
+
     public IList<ApiOperation> Extract(
         OpenApiDocument apiDocument)
     {
@@ -41,11 +43,25 @@ public sealed class ApiOperationExtractor : IApiOperationExtractor
                 continue;
             }
 
-            foreach (var apiMediaType in apiParameter.Content)
+            if (apiParameter.Content.Keys.Count > 0)
+            {
+                foreach (var apiMediaType in apiParameter.Content)
+                {
+                    CollectSchema(
+                        componentsSchemas,
+                        apiSchema: apiMediaType.Value.Schema,
+                        locatedArea: ApiSchemaMapLocatedAreaType.Parameter,
+                        apiPath.Key,
+                        httpOperation: apiOperation.HttpOperationType,
+                        parentApiSchema: null,
+                        result);
+                }
+            }
+            else
             {
                 CollectSchema(
                     componentsSchemas,
-                    apiSchema: apiMediaType.Value.Schema,
+                    apiSchema: apiParameter.Schema,
                     locatedArea: ApiSchemaMapLocatedAreaType.Parameter,
                     apiPath.Key,
                     httpOperation: apiOperation.HttpOperationType,
@@ -66,16 +82,19 @@ public sealed class ApiOperationExtractor : IApiOperationExtractor
             return;
         }
 
-        foreach (var apiMediaType in apiOperation.OpenApiOperation.RequestBody.Content)
+        if (apiOperation.OpenApiOperation.RequestBody.Content.Count > 0)
         {
-            CollectSchema(
-                componentsSchemas,
-                apiSchema: apiMediaType.Value.Schema,
-                locatedArea: ApiSchemaMapLocatedAreaType.RequestBody,
-                apiPath.Key,
-                apiOperation.HttpOperationType,
-                parentApiSchema: null,
-                result);
+            foreach (var apiMediaType in apiOperation.OpenApiOperation.RequestBody.Content)
+            {
+                CollectSchema(
+                    componentsSchemas,
+                    apiSchema: apiMediaType.Value.Schema,
+                    locatedArea: ApiSchemaMapLocatedAreaType.RequestBody,
+                    apiPath.Key,
+                    apiOperation.HttpOperationType,
+                    parentApiSchema: null,
+                    result);
+            }
         }
     }
 
@@ -92,16 +111,19 @@ public sealed class ApiOperationExtractor : IApiOperationExtractor
                 continue;
             }
 
-            foreach (var apiMediaType in apiResponse.Value.Content)
+            if (apiResponse.Value.Content.Keys.Count > 0)
             {
-                CollectSchema(
-                    componentsSchemas,
-                    apiSchema: apiMediaType.Value.Schema,
-                    locatedArea: ApiSchemaMapLocatedAreaType.Response,
-                    apiPath.Key,
-                    apiOperation.HttpOperationType,
-                    parentApiSchema: null,
-                    result);
+                foreach (var apiMediaType in apiResponse.Value.Content.Where(x => x.Key.Equals(MediaTypeNames.Application.Json, StringComparison.OrdinalIgnoreCase)))
+                {
+                    CollectSchema(
+                        componentsSchemas,
+                        apiSchema: apiMediaType.Value.Schema,
+                        locatedArea: ApiSchemaMapLocatedAreaType.Response,
+                        apiPath.Key,
+                        apiOperation.HttpOperationType,
+                        parentApiSchema: null,
+                        result);
+                }
             }
         }
     }
@@ -120,46 +142,48 @@ public sealed class ApiOperationExtractor : IApiOperationExtractor
             return;
         }
 
-        (var schemaKey, apiSchema) = ConsolidateSchemaObjectTypes(apiSchema);
-
-        if (schemaKey.Length == 0 ||
-            schemaKey == nameof(ProblemDetails) ||
-            schemaKey.Equals(NameConstants.Pagination, StringComparison.OrdinalIgnoreCase))
+        if (apiSchema.IsTypeCustomPagination())
         {
-            if (apiSchema.IsTypeCustomPagination())
+            var apiSchemaForCustomPagination = apiSchema.GetCustomPaginationSchema();
+            var apiSchemaForCustomPaginationItems = apiSchema.GetCustomPaginationItemsSchema();
+            if (apiSchemaForCustomPagination is not null &&
+                apiSchemaForCustomPaginationItems is not null)
             {
-                var apiSchemaForCustomPagination = apiSchema.GetCustomPaginationSchema();
-                var apiSchemaForCustomPaginationItems = apiSchema.GetCustomPaginationItemsSchema();
-                if (apiSchemaForCustomPagination is not null &&
-                    apiSchemaForCustomPaginationItems is not null)
-                {
-                    var consolidateSchemaForCustomPaginationItems = ConsolidateSchemaObjectTypes(apiSchemaForCustomPaginationItems);
-                    CollectSchema(
-                        componentsSchemas,
-                        consolidateSchemaForCustomPaginationItems.Item2,
-                        locatedArea,
-                        apiPath,
-                        httpOperation,
-                        parentApiSchema,
-                        result);
+                var consolidateSchemaForCustomPaginationItems = ConsolidateSchemaObjectTypes(apiSchemaForCustomPaginationItems);
+                CollectSchema(
+                    componentsSchemas,
+                    consolidateSchemaForCustomPaginationItems.Item2,
+                    locatedArea,
+                    apiPath,
+                    httpOperation,
+                    parentApiSchema,
+                    result);
 
-                    var consolidateSchemaForCustomPagination = ConsolidateSchemaObjectTypes(apiSchemaForCustomPagination);
-                    CollectSchema(
-                        componentsSchemas,
-                        consolidateSchemaForCustomPagination.Item2,
-                        locatedArea,
-                        apiPath,
-                        httpOperation,
-                        parentApiSchema,
-                        result);
-                }
+                var consolidateSchemaForCustomPagination = ConsolidateSchemaObjectTypes(apiSchemaForCustomPagination);
+                CollectSchema(
+                    componentsSchemas,
+                    consolidateSchemaForCustomPagination.Item2,
+                    locatedArea,
+                    apiPath,
+                    httpOperation,
+                    parentApiSchema,
+                    result);
             }
 
             return;
         }
 
-        var apiOperation = new ApiOperation(schemaKey, locatedArea, apiPath, httpOperation, parentApiSchema);
-        if (result.Any(x => x.Equals(apiOperation)))
+        (var schemaKey, apiSchema) = ConsolidateSchemaObjectTypes(apiSchema);
+
+        if (string.IsNullOrEmpty(schemaKey) ||
+            schemaKey == "ProblemDetails" ||
+            schemaKey.Equals(NameConstants.Pagination, StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        var apiOperation = new ApiOperation(schemaKey.PascalCase(), locatedArea, apiPath, httpOperation, parentApiSchema);
+        if (result.Exists(x => x.Equals(apiOperation)))
         {
             return;
         }
@@ -227,7 +251,7 @@ public sealed class ApiOperationExtractor : IApiOperationExtractor
 
         result.Add(subApiOperation);
 
-        var subApiSchema = componentsSchemas.Single(x => x.Key.Equals(subSchemaKey, StringComparison.OrdinalIgnoreCase)).Value;
+        var subApiSchema = componentsSchemas.Single(x => x.GetFormattedKey().Equals(subSchemaKey, StringComparison.OrdinalIgnoreCase)).Value;
         if (subApiSchema.Properties.Any())
         {
             Collect(
@@ -266,7 +290,7 @@ public sealed class ApiOperationExtractor : IApiOperationExtractor
             return;
         }
 
-        var subApiSchema = componentsSchemas.Single(x => x.Key.Equals(schemaKey, StringComparison.OrdinalIgnoreCase)).Value;
+        var subApiSchema = componentsSchemas.Single(x => x.GetFormattedKey().Equals(schemaKey, StringComparison.OrdinalIgnoreCase)).Value;
 
         Collect(
             componentsSchemas,
@@ -306,24 +330,30 @@ public sealed class ApiOperationExtractor : IApiOperationExtractor
         var schemaKey = string.Empty;
         if (apiSchema.Reference?.Id is not null)
         {
-            schemaKey = apiSchema.Reference.Id.EnsureFirstCharacterToUpper();
+            schemaKey = apiSchema.Reference.Id.PascalCase(ModelNameSeparators, removeSeparators: true);
         }
         else if (apiSchema.IsArray())
         {
-            schemaKey = apiSchema.Items.Reference.Id.EnsureFirstCharacterToUpper();
+            schemaKey = apiSchema.Items.Reference.Id.PascalCase(ModelNameSeparators, removeSeparators: true);
             apiSchema = apiSchema.Items;
         }
         else if (apiSchema.OneOf.Any() &&
-                 apiSchema.OneOf.First().Reference?.Id is not null)
+                 apiSchema.OneOf[0].Reference?.Id is not null)
         {
-            schemaKey = apiSchema.OneOf.First().Reference.Id.EnsureFirstCharacterToUpper();
-            apiSchema = apiSchema.OneOf.First();
+            schemaKey = apiSchema.OneOf[0].Reference.Id.PascalCase(ModelNameSeparators, removeSeparators: true);
+            apiSchema = apiSchema.OneOf[0];
         }
         else if (apiSchema.AnyOf.Any() &&
-                 apiSchema.AnyOf.First().Reference?.Id is not null)
+                 apiSchema.AnyOf[0].Reference?.Id is not null)
         {
-            schemaKey = apiSchema.AnyOf.First().Reference.Id.EnsureFirstCharacterToUpper();
-            apiSchema = apiSchema.AnyOf.First();
+            schemaKey = apiSchema.AnyOf[0].Reference.Id.PascalCase(ModelNameSeparators, removeSeparators: true);
+            apiSchema = apiSchema.AnyOf[0];
+        }
+        else if (apiSchema.AllOf.Any() &&
+                 apiSchema.AllOf[0].Reference?.Id is not null)
+        {
+            schemaKey = apiSchema.AllOf[0].Reference.Id.PascalCase(ModelNameSeparators, removeSeparators: true);
+            apiSchema = apiSchema.AllOf[0];
         }
         else if (apiSchema.IsTypePagination())
         {

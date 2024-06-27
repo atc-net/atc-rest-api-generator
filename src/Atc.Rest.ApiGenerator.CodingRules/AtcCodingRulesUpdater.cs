@@ -9,7 +9,7 @@ public sealed partial class AtcCodingRulesUpdater : IAtcCodingRulesUpdater
     public const string GitRawContentUrl = "https://raw.githubusercontent.com";
     public const string GitHubPrefix = "[silver][[GitHub]][/] ";
 
-    private const string RawCodingRulesDistributionUrl = "https://raw.githubusercontent.com/atc-net/atc-coding-rules/main/distribution/dotnet6";
+    private const string RawCodingRulesDistributionUrl = "https://raw.githubusercontent.com/atc-net/atc-coding-rules/main/distribution/dotnet8";
     public const string FileNameEditorConfig = ".editorconfig";
     public const string FileNameDirectoryBuildProps = "Directory.Build.props";
 
@@ -20,13 +20,13 @@ public sealed partial class AtcCodingRulesUpdater : IAtcCodingRulesUpdater
     }
 
     public bool Scaffold(
-        string outputSlnPath,
-        DirectoryInfo outputSrcPath,
-        DirectoryInfo? outputTestPath)
+        string slnPath,
+        DirectoryInfo srcPath,
+        DirectoryInfo? testPath)
     {
-        var rootPath = outputSlnPath.EndsWith(".sln", StringComparison.OrdinalIgnoreCase)
-            ? new FileInfo(outputSlnPath).Directory
-            : new DirectoryInfo(outputSlnPath);
+        var rootPath = slnPath.EndsWith(".sln", StringComparison.OrdinalIgnoreCase)
+            ? new FileInfo(slnPath).Directory
+            : new DirectoryInfo(slnPath);
 
         if (rootPath is null)
         {
@@ -38,19 +38,16 @@ public sealed partial class AtcCodingRulesUpdater : IAtcCodingRulesUpdater
             return true;
         }
 
-        HandleCodingRulesFiles(outputSrcPath, outputTestPath, rootPath);
-        HandleEditorConfigFiles(outputSrcPath, outputTestPath, rootPath);
-        HandleDirectoryBuildPropsFiles(outputSrcPath, outputTestPath, rootPath);
+        HandleCodingRulesFiles(srcPath, testPath, rootPath);
+        HandleEditorConfigFiles(srcPath, testPath, rootPath);
+        HandleDirectoryBuildPropsFiles(srcPath, testPath, rootPath);
 
         return true;
     }
 
     private static bool IsFirstTime(
         DirectoryInfo rootPath)
-    {
-        var file = new FileInfo(Path.Combine(rootPath.FullName, FileNameEditorConfig));
-        return !file.Exists;
-    }
+        => !rootPath.CombineFileInfo(FileNameEditorConfig).Exists;
 
     private void HandleCodingRulesFiles(
         DirectoryInfo outputSrcPath,
@@ -114,7 +111,7 @@ public sealed partial class AtcCodingRulesUpdater : IAtcCodingRulesUpdater
         {
             var sb = new StringBuilder();
             sb.AppendLine("{");
-            sb.AppendLine("  \"projectTarget\": \"DotNet6\",");
+            sb.AppendLine("  \"projectTarget\": \"DotNet8\",");
             sb.AppendLine("  \"mappings\": {");
             sb.Append("    \"src\": { \"paths\": [ \"");
 
@@ -161,7 +158,7 @@ public sealed partial class AtcCodingRulesUpdater : IAtcCodingRulesUpdater
             sb.AppendLine("atc-coding-rules-updater run `");
             sb.AppendLine("  -p $currentPath `");
             sb.AppendLine("  --optionsPath $currentPath'\\atc-coding-rules-updater.json' `");
-            sb.AppendLine("  -v true");
+            sb.AppendLine("  --verbose");
             File.WriteAllText(file, sb.ToString());
             File.WriteAllText(filePath, sb.ToString());
             logger.LogDebug($"{CodingRulesConstants.LogFileCreated}   root: {file} created");
@@ -177,7 +174,7 @@ public sealed partial class AtcCodingRulesUpdater : IAtcCodingRulesUpdater
         string area,
         string urlPart)
     {
-        var file = new FileInfo(Path.Combine(path.FullName, FileNameEditorConfig));
+        var file = path.CombineFileInfo(FileNameEditorConfig);
 
         var rawGitUrl = string.IsNullOrEmpty(urlPart)
             ? $"{RawCodingRulesDistributionUrl}/{FileNameEditorConfig}"
@@ -208,7 +205,7 @@ public sealed partial class AtcCodingRulesUpdater : IAtcCodingRulesUpdater
         string area,
         string urlPart)
     {
-        var file = new FileInfo(Path.Combine(path.FullName, FileNameDirectoryBuildProps));
+        var file = path.CombineFileInfo(FileNameDirectoryBuildProps);
 
         var rawGitUrl = string.IsNullOrEmpty(urlPart)
             ? $"{RawCodingRulesDistributionUrl}/{FileNameDirectoryBuildProps}"

@@ -2,7 +2,7 @@ namespace Atc.Rest.ApiGenerator.CodingRules.Extensions;
 
 public static class StringExtensions
 {
-    private static readonly string[] LineBreaks = { "\r\n", "\r", "\n" };
+    private static readonly string[] LineBreaks = ["\r\n", "\r", "\n"];
 
     public static string TrimEndForEmptyLines(
         this string value)

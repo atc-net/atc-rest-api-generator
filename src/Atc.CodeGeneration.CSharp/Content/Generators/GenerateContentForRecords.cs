@@ -30,7 +30,17 @@ public class GenerateContentForRecords : IContentGenerator
         {
             var recordParameters = parameters.Parameters[i];
 
-            sb.Append($"{recordParameters.AccessModifier.GetDescription()} {recordParameters.Name}");
+            if (recordParameters.Parameters is not null &&
+                recordParameters.Parameters.Any(x => x.IsGenericListType &&
+                                                     x.TypeName.Equals("T", StringComparison.Ordinal)))
+            {
+                sb.Append($"{recordParameters.AccessModifier.GetDescription()} {recordParameters.Name}<T>");
+            }
+            else
+            {
+                sb.Append($"{recordParameters.AccessModifier.GetDescription()} {recordParameters.Name}");
+            }
+
             if (recordParameters.Parameters is null ||
                 !recordParameters.Parameters.Any())
             {
@@ -38,16 +48,8 @@ public class GenerateContentForRecords : IContentGenerator
             }
             else
             {
-                var indentSpaces = 0;
-                if (parameters.Parameters.Count == 1)
-                {
-                    sb.Append('(');
-                }
-                else
-                {
-                    sb.AppendLine("(");
-                    indentSpaces = 4;
-                }
+                sb.AppendLine("(");
+                const int indentSpaces = 4;
 
                 for (var j = 0; j < recordParameters.Parameters.Count; j++)
                 {
@@ -55,22 +57,30 @@ public class GenerateContentForRecords : IContentGenerator
                     var useCommaForEndChar = j != recordParameters.Parameters.Count - 1;
                     sb.AppendInputParameter(
                         indentSpaces,
+                        usePropertyPrefix: true,
                         item.Attributes,
                         item.GenericTypeName,
                         item.TypeName,
+                        item.IsNullableType,
                         item.Name,
                         item.DefaultValue,
                         useCommaForEndChar);
                 }
             }
 
-            sb.Append(';');
-
-            if (i != parameters.Parameters.Count - 1)
+            if (recordParameters.Parameters is not null &&
+                recordParameters.Parameters.Any())
             {
-                sb.AppendLine();
-                sb.AppendLine();
+                sb.Append(';');
             }
+
+            if (i == parameters.Parameters.Count - 1)
+            {
+                continue;
+            }
+
+            sb.AppendLine();
+            sb.AppendLine();
         }
 
         return sb.ToString();

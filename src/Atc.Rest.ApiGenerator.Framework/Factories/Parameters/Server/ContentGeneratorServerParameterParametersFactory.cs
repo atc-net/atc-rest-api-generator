@@ -5,7 +5,7 @@ namespace Atc.Rest.ApiGenerator.Framework.Factories.Parameters.Server;
 
 public static class ContentGeneratorServerParameterParametersFactory
 {
-    public static ContentGeneratorServerParameterParameters Create(
+    public static ContentGeneratorServerParameterParameters CreateForClass(
         string @namespace,
         OpenApiOperation openApiOperation,
         IList<OpenApiParameter> globalPathParameters)
@@ -27,6 +27,30 @@ public static class ContentGeneratorServerParameterParametersFactory
             openApiOperation.ExtractDocumentationTagsForParameters(),
             ParameterName: $"{operationName}{ContentGeneratorConstants.Parameters}",
             parameters);
+    }
+
+    public static ContentGeneratorServerParameterParameters CreateForRecord(
+        string @namespace,
+        OpenApiOperation openApiOperation,
+        IList<OpenApiParameter> globalPathParameters)
+    {
+        ArgumentNullException.ThrowIfNull(openApiOperation);
+        ArgumentNullException.ThrowIfNull(globalPathParameters);
+
+        var operationName = openApiOperation.GetOperationName();
+
+        var parameters = new List<ContentGeneratorServerParameterParametersProperty>();
+
+        AppendParameters(parameters, globalPathParameters);
+        AppendParameters(parameters, openApiOperation.Parameters);
+        AppendParametersFromBody(parameters, openApiOperation.RequestBody);
+
+        return new ContentGeneratorServerParameterParameters(
+            @namespace,
+            operationName,
+            openApiOperation.ExtractDocumentationTagsForParameters(),
+            ParameterName: $"{operationName}{ContentGeneratorConstants.Parameters}",
+            SortOptionalParametersMustAppearAfterAllRequiredParameters(parameters));
     }
 
     private static void AppendParameters(
@@ -55,7 +79,7 @@ public static class ContentGeneratorServerParameterParametersFactory
                     dataType,
                     isSimpleType,
                     useListForDataType,
-                    GetIsNullable(openApiParameter, useListForDataType),
+                    GetIsNullable(openApiParameter),
                     openApiParameter.Required,
                     GetAdditionalValidationAttributes(openApiParameter),
                     openApiParameter.Schema.GetDefaultValueAsString()));
@@ -64,14 +88,8 @@ public static class ContentGeneratorServerParameterParametersFactory
     }
 
     private static bool GetIsNullable(
-        OpenApiParameter openApiParameter,
-        bool useListForDataType)
+        OpenApiParameter openApiParameter)
     {
-        if (useListForDataType)
-        {
-            return false;
-        }
-
         var isNullable = openApiParameter.Schema.Nullable;
         if (isNullable)
         {
@@ -160,5 +178,21 @@ public static class ContentGeneratorServerParameterParametersFactory
     {
         var validationAttributeExtractor = new ValidationAttributeExtractor();
         return validationAttributeExtractor.Extract(openApiParameter.Schema);
+    }
+
+    /// <summary>
+    /// CS1737 -  Sorts the optional parameters must appear after all required parameters.
+    /// </summary>
+    /// <param name="parameters">The parameter base parameters.</param>
+    private static IList<ContentGeneratorServerParameterParametersProperty> SortOptionalParametersMustAppearAfterAllRequiredParameters(
+        IReadOnlyCollection<ContentGeneratorServerParameterParametersProperty> parameters)
+    {
+        var parametersWithoutDefaultValues = parameters.Where(x => x.DefaultValueInitializer is null).ToList();
+        var parametersWitDefaultValues = parameters.Where(x => x.DefaultValueInitializer is not null).ToList();
+
+        var data = new List<ContentGeneratorServerParameterParametersProperty>();
+        data.AddRange(parametersWithoutDefaultValues);
+        data.AddRange(parametersWitDefaultValues);
+        return data;
     }
 }

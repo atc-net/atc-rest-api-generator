@@ -1,5 +1,37 @@
 namespace Atc.CodeGeneration.CSharp.Content;
 
+public record SolutionConfigurationParameters(
+    Guid ConfigurationId);
+
+public record SolutionProjectParameters(
+    Guid ProjectTypeId,
+    string Name,
+    string RelativePath,
+    Guid ConfigurationId);
+
+public record SolutionFileParameters(
+    Guid SolutionId,
+    IList<SolutionConfigurationParameters> Configurations,
+    IList<SolutionProjectParameters> Projects);
+
+[SuppressMessage("X", "S2094: Remove this empty record, write its code or make it an interface", Justification = "OK - WIP")]
+public record SolutionDotSettingsFileParameters();
+
+public record PropertyGroupParameter(
+    string Key,
+    IList<KeyValuePair<string, string>>? Attributes,
+    string? Value);
+
+public record ItemGroupParameter(
+    string Key,
+    IList<KeyValuePair<string, string>>? Attributes,
+    string? Value);
+
+public record ProjectFileParameters(
+    string ProjectSdK,
+    IList<IList<PropertyGroupParameter>> PropertyGroups,
+    IList<IList<ItemGroupParameter>> ItemGroups);
+
 public record BaseParameters(
     string? HeaderContent,
     string Namespace,
@@ -71,6 +103,7 @@ public record ParameterBaseParameters(
     string? GenericTypeName,
     bool IsGenericListType,
     string TypeName,
+    bool IsNullableType,
     bool IsReferenceType,
     string Name,
     string? DefaultValue);
@@ -78,6 +111,7 @@ public record ParameterBaseParameters(
 public record ConstructorParameterBaseParameters(
     string? GenericTypeName,
     string TypeName,
+    bool IsNullableType,
     string Name,
     string? DefaultValue,
     bool PassToInheritedClass,
@@ -98,7 +132,9 @@ public record PropertyParameters(
     AccessModifiers AccessModifier,
     string? GenericTypeName,
     string TypeName,
+    bool IsNullableType,
     string Name,
+    string? JsonName,
     string? DefaultValue,
     bool IsReferenceType,
     bool IsGenericListType,
@@ -112,6 +148,7 @@ public record PropertyParameters(
         GenericTypeName,
         IsGenericListType,
         TypeName,
+        IsNullableType,
         IsReferenceType,
         Name,
         DefaultValue);

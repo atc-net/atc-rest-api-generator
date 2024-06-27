@@ -1,0 +1,20 @@
+﻿{
+  "generator": {
+    "aspNetOutputType": "Mvc",
+    "swaggerThemeMode": "None",
+    "useRestExtended": true,
+    "includeDeprecated": false,
+    "request": {},
+    "response": {
+      "useProblemDetailsAsDefaultBody": false
+    }
+  },
+  "validation": {
+    "strictMode": false,
+    "operationIdValidation": false,
+    "operationIdCasingStyle": "CamelCase",
+    "modelNameCasingStyle": "PascalCase",
+    "modelPropertyNameCasingStyle": "CamelCase"
+  },
+  "includeDeprecated": false
+}

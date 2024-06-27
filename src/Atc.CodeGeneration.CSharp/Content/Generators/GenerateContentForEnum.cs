@@ -19,6 +19,8 @@ public class GenerateContentForEnum : IContentGenerator
     {
         var contentWriter = new GenerateContentWriter(codeDocumentationTagsGenerator);
 
+        var useJsonStringEnumConverter = UseJsonStringEnumConverter(parameters.Values);
+
         var sb = new StringBuilder();
         sb.Append(
             contentWriter.GenerateTopOfType(
@@ -26,6 +28,11 @@ public class GenerateContentForEnum : IContentGenerator
                 parameters.Namespace,
                 parameters.DocumentationTags,
                 GetAttributeParametersList()));
+
+        if (useJsonStringEnumConverter)
+        {
+            sb.AppendLine("[JsonConverter(typeof(JsonStringEnumConverter))]");
+        }
 
         sb.Append($"{parameters.AccessModifier.GetDescription()} enum ");
         sb.AppendLine($"{parameters.EnumTypeName}");
@@ -35,13 +42,30 @@ public class GenerateContentForEnum : IContentGenerator
         {
             if (parametersValue.DescriptionAttribute is not null)
             {
-                sb.AppendAttribute(4, parametersValue.DescriptionAttribute);
+                sb.AppendAttribute(4, usePropertyPrefix: false, parametersValue.DescriptionAttribute);
                 sb.AppendLine();
             }
 
             var sbLine = new StringBuilder();
 
-            sbLine.Append(parametersValue.Name);
+            if (useJsonStringEnumConverter)
+            {
+                if ("*".Equals(parametersValue.Name, StringComparison.Ordinal))
+                {
+                    sbLine.AppendLine("[EnumMember(Value = \"*\")]");
+                    sbLine.Append(4, "None");
+                }
+                else
+                {
+                    sbLine.AppendLine($"[EnumMember(Value = \"{parametersValue.Name}\")]");
+                    sbLine.Append(4, parametersValue.Name.PascalCase(removeSeparators: true));
+                }
+            }
+            else
+            {
+                sbLine.Append(parametersValue.Name);
+            }
+
             if (parametersValue.Value is not null)
             {
                 sbLine.Append($" = {parametersValue.Value}");
@@ -49,6 +73,12 @@ public class GenerateContentForEnum : IContentGenerator
 
             sbLine.Append(',');
             sb.AppendLine(4, sbLine.ToString());
+
+            if (useJsonStringEnumConverter &&
+                parameters.Values.Last() != parametersValue)
+            {
+                sb.AppendLine();
+            }
         }
 
         sb.Append('}');
@@ -71,4 +101,9 @@ public class GenerateContentForEnum : IContentGenerator
 
         return attributeParameters;
     }
+
+    private static bool UseJsonStringEnumConverter(
+        IList<EnumValueParameters> parametersValues)
+        => parametersValues.Any(x => x.Name.IsFirstCharacterLowerCase() ||
+                                     x.Name.Contains('-', StringComparison.Ordinal));
 }

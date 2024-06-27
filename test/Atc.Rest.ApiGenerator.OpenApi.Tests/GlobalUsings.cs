@@ -1,3 +1,5 @@
+global using System.Diagnostics.CodeAnalysis;
+
 global using Atc.Rest.ApiGenerator.OpenApi.Extensions;
 global using Atc.Rest.ApiGenerator.OpenApi.Factories;
 

@@ -38,7 +38,7 @@ public class GenerateContentWriter
         {
             foreach (var attribute in attributes)
             {
-                sb.AppendAttribute(attribute);
+                sb.AppendAttribute(usePropertyPrefix: false, attribute);
                 sb.AppendLine();
             }
         }
@@ -68,7 +68,7 @@ public class GenerateContentWriter
         {
             if (parameters.Parameters.Count(x => x.PassToInheritedClass) == 1)
             {
-                var firstParameterParameters = parameters.Parameters.First();
+                var firstParameterParameters = parameters.Parameters[0];
                 if (firstParameterParameters.CreateAaOneLiner)
                 {
                     sb.Append($"{firstParameterParameters.TypeName} {firstParameterParameters.Name})");
@@ -87,9 +87,11 @@ public class GenerateContentWriter
                     var useCommaForEndChar = i != parameters.Parameters.Count - 1;
                     sb.AppendInputParameter(
                         8,
+                        usePropertyPrefix: false,
                         attributes: null,
                         item.GenericTypeName,
                         item.TypeName,
+                        item.IsNullableType,
                         item.Name,
                         item.DefaultValue,
                         useCommaForEndChar);
@@ -111,7 +113,7 @@ public class GenerateContentWriter
             if (parameters.Parameters is not null &&
                 parameters.Parameters.Count(x => x.PassToInheritedClass) == 1)
             {
-                var firstParameterParameters = parameters.Parameters.First();
+                var firstParameterParameters = parameters.Parameters[0];
                 if (firstParameterParameters.CreateAaOneLiner)
                 {
                     sb.Append($" : {parameters.InheritedClassTypeName}({firstParameterParameters.Name}) {{ }}");
@@ -170,7 +172,12 @@ public class GenerateContentWriter
 
         if (parameters.Attributes is not null)
         {
-            sb.AppendAttributesAsLines(4, parameters.Attributes);
+            sb.AppendAttributesAsLines(4, usePropertyPrefix: false, parameters.Attributes);
+        }
+
+        if (parameters.JsonName is not null)
+        {
+            sb.AppendLine(4, $"[JsonPropertyName(\"{parameters.JsonName}\")]");
         }
 
         sb.Append("    ");
@@ -179,7 +186,7 @@ public class GenerateContentWriter
             sb.AppendAccessModifier(parameters.AccessModifier);
         }
 
-        sb.AppendTypeAndName(parameters.GenericTypeName, parameters.TypeName, parameters.Name);
+        sb.AppendTypeAndName(parameters.GenericTypeName, parameters.TypeName, parameters.IsNullableType, parameters.Name);
 
         if (parameters.UseAutoProperty)
         {
@@ -203,7 +210,16 @@ public class GenerateContentWriter
             }
             else if (!string.IsNullOrEmpty(parameters.DefaultValue))
             {
-                sb.Append($" = {parameters.DefaultValue};");
+                if (!parameters.IsGenericListType &&
+                    parameters.TypeName.Equals("string", StringComparison.Ordinal) &&
+                    !parameters.DefaultValue.Equals("null", StringComparison.Ordinal))
+                {
+                    sb.Append($" = \"{parameters.DefaultValue}\";");
+                }
+                else
+                {
+                    sb.Append($" = {parameters.DefaultValue};");
+                }
             }
         }
         else if (!string.IsNullOrEmpty(parameters.Content))
@@ -240,7 +256,7 @@ public class GenerateContentWriter
 
         if (parameters.Attributes is not null)
         {
-            sb.AppendAttributesAsLines(4, parameters.Attributes);
+            sb.AppendAttributesAsLines(4, usePropertyPrefix: false, parameters.Attributes);
         }
 
         sb.Append("    ");
@@ -255,7 +271,7 @@ public class GenerateContentWriter
         }
         else
         {
-            sb.AppendTypeAndName(parameters.ReturnGenericTypeName, parameters.ReturnTypeName, parameters.Name);
+            sb.AppendTypeAndName(parameters.ReturnGenericTypeName, parameters.ReturnTypeName, isNullableType: false, parameters.Name);
         }
 
         if (parameters.Parameters is not null &&
@@ -279,9 +295,11 @@ public class GenerateContentWriter
                 var useCommaForEndChar = i != parameters.Parameters.Count - 1;
                 sb.AppendInputParameter(
                     indentSpaces,
+                    usePropertyPrefix: false,
                     item.Attributes,
                     item.GenericTypeName,
                     item.TypeName,
+                    item.IsNullableType,
                     item.Name,
                     item.DefaultValue,
                     useCommaForEndChar);

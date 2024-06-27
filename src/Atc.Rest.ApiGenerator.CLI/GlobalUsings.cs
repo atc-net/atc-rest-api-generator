@@ -1,4 +1,3 @@
-global using System;
 global using System.Collections.Concurrent;
 global using System.ComponentModel;
 global using System.Diagnostics;
@@ -12,17 +11,19 @@ global using Atc.Console.Spectre.Helpers;
 global using Atc.Console.Spectre.Logging;
 global using Atc.Helpers;
 global using Atc.Rest.ApiGenerator.CLI.Commands;
+global using Atc.Rest.ApiGenerator.CLI.Commands.Attributes;
 global using Atc.Rest.ApiGenerator.CLI.Commands.Settings;
 global using Atc.Rest.ApiGenerator.CLI.Extensions;
 global using Atc.Rest.ApiGenerator.CodingRules;
-global using Atc.Rest.ApiGenerator.Framework.Contracts.Options;
+global using Atc.Rest.ApiGenerator.Contracts;
+global using Atc.Rest.ApiGenerator.Framework.Providers;
 global using Atc.Rest.ApiGenerator.Framework.Readers;
 global using Atc.Rest.ApiGenerator.Helpers;
 global using Atc.Rest.ApiGenerator.Nuget.Clients;
 global using Atc.Rest.ApiGenerator.OpenApi.Extractors;
 global using Atc.Rest.ApiGenerator.OpenApi.Factories;
 global using Atc.Rest.ApiGenerator.OpenApi.Validators;
-global using Atc.Rest.ApiGenerator.Projects;
+global using Atc.Rest.ApiGenerator.Options;
 
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;

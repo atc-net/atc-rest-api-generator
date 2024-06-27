@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -9,20 +9,59 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc.DotNet" Version="2.0.360" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.4" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.1" />
-    <PackageReference Include="Atc.CodeDocumentation" Version="2.0.360" />
-    <PackageReference Include="Atc.XUnit" Version="2.0.360" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
+    <Compile Remove="Scenarios\DemoSample\VerifyClient\**" />
+    <Compile Remove="Scenarios\DemoSample\VerifyServerAll\**" />
+    <Compile Remove="Scenarios\ExAllResponseTypes\VerifyClient\**" />
+    <Compile Remove="Scenarios\ExAllResponseTypes\VerifyServerAll\**" />
+    <Compile Remove="Scenarios\ExGenericPagination\VerifyClient\**" />
+    <Compile Remove="Scenarios\ExGenericPagination\VerifyServerAll\**" />
+    <Compile Remove="Scenarios\ExNsWithTask\VerifyClient\**" />
+    <Compile Remove="Scenarios\ExNsWithTask\VerifyServerAll\**" />
+    <Compile Remove="Scenarios\ExUsers\VerifyClient\**" />
+    <Compile Remove="Scenarios\ExUsers\VerifyServerAll\**" />
+    <Compile Remove="Scenarios\PetStore\VerifyClient\**" />
+    <Compile Remove="Scenarios\PetStore\VerifyServerAll\**" />
+    <EmbeddedResource Remove="Scenarios\DemoSample\VerifyClient\**" />
+    <EmbeddedResource Remove="Scenarios\DemoSample\VerifyServerAll\**" />
+    <EmbeddedResource Remove="Scenarios\ExAllResponseTypes\VerifyClient\**" />
+    <EmbeddedResource Remove="Scenarios\ExAllResponseTypes\VerifyServerAll\**" />
+    <EmbeddedResource Remove="Scenarios\ExGenericPagination\VerifyClient\**" />
+    <EmbeddedResource Remove="Scenarios\ExGenericPagination\VerifyServerAll\**" />
+    <EmbeddedResource Remove="Scenarios\ExNsWithTask\VerifyClient\**" />
+    <EmbeddedResource Remove="Scenarios\ExNsWithTask\VerifyServerAll\**" />
+    <EmbeddedResource Remove="Scenarios\ExUsers\VerifyClient\**" />
+    <EmbeddedResource Remove="Scenarios\ExUsers\VerifyServerAll\**" />
+    <EmbeddedResource Remove="Scenarios\PetStore\VerifyClient\**" />
+    <EmbeddedResource Remove="Scenarios\PetStore\VerifyServerAll\**" />
+    <None Remove="Scenarios\DemoSample\VerifyClient\**" />
+    <None Remove="Scenarios\DemoSample\VerifyServerAll\**" />
+    <None Remove="Scenarios\ExAllResponseTypes\VerifyClient\**" />
+    <None Remove="Scenarios\ExAllResponseTypes\VerifyServerAll\**" />
+    <None Remove="Scenarios\ExGenericPagination\VerifyClient\**" />
+    <None Remove="Scenarios\ExGenericPagination\VerifyServerAll\**" />
+    <None Remove="Scenarios\ExNsWithTask\VerifyClient\**" />
+    <None Remove="Scenarios\ExNsWithTask\VerifyServerAll\**" />
+    <None Remove="Scenarios\ExUsers\VerifyClient\**" />
+    <None Remove="Scenarios\ExUsers\VerifyServerAll\**" />
+    <None Remove="Scenarios\PetStore\VerifyClient\**" />
+    <None Remove="Scenarios\PetStore\VerifyServerAll\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Atc.DotNet" Version="2.0.488" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
+    <PackageReference Include="Atc.CodeDocumentation" Version="2.0.488" />
+    <PackageReference Include="Atc.XUnit" Version="2.0.488" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
     <PackageReference Include="Verify" Version="17.10.2" />
     <PackageReference Include="Verify.Xunit" Version="17.10.2" />
-    <PackageReference Include="xunit" Version="2.5.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.1">
+    <PackageReference Include="xunit" Version="2.8.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="coverlet.collector" Version="6.0.0">
+    <PackageReference Include="coverlet.collector" Version="6.0.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -30,19 +69,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Atc.Rest.ApiGenerator.CLI\Atc.Rest.ApiGenerator.CLI.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="**\*.verified.cs" />
-    <Compile Remove="**\*.received.cs" />
-    <Compile Remove="MyCompany.ProductionUnit.Task.NamespaceApi\**" />
-    <None Include="**\*.verified.cs" />
-    <None Include="**\*.received.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Remove="MyCompany.ProductionUnit.Task.NamespaceApi\**" />
-    <None Remove="MyCompany.ProductionUnit.Task.NamespaceApi\**" />
   </ItemGroup>
 
 </Project>

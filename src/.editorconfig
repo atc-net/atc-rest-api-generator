@@ -1,8 +1,8 @@
 # ATC coding rules - https://github.com/atc-net/atc-coding-rules
-# Version: 1.0.9
-# Updated: 01-02-2022
+# Version: 1.0.0
+# Updated: 25-09-2023
 # Location: src
-# Distribution: DotNet6
+# Distribution: DotNet8
 # Inspired by: https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/code-style-rule-options
 
 ##########################################
@@ -48,6 +48,7 @@
 dotnet_diagnostic.CA1305.severity = none         # Specify IFormatProvider
 
 dotnet_diagnostic.MA0011.severity = none         # IFormatProvider is missing
+dotnet_diagnostic.MA0048.severity = none         # File name must match type name
 dotnet_diagnostic.MA0051.severity = none         # Method is too long
 
 dotnet_diagnostic.S3358.severity = none          # for now..

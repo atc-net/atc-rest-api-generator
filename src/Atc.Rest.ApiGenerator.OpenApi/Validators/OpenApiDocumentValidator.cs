@@ -23,6 +23,7 @@ public class OpenApiDocumentValidator : IOpenApiDocumentValidator
 
     public bool IsValid(
         ApiOptionsValidation apiOptionsValidation,
+        bool includeDeprecated,
         OpenApiDocumentContainer apiDocumentContainer)
     {
         logger.LogInformation($"{AreaValidationEmoji} Working on validation");
@@ -38,7 +39,7 @@ public class OpenApiDocumentValidator : IOpenApiDocumentValidator
         }
 
         return IsValidUsingMicrosoftOpenApi(apiDocumentContainer) &&
-               IsValidUsingAtcOptions(apiOptionsValidation, apiDocumentContainer);
+               IsValidUsingAtcOptions(apiOptionsValidation, includeDeprecated, apiDocumentContainer);
     }
 
     private bool IsValidUsingMicrosoftOpenApi(
@@ -59,7 +60,7 @@ public class OpenApiDocumentValidator : IOpenApiDocumentValidator
                 .ToList();
 
             logger.LogKeyValueItems(validationErrors);
-            return false;
+            return logCategory != LogCategoryType.Error;
         }
 
         if (apiDocumentContainer.Diagnostic.SpecificationVersion == OpenApiSpecVersion.OpenApi2_0)
@@ -73,11 +74,12 @@ public class OpenApiDocumentValidator : IOpenApiDocumentValidator
 
     private bool IsValidUsingAtcOptions(
         ApiOptionsValidation validationOptions,
+        bool includeDeprecated,
         OpenApiDocumentContainer apiDocumentContainer)
     {
         ValidateSecurity(apiDocumentContainer.Document!);
         ValidateServers(apiDocumentContainer.Document!.Servers);
-        ValidateSchemas(validationOptions, apiDocumentContainer.Document!.Components.Schemas.Values);
+        ValidateSchemas(validationOptions, includeDeprecated, apiDocumentContainer.Document!.Components.Schemas.Values);
         ValidateOperations(validationOptions, apiDocumentContainer.Document.Paths, apiDocumentContainer.Document!.Components.Schemas);
         ValidatePathsAndOperations(apiDocumentContainer.Document!.Paths);
         ValidateOperationsParametersAndResponses(apiDocumentContainer.Document!.Paths.Values);
@@ -85,7 +87,7 @@ public class OpenApiDocumentValidator : IOpenApiDocumentValidator
         AddIndentationToLogItemKeys(logItems);
 
         logger.LogKeyValueItems(logItems);
-        return logItems.All(x => x.LogCategory != LogCategoryType.Error);
+        return !validationOptions.StrictMode || logItems.TrueForAll(x => x.LogCategory != LogCategoryType.Error);
     }
 
     private void ValidateSecurity(
@@ -311,6 +313,7 @@ public class OpenApiDocumentValidator : IOpenApiDocumentValidator
 
     private void ValidateSchemas(
         ApiOptionsValidation validationOptions,
+        bool includeDeprecated,
         IEnumerable<OpenApiSchema> schemas)
     {
         foreach (var schema in schemas)
@@ -345,6 +348,11 @@ public class OpenApiDocumentValidator : IOpenApiDocumentValidator
 
                     foreach (var (key, value) in schema.Properties)
                     {
+                        if (value.Deprecated && !includeDeprecated)
+                        {
+                            continue;
+                        }
+
                         if (string.IsNullOrEmpty(key))
                         {
                             logItems.Add(logItemFactory.Create(logCategory, ValidationRuleNameConstants.Schema12, $"Missing key/name for one or more properties on object type '{schema.Reference.ReferenceV3}'."));

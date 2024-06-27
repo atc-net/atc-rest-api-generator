@@ -1,9 +1,0 @@
-info:
-  title: Demo Api
-  description: Demo Api - MultiFileVersion
-  version: '1.0'
-  contact:
-    name: Delegate A/S
-servers:
-  - url: /api/v1
-    description: Api version 1.0

@@ -26,7 +26,7 @@ public class LogItemFactory : ILogItemFactory
             list.Add(new Tuple<string, string>(fieldInfo.Name, fieldValue!));
         }
 
-        var tuple = list.FirstOrDefault(x => x.Item2 == ruleName);
+        var tuple = list.Find(x => x.Item2 == ruleName);
         if (tuple is null ||
             string.IsNullOrEmpty(tuple.Item2))
         {

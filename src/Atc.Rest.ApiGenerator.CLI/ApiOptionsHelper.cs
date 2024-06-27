@@ -1,3 +1,4 @@
+// ReSharper disable InvertIf
 namespace Atc.Rest.ApiGenerator.CLI;
 
 [SuppressMessage("Info Code Smell", "S4457:Split this method into two", Justification = "OK for now.")]
@@ -114,6 +115,70 @@ public static class ApiOptionsHelper
         if (settings.ModelPropertyNameCasingStyle.IsSet)
         {
             apiOptions.Validation.ModelPropertyNameCasingStyle = settings.ModelPropertyNameCasingStyle.Value;
+        }
+
+        switch (settings)
+        {
+            case ServerAllCommandSettings serverAllCommandSettings:
+            {
+                if (serverAllCommandSettings.AspNetOutputType.IsSet)
+                {
+                    apiOptions.Generator.AspNetOutputType = serverAllCommandSettings.AspNetOutputType.Value;
+                }
+
+                if (serverAllCommandSettings.SwaggerThemeMode.IsSet)
+                {
+                    apiOptions.Generator.SwaggerThemeMode = serverAllCommandSettings.SwaggerThemeMode.Value;
+                }
+
+                if (serverAllCommandSettings.UseProblemDetailsAsDefaultResponseBody)
+                {
+                    apiOptions.Generator.Response.UseProblemDetailsAsDefaultBody = serverAllCommandSettings.UseProblemDetailsAsDefaultResponseBody;
+                }
+
+                break;
+            }
+            case ServerHostCommandSettings serverHostCommandSettings:
+            {
+                if (serverHostCommandSettings.AspNetOutputType.IsSet)
+                {
+                    apiOptions.Generator.AspNetOutputType = serverHostCommandSettings.AspNetOutputType.Value;
+                }
+
+                if (serverHostCommandSettings.SwaggerThemeMode.IsSet)
+                {
+                    apiOptions.Generator.SwaggerThemeMode = serverHostCommandSettings.SwaggerThemeMode.Value;
+                }
+
+                if (serverHostCommandSettings.UseProblemDetailsAsDefaultResponseBody)
+                {
+                    apiOptions.Generator.Response.UseProblemDetailsAsDefaultBody = serverHostCommandSettings.UseProblemDetailsAsDefaultResponseBody;
+                }
+
+                break;
+            }
+            case ServerApiCommandSettings serverApiCommandSettings:
+            {
+                if (serverApiCommandSettings.UseProblemDetailsAsDefaultResponseBody)
+                {
+                    apiOptions.Generator.Response.UseProblemDetailsAsDefaultBody = serverApiCommandSettings.UseProblemDetailsAsDefaultResponseBody;
+                }
+
+                break;
+            }
+            case ServerDomainCommandSettings:
+            {
+                break;
+            }
+            case ClientApiCommandSettings clientApiCommandSettings:
+            {
+                if (clientApiCommandSettings.UseProblemDetailsAsDefaultResponseBody)
+                {
+                    apiOptions.Generator.Response.UseProblemDetailsAsDefaultBody = clientApiCommandSettings.UseProblemDetailsAsDefaultResponseBody;
+                }
+
+                break;
+            }
         }
     }
 }

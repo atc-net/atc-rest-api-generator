@@ -8,14 +8,14 @@ public class GenerateContentForRecordsTests : GenerateContentBaseTests
         const string expectedCode =
             @"namespace Energy.Consumption.Api.Contracts.Contracts.Petrol.Parameters;
 
-public record struct CreateLocationParameters(
+public record CreateLocationParameters(
     CreateLocationRequest? Request);
 
-public record struct GetLocationByIdParameters(
-    [FromRoute, Required] Guid LocationId);
+public record GetLocationByIdParameters(
+    [property: FromRoute, Required] Guid LocationId);
 
-public record struct GetLocationsByCountryCodeA3Parameters(
-    [FromQuery] string CountryCodeA3);";
+public record GetLocationsByCountryCodeA3Parameters(
+    [property: FromQuery] string CountryCodeA3);";
 
         var recordsParameters = new RecordsParameters(
             HeaderContent: null,
@@ -26,7 +26,7 @@ public record struct GetLocationsByCountryCodeA3Parameters(
             {
                 new(
                     DocumentationTags: null,
-                    AccessModifiers.PublicRecordStruct,
+                    AccessModifiers.PublicRecord,
                     Name: "CreateLocationParameters",
                     new List<ParameterBaseParameters>
                     {
@@ -34,14 +34,15 @@ public record struct GetLocationsByCountryCodeA3Parameters(
                             Attributes: null,
                             GenericTypeName: null,
                             IsGenericListType: false,
-                            TypeName: "CreateLocationRequest?",
+                            TypeName: "CreateLocationRequest",
+                            IsNullableType: true,
                             IsReferenceType: true,
                             Name: "Request",
                             DefaultValue: null),
                     }),
                 new(
                     DocumentationTags: null,
-                    AccessModifiers.PublicRecordStruct,
+                    AccessModifiers.PublicRecord,
                     Name: "GetLocationByIdParameters",
                     new List<ParameterBaseParameters>
                     {
@@ -50,13 +51,14 @@ public record struct GetLocationsByCountryCodeA3Parameters(
                             GenericTypeName: null,
                             IsGenericListType: false,
                             TypeName: "Guid",
+                            IsNullableType: false,
                             IsReferenceType: false,
                             Name: "LocationId",
                             DefaultValue: null),
                     }),
                 new(
                     DocumentationTags: null,
-                    AccessModifiers.PublicRecordStruct,
+                    AccessModifiers.PublicRecord,
                     Name: "GetLocationsByCountryCodeA3Parameters",
                     new List<ParameterBaseParameters>
                     {
@@ -65,6 +67,7 @@ public record struct GetLocationsByCountryCodeA3Parameters(
                             GenericTypeName: null,
                             IsGenericListType: false,
                             TypeName: "string",
+                            IsNullableType: false,
                             IsReferenceType: false,
                             Name: "CountryCodeA3",
                             DefaultValue: null),

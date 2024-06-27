@@ -25,6 +25,7 @@ public static class ContentGeneratorClientEndpointInterfaceParametersFactory
                     GenericTypeName: null,
                     IsGenericListType: false,
                     TypeName: $"{operationName}{ContentGeneratorConstants.Parameters}",
+                    IsNullableType: false,
                     IsReferenceType: true,
                     Name: "parameters",
                     DefaultValue: null));
@@ -37,6 +38,7 @@ public static class ContentGeneratorClientEndpointInterfaceParametersFactory
                 GenericTypeName: null,
                 IsGenericListType: false,
                 TypeName: "string",
+                IsNullableType: false,
                 IsReferenceType: false,
                 Name: "httpClientName",
                 DefaultValue: httpClientName));
@@ -48,6 +50,7 @@ public static class ContentGeneratorClientEndpointInterfaceParametersFactory
                 GenericTypeName: null,
                 IsGenericListType: false,
                 TypeName: "CancellationToken",
+                IsNullableType: false,
                 IsReferenceType: true,
                 Name: "cancellationToken",
                 DefaultValue: "default"));
@@ -65,7 +68,7 @@ public static class ContentGeneratorClientEndpointInterfaceParametersFactory
                     @return: null),
                 Attributes: null,
                 AccessModifier: AccessModifiers.None,
-                ReturnTypeName: $"I{operationName}{ContentGeneratorConstants.EndpointResult}",
+                ReturnTypeName: $"{operationName}{ContentGeneratorConstants.EndpointResult}",
                 ReturnGenericTypeName: "Task",
                 Name: "ExecuteAsync",
                 Parameters: methodParametersParameters,
