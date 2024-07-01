@@ -404,7 +404,7 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
         bool useProblemDetailsAsDefaultResponseBody,
         bool useCustomErrorResponseModel)
     {
-        var suffix = string.Empty;
+        string suffix;
         if (useCustomErrorResponseModel)
         {
             suffix = "WCEM";

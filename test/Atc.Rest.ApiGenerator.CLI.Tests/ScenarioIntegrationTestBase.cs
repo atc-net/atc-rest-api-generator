@@ -76,7 +76,7 @@ public abstract class ScenarioIntegrationTestBase : IntegrationTestCliBase
         ArgumentNullException.ThrowIfNull(workingPath);
         ArgumentNullException.ThrowIfNull(scenario);
 
-        var suffix = string.Empty;
+        string suffix;
         if (useCustomErrorResponseModel)
         {
             suffix = "WithCustomErrorResponse";
