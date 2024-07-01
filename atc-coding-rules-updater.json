@@ -5,12 +5,6 @@
   "temporarySuppressionAsExcel": false,
   "analyzerProviderCollectingMode": "LocalCache",
   "mappings": {
-    "sample": {
-      "paths": [
-        "sample-minimal",
-        "sample-mvc"
-      ]
-    },
     "src": {
       "paths": [
         "src"
