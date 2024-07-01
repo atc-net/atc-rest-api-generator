@@ -367,12 +367,10 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
         sbCommands.Append(scenarioPath.Name);
         sbCommands.Append(" --outputPath ");
         sbCommands.Append(Path.Combine(outputPath.FullName, "src"));
-        if (!useCustomErrorResponseModel)
+        if (!useCustomErrorResponseModel &&
+            useProblemDetailsAsDefaultResponseBody)
         {
-            if (useProblemDetailsAsDefaultResponseBody)
-            {
-                sbCommands.Append(" --useProblemDetailsAsDefaultResponseBody");
-            }
+            sbCommands.Append(" --useProblemDetailsAsDefaultResponseBody");
         }
 
         if (optionsFile is not null)
