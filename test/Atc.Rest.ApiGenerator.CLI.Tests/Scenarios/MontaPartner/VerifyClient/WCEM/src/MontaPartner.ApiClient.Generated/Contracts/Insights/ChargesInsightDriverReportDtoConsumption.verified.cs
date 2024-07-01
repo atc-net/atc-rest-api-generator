@@ -19,7 +19,6 @@ public class ChargesInsightDriverReportDtoConsumption
     /// * `team-operator` - Charges that belong to Charge Points of the same operator as paying team operator.
     /// * `public` - Any charge that was paid for by this team that does not match the other cases.
     /// Note that more chargeTypes might be added in the future. Make sure to handle this gracefully.
-    /// .
     /// </summary>
     [Required]
     public string ChargeType { get; set; }

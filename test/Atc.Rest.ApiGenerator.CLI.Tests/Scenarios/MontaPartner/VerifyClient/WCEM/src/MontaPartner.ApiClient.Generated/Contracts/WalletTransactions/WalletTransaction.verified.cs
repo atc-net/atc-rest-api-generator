@@ -107,7 +107,6 @@ public class WalletTransaction
     /// Kind of this transaction, ie 'charge-sponsored'.
     /// &lt;br/&gt;
     /// **Note:** This is an open field and therefore more kinds will be added moving forward.
-    /// .
     /// </summary>
     [Required]
     public string Kind { get; set; }

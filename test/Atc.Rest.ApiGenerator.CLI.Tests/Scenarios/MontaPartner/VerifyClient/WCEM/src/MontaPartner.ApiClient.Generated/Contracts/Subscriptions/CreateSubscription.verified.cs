@@ -31,7 +31,6 @@ public class CreateSubscription
     /// Allows to modify the absolute discount on a subscription if provided.
     /// If not provided, the discount of the plan is used.
     /// Note: If you want to set it on an existing subscription, you have to cancel the subscription first.
-    /// .
     /// </summary>
     public double? DiscountAbsolute { get; set; }
 
@@ -39,7 +38,6 @@ public class CreateSubscription
     /// Allows to modify the percentage discount on a subscription if provided.
     /// If not provided, the discount of the plan is used.
     /// Note: If you want to set it on an existing subscription, you have to cancel the subscription first.
-    /// .
     /// </summary>
     public double? DiscountPercentage { get; set; }
 

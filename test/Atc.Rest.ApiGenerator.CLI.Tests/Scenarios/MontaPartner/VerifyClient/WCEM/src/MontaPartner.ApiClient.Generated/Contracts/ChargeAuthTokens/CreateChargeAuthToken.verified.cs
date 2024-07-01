@@ -64,8 +64,7 @@ public class CreateChargeAuthToken
     /// <summary>
     /// If the charge auth token is blocked, it will not be able to charge.
     /// * `null` = not blocked
-    /// * date-time = blocked since date-time
-    /// .
+    /// * date-time = blocked since date-time.
     /// </summary>
     public DateTimeOffset? BlockedAt { get; set; }
 

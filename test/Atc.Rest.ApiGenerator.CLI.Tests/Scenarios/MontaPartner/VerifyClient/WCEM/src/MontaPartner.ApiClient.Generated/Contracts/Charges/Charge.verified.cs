@@ -40,8 +40,7 @@ public class Charge
 
     /// <summary>
     /// Id of the price group related to this charge. Note: The underlying price/costGroup models can change and you have
-    /// to use other fields to get the historic data (costBreakdown, priceBreakdown, price)
-    /// .
+    /// to use other fields to get the historic data (costBreakdown, priceBreakdown, price).
     /// </summary>
     public long PriceGroupId { get; set; }
 

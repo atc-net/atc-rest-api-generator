@@ -43,7 +43,6 @@ public class PatchChargePoint
     /// Indicates the charge point should be displayed on map.
     /// By setting this to false, the charge point will not be shown on the app's map,
     /// but will still be fully functional for users of the charge point.
-    /// .
     /// </summary>
     public bool? ShowOnMap { get; set; } = true;
 

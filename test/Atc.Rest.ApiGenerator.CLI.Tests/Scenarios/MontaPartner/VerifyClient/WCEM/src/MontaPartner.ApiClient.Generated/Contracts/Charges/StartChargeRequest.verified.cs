@@ -27,7 +27,6 @@ public class StartChargeRequest
     /// <summary>
     /// If true, a charge point will be reserved and a charge object with state reserved will be returned.
     /// Use `restart` endpoint to start the charge.
-    /// .
     /// </summary>
     public bool ReserveCharge { get; set; }
 

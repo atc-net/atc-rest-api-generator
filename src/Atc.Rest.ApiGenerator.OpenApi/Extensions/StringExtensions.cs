@@ -1,5 +1,3 @@
-using System.Numerics;
-
 namespace Atc.Rest.ApiGenerator.OpenApi.Extensions;
 
 public static class StringExtensions
@@ -42,13 +40,17 @@ public static class StringExtensions
             value = value[..^1];
         }
 
-        if (value.Contains("\n", StringComparison.Ordinal))
+        if (value.Contains('\n', StringComparison.Ordinal))
         {
             var lines = value.ToLines();
             var sb = new StringBuilder();
             foreach (var line in lines)
             {
-                sb.AppendLine(line.Trim());
+                var trimmedLine = line.Trim();
+                if (trimmedLine.Length > 0)
+                {
+                    sb.AppendLine(trimmedLine);
+                }
             }
 
             value = sb.ToString();
@@ -56,6 +58,11 @@ public static class StringExtensions
         else
         {
             value = value.Trim();
+        }
+
+        if (value.EndsWith(Environment.NewLine, StringComparison.Ordinal))
+        {
+            value = value[..^Environment.NewLine.Length];
         }
 
         return value.EnsureEndsWithDot();

@@ -36,8 +36,7 @@ public class GetSitesParameters
 
     /// <summary>
     /// lat,long coordinates. If supplied, the Charge Points will be sorted in nearest first order relative
-    /// to this point. (Format: 55.7096,12.5856)
-    /// .
+    /// to this point. (Format: 55.7096,12.5856).
     /// </summary>
     public string SortByLocation { get; set; }
 

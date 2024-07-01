@@ -61,14 +61,12 @@ public class CreateChargePoint
     /// Indicates the charge point should be displayed on map.
     /// By setting this to false, the charge point will not be shown on the app's map,
     /// but will still be fully functional for users of the charge point.
-    /// .
     /// </summary>
     public bool? ShowOnMap { get; set; } = true;
 
     /// <summary>
     /// Ids of the connectors this charge point support,
     /// When not present the provide charge point model connectors will be used instead.
-    /// .
     /// </summary>
     public List<long>? ConnectorIds { get; set; } = new List<long>();
 

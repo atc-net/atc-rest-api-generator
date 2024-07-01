@@ -47,7 +47,6 @@ public class PatchChargeAuthToken
     /// <summary>
     /// Indicates until when this charge auth token is active, null means indefinitely.
     /// Note: Use `../block` and `../unblock` endpoints to (un)block a charge auth token.
-    /// .
     /// </summary>
     public DateTimeOffset? ActiveUntil { get; set; }
 
