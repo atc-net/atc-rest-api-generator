@@ -1,3 +1,5 @@
+using System.Numerics;
+
 namespace Atc.Rest.ApiGenerator.OpenApi.Extensions;
 
 public static class StringExtensions
@@ -38,6 +40,22 @@ public static class StringExtensions
         if (value.EndsWith("\n", StringComparison.Ordinal))
         {
             value = value[..^1];
+        }
+
+        if (value.Contains("\n", StringComparison.Ordinal))
+        {
+            var lines = value.ToLines();
+            var sb = new StringBuilder();
+            foreach (var line in lines)
+            {
+                sb.AppendLine(line.Trim());
+            }
+
+            value = sb.ToString();
+        }
+        else
+        {
+            value = value.Trim();
         }
 
         return value.EnsureEndsWithDot();
