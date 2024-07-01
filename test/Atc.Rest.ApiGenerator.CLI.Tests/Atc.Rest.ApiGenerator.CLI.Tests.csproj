@@ -19,6 +19,7 @@
     <Compile Remove="Scenarios\ExNsWithTask\VerifyServerAll\**" />
     <Compile Remove="Scenarios\ExUsers\VerifyClient\**" />
     <Compile Remove="Scenarios\ExUsers\VerifyServerAll\**" />
+    <Compile Remove="Scenarios\MontaPartner\VerifyClient\**" />
     <Compile Remove="Scenarios\PetStore\VerifyClient\**" />
     <Compile Remove="Scenarios\PetStore\VerifyServerAll\**" />
     <EmbeddedResource Remove="Scenarios\DemoSample\VerifyClient\**" />
@@ -31,6 +32,7 @@
     <EmbeddedResource Remove="Scenarios\ExNsWithTask\VerifyServerAll\**" />
     <EmbeddedResource Remove="Scenarios\ExUsers\VerifyClient\**" />
     <EmbeddedResource Remove="Scenarios\ExUsers\VerifyServerAll\**" />
+    <EmbeddedResource Remove="Scenarios\MontaPartner\VerifyClient\**" />
     <EmbeddedResource Remove="Scenarios\PetStore\VerifyClient\**" />
     <EmbeddedResource Remove="Scenarios\PetStore\VerifyServerAll\**" />
     <None Remove="Scenarios\DemoSample\VerifyClient\**" />
@@ -43,6 +45,7 @@
     <None Remove="Scenarios\ExNsWithTask\VerifyServerAll\**" />
     <None Remove="Scenarios\ExUsers\VerifyClient\**" />
     <None Remove="Scenarios\ExUsers\VerifyServerAll\**" />
+    <None Remove="Scenarios\MontaPartner\VerifyClient\**" />
     <None Remove="Scenarios\PetStore\VerifyClient\**" />
     <None Remove="Scenarios\PetStore\VerifyServerAll\**" />
   </ItemGroup>

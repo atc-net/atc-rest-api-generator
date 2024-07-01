@@ -1,0 +1,53 @@
+{
+    "generator": {
+      "aspNetOutputType": "Mvc",
+      "swaggerThemeMode": "None",
+      "useRestExtended": true,
+      "includeDeprecated": false,
+      "projectSuffixName": "",
+      "removeNamespaceGroupSeparatorInGlobalUsings": false,
+      "request": {},
+      "response": {
+        "useProblemDetailsAsDefaultBody": false,
+        "customErrorResponseModel": {
+          "name": "ErrorResponse",
+          "description": "Represents an error response.",
+          "schema": {
+            "status": {
+              "dataType": "string?",
+              "description": "Gets or sets the status of the error."
+            },
+            "message": {
+              "dataType": "string?",
+              "description": "Gets or sets the error message."
+            },
+            "readableMessage": {
+              "dataType": "string?",
+              "description": "Gets or sets the readable message."
+            },
+            "errorCode": {
+              "dataType": "string?",
+              "description": "Gets or sets the error code."
+            },
+            "context": {
+              "dataType": "object?",
+              "description": "Gets or sets the context information."
+            }
+          }
+        }
+      },
+      "client": {
+        "folderName": "",
+        "excludeEndpointGeneration": false,
+        "httpClientName": "MontaApiClient"
+      }
+    },
+    "validation": {
+      "strictMode": false,
+      "operationIdValidation": false,
+      "operationIdCasingStyle": "CamelCase",
+      "modelNameCasingStyle": "PascalCase",
+      "modelPropertyNameCasingStyle": "CamelCase"
+    },
+    "includeDeprecated": false
+}
