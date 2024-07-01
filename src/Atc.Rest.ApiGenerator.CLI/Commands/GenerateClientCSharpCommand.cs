@@ -49,10 +49,6 @@ public class GenerateClientCSharpCommand : AsyncCommand<ClientApiCommandSettings
         var shouldScaffoldCodingRules = CodingRulesHelper.ShouldScaffoldCodingRules(settings.OutputPath, settings.DisableCodingRules);
         var isUsingCodingRules = CodingRulesHelper.IsUsingCodingRules(settings.OutputPath, settings.DisableCodingRules);
 
-        var httpClientName = settings.HttpClientName is not null && settings.HttpClientName.IsSet
-            ? settings.HttpClientName.Value
-            : null;
-
         if (shouldScaffoldCodingRules &&
             !NetworkInformationHelper.HasHttpConnection())
         {
@@ -74,15 +70,10 @@ public class GenerateClientCSharpCommand : AsyncCommand<ClientApiCommandSettings
                     loggerFactory,
                     apiOperationExtractor,
                     nugetPackageReferenceProvider,
-                    settings.ProjectPrefixName,
-                    httpClientName,
-                    settings.ClientFolderName is not null && settings.ClientFolderName.IsSet ? settings.ClientFolderName.Value : string.Empty,
                     new DirectoryInfo(settings.OutputPath),
                     apiDocumentContainer,
-                    settings.ExcludeEndpointGeneration,
                     apiOptions,
-                    isUsingCodingRules,
-                    settings.RemoveNamespaceGroupSeparatorInGlobalUsings))
+                    isUsingCodingRules))
             {
                 return ConsoleExitStatusCodes.Failure;
             }

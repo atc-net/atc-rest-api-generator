@@ -212,7 +212,8 @@ public class GenerateContentWriter
             {
                 if (!parameters.IsGenericListType &&
                     parameters.TypeName.Equals("string", StringComparison.Ordinal) &&
-                    !parameters.DefaultValue.Equals("null", StringComparison.Ordinal))
+                    !parameters.DefaultValue.Equals("null", StringComparison.Ordinal) &&
+                    !parameters.DefaultValue.Equals("string.Empty", StringComparison.Ordinal))
                 {
                     sb.Append($" = \"{parameters.DefaultValue}\";");
                 }

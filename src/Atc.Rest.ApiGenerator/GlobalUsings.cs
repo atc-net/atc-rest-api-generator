@@ -4,6 +4,7 @@ global using Atc.Console.Spectre;
 global using Atc.Helpers;
 global using Atc.Rest.ApiGenerator.Client.CSharp.ProjectGenerator;
 global using Atc.Rest.ApiGenerator.Contracts;
+global using Atc.Rest.ApiGenerator.Contracts.Models;
 global using Atc.Rest.ApiGenerator.Contracts.Options;
 global using Atc.Rest.ApiGenerator.Framework.ProjectGenerator;
 global using Atc.Rest.ApiGenerator.Framework.Providers;

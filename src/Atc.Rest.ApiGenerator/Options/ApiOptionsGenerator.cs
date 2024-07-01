@@ -10,7 +10,15 @@ public class ApiOptionsGenerator
 
     public bool IncludeDeprecated { get; set; }
 
+    public string ProjectName { get; set; } = string.Empty;
+
+    public string ProjectSuffixName { get; set; } = string.Empty;
+
+    public bool RemoveNamespaceGroupSeparatorInGlobalUsings { get; set; }
+
     public ApiOptionsGeneratorRequest Request { get; set; } = new();
 
     public ApiOptionsGeneratorResponse Response { get; set; } = new();
+
+    public ApiOptionsGeneratorClient? Client { get; set; }
 }

@@ -96,16 +96,10 @@ public sealed class ContentWriter : IContentWriter
         FileInfo fileInfo,
         string text)
     {
-        if (fileInfo.Extension.Equals(".cs", StringComparison.OrdinalIgnoreCase) &&
-            text.EndsWith("}" + Environment.NewLine, StringComparison.Ordinal))
+        if ((fileInfo.Extension.Equals(".cs", StringComparison.OrdinalIgnoreCase) && text.EndsWith("}" + Environment.NewLine, StringComparison.Ordinal)) ||
+            (fileInfo.Name.Equals("GlobalUsings.cs", StringComparison.Ordinal) && text.EndsWith(";" + Environment.NewLine, StringComparison.Ordinal)))
         {
-            // Trim last NewLine in in *.cs files
-            text = RemoveLastNewLine(text);
-        }
-        else if (fileInfo.Name.Equals("GlobalUsings.cs", StringComparison.Ordinal) &&
-                 text.EndsWith(";" + Environment.NewLine, StringComparison.Ordinal))
-        {
-            // Trim last NewLine in in GlobalUsings.cs files
+            // Trim last NewLine in *.cs files or last NewLine in GlobalUsings.cs files
             text = RemoveLastNewLine(text);
         }
 

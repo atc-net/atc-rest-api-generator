@@ -82,15 +82,15 @@ public static class OpenApiSchemaExtensions
     }
 
     public static string? GetCollectionDataType(
-        this OpenApiSchema schema)
+        this OpenApiSchema apiSchema)
     {
-        if (schema.IsArray())
+        if (apiSchema.IsArray())
         {
             return NameConstants.List;
         }
 
-        if (schema.IsTypePagination() ||
-            schema.IsTypeCustomPagination())
+        if (apiSchema.IsTypePagination() ||
+            apiSchema.IsTypeCustomPagination())
         {
             return NameConstants.Pagination;
         }
@@ -124,16 +124,16 @@ public static class OpenApiSchemaExtensions
            apiSchema.Items?.Reference?.Id is not null;
 
     public static bool IsTypeCustomPagination(
-        this OpenApiSchema schema)
+        this OpenApiSchema apiSchema)
     {
-        ArgumentNullException.ThrowIfNull(schema);
+        ArgumentNullException.ThrowIfNull(apiSchema);
 
-        if (schema.AllOf.Count == 2)
+        if (apiSchema.AllOf.Count == 2)
         {
-            if (schema.AllOf[0].Reference?.Id is null &&
-                schema.AllOf[1].Reference?.Id is not null)
+            if (apiSchema.AllOf[0].Reference?.Id is null &&
+                apiSchema.AllOf[1].Reference?.Id is not null)
             {
-                var dataType = schema.AllOf[1].Reference?.Id.PascalCase(ApiOperationExtractor.ModelNameSeparators, removeSeparators: true);
+                var dataType = apiSchema.AllOf[1].Reference?.Id.PascalCase(ApiOperationExtractor.ModelNameSeparators, removeSeparators: true);
                 if (dataType is not null &&
                     (dataType.Contains(NameConstants.Pagination, StringComparison.Ordinal) ||
                     dataType.Contains("Paginated", StringComparison.Ordinal)))
@@ -142,13 +142,35 @@ public static class OpenApiSchemaExtensions
                 }
             }
 
-            if (schema.AllOf[0].Reference?.Id is not null &&
-                schema.AllOf[1].Reference?.Id is null)
+            if (apiSchema.AllOf[0].Reference?.Id is not null &&
+                apiSchema.AllOf[1].Reference?.Id is null)
             {
-                var dataType = schema.AllOf[0].Reference?.Id.PascalCase(ApiOperationExtractor.ModelNameSeparators, removeSeparators: true);
+                var dataType = apiSchema.AllOf[0].Reference?.Id.PascalCase(ApiOperationExtractor.ModelNameSeparators, removeSeparators: true);
                 if (dataType is not null &&
                     (dataType.Contains(NameConstants.Pagination, StringComparison.Ordinal) ||
                     dataType.Contains("Paginated", StringComparison.Ordinal)))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public static bool IsSchemaEnumAndUseJsonString(this OpenApiSchema apiSchema)
+    {
+        if (apiSchema.IsSchemaEnum())
+        {
+            foreach (var apiAny in apiSchema.Enum)
+            {
+                if (apiAny is not OpenApiString openApiString)
+                {
+                    continue;
+                }
+
+                if ((!apiSchema.Type.Equals("string", StringComparison.Ordinal) && openApiString.Value.IsFirstCharacterLowerCase()) ||
+                    openApiString.Value.Contains('-', StringComparison.Ordinal))
                 {
                     return true;
                 }

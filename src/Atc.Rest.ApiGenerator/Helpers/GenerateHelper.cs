@@ -205,34 +205,22 @@ public static class GenerateHelper
         ILoggerFactory loggerFactory,
         IApiOperationExtractor apiOperationExtractor,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
-        string projectPrefixName,
-        string? httpClientName,
-        string? clientFolderName,
         DirectoryInfo outputPath,
         OpenApiDocumentContainer apiDocumentContainer,
-        bool excludeEndpointGeneration,
         ApiOptions apiOptions,
-        bool useCodingRules,
-        bool removeNamespaceGroupSeparatorInGlobalUsings)
+        bool useCodingRules)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
-        ArgumentNullException.ThrowIfNull(projectPrefixName);
         ArgumentNullException.ThrowIfNull(outputPath);
         ArgumentNullException.ThrowIfNull(apiDocumentContainer);
         ArgumentNullException.ThrowIfNull(apiOptions);
 
         var clientCSharpApiProjectOptions = new ClientCSharpApiProjectOptions(
             outputPath,
-            clientFolderName,
             apiDocumentContainer.Document!,
             apiDocumentContainer.DocFile,
-            projectPrefixName,
-            "ApiClient.Generated",
-            httpClientName,
-            excludeEndpointGeneration,
             apiOptions,
-            useCodingRules,
-            removeNamespaceGroupSeparatorInGlobalUsings);
+            useCodingRules);
         var clientCSharpApiGenerator = new Generators.ClientCSharpApiGenerator(loggerFactory, apiOperationExtractor, nugetPackageReferenceProvider, clientCSharpApiProjectOptions);
 
         var generateResult = false;

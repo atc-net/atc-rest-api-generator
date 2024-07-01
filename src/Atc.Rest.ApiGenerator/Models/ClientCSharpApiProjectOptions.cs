@@ -4,26 +4,21 @@ public class ClientCSharpApiProjectOptions
 {
     public ClientCSharpApiProjectOptions(
         DirectoryInfo projectSrcGeneratePath,
-        string? clientFolderName,
         OpenApiDocument openApiDocument,
         FileInfo openApiDocumentFile,
-        string projectPrefixName,
-        string projectSuffixName,
-        string? httpClientName,
-        bool excludeEndpointGeneration,
         ApiOptions apiOptions,
-        bool usingCodingRules,
-        bool removeNamespaceGroupSeparatorInGlobalUsings)
+        bool usingCodingRules)
     {
         ArgumentNullException.ThrowIfNull(projectSrcGeneratePath);
+        ArgumentNullException.ThrowIfNull(apiOptions);
 
-        ProjectName = projectPrefixName ?? throw new ArgumentNullException(nameof(projectPrefixName));
+        ProjectName = $"{apiOptions.Generator.ProjectName}.{apiOptions.Generator.ProjectSuffixName}";
+
         PathForSrcGenerate = projectSrcGeneratePath.Name.StartsWith(ProjectName, StringComparison.OrdinalIgnoreCase)
             ? projectSrcGeneratePath.Parent!
             : projectSrcGeneratePath;
 
         ForClient = true;
-        ClientFolderName = clientFolderName;
         Document = openApiDocument ?? throw new ArgumentNullException(nameof(openApiDocument));
         DocumentFile = openApiDocumentFile ?? throw new ArgumentNullException(nameof(openApiDocumentFile));
 
@@ -41,28 +36,14 @@ public class ClientCSharpApiProjectOptions
         ApiGeneratorVersion = apiGeneratorVersion!;
 
         ApiOptions = apiOptions;
-        ProjectName = projectPrefixName
-            .Replace(" ", ".", StringComparison.Ordinal)
-            .Replace("-", ".", StringComparison.Ordinal)
-            .Trim() + $".{projectSuffixName}";
-
-        HttpClientName = httpClientName ?? $"{projectPrefixName}-ApiClient";
 
         PathForSrcGenerate = new DirectoryInfo(Path.Combine(PathForSrcGenerate.FullName, ProjectName));
         ProjectSrcCsProj = new FileInfo(Path.Combine(PathForSrcGenerate.FullName, $"{ProjectName}.csproj"));
 
-        ApiGroupNames = openApiDocument.GetApiGroupNames();
-
         UsingCodingRules = usingCodingRules;
-        RemoveNamespaceGroupSeparatorInGlobalUsings = removeNamespaceGroupSeparatorInGlobalUsings;
-        ExcludeEndpointGeneration = excludeEndpointGeneration;
     }
 
     public bool UsingCodingRules { get; }
-
-    public bool RemoveNamespaceGroupSeparatorInGlobalUsings { get; }
-
-    public bool UseNullableReferenceTypes { get; } = true;
 
     public string ApiGeneratorName { get; }
 
@@ -81,20 +62,12 @@ public class ClientCSharpApiProjectOptions
 
     public bool ForClient { get; }
 
-    public string? ClientFolderName { get; }
-
     public OpenApiDocument Document { get; }
 
     public FileInfo DocumentFile { get; }
 
     public string ProjectName { get; }
 
-    public string HttpClientName { get; set; }
-
-    public IList<string> ApiGroupNames { get; }
-
-    public bool ExcludeEndpointGeneration { get; }
-
     public override string ToString()
-        => $"{nameof(ApiGeneratorName)}: {ApiGeneratorName}, {nameof(ApiGeneratorVersion)}: {ApiGeneratorVersion}, {nameof(ApiGeneratorNameAndVersion)}: {ApiGeneratorNameAndVersion}, {nameof(ApiOptions)}: {ApiOptions}, {nameof(PathForSrcGenerate)}: {PathForSrcGenerate}, {nameof(ProjectSrcCsProj)}: {ProjectSrcCsProj}, {nameof(ForClient)}: {ForClient}, {nameof(ClientFolderName)}: {ClientFolderName}, {nameof(Document)}: {Document}, {nameof(DocumentFile)}: {DocumentFile}, {nameof(ProjectName)}: {ProjectName}, {nameof(HttpClientName)}: {HttpClientName}, {nameof(ApiGroupNames)}: {ApiGroupNames}, {nameof(ExcludeEndpointGeneration)}: {ExcludeEndpointGeneration}";
+        => $"{nameof(ApiGeneratorName)}: {ApiGeneratorName}, {nameof(ApiGeneratorVersion)}: {ApiGeneratorVersion}, {nameof(ApiGeneratorNameAndVersion)}: {ApiGeneratorNameAndVersion}, {nameof(ApiOptions)}: {ApiOptions}, {nameof(PathForSrcGenerate)}: {PathForSrcGenerate}, {nameof(ProjectSrcCsProj)}: {ProjectSrcCsProj}, {nameof(ForClient)}: {ForClient}, {nameof(Document)}: {Document}, {nameof(DocumentFile)}: {DocumentFile}, {nameof(ProjectName)}: {ProjectName}";
 }

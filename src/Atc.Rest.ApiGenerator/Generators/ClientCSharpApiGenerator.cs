@@ -32,11 +32,18 @@ public class ClientCSharpApiGenerator
             projectOptions.Document,
             operationSchemaMappings,
             projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
-            projectOptions.ApiOptions.Generator.IncludeDeprecated)
+            projectOptions.ApiOptions.Generator.IncludeDeprecated,
+            projectOptions.ApiOptions.Generator.Response.CustomErrorResponseModel);
+
+        if (projectOptions.ApiOptions.Generator.Client is not null)
         {
-            HttpClientName = projectOptions.HttpClientName,
-            ClientFolderName = projectOptions.ClientFolderName,
-        };
+            clientCSharpApiGenerator.HttpClientName = projectOptions.ApiOptions.Generator.Client.HttpClientName;
+
+            if (!string.IsNullOrEmpty(projectOptions.ApiOptions.Generator.Client.FolderName))
+            {
+                clientCSharpApiGenerator.ClientFolderName = projectOptions.ApiOptions.Generator.Client.FolderName;
+            }
+        }
     }
 
     public async Task<bool> Generate()
@@ -49,7 +56,8 @@ public class ClientCSharpApiGenerator
 
         clientCSharpApiGenerator.GenerateParameters();
 
-        if (!projectOptions.ExcludeEndpointGeneration)
+        if (projectOptions.ApiOptions.Generator.Client is not null &&
+            !projectOptions.ApiOptions.Generator.Client.ExcludeEndpointGeneration)
         {
             clientCSharpApiGenerator.GenerateEndpointInterfaces();
 
@@ -61,7 +69,7 @@ public class ClientCSharpApiGenerator
         }
 
         clientCSharpApiGenerator.MaintainGlobalUsings(
-            projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
+            projectOptions.ApiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings);
 
         return true;
     }

@@ -16,6 +16,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
     private readonly AttributeParameters codeGeneratorAttribute;
     private readonly bool useProblemDetailsAsDefaultResponseBody;
     private readonly bool includeDeprecated;
+    private readonly CustomErrorResponseModel? customErrorResponseModel;
 
     public ClientCSharpApiGenerator(
         ILoggerFactory loggerFactory,
@@ -26,7 +27,8 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
         OpenApiDocument openApiDocument,
         IList<ApiOperation> operationSchemaMappings,
         bool useProblemDetailsAsDefaultResponseBody,
-        bool includeDeprecated)
+        bool includeDeprecated,
+        CustomErrorResponseModel? customErrorResponseModel)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
         ArgumentNullException.ThrowIfNull(nugetPackageReferenceProvider);
@@ -41,6 +43,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
         this.apiGeneratorVersion = apiGeneratorVersion;
         this.projectName = projectName;
         this.projectPath = projectPath;
+        this.customErrorResponseModel = customErrorResponseModel;
         this.openApiDocument = openApiDocument;
         this.operationSchemaMappings = operationSchemaMappings;
         this.useProblemDetailsAsDefaultResponseBody = useProblemDetailsAsDefaultResponseBody;
@@ -107,6 +110,8 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
 
     public void GenerateModels()
     {
+        GenerateCustomErrorResponseModel(customErrorResponseModel);
+
         foreach (var apiGroupName in openApiDocument.GetApiGroupNames())
         {
             var apiOperations = operationSchemaMappings
@@ -252,7 +257,8 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
                     new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
                     new CodeDocumentationTagsGenerator(),
                     endpointParameters,
-                    useProblemDetailsAsDefaultResponseBody);
+                    useProblemDetailsAsDefaultResponseBody,
+                    customErrorResponseModel?.Name);
 
                 var content = contentGenerator.Generate();
 
@@ -516,6 +522,37 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
             isSharedContract
                 ? projectPath.CombineFileInfo(ContentGeneratorConstants.Contracts, ContentGeneratorConstants.SpecialFolderSharedModels, $"{modelName}.cs")
                 : projectPath.CombineFileInfo(ContentGeneratorConstants.Contracts, apiGroupName, $"{modelName}.cs"),
+            ContentWriterArea.Src,
+            content);
+    }
+
+    private void GenerateCustomErrorResponseModel(
+        CustomErrorResponseModel? customErrorResponseModel)
+    {
+        if (customErrorResponseModel is null ||
+            string.IsNullOrEmpty(customErrorResponseModel.Name))
+        {
+            return;
+        }
+
+        var fullNamespace = $"{projectName}.{ContentGeneratorConstants.Contracts}";
+
+        var parameters = ContentGeneratorServerClientModelParametersFactory.CreateForCustomErrorResponseModel(
+            codeGeneratorContentHeader,
+            fullNamespace,
+            codeGeneratorAttribute,
+            customErrorResponseModel);
+
+        var contentGeneratorClass = new GenerateContentForClass(
+            new CodeDocumentationTagsGenerator(),
+            parameters);
+
+        var content = contentGeneratorClass.Generate();
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectPath,
+            projectPath.CombineFileInfo(ContentGeneratorConstants.Contracts, ContentGeneratorConstants.SpecialFolderSharedModels, $"{customErrorResponseModel.Name.EnsureFirstCharacterToUpper()}.cs"),
             ContentWriterArea.Src,
             content);
     }

@@ -27,6 +27,7 @@ public static class ApiOptionsHelper
         var options = await CreateDefault(optionsPath);
 
         ApplyValidationOverrides(options, settings);
+        ApplyGeneratorOverrides(options, settings);
 
         return options;
     }
@@ -51,13 +52,13 @@ public static class ApiOptionsHelper
     {
         ArgumentNullException.ThrowIfNull(optionsPath);
 
+        var options = new ApiOptions();
+
         var fileInfo = GetOptionsFile(optionsPath);
         if (fileInfo.Exists)
         {
-            return (false, "File already exist");
+            options = await FileHelper<ApiOptions>.ReadJsonFileAndDeserializeAsync(fileInfo) ?? new ApiOptions();
         }
-
-        var options = new ApiOptions();
 
         await FileHelper<ApiOptions>.WriteModelToJsonFileAsync(fileInfo, options);
         return (true, string.Empty);
@@ -74,10 +75,17 @@ public static class ApiOptionsHelper
             return (false, "File does not exist");
         }
 
-        var options = await FileHelper<ApiOptions>.ReadJsonFileAndDeserializeAsync(fileInfo);
-        return options is null
-            ? (false, "File is invalid")
-            : (true, string.Empty);
+        try
+        {
+            var options = await FileHelper<ApiOptions>.ReadJsonFileAndDeserializeAsync(fileInfo);
+            return options is null
+                ? (false, "File is invalid")
+                : (true, string.Empty);
+        }
+        catch (Exception ex)
+        {
+            return (false, $"File is invalid: {ex.Message}");
+        }
     }
 
     private static FileInfo GetOptionsFile(
@@ -116,66 +124,88 @@ public static class ApiOptionsHelper
         {
             apiOptions.Validation.ModelPropertyNameCasingStyle = settings.ModelPropertyNameCasingStyle.Value;
         }
+    }
+
+    private static void ApplyGeneratorOverrides(
+        ApiOptions apiOptions,
+        BaseConfigurationCommandSettings settings)
+    {
+        if (settings is BaseServerCommandSettings serverSettings)
+        {
+            if (serverSettings.AspNetOutputType.IsSet)
+            {
+                apiOptions.Generator.AspNetOutputType = serverSettings.AspNetOutputType.Value;
+            }
+
+            if (serverSettings.SwaggerThemeMode.IsSet)
+            {
+                apiOptions.Generator.SwaggerThemeMode = serverSettings.SwaggerThemeMode.Value;
+            }
+
+            if (serverSettings.UseProblemDetailsAsDefaultResponseBody)
+            {
+                apiOptions.Generator.Response.UseProblemDetailsAsDefaultBody = serverSettings.UseProblemDetailsAsDefaultResponseBody;
+            }
+
+            if (serverSettings.ProjectPrefixName is not null)
+            {
+                apiOptions.Generator.ProjectName = serverSettings.ProjectPrefixName
+                    .Replace(" ", ".", StringComparison.Ordinal)
+                    .Replace("-", ".", StringComparison.Ordinal)
+                    .Trim();
+            }
+
+            apiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings = serverSettings.RemoveNamespaceGroupSeparatorInGlobalUsings;
+        }
 
         switch (settings)
         {
-            case ServerAllCommandSettings serverAllCommandSettings:
-            {
-                if (serverAllCommandSettings.AspNetOutputType.IsSet)
-                {
-                    apiOptions.Generator.AspNetOutputType = serverAllCommandSettings.AspNetOutputType.Value;
-                }
-
-                if (serverAllCommandSettings.SwaggerThemeMode.IsSet)
-                {
-                    apiOptions.Generator.SwaggerThemeMode = serverAllCommandSettings.SwaggerThemeMode.Value;
-                }
-
-                if (serverAllCommandSettings.UseProblemDetailsAsDefaultResponseBody)
-                {
-                    apiOptions.Generator.Response.UseProblemDetailsAsDefaultBody = serverAllCommandSettings.UseProblemDetailsAsDefaultResponseBody;
-                }
-
-                break;
-            }
-            case ServerHostCommandSettings serverHostCommandSettings:
-            {
-                if (serverHostCommandSettings.AspNetOutputType.IsSet)
-                {
-                    apiOptions.Generator.AspNetOutputType = serverHostCommandSettings.AspNetOutputType.Value;
-                }
-
-                if (serverHostCommandSettings.SwaggerThemeMode.IsSet)
-                {
-                    apiOptions.Generator.SwaggerThemeMode = serverHostCommandSettings.SwaggerThemeMode.Value;
-                }
-
-                if (serverHostCommandSettings.UseProblemDetailsAsDefaultResponseBody)
-                {
-                    apiOptions.Generator.Response.UseProblemDetailsAsDefaultBody = serverHostCommandSettings.UseProblemDetailsAsDefaultResponseBody;
-                }
-
-                break;
-            }
-            case ServerApiCommandSettings serverApiCommandSettings:
-            {
-                if (serverApiCommandSettings.UseProblemDetailsAsDefaultResponseBody)
-                {
-                    apiOptions.Generator.Response.UseProblemDetailsAsDefaultBody = serverApiCommandSettings.UseProblemDetailsAsDefaultResponseBody;
-                }
-
-                break;
-            }
-            case ServerDomainCommandSettings:
-            {
-                break;
-            }
             case ClientApiCommandSettings clientApiCommandSettings:
             {
                 if (clientApiCommandSettings.UseProblemDetailsAsDefaultResponseBody)
                 {
                     apiOptions.Generator.Response.UseProblemDetailsAsDefaultBody = clientApiCommandSettings.UseProblemDetailsAsDefaultResponseBody;
                 }
+
+                if (clientApiCommandSettings.ProjectPrefixName is not null)
+                {
+                    apiOptions.Generator.ProjectName = clientApiCommandSettings.ProjectPrefixName;
+                }
+
+                apiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings = clientApiCommandSettings.RemoveNamespaceGroupSeparatorInGlobalUsings;
+
+                if (string.IsNullOrEmpty(apiOptions.Generator.ProjectSuffixName))
+                {
+                    apiOptions.Generator.ProjectSuffixName = "ApiClient.Generated";
+                }
+                else
+                {
+                    apiOptions.Generator.ProjectSuffixName = apiOptions.Generator.ProjectSuffixName
+                        .Replace(" ", ".", StringComparison.Ordinal)
+                        .Replace("-", ".", StringComparison.Ordinal)
+                        .Trim();
+                }
+
+                apiOptions.Generator.Client ??= new ApiOptionsGeneratorClient();
+
+                if (clientApiCommandSettings.ClientFolderName is not null &&
+                    clientApiCommandSettings.ClientFolderName.IsSet)
+                {
+                    apiOptions.Generator.Client.FolderName = clientApiCommandSettings.ClientFolderName.Value;
+                }
+
+                if (clientApiCommandSettings.HttpClientName is not null &&
+                    clientApiCommandSettings.HttpClientName.IsSet)
+                {
+                    apiOptions.Generator.Client.HttpClientName = clientApiCommandSettings.HttpClientName.Value;
+                }
+                else
+                {
+                    var baseGenerateCommandSettings = (BaseGenerateCommandSettings)settings;
+                    apiOptions.Generator.Client.HttpClientName = $"{baseGenerateCommandSettings.ProjectPrefixName}-ApiClient";
+                }
+
+                apiOptions.Generator.Client.ExcludeEndpointGeneration = clientApiCommandSettings.ExcludeEndpointGeneration;
 
                 break;
             }
