@@ -110,7 +110,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
 
     public void GenerateModels()
     {
-        GenerateCustomErrorResponseModel(customErrorResponseModel);
+        GenerateCustomErrorResponseModel();
 
         foreach (var apiGroupName in openApiDocument.GetApiGroupNames())
         {
@@ -526,8 +526,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
             content);
     }
 
-    private void GenerateCustomErrorResponseModel(
-        CustomErrorResponseModel? customErrorResponseModel)
+    private void GenerateCustomErrorResponseModel()
     {
         if (customErrorResponseModel is null ||
             string.IsNullOrEmpty(customErrorResponseModel.Name))
