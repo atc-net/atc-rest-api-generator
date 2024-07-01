@@ -19,6 +19,7 @@
     <Compile Remove="Scenarios\ExNsWithTask\VerifyServerAll\**" />
     <Compile Remove="Scenarios\ExUsers\VerifyClient\**" />
     <Compile Remove="Scenarios\ExUsers\VerifyServerAll\**" />
+    <Compile Remove="Scenarios\Monta\VerifyClient\**" />
     <Compile Remove="Scenarios\PetStore\VerifyClient\**" />
     <Compile Remove="Scenarios\PetStore\VerifyServerAll\**" />
     <EmbeddedResource Remove="Scenarios\DemoSample\VerifyClient\**" />
@@ -31,6 +32,7 @@
     <EmbeddedResource Remove="Scenarios\ExNsWithTask\VerifyServerAll\**" />
     <EmbeddedResource Remove="Scenarios\ExUsers\VerifyClient\**" />
     <EmbeddedResource Remove="Scenarios\ExUsers\VerifyServerAll\**" />
+    <EmbeddedResource Remove="Scenarios\Monta\VerifyClient\**" />
     <EmbeddedResource Remove="Scenarios\PetStore\VerifyClient\**" />
     <EmbeddedResource Remove="Scenarios\PetStore\VerifyServerAll\**" />
     <None Remove="Scenarios\DemoSample\VerifyClient\**" />
@@ -43,16 +45,17 @@
     <None Remove="Scenarios\ExNsWithTask\VerifyServerAll\**" />
     <None Remove="Scenarios\ExUsers\VerifyClient\**" />
     <None Remove="Scenarios\ExUsers\VerifyServerAll\**" />
+    <None Remove="Scenarios\Monta\VerifyClient\**" />
     <None Remove="Scenarios\PetStore\VerifyClient\**" />
     <None Remove="Scenarios\PetStore\VerifyServerAll\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc.DotNet" Version="2.0.488" />
+    <PackageReference Include="Atc.DotNet" Version="2.0.490" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.1" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
-    <PackageReference Include="Atc.CodeDocumentation" Version="2.0.488" />
-    <PackageReference Include="Atc.XUnit" Version="2.0.488" />
+    <PackageReference Include="Atc.CodeDocumentation" Version="2.0.490" />
+    <PackageReference Include="Atc.XUnit" Version="2.0.490" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
     <PackageReference Include="Verify" Version="17.10.2" />
     <PackageReference Include="Verify.Xunit" Version="17.10.2" />

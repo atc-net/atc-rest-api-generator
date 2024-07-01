@@ -54,18 +54,39 @@ public abstract class ScenarioIntegrationTestBase : IntegrationTestCliBase
         };
     }
 
+    public static FileInfo? GetApiGeneratorOptionsPath(
+        string scenarioPath)
+    {
+        var files = Directory.GetFiles(scenarioPath, "ApiGeneratorOptions.json");
+        return files.Length switch
+        {
+            0 => null,
+            > 1 => throw new NotSupportedException($"Too many ApiGeneratorOptions.json files found in path '{scenarioPath}'."),
+            _ => new FileInfo(files[0]),
+        };
+    }
+
     public static DirectoryInfo GetOutputPath(
         DirectoryInfo workingPath,
         DirectoryInfo scenario,
         AspNetOutputType? aspNetOutputType,
-        bool useProblemDetailsAsDefaultResponseBody)
+        bool useProblemDetailsAsDefaultResponseBody,
+        bool useCustomErrorResponseModel = false)
     {
         ArgumentNullException.ThrowIfNull(workingPath);
         ArgumentNullException.ThrowIfNull(scenario);
 
-        var suffix = useProblemDetailsAsDefaultResponseBody
-            ? "WithProblemDetails"
-            : "WithoutProblemDetails";
+        string suffix;
+        if (useCustomErrorResponseModel)
+        {
+            suffix = "WithCustomErrorResponse";
+        }
+        else
+        {
+            suffix = useProblemDetailsAsDefaultResponseBody
+                ? "WithProblemDetails"
+                : "WithoutProblemDetails";
+        }
 
         if (aspNetOutputType is null)
         {

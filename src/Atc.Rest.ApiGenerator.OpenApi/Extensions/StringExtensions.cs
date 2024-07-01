@@ -40,6 +40,31 @@ public static class StringExtensions
             value = value[..^1];
         }
 
+        if (value.Contains('\n', StringComparison.Ordinal))
+        {
+            var lines = value.ToLines();
+            var sb = new StringBuilder();
+            foreach (var line in lines)
+            {
+                var trimmedLine = line.Trim();
+                if (trimmedLine.Length > 0)
+                {
+                    sb.AppendLine(trimmedLine);
+                }
+            }
+
+            value = sb.ToString();
+        }
+        else
+        {
+            value = value.Trim();
+        }
+
+        if (value.EndsWith(Environment.NewLine, StringComparison.Ordinal))
+        {
+            value = value[..^Environment.NewLine.Length];
+        }
+
         return value.EnsureEndsWithDot();
     }
 }

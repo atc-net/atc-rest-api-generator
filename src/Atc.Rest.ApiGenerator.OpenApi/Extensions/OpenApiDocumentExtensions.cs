@@ -260,21 +260,52 @@ public static class OpenApiDocumentExtensions
                     continue;
                 }
 
+                foreach (var apiParameter in apiPathPair.Value.Parameters)
+                {
+                    if (apiParameter.IsSchemaEnumAndUseJsonString())
+                    {
+                        return true;
+                    }
+                }
+
                 foreach (var apiParameter in apiOperationPair.Value.Parameters)
                 {
-                    if (apiParameter.Schema.IsSchemaEnum())
+                    if (apiParameter.IsSchemaEnumAndUseJsonString())
                     {
-                        foreach (var apiAny in apiParameter.Schema.Enum)
-                        {
-                            if (apiAny is not OpenApiString openApiString)
-                            {
-                                continue;
-                            }
+                        return true;
+                    }
+                }
 
-                            if ((!apiParameter.Schema.Type.Equals("string", StringComparison.Ordinal) && openApiString.Value.IsFirstCharacterLowerCase()) ||
-                                openApiString.Value.Contains('-', StringComparison.Ordinal))
+                foreach (var apiResponse in apiOperationPair.Value.Responses.Values)
+                {
+                    foreach (var apiMediaType in apiResponse.Content.Values)
+                    {
+                        if (apiMediaType.IsSchemaEnumAndUseJsonString())
+                        {
+                            return true;
+                        }
+
+                        foreach (var propertyApiSchemaPair in apiMediaType.Schema.Properties)
+                        {
+                            if (propertyApiSchemaPair.IsSchemaEnumAndUseJsonString())
                             {
                                 return true;
+                            }
+
+                            foreach (var oneOfApiSchema in propertyApiSchemaPair.Value.OneOf)
+                            {
+                                if (oneOfApiSchema.IsSchemaEnumAndUseJsonString())
+                                {
+                                    return true;
+                                }
+
+                                foreach (var oneOfPropertyApiSchemaPair in oneOfApiSchema.Properties)
+                                {
+                                    if (oneOfPropertyApiSchemaPair.IsSchemaEnumAndUseJsonString())
+                                    {
+                                        return true;
+                                    }
+                                }
                             }
                         }
                     }

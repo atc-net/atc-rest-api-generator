@@ -65,6 +65,88 @@ public static class ContentGeneratorServerClientModelParametersFactory
             Parameters: recordParameters);
     }
 
+    public static ClassParameters CreateForCustomErrorResponseModel(
+        string codeGeneratorContentHeader,
+        string fullNamespace,
+        AttributeParameters codeGeneratorAttribute,
+        CustomErrorResponseModel customErrorResponseModel)
+    {
+        ArgumentNullException.ThrowIfNull(customErrorResponseModel);
+
+        var summery = "Represents an error response.";
+        var documentationTags = new CodeDocumentationTags(summery);
+        if (!string.IsNullOrEmpty(customErrorResponseModel.Description))
+        {
+            documentationTags = new CodeDocumentationTags(
+                summary: customErrorResponseModel.Description,
+                parameters: null,
+                remark: null,
+                code: null,
+                example: null,
+                exceptions: null,
+                @return: null);
+        }
+
+        var properties = new List<PropertyParameters>();
+        foreach (var schema in customErrorResponseModel.Schema)
+        {
+            CodeDocumentationTags? documentationTag = null;
+
+            var dataType = string.Empty;
+            var isNullableType = false;
+            string? defaultValue = null;
+
+            if (schema.Value.DataType.EndsWith('?'))
+            {
+                dataType = schema.Value.DataType.Replace("?", string.Empty, StringComparison.Ordinal);
+                isNullableType = true;
+            }
+            else
+            {
+                dataType = schema.Value.DataType;
+                if (dataType.Equals("string", StringComparison.OrdinalIgnoreCase))
+                {
+                    defaultValue = "string.Empty";
+                }
+            }
+
+            properties.Add(
+                new PropertyParameters(
+                    documentationTag,
+                    Attributes: null,
+                    AccessModifiers.Public,
+                    GenericTypeName: null,
+                    TypeName: dataType,
+                    IsNullableType: isNullableType,
+                    Name: schema.Key.EnsureFirstCharacterToUpper(),
+                    JsonName: null,
+                    DefaultValue: defaultValue,
+                    IsReferenceType: false,
+                    IsGenericListType: false,
+                    UseAutoProperty: true,
+                    UseGet: true,
+                    UseSet: true,
+                    UseExpressionBody: false,
+                    Content: null));
+        }
+
+        return new ClassParameters(
+            HeaderContent: null,
+            fullNamespace,
+            documentationTags,
+            new List<AttributeParameters> { codeGeneratorAttribute },
+            AccessModifiers.PublicClass,
+            ClassTypeName: customErrorResponseModel.Name.EnsureFirstCharacterToUpper(),
+            GenericTypeName: null,
+            InheritedClassTypeName: null,
+            InheritedGenericClassTypeName: null,
+            InheritedInterfaceTypeName: null,
+            Constructors: null,
+            Properties: properties,
+            Methods: null,
+            GenerateToStringMethod: true);
+    }
+
     private static bool GetRequired(
         ICollection<string> required,
         string name,
@@ -361,13 +443,10 @@ public static class ContentGeneratorServerClientModelParametersFactory
                     : openApiParameter.IsSimpleDataType() || openApiParameter.IsSchemaEnumOrPropertyEnum() || openApiParameter.IsFormatTypeBinary();
 
                 string? dataTypeForList = null;
-                if (hasAnyPropertiesAsArrayWithFormatTypeBinary)
-                {
-                    dataTypeForList = dataType;
-                }
-                else if (useListForDataType && !string.IsNullOrEmpty(openApiParameter.Items.Title) &&
-                         openApiParameter.Default is null &&
-                         !GetRequired(apiSchemaModel.Required, apiSchema.Key, hasAnyPropertiesAsArrayWithFormatTypeBinary))
+                if (hasAnyPropertiesAsArrayWithFormatTypeBinary ||
+                    (useListForDataType && !string.IsNullOrEmpty(openApiParameter.Items.Title) &&
+                     openApiParameter.Default is null &&
+                     !GetRequired(apiSchemaModel.Required, apiSchema.Key, hasAnyPropertiesAsArrayWithFormatTypeBinary)))
                 {
                     dataTypeForList = dataType;
                 }

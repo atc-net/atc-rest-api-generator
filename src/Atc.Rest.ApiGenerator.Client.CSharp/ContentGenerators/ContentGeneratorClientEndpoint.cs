@@ -10,19 +10,22 @@ public class ContentGeneratorClientEndpoint : IContentGenerator
     private readonly CodeDocumentationTagsGenerator codeDocumentationTagsGenerator;
     private readonly ContentGeneratorClientEndpointParameters parameters;
     private readonly bool useProblemDetailsAsDefaultResponseBody;
+    private readonly string? customErrorResponseModel;
 
     public ContentGeneratorClientEndpoint(
         GeneratedCodeHeaderGenerator codeHeaderGenerator,
         GeneratedCodeAttributeGenerator codeAttributeGenerator,
         CodeDocumentationTagsGenerator codeDocumentationTagsGenerator,
         ContentGeneratorClientEndpointParameters parameters,
-        bool useProblemDetailsAsDefaultResponseBody)
+        bool useProblemDetailsAsDefaultResponseBody,
+        string? customErrorResponseModel)
     {
         this.codeHeaderGenerator = codeHeaderGenerator;
         this.codeAttributeGenerator = codeAttributeGenerator;
         this.codeDocumentationTagsGenerator = codeDocumentationTagsGenerator;
         this.parameters = parameters;
         this.useProblemDetailsAsDefaultResponseBody = useProblemDetailsAsDefaultResponseBody;
+        this.customErrorResponseModel = customErrorResponseModel;
     }
 
     public string Generate()
@@ -115,7 +118,15 @@ public class ContentGeneratorClientEndpoint : IContentGenerator
                     AppendAddSuccessResponseForStatusCodeOk(sb, responseModel);
                     break;
                 case HttpStatusCode.BadRequest:
-                    sb.AppendLine(8, $"responseBuilder.AddErrorResponse<ValidationProblemDetails>(HttpStatusCode.{responseModel.StatusCode.ToNormalizedString()});");
+                    if (string.IsNullOrEmpty(customErrorResponseModel))
+                    {
+                        sb.AppendLine(8, $"responseBuilder.AddErrorResponse<ValidationProblemDetails>(HttpStatusCode.{responseModel.StatusCode.ToNormalizedString()});");
+                    }
+                    else
+                    {
+                        sb.AppendLine(8, $"responseBuilder.AddErrorResponse<{customErrorResponseModel}>(HttpStatusCode.{responseModel.StatusCode.ToNormalizedString()});");
+                    }
+
                     break;
                 case HttpStatusCode.Continue:
                 case HttpStatusCode.SwitchingProtocols:
@@ -176,11 +187,19 @@ public class ContentGeneratorClientEndpoint : IContentGenerator
                 case HttpStatusCode.LoopDetected:
                 case HttpStatusCode.NotExtended:
                 case HttpStatusCode.NetworkAuthenticationRequired:
-                    sb.AppendLine(
-                        8,
-                        useProblemDetailsAsDefaultResponseBody
-                            ? $"responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.{responseModel.StatusCode});"
-                            : $"responseBuilder.AddErrorResponse<string>(HttpStatusCode.{responseModel.StatusCode});");
+                    if (string.IsNullOrEmpty(customErrorResponseModel))
+                    {
+                        sb.AppendLine(
+                            8,
+                            useProblemDetailsAsDefaultResponseBody
+                                ? $"responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.{responseModel.StatusCode});"
+                                : $"responseBuilder.AddErrorResponse<string>(HttpStatusCode.{responseModel.StatusCode});");
+                    }
+                    else
+                    {
+                        sb.AppendLine(8, $"responseBuilder.AddErrorResponse<{customErrorResponseModel}>(HttpStatusCode.{responseModel.StatusCode});");
+                    }
+
                     break;
                 default:
                     sb.AppendLine(4, $"// TODO: Not Implemented for {responseModel.StatusCode}.");

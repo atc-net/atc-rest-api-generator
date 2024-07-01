@@ -2,6 +2,28 @@ namespace Atc.Rest.ApiGenerator.OpenApi.Extensions;
 
 public static class OpenApiParameterExtensions
 {
+    public static bool IsSchemaEnumAndUseJsonString(this OpenApiParameter apiParameter)
+    {
+        if (apiParameter.Schema.IsSchemaEnum())
+        {
+            foreach (var apiAny in apiParameter.Schema.Enum)
+            {
+                if (apiAny is not OpenApiString openApiString)
+                {
+                    continue;
+                }
+
+                if ((!apiParameter.Schema.Type.Equals("string", StringComparison.Ordinal) && openApiString.Value.IsFirstCharacterLowerCase()) ||
+                    openApiString.Value.Contains('-', StringComparison.Ordinal))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     public static CodeDocumentationTags ExtractDocumentationTags(
         this OpenApiParameter apiParameter)
     {

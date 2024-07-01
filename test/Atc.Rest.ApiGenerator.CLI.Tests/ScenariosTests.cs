@@ -86,36 +86,39 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
     }
 
     [Theory]
-    [InlineData("DemoSample", false)]
-    [InlineData("DemoSample", true)]
-    [InlineData("ExAllResponseTypes", false)]
-    [InlineData("ExAllResponseTypes", true)]
-    [InlineData("ExGenericPagination", false)]
-    [InlineData("ExGenericPagination", true)]
-    [InlineData("ExNsWithTask", false)]
-    [InlineData("ExNsWithTask", true)]
-    [InlineData("ExUsers", false)]
-    [InlineData("ExUsers", true)]
-    [InlineData("PetStore", false)]
-    [InlineData("PetStore", true)]
+    [InlineData("DemoSample", false, false)]
+    [InlineData("DemoSample", true, false)]
+    [InlineData("ExAllResponseTypes", false, false)]
+    [InlineData("ExAllResponseTypes", true, false)]
+    [InlineData("ExGenericPagination", false, false)]
+    [InlineData("ExGenericPagination", true, false)]
+    [InlineData("ExNsWithTask", false, false)]
+    [InlineData("ExNsWithTask", true, false)]
+    [InlineData("ExUsers", false, false)]
+    [InlineData("ExUsers", true, false)]
+    [InlineData("PetStore", false, false)]
+    [InlineData("PetStore", true, false)]
+    [InlineData("Monta", false, true)]
     public async Task GenerateVerifyAndBuildForClientCSharpByScenario(
         string scenarioName,
-        bool useProblemDetailsAsDefaultResponseBody)
+        bool useProblemDetailsAsDefaultResponseBody,
+        bool useCustomErrorResponseModel)
     {
         // Arrange
         var scenarioPath = CollectScenarioPaths().First(x => x.Name == scenarioName);
 
         var specificationFile = GetYamlSpecificationPath(scenarioPath.FullName);
+        var optionsFile = GetApiGeneratorOptionsPath(scenarioPath.FullName);
 
-        var outputPath = GetOutputPath(WorkingPath, scenarioPath, aspNetOutputType: null, useProblemDetailsAsDefaultResponseBody);
+        var outputPath = GetOutputPath(WorkingPath, scenarioPath, aspNetOutputType: null, useProblemDetailsAsDefaultResponseBody, useCustomErrorResponseModel);
         if (Directory.Exists(outputPath.FullName))
         {
             Directory.Delete(outputPath.FullName, recursive: true);
         }
 
         // Act & Assert
-        await AssertGenerateForClientCSharp(outputPath, scenarioPath, specificationFile, useProblemDetailsAsDefaultResponseBody);
-        await AssertVerifyCsFilesForClientCSharp(outputPath, scenarioPath, useProblemDetailsAsDefaultResponseBody);
+        await AssertGenerateForClientCSharp(outputPath, scenarioPath, specificationFile, optionsFile, useProblemDetailsAsDefaultResponseBody, useCustomErrorResponseModel);
+        await AssertVerifyCsFilesForClientCSharp(outputPath, scenarioPath, useProblemDetailsAsDefaultResponseBody, useCustomErrorResponseModel);
     }
 
     ////[Fact]
@@ -352,7 +355,9 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
         DirectoryInfo outputPath,
         DirectoryInfo scenarioPath,
         FileInfo specificationFile,
-        bool useProblemDetailsAsDefaultResponseBody)
+        FileInfo? optionsFile,
+        bool useProblemDetailsAsDefaultResponseBody,
+        bool useCustomErrorResponseModel)
     {
         var sbCommands = new StringBuilder();
         sbCommands.Append("generate client csharp");
@@ -362,9 +367,16 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
         sbCommands.Append(scenarioPath.Name);
         sbCommands.Append(" --outputPath ");
         sbCommands.Append(Path.Combine(outputPath.FullName, "src"));
-        if (useProblemDetailsAsDefaultResponseBody)
+        if (!useCustomErrorResponseModel &&
+            useProblemDetailsAsDefaultResponseBody)
         {
             sbCommands.Append(" --useProblemDetailsAsDefaultResponseBody");
+        }
+
+        if (optionsFile is not null)
+        {
+            sbCommands.Append(" --optionsPath ");
+            sbCommands.Append(optionsFile.FullName);
         }
 
         sbCommands.Append(" --verbose");
@@ -389,11 +401,20 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
     private static async Task AssertVerifyCsFilesForClientCSharp(
         DirectoryInfo outputPath,
         DirectoryInfo scenarioPath,
-        bool useProblemDetailsAsDefaultResponseBody)
+        bool useProblemDetailsAsDefaultResponseBody,
+        bool useCustomErrorResponseModel)
     {
-        var suffix = useProblemDetailsAsDefaultResponseBody
-            ? "WPD"
-            : "WOPD";
+        string suffix;
+        if (useCustomErrorResponseModel)
+        {
+            suffix = "WCEM";
+        }
+        else
+        {
+            suffix = useProblemDetailsAsDefaultResponseBody
+                ? "WPD"
+                : "WOPD";
+        }
 
         var verifyPath = new DirectoryInfo(Path.Combine(scenarioPath.FullName, "VerifyClient", suffix));
 
