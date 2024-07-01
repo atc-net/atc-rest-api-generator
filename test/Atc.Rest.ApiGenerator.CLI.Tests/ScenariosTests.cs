@@ -98,7 +98,7 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
     [InlineData("ExUsers", true, false)]
     [InlineData("PetStore", false, false)]
     [InlineData("PetStore", true, false)]
-    [InlineData("MontaPartner", false, true)]
+    [InlineData("Monta", false, true)]
     public async Task GenerateVerifyAndBuildForClientCSharpByScenario(
         string scenarioName,
         bool useProblemDetailsAsDefaultResponseBody,
