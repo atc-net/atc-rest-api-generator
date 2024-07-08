@@ -21,9 +21,10 @@ public static class ContentGeneratorClientEndpointParametersFactory
         AppendParameters(parameters, openApiOperation.Parameters);
         AppendParametersFromBody(parameters, openApiOperation.RequestBody);
 
+        var modelNamespace = $"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
         var operationName = openApiOperation.GetOperationName();
         var endpointAuthorization = openApiOperation.ExtractApiOperationAuthorization(openApiPath);
-        var responseModels = openApiOperation.ExtractApiOperationResponseModels().ToList();
+        var responseModels = openApiOperation.ExtractApiOperationResponseModels(modelNamespace).ToList();
 
         if (openApiPath.HasParameters() ||
             openApiOperation.HasParametersOrRequestBody())

@@ -1,3 +1,4 @@
+// ReSharper disable ConvertIfStatementToReturnStatement
 namespace Atc.Rest.ApiGenerator.Contracts.Extensions;
 
 public static class ApiOperationResponseModelExtensions
@@ -13,10 +14,20 @@ public static class ApiOperationResponseModelExtensions
         }
 
         var dataType = responseModel.DataType;
-        if (responseModel.Namespace is not null &&
-            responseModel.Namespace.EndsWith(responseModel.DataType, StringComparison.Ordinal))
+        if (responseModel.Namespace is null)
         {
-            dataType = $"{responseModel.Namespace}.{dataType}";
+            return dataType;
+        }
+
+        if (responseModel.Namespace.EndsWith(responseModel.DataType, StringComparison.Ordinal))
+        {
+            return $"{responseModel.Namespace}.{dataType}";
+        }
+
+        // Special cases for .NET types
+        if (dataType.Equals("Task", StringComparison.Ordinal))
+        {
+            return $"{responseModel.Namespace}.{dataType}";
         }
 
         return dataType;

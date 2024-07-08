@@ -238,11 +238,11 @@ public class ContentGeneratorClientEndpoint : IContentGenerator
 
         if (responseModel.CollectionDataType == NameConstants.List)
         {
-            sb.AppendLine(8, $"responseBuilder.AddSuccessResponse<IEnumerable<{responseModel.DataType}>>(HttpStatusCode.OK);");
+            sb.AppendLine(8, $"responseBuilder.AddSuccessResponse<IEnumerable<{dataType}>>(HttpStatusCode.OK);");
         }
         else
         {
-            sb.AppendLine(8, $"responseBuilder.AddSuccessResponse<{responseModel.CollectionDataType}<{responseModel.DataType}>>(HttpStatusCode.OK);");
+            sb.AppendLine(8, $"responseBuilder.AddSuccessResponse<{responseModel.CollectionDataType}<{dataType}>>(HttpStatusCode.OK);");
         }
     }
 
