@@ -245,6 +245,11 @@ public static class ContentGeneratorServerClientModelParametersFactory
                     }
 
                     dataType ??= openApiParameter.Items.GetDataType();
+
+                    if ("Object".Equals(dataType, StringComparison.Ordinal))
+                    {
+                        dataType = "object";
+                    }
                 }
                 else
                 {
