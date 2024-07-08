@@ -53,7 +53,12 @@ public sealed class ValidationAttributeExtractor : IValidationAttributeExtractor
                 validationAttributes.Add(new UriAttribute());
                 break;
             default:
-                throw new NotImplementedException($"Schema Format '{format}' must be implemented.");
+                if (!string.IsNullOrEmpty(schema.Pattern))
+                {
+                    validationAttributes.Add(new RegularExpressionAttribute(schema.Pattern));
+                }
+
+                break;
         }
     }
 
