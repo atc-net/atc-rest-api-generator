@@ -17,7 +17,7 @@ public static class ContentGeneratorServerResultParametersFactory
 
         // Methods
         var methodParameters = new List<ContentGeneratorServerResultMethodParameters>();
-        var responseModels = openApiOperation.ExtractApiOperationResponseModels().ToList();
+        var responseModels = openApiOperation.ExtractApiOperationResponseModels(@namespace).ToList();
 
         foreach (var responseModel in responseModels.OrderBy(x => x.StatusCode))
         {
