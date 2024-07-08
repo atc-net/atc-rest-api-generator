@@ -130,32 +130,34 @@ public static class ApiOptionsHelper
         ApiOptions apiOptions,
         BaseConfigurationCommandSettings settings)
     {
-        if (settings is BaseServerCommandSettings serverSettings)
+        if (settings is BaseServerCommandSettings serverCommandSettings)
         {
-            if (serverSettings.AspNetOutputType.IsSet)
+            if (serverCommandSettings.AspNetOutputType.IsSet)
             {
-                apiOptions.Generator.AspNetOutputType = serverSettings.AspNetOutputType.Value;
+                apiOptions.Generator.AspNetOutputType = serverCommandSettings.AspNetOutputType.Value;
             }
 
-            if (serverSettings.SwaggerThemeMode.IsSet)
+            if (serverCommandSettings.SwaggerThemeMode.IsSet)
             {
-                apiOptions.Generator.SwaggerThemeMode = serverSettings.SwaggerThemeMode.Value;
+                apiOptions.Generator.SwaggerThemeMode = serverCommandSettings.SwaggerThemeMode.Value;
             }
 
-            if (serverSettings.UseProblemDetailsAsDefaultResponseBody)
+            if (serverCommandSettings.UseProblemDetailsAsDefaultResponseBody)
             {
-                apiOptions.Generator.Response.UseProblemDetailsAsDefaultBody = serverSettings.UseProblemDetailsAsDefaultResponseBody;
+                apiOptions.Generator.Response.UseProblemDetailsAsDefaultBody =
+                    serverCommandSettings.UseProblemDetailsAsDefaultResponseBody;
             }
 
-            if (serverSettings.ProjectPrefixName is not null)
+            if (serverCommandSettings.ProjectPrefixName is not null)
             {
-                apiOptions.Generator.ProjectName = serverSettings.ProjectPrefixName
-                    .Replace(" ", ".", StringComparison.Ordinal)
-                    .Replace("-", ".", StringComparison.Ordinal)
-                    .Trim();
+                apiOptions.Generator.ProjectName = serverCommandSettings.ProjectPrefixName;
             }
 
-            apiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings = serverSettings.RemoveNamespaceGroupSeparatorInGlobalUsings;
+            if (!serverCommandSettings.RemoveNamespaceGroupSeparatorInGlobalUsings ||
+                apiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings)
+            {
+                apiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings = serverCommandSettings.RemoveNamespaceGroupSeparatorInGlobalUsings;
+            }
         }
 
         switch (settings)
@@ -164,7 +166,8 @@ public static class ApiOptionsHelper
             {
                 if (clientApiCommandSettings.UseProblemDetailsAsDefaultResponseBody)
                 {
-                    apiOptions.Generator.Response.UseProblemDetailsAsDefaultBody = clientApiCommandSettings.UseProblemDetailsAsDefaultResponseBody;
+                    apiOptions.Generator.Response.UseProblemDetailsAsDefaultBody =
+                        clientApiCommandSettings.UseProblemDetailsAsDefaultResponseBody;
                 }
 
                 if (clientApiCommandSettings.ProjectPrefixName is not null)
@@ -172,18 +175,15 @@ public static class ApiOptionsHelper
                     apiOptions.Generator.ProjectName = clientApiCommandSettings.ProjectPrefixName;
                 }
 
-                apiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings = clientApiCommandSettings.RemoveNamespaceGroupSeparatorInGlobalUsings;
+                if (!clientApiCommandSettings.RemoveNamespaceGroupSeparatorInGlobalUsings ||
+                    apiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings)
+                {
+                    apiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings = clientApiCommandSettings.RemoveNamespaceGroupSeparatorInGlobalUsings;
+                }
 
                 if (string.IsNullOrEmpty(apiOptions.Generator.ProjectSuffixName))
                 {
                     apiOptions.Generator.ProjectSuffixName = "ApiClient.Generated";
-                }
-                else
-                {
-                    apiOptions.Generator.ProjectSuffixName = apiOptions.Generator.ProjectSuffixName
-                        .Replace(" ", ".", StringComparison.Ordinal)
-                        .Replace("-", ".", StringComparison.Ordinal)
-                        .Trim();
                 }
 
                 apiOptions.Generator.Client ??= new ApiOptionsGeneratorClient();
@@ -199,16 +199,26 @@ public static class ApiOptionsHelper
                 {
                     apiOptions.Generator.Client.HttpClientName = clientApiCommandSettings.HttpClientName.Value;
                 }
-                else
+                else if ("ApiClient".Equals(apiOptions.Generator.Client.HttpClientName, StringComparison.Ordinal))
                 {
                     var baseGenerateCommandSettings = (BaseGenerateCommandSettings)settings;
                     apiOptions.Generator.Client.HttpClientName = $"{baseGenerateCommandSettings.ProjectPrefixName}-ApiClient";
                 }
 
-                apiOptions.Generator.Client.ExcludeEndpointGeneration = clientApiCommandSettings.ExcludeEndpointGeneration;
+                apiOptions.Generator.Client.ExcludeEndpointGeneration =
+                    clientApiCommandSettings.ExcludeEndpointGeneration;
 
                 break;
             }
+        }
+
+        if (apiOptions.Generator.ProjectSuffixName.Contains(' ', StringComparison.Ordinal) ||
+            apiOptions.Generator.ProjectSuffixName.Contains('-', StringComparison.Ordinal))
+        {
+            apiOptions.Generator.ProjectSuffixName = apiOptions.Generator.ProjectSuffixName
+                .Trim()
+                .Replace(' ', '.')
+                .Replace('-', '.');
         }
     }
 }

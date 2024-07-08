@@ -39,7 +39,7 @@ public class CreateSite
     /// <summary>
     /// Custom JSON payload for this entity, managed by you.
     /// </summary>
-    public List<Object>? PartnerCustomPayload { get; set; } = new List<Object>();
+    public List<object>? PartnerCustomPayload { get; set; } = new List<object>();
 
     /// <inheritdoc />
     public override string ToString()
