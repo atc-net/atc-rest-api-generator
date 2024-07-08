@@ -27,7 +27,7 @@ public class WebhookEntryPayload
     /// <summary>
     /// payload of this entity, e.g. a full Charge object.
     /// </summary>
-    public List<Object>? Payload { get; set; } = new List<Object>();
+    public List<object>? Payload { get; set; } = new List<object>();
 
     /// <inheritdoc />
     public override string ToString()

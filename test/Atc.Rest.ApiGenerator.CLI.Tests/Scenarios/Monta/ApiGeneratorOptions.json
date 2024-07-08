@@ -39,7 +39,7 @@
       "client": {
         "folderName": "",
         "excludeEndpointGeneration": false,
-        "httpClientName": "MontaApiClient"
+        "httpClientName": "Monta-ApiClient"
       }
     },
     "validation": {

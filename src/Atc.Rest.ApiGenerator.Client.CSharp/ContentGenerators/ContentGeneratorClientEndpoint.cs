@@ -234,7 +234,7 @@ public class ContentGeneratorClientEndpoint : IContentGenerator
 
         if (responseModel.CollectionDataType is null)
         {
-            sb.AppendLine(8, $"responseBuilder.AddSuccessResponse<{responseModel.DataType}>(HttpStatusCode.OK);");
+            sb.AppendLine(8, $"responseBuilder.AddSuccessResponse<{dataType}>(HttpStatusCode.OK);");
             return;
         }
 
