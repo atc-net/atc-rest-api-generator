@@ -230,6 +230,8 @@ public class ContentGeneratorClientEndpoint : IContentGenerator
             return;
         }
 
+        var dataType = responseModel.GetQualifiedDataType();
+
         if (responseModel.CollectionDataType is null)
         {
             sb.AppendLine(8, $"responseBuilder.AddSuccessResponse<{responseModel.DataType}>(HttpStatusCode.OK);");
