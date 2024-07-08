@@ -11,4 +11,7 @@ public class ApiOptionsValidation
     public CasingStyle ModelNameCasingStyle { get; set; } = CasingStyle.PascalCase;
 
     public CasingStyle ModelPropertyNameCasingStyle { get; set; } = CasingStyle.CamelCase;
+
+    public override string ToString()
+        => $"{nameof(StrictMode)}: {StrictMode}, {nameof(OperationIdValidation)}: {OperationIdValidation}, {nameof(OperationIdCasingStyle)}: {OperationIdCasingStyle}, {nameof(ModelNameCasingStyle)}: {ModelNameCasingStyle}, {nameof(ModelPropertyNameCasingStyle)}: {ModelPropertyNameCasingStyle}";
 }

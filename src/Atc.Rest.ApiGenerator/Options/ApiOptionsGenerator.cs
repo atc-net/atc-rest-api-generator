@@ -21,4 +21,7 @@ public class ApiOptionsGenerator
     public ApiOptionsGeneratorResponse Response { get; set; } = new();
 
     public ApiOptionsGeneratorClient? Client { get; set; }
+
+    public override string ToString()
+        => $"{nameof(AspNetOutputType)}: {AspNetOutputType}, {nameof(SwaggerThemeMode)}: {SwaggerThemeMode}, {nameof(UseRestExtended)}: {UseRestExtended}, {nameof(IncludeDeprecated)}: {IncludeDeprecated}, {nameof(ProjectName)}: {ProjectName}, {nameof(ProjectSuffixName)}: {ProjectSuffixName}, {nameof(RemoveNamespaceGroupSeparatorInGlobalUsings)}: {RemoveNamespaceGroupSeparatorInGlobalUsings}, {nameof(Request)}: ({Request}), {nameof(Response)}: ({Response}), {nameof(Client)}: ({Client})";
 }
