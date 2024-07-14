@@ -19,7 +19,8 @@ public static class ApiOperationResponseModelExtensions
             return dataType;
         }
 
-        if (responseModel.Namespace.EndsWith(responseModel.DataType, StringComparison.Ordinal))
+        if (responseModel.Namespace.EndsWith($".{responseModel.DataType}", StringComparison.Ordinal) ||
+            responseModel.Namespace.Contains($"{responseModel.DataType}.", StringComparison.Ordinal))
         {
             return $"{responseModel.Namespace}.{dataType}";
         }
