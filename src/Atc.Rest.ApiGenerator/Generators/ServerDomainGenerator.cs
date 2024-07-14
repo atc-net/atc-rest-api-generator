@@ -87,7 +87,7 @@ public class ServerDomainGenerator
             serverDomainGeneratorMvc.GenerateAssemblyMarker();
 
             serverDomainGeneratorMvc.MaintainGlobalUsings(
-                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
+                projectOptions.ApiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings);
         }
         else
         {
@@ -98,7 +98,7 @@ public class ServerDomainGenerator
             serverDomainGeneratorMinimalApi.GenerateServiceCollectionExtensions();
 
             serverDomainGeneratorMinimalApi.MaintainGlobalUsings(
-                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
+                projectOptions.ApiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings);
         }
 
         if (serverDomainTestGenerator is not null &&
@@ -112,7 +112,7 @@ public class ServerDomainGenerator
 
             serverDomainTestGenerator.MaintainGlobalUsings(
                 projectOptions.UsingCodingRules,
-                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
+                projectOptions.ApiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings);
         }
 
         return true;

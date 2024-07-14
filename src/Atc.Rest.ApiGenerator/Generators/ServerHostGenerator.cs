@@ -114,7 +114,7 @@ public class ServerHostGenerator
             serverHostGeneratorMvc.GenerateConfigureSwaggerDocOptions();
 
             serverHostGeneratorMvc.MaintainGlobalUsings(
-                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
+                projectOptions.ApiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings);
 
             if (serverHostTestGeneratorMvc is not null &&
                 projectOptions.PathForTestGenerate is not null)
@@ -131,7 +131,7 @@ public class ServerHostGenerator
 
                 serverHostTestGeneratorMvc.MaintainGlobalUsings(
                     projectOptions.UsingCodingRules,
-                    projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
+                    projectOptions.ApiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings);
             }
         }
         else
@@ -152,7 +152,7 @@ public class ServerHostGenerator
             serverHostGeneratorMinimalApi.GenerateConfigureSwaggerDocOptions();
 
             serverHostGeneratorMinimalApi.MaintainGlobalUsings(
-                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
+                projectOptions.ApiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings);
             serverHostGeneratorMinimalApi.MaintainWwwResources();
 
             if (serverHostTestGeneratorMinimalApi is not null &&
@@ -170,7 +170,7 @@ public class ServerHostGenerator
 
                 serverHostTestGeneratorMinimalApi.MaintainGlobalUsings(
                     projectOptions.UsingCodingRules,
-                    projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
+                    projectOptions.ApiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings);
             }
         }
 

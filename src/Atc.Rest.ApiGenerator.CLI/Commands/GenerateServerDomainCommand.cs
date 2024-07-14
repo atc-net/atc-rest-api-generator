@@ -57,11 +57,6 @@ public class GenerateServerDomainCommand : AsyncCommand<ServerDomainCommandSetti
         var shouldScaffoldCodingRules = CodingRulesHelper.ShouldScaffoldCodingRules(settings.OutputPath, settings.DisableCodingRules);
         var isUsingCodingRules = CodingRulesHelper.IsUsingCodingRules(settings.OutputPath, settings.DisableCodingRules);
 
-        if (settings.AspNetOutputType.IsSet)
-        {
-            apiOptions.Generator.AspNetOutputType = settings.AspNetOutputType.Value;
-        }
-
         if (shouldScaffoldCodingRules &&
             !NetworkInformationHelper.HasHttpConnection())
         {
@@ -89,7 +84,6 @@ public class GenerateServerDomainCommand : AsyncCommand<ServerDomainCommandSetti
                     apiDocumentContainer,
                     apiOptions,
                     isUsingCodingRules,
-                    settings.RemoveNamespaceGroupSeparatorInGlobalUsings,
                     new DirectoryInfo(settings.ApiPath)))
             {
                 return ConsoleExitStatusCodes.Failure;

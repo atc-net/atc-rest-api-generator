@@ -16,13 +16,13 @@ public class CreateChargeAuthToken
     /// Id of the team the charge auth token belongs.
     /// </summary>
     [Required]
-    [Range(0, 2147483647)]
+    [Range(0, int.MaxValue)]
     public long TeamId { get; set; }
 
     /// <summary>
     /// Id of the user the charge auth token should be associated to.
     /// </summary>
-    [Range(0, 2147483647)]
+    [Range(0, int.MaxValue)]
     public long? UserId { get; set; }
 
     /// <summary>

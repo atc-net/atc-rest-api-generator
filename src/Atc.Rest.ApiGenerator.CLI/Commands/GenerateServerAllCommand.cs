@@ -64,16 +64,6 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
         var shouldScaffoldCodingRules = CodingRulesHelper.ShouldScaffoldCodingRules(outputSlnPath, settings.DisableCodingRules);
         var isUsingCodingRules = CodingRulesHelper.IsUsingCodingRules(outputSlnPath, settings.DisableCodingRules);
 
-        if (settings.AspNetOutputType.IsSet)
-        {
-            apiOptions.Generator.AspNetOutputType = settings.AspNetOutputType.Value;
-        }
-
-        if (settings.SwaggerThemeMode.IsSet)
-        {
-            apiOptions.Generator.SwaggerThemeMode = settings.SwaggerThemeMode.Value;
-        }
-
         if (shouldScaffoldCodingRules &&
             !NetworkInformationHelper.HasHttpConnection())
         {
@@ -100,8 +90,7 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
                 outputTestPath,
                 apiDocumentContainer,
                 apiOptions,
-                isUsingCodingRules,
-                settings.RemoveNamespaceGroupSeparatorInGlobalUsings))
+                isUsingCodingRules))
             {
                 return ConsoleExitStatusCodes.Failure;
             }
@@ -116,7 +105,6 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
                     apiDocumentContainer,
                     apiOptions,
                     isUsingCodingRules,
-                    settings.RemoveNamespaceGroupSeparatorInGlobalUsings,
                     outputSrcPath))
             {
                 return ConsoleExitStatusCodes.Failure;
@@ -132,7 +120,6 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
                     apiDocumentContainer,
                     apiOptions,
                     isUsingCodingRules,
-                    settings.RemoveNamespaceGroupSeparatorInGlobalUsings,
                     outputSrcPath,
                     outputSrcPath))
             {

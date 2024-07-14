@@ -57,16 +57,6 @@ public class GenerateServerHostCommand : AsyncCommand<ServerHostCommandSettings>
         var shouldScaffoldCodingRules = CodingRulesHelper.ShouldScaffoldCodingRules(settings.OutputPath, settings.DisableCodingRules);
         var isUsingCodingRules = CodingRulesHelper.IsUsingCodingRules(settings.OutputPath, settings.DisableCodingRules);
 
-        if (settings.AspNetOutputType.IsSet)
-        {
-            apiOptions.Generator.AspNetOutputType = settings.AspNetOutputType.Value;
-        }
-
-        if (settings.SwaggerThemeMode.IsSet)
-        {
-            apiOptions.Generator.SwaggerThemeMode = settings.SwaggerThemeMode.Value;
-        }
-
         if (shouldScaffoldCodingRules &&
             !NetworkInformationHelper.HasHttpConnection())
         {
@@ -94,7 +84,6 @@ public class GenerateServerHostCommand : AsyncCommand<ServerHostCommandSettings>
                     apiDocumentContainer,
                     apiOptions,
                     isUsingCodingRules,
-                    settings.RemoveNamespaceGroupSeparatorInGlobalUsings,
                     new DirectoryInfo(settings.ApiPath),
                     new DirectoryInfo(settings.DomainPath)))
             {

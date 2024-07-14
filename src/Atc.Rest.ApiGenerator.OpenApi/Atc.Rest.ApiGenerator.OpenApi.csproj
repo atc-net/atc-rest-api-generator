@@ -6,9 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc" Version="2.0.490" />
-    <PackageReference Include="Atc.CodeDocumentation" Version="2.0.490" />
-    <PackageReference Include="Atc.OpenApi" Version="2.0.490" />
+    <PackageReference Include="Atc" Version="2.0.495" />
+    <PackageReference Include="Atc.CodeDocumentation" Version="2.0.495" />
+    <PackageReference Include="Atc.OpenApi" Version="2.0.495" />
     <PackageReference Include="Microsoft.OpenApi" Version="1.6.15" />
     <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.6.15" />
   </ItemGroup>

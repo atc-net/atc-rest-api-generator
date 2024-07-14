@@ -12,8 +12,7 @@ public static class GenerateHelper
         DirectoryInfo? outputTestPath,
         OpenApiDocumentContainer apiDocumentContainer,
         ApiOptions apiOptions,
-        bool useCodingRules,
-        bool removeNamespaceGroupSeparatorInGlobalUsings)
+        bool useCodingRules)
     {
         ArgumentNullException.ThrowIfNull(apiOperationExtractor);
         ArgumentNullException.ThrowIfNull(projectPrefixName);
@@ -29,8 +28,7 @@ public static class GenerateHelper
             projectPrefixName,
             "Api.Generated",
             apiOptions,
-            useCodingRules,
-            removeNamespaceGroupSeparatorInGlobalUsings);
+            useCodingRules);
         var serverApiGenerator = new ServerApiGenerator(loggerFactory, apiOperationExtractor, nugetPackageReferenceProvider, projectOptions);
 
         var generateResult = false;
@@ -52,7 +50,6 @@ public static class GenerateHelper
         OpenApiDocumentContainer apiDocumentContainer,
         ApiOptions apiOptions,
         bool useCodingRules,
-        bool removeNamespaceGroupSeparatorInGlobalUsings,
         DirectoryInfo apiPath)
     {
         ArgumentNullException.ThrowIfNull(projectPrefixName);
@@ -69,7 +66,6 @@ public static class GenerateHelper
             projectPrefixName,
             apiOptions,
             useCodingRules,
-            removeNamespaceGroupSeparatorInGlobalUsings,
             apiPath);
         var serverDomainGenerator = new ServerDomainGenerator(loggerFactory, apiOperationExtractor, nugetPackageReferenceProvider, domainProjectOptions);
 
@@ -92,7 +88,6 @@ public static class GenerateHelper
         OpenApiDocumentContainer apiDocumentContainer,
         ApiOptions apiOptions,
         bool usingCodingRules,
-        bool removeNamespaceGroupSeparatorInGlobalUsings,
         DirectoryInfo apiPath,
         DirectoryInfo domainPath)
     {
@@ -111,7 +106,6 @@ public static class GenerateHelper
             projectPrefixName,
             apiOptions,
             usingCodingRules,
-            removeNamespaceGroupSeparatorInGlobalUsings,
             apiPath,
             domainPath);
         var serverHostGenerator = new ServerHostGenerator(loggerFactory, apiOperationExtractor, nugetPackageReferenceProvider, hostProjectOptions);

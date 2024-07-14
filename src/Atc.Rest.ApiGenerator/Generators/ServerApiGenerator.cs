@@ -80,7 +80,7 @@ public class ServerApiGenerator
 
             serverApiGeneratorMvc.MaintainApiSpecification(projectOptions.DocumentFile);
             serverApiGeneratorMvc.MaintainGlobalUsings(
-                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
+                projectOptions.ApiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings);
         }
         else
         {
@@ -95,7 +95,7 @@ public class ServerApiGenerator
 
             serverApiGeneratorMinimalApi.MaintainApiSpecification(projectOptions.DocumentFile);
             serverApiGeneratorMinimalApi.MaintainGlobalUsings(
-                projectOptions.RemoveNamespaceGroupSeparatorInGlobalUsings);
+                projectOptions.ApiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings);
         }
 
         return true;

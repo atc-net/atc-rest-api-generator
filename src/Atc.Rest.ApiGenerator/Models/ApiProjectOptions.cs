@@ -11,7 +11,6 @@ public class ApiProjectOptions : BaseProjectOptions
         string? projectSuffixName,
         ApiOptions apiOptions,
         bool usingCodingRules,
-        bool removeNamespaceGroupSeparatorInGlobalUsings,
         bool forClient = false,
         string? clientFolderName = null)
         : base(
@@ -23,7 +22,6 @@ public class ApiProjectOptions : BaseProjectOptions
             projectSuffixName,
             apiOptions,
             usingCodingRules,
-            removeNamespaceGroupSeparatorInGlobalUsings,
             forClient,
             clientFolderName)
     {
