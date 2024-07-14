@@ -10,7 +10,6 @@ public class DomainProjectOptions : BaseProjectOptions
         string projectPrefixName,
         ApiOptions apiOptions,
         bool useCodingRules,
-        bool removeNamespaceGroupSeparatorInGlobalUsings,
         DirectoryInfo apiProjectSrcPath)
         : base(
             projectSourceGeneratePath,
@@ -20,8 +19,7 @@ public class DomainProjectOptions : BaseProjectOptions
             projectPrefixName,
             "Domain",
             apiOptions,
-            useCodingRules,
-            removeNamespaceGroupSeparatorInGlobalUsings)
+            useCodingRules)
     {
         ApiProjectSrcPath = apiProjectSrcPath ?? throw new ArgumentNullException(nameof(apiProjectSrcPath));
         PathForSrcHandlers = new DirectoryInfo(Path.Combine(PathForSrcGenerate.FullName, ContentGeneratorConstants.Handlers));

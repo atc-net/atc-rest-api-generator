@@ -153,8 +153,7 @@ public static class ApiOptionsHelper
                 apiOptions.Generator.ProjectName = serverCommandSettings.ProjectPrefixName;
             }
 
-            if (!serverCommandSettings.RemoveNamespaceGroupSeparatorInGlobalUsings ||
-                apiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings)
+            if (serverCommandSettings.RemoveNamespaceGroupSeparatorInGlobalUsings)
             {
                 apiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings = serverCommandSettings.RemoveNamespaceGroupSeparatorInGlobalUsings;
             }
@@ -175,8 +174,7 @@ public static class ApiOptionsHelper
                     apiOptions.Generator.ProjectName = clientApiCommandSettings.ProjectPrefixName;
                 }
 
-                if (!clientApiCommandSettings.RemoveNamespaceGroupSeparatorInGlobalUsings ||
-                    apiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings)
+                if (clientApiCommandSettings.RemoveNamespaceGroupSeparatorInGlobalUsings)
                 {
                     apiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings = clientApiCommandSettings.RemoveNamespaceGroupSeparatorInGlobalUsings;
                 }
@@ -205,8 +203,7 @@ public static class ApiOptionsHelper
                     apiOptions.Generator.Client.HttpClientName = $"{baseGenerateCommandSettings.ProjectPrefixName}-ApiClient";
                 }
 
-                apiOptions.Generator.Client.ExcludeEndpointGeneration =
-                    clientApiCommandSettings.ExcludeEndpointGeneration;
+                apiOptions.Generator.Client.ExcludeEndpointGeneration = clientApiCommandSettings.ExcludeEndpointGeneration;
 
                 break;
             }
