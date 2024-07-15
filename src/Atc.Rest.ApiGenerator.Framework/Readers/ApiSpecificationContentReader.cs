@@ -10,7 +10,8 @@ public class ApiSpecificationContentReader : IApiSpecificationContentReader
         ArgumentNullException.ThrowIfNull(specificationPath);
 
         FileInfo? apiDocFile;
-        if (specificationPath.EndsWith(".yaml", StringComparison.Ordinal))
+        if (specificationPath.EndsWith(".yaml", StringComparison.Ordinal) ||
+            specificationPath.EndsWith(".yml", StringComparison.Ordinal))
         {
             apiDocFile = specificationPath.StartsWith("http", StringComparison.CurrentCultureIgnoreCase)
                 ? HttpClientHelper.DownloadToTempFile(
