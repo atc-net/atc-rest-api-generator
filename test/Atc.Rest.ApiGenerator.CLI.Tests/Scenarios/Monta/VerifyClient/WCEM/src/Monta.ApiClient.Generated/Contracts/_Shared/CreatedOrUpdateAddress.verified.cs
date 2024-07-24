@@ -49,7 +49,7 @@ public class CreatedOrUpdateAddress
     /// The country id, Note.
     /// </summary>
     [Required]
-    [Range(0, 2147483647)]
+    [Range(0, int.MaxValue)]
     public long CountryId { get; set; }
 
     /// <inheritdoc />

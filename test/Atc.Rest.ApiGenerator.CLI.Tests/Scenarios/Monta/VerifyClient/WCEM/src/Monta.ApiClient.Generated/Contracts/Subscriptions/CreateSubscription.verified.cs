@@ -15,7 +15,7 @@ public class CreateSubscription
     /// <summary>
     /// Id of the plan to subscribe to.
     /// </summary>
-    [Range(0, 2147483647)]
+    [Range(0, int.MaxValue)]
     public long PlanId { get; set; }
 
     [Required]
@@ -24,7 +24,7 @@ public class CreateSubscription
     /// <summary>
     /// Id of the customer the subscription is created for, e.g. a chargePointId.
     /// </summary>
-    [Range(0, 2147483647)]
+    [Range(0, int.MaxValue)]
     public long CustomerId { get; set; }
 
     /// <summary>

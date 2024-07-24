@@ -43,7 +43,7 @@ public class StartChargeRequest
     /// <summary>
     /// Allows you to enforce a specific price group for this charge. &lt;br /&gt;*Note*: The price group must be of type `team` or `charge-point`.
     /// </summary>
-    [Range(0, 2147483647)]
+    [Range(0, int.MaxValue)]
     public long? PriceGroupId { get; set; }
 
     public GenericPaymentSession? GenericPaymentSession { get; set; }

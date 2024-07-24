@@ -16,21 +16,21 @@ public class CreateChargePoint
     /// Id of the team that the charge point belongs to.
     /// </summary>
     [Required]
-    [Range(0, 2147483647)]
+    [Range(0, int.MaxValue)]
     public long TeamId { get; set; }
 
     /// <summary>
     /// Id of the site the charge point belongs to.
     /// </summary>
     [Required]
-    [Range(0, 2147483647)]
+    [Range(0, int.MaxValue)]
     public long SiteId { get; set; }
 
     /// <summary>
     /// Id of the charge point model.
     /// </summary>
     [Required]
-    [Range(0, 2147483647)]
+    [Range(0, int.MaxValue)]
     public long ChargePointModelId { get; set; }
 
     /// <summary>

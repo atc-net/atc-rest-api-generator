@@ -40,13 +40,13 @@ public class CreateOrUpdatePricingDto
     /// <summary>
     /// The id of the selected Tariff.
     /// </summary>
-    [Range(0, 2147483647)]
+    [Range(0, int.MaxValue)]
     public long? TariffId { get; set; }
 
     /// <summary>
     /// The id of the selected charge pricing tag.
     /// </summary>
-    [Range(0, 2147483647)]
+    [Range(0, int.MaxValue)]
     public long? TagId { get; set; }
 
     /// <summary>

@@ -16,14 +16,14 @@ public class CreateOrUpdateChargePointIntegration
     /// Id of the charge point to setup the integration.
     /// </summary>
     [Required]
-    [Range(0, 2147483647)]
+    [Range(0, int.MaxValue)]
     public long ChargePointId { get; set; }
 
     /// <summary>
     /// Id of the charge point model to be integrated.
     /// </summary>
     [Required]
-    [Range(0, 2147483647)]
+    [Range(0, int.MaxValue)]
     public long ChargePointModelId { get; set; }
 
     /// <summary>
@@ -36,7 +36,7 @@ public class CreateOrUpdateChargePointIntegration
     /// <summary>
     /// Connector id for the charge point integration. when `null` the `connectorId` will default to `1`.
     /// </summary>
-    [Range(0, 2147483647)]
+    [Range(0, int.MaxValue)]
     public int? ConnectorId { get; set; }
 
     /// <summary>

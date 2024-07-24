@@ -27,7 +27,7 @@ public class MontaAppResponse
 
     public string? ErrorCode { get; set; }
 
-    public Object? Context { get; set; }
+    public object? Context { get; set; }
 
     public List<MontaAppResponseErrorDetail>? Errors { get; set; } = new List<MontaAppResponseErrorDetail>();
 

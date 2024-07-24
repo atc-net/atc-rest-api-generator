@@ -16,7 +16,7 @@ public class Pricing
     /// Id of the pricing.
     /// </summary>
     [Required]
-    [Range(0, 2147483647)]
+    [Range(0, int.MaxValue)]
     public long Id { get; set; }
 
     /// <summary>

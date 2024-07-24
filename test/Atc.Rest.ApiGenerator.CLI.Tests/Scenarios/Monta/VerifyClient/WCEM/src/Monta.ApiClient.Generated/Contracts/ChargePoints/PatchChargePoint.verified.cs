@@ -16,7 +16,7 @@ public class PatchChargePoint
     /// Id of the site the charge point belongs to.
     /// </summary>
     [Required]
-    [Range(0, 2147483647)]
+    [Range(0, int.MaxValue)]
     public long? SiteId { get; set; }
 
     /// <summary>

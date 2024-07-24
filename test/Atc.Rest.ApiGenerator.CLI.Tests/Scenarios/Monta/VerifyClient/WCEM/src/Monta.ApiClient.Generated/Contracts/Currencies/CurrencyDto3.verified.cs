@@ -15,7 +15,7 @@ public class CurrencyDto3
     /// <summary>
     /// id of the currency.
     /// </summary>
-    [Range(0, 2147483647)]
+    [Range(0, int.MaxValue)]
     public long? Id { get; set; }
 
     /// <summary>

@@ -15,13 +15,13 @@ public class CreateTeamMember
     /// <summary>
     /// Id of the team that the user will be invited.
     /// </summary>
-    [Range(0, 2147483647)]
+    [Range(0, int.MaxValue)]
     public long TeamId { get; set; }
 
     /// <summary>
     /// Id of the user to be invited&lt;br /&gt;*Note*: When inviting by `userId` the fields `email` or `phone` must not be provided.
     /// </summary>
-    [Range(0, 2147483647)]
+    [Range(0, int.MaxValue)]
     public long? UserId { get; set; }
 
     /// <summary>

@@ -15,25 +15,25 @@ public class CreateSponsoredChargePointDto
     /// <summary>
     /// Id of the team that is sponsoring this charge point.
     /// </summary>
-    [Range(0, 2147483647)]
+    [Range(0, int.MaxValue)]
     public long SponsoringTeamId { get; set; }
 
     /// <summary>
     /// Id of the charge point to be sponsored.
     /// </summary>
-    [Range(0, 2147483647)]
+    [Range(0, int.MaxValue)]
     public long ChargePointId { get; set; }
 
     /// <summary>
     /// Id of the user to have a charge point sponsored.
     /// </summary>
-    [Range(0, 2147483647)]
+    [Range(0, int.MaxValue)]
     public long UserId { get; set; }
 
     /// <summary>
     /// The price group for this sponsorship, Only price groups of type `reimbursement` or `sponsored` are allowed&lt;br /&gt;&lt;br /&gt;*Note:* if the `priceGroupId` is null the charge point cost price group will be used instead, if the charge point has no cost price group set the request will fail, please ensure that charge point has a valid cost group assigned when not providing a `priceGroupId`.
     /// </summary>
-    [Range(0, 2147483647)]
+    [Range(0, int.MaxValue)]
     public long? PriceGroupId { get; set; }
 
     [Required]
