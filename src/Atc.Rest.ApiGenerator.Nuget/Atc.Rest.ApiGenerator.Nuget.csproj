@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc" Version="2.0.495" />
+    <PackageReference Include="Atc" Version="2.0.498" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
   </ItemGroup>
 
