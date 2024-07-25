@@ -391,7 +391,9 @@ public class OpenApiDocumentValidator : IOpenApiDocumentValidator
                                         !value.HasItemsWithSimpleDataType() &&
                                         !value.HasItemsWithFormatTypeBinary())
                                     {
-                                        logItems.Add(logItemFactory.Create(logCategory, ValidationRuleNameConstants.Schema05, $"Implicit object definition on property '{key}' in array type '{schema.Reference.ReferenceV3}' is not supported."));
+                                        logItems.Add(validationOptions.StrictMode
+                                            ? logItemFactory.Create(LogCategoryType.Warning, ValidationRuleNameConstants.Schema05, $"Implicit object definition on property '{key}' in array type '{schema.Reference.ReferenceV3}' is only a good for JSON data.")
+                                            : logItemFactory.Create(LogCategoryType.Error, ValidationRuleNameConstants.Schema05, $"Implicit object definition on property '{key}' in array type '{schema.Reference.ReferenceV3}' is not supported."));
                                     }
                                 }
 
