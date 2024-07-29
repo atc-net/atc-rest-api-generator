@@ -66,15 +66,19 @@ public static class OpenApiOperationExtensions
         this OpenApiOperation apiOperation,
         OpenApiPathItem apiPath)
     {
+        var authorizationRequiredForPath = apiPath.Extensions.ExtractAuthenticationRequired();
         var authorizationRolesForPath = apiPath.Extensions.ExtractAuthorizationRoles();
         var authenticationSchemesForPath = apiPath.Extensions.ExtractAuthenticationSchemes();
+        var authorizationRequiredForOperation = apiOperation.Extensions.ExtractAuthenticationRequired();
         var authorizationRolesForOperation = apiOperation.Extensions.ExtractAuthorizationRoles();
         var authenticationSchemesForOperation = apiOperation.Extensions.ExtractAuthenticationSchemes();
 
-        if (authorizationRolesForPath is null &&
-            authenticationSchemesForPath is null &&
-            authorizationRolesForOperation is null &&
-            authenticationSchemesForOperation is null)
+        if (authorizationRequiredForPath.HasNoValueOrFalse() &&
+            authorizationRolesForPath.Count == 0 &&
+            authenticationSchemesForPath.Count == 0 &&
+            authorizationRequiredForOperation.HasNoValue() &&
+            authorizationRolesForOperation.Count == 0 &&
+            authenticationSchemesForOperation.Count == 0)
         {
             return null;
         }
@@ -82,7 +86,7 @@ public static class OpenApiOperationExtensions
         IList<string>? authorizationRoles = null;
         IList<string>? authenticationSchemes = null;
 
-        if (authorizationRolesForPath is not null)
+        if (authorizationRolesForPath.Count > 0)
         {
             authorizationRoles = authorizationRolesForPath
                 .Distinct(StringComparer.Ordinal)
@@ -90,7 +94,7 @@ public static class OpenApiOperationExtensions
                 .ToList();
         }
 
-        if (authorizationRolesForOperation is not null)
+        if (authorizationRolesForOperation.Count > 0)
         {
             authorizationRoles = authorizationRoles is null
                 ? authorizationRolesForOperation
@@ -104,7 +108,7 @@ public static class OpenApiOperationExtensions
                     .ToList();
         }
 
-        if (authenticationSchemesForPath is not null)
+        if (authenticationSchemesForPath.Count > 0)
         {
             authenticationSchemes = authenticationSchemesForPath
                 .Distinct(StringComparer.Ordinal)
@@ -112,7 +116,7 @@ public static class OpenApiOperationExtensions
                 .ToList();
         }
 
-        if (authorizationRolesForOperation is not null)
+        if (authenticationSchemesForOperation.Count > 0)
         {
             authenticationSchemes = authenticationSchemes is null
                 ? authenticationSchemesForOperation
@@ -126,10 +130,24 @@ public static class OpenApiOperationExtensions
                     .ToList();
         }
 
+        var useAllowAnonymous = authorizationRequiredForPath.HasValueAndFalse() &&
+                                authorizationRequiredForOperation.HasValueAndFalse();
+
+        if (authorizationRoles?.Count > 0 ||
+            authenticationSchemes?.Count > 0)
+        {
+            useAllowAnonymous = false;
+        }
+
+        if (authorizationRequiredForOperation.HasValueAndFalse())
+        {
+            useAllowAnonymous = true;
+        }
+
         return new ApiAuthorizeModel(
             Roles: authorizationRoles,
             AuthenticationSchemes: authenticationSchemes,
-            UseAllowAnonymous: false);
+            UseAllowAnonymous: useAllowAnonymous);
     }
 
     public static IEnumerable<ApiOperationResponseModel> ExtractApiOperationResponseModels(

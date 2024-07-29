@@ -52,7 +52,7 @@ public static class OpenApiPathsExtensions
             }
         }
 
-        var useAllowAnonymous = apiPath.Operations.Keys.Count != data.OfType<ApiAuthorizeModel>().Count();
+        var useAllowAnonymous = data.All(x => x is null || x.UseAllowAnonymous);
 
         return new ApiAuthorizeModel(
             Roles: authorizationRoles,
