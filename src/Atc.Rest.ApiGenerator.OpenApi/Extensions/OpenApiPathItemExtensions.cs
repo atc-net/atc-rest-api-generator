@@ -1,6 +1,6 @@
 namespace Atc.Rest.ApiGenerator.OpenApi.Extensions;
 
-public static class OpenApiPathsExtensions
+public static class OpenApiPathItemExtensions
 {
     [SuppressMessage("Naming", "CA1867:Use 'string.Method(char)' instead of 'string.Method(string)' for string with single char", Justification = "OK.")]
     public static string GetApiGroupName(
