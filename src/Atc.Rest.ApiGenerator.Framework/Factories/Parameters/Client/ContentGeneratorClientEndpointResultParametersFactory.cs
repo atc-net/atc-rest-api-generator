@@ -35,6 +35,7 @@ public static class ContentGeneratorClientEndpointResultParametersFactory
                 InheritClassName: ContentGeneratorConstants.EndpointResponse,
                 HasParameterType: hasParameterType,
                 Authorization: endpointAuthorization,
+                IsAuthorizationRequiredFromPath: endpointAuthorization is not null,
                 ResponseModels: responseModels,
                 parameters);
         }
@@ -48,6 +49,7 @@ public static class ContentGeneratorClientEndpointResultParametersFactory
             InheritClassName: ContentGeneratorConstants.EndpointResponse,
             HasParameterType: hasParameterType,
             Authorization: endpointAuthorization,
+            IsAuthorizationRequiredFromPath: endpointAuthorization is not null,
             ResponseModels: responseModels,
             Parameters: null);
     }

@@ -104,7 +104,7 @@ public class ContentGeneratorClientEndpoint : IContentGenerator
         sb.AppendLine(8, "var responseBuilder = httpMessageFactory.FromResponse(response);");
 
         var responseModels = parameters.ResponseModels
-            .AppendUnauthorizedIfNeeded(parameters.Authorization)
+            .AppendUnauthorizedIfNeeded(parameters.Authorization, parameters.IsAuthorizationRequiredFromPath)
             .AppendForbiddenIfNeeded(parameters.Authorization)
             .AppendBadRequestIfNeeded(parameters.ParameterName)
             .OrderBy(x => x.StatusCode)

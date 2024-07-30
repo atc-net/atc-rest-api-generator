@@ -52,11 +52,18 @@ public static class OpenApiPathItemExtensions
             }
         }
 
-        var useAllowAnonymous = data.All(x => x is null || x.UseAllowAnonymous);
+        var authenticationRequiredForPath = apiPath.Extensions.ExtractAuthenticationRequired();
+
+        if ((authorizationRoles is null || authorizationRoles.Count == 0) &&
+            (authenticationSchemes is null || authenticationSchemes.Count == 0) &&
+            authenticationRequiredForPath.HasValueAndFalse())
+        {
+            return null;
+        }
 
         return new ApiAuthorizeModel(
             Roles: authorizationRoles,
             AuthenticationSchemes: authenticationSchemes,
-            UseAllowAnonymous: useAllowAnonymous);
+            UseAllowAnonymous: false);
     }
 }

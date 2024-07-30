@@ -32,6 +32,7 @@ public static class ContentGeneratorClientEndpointResultInterfaceParametersFacto
             InheritInterfaceName: "IEndpointResponse",
             HasParameterType: hasParameterType,
             Authorization: endpointAuthorization,
+            IsAuthorizationRequiredFromPath: endpointAuthorization is not null,
             ResponseModels: responseModels);
     }
 

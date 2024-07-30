@@ -22,7 +22,7 @@ public sealed class OpenApiOperationExtensionsTests
         // Arrange
         var apiPath = new OpenApiPathItem
         {
-            Extensions = new Dictionary<string, IOpenApiExtension>
+            Extensions = new Dictionary<string, IOpenApiExtension>(StringComparer.Ordinal)
             {
                 { SecurityExtensionNameConstants.AuthorizeRoles, new OpenApiArray { new OpenApiString("api.execute.all") } },
             },
@@ -47,7 +47,7 @@ public sealed class OpenApiOperationExtensionsTests
         var apiPath = new OpenApiPathItem();
         var apiOperation = new OpenApiOperation
         {
-            Extensions = new Dictionary<string, IOpenApiExtension>
+            Extensions = new Dictionary<string, IOpenApiExtension>(StringComparer.Ordinal)
             {
                 { SecurityExtensionNameConstants.AuthorizeRoles, new OpenApiArray { new OpenApiString("api.execute.all") } },
             },
@@ -70,7 +70,7 @@ public sealed class OpenApiOperationExtensionsTests
         // Arrange
         var apiPath = new OpenApiPathItem
         {
-            Extensions = new Dictionary<string, IOpenApiExtension>
+            Extensions = new Dictionary<string, IOpenApiExtension>(StringComparer.Ordinal)
             {
                 { SecurityExtensionNameConstants.AuthenticationSchemes, new OpenApiArray { new OpenApiString("scheme1") } },
             },
@@ -95,7 +95,7 @@ public sealed class OpenApiOperationExtensionsTests
         var apiPath = new OpenApiPathItem();
         var apiOperation = new OpenApiOperation
         {
-            Extensions = new Dictionary<string, IOpenApiExtension>
+            Extensions = new Dictionary<string, IOpenApiExtension>(StringComparer.Ordinal)
             {
                 { SecurityExtensionNameConstants.AuthenticationSchemes, new OpenApiArray { new OpenApiString("scheme1") } },
             },
@@ -125,14 +125,14 @@ public sealed class OpenApiOperationExtensionsTests
         // Arrange
         var apiPath = new OpenApiPathItem
         {
-            Extensions = new Dictionary<string, IOpenApiExtension>
+            Extensions = new Dictionary<string, IOpenApiExtension>(StringComparer.Ordinal)
             {
                 { SecurityExtensionNameConstants.AuthenticationRequired, new OpenApiBoolean(pathAuthenticationRequired) },
             },
         };
         var apiOperation = new OpenApiOperation
         {
-            Extensions = new Dictionary<string, IOpenApiExtension>
+            Extensions = new Dictionary<string, IOpenApiExtension>(StringComparer.Ordinal)
             {
                 { SecurityExtensionNameConstants.AuthenticationRequired, new OpenApiBoolean(operationAuthenticationRequired) },
             },
@@ -154,7 +154,7 @@ public sealed class OpenApiOperationExtensionsTests
         // Arrange
         var apiPath = new OpenApiPathItem
         {
-            Extensions = new Dictionary<string, IOpenApiExtension>
+            Extensions = new Dictionary<string, IOpenApiExtension>(StringComparer.Ordinal)
             {
                 { SecurityExtensionNameConstants.AuthorizeRoles, new OpenApiArray { new OpenApiString("role1"), new OpenApiString("role2") } },
                 { SecurityExtensionNameConstants.AuthenticationSchemes, new OpenApiArray { new OpenApiString("scheme1"), new OpenApiString("scheme2") } },
@@ -162,7 +162,7 @@ public sealed class OpenApiOperationExtensionsTests
         };
         var apiOperation = new OpenApiOperation
         {
-            Extensions = new Dictionary<string, IOpenApiExtension>
+            Extensions = new Dictionary<string, IOpenApiExtension>(StringComparer.Ordinal)
             {
                 { SecurityExtensionNameConstants.AuthorizeRoles, new OpenApiArray { new OpenApiString("role3"), new OpenApiString("role4") } },
                 { SecurityExtensionNameConstants.AuthenticationSchemes, new OpenApiArray { new OpenApiString("scheme3"), new OpenApiString("scheme4") } },

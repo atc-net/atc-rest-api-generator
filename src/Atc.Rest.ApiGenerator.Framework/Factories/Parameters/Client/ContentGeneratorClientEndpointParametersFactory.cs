@@ -41,6 +41,7 @@ public static class ContentGeneratorClientEndpointParametersFactory
                 ResultName: $"{operationName}{ContentGeneratorConstants.EndpointResult}",
                 ParameterName: $"{operationName}{ContentGeneratorConstants.Parameters}",
                 Authorization: endpointAuthorization,
+                IsAuthorizationRequiredFromPath: endpointAuthorization is not null,
                 ResponseModels: responseModels,
                 parameters);
         }
@@ -57,6 +58,7 @@ public static class ContentGeneratorClientEndpointParametersFactory
             ResultName: $"{operationName}{ContentGeneratorConstants.EndpointResult}",
             ParameterName: null,
             Authorization: endpointAuthorization,
+            IsAuthorizationRequiredFromPath: endpointAuthorization is not null,
             ResponseModels: responseModels,
             Parameters: null);
     }
