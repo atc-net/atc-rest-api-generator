@@ -8,11 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc" Version="2.0.498" />
-    <PackageReference Include="Atc.CodeAnalysis.CSharp" Version="2.0.498" />
-    <PackageReference Include="Atc.Console.Spectre" Version="2.0.498" />
-    <PackageReference Include="Atc.DotNet" Version="2.0.498" />
-    <PackageReference Include="Atc.OpenApi" Version="2.0.498" />
+    <PackageReference Include="Atc" Version="2.0.500" />
+    <PackageReference Include="Atc.CodeAnalysis.CSharp" Version="2.0.500" />
+    <PackageReference Include="Atc.Console.Spectre" Version="2.0.500" />
+    <PackageReference Include="Atc.DotNet" Version="2.0.500" />
+    <PackageReference Include="Atc.OpenApi" Version="2.0.500" />
     <PackageReference Include="Atc.Rest.Client" Version="1.0.79" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.10.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
