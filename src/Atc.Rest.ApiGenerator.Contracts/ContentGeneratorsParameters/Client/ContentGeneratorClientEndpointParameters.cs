@@ -12,6 +12,7 @@ public record ContentGeneratorClientEndpointParameters(
     string ResultName,
     string? ParameterName,
     ApiAuthorizeModel? Authorization,
+    bool IsAuthorizationRequiredFromPath,
     IList<ApiOperationResponseModel> ResponseModels,
     IList<ContentGeneratorClientEndpointParametersParameters>? Parameters);
 

@@ -64,7 +64,7 @@ public class ContentGeneratorClientEndpointResultInterface : IContentGenerator
         StringBuilder sb)
     {
         var responseModels = parameters.ResponseModels
-            .AppendUnauthorizedIfNeeded(parameters.Authorization)
+            .AppendUnauthorizedIfNeeded(parameters.Authorization, parameters.IsAuthorizationRequiredFromPath)
             .AppendForbiddenIfNeeded(parameters.Authorization)
             .AppendBadRequestIfNeeded(parameters.HasParameterType)
             .OrderBy(x => x.StatusCode)
@@ -183,7 +183,7 @@ public class ContentGeneratorClientEndpointResultInterface : IContentGenerator
         StringBuilder sb)
     {
         var responseModels = parameters.ResponseModels
-            .AppendUnauthorizedIfNeeded(parameters.Authorization)
+            .AppendUnauthorizedIfNeeded(parameters.Authorization, parameters.IsAuthorizationRequiredFromPath)
             .AppendForbiddenIfNeeded(parameters.Authorization)
             .AppendBadRequestIfNeeded(parameters.HasParameterType)
             .OrderBy(x => x.StatusCode)
@@ -276,7 +276,7 @@ public class ContentGeneratorClientEndpointResultInterface : IContentGenerator
         StringBuilder sb)
     {
         var responseModels = parameters.ResponseModels
-            .AppendUnauthorizedIfNeeded(parameters.Authorization)
+            .AppendUnauthorizedIfNeeded(parameters.Authorization, parameters.IsAuthorizationRequiredFromPath)
             .AppendForbiddenIfNeeded(parameters.Authorization)
             .AppendBadRequestIfNeeded(parameters.HasParameterType)
             .OrderBy(x => x.StatusCode)

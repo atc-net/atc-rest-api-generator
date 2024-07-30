@@ -36,17 +36,27 @@ public static class ApiOperationResponseModelExtensions
 
     public static IEnumerable<ApiOperationResponseModel> AppendUnauthorizedIfNeeded(
         this IEnumerable<ApiOperationResponseModel> responseModels,
-        ApiAuthorizeModel? authorization)
+        ApiAuthorizeModel? authorization,
+        bool isRequiredFromPath)
     {
-        if (authorization is null)
+        if (authorization is null &&
+            !isRequiredFromPath)
+        {
+            return responseModels;
+        }
+
+        if (authorization is not null &&
+            authorization.UseAllowAnonymous)
         {
             return responseModels;
         }
 
         var models = responseModels.ToList();
 
+        var useAllowAnonymous = authorization?.UseAllowAnonymous ?? false;
+
         if (models.TrueForAll(x => x.StatusCode != HttpStatusCode.Unauthorized) &&
-            !authorization.UseAllowAnonymous)
+            (isRequiredFromPath || !useAllowAnonymous))
         {
             models.Add(
                 new ApiOperationResponseModel(

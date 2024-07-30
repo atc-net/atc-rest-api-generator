@@ -186,7 +186,7 @@ public sealed class ContentGeneratorServerEndpoints : IContentGenerator
         ContentGeneratorServerEndpointMethodParameters item)
     {
         var responseModels = item.ResponseModels
-            .AppendUnauthorizedIfNeeded(item.Authorization)
+            .AppendUnauthorizedIfNeeded(item.Authorization, item.IsAuthorizationRequiredFromPath)
             .AppendForbiddenIfNeeded(item.Authorization)
             .AppendBadRequestIfNeeded(item.ParameterTypeName)
             .OrderBy(x => x.StatusCode)
@@ -288,7 +288,7 @@ public sealed class ContentGeneratorServerEndpoints : IContentGenerator
         ContentGeneratorServerEndpointMethodParameters item)
     {
         var responseModels = item.ResponseModels
-            .AppendUnauthorizedIfNeeded(item.Authorization)
+            .AppendUnauthorizedIfNeeded(item.Authorization, item.IsAuthorizationRequiredFromPath)
             .AppendForbiddenIfNeeded(item.Authorization)
             .AppendBadRequestIfNeeded(item.ParameterTypeName)
             .OrderBy(x => x.StatusCode)

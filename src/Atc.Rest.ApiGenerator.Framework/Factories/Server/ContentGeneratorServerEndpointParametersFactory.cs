@@ -38,7 +38,8 @@ public static class ContentGeneratorServerEndpointParametersFactory
                     MultipartBodyLengthLimit: GetMultipartBodyLengthLimit(apiOperation.Value),
                     ResultName: $"{operationName}{ContentGeneratorConstants.Result}",
                     ResponseModels: responseModels,
-                    Authorization: endpointAuthorization));
+                    Authorization: endpointAuthorization,
+                    IsAuthorizationRequiredFromPath: controllerAuthorization is not null));
             }
         }
 

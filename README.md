@@ -386,6 +386,8 @@ If all path-items (operations) under a given path all have x-authentication-requ
 
 Authentication-Schemes and Authorize-Roles defined at path/controller level is taken into consideration when generating [Authorize] attributes for path-item/action/method level.
 
+If no path-items (operations) under a given path have the x-authentication-required extension set, then no attributes will be generated for that given path/controller. If you want to force e.g [Authorize] or [AllowAnonymous], set the x-authentication-required extension to `true` or `false` respectively.
+
 ### Example
 
 > NOTE: Tags, parameters, responses, request-bodies, schemas etc. are removed for brevity, so the references in spec below are not valid - The specification is only illustrating the various places the 3 new extension tags can be applied.

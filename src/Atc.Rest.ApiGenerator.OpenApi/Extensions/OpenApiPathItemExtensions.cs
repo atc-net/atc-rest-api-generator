@@ -1,6 +1,6 @@
 namespace Atc.Rest.ApiGenerator.OpenApi.Extensions;
 
-public static class OpenApiPathsExtensions
+public static class OpenApiPathItemExtensions
 {
     [SuppressMessage("Naming", "CA1867:Use 'string.Method(char)' instead of 'string.Method(string)' for string with single char", Justification = "OK.")]
     public static string GetApiGroupName(
@@ -52,11 +52,18 @@ public static class OpenApiPathsExtensions
             }
         }
 
-        var useAllowAnonymous = apiPath.Operations.Keys.Count != data.OfType<ApiAuthorizeModel>().Count();
+        var authenticationRequiredForPath = apiPath.Extensions.ExtractAuthenticationRequired();
+
+        if ((authorizationRoles is null || authorizationRoles.Count == 0) &&
+            (authenticationSchemes is null || authenticationSchemes.Count == 0) &&
+            authenticationRequiredForPath.HasValueAndFalse())
+        {
+            return null;
+        }
 
         return new ApiAuthorizeModel(
             Roles: authorizationRoles,
             AuthenticationSchemes: authenticationSchemes,
-            UseAllowAnonymous: useAllowAnonymous);
+            UseAllowAnonymous: false);
     }
 }

@@ -9,6 +9,7 @@ public record ContentGeneratorClientEndpointResultParameters(
     string InheritClassName,
     bool HasParameterType,
     ApiAuthorizeModel? Authorization,
+    bool IsAuthorizationRequiredFromPath,
     IList<ApiOperationResponseModel> ResponseModels,
     IList<ContentGeneratorClientEndpointResultParametersParameters>? Parameters);
 

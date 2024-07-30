@@ -11,4 +11,5 @@ public record ContentGeneratorServerEndpointMethodParameters(
     long? MultipartBodyLengthLimit,
     string ResultName,
     ApiAuthorizeModel? Authorization,
+    bool IsAuthorizationRequiredFromPath,
     IEnumerable<ApiOperationResponseModel> ResponseModels);

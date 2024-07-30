@@ -23,6 +23,7 @@ public static class ContentGeneratorClientEndpointParametersFactory
 
         var modelNamespace = $"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
         var operationName = openApiOperation.GetOperationName();
+        var controllerAuthorization = openApiPath.ExtractApiPathAuthorization();
         var endpointAuthorization = openApiOperation.ExtractApiOperationAuthorization(openApiPath);
         var responseModels = openApiOperation.ExtractApiOperationResponseModels(modelNamespace).ToList();
 
@@ -41,6 +42,7 @@ public static class ContentGeneratorClientEndpointParametersFactory
                 ResultName: $"{operationName}{ContentGeneratorConstants.EndpointResult}",
                 ParameterName: $"{operationName}{ContentGeneratorConstants.Parameters}",
                 Authorization: endpointAuthorization,
+                IsAuthorizationRequiredFromPath: controllerAuthorization is not null,
                 ResponseModels: responseModels,
                 parameters);
         }
@@ -57,6 +59,7 @@ public static class ContentGeneratorClientEndpointParametersFactory
             ResultName: $"{operationName}{ContentGeneratorConstants.EndpointResult}",
             ParameterName: null,
             Authorization: endpointAuthorization,
+            IsAuthorizationRequiredFromPath: controllerAuthorization is not null,
             ResponseModels: responseModels,
             Parameters: null);
     }

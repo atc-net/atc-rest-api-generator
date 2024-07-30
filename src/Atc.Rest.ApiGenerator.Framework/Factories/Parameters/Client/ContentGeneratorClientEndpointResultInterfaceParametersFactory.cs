@@ -20,6 +20,7 @@ public static class ContentGeneratorClientEndpointResultInterfaceParametersFacto
 
         var modelNamespace = $"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
         var operationName = openApiOperation.GetOperationName();
+        var controllerAuthorization = openApiPath.ExtractApiPathAuthorization();
         var endpointAuthorization = openApiOperation.ExtractApiOperationAuthorization(openApiPath);
         var responseModels = openApiOperation.ExtractApiOperationResponseModels(modelNamespace).ToList();
         var hasParameterType = openApiPath.HasParameters() || openApiOperation.HasParametersOrRequestBody();
@@ -32,6 +33,7 @@ public static class ContentGeneratorClientEndpointResultInterfaceParametersFacto
             InheritInterfaceName: "IEndpointResponse",
             HasParameterType: hasParameterType,
             Authorization: endpointAuthorization,
+            IsAuthorizationRequiredFromPath: controllerAuthorization is not null,
             ResponseModels: responseModels);
     }
 
