@@ -1,5 +1,6 @@
 ﻿global using System.CodeDom.Compiler;
 global using System.Reflection;
+global using System.Text;
 
 global using Asp.Versioning.ApiExplorer;
 

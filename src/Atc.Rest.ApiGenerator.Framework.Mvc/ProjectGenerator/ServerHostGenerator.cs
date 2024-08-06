@@ -125,7 +125,27 @@ public class ServerHostGenerator : IServerHostGenerator
         => throw new NotSupportedException($"{nameof(ScaffoldWebApplicationExtensions)} is not supported for MVC");
 
     public void ScaffoldConfigureSwaggerOptions()
-        => throw new NotSupportedException($"{nameof(ScaffoldConfigureSwaggerOptions)} is not supported for MVC");
+    {
+        var fullNamespace = $"{projectName}";
+
+        var contentGeneratorServerSwaggerDocOptionsParameters = ContentGeneratorServerSwaggerDocOptionsParameterFactory
+            .Create(
+                fullNamespace,
+                openApiDocument.ToSwaggerDocOptionsParameters());
+
+        var contentGenerator = new ContentGeneratorServeConfigureSwaggerOptions(
+            contentGeneratorServerSwaggerDocOptionsParameters);
+
+        var content = contentGenerator.Generate();
+
+        var contentWriter = new ContentWriter(logger);
+        contentWriter.Write(
+            projectPath,
+            projectPath.CombineFileInfo("Options", "ConfigureSwaggerOptions.cs"),
+            ContentWriterArea.Src,
+            content,
+            overrideIfExist: false);
+    }
 
     public void ScaffoldProgramFile(
         SwaggerThemeMode swaggerThemeMode)
@@ -162,7 +182,7 @@ public class ServerHostGenerator : IServerHostGenerator
 
     public void ScaffoldWebConfig()
     {
-        var contentGenerator = new Framework.ContentGenerators.Server.ContentGeneratorServerWebConfig();
+        var contentGenerator = new ContentGeneratorServerWebConfig();
 
         var content = contentGenerator.Generate();
 
@@ -184,7 +204,7 @@ public class ServerHostGenerator : IServerHostGenerator
                 fullNamespace,
                 openApiDocument.ToSwaggerDocOptionsParameters());
 
-        var contentGenerator = new Framework.ContentGenerators.Server.ContentGeneratorServerSwaggerDocOptions(
+        var contentGenerator = new ContentGeneratorServerSwaggerDocOptions(
             new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
             new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
             contentGeneratorServerSwaggerDocOptionsParameters);
@@ -206,6 +226,7 @@ public class ServerHostGenerator : IServerHostGenerator
         {
             "System.CodeDom.Compiler",
             "System.Reflection",
+            "System.Text",
             domainProjectName,
             $"{projectName}.Generated",
             $"{projectName}.Options",
