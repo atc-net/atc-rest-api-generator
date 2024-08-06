@@ -1,11 +1,11 @@
-namespace Atc.Rest.ApiGenerator.Framework.Minimal.ContentGenerators;
+namespace Atc.Rest.ApiGenerator.Framework.ContentGenerators.Server;
 
 public class ContentGeneratorServeConfigureSwaggerOptions : IContentGenerator
 {
-    private readonly ContentGeneratorBaseParameters parameters;
+    private readonly ContentGeneratorServerSwaggerDocOptionsParameters parameters;
 
     public ContentGeneratorServeConfigureSwaggerOptions(
-        ContentGeneratorBaseParameters parameters)
+        ContentGeneratorServerSwaggerDocOptionsParameters parameters)
     {
         this.parameters = parameters;
     }
@@ -50,13 +50,69 @@ public class ContentGeneratorServeConfigureSwaggerOptions : IContentGenerator
         sb.AppendLine(8, "ApiVersionDescription description)");
         sb.AppendLine(4, "{");
 
-        // TODO: Add fix details to the OpenApiInfo
-        sb.AppendLine(8, "var text = new StringBuilder(\"An example API to showcase minimal api implementation using the Atc.Rest.MinimalApi Nuget package.\");");
+        var description = string.Empty;
+        if (!string.IsNullOrWhiteSpace(parameters.SwaggerDocOptions.Description))
+        {
+            description = parameters.SwaggerDocOptions.Description!
+                .Replace("\"", string.Empty, StringComparison.Ordinal)
+                .Replace("'", string.Empty, StringComparison.Ordinal)
+                .Trim();
+        }
+
+        sb.AppendLine(8, $"var text = new StringBuilder(\"{description}\");");
         sb.AppendLine(8, "var info = new OpenApiInfo");
         sb.AppendLine(8, "{");
         sb.AppendLine(12, "Title = $\"{environment.ApplicationName} {description.GroupName.ToUpperInvariant()}\",");
         sb.AppendLine(12, "Version = description.ApiVersion.ToString(),");
-        sb.AppendLine(12, "Contact = new OpenApiContact { Name = \"atc-net\", Email = \"atcnet.org@gmail.com\" },");
+        if (!string.IsNullOrWhiteSpace(parameters.SwaggerDocOptions.ContactName) ||
+            !string.IsNullOrWhiteSpace(parameters.SwaggerDocOptions.ContactEmail) ||
+            !string.IsNullOrWhiteSpace(parameters.SwaggerDocOptions.ContactUrl))
+        {
+            sb.AppendLine(12, "Contact = new OpenApiContact");
+            sb.AppendLine(12, "{");
+
+            if (!string.IsNullOrWhiteSpace(parameters.SwaggerDocOptions.ContactName))
+            {
+                sb.AppendLine(16, $"Name = \"{parameters.SwaggerDocOptions.ContactName}\",");
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.SwaggerDocOptions.ContactEmail))
+            {
+                sb.AppendLine(16, $"Email = \"{parameters.SwaggerDocOptions.ContactEmail}\",");
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.SwaggerDocOptions.ContactUrl))
+            {
+                sb.AppendLine(16, $"Url = new Uri(\"{parameters.SwaggerDocOptions.ContactUrl}\"),");
+            }
+
+            sb.AppendLine(12, "},");
+        }
+
+        if (!string.IsNullOrWhiteSpace(parameters.SwaggerDocOptions.TermsOfService))
+        {
+            sb.AppendLine(12, $"TermsOfService = new Uri(\"{parameters.SwaggerDocOptions.TermsOfService}\"),");
+        }
+
+        if (!string.IsNullOrWhiteSpace(parameters.SwaggerDocOptions.LicenseName) ||
+            !string.IsNullOrWhiteSpace(parameters.SwaggerDocOptions.LicenseUrl))
+        {
+            sb.AppendLine(12, "License = new OpenApiLicense");
+            sb.AppendLine(12, "{");
+
+            if (!string.IsNullOrWhiteSpace(parameters.SwaggerDocOptions.LicenseName))
+            {
+                sb.AppendLine(16, $"Name = \"{parameters.SwaggerDocOptions.LicenseName}\",");
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.SwaggerDocOptions.LicenseUrl))
+            {
+                sb.AppendLine(16, $"Url = new Uri(\"{parameters.SwaggerDocOptions.LicenseUrl}\"),");
+            }
+
+            sb.AppendLine(12, "},");
+        }
+
         sb.AppendLine(8, "};");
         sb.AppendLine();
         sb.AppendLine(8, "if (description.IsDeprecated)");
@@ -79,7 +135,7 @@ public class ContentGeneratorServeConfigureSwaggerOptions : IContentGenerator
         sb.AppendLine();
         sb.AppendLine(16, "foreach (var link in policy.Links)");
         sb.AppendLine(16, "{");
-        sb.AppendLine(20, "if (link.Type != \"text /html\")");
+        sb.AppendLine(20, "if (link.Type != \"text/html\")");
         sb.AppendLine(20, "{");
         sb.AppendLine(24, "continue;");
         sb.AppendLine(20, "}");
