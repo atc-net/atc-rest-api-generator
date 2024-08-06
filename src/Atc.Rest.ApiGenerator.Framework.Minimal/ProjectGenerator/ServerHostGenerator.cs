@@ -183,8 +183,15 @@ public class ServerHostGenerator : IServerHostGenerator
 
     public void ScaffoldConfigureSwaggerOptions()
     {
-        var contentGenerator = new ContentGenerators.ContentGeneratorServeConfigureSwaggerOptions(
-            new ContentGeneratorBaseParameters(Namespace: projectName));
+        var fullNamespace = $"{projectName}";
+
+        var contentGeneratorServerSwaggerDocOptionsParameters = ContentGeneratorServerSwaggerDocOptionsParameterFactory
+            .Create(
+                fullNamespace,
+                openApiDocument.ToSwaggerDocOptionsParameters());
+
+        var contentGenerator = new ContentGeneratorServeConfigureSwaggerOptions(
+            contentGeneratorServerSwaggerDocOptionsParameters);
 
         var content = contentGenerator.Generate();
 
@@ -222,7 +229,7 @@ public class ServerHostGenerator : IServerHostGenerator
 
     public void ScaffoldWebConfig()
     {
-        var contentGenerator = new Framework.ContentGenerators.Server.ContentGeneratorServerWebConfig();
+        var contentGenerator = new ContentGeneratorServerWebConfig();
 
         var content = contentGenerator.Generate();
 
@@ -244,7 +251,7 @@ public class ServerHostGenerator : IServerHostGenerator
                 fullNamespace,
                 openApiDocument.ToSwaggerDocOptionsParameters());
 
-        var contentGenerator = new Framework.ContentGenerators.Server.ContentGeneratorServerSwaggerDocOptions(
+        var contentGenerator = new ContentGeneratorServerSwaggerDocOptions(
             new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
             new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
             contentGeneratorServerSwaggerDocOptionsParameters);

@@ -110,11 +110,13 @@ public class ServerHostGenerator
                 projectOptions.ApiOptions.Generator.SwaggerThemeMode);
             serverHostGeneratorMvc.ScaffoldStartupFile();
             serverHostGeneratorMvc.ScaffoldWebConfig();
+            serverHostGeneratorMvc.ScaffoldConfigureSwaggerOptions();
 
             serverHostGeneratorMvc.GenerateConfigureSwaggerDocOptions();
 
             serverHostGeneratorMvc.MaintainGlobalUsings(
                 projectOptions.ApiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings);
+            serverHostGeneratorMvc.MaintainWwwResources();
 
             if (serverHostTestGeneratorMvc is not null &&
                 projectOptions.PathForTestGenerate is not null)
