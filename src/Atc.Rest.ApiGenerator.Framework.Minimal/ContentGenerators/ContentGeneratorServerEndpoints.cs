@@ -403,8 +403,8 @@ public sealed class ContentGeneratorServerEndpoints : IContentGenerator
             }
             else
             {
-                sb.AppendLine(
-                    4,
+                sb.Append(
+                    12,
                     responseModel.CollectionDataType == "List"
                         ? $".Produces<IEnumerable<{dataType}>>()"
                         : $".Produces<{responseModel.CollectionDataType}<{dataType}>>()");
