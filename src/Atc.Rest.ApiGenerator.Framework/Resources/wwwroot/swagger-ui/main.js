@@ -6,13 +6,9 @@ document.getElementsByTagName("head")[0].appendChild(link);
 
 document.addEventListener('DOMContentLoaded', function () {
   setTimeout(function () {
-    const linkElement = document.querySelector('div.topbar-wrapper > a[rel="noopener noreferrer"].link');
-    if (linkElement) {
-      const svgElement = linkElement.querySelector('svg');
-      if (svgElement) {
-        linkElement.parentNode.insertBefore(svgElement, linkElement);
-      }
-      linkElement.remove();
+    const svgElement = document.querySelector('div.topbar-wrapper > a[rel="noopener noreferrer"].link > svg');
+    if (svgElement) {
+      svgElement.remove()
     }
-  }, 100);
+  }, 10);
 }, false);
