@@ -5,7 +5,7 @@
 /// Description: Update user by id.
 /// Operation: UpdateUserById.
 /// </summary>
-public class UpdateUserByIdHandler : IUpdateUserByIdHandler
+public sealed class UpdateUserByIdHandler : IUpdateUserByIdHandler
 {
     public Task<UpdateUserByIdResult> ExecuteAsync(
         UpdateUserByIdParameters parameters,

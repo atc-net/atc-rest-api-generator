@@ -5,7 +5,7 @@
 /// Description: Create a pet.
 /// Operation: CreatePets.
 /// </summary>
-public class CreatePetsHandler : ICreatePetsHandler
+public sealed class CreatePetsHandler : ICreatePetsHandler
 {
     public Task<CreatePetsResult> ExecuteAsync(
         CancellationToken cancellationToken = default)

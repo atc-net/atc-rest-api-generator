@@ -213,45 +213,8 @@ public class ServerDomainGenerator : IServerDomainGenerator
             AlwaysBreakDownParameters: true,
             UseExpressionBody: false,
             Content: """
-                     services.ConfigureOptions(configuration);
                      services.DefineHandlersAndServices();
                      return services;
-                     """);
-
-        var methodConfigureOptions = new MethodParameters(
-            DocumentationTags: null,
-            Attributes: null,
-            AccessModifiers.PublicStatic,
-            ReturnGenericTypeName: null,
-            ReturnTypeName: "void",
-            Name: "ConfigureOptions",
-            Parameters:
-            [
-                new(
-                    Attributes: null,
-                    GenericTypeName: null,
-                    IsGenericListType: false,
-                    TypeName: "this IServiceCollection",
-                    IsNullableType: false,
-                    IsReferenceType: false,
-                    Name: "services",
-                    DefaultValue: null),
-                new(
-                    Attributes: null,
-                    GenericTypeName: null,
-                    IsGenericListType: false,
-                    TypeName: "IConfiguration",
-                    IsNullableType: false,
-                    IsReferenceType: false,
-                    Name: "configuration",
-                    DefaultValue: null),
-            ],
-            AlwaysBreakDownParameters: true,
-            UseExpressionBody: false,
-            Content: """
-                     services.Configure<ServiceOptions>(options => configuration.GetRequiredSection(nameof(ServiceOptions)).Bind(options));
-                     services.Configure<EnvironmentOptions>(options => configuration.GetRequiredSection(nameof(EnvironmentOptions)).Bind(options));
-                     services.Configure<NamingOptions>(options => configuration.GetRequiredSection(nameof(NamingOptions)).Bind(options));
                      """);
 
         var methodDefineHandlersAndServices = new MethodParameters(
@@ -293,7 +256,6 @@ public class ServerDomainGenerator : IServerDomainGenerator
             Methods:
             [
                 methodConfigureDomainServices,
-                methodConfigureOptions,
                 methodDefineHandlersAndServices,
             ],
             GenerateToStringMethod: false);
@@ -319,8 +281,6 @@ public class ServerDomainGenerator : IServerDomainGenerator
         {
             "System.CodeDom.Compiler",
             "System.Diagnostics.CodeAnalysis",
-            "Atc.Azure.Options",
-            "Atc.Azure.Options.Environment",
             "Microsoft.Extensions.Configuration",
             "Microsoft.Extensions.DependencyInjection",
         };

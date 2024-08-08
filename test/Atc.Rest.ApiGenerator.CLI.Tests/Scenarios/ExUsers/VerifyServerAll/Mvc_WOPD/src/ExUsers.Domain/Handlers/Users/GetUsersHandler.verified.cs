@@ -5,7 +5,7 @@
 /// Description: Get all users.
 /// Operation: GetUsers.
 /// </summary>
-public class GetUsersHandler : IGetUsersHandler
+public sealed class GetUsersHandler : IGetUsersHandler
 {
     public Task<GetUsersResult> ExecuteAsync(
         CancellationToken cancellationToken = default)

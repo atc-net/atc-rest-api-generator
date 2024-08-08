@@ -5,7 +5,7 @@
 /// Description: List all pets.
 /// Operation: ListPets.
 /// </summary>
-public class ListPetsHandler : IListPetsHandler
+public sealed class ListPetsHandler : IListPetsHandler
 {
     public Task<ListPetsResult> ExecuteAsync(
         ListPetsParameters parameters,

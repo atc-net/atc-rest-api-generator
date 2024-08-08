@@ -5,7 +5,7 @@
 /// Description: Update gender on a user.
 /// Operation: UpdateMyTestGender.
 /// </summary>
-public class UpdateMyTestGenderHandler : IUpdateMyTestGenderHandler
+public sealed class UpdateMyTestGenderHandler : IUpdateMyTestGenderHandler
 {
     public Task<UpdateMyTestGenderResult> ExecuteAsync(
         UpdateMyTestGenderParameters parameters,

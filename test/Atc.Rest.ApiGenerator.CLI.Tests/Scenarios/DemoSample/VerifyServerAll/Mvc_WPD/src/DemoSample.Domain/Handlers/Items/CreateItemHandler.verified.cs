@@ -5,7 +5,7 @@
 /// Description: Create a new item.
 /// Operation: CreateItem.
 /// </summary>
-public class CreateItemHandler : ICreateItemHandler
+public sealed class CreateItemHandler : ICreateItemHandler
 {
     public Task<CreateItemResult> ExecuteAsync(
         CreateItemParameters parameters,

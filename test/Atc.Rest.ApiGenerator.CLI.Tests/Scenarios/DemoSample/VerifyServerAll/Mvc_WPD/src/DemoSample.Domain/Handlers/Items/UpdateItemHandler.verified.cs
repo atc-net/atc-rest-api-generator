@@ -5,7 +5,7 @@
 /// Description: Updates an item.
 /// Operation: UpdateItem.
 /// </summary>
-public class UpdateItemHandler : IUpdateItemHandler
+public sealed class UpdateItemHandler : IUpdateItemHandler
 {
     public Task<UpdateItemResult> ExecuteAsync(
         UpdateItemParameters parameters,

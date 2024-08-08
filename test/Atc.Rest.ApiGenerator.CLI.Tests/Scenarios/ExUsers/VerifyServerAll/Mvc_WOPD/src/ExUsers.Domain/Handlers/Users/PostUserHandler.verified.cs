@@ -5,7 +5,7 @@
 /// Description: Create a new user.
 /// Operation: PostUser.
 /// </summary>
-public class PostUserHandler : IPostUserHandler
+public sealed class PostUserHandler : IPostUserHandler
 {
     public Task<PostUserResult> ExecuteAsync(
         PostUserParameters parameters,

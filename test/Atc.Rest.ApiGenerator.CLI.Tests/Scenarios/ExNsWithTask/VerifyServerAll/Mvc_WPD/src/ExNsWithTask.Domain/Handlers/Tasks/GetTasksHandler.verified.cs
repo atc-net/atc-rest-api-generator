@@ -5,7 +5,7 @@
 /// Description: Returns tasks.
 /// Operation: GetTasks.
 /// </summary>
-public class GetTasksHandler : IGetTasksHandler
+public sealed class GetTasksHandler : IGetTasksHandler
 {
     public Task<GetTasksResult> ExecuteAsync(
         CancellationToken cancellationToken = default)

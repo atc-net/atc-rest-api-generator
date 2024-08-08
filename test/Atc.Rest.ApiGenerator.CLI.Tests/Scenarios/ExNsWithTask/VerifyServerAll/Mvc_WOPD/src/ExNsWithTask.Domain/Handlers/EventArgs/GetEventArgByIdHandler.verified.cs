@@ -5,7 +5,7 @@
 /// Description: Get EventArgs By Id.
 /// Operation: GetEventArgById.
 /// </summary>
-public class GetEventArgByIdHandler : IGetEventArgByIdHandler
+public sealed class GetEventArgByIdHandler : IGetEventArgByIdHandler
 {
     public Task<GetEventArgByIdResult> ExecuteAsync(
         GetEventArgByIdParameters parameters,

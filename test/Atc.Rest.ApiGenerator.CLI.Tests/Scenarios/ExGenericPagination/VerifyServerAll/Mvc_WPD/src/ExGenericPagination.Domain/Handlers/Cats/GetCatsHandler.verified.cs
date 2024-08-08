@@ -5,7 +5,7 @@
 /// Description: Find all cats.
 /// Operation: GetCats.
 /// </summary>
-public class GetCatsHandler : IGetCatsHandler
+public sealed class GetCatsHandler : IGetCatsHandler
 {
     public Task<GetCatsResult> ExecuteAsync(
         GetCatsParameters parameters,

@@ -5,7 +5,7 @@
 /// Description: Delete user by id.
 /// Operation: DeleteUserById.
 /// </summary>
-public class DeleteUserByIdHandler : IDeleteUserByIdHandler
+public sealed class DeleteUserByIdHandler : IDeleteUserByIdHandler
 {
     public Task<DeleteUserByIdResult> ExecuteAsync(
         DeleteUserByIdParameters parameters,

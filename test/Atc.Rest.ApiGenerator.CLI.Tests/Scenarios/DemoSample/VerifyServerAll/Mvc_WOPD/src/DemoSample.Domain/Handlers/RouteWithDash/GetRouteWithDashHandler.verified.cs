@@ -5,7 +5,7 @@
 /// Description: Your GET endpoint.
 /// Operation: GetRouteWithDash.
 /// </summary>
-public class GetRouteWithDashHandler : IGetRouteWithDashHandler
+public sealed class GetRouteWithDashHandler : IGetRouteWithDashHandler
 {
     public Task<GetRouteWithDashResult> ExecuteAsync(
         CancellationToken cancellationToken = default)

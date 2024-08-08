@@ -5,7 +5,7 @@
 /// Description: Find all dogs.
 /// Operation: GetDogs.
 /// </summary>
-public class GetDogsHandler : IGetDogsHandler
+public sealed class GetDogsHandler : IGetDogsHandler
 {
     public Task<GetDogsResult> ExecuteAsync(
         GetDogsParameters parameters,

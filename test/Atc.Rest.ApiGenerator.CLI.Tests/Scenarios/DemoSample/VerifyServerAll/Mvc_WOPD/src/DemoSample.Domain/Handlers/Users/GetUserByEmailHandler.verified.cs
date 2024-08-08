@@ -5,7 +5,7 @@
 /// Description: Get user by email.
 /// Operation: GetUserByEmail.
 /// </summary>
-public class GetUserByEmailHandler : IGetUserByEmailHandler
+public sealed class GetUserByEmailHandler : IGetUserByEmailHandler
 {
     public Task<GetUserByEmailResult> ExecuteAsync(
         GetUserByEmailParameters parameters,
