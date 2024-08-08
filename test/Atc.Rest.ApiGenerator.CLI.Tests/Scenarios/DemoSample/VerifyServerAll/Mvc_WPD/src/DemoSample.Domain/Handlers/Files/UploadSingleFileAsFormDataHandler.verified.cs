@@ -5,7 +5,7 @@
 /// Description: Upload a file as OctetStream.
 /// Operation: UploadSingleFileAsFormData.
 /// </summary>
-public class UploadSingleFileAsFormDataHandler : IUploadSingleFileAsFormDataHandler
+public sealed class UploadSingleFileAsFormDataHandler : IUploadSingleFileAsFormDataHandler
 {
     public Task<UploadSingleFileAsFormDataResult> ExecuteAsync(
         UploadSingleFileAsFormDataParameters parameters,

@@ -5,7 +5,7 @@
 /// Description: Upload multi files as form data.
 /// Operation: UploadMultiFilesAsFormData.
 /// </summary>
-public class UploadMultiFilesAsFormDataHandler : IUploadMultiFilesAsFormDataHandler
+public sealed class UploadMultiFilesAsFormDataHandler : IUploadMultiFilesAsFormDataHandler
 {
     public Task<UploadMultiFilesAsFormDataResult> ExecuteAsync(
         UploadMultiFilesAsFormDataParameters parameters,

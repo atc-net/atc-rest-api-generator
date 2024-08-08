@@ -5,7 +5,7 @@
 /// Description: Example endpoint.
 /// Operation: GetExample.
 /// </summary>
-public class GetExampleHandler : IGetExampleHandler
+public sealed class GetExampleHandler : IGetExampleHandler
 {
     public Task<GetExampleResult> ExecuteAsync(
         GetExampleParameters parameters,

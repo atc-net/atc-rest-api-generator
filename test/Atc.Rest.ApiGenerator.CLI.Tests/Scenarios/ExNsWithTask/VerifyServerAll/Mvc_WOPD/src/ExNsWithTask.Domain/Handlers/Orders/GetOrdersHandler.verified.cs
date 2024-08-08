@@ -5,7 +5,7 @@
 /// Description: Get orders.
 /// Operation: GetOrders.
 /// </summary>
-public class GetOrdersHandler : IGetOrdersHandler
+public sealed class GetOrdersHandler : IGetOrdersHandler
 {
     public Task<GetOrdersResult> ExecuteAsync(
         GetOrdersParameters parameters,

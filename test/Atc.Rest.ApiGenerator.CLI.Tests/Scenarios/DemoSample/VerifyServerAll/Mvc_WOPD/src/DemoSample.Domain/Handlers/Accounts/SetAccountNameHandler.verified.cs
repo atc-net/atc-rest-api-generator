@@ -5,7 +5,7 @@
 /// Description: Set name of account.
 /// Operation: SetAccountName.
 /// </summary>
-public class SetAccountNameHandler : ISetAccountNameHandler
+public sealed class SetAccountNameHandler : ISetAccountNameHandler
 {
     public Task<SetAccountNameResult> ExecuteAsync(
         SetAccountNameParameters parameters,

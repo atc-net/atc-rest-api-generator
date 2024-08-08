@@ -5,7 +5,7 @@
 /// Description: Upload files as FormData.
 /// Operation: UploadSingleObjectWithFilesAsFormData.
 /// </summary>
-public class UploadSingleObjectWithFilesAsFormDataHandler : IUploadSingleObjectWithFilesAsFormDataHandler
+public sealed class UploadSingleObjectWithFilesAsFormDataHandler : IUploadSingleObjectWithFilesAsFormDataHandler
 {
     public Task<UploadSingleObjectWithFilesAsFormDataResult> ExecuteAsync(
         UploadSingleObjectWithFilesAsFormDataParameters parameters,

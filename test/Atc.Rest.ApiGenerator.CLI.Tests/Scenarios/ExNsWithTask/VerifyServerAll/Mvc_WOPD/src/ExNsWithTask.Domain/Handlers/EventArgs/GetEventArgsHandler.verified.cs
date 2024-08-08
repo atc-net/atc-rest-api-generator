@@ -5,7 +5,7 @@
 /// Description: Get EventArgs List.
 /// Operation: GetEventArgs.
 /// </summary>
-public class GetEventArgsHandler : IGetEventArgsHandler
+public sealed class GetEventArgsHandler : IGetEventArgsHandler
 {
     public Task<GetEventArgsResult> ExecuteAsync(
         CancellationToken cancellationToken = default)

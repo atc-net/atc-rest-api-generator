@@ -5,7 +5,7 @@
 /// Description: Get addresses by postal code.
 /// Operation: GetAddressesByPostalCodes.
 /// </summary>
-public class GetAddressesByPostalCodesHandler : IGetAddressesByPostalCodesHandler
+public sealed class GetAddressesByPostalCodesHandler : IGetAddressesByPostalCodesHandler
 {
     public Task<GetAddressesByPostalCodesResult> ExecuteAsync(
         GetAddressesByPostalCodesParameters parameters,

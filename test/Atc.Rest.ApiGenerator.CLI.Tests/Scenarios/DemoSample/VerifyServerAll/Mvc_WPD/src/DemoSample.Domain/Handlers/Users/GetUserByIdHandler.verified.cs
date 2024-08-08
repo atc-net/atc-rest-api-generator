@@ -5,7 +5,7 @@
 /// Description: Get user by id.
 /// Operation: GetUserById.
 /// </summary>
-public class GetUserByIdHandler : IGetUserByIdHandler
+public sealed class GetUserByIdHandler : IGetUserByIdHandler
 {
     public Task<GetUserByIdResult> ExecuteAsync(
         GetUserByIdParameters parameters,

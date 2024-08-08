@@ -5,7 +5,7 @@
 /// Description: Get order by id.
 /// Operation: GetOrderById.
 /// </summary>
-public class GetOrderByIdHandler : IGetOrderByIdHandler
+public sealed class GetOrderByIdHandler : IGetOrderByIdHandler
 {
     public Task<GetOrderByIdResult> ExecuteAsync(
         GetOrderByIdParameters parameters,

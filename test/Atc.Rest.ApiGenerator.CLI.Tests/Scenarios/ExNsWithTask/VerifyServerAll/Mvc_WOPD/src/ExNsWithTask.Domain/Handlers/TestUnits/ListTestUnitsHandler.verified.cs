@@ -5,7 +5,7 @@
 /// Description: List test units.
 /// Operation: ListTestUnits.
 /// </summary>
-public class ListTestUnitsHandler : IListTestUnitsHandler
+public sealed class ListTestUnitsHandler : IListTestUnitsHandler
 {
     public Task<ListTestUnitsResult> ExecuteAsync(
         ListTestUnitsParameters parameters,

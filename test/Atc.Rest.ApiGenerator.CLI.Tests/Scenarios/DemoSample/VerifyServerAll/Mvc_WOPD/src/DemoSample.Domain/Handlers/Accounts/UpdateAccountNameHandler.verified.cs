@@ -5,7 +5,7 @@
 /// Description: Update name of account.
 /// Operation: UpdateAccountName.
 /// </summary>
-public class UpdateAccountNameHandler : IUpdateAccountNameHandler
+public sealed class UpdateAccountNameHandler : IUpdateAccountNameHandler
 {
     public Task<UpdateAccountNameResult> ExecuteAsync(
         UpdateAccountNameParameters parameters,

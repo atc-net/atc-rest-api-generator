@@ -5,7 +5,7 @@
 /// Description: Get File By Id.
 /// Operation: GetFileById.
 /// </summary>
-public class GetFileByIdHandler : IGetFileByIdHandler
+public sealed class GetFileByIdHandler : IGetFileByIdHandler
 {
     public Task<GetFileByIdResult> ExecuteAsync(
         GetFileByIdParameters parameters,
