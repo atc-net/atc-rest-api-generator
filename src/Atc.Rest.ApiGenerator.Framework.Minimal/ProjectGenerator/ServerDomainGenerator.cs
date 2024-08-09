@@ -169,7 +169,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
             content);
     }
 
-    public void GenerateServiceCollectionExtensions()
+    public void GenerateServiceCollectionEndpointHandlerExtensions()
     {
         var sbServicesHandlerRegistrations = new StringBuilder();
         foreach (var urlPath in openApiDocument.Paths)
@@ -182,13 +182,16 @@ public class ServerDomainGenerator : IServerDomainGenerator
             }
         }
 
+        sbServicesHandlerRegistrations.AppendLine();
+        sbServicesHandlerRegistrations.AppendLine("return services;");
+
         var methodConfigureDomainServices = new MethodParameters(
             DocumentationTags: null,
             Attributes: null,
             AccessModifiers.PublicStatic,
             ReturnGenericTypeName: null,
             ReturnTypeName: "IServiceCollection",
-            Name: "ConfigureDomainServices",
+            Name: "ConfigureDomainHandlers",
             Parameters:
             [
                 new(
@@ -212,32 +215,6 @@ public class ServerDomainGenerator : IServerDomainGenerator
             ],
             AlwaysBreakDownParameters: true,
             UseExpressionBody: false,
-            Content: """
-                     services.DefineHandlersAndServices();
-                     return services;
-                     """);
-
-        var methodDefineHandlersAndServices = new MethodParameters(
-            DocumentationTags: null,
-            Attributes: null,
-            AccessModifiers.PublicStatic,
-            ReturnGenericTypeName: null,
-            ReturnTypeName: "void",
-            Name: "DefineHandlersAndServices",
-            Parameters:
-            [
-                new(
-                    Attributes: null,
-                    GenericTypeName: null,
-                    IsGenericListType: false,
-                    TypeName: "this IServiceCollection",
-                    IsNullableType: false,
-                    IsReferenceType: false,
-                    Name: "services",
-                    DefaultValue: null),
-            ],
-            AlwaysBreakDownParameters: true,
-            UseExpressionBody: false,
             Content: sbServicesHandlerRegistrations.ToString());
 
         var classParameters = new ClassParameters(
@@ -246,7 +223,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
             DocumentationTags: null,
             Attributes: [codeGeneratorAttribute],
             AccessModifiers.PublicStaticClass,
-            ClassTypeName: "ServiceCollectionExtensions",
+            ClassTypeName: "ServiceCollectionEndpointHandlerExtensions",
             GenericTypeName: null,
             InheritedClassTypeName: null,
             InheritedGenericClassTypeName: null,
@@ -256,7 +233,6 @@ public class ServerDomainGenerator : IServerDomainGenerator
             Methods:
             [
                 methodConfigureDomainServices,
-                methodDefineHandlersAndServices,
             ],
             GenerateToStringMethod: false);
 
@@ -269,7 +245,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
             projectPath,
-            projectPath.CombineFileInfo("Extensions", "ServiceCollectionExtensions.cs"),
+            projectPath.CombineFileInfo("Extensions", "ServiceCollectionEndpointHandlerExtensions.cs"),
             ContentWriterArea.Src,
             content);
     }

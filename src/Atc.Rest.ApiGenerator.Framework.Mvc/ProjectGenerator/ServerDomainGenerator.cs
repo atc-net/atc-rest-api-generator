@@ -148,8 +148,8 @@ public class ServerDomainGenerator : IServerDomainGenerator
             content);
     }
 
-    public void GenerateServiceCollectionExtensions()
-        => throw new NotSupportedException($"{nameof(GenerateServiceCollectionExtensions)} is not supported for MVC");
+    public void GenerateServiceCollectionEndpointHandlerExtensions()
+        => throw new NotSupportedException($"{nameof(GenerateServiceCollectionEndpointHandlerExtensions)} is not supported for MVC");
 
     public void MaintainGlobalUsings(
         bool removeNamespaceGroupSeparatorInGlobalUsings)
