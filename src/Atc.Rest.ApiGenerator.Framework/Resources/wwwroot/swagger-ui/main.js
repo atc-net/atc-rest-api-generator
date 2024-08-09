@@ -10,5 +10,5 @@ document.addEventListener('DOMContentLoaded', function () {
     if (svgElement) {
       svgElement.remove()
     }
-  }, 10);
+  }, 100);
 }, false);
