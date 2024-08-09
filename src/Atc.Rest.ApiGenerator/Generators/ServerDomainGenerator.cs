@@ -95,7 +95,7 @@ public class ServerDomainGenerator
             serverDomainGeneratorMinimalApi.ScaffoldHandlers();
 
             serverDomainGeneratorMinimalApi.GenerateAssemblyMarker();
-            serverDomainGeneratorMinimalApi.GenerateServiceCollectionExtensions();
+            serverDomainGeneratorMinimalApi.GenerateServiceCollectionEndpointHandlerExtensions();
 
             serverDomainGeneratorMinimalApi.MaintainGlobalUsings(
                 projectOptions.ApiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings);

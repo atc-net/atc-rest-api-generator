@@ -17,7 +17,7 @@ public interface IServerDomainGenerator
 
     void GenerateAssemblyMarker();
 
-    void GenerateServiceCollectionExtensions();
+    void GenerateServiceCollectionEndpointHandlerExtensions();
 
     void MaintainGlobalUsings(
         bool removeNamespaceGroupSeparatorInGlobalUsings);

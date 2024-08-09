@@ -31,7 +31,7 @@ public sealed class ContentGeneratorServerProgram : IContentGenerator
         sb.AppendLine();
         sb.AppendLine(8, "services.AddMemoryCache();");
         sb.AppendLine();
-        sb.AppendLine(8, "services.ConfigureDomainServices(builder.Configuration);");
+        sb.AppendLine(8, "services.ConfigureDomainHandlers(builder.Configuration);");
         sb.AppendLine();
         sb.AppendLine(8, "services.AddValidatorsFromAssemblyContaining<IDomainAssemblyMarker>(ServiceLifetime.Singleton);");
         sb.AppendLine();
