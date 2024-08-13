@@ -133,8 +133,8 @@ public static class GenerateHelper
         ArgumentNullException.ThrowIfNull(srcPath);
 
         var projectName = projectPrefixName
-            .Replace(" ", ".", StringComparison.Ordinal)
-            .Replace("-", ".", StringComparison.Ordinal)
+            .Replace(' ', '.')
+            .Replace('-', '.')
             .Trim();
 
         var rootPath = outputSlnPath.EndsWith(".sln", StringComparison.OrdinalIgnoreCase)
