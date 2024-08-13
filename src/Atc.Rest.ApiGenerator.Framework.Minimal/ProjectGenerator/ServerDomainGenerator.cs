@@ -219,7 +219,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
 
         var classParameters = new ClassParameters(
             codeGeneratorContentHeader,
-            Namespace: projectName,
+            Namespace: $"{projectName}.Extensions",
             DocumentationTags: null,
             Attributes: [codeGeneratorAttribute],
             AccessModifiers.PublicStaticClass,
