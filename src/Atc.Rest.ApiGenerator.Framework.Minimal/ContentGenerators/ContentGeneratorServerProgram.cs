@@ -48,7 +48,7 @@ public sealed class ContentGeneratorServerProgram : IContentGenerator
 
         sb.AppendLine(8, "services.AddCors(corsOptions =>");
         sb.AppendLine(8, "{");
-        sb.AppendLine(12, "corsOptions.AddPolicy(\"DemoCorsPolicy\", configurePolicy =>");
+        sb.AppendLine(12, "corsOptions.AddPolicy(\"CorsPolicy\", configurePolicy =>");
         sb.AppendLine(12, "{");
         sb.AppendLine(16, "configurePolicy");
         sb.AppendLine(20, ".AllowAnyOrigin()");
@@ -88,7 +88,7 @@ public sealed class ContentGeneratorServerProgram : IContentGenerator
         sb.AppendLine(8, "app.UseHttpsRedirection();");
         sb.AppendLine(8, "app.UseHsts();");
         sb.AppendLine();
-        sb.AppendLine(8, "app.UseCors(\"DemoCorsPolicy\");");
+        sb.AppendLine(8, "app.UseCors(\"CorsPolicy\");");
         sb.AppendLine();
         sb.AppendLine(8, "if (!app.Environment.IsDevelopment())");
         sb.AppendLine(8, "{");
