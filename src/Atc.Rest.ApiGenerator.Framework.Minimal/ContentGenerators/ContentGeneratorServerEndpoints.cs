@@ -155,6 +155,11 @@ public sealed class ContentGeneratorServerEndpoints : IContentGenerator
         {
             var item = parameters.MethodParameters[i];
 
+            StringBuilderEndpointHelper.AppendMethodContentAuthorizationIfNeeded(
+                sb,
+                parameters.Authorization,
+                item.Authorization);
+
             sb.AppendLine(4, $"internal async Task<IResult> {item.Name}(");
             sb.AppendLine(8, $"[FromServices] {item.InterfaceName} handler,");
 
