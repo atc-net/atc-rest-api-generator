@@ -48,12 +48,12 @@ public abstract class BaseProjectOptions
         RouteBase = openApiDocument.GetServerUrlBasePath();
         ProjectName = string.IsNullOrEmpty(projectSuffixName)
             ? projectPrefixName
-                .Replace(" ", ".", StringComparison.Ordinal)
-                .Replace("-", ".", StringComparison.Ordinal)
+                .Replace(' ', '.')
+                .Replace('-', '.')
                 .Trim()
             : projectPrefixName
-                .Replace(" ", ".", StringComparison.Ordinal)
-                .Replace("-", ".", StringComparison.Ordinal)
+                .Replace(' ', '.')
+                .Replace('-', '.')
                 .Trim() + $".{projectSuffixName}";
 
         ProjectPrefixName = ProjectName.Contains('.', StringComparison.Ordinal)

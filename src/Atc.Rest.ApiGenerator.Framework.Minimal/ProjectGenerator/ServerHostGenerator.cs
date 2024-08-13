@@ -290,7 +290,8 @@ public class ServerHostGenerator : IServerHostGenerator
             $"{projectName}.Extensions",
             $"{projectName}.Generated",
             $"{projectName}.Options",
-            $"{projectName}".Replace(".Api", ".Domain", StringComparison.Ordinal),
+            domainProjectName,
+            $"{domainProjectName}.Extensions",
         };
 
         GlobalUsingsHelper.CreateOrUpdate(
