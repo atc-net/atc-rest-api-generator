@@ -66,7 +66,10 @@ public sealed class ContentGeneratorServerController : IContentGenerator
                 sb.Append(codeDocumentationTagsGenerator.GenerateTags(4, item.DocumentationTags));
             }
 
-            AppendMethodContentAuthorizationIfNeeded(sb, item);
+            StringBuilderEndpointHelper.AppendMethodContentAuthorizationIfNeeded(
+                sb,
+                parameters.Authorization,
+                item.Authorization);
 
             sb.AppendLine(4, string.IsNullOrEmpty(item.RouteSuffix)
                 ? $"[Http{item.OperationTypeRepresentation}]"
@@ -107,66 +110,6 @@ public sealed class ContentGeneratorServerController : IContentGenerator
                 sb.AppendLine();
             }
         }
-    }
-
-    private void AppendMethodContentAuthorizationIfNeeded(
-        StringBuilder sb,
-        ContentGeneratorServerEndpointMethodParameters item)
-    {
-        if (item.Authorization is null)
-        {
-            return;
-        }
-
-        if (item.Authorization.UseAllowAnonymous)
-        {
-            if (parameters.Authorization is not null &&
-                parameters.Authorization.UseAllowAnonymous)
-            {
-                return;
-            }
-
-            sb.AppendLine(4, "[AllowAnonymous]");
-            return;
-        }
-
-        if (parameters.Authorization is not null &&
-            !parameters.Authorization.UseAllowAnonymous &&
-            (item.Authorization.Roles is null || item.Authorization.Roles.Count == 0) &&
-            (item.Authorization.AuthenticationSchemes is null || item.Authorization.AuthenticationSchemes.Count == 0))
-        {
-            return;
-        }
-
-        var authorizeLineBuilder = new StringBuilder();
-        var authRoles = item.Authorization.Roles is null
-            ? null
-            : string.Join(',', item.Authorization.Roles);
-        var authSchemes = item.Authorization.AuthenticationSchemes is null
-            ? null
-            : string.Join(',', item.Authorization.AuthenticationSchemes);
-
-        authorizeLineBuilder.Append(4, "[Authorize");
-
-        if (!string.IsNullOrEmpty(authRoles))
-        {
-            authorizeLineBuilder.Append($"(Roles = \"{authRoles}\"");
-        }
-
-        if (!string.IsNullOrEmpty(authSchemes))
-        {
-            authorizeLineBuilder.Append(string.IsNullOrEmpty(authRoles)
-                ? $"(AuthenticationSchemes = \"{authSchemes}\""
-                : $", AuthenticationSchemes = \"{authSchemes}\"");
-        }
-
-        if (!string.IsNullOrEmpty(authRoles) || !string.IsNullOrEmpty(authSchemes))
-        {
-            authorizeLineBuilder.Append(')');
-        }
-
-        authorizeLineBuilder.Append(']');
-        sb.AppendLine(authorizeLineBuilder.ToString());
     }
 
     private static void AppendProducesWithProblemDetails(
