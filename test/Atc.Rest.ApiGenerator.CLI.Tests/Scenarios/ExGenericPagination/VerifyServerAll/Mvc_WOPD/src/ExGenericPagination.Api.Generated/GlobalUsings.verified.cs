@@ -8,6 +8,5 @@ global using ExGenericPagination.Api.Generated.Contracts;
 global using ExGenericPagination.Api.Generated.Contracts.Cats;
 global using ExGenericPagination.Api.Generated.Contracts.Dogs;
 
-global using Microsoft.AspNetCore.Authorization;
 global using Microsoft.AspNetCore.Http;
 global using Microsoft.AspNetCore.Mvc;

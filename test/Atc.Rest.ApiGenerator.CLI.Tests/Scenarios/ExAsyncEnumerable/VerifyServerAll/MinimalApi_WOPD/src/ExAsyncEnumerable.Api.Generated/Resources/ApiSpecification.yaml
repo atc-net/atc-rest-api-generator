@@ -1,0 +1,118 @@
+openapi: 3.0.1
+info:
+  title: TestUnit AsyncEnumerable Ns Api
+  description: TestUnit AsyncEnumerable Ns Api - SingleFileVersion
+  version: '1.0'
+  contact:
+    name: atc-net A/S
+servers:
+  - url: /api/v1
+    description: Api version 1.0
+paths:
+  /customers:
+    get:
+      summary: Get customers
+      description: Get customer
+      operationId: getCustomers
+      parameters:
+        - $ref: '#/components/parameters/pagingPageSize'
+        - $ref: '#/components/parameters/pagingPageIndex'
+        - $ref: '#/components/parameters/continuationToken'
+        - $ref: '#/components/parameters/filter'
+      x-return-async-enumerable: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginationResult'
+                  - type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Customer'
+  /users:
+    get:
+      summary: Get users
+      description: Get users
+      operationId: getUsers
+      x-return-async-enumerable: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+components:
+  schemas:
+    PaginationResult:
+      type: object
+      title: PaginationResult
+      description: An item result subset of a data query.
+      properties:
+        pageSize:
+          type: integer
+        continuationToken:
+          type: string
+          nullable: true
+          description: Token to indicate next result set.
+        items:
+          type: array
+          items: {}
+    Customer:
+      title: Customer
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+    User:
+      title: User
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+  parameters:
+    continuationToken:
+      name: x-continuation
+      in: header
+      required: false
+      schema:
+        type: string
+        nullable: true
+    filter:
+      name: filter
+      in: query
+      required: false
+      schema:
+        type: string
+    pagingPageIndex:
+      name: pageIndex
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+      description: The number of items to skip before starting to collect the result set.
+    pagingPageSize:
+      name: pageSize
+      in: query
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+      description: The numbers of items to return.
