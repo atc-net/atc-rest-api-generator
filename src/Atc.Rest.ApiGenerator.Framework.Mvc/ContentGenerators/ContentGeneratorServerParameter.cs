@@ -69,7 +69,16 @@ public sealed class ContentGeneratorServerParameter : IContentGenerator
             case ParameterLocationType.Header:
             case ParameterLocationType.Route:
             case ParameterLocationType.Cookie:
-                sb.AppendLine(4, $"[From{item.ParameterLocationType}(Name = \"{item.Name}\")]");
+                if (string.IsNullOrEmpty(item.Name) ||
+                    item.Name.Equals(item.ParameterName, StringComparison.OrdinalIgnoreCase))
+                {
+                    sb.AppendLine(4, $"[From{item.ParameterLocationType}]");
+                }
+                else
+                {
+                    sb.AppendLine(4, $"[From{item.ParameterLocationType}(Name = \"{item.Name}\")]");
+                }
+
                 break;
             case ParameterLocationType.Body:
             case ParameterLocationType.Form:
