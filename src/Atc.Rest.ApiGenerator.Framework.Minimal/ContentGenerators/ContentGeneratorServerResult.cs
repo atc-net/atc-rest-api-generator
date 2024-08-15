@@ -108,11 +108,23 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
             return;
         }
 
-        sb.AppendLine(
+        if (item.ResponseModel.UseAsyncEnumerable)
+        {
+            sb.AppendLine(
+                4,
+                string.IsNullOrEmpty(item.ResponseModel.CollectionDataType)
+                    ? $"public static {resultName} Ok(IAsyncEnumerable<{item.ResponseModel.DataType}> result)"
+                    : $"public static {resultName} Ok(IAsyncEnumerable<{item.ResponseModel.CollectionDataType}<{item.ResponseModel.DataType}>> result)");
+        }
+        else
+        {
+            sb.AppendLine(
                 4,
                 string.IsNullOrEmpty(item.ResponseModel.CollectionDataType)
                     ? $"public static {resultName} Ok({item.ResponseModel.DataType} result)"
                     : $"public static {resultName} Ok({item.ResponseModel.CollectionDataType}<{item.ResponseModel.DataType}> result)");
+        }
+
         sb.AppendLine(8, "=> new(TypedResults.Ok(result));");
     }
 

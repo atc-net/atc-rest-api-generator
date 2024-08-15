@@ -318,11 +318,22 @@ public sealed class ContentGeneratorServerController : IContentGenerator
             }
             else
             {
-                sb.AppendLine(
-                    4,
-                    responseModel.CollectionDataType == "List"
-                        ? $"[ProducesResponseType(typeof(IEnumerable<{dataType}>), StatusCodes.{responseModel.StatusCode.ToStatusCodesConstant()})]"
-                        : $"[ProducesResponseType(typeof({responseModel.CollectionDataType}<{dataType}>), StatusCodes.{responseModel.StatusCode.ToStatusCodesConstant()})]");
+                if (responseModel.UseAsyncEnumerable)
+                {
+                    sb.AppendLine(
+                        4,
+                        responseModel.CollectionDataType == NameConstants.List
+                            ? $"[ProducesResponseType(typeof(IAsyncEnumerable<{dataType}>), StatusCodes.{responseModel.StatusCode.ToStatusCodesConstant()})]"
+                            : $"[ProducesResponseType(typeof(IAsyncEnumerable<{responseModel.CollectionDataType}<{dataType}>>), StatusCodes.{responseModel.StatusCode.ToStatusCodesConstant()})]");
+                }
+                else
+                {
+                    sb.AppendLine(
+                        4,
+                        responseModel.CollectionDataType == NameConstants.List
+                            ? $"[ProducesResponseType(typeof(IEnumerable<{dataType}>), StatusCodes.{responseModel.StatusCode.ToStatusCodesConstant()})]"
+                            : $"[ProducesResponseType(typeof({responseModel.CollectionDataType}<{dataType}>), StatusCodes.{responseModel.StatusCode.ToStatusCodesConstant()})]");
+                }
             }
         }
     }

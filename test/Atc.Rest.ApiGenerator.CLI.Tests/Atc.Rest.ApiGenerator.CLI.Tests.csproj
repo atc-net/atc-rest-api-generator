@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -13,6 +13,8 @@
     <Compile Remove="Scenarios\DemoSample\VerifyServerAll\**" />
     <Compile Remove="Scenarios\ExAllResponseTypes\VerifyClient\**" />
     <Compile Remove="Scenarios\ExAllResponseTypes\VerifyServerAll\**" />
+    <Compile Remove="Scenarios\ExAsyncEnumerable\VerifyClient\**" />
+    <Compile Remove="Scenarios\ExAsyncEnumerable\VerifyServerAll\**" />
     <Compile Remove="Scenarios\ExGenericPagination\VerifyClient\**" />
     <Compile Remove="Scenarios\ExGenericPagination\VerifyServerAll\**" />
     <Compile Remove="Scenarios\ExNsWithTask\VerifyClient\**" />
@@ -26,6 +28,8 @@
     <EmbeddedResource Remove="Scenarios\DemoSample\VerifyServerAll\**" />
     <EmbeddedResource Remove="Scenarios\ExAllResponseTypes\VerifyClient\**" />
     <EmbeddedResource Remove="Scenarios\ExAllResponseTypes\VerifyServerAll\**" />
+    <EmbeddedResource Remove="Scenarios\ExAsyncEnumerable\VerifyClient\**" />
+    <EmbeddedResource Remove="Scenarios\ExAsyncEnumerable\VerifyServerAll\**" />
     <EmbeddedResource Remove="Scenarios\ExGenericPagination\VerifyClient\**" />
     <EmbeddedResource Remove="Scenarios\ExGenericPagination\VerifyServerAll\**" />
     <EmbeddedResource Remove="Scenarios\ExNsWithTask\VerifyClient\**" />
@@ -39,6 +43,8 @@
     <None Remove="Scenarios\DemoSample\VerifyServerAll\**" />
     <None Remove="Scenarios\ExAllResponseTypes\VerifyClient\**" />
     <None Remove="Scenarios\ExAllResponseTypes\VerifyServerAll\**" />
+    <None Remove="Scenarios\ExAsyncEnumerable\VerifyClient\**" />
+    <None Remove="Scenarios\ExAsyncEnumerable\VerifyServerAll\**" />
     <None Remove="Scenarios\ExGenericPagination\VerifyClient\**" />
     <None Remove="Scenarios\ExGenericPagination\VerifyServerAll\**" />
     <None Remove="Scenarios\ExNsWithTask\VerifyClient\**" />
@@ -51,11 +57,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc.DotNet" Version="2.0.500" />
+    <PackageReference Include="Atc.DotNet" Version="2.0.513" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.2" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
-    <PackageReference Include="Atc.CodeDocumentation" Version="2.0.500" />
-    <PackageReference Include="Atc.XUnit" Version="2.0.500" />
+    <PackageReference Include="Atc.CodeDocumentation" Version="2.0.513" />
+    <PackageReference Include="Atc.XUnit" Version="2.0.513" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
     <PackageReference Include="Verify" Version="17.10.2" />
     <PackageReference Include="Verify.Xunit" Version="17.10.2" />
@@ -72,6 +78,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Atc.Rest.ApiGenerator.CLI\Atc.Rest.ApiGenerator.CLI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Atc.Test" Version="1.0.93" />
   </ItemGroup>
 
 </Project>

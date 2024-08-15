@@ -186,6 +186,7 @@ public static class OpenApiOperationExtensions
                     }
 
                     string? collectionDataType = null;
+                    var useAsyncEnumerable = false;
                     var dataType = apiMediaType.Value.Schema.GetModelName();
 
                     if (string.IsNullOrEmpty(dataType) &&
@@ -213,12 +214,16 @@ public static class OpenApiOperationExtensions
                                 collectionDataType = customPaginationSchema is not null
                                     ? customPaginationSchema.GetDataType()
                                     : NameConstants.Pagination + ContentGeneratorConstants.Result;
+
+                                useAsyncEnumerable = apiOperation.IsAsyncEnumerableEnabled();
                             }
                         }
                     }
                     else
                     {
                         collectionDataType = apiMediaType.Value.Schema.GetCollectionDataType();
+
+                        useAsyncEnumerable = apiOperation.IsAsyncEnumerableEnabled();
                     }
 
                     result.Add(
@@ -228,6 +233,7 @@ public static class OpenApiOperationExtensions
                             GroupName: null,
                             MediaType: apiMediaType.Key,
                             CollectionDataType: collectionDataType,
+                            UseAsyncEnumerable: useAsyncEnumerable,
                             DataType: dataType,
                             Description: apiResponse.Value.Description,
                             Namespace: @namespace));
@@ -237,4 +243,9 @@ public static class OpenApiOperationExtensions
 
         return result;
     }
+
+    public static bool IsAsyncEnumerableEnabled(
+        this OpenApiOperation operation)
+        => operation.Extensions.TryGetValue("x-return-async-enumerable", out var extension) &&
+           extension is OpenApiBoolean { Value: true };
 }

@@ -182,19 +182,39 @@ public class ContentGeneratorClientEndpointResult : IContentGenerator
             return;
         }
 
-        if (responseModel.CollectionDataType == NameConstants.List)
+        if (responseModel.UseAsyncEnumerable)
         {
-            sb.AppendLine(4, $"public IEnumerable<{dataType}> OkContent");
-            sb.AppendLine(8, $"=> IsOk && ContentObject is IEnumerable<{dataType}> result");
-            sb.AppendLine(12, "? result");
-            sb.AppendLine(12, ": throw new InvalidOperationException(\"Content is not the expected type - please use the IsOk property first.\");");
+            if (responseModel.CollectionDataType == NameConstants.List)
+            {
+                sb.AppendLine(4, $"public IAsyncEnumerable<{dataType}> OkContent");
+                sb.AppendLine(8, $"=> IsOk && ContentObject is IAsyncEnumerable<{dataType}> result");
+                sb.AppendLine(12, "? result");
+                sb.AppendLine(12, ": throw new InvalidOperationException(\"Content is not the expected type - please use the IsOk property first.\");");
+            }
+            else
+            {
+                sb.AppendLine(4, $"public IAsyncEnumerable<{responseModel.CollectionDataType}<{dataType}>> OkContent");
+                sb.AppendLine(8, $"=> IsOk && ContentObject is IAsyncEnumerable<{responseModel.CollectionDataType}<{dataType}>> result");
+                sb.AppendLine(12, "? result");
+                sb.AppendLine(12, ": throw new InvalidOperationException(\"Content is not the expected type - please use the IsOk property first.\");");
+            }
         }
         else
         {
-            sb.AppendLine(4, $"public {responseModel.CollectionDataType}<{dataType}> OkContent");
-            sb.AppendLine(8, $"=> IsOk && ContentObject is {responseModel.CollectionDataType}<{dataType}> result");
-            sb.AppendLine(12, "? result");
-            sb.AppendLine(12, ": throw new InvalidOperationException(\"Content is not the expected type - please use the IsOk property first.\");");
+            if (responseModel.CollectionDataType == NameConstants.List)
+            {
+                sb.AppendLine(4, $"public IEnumerable<{dataType}> OkContent");
+                sb.AppendLine(8, $"=> IsOk && ContentObject is IEnumerable<{dataType}> result");
+                sb.AppendLine(12, "? result");
+                sb.AppendLine(12, ": throw new InvalidOperationException(\"Content is not the expected type - please use the IsOk property first.\");");
+            }
+            else
+            {
+                sb.AppendLine(4, $"public {responseModel.CollectionDataType}<{dataType}> OkContent");
+                sb.AppendLine(8, $"=> IsOk && ContentObject is {responseModel.CollectionDataType}<{dataType}> result");
+                sb.AppendLine(12, "? result");
+                sb.AppendLine(12, ": throw new InvalidOperationException(\"Content is not the expected type - please use the IsOk property first.\");");
+            }
         }
     }
 

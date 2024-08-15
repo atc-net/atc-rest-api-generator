@@ -73,7 +73,15 @@ public sealed class ContentGeneratorServerParameter : IContentGenerator
 
         if (item.ParameterLocationType != ParameterLocationType.None)
         {
-            result.Add(AttributeParametersFactory.Create($"From{item.ParameterLocationType}"));
+            if (string.IsNullOrEmpty(item.Name) ||
+                item.Name.Equals(item.ParameterName, StringComparison.OrdinalIgnoreCase))
+            {
+                result.Add(AttributeParametersFactory.Create($"From{item.ParameterLocationType}"));
+            }
+            else
+            {
+                result.Add(AttributeParametersFactory.Create($"From{item.ParameterLocationType}(Name = \"{item.Name}\")"));
+            }
         }
 
         if (item.IsRequired)

@@ -567,6 +567,7 @@ dotnet_diagnostic.CA1848.severity = suggestion		# Use the LoggerMessage delegate
 dotnet_diagnostic.CA2254.severity = suggestion		# Template should be a static expression - https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2254
 
 dotnet_diagnostic.S1172.severity = none				# False positive
+dotnet_diagnostic.S2325.Severity = none             # Make 'xxx' a static method
 dotnet_diagnostic.S2629.Severity = none
 dotnet_diagnostic.S3267.severity = none				# Loop should be simplified by calling Select(x => x.Value)) - We dont like this rule because of readability/maintainability
 dotnet_diagnostic.S3878.Severity = none
@@ -587,3 +588,5 @@ dotnet_diagnostic.S125.Severity = none
 dotnet_diagnostic.S1481.Severity = none
 dotnet_diagnostic.SA1512.Severity = none
 dotnet_diagnostic.SA1513.Severity = none
+
+dotnet_diagnostic.AsyncFixer02.Severity = none      # ToListAsync should be used instead of xxx

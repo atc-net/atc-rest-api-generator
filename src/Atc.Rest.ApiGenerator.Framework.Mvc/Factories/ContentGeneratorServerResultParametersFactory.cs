@@ -41,11 +41,13 @@ public static class ContentGeneratorServerResultParametersFactory
 
             var collectionDataType = responseModel?.CollectionDataType;
             var dataType = responseModel?.DataType;
+            var useAsyncEnumerable = responseModel?.UseAsyncEnumerable ?? false;
 
             // Implicit Operator
             implicitOperatorParameters = new ContentGeneratorServerResultImplicitOperatorParameters(
                 CollectionDataType: collectionDataType,
-                DataType: dataType);
+                DataType: dataType,
+                UseAsyncEnumerable: useAsyncEnumerable);
         }
 
         return new ContentGeneratorServerResultParameters(

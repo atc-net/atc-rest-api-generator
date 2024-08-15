@@ -8,4 +8,5 @@ public record ApiOperationResponseModel(
     string? CollectionDataType,
     string? DataType,
     string? Description,
-    string? Namespace);
+    string? Namespace,
+    bool UseAsyncEnumerable = false);

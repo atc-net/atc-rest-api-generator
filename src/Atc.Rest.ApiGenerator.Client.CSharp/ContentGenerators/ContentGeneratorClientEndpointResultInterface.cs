@@ -169,13 +169,27 @@ public class ContentGeneratorClientEndpointResultInterface : IContentGenerator
             return;
         }
 
-        if (responseModel.CollectionDataType == NameConstants.List)
+        if (responseModel.UseAsyncEnumerable)
         {
-            sb.AppendLine(4, $"IEnumerable<{dataType}> OkContent {{ get; }}");
+            if (responseModel.CollectionDataType == NameConstants.List)
+            {
+                sb.AppendLine(4, $"IAsyncEnumerable<{dataType}> OkContent {{ get; }}");
+            }
+            else
+            {
+                sb.AppendLine(4, $"IAsyncEnumerable<{responseModel.CollectionDataType}<{dataType}>> OkContent {{ get; }}");
+            }
         }
         else
         {
-            sb.AppendLine(4, $"{responseModel.CollectionDataType}<{dataType}> OkContent {{ get; }}");
+            if (responseModel.CollectionDataType == NameConstants.List)
+            {
+                sb.AppendLine(4, $"IEnumerable<{dataType}> OkContent {{ get; }}");
+            }
+            else
+            {
+                sb.AppendLine(4, $"{responseModel.CollectionDataType}<{dataType}> OkContent {{ get; }}");
+            }
         }
     }
 

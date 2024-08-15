@@ -22,4 +22,8 @@
     <ProjectReference Include="..\..\src\Atc.Rest.ApiGenerator.Contracts\Atc.Rest.ApiGenerator.Contracts.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="Atc.Test" Version="1.0.93" />
+  </ItemGroup>
+
 </Project>

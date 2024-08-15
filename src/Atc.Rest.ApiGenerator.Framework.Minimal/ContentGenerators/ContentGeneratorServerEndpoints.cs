@@ -408,11 +408,22 @@ public sealed class ContentGeneratorServerEndpoints : IContentGenerator
             }
             else
             {
-                sb.Append(
-                    12,
-                    responseModel.CollectionDataType == "List"
-                        ? $".Produces<IEnumerable<{dataType}>>()"
-                        : $".Produces<{responseModel.CollectionDataType}<{dataType}>>()");
+                if (responseModel.UseAsyncEnumerable)
+                {
+                    sb.Append(
+                        12,
+                        responseModel.CollectionDataType == NameConstants.List
+                            ? $".Produces<IAsyncEnumerable<{dataType}>>()"
+                            : $".Produces<IAsyncEnumerable<{responseModel.CollectionDataType}<{dataType}>>>()");
+                }
+                else
+                {
+                    sb.Append(
+                        12,
+                        responseModel.CollectionDataType == NameConstants.List
+                            ? $".Produces<IEnumerable<{dataType}>>()"
+                            : $".Produces<{responseModel.CollectionDataType}<{dataType}>>()");
+                }
             }
         }
     }
