@@ -1,7 +1,37 @@
-[![NuGet Version](https://img.shields.io/nuget/v/atc-rest-api-generator.svg?logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/atc-rest-api-generator)
-
 # ATC-NET REST API Generator
 
+[![NuGet Version](https://img.shields.io/nuget/v/atc-rest-api-generator.svg?logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/atc-rest-api-generator)
+
+## Table of content
+
+- [ATC-NET REST API Generator](#atc-net-rest-api-generator)
+  - [Table of content](#table-of-content)
+  - [Projects in the repository](#projects-in-the-repository)
+  - [Project dependency graph](#project-dependency-graph)
+  - [CLI Tool](#cli-tool)
+  - [Prerequisites](#prerequisites)
+    - [Requirements](#requirements)
+    - [Installation](#installation)
+    - [Update](#update)
+    - [Usage](#usage)
+      - [Option **-h | --help**](#option--h----help)
+      - [Option **generate server all -h**](#option-generate-server-all--h)
+      - [Command **options-file**](#command-options-file)
+      - [Default options-file - ApiGeneratorOptions.json](#default-options-file---apigeneratoroptionsjson)
+  - [PetStore Example](#petstore-example)
+  - [Security - supporting role-based security and custom authentication-schemes](#security---supporting-role-based-security-and-custom-authentication-schemes)
+    - [Roles and authentication-scheme validation](#roles-and-authentication-scheme-validation)
+    - [Logic for determining `[Authorize]` or `[AllowAnonymous]` attributes](#logic-for-determining-authorize-or-allowanonymous-attributes)
+    - [Example](#example)
+  - [OpenApi Snippets](#openapi-snippets)
+    - [List of items](#list-of-items)
+    - [List of items with a custom PaginationResult](#list-of-items-with-a-custom-paginationresult)
+    - [List of items with a built-in Pagination](#list-of-items-with-a-built-in-pagination)
+    - [AsyncEnumerable of items](#asyncenumerable-of-items)
+    - [AsyncEnumerable of items with a custom PaginationResult](#asyncenumerable-of-items-with-a-custom-paginationresult)
+    - [AsyncEnumerable of items with a built-in Pagination](#asyncenumerable-of-items-with-a-built-in-pagination)
+    - [Custom PaginationResult with query parameters](#custom-paginationresult-with-query-parameters)
+  - [How to contribute](#how-to-contribute)
 
 ## Projects in the repository
 
@@ -9,16 +39,15 @@
 |---|---|---|---|
 |[Atc.Rest.ApiGenerator](src/Atc.Rest.ApiGenerator) | net8.0 | Atc.Rest.ApiGenerator is a WebApi C# code generator using a OpenApi 3.0.x specification YAML file. | [![Nuget](https://img.shields.io/nuget/dt/Atc.Rest.ApiGenerator?logo=nuget&style=flat-square)](https://www.nuget.org/packages/Atc.Rest.ApiGenerator) |
 |[Atc.Rest.ApiGenerator.CLI](src/Atc.Rest.ApiGenerator.CLI) |net8.0 | A CLI tool that use Atc.Rest.ApiGenerator to create/update a project specified by a OpenApi 3.0.x specification YAML file. | [![Nuget](https://img.shields.io/nuget/dt/atc-rest-api-generator?logo=nuget&style=flat-square)](https://www.nuget.org/packages/atc-rest-api-generator) |
-|[Atc.Rest.ApiGenerator.CodingRules](src/Atc.Rest.ApiGenerator.CodingRules) | net8.0| Create/update atc coding rules for the generated code |
-|[Atc.Rest.ApiGenerator.Contracts](src/Atc.Rest.ApiGenerator.Contracts) | net8.0| Shared contracts and interfaces for the generated code. |
-|[Atc.Rest.ApiGenerator.Framework.Mvc](src/Atc.Rest.ApiGenerator.Framework.Mvc) | net8.0| Provides support for generating ASP.NET MVC / Controller based REST API server implementations. |
-|[Atc.Rest.ApiGenerator.Framework.Minimal](src/Atc.Rest.ApiGenerator.Framework.Minimal) | net8.0| Provides support for generating MinimalAPI based REST server implementations. |
-|[Atc.Rest.ApiGenerator.Client.CSharp](src/Atc.Rest.ApiGenerator.Client.CSharp) | net8.0| Generates C# client code for interacting with the generated REST APIs. |
-|[Atc.Rest.ApiGenerator.Framework](src/Atc.Rest.ApiGenerator.Framework) | net8.0| Shared framework components and utilities for the API generator projects. |
-|[Atc.Rest.ApiGenerator.OpenApi](src/Atc.Rest.ApiGenerator.OpenApi) | net8.0| Handles OpenAPI specification parsing and manipulation for the API generator. |
-|[Atc.Rest.ApiGenerator.Nuget](src/Atc.Rest.ApiGenerator.Nuget) | net8.0| Manages NuGet packages required by the generated code and frameworks. |
-|[Atc.CodeGeneration.CSharp](src/Atc.CodeGeneration.CSharp) | net8.0| Provides utilities and functionalities for generating C# code. |
-
+|[Atc.Rest.ApiGenerator.CodingRules](src/Atc.Rest.ApiGenerator.CodingRules) | net8.0| Create/update atc coding rules for the generated code | |
+|[Atc.Rest.ApiGenerator.Contracts](src/Atc.Rest.ApiGenerator.Contracts) | net8.0| Shared contracts and interfaces for the generated code. | |
+|[Atc.Rest.ApiGenerator.Framework.Mvc](src/Atc.Rest.ApiGenerator.Framework.Mvc) | net8.0| Provides support for generating ASP.NET MVC / Controller based REST API server implementations. | |
+|[Atc.Rest.ApiGenerator.Framework.Minimal](src/Atc.Rest.ApiGenerator.Framework.Minimal) | net8.0| Provides support for generating MinimalAPI based REST server implementations. | |
+|[Atc.Rest.ApiGenerator.Client.CSharp](src/Atc.Rest.ApiGenerator.Client.CSharp) | net8.0| Generates C# client code for interacting with the generated REST APIs. | |
+|[Atc.Rest.ApiGenerator.Framework](src/Atc.Rest.ApiGenerator.Framework) | net8.0| Shared framework components and utilities for the API generator projects. | |
+|[Atc.Rest.ApiGenerator.OpenApi](src/Atc.Rest.ApiGenerator.OpenApi) | net8.0| Handles OpenAPI specification parsing and manipulation for the API generator. | |
+|[Atc.Rest.ApiGenerator.Nuget](src/Atc.Rest.ApiGenerator.Nuget) | net8.0| Manages NuGet packages required by the generated code and frameworks. | |
+|[Atc.CodeGeneration.CSharp](src/Atc.CodeGeneration.CSharp) | net8.0| Provides utilities and functionalities for generating C# code. | |
 
 ## Project dependency graph
 
@@ -461,6 +490,257 @@ components:
   requestBodies: {}
   responses: {}
   securitySchemes: {}
+```
+
+## OpenApi Snippets
+
+### List of items
+
+```yaml
+# Example with List of items
+/users:
+    get:
+      operationId: getUsers
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+```
+
+```csharp
+// Output for result type
+IEnumerable<User>
+```
+
+### List of items with a custom PaginationResult
+
+```yaml
+ # Example with List of items with a custom PaginationResult
+/users:
+    get:
+      operationId: getUsers
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResult'
+                  - type: object
+                    properties:
+                      results:
+                        type: array
+                        items:
+                            $ref: '#/components/schemas/User'
+```
+
+```csharp
+// Output for result type
+PaginationResult<User>
+```
+
+### List of items with a built-in Pagination
+
+```yaml
+# Example with List of items with a built-in Pagination
+/users:
+    get:
+      operationId: getUsers
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Pagination'
+                  - $ref: '#/components/schemas/User'
+```
+
+```csharp
+// Output for result type
+Pagination<User>
+```
+
+### AsyncEnumerable of items
+
+```yaml
+# Example with AsyncEnumerable of items
+/users:
+    get:
+      operationId: getUsers
+      x-return-async-enumerable: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+```
+
+```csharp
+// Output for result type
+IAsyncEnumerable<User>
+```
+
+### AsyncEnumerable of items with a custom PaginationResult
+
+```yaml
+# Example with AsyncEnumerable of items with a custom PaginationResult
+/users:
+    get:
+      operationId: getUsers
+      x-return-async-enumerable: true
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResult'
+                  - type: object
+                    properties:
+                      results:
+                        type: array
+                        items:
+                            $ref: '#/components/schemas/User'
+```
+
+```csharp
+// Output for result type
+IAsyncEnumerable<PaginationResult<User>>
+```
+
+### AsyncEnumerable of items with a built-in Pagination
+
+```yaml
+# Example with AsyncEnumerable of items with a built-in Pagination
+# Note: The build-in Pagination can be found in namespace Atc.Rest.Results
+/users:
+    get:
+      operationId: getUsers
+      x-return-async-enumerable: true
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Pagination'
+                  - $ref: '#/components/schemas/User'
+```
+
+```csharp
+// Output for result type
+IAsyncEnumerable<Pagination<User>>
+```
+
+### Custom PaginationResult with query parameters
+
+```yaml
+ # Example with custom PaginationResult and use of query parameters
+paths:
+  /users:
+    get:
+      operationId: getUsers
+      parameters:
+        - $ref: '#/components/parameters/pageSize'
+        - $ref: '#/components/parameters/continuationToken'
+        - $ref: '#/components/parameters/queryString'
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginationResult'
+                  - type: object
+                    properties:
+                      results:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/User'
+components:
+  schemas:
+    PaginationResult:
+      type: object
+      title: PaginationResult
+      description: An item result subset of a data query.
+      properties:
+        pageSize:
+          type: integer
+        continuationToken:
+          type: string
+          nullable: true
+          description: Token to indicate next result set.
+        items:
+          type: array
+          items: {}
+  parameters:
+    pageSize:
+      name: pageSize
+      in: query
+      required: true
+      schema:
+        type: integer
+        default: 10
+    continuationToken:
+      name: continuationToken
+      in: query
+      required: false
+      schema:
+        type: string
+        nullable: true
+    queryString:
+      name: queryString
+      in: query
+      required: true
+      schema:
+        type: string
+```
+
+```csharp
+// Output for generated parameter class in Minimal-Api
+public record GetUsersParameters(
+    [property: FromQuery] string? ContinuationToken,
+    [property: FromQuery, Required] string QueryString,
+    [property: FromQuery, Required] int PageSize = 10);
+
+
+// Output for generated result class in Minimal-Api
+public class GetUsersResult
+{
+    private GetUsersResult(IResult result)
+    {
+        Result = result;
+    }
+
+    public IResult Result { get; }
+
+    /// <summary>
+    /// 200 - Ok response.
+    /// </summary>
+    public static GetUsersResult Ok(PaginationResult<User> result)
+        => new(TypedResults.Ok(result));
+
+    /// <summary>
+    /// Performs an implicit conversion from GetUsersResult to IResult.
+    /// </summary>
+    public static IResult ToIResult(GetUsersResult result)
+        => result.Result;
+}
 ```
 
 ## How to contribute
