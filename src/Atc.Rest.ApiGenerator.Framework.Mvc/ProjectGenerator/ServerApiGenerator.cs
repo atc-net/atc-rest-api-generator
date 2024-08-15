@@ -353,8 +353,15 @@ public class ServerApiGenerator : IServerApiGenerator
             requiredUsings.Add("System.Text.Json.Serialization");
         }
 
-        // TODO: Check for any use ??
-        requiredUsings.Add("Microsoft.AspNetCore.Authorization");
+        if (openApiDocument.IsUsingRequiredForAsyncEnumerable(includeDeprecated))
+        {
+            requiredUsings.Add("Atc.Factories");
+        }
+
+        if (openApiDocument.IsUsingRequiredForMicrosoftAspNetCoreAuthorization(includeDeprecated))
+        {
+            requiredUsings.Add("Microsoft.AspNetCore.Authorization");
+        }
 
         if (operationSchemaMappings.Any(apiOperation => apiOperation.Model.IsShared))
         {

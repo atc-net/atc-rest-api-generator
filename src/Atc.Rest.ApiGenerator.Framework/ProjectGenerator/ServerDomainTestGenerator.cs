@@ -51,7 +51,7 @@ public class ServerDomainTestGenerator : IServerDomainTestGenerator
                     new("Version", packageReference.PackageVersion),
                 ],
                 Value: packageReference.SubElements))
-            .ToList();
+            .ToImmutableList();
 
         var projectFileParameters = new ProjectFileParameters(
             "Microsoft.NET.Sdk",

@@ -238,13 +238,27 @@ public class ContentGeneratorClientEndpoint : IContentGenerator
             return;
         }
 
-        if (responseModel.CollectionDataType == NameConstants.List)
+        if (responseModel.UseAsyncEnumerable)
         {
-            sb.AppendLine(8, $"responseBuilder.AddSuccessResponse<IEnumerable<{dataType}>>(HttpStatusCode.OK);");
+            if (responseModel.CollectionDataType == NameConstants.List)
+            {
+                sb.AppendLine(8, $"responseBuilder.AddSuccessResponse<IAsyncEnumerable<{dataType}>>(HttpStatusCode.OK);");
+            }
+            else
+            {
+                sb.AppendLine(8, $"responseBuilder.AddSuccessResponse<IAsyncEnumerable<{responseModel.CollectionDataType}<{dataType}>>>(HttpStatusCode.OK);");
+            }
         }
         else
         {
-            sb.AppendLine(8, $"responseBuilder.AddSuccessResponse<{responseModel.CollectionDataType}<{dataType}>>(HttpStatusCode.OK);");
+            if (responseModel.CollectionDataType == NameConstants.List)
+            {
+                sb.AppendLine(8, $"responseBuilder.AddSuccessResponse<IEnumerable<{dataType}>>(HttpStatusCode.OK);");
+            }
+            else
+            {
+                sb.AppendLine(8, $"responseBuilder.AddSuccessResponse<{responseModel.CollectionDataType}<{dataType}>>(HttpStatusCode.OK);");
+            }
         }
     }
 

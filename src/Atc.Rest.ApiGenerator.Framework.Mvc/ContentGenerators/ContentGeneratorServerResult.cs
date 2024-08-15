@@ -118,15 +118,31 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
             return;
         }
 
-        if (item.ResponseModel.CollectionDataType == NameConstants.List)
+        if (item.ResponseModel.UseAsyncEnumerable)
         {
-            sb.AppendLine(4, $"public static {resultName} Ok(IEnumerable<{item.ResponseModel.DataType}> response)");
-            sb.AppendLine(8, $"=> new {resultName}(new OkObjectResult(response ?? Enumerable.Empty<{item.ResponseModel.DataType}>()));");
+            if (item.ResponseModel.CollectionDataType == NameConstants.List)
+            {
+                sb.AppendLine(4, $"public static {resultName} Ok(IAsyncEnumerable<{item.ResponseModel.DataType}> response)");
+                sb.AppendLine(8, $"=> new {resultName}(new OkObjectResult(response ?? AsyncEnumerableFactory.Empty<{item.ResponseModel.DataType}>()));");
+            }
+            else
+            {
+                sb.AppendLine(4, $"public static {resultName} Ok(IAsyncEnumerable<{item.ResponseModel.CollectionDataType}<{item.ResponseModel.DataType}>> response)");
+                sb.AppendLine(8, $"=> new {resultName}(new OkObjectResult(response));");
+            }
         }
         else
         {
-            sb.AppendLine(4, $"public static {resultName} Ok({item.ResponseModel.CollectionDataType}<{item.ResponseModel.DataType}> response)");
-            sb.AppendLine(8, $"=> new {resultName}(new OkObjectResult(response));");
+            if (item.ResponseModel.CollectionDataType == NameConstants.List)
+            {
+                sb.AppendLine(4, $"public static {resultName} Ok(IEnumerable<{item.ResponseModel.DataType}> response)");
+                sb.AppendLine(8, $"=> new {resultName}(new OkObjectResult(response ?? Enumerable.Empty<{item.ResponseModel.DataType}>()));");
+            }
+            else
+            {
+                sb.AppendLine(4, $"public static {resultName} Ok({item.ResponseModel.CollectionDataType}<{item.ResponseModel.DataType}> response)");
+                sb.AppendLine(8, $"=> new {resultName}(new OkObjectResult(response));");
+            }
         }
     }
 
@@ -320,6 +336,7 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
         if (item.ImplicitOperatorParameters.DataType is null)
         {
             sb.AppendLine(4, $"public static implicit operator {item.ResultName}(string response)");
+            sb.AppendLine(8, "=> Ok(response);");
         }
         else
         {
@@ -328,8 +345,26 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
                 item.ImplicitOperatorParameters.CollectionDataType is null
                     ? $"public static implicit operator {item.ResultName}({item.ImplicitOperatorParameters.DataType} response)"
                     : $"public static implicit operator {item.ResultName}({item.ImplicitOperatorParameters.CollectionDataType}<{item.ImplicitOperatorParameters.DataType}> response)");
-        }
 
-        sb.AppendLine(8, "=> Ok(response);");
+            if (item.ImplicitOperatorParameters.UseAsyncEnumerable)
+            {
+                if (item.ImplicitOperatorParameters.CollectionDataType is null)
+                {
+                    sb.AppendLine(8, "=> Ok(AsyncEnumerableFactory.FromSingleItem(response));");
+                }
+                else
+                {
+                    sb.AppendLine(
+                        8,
+                        item.ImplicitOperatorParameters.CollectionDataType == NameConstants.List
+                            ? "=> Ok(response.ToAsyncEnumerable());"
+                            : "=> Ok(AsyncEnumerableFactory.FromSingleItem(response));");
+                }
+            }
+            else
+            {
+                sb.AppendLine(8, "=> Ok(response);");
+            }
+        }
     }
 }

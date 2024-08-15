@@ -376,7 +376,8 @@ public static class OpenApiDocumentExtensions
                     continue;
                 }
 
-                var isOperationAuthenticationRequired = apiOperationPair.Value.Extensions.ExtractAuthenticationRequired();
+                var isOperationAuthenticationRequired =
+                    apiOperationPair.Value.Extensions.ExtractAuthenticationRequired();
                 if (isOperationAuthenticationRequired is not null && isOperationAuthenticationRequired.Value)
                 {
                     return true;
@@ -397,6 +398,29 @@ public static class OpenApiDocumentExtensions
                 authenticationSchemes is not null && authenticationSchemes.Count > 0)
             {
                 return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static bool IsUsingRequiredForAsyncEnumerable(
+        this OpenApiDocument openApiDocument,
+        bool includeDeprecated)
+    {
+        foreach (var openApiPath in openApiDocument.Paths)
+        {
+            foreach (var apiOperationPair in openApiPath.Value.Operations)
+            {
+                if (apiOperationPair.Value.Deprecated && !includeDeprecated)
+                {
+                    continue;
+                }
+
+                if (apiOperationPair.Value.IsAsyncEnumerableEnabled())
+                {
+                    return true;
+                }
             }
         }
 

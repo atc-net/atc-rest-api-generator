@@ -14,4 +14,5 @@ public record ContentGeneratorServerResultMethodParameters(
 
 public record ContentGeneratorServerResultImplicitOperatorParameters(
     string? CollectionDataType,
-    string? DataType);
+    string? DataType,
+    bool UseAsyncEnumerable = false);

@@ -178,7 +178,7 @@ public static class ContentGeneratorServerClientModelParametersFactory
             return schema.Default.GetDefaultValueAsString();
         }
 
-        if ("List".Equals(dataTypeForList, StringComparison.Ordinal))
+        if (NameConstants.List.Equals(dataTypeForList, StringComparison.Ordinal))
         {
             return null;
         }
@@ -208,14 +208,14 @@ public static class ContentGeneratorServerClientModelParametersFactory
                     documentationTags,
                     Attributes: null,
                     AccessModifier: AccessModifiers.Public,
-                    GenericTypeName: "List",
+                    GenericTypeName: NameConstants.List,
                     IsGenericListType: true,
                     TypeName: childModelName,
                     IsNullableType: false,
                     IsReferenceType: false,
-                    Name: childModelName + "List",
+                    Name: childModelName + NameConstants.List,
                     JsonName: null,
-                    DefaultValue: $"new List<{childModelName}>()",
+                    DefaultValue: $"new {NameConstants.List}<{childModelName}>()",
                     UseAutoProperty: true,
                     UseGet: true,
                     UseSet: true,
@@ -305,14 +305,14 @@ public static class ContentGeneratorServerClientModelParametersFactory
 
                 if (dataTypeForList is null && useListForDataType)
                 {
-                    dataTypeForList = "List";
+                    dataTypeForList = NameConstants.List;
                 }
 
                 var defaultValue = GetDefaultValue(openApiParameter, dataTypeForList);
 
                 if (dataType.Equals(dataTypeForList, StringComparison.Ordinal))
                 {
-                    dataTypeForList = "List";
+                    dataTypeForList = NameConstants.List;
                 }
 
                 var name = apiSchema.Key.EnsureFirstCharacterToUpper();
@@ -406,12 +406,12 @@ public static class ContentGeneratorServerClientModelParametersFactory
                  DocumentationTags: null,
                  Attributes: null,
                  AccessModifier: AccessModifiers.Public,
-                 GenericTypeName: "List",
+                 GenericTypeName: NameConstants.List,
                  IsGenericListType: true,
                  TypeName: childModelName,
                  IsNullableType: false,
                  IsReferenceType: false,
-                 Name: childModelName + "List",
+                 Name: childModelName + NameConstants.List,
                  JsonName: null,
                  DefaultValue: null,
                  UseAutoProperty: true,
@@ -473,7 +473,7 @@ public static class ContentGeneratorServerClientModelParametersFactory
                 string? defaultValue = null;
                 if (useListForDataType)
                 {
-                    dataTypeForList = "List";
+                    dataTypeForList = NameConstants.List;
                 }
                 else
                 {
