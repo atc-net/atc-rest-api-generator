@@ -17,7 +17,7 @@ public class GetCustomersParameters
     /// <summary>
     /// The numbers of items to return.
     /// </summary>
-    [FromQuery(Name = "pageSize")]
+    [FromQuery]
     [Required]
     [Range(1, 100)]
     public int PageSize { get; set; } = 10;
@@ -25,14 +25,14 @@ public class GetCustomersParameters
     /// <summary>
     /// The number of items to skip before starting to collect the result set.
     /// </summary>
-    [FromQuery(Name = "pageIndex")]
+    [FromQuery]
     [Range(0, 2147483647)]
     public int PageIndex { get; set; } = 0;
 
     [FromHeader(Name = "x-continuation")]
     public string? Continuation { get; set; }
 
-    [FromQuery(Name = "filter")]
+    [FromQuery]
     public string? Filter { get; set; }
 
     /// <inheritdoc />

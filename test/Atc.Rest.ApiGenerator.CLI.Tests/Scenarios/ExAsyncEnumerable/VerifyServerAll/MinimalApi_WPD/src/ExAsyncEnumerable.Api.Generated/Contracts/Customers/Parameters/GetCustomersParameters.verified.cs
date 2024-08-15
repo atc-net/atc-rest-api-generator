@@ -13,7 +13,7 @@ namespace ExAsyncEnumerable.Api.Generated.Contracts.Customers;
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public record GetCustomersParameters(
-    [property: FromHeader] string? Continuation,
+    [property: FromHeader(Name = "x-continuation")] string? Continuation,
     [property: FromQuery] string? Filter,
     [property: FromQuery, Required, Range(1, 100)] int PageSize = 10,
     [property: FromQuery, Range(0, int.MaxValue)] int PageIndex = 0);
