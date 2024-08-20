@@ -6,29 +6,29 @@ public static class ServiceCollectionExtensions
         this IServiceCollection services)
     {
         services.AddEndpointsApiExplorer();
-        services.AddApiVersioning(
-                options =>
-                {
-                    // Specify the default API Version
-                    options.DefaultApiVersion = new ApiVersion(1, 0);
+        services
+            .AddApiVersioning(options =>
+            {
+                // Specify the default API Version
+                options.DefaultApiVersion = new ApiVersion(1, 0);
 
-                    // If the client hasn't specified the API version in the request, use the default API version number
-                    options.AssumeDefaultVersionWhenUnspecified = true;
+                // If the client hasn't specified the API version in the request, use the default API version number
+                options.AssumeDefaultVersionWhenUnspecified = true;
 
-                    // reporting api versions will return the headers
-                    // "api-supported-versions" and "api-deprecated-versions"
-                    options.ReportApiVersions = true;
+                // reporting api versions will return the headers
+                // "api-supported-versions" and "api-deprecated-versions"
+                options.ReportApiVersions = true;
 
-                    //// DEFAULT Version reader is QueryStringApiVersionReader();
-                    //// clients request the specific version using the x-api-version header
-                    //// Supporting multiple versioning scheme
-                    options.ApiVersionReader = ApiVersionReader.Combine(
-                        new HeaderApiVersionReader(ApiVersionConstants.ApiVersionHeaderParameter),
-                        new MediaTypeApiVersionReader(ApiVersionConstants.ApiVersionMediaTypeParameter),
-                        new QueryStringApiVersionReader(ApiVersionConstants.ApiVersionQueryParameter),
-                        new QueryStringApiVersionReader(ApiVersionConstants.ApiVersionQueryParameterShort),
-                        new UrlSegmentApiVersionReader());
-                })
+                //// DEFAULT Version reader is QueryStringApiVersionReader();
+                //// clients request the specific version using the x-api-version header
+                //// Supporting multiple versioning scheme
+                options.ApiVersionReader = ApiVersionReader.Combine(
+                    new HeaderApiVersionReader(ApiVersionConstants.ApiVersionHeaderParameter),
+                    new MediaTypeApiVersionReader(ApiVersionConstants.ApiVersionMediaTypeParameter),
+                    new QueryStringApiVersionReader(ApiVersionConstants.ApiVersionQueryParameter),
+                    new QueryStringApiVersionReader(ApiVersionConstants.ApiVersionQueryParameterShort),
+                    new UrlSegmentApiVersionReader());
+            })
             .AddApiExplorer(options =>
             {
                 // add the versioned api explorer, which also adds IApiVersionDescriptionProvider service
@@ -44,7 +44,8 @@ public static class ServiceCollectionExtensions
     public static void ConfigureSwagger(
         this IServiceCollection services)
     {
-        services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+        services.ConfigureOptions<ConfigureSwaggerDocOptions>();
+
         services.AddSwaggerGen(options =>
         {
             options.OperationFilter<SwaggerDefaultValues>();
