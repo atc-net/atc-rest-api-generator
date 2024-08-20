@@ -30,7 +30,7 @@ public sealed class ContentGeneratorServerConfigureSwaggerDocOptions : IContentG
         sb.AppendLine(4, "private readonly IWebHostEnvironment environment;");
         sb.AppendLine();
         sb.AppendLine(4, "/// <summary>");
-        sb.AppendLine(4, "/// Initializes a new instance of the <see cref=\"ConfigureSwaggerOptions\"/> class.");
+        sb.AppendLine(4, "/// Initializes a new instance of the <see cref=\"ConfigureSwaggerDocOptions\"/> class.");
         sb.AppendLine(4, "/// </summary>");
         sb.AppendLine(4, "/// <param name=\"provider\">The <see cref=\"IApiVersionDescriptionProvider\">provider</see> used to generate Swagger documents.</param>");
         sb.AppendLine(4, "/// <param name=\"environment\">The environment.</param>");
