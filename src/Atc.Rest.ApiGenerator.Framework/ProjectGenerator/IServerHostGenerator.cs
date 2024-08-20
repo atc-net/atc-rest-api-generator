@@ -28,8 +28,6 @@ public interface IServerHostGenerator
 
     void GenerateConfigureSwaggerDocOptions();
 
-    void ScaffoldConfigureSwaggerOptions();
-
     void ScaffoldProgramFile(
         SwaggerThemeMode swaggerThemeMode);
 

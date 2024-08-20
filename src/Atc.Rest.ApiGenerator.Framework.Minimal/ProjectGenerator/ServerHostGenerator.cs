@@ -181,29 +181,6 @@ public class ServerHostGenerator : IServerHostGenerator
             overrideIfExist: false);
     }
 
-    public void ScaffoldConfigureSwaggerOptions()
-    {
-        var fullNamespace = $"{projectName}";
-
-        var contentGeneratorServerSwaggerDocOptionsParameters = ContentGeneratorServerSwaggerDocOptionsParameterFactory
-            .Create(
-                fullNamespace,
-                openApiDocument.ToSwaggerDocOptionsParameters());
-
-        var contentGenerator = new ContentGeneratorServerConfigureSwaggerOptions(
-            contentGeneratorServerSwaggerDocOptionsParameters);
-
-        var content = contentGenerator.Generate();
-
-        var contentWriter = new ContentWriter(logger);
-        contentWriter.Write(
-            projectPath,
-            projectPath.CombineFileInfo("Options", "ConfigureSwaggerOptions.cs"),
-            ContentWriterArea.Src,
-            content,
-            overrideIfExist: false);
-    }
-
     public void ScaffoldProgramFile(
         SwaggerThemeMode swaggerThemeMode)
     {
