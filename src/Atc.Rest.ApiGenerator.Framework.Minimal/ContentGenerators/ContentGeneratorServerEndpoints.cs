@@ -35,13 +35,6 @@ public sealed class ContentGeneratorServerEndpoints : IContentGenerator
             sb.Append(codeDocumentationTagsGenerator.GenerateTags(0, parameters.DocumentationTags));
         }
 
-        if (parameters.Authorization is not null)
-        {
-            sb.AppendLine(parameters.Authorization.UseAllowAnonymous
-                ? "[AllowAnonymous]"
-                : "[Authorize]");
-        }
-
         sb.AppendLine(codeAttributeGenerator.Generate());
 
         sb.AppendLine($"public sealed class {parameters.ApiGroupName}EndpointDefinition : IEndpointDefinition");
