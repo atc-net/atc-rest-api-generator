@@ -21,7 +21,7 @@ public class ContentGeneratorServeWebApplicationExtensions : IContentGenerator
         sb.AppendLine();
         sb.AppendLine("public static class WebApplicationExtensions");
         sb.AppendLine("{");
-        sb.AppendLine(4, "private static readonly string[] PatchHttpMethods = { \"patch\" };");
+        sb.AppendLine(4, "private static readonly string[] PatchHttpMethods = [\"patch\"];");
         sb.AppendLine();
         sb.AppendLine(4, "public static RouteHandlerBuilder MapPatch(");
         sb.AppendLine(8, "this WebApplication app,");
