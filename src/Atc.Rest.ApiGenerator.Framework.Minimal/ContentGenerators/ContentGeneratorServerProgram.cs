@@ -70,6 +70,8 @@ public sealed class ContentGeneratorServerProgram : IContentGenerator
         sb.AppendLine();
         sb.AppendLine(8, "app.UseEndpointDefinitions();");
         sb.AppendLine();
+        sb.AppendLine(8, "app.MapGet(\"/\", () => TypedResults.Text(\"OK\", \"text/plain\")).ExcludeFromDescription();");
+        sb.AppendLine();
         sb.AppendLine(8, "app.UseGlobalErrorHandler();");
         sb.AppendLine();
         sb.AppendLine(8, "// Enabling the status code pages middleware, will allow Problem Details to be used in some extra non-exception related framework scenarios,");

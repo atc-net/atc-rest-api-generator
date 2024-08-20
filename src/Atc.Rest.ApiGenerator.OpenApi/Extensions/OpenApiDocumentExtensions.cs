@@ -376,8 +376,7 @@ public static class OpenApiDocumentExtensions
                     continue;
                 }
 
-                var isOperationAuthenticationRequired =
-                    apiOperationPair.Value.Extensions.ExtractAuthenticationRequired();
+                var isOperationAuthenticationRequired = apiOperationPair.Value.Extensions.ExtractAuthenticationRequired();
                 if (isOperationAuthenticationRequired is not null && isOperationAuthenticationRequired.Value)
                 {
                     return true;
@@ -394,8 +393,8 @@ public static class OpenApiDocumentExtensions
 
             var authenticationRoles = openApiPath.Value.Extensions.ExtractAuthorizationRoles();
             var authenticationSchemes = openApiPath.Value.Extensions.ExtractAuthenticationSchemes();
-            if (authenticationRoles is not null && authenticationRoles.Count > 0 &&
-                authenticationSchemes is not null && authenticationSchemes.Count > 0)
+            if ((authenticationRoles is not null && authenticationRoles.Count > 0) ||
+                (authenticationSchemes is not null && authenticationSchemes.Count > 0))
             {
                 return true;
             }

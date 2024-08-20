@@ -28,7 +28,7 @@ public class NugetPackageReferenceProvider(
         { "Microsoft.NETCore.Platforms", "7.0.4" },
         { "Microsoft.NET.Test.Sdk", "17.10.0" },
         { "NSubstitute", "5.1.0" },
-        { "Swashbuckle.AspNetCore", "6.6.2" },
+        { "Swashbuckle.AspNetCore", "6.7.0" },
         { "xunit", "2.8.1" },
         { "xunit.runner.visualstudio", "2.8.1" },
     };

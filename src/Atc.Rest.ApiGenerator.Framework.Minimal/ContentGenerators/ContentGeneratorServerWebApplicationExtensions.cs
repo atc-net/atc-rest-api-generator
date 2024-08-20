@@ -1,11 +1,11 @@
 // ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
 namespace Atc.Rest.ApiGenerator.Framework.Minimal.ContentGenerators;
 
-public class ContentGeneratorServeWebApplicationExtensions : IContentGenerator
+public class ContentGeneratorServerWebApplicationExtensions : IContentGenerator
 {
     private readonly ContentGeneratorBaseParameters parameters;
 
-    public ContentGeneratorServeWebApplicationExtensions(
+    public ContentGeneratorServerWebApplicationExtensions(
         ContentGeneratorBaseParameters parameters)
     {
         this.parameters = parameters;
@@ -21,7 +21,7 @@ public class ContentGeneratorServeWebApplicationExtensions : IContentGenerator
         sb.AppendLine();
         sb.AppendLine("public static class WebApplicationExtensions");
         sb.AppendLine("{");
-        sb.AppendLine(4, "private static readonly string[] PatchHttpMethods = { \"patch\" };");
+        sb.AppendLine(4, "private static readonly string[] PatchHttpMethods = [\"patch\"];");
         sb.AppendLine();
         sb.AppendLine(4, "public static RouteHandlerBuilder MapPatch(");
         sb.AppendLine(8, "this WebApplication app,");
@@ -39,6 +39,11 @@ public class ContentGeneratorServeWebApplicationExtensions : IContentGenerator
             sb.AppendLine(8, "this WebApplication app,");
             sb.AppendLine(8, "string applicationName)");
             sb.AppendLine(4, "{");
+            sb.AppendLine(8, "if (!app.Environment.IsDevelopment())");
+            sb.AppendLine(8, "{");
+            sb.AppendLine(12, "return app;");
+            sb.AppendLine(8, "}");
+            sb.AppendLine();
             sb.AppendLine(8, "app.UseSwagger();");
             sb.AppendLine(8, "app.UseSwaggerUI(options =>");
             sb.AppendLine(8, "{");

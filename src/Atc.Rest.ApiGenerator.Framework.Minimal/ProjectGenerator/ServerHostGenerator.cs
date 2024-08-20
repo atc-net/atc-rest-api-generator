@@ -164,7 +164,7 @@ public class ServerHostGenerator : IServerHostGenerator
     public void ScaffoldWebApplicationExtensions(
         SwaggerThemeMode swaggerThemeMode)
     {
-        var contentGenerator = new ContentGenerators.ContentGeneratorServeWebApplicationExtensions(
+        var contentGenerator = new ContentGenerators.ContentGeneratorServerWebApplicationExtensions(
             new ContentGeneratorBaseParameters(Namespace: projectName))
         {
             SwaggerThemeMode = swaggerThemeMode,
@@ -176,29 +176,6 @@ public class ServerHostGenerator : IServerHostGenerator
         contentWriter.Write(
             projectPath,
             projectPath.CombineFileInfo("Extensions", "WebApplicationExtensions.cs"),
-            ContentWriterArea.Src,
-            content,
-            overrideIfExist: false);
-    }
-
-    public void ScaffoldConfigureSwaggerOptions()
-    {
-        var fullNamespace = $"{projectName}";
-
-        var contentGeneratorServerSwaggerDocOptionsParameters = ContentGeneratorServerSwaggerDocOptionsParameterFactory
-            .Create(
-                fullNamespace,
-                openApiDocument.ToSwaggerDocOptionsParameters());
-
-        var contentGenerator = new ContentGeneratorServeConfigureSwaggerOptions(
-            contentGeneratorServerSwaggerDocOptionsParameters);
-
-        var content = contentGenerator.Generate();
-
-        var contentWriter = new ContentWriter(logger);
-        contentWriter.Write(
-            projectPath,
-            projectPath.CombineFileInfo("Options", "ConfigureSwaggerOptions.cs"),
             ContentWriterArea.Src,
             content,
             overrideIfExist: false);
@@ -251,7 +228,7 @@ public class ServerHostGenerator : IServerHostGenerator
                 fullNamespace,
                 openApiDocument.ToSwaggerDocOptionsParameters());
 
-        var contentGenerator = new ContentGeneratorServerSwaggerDocOptions(
+        var contentGenerator = new ContentGeneratorServerConfigureSwaggerDocOptions(
             new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
             new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
             contentGeneratorServerSwaggerDocOptionsParameters);

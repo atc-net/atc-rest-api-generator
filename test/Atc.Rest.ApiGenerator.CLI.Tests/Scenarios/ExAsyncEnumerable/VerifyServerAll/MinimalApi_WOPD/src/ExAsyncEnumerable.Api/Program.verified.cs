@@ -45,6 +45,8 @@ public static class Program
 
         app.UseEndpointDefinitions();
 
+        app.MapGet("/", () => TypedResults.Text("OK", "text/plain")).ExcludeFromDescription();
+
         app.UseGlobalErrorHandler();
 
         // Enabling the status code pages middleware, will allow Problem Details to be used in some extra non-exception related framework scenarios,

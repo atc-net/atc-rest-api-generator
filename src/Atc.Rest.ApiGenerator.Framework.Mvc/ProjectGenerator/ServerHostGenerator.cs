@@ -124,29 +124,6 @@ public class ServerHostGenerator : IServerHostGenerator
         SwaggerThemeMode swaggerThemeMode)
         => throw new NotSupportedException($"{nameof(ScaffoldWebApplicationExtensions)} is not supported for MVC");
 
-    public void ScaffoldConfigureSwaggerOptions()
-    {
-        var fullNamespace = $"{projectName}";
-
-        var contentGeneratorServerSwaggerDocOptionsParameters = ContentGeneratorServerSwaggerDocOptionsParameterFactory
-            .Create(
-                fullNamespace,
-                openApiDocument.ToSwaggerDocOptionsParameters());
-
-        var contentGenerator = new ContentGeneratorServeConfigureSwaggerOptions(
-            contentGeneratorServerSwaggerDocOptionsParameters);
-
-        var content = contentGenerator.Generate();
-
-        var contentWriter = new ContentWriter(logger);
-        contentWriter.Write(
-            projectPath,
-            projectPath.CombineFileInfo("Options", "ConfigureSwaggerOptions.cs"),
-            ContentWriterArea.Src,
-            content,
-            overrideIfExist: false);
-    }
-
     public void ScaffoldProgramFile(
         SwaggerThemeMode swaggerThemeMode)
     {
@@ -204,7 +181,7 @@ public class ServerHostGenerator : IServerHostGenerator
                 fullNamespace,
                 openApiDocument.ToSwaggerDocOptionsParameters());
 
-        var contentGenerator = new ContentGeneratorServerSwaggerDocOptions(
+        var contentGenerator = new ContentGeneratorServerConfigureSwaggerDocOptions(
             new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
             new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
             contentGeneratorServerSwaggerDocOptionsParameters);

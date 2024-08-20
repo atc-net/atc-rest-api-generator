@@ -110,7 +110,6 @@ public class ServerHostGenerator
                 projectOptions.ApiOptions.Generator.SwaggerThemeMode);
             serverHostGeneratorMvc.ScaffoldStartupFile();
             serverHostGeneratorMvc.ScaffoldWebConfig();
-            serverHostGeneratorMvc.ScaffoldConfigureSwaggerOptions();
 
             serverHostGeneratorMvc.GenerateConfigureSwaggerDocOptions();
 
@@ -149,7 +148,6 @@ public class ServerHostGenerator
             serverHostGeneratorMinimalApi.ScaffoldWebApplicationBuilderExtensions();
             serverHostGeneratorMinimalApi.ScaffoldWebApplicationExtensions(
                 projectOptions.ApiOptions.Generator.SwaggerThemeMode);
-            serverHostGeneratorMinimalApi.ScaffoldConfigureSwaggerOptions();
 
             serverHostGeneratorMinimalApi.GenerateConfigureSwaggerDocOptions();
 

@@ -9,7 +9,6 @@ namespace ExAsyncEnumerable.Api.Generated.Endpoints;
 /// <summary>
 /// Endpoint definitions.
 /// </summary>
-[Authorize]
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public sealed class UsersEndpointDefinition : IEndpointDefinition
 {

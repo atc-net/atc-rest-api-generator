@@ -1,12 +1,18 @@
 namespace Atc.Rest.ApiGenerator.Framework.ContentGenerators.Server;
 
-public class ContentGeneratorServeConfigureSwaggerOptions : IContentGenerator
+public sealed class ContentGeneratorServerConfigureSwaggerDocOptions : IContentGenerator
 {
+    private readonly GeneratedCodeHeaderGenerator codeHeaderGenerator;
+    private readonly GeneratedCodeAttributeGenerator codeAttributeGenerator;
     private readonly ContentGeneratorServerSwaggerDocOptionsParameters parameters;
 
-    public ContentGeneratorServeConfigureSwaggerOptions(
+    public ContentGeneratorServerConfigureSwaggerDocOptions(
+        GeneratedCodeHeaderGenerator codeHeaderGenerator,
+        GeneratedCodeAttributeGenerator codeAttributeGenerator,
         ContentGeneratorServerSwaggerDocOptionsParameters parameters)
     {
+        this.codeHeaderGenerator = codeHeaderGenerator;
+        this.codeAttributeGenerator = codeAttributeGenerator;
         this.parameters = parameters;
     }
 
@@ -14,19 +20,21 @@ public class ContentGeneratorServeConfigureSwaggerOptions : IContentGenerator
     {
         var sb = new StringBuilder();
 
+        sb.Append(codeHeaderGenerator.Generate());
         sb.AppendLine($"namespace {parameters.Namespace}.Options;"); // TODO: Move to constant
         sb.AppendLine();
-        sb.AppendLine("public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>");
+        sb.AppendLine(codeAttributeGenerator.Generate());
+        sb.AppendLine("public class ConfigureSwaggerDocOptions : IConfigureOptions<SwaggerGenOptions>");
         sb.AppendLine("{");
         sb.AppendLine(4, "private readonly IApiVersionDescriptionProvider provider;");
         sb.AppendLine(4, "private readonly IWebHostEnvironment environment;");
         sb.AppendLine();
         sb.AppendLine(4, "/// <summary>");
-        sb.AppendLine(4, "/// Initializes a new instance of the <see cref=\"ConfigureSwaggerOptions\"/> class.");
+        sb.AppendLine(4, "/// Initializes a new instance of the <see cref=\"ConfigureSwaggerDocOptions\"/> class.");
         sb.AppendLine(4, "/// </summary>");
         sb.AppendLine(4, "/// <param name=\"provider\">The <see cref=\"IApiVersionDescriptionProvider\">provider</see> used to generate Swagger documents.</param>");
         sb.AppendLine(4, "/// <param name=\"environment\">The environment.</param>");
-        sb.AppendLine(4, "public ConfigureSwaggerOptions(");
+        sb.AppendLine(4, "public ConfigureSwaggerDocOptions(");
         sb.AppendLine(8, "IApiVersionDescriptionProvider provider,");
         sb.AppendLine(8, "IWebHostEnvironment environment)");
         sb.AppendLine(4, "{");
@@ -34,17 +42,17 @@ public class ContentGeneratorServeConfigureSwaggerOptions : IContentGenerator
         sb.AppendLine(8, "this.environment = environment;");
         sb.AppendLine(4, "}");
         sb.AppendLine();
-        sb.AppendLine(4, "/// <inheritdoc />");
         sb.AppendLine(4, "public void Configure(");
         sb.AppendLine(8, "SwaggerGenOptions options)");
         sb.AppendLine(4, "{");
-        sb.AppendLine(8, "// Add a swagger document for each discovered API version");
-        sb.AppendLine(8, "// note: you might choose to skip or document deprecated API versions differently");
         sb.AppendLine(8, "foreach (var description in provider.ApiVersionDescriptions)");
         sb.AppendLine(8, "{");
         sb.AppendLine(12, "options.SwaggerDoc(description.GroupName, CreateInfoForApiVersion(description));");
         sb.AppendLine(8, "}");
+        sb.AppendLine();
+        sb.AppendLine(8, "options.IncludeXmlComments(Path.ChangeExtension(GetType().Assembly.Location, \"xml\"));");
         sb.AppendLine(4, "}");
+
         sb.AppendLine();
         sb.AppendLine(4, "private OpenApiInfo CreateInfoForApiVersion(");
         sb.AppendLine(8, "ApiVersionDescription description)");
