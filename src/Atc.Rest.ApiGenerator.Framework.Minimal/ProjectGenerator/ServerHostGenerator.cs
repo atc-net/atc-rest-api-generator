@@ -251,7 +251,7 @@ public class ServerHostGenerator : IServerHostGenerator
                 fullNamespace,
                 openApiDocument.ToSwaggerDocOptionsParameters());
 
-        var contentGenerator = new ContentGeneratorServerSwaggerDocOptions(
+        var contentGenerator = new ContentGeneratorServerConfigureSwaggerDocOptions(
             new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
             new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
             contentGeneratorServerSwaggerDocOptionsParameters);

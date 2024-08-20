@@ -1,12 +1,12 @@
 namespace Atc.Rest.ApiGenerator.Framework.ContentGenerators.Server;
 
-public sealed class ContentGeneratorServerSwaggerDocOptions : IContentGenerator
+public sealed class ContentGeneratorServerConfigureSwaggerDocOptions : IContentGenerator
 {
     private readonly GeneratedCodeHeaderGenerator codeHeaderGenerator;
     private readonly GeneratedCodeAttributeGenerator codeAttributeGenerator;
     private readonly ContentGeneratorServerSwaggerDocOptionsParameters parameters;
 
-    public ContentGeneratorServerSwaggerDocOptions(
+    public ContentGeneratorServerConfigureSwaggerDocOptions(
         GeneratedCodeHeaderGenerator codeHeaderGenerator,
         GeneratedCodeAttributeGenerator codeAttributeGenerator,
         ContentGeneratorServerSwaggerDocOptionsParameters parameters)
