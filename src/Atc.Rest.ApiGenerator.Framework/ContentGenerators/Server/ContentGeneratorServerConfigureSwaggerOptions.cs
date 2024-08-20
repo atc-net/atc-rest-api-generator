@@ -1,10 +1,10 @@
 namespace Atc.Rest.ApiGenerator.Framework.ContentGenerators.Server;
 
-public class ContentGeneratorServeConfigureSwaggerOptions : IContentGenerator
+public class ContentGeneratorServerConfigureSwaggerOptions : IContentGenerator
 {
     private readonly ContentGeneratorServerSwaggerDocOptionsParameters parameters;
 
-    public ContentGeneratorServeConfigureSwaggerOptions(
+    public ContentGeneratorServerConfigureSwaggerOptions(
         ContentGeneratorServerSwaggerDocOptionsParameters parameters)
     {
         this.parameters = parameters;
