@@ -39,6 +39,11 @@ public class ContentGeneratorServeWebApplicationExtensions : IContentGenerator
             sb.AppendLine(8, "this WebApplication app,");
             sb.AppendLine(8, "string applicationName)");
             sb.AppendLine(4, "{");
+            sb.AppendLine(8, "if (!app.Environment.IsDevelopment())");
+            sb.AppendLine(8, "{");
+            sb.AppendLine(12, "return app;");
+            sb.AppendLine(8, "}");
+            sb.AppendLine();
             sb.AppendLine(8, "app.UseSwagger();");
             sb.AppendLine(8, "app.UseSwaggerUI(options =>");
             sb.AppendLine(8, "{");
