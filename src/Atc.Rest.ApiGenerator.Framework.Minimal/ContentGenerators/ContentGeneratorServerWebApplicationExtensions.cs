@@ -1,11 +1,11 @@
 // ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
 namespace Atc.Rest.ApiGenerator.Framework.Minimal.ContentGenerators;
 
-public class ContentGeneratorServeWebApplicationExtensions : IContentGenerator
+public class ContentGeneratorServerWebApplicationExtensions : IContentGenerator
 {
     private readonly ContentGeneratorBaseParameters parameters;
 
-    public ContentGeneratorServeWebApplicationExtensions(
+    public ContentGeneratorServerWebApplicationExtensions(
         ContentGeneratorBaseParameters parameters)
     {
         this.parameters = parameters;

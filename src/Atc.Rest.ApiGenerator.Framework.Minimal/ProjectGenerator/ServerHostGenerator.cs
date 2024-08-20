@@ -164,7 +164,7 @@ public class ServerHostGenerator : IServerHostGenerator
     public void ScaffoldWebApplicationExtensions(
         SwaggerThemeMode swaggerThemeMode)
     {
-        var contentGenerator = new ContentGenerators.ContentGeneratorServeWebApplicationExtensions(
+        var contentGenerator = new ContentGenerators.ContentGeneratorServerWebApplicationExtensions(
             new ContentGeneratorBaseParameters(Namespace: projectName))
         {
             SwaggerThemeMode = swaggerThemeMode,
