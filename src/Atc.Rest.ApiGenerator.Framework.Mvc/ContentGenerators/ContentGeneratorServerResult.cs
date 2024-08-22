@@ -83,11 +83,11 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
         {
             if (useProblemDetailsAsDefaultResponseBody)
             {
-                AppendMethodContentForOtherStatusCodesThenOkWithProblemDetails(sb, item, resultName);
+                AppendMethodContentForOtherStatusCodesThanOkWithProblemDetails(sb, item, resultName);
             }
             else
             {
-                AppendMethodContentForOtherStatusCodesThenOkWithoutProblemDetails(sb, item, resultName);
+                AppendMethodContentForOtherStatusCodesThanOkWithoutProblemDetails(sb, item, resultName);
             }
         }
     }
@@ -146,7 +146,7 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
         }
     }
 
-    private void AppendMethodContentForOtherStatusCodesThenOkWithProblemDetails(
+    private void AppendMethodContentForOtherStatusCodesThanOkWithProblemDetails(
         StringBuilder sb,
         ContentGeneratorServerResultMethodParameters item,
         string resultName)
@@ -159,6 +159,10 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
             case HttpStatusCode.Created:
                 sb.AppendLine(4, $"public static {resultName} {item.ResponseModel.StatusCode.ToNormalizedString()}(string? uri = null)");
                 sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResult)}({nameof(HttpStatusCode)}.{item.ResponseModel.StatusCode}, uri));");
+                break;
+            case HttpStatusCode.NotFound:
+                sb.AppendLine(4, $"public static {resultName} {item.ResponseModel.StatusCode.ToNormalizedString()}(string? message = null)");
+                sb.AppendLine(8, $"=> new {resultName}(new {item.ResponseModel.StatusCode.ToNormalizedString()}ObjectResult(message));");
                 break;
             case HttpStatusCode.BadRequest:
                 sb.AppendLine(4, $"public static {resultName} {item.ResponseModel.StatusCode.ToNormalizedString()}(string? message = null)");
@@ -190,7 +194,6 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
             case HttpStatusCode.Unauthorized:
             case HttpStatusCode.PaymentRequired:
             case HttpStatusCode.Forbidden:
-            case HttpStatusCode.NotFound:
             case HttpStatusCode.MethodNotAllowed:
             case HttpStatusCode.NotAcceptable:
             case HttpStatusCode.ProxyAuthenticationRequired:
@@ -233,7 +236,7 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
         }
     }
 
-    private void AppendMethodContentForOtherStatusCodesThenOkWithoutProblemDetails(
+    private void AppendMethodContentForOtherStatusCodesThanOkWithoutProblemDetails(
         StringBuilder sb,
         ContentGeneratorServerResultMethodParameters item,
         string resultName)

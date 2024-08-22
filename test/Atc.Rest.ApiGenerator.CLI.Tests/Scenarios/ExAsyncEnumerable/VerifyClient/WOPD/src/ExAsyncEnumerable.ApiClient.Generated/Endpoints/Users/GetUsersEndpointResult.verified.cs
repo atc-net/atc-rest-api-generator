@@ -22,16 +22,8 @@ public class GetUsersEndpointResult : EndpointResponse, IGetUsersEndpointResult
     public bool IsOk
         => StatusCode == HttpStatusCode.OK;
 
-    public bool IsUnauthorized
-        => StatusCode == HttpStatusCode.Unauthorized;
-
     public IAsyncEnumerable<User> OkContent
         => IsOk && ContentObject is IAsyncEnumerable<User> result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsOk property first.");
-
-    public string? UnauthorizedContent
-        => IsUnauthorized && ContentObject is string result
-            ? result
-            : throw new InvalidOperationException("Content is not the expected type - please use the IsUnauthorized property first.");
 }

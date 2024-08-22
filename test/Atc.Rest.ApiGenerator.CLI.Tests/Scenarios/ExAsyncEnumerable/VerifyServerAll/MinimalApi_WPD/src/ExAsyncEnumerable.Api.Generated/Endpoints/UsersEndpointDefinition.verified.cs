@@ -26,8 +26,7 @@ public sealed class UsersEndpointDefinition : IEndpointDefinition
             .WithName("GetUsers")
             .WithSummary("Get users.")
             .WithDescription("Get users.")
-            .Produces<IAsyncEnumerable<User>>()
-            .ProducesProblem(StatusCodes.Status401Unauthorized);
+            .Produces<IAsyncEnumerable<User>>();
     }
 
     internal async Task<IResult> GetUsers(

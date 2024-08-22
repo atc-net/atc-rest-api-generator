@@ -351,9 +351,6 @@ public class ServerApiGenerator : IServerApiGenerator
             requiredUsings.Add("Atc.Rest.MinimalApi.Filters.Endpoints");
         }
 
-        // TODO: Check for any use ??
-        requiredUsings.Add("Microsoft.AspNetCore.Authorization");
-
         if (operationSchemaMappings.Any(apiOperation => apiOperation.Model.IsShared))
         {
             requiredUsings.Add($"{projectName}.{ContentGeneratorConstants.Contracts}");

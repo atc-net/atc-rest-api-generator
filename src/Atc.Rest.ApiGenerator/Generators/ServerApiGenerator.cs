@@ -79,8 +79,7 @@ public class ServerApiGenerator
             serverApiGeneratorMvc.GenerateEndpoints();
 
             serverApiGeneratorMvc.MaintainApiSpecification(projectOptions.DocumentFile);
-            serverApiGeneratorMvc.MaintainGlobalUsings(
-                projectOptions.ApiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings);
+            serverApiGeneratorMvc.MaintainGlobalUsings(projectOptions.ApiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings);
         }
         else
         {
@@ -94,8 +93,7 @@ public class ServerApiGenerator
             serverApiGeneratorMinimalApi.GenerateEndpoints();
 
             serverApiGeneratorMinimalApi.MaintainApiSpecification(projectOptions.DocumentFile);
-            serverApiGeneratorMinimalApi.MaintainGlobalUsings(
-                projectOptions.ApiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings);
+            serverApiGeneratorMinimalApi.MaintainGlobalUsings(projectOptions.ApiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings);
         }
 
         return true;

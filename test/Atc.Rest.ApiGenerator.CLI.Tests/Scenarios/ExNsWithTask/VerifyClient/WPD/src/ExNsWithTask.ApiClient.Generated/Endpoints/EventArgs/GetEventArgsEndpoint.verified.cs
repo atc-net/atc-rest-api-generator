@@ -38,7 +38,6 @@ public class GetEventArgsEndpoint : IGetEventArgsEndpoint
 
         var responseBuilder = httpMessageFactory.FromResponse(response);
         responseBuilder.AddSuccessResponse<IEnumerable<ExNsWithTask.ApiClient.Generated.Contracts.EventArgs.EventArgs>>(HttpStatusCode.OK);
-        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.Unauthorized);
         return await responseBuilder.BuildResponseAsync(x => new GetEventArgsEndpointResult(x), cancellationToken);
     }
 }

@@ -25,9 +25,6 @@ public class GetCustomersEndpointResult : EndpointResponse, IGetCustomersEndpoin
     public bool IsBadRequest
         => StatusCode == HttpStatusCode.BadRequest;
 
-    public bool IsUnauthorized
-        => StatusCode == HttpStatusCode.Unauthorized;
-
     public IAsyncEnumerable<PaginationResult<Customer>> OkContent
         => IsOk && ContentObject is IAsyncEnumerable<PaginationResult<Customer>> result
             ? result
@@ -37,9 +34,4 @@ public class GetCustomersEndpointResult : EndpointResponse, IGetCustomersEndpoin
         => IsBadRequest && ContentObject is ValidationProblemDetails result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsBadRequest property first.");
-
-    public ProblemDetails UnauthorizedContent
-        => IsUnauthorized && ContentObject is ProblemDetails result
-            ? result
-            : throw new InvalidOperationException("Content is not the expected type - please use the IsUnauthorized property first.");
 }

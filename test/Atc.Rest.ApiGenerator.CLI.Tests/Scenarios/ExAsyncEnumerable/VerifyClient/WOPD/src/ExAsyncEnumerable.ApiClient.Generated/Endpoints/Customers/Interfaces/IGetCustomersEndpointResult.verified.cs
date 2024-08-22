@@ -19,11 +19,7 @@ public interface IGetCustomersEndpointResult : IEndpointResponse
 
     bool IsBadRequest { get; }
 
-    bool IsUnauthorized { get; }
-
     IAsyncEnumerable<PaginationResult<Customer>> OkContent { get; }
 
     string? BadRequestContent { get; }
-
-    string? UnauthorizedContent { get; }
 }

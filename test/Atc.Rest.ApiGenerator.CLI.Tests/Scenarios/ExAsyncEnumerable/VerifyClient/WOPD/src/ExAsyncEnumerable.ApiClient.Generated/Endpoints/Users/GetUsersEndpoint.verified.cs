@@ -38,7 +38,6 @@ public class GetUsersEndpoint : IGetUsersEndpoint
 
         var responseBuilder = httpMessageFactory.FromResponse(response);
         responseBuilder.AddSuccessResponse<IAsyncEnumerable<User>>(HttpStatusCode.OK);
-        responseBuilder.AddErrorResponse<string>(HttpStatusCode.Unauthorized);
         return await responseBuilder.BuildResponseAsync(x => new GetUsersEndpointResult(x), cancellationToken);
     }
 }

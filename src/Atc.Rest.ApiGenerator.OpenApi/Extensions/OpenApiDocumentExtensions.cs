@@ -364,7 +364,7 @@ public static class OpenApiDocumentExtensions
         foreach (var openApiPath in openApiDocument.Paths)
         {
             var isAuthenticationRequired = openApiPath.Value.Extensions.ExtractAuthenticationRequired();
-            if (isAuthenticationRequired is not null && isAuthenticationRequired.Value)
+            if (isAuthenticationRequired is not null)
             {
                 return true;
             }
@@ -377,7 +377,7 @@ public static class OpenApiDocumentExtensions
                 }
 
                 var isOperationAuthenticationRequired = apiOperationPair.Value.Extensions.ExtractAuthenticationRequired();
-                if (isOperationAuthenticationRequired is not null && isOperationAuthenticationRequired.Value)
+                if (isOperationAuthenticationRequired is not null)
                 {
                     return true;
                 }

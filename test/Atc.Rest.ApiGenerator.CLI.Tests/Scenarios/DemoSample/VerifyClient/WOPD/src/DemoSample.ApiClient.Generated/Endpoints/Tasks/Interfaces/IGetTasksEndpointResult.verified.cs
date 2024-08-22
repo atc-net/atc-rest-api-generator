@@ -17,9 +17,5 @@ public interface IGetTasksEndpointResult : IEndpointResponse
 
     bool IsOk { get; }
 
-    bool IsUnauthorized { get; }
-
     IEnumerable<DemoSample.ApiClient.Generated.Contracts.Tasks.Task> OkContent { get; }
-
-    string? UnauthorizedContent { get; }
 }

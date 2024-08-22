@@ -17,9 +17,5 @@ public interface IGetUsersEndpointResult : IEndpointResponse
 
     bool IsOk { get; }
 
-    bool IsUnauthorized { get; }
-
     IAsyncEnumerable<User> OkContent { get; }
-
-    ProblemDetails UnauthorizedContent { get; }
 }

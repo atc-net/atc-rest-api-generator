@@ -211,6 +211,10 @@ public class ContentGeneratorClientEndpointResultInterface : IContentGenerator
                     sb.AppendLine();
                     AppendMethodContentStatusCodeOk(sb, responseModel);
                     break;
+                case HttpStatusCode.NotFound:
+                    sb.AppendLine();
+                    sb.AppendLine(4, $"string? {responseModel.StatusCode.ToNormalizedString()}Content {{ get; }}");
+                    break;
                 case HttpStatusCode.BadRequest:
                     sb.AppendLine();
                     sb.AppendLine(4, $"ValidationProblemDetails {responseModel.StatusCode.ToNormalizedString()}Content {{ get; }}");
@@ -242,7 +246,6 @@ public class ContentGeneratorClientEndpointResultInterface : IContentGenerator
                 case HttpStatusCode.Unauthorized:
                 case HttpStatusCode.PaymentRequired:
                 case HttpStatusCode.Forbidden:
-                case HttpStatusCode.NotFound:
                 case HttpStatusCode.MethodNotAllowed:
                 case HttpStatusCode.NotAcceptable:
                 case HttpStatusCode.ProxyAuthenticationRequired:

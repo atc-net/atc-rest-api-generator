@@ -38,7 +38,6 @@ public class GetTasksEndpoint : IGetTasksEndpoint
 
         var responseBuilder = httpMessageFactory.FromResponse(response);
         responseBuilder.AddSuccessResponse<IEnumerable<DemoSample.ApiClient.Generated.Contracts.Tasks.Task>>(HttpStatusCode.OK);
-        responseBuilder.AddErrorResponse<string>(HttpStatusCode.Unauthorized);
         return await responseBuilder.BuildResponseAsync(x => new GetTasksEndpointResult(x), cancellationToken);
     }
 }

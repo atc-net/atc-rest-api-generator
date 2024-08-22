@@ -202,6 +202,7 @@ public sealed class ContentGeneratorServerEndpoints : IContentGenerator
                     break;
                 case HttpStatusCode.Accepted:
                 case HttpStatusCode.Created:
+                case HttpStatusCode.NotFound:
                     sb.Append(12, $".Produces<string?>(StatusCodes.{responseModel.StatusCode.ToStatusCodesConstant()})");
                     break;
                 case HttpStatusCode.EarlyHints:
@@ -229,7 +230,6 @@ public sealed class ContentGeneratorServerEndpoints : IContentGenerator
                 case HttpStatusCode.Unauthorized:
                 case HttpStatusCode.PaymentRequired:
                 case HttpStatusCode.Forbidden:
-                case HttpStatusCode.NotFound:
                 case HttpStatusCode.MethodNotAllowed:
                 case HttpStatusCode.NotAcceptable:
                 case HttpStatusCode.ProxyAuthenticationRequired:

@@ -236,6 +236,13 @@ public class ContentGeneratorClientEndpointResult : IContentGenerator
                     sb.AppendLine();
                     AppendMethodContentStatusCodeOk(sb, responseModel);
                     break;
+                case HttpStatusCode.NotFound:
+                    sb.AppendLine();
+                    sb.AppendLine(4, $"public string? {responseModel.StatusCode.ToNormalizedString()}Content");
+                    sb.AppendLine(8, $"=> Is{responseModel.StatusCode.ToNormalizedString()} && ContentObject is string result");
+                    sb.AppendLine(12, "? result");
+                    sb.AppendLine(12, $": throw new InvalidOperationException(\"Content is not the expected type - please use the Is{responseModel.StatusCode.ToNormalizedString()} property first.\");");
+                    break;
                 case HttpStatusCode.BadRequest:
                     sb.AppendLine();
                     sb.AppendLine(4, $"public ValidationProblemDetails {responseModel.StatusCode.ToNormalizedString()}Content");
@@ -270,7 +277,6 @@ public class ContentGeneratorClientEndpointResult : IContentGenerator
                 case HttpStatusCode.Unauthorized:
                 case HttpStatusCode.PaymentRequired:
                 case HttpStatusCode.Forbidden:
-                case HttpStatusCode.NotFound:
                 case HttpStatusCode.MethodNotAllowed:
                 case HttpStatusCode.NotAcceptable:
                 case HttpStatusCode.ProxyAuthenticationRequired:

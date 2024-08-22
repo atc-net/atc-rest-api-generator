@@ -108,6 +108,12 @@ public sealed class OpenApiPathItemExtensionsTests
             },
         };
 
+        if (expectedUseAllowAnonymous is null)
+        {
+            apiPath.Extensions.Remove(SecurityExtensionNameConstants.AuthenticationRequired);
+            apiPath.Operations.Values.First().Extensions.Remove(SecurityExtensionNameConstants.AuthenticationRequired);
+        }
+
         // Act
         var result = apiPath.ExtractApiPathAuthorization();
 
