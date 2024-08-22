@@ -41,8 +41,7 @@ public class GetEventArgByIdEndpoint : IGetEventArgByIdEndpoint
         var responseBuilder = httpMessageFactory.FromResponse(response);
         responseBuilder.AddSuccessResponse<ExNsWithTask.ApiClient.Generated.Contracts.EventArgs.EventArgs>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse<ValidationProblemDetails>(HttpStatusCode.BadRequest);
-        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.Unauthorized);
-        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.NotFound);
+        responseBuilder.AddErrorResponse<string?>(HttpStatusCode.NotFound);
         return await responseBuilder.BuildResponseAsync(x => new GetEventArgByIdEndpointResult(x), cancellationToken);
     }
 }

@@ -44,7 +44,6 @@ public class GetCustomersEndpoint : IGetCustomersEndpoint
         var responseBuilder = httpMessageFactory.FromResponse(response);
         responseBuilder.AddSuccessResponse<IAsyncEnumerable<PaginationResult<Customer>>>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse<ValidationProblemDetails>(HttpStatusCode.BadRequest);
-        responseBuilder.AddErrorResponse<ProblemDetails>(HttpStatusCode.Unauthorized);
         return await responseBuilder.BuildResponseAsync(x => new GetCustomersEndpointResult(x), cancellationToken);
     }
 }

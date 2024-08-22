@@ -9,7 +9,6 @@ namespace ExAsyncEnumerable.Api.Generated.Endpoints;
 /// <summary>
 /// Endpoint definitions.
 /// </summary>
-[Authorize]
 [ApiController]
 [Route("/api/v1/users")]
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
@@ -21,7 +20,6 @@ public sealed class UsersController : ControllerBase
     /// </summary>
     [HttpGet]
     [ProducesResponseType(typeof(IAsyncEnumerable<User>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> GetUsers(
         [FromServices] IGetUsersHandler handler,
         CancellationToken cancellationToken)

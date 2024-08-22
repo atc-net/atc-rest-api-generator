@@ -25,9 +25,6 @@ public class GetEventArgByIdEndpointResult : EndpointResponse, IGetEventArgByIdE
     public bool IsBadRequest
         => StatusCode == HttpStatusCode.BadRequest;
 
-    public bool IsUnauthorized
-        => StatusCode == HttpStatusCode.Unauthorized;
-
     public bool IsNotFound
         => StatusCode == HttpStatusCode.NotFound;
 
@@ -40,11 +37,6 @@ public class GetEventArgByIdEndpointResult : EndpointResponse, IGetEventArgByIdE
         => IsBadRequest && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsBadRequest property first.");
-
-    public string? UnauthorizedContent
-        => IsUnauthorized && ContentObject is string result
-            ? result
-            : throw new InvalidOperationException("Content is not the expected type - please use the IsUnauthorized property first.");
 
     public string? NotFoundContent
         => IsNotFound && ContentObject is string result

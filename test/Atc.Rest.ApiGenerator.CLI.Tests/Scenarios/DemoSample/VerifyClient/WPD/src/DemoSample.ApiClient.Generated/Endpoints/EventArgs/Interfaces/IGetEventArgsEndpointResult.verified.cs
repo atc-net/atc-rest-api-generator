@@ -17,9 +17,5 @@ public interface IGetEventArgsEndpointResult : IEndpointResponse
 
     bool IsOk { get; }
 
-    bool IsUnauthorized { get; }
-
     IEnumerable<DemoSample.ApiClient.Generated.Contracts.EventArgs.EventArgs> OkContent { get; }
-
-    ProblemDetails UnauthorizedContent { get; }
 }

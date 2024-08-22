@@ -19,15 +19,11 @@ public interface IGetEventArgByIdEndpointResult : IEndpointResponse
 
     bool IsBadRequest { get; }
 
-    bool IsUnauthorized { get; }
-
     bool IsNotFound { get; }
 
     DemoSample.ApiClient.Generated.Contracts.EventArgs.EventArgs OkContent { get; }
 
     ValidationProblemDetails BadRequestContent { get; }
 
-    ProblemDetails UnauthorizedContent { get; }
-
-    ProblemDetails NotFoundContent { get; }
+    string? NotFoundContent { get; }
 }

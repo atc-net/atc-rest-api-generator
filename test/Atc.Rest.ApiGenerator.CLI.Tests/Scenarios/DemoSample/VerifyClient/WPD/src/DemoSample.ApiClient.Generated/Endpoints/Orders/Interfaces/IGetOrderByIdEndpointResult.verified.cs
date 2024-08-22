@@ -25,5 +25,5 @@ public interface IGetOrderByIdEndpointResult : IEndpointResponse
 
     ValidationProblemDetails BadRequestContent { get; }
 
-    ProblemDetails NotFoundContent { get; }
+    string? NotFoundContent { get; }
 }

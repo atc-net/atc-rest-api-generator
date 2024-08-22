@@ -9,7 +9,6 @@ namespace ExAsyncEnumerable.Api.Generated.Endpoints;
 /// <summary>
 /// Endpoint definitions.
 /// </summary>
-[Authorize]
 [ApiController]
 [Route("/api/v1/customers")]
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
@@ -22,7 +21,6 @@ public sealed class CustomersController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(IAsyncEnumerable<PaginationResult<Customer>>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> GetCustomers(
         GetCustomersParameters parameters,
         [FromServices] IGetCustomersHandler handler,

@@ -38,8 +38,8 @@ public class GetOrderByIdEndpointResult : EndpointResponse, IGetOrderByIdEndpoin
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsBadRequest property first.");
 
-    public ProblemDetails NotFoundContent
-        => IsNotFound && ContentObject is ProblemDetails result
+    public string? NotFoundContent
+        => IsNotFound && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsNotFound property first.");
 }

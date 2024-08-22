@@ -22,16 +22,8 @@ public class GetTasksEndpointResult : EndpointResponse, IGetTasksEndpointResult
     public bool IsOk
         => StatusCode == HttpStatusCode.OK;
 
-    public bool IsUnauthorized
-        => StatusCode == HttpStatusCode.Unauthorized;
-
     public IEnumerable<DemoSample.ApiClient.Generated.Contracts.Tasks.Task> OkContent
         => IsOk && ContentObject is IEnumerable<DemoSample.ApiClient.Generated.Contracts.Tasks.Task> result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsOk property first.");
-
-    public string? UnauthorizedContent
-        => IsUnauthorized && ContentObject is string result
-            ? result
-            : throw new InvalidOperationException("Content is not the expected type - please use the IsUnauthorized property first.");
 }

@@ -28,8 +28,7 @@ public sealed class CustomersEndpointDefinition : IEndpointDefinition
             .WithDescription("Get customer.")
             .AddEndpointFilter<ValidationFilter<GetCustomersParameters>>()
             .Produces<IAsyncEnumerable<PaginationResult<Customer>>>()
-            .ProducesValidationProblem()
-            .ProducesProblem(StatusCodes.Status401Unauthorized);
+            .ProducesValidationProblem();
     }
 
     internal async Task<IResult> GetCustomers(
