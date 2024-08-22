@@ -83,11 +83,11 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
         {
             if (useProblemDetailsAsDefaultResponseBody)
             {
-                AppendMethodContentForOtherStatusCodesThenOkWithProblemDetails(sb, item, resultName);
+                AppendMethodContentForOtherStatusCodesThanOkWithProblemDetails(sb, item, resultName);
             }
             else
             {
-                AppendMethodContentForOtherStatusCodesThenOkWithoutProblemDetails(sb, item, resultName);
+                AppendMethodContentForOtherStatusCodesThanOkWithoutProblemDetails(sb, item, resultName);
             }
         }
     }
@@ -146,7 +146,7 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
         }
     }
 
-    private void AppendMethodContentForOtherStatusCodesThenOkWithProblemDetails(
+    private void AppendMethodContentForOtherStatusCodesThanOkWithProblemDetails(
         StringBuilder sb,
         ContentGeneratorServerResultMethodParameters item,
         string resultName)
@@ -233,7 +233,7 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
         }
     }
 
-    private void AppendMethodContentForOtherStatusCodesThenOkWithoutProblemDetails(
+    private void AppendMethodContentForOtherStatusCodesThanOkWithoutProblemDetails(
         StringBuilder sb,
         ContentGeneratorServerResultMethodParameters item,
         string resultName)

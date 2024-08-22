@@ -38,6 +38,7 @@ public static class StringBuilderEndpointHelper
         var authRoles = authorizationForEndpoint.Roles is null
             ? null
             : string.Join(',', authorizationForEndpoint.Roles);
+
         var authSchemes = authorizationForEndpoint.AuthenticationSchemes is null
             ? null
             : string.Join(',', authorizationForEndpoint.AuthenticationSchemes);
