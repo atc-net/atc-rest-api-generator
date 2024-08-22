@@ -160,6 +160,10 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
                 sb.AppendLine(4, $"public static {resultName} {item.ResponseModel.StatusCode.ToNormalizedString()}(string? uri = null)");
                 sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResult)}({nameof(HttpStatusCode)}.{item.ResponseModel.StatusCode}, uri));");
                 break;
+            case HttpStatusCode.NotFound:
+                sb.AppendLine(4, $"public static {resultName} {item.ResponseModel.StatusCode.ToNormalizedString()}(string? message = null)");
+                sb.AppendLine(8, $"=> new {resultName}(new {item.ResponseModel.StatusCode.ToNormalizedString()}ObjectResult(message));");
+                break;
             case HttpStatusCode.BadRequest:
                 sb.AppendLine(4, $"public static {resultName} {item.ResponseModel.StatusCode.ToNormalizedString()}(string? message = null)");
                 sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResultWithValidationProblemDetails)}({nameof(HttpStatusCode)}.{item.ResponseModel.StatusCode}, message));");
@@ -190,7 +194,6 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
             case HttpStatusCode.Unauthorized:
             case HttpStatusCode.PaymentRequired:
             case HttpStatusCode.Forbidden:
-            case HttpStatusCode.NotFound:
             case HttpStatusCode.MethodNotAllowed:
             case HttpStatusCode.NotAcceptable:
             case HttpStatusCode.ProxyAuthenticationRequired:

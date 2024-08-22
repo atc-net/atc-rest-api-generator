@@ -117,6 +117,16 @@ public class ContentGeneratorClientEndpoint : IContentGenerator
                 case HttpStatusCode.OK:
                     AppendAddSuccessResponseForStatusCodeOk(sb, responseModel);
                     break;
+                case HttpStatusCode.NotFound:
+                    if (string.IsNullOrEmpty(customErrorResponseModel))
+                    {
+                        sb.AppendLine(8, $"responseBuilder.AddErrorResponse<string?>(HttpStatusCode.{responseModel.StatusCode});");
+                    }
+                    else
+                    {
+                        sb.AppendLine(8, $"responseBuilder.AddErrorResponse<{customErrorResponseModel}>(HttpStatusCode.{responseModel.StatusCode});");
+                    }
+                    break;
                 case HttpStatusCode.BadRequest:
                     if (string.IsNullOrEmpty(customErrorResponseModel))
                     {
@@ -153,7 +163,6 @@ public class ContentGeneratorClientEndpoint : IContentGenerator
                 case HttpStatusCode.Unauthorized:
                 case HttpStatusCode.PaymentRequired:
                 case HttpStatusCode.Forbidden:
-                case HttpStatusCode.NotFound:
                 case HttpStatusCode.MethodNotAllowed:
                 case HttpStatusCode.NotAcceptable:
                 case HttpStatusCode.ProxyAuthenticationRequired:

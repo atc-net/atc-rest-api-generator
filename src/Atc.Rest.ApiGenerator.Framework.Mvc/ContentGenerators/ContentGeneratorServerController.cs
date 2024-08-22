@@ -130,6 +130,9 @@ public sealed class ContentGeneratorServerController : IContentGenerator
                 case HttpStatusCode.OK:
                     AppendProducesForOk(sb, responseModel);
                     break;
+                case HttpStatusCode.NotFound:
+                    sb.AppendLine(4, $"[ProducesResponseType(typeof(string), StatusCodes.{responseModel.StatusCode.ToStatusCodesConstant()})]");
+                    break;
                 case HttpStatusCode.BadRequest:
                     sb.AppendLine(4, $"[ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.{responseModel.StatusCode.ToStatusCodesConstant()})]");
                     break;
@@ -160,7 +163,6 @@ public sealed class ContentGeneratorServerController : IContentGenerator
                 case HttpStatusCode.Unauthorized:
                 case HttpStatusCode.PaymentRequired:
                 case HttpStatusCode.Forbidden:
-                case HttpStatusCode.NotFound:
                 case HttpStatusCode.MethodNotAllowed:
                 case HttpStatusCode.NotAcceptable:
                 case HttpStatusCode.ProxyAuthenticationRequired:

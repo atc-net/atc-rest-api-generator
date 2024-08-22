@@ -144,9 +144,12 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
             case HttpStatusCode.Accepted:
             case HttpStatusCode.Created:
                 sb.AppendLine(4, $"public static {resultName} {item.ResponseModel.StatusCode.ToNormalizedString()}(string? uri = null)");
-                sb.AppendLine(8, $"=> new(Results.Problem(uri, null, StatusCodes.{item.ResponseModel.StatusCode.ToStatusCodesConstant()}));");
+                sb.AppendLine(8, $"=> new(TypedResults.{item.ResponseModel.StatusCode}(uri));");
                 break;
             case HttpStatusCode.NotFound:
+                sb.AppendLine(4, $"public static {resultName} {item.ResponseModel.StatusCode.ToNormalizedString()}(string? message = null)");
+                sb.AppendLine(8, $"=> new(TypedResults.{item.ResponseModel.StatusCode}(message));");
+                break;
             case HttpStatusCode.Conflict:
                 sb.AppendLine(4, $"public static {resultName} {item.ResponseModel.StatusCode.ToNormalizedString()}(string? message = null)");
                 sb.AppendLine(8, $"=> new(Results.Problem(message, null, StatusCodes.{item.ResponseModel.StatusCode.ToStatusCodesConstant()}));");
