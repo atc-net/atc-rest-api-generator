@@ -56,7 +56,7 @@ public static class OpenApiPathItemExtensions
 
         if ((authorizationRoles is null || authorizationRoles.Count == 0) &&
             (authenticationSchemes is null || authenticationSchemes.Count == 0) &&
-            authenticationRequiredForPath.HasValueAndFalse())
+            authenticationRequiredForPath is null)
         {
             return null;
         }
