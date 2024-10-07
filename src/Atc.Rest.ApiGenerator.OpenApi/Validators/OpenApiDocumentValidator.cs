@@ -502,7 +502,8 @@ public class OpenApiDocumentValidator : IOpenApiDocumentValidator
                     {
                         if (operationValue.IsOperationIdPluralized(operationKey))
                         {
-                            if (!responseModelSchema.IsModelOfTypeArray(modelSchemas))
+                            if (!responseModelSchema.IsModelOfTypeArray(modelSchemas) &&
+                                !responseModelSchema.IsTypeCustomPagination())
                             {
                                 logItems.Add(logItemFactory.Create(logCategory, ValidationRuleNameConstants.Operation08, $"OperationId '{operationValue.OperationId}' is not singular - Response model is defined as a single item."));
                             }
