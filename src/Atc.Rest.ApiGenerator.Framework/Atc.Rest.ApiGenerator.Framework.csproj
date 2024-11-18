@@ -26,10 +26,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc" Version="2.0.513" />
-    <PackageReference Include="Atc.DotNet" Version="2.0.513" />
-    <PackageReference Include="Atc.OpenApi" Version="2.0.513" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
+    <PackageReference Include="Atc" Version="2.0.525" />
+    <PackageReference Include="Atc.DotNet" Version="2.0.525" />
+    <PackageReference Include="Atc.OpenApi" Version="2.0.525" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />
   </ItemGroup>
 
   <ItemGroup>
