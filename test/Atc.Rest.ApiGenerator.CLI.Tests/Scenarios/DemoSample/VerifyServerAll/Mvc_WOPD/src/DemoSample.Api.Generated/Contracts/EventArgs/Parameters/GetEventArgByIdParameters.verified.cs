@@ -17,7 +17,7 @@ public class GetEventArgByIdParameters
     /// <summary>
     /// The id of the eventArgs.
     /// </summary>
-    [FromRoute]
+    [FromRoute(Name = "id")]
     [Required]
     public string Id { get; set; }
 

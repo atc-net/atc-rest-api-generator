@@ -17,28 +17,28 @@ public class PatchOrdersIdParameters
     /// <summary>
     /// The id of the order.
     /// </summary>
-    [FromRoute]
+    [FromRoute(Name = "id")]
     [Required]
     public Guid Id { get; set; }
 
     /// <summary>
     /// The myTestHeader special key.
     /// </summary>
-    [FromHeader]
+    [FromHeader(Name = "myTestHeader")]
     [Required]
     public string MyTestHeader { get; set; }
 
     /// <summary>
     /// The myTestHeaderBool special key.
     /// </summary>
-    [FromHeader]
+    [FromHeader(Name = "myTestHeaderBool")]
     [Required]
     public bool MyTestHeaderBool { get; set; }
 
     /// <summary>
     /// The myTestHeaderInt special key.
     /// </summary>
-    [FromHeader]
+    [FromHeader(Name = "myTestHeaderInt")]
     [Required]
     public int MyTestHeaderInt { get; set; }
 

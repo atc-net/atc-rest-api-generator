@@ -17,7 +17,7 @@ public class DeleteUserByIdParameters
     /// <summary>
     /// Id of the user.
     /// </summary>
-    [FromRoute]
+    [FromRoute(Name = "id")]
     [Required]
     public Guid Id { get; set; }
 

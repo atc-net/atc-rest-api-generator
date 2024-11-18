@@ -17,7 +17,7 @@ public class ShowPetByIdParameters
     /// <summary>
     /// The id of the pet to retrieve.
     /// </summary>
-    [FromRoute]
+    [FromRoute(Name = "petId")]
     [Required]
     public string PetId { get; set; }
 
