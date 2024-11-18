@@ -22,7 +22,7 @@ public sealed class SwaggerThemeModeAttribute : DescriptionAttribute
     {
         get
         {
-            var values = Enum.GetNames(typeof(SwaggerThemeMode))
+            var values = Enum.GetNames<SwaggerThemeMode>()
                 .Select(enumValue => enumValue.Equals(Default.ToString(), StringComparison.Ordinal)
                     ? $"{enumValue} (default)"
                     : enumValue)
