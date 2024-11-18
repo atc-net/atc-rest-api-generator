@@ -35,7 +35,10 @@ public static class ContentGeneratorServerResultParametersFactory
         var okResponseModel = responseModels.Find(x => x.StatusCode == HttpStatusCode.OK) ??
                               responseModels.Find(x => x.StatusCode == HttpStatusCode.Created);
 
-        if (ShouldAppendImplicitOperatorContent(httpStatusCodes, okResponseModel?.DataType, openApiOperation.Responses.IsSchemaUsingBinaryFormatForOkResponse()))
+        if (ShouldAppendImplicitOperatorContent(
+                httpStatusCodes,
+                okResponseModel?.DataType,
+                openApiOperation.Responses.IsSchemaUsingBinaryFormatForOkResponse()))
         {
             var collectionDataType = okResponseModel?.CollectionDataType;
             var dataType = okResponseModel?.DataType;
@@ -76,8 +79,8 @@ public static class ContentGeneratorServerResultParametersFactory
             httpStatusCode = HttpStatusCode.Created;
         }
 
-        if (string.IsNullOrEmpty(modelName) &&
-            httpStatusCode == HttpStatusCode.Created)
+        if (httpStatusCode == HttpStatusCode.Created &&
+            string.IsNullOrEmpty(modelName))
         {
             return false;
         }
