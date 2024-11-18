@@ -65,10 +65,21 @@ public sealed class ContentGeneratorServerParameter : IContentGenerator
     {
         switch (item.ParameterLocationType)
         {
-            case ParameterLocationType.Query:
-            case ParameterLocationType.Header:
             case ParameterLocationType.Route:
+            case ParameterLocationType.Header:
             case ParameterLocationType.Cookie:
+                if (string.IsNullOrEmpty(item.Name))
+                {
+                    sb.AppendLine(4, $"[From{item.ParameterLocationType}]");
+                }
+                else
+                {
+                    sb.AppendLine(4, $"[From{item.ParameterLocationType}(Name = \"{item.Name}\")]");
+                }
+
+                break;
+
+            case ParameterLocationType.Query:
                 if (string.IsNullOrEmpty(item.Name) ||
                     item.Name.Equals(item.ParameterName, StringComparison.OrdinalIgnoreCase))
                 {
