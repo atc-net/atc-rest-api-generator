@@ -17,7 +17,7 @@ public class SetAccountNameParameters
     /// <summary>
     /// The accountId.
     /// </summary>
-    [FromRoute]
+    [FromRoute(Name = "accountId")]
     [Required]
     public Guid AccountId { get; set; }
 

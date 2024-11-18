@@ -17,7 +17,7 @@ public class GetAddressesByPostalCodesParameters
     /// <summary>
     /// The postalCode to limit addresses on.
     /// </summary>
-    [FromRoute]
+    [FromRoute(Name = "postalCode")]
     [Required]
     public string PostalCode { get; set; }
 

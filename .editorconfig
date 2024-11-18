@@ -464,11 +464,13 @@ dotnet_diagnostic.MA0048.severity = error           # https://github.com/atc-net
 dotnet_diagnostic.CA1014.severity = none            # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/MicrosoftCodeAnalysis/CA1014.md
 dotnet_diagnostic.CA1068.severity = error           # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/MicrosoftCodeAnalysis/CA1068.md
 dotnet_diagnostic.CA1305.severity = error
+dotnet_diagnostic.CA1308.severity = suggestion      # Normalize strings to uppercase
 dotnet_diagnostic.CA1510.severity = suggestion      # Use ArgumentNullException throw helper
 dotnet_diagnostic.CA1511.severity = suggestion      # Use ArgumentException throw helper
 dotnet_diagnostic.CA1512.severity = suggestion      # Use ArgumentOutOfRangeException throw helper
 dotnet_diagnostic.CA1513.severity = suggestion      # Use ObjectDisposedException throw helper
 dotnet_diagnostic.CA1514.severity = error           # Avoid redundant length argument
+dotnet_diagnostic.CA1515.severity = suggestion      # Because an application's API isn't typically referenced from outside the assembly, types can be made internal (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1515)
 dotnet_diagnostic.CA1707.severity = error           # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/MicrosoftCodeAnalysis/CA1707.md
 dotnet_diagnostic.CA1812.severity = none
 dotnet_diagnostic.CA1822.severity = suggestion
@@ -504,7 +506,16 @@ dotnet_diagnostic.CA2259.severity = error           # Ensure ThreadStatic is onl
 dotnet_diagnostic.CA2260.severity = error           # Implement generic math interfaces correctly
 dotnet_diagnostic.CA2261.severity = error           # Do not use ConfigureAwaitOptions.SuppressThrowing with Task<TResult>
 dotnet_diagnostic.IDE0005.severity = warning        # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/MicrosoftCodeAnalysis/IDE0005.md
+dotnet_diagnostic.IDE0010.severity = suggestion     # Populate switch
+dotnet_diagnostic.IDE0028.severity = suggestion     # Collection initialization can be simplified
+dotnet_diagnostic.IDE0021.severity = suggestion     # Use expression body for constructor
+dotnet_diagnostic.IDE0055.severity = none           # Fix formatting
 dotnet_diagnostic.IDE0058.severity = none           # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/MicrosoftCodeAnalysis/IDE0058.md
+dotnet_diagnostic.IDE0061.severity = suggestion     # Use expression body for local function
+dotnet_diagnostic.IDE0130.severity = suggestion     # Namespace does not match folder structure
+dotnet_diagnostic.IDE0290.severity = none			# Use primary constructor
+dotnet_diagnostic.IDE0301.severity = suggestion     # Use collection expression for empty
+dotnet_diagnostic.IDE0305.severity = suggestion     # Collection initialization can be simplified
 
 
 # Microsoft - Compiler Errors
@@ -541,6 +552,7 @@ dotnet_diagnostic.SA1649.severity = error           # https://github.com/atc-net
 # https://rules.sonarsource.com/csharp
 dotnet_diagnostic.S1135.severity = suggestion       # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/SonarAnalyzerCSharp/S1135.md
 dotnet_diagnostic.S2629.severity = none            	# Don't use string interpolation in logging message templates.
+dotnet_diagnostic.S3358.severity = none           	# Extract this nested ternary operation into an independent statement.
 dotnet_diagnostic.S6602.severity = none           	# "Find" method should be used instead of the "FirstOrDefault"
 dotnet_diagnostic.S6603.severity = none            	# The collection-specific "TrueForAll" method should be used instead of the "All"
 dotnet_diagnostic.S6605.severity = none             # Collection-specific "Exists" method should be used instead of the "Any"
@@ -584,9 +596,19 @@ dotnet_diagnostic.CA1822.Severity = none
 dotnet_diagnostic.CA1859.Severity = none
 dotnet_diagnostic.CA1860.Severity = none
 dotnet_diagnostic.CA1861.Severity = none
+
 dotnet_diagnostic.S125.Severity = none
 dotnet_diagnostic.S1481.Severity = none
 dotnet_diagnostic.SA1512.Severity = none
 dotnet_diagnostic.SA1513.Severity = none
 
 dotnet_diagnostic.AsyncFixer02.Severity = none      # ToListAsync should be used instead of xxx
+
+dotnet_diagnostic.IDE0022.Severity = none           # Use expression body for method
+dotnet_diagnostic.IDE0045.Severity = none           # 'if' statement can be simplified
+dotnet_diagnostic.IDE0046.Severity = none           # 'if' statement can be simplified
+dotnet_diagnostic.IDE0052.Severity = none           # Private member
+dotnet_diagnostic.IDE0059.Severity = none           # Unnecessary assignment of a value
+dotnet_diagnostic.IDE0060.Severity = none           # Remove unused parameter
+dotnet_diagnostic.IDE0270.Severity = none           # Null check can be simplified
+dotnet_diagnostic.IDE0300.Severity = none           # Collection initialization can be simplified

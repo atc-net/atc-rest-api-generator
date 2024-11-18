@@ -57,15 +57,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc.DotNet" Version="2.0.513" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.2" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
-    <PackageReference Include="Atc.CodeDocumentation" Version="2.0.513" />
-    <PackageReference Include="Atc.XUnit" Version="2.0.513" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
+    <PackageReference Include="Atc.DotNet" Version="2.0.525" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.0" />
+    <PackageReference Include="Atc.CodeDocumentation" Version="2.0.525" />
+    <PackageReference Include="Atc.XUnit" Version="2.0.525" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
     <PackageReference Include="Verify" Version="17.10.2" />
     <PackageReference Include="Verify.Xunit" Version="17.10.2" />
-    <PackageReference Include="xunit" Version="2.9.0" />
+    <PackageReference Include="xunit" Version="2.9.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -78,10 +78,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Atc.Rest.ApiGenerator.CLI\Atc.Rest.ApiGenerator.CLI.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="Atc.Test" Version="1.0.93" />
   </ItemGroup>
 
 </Project>

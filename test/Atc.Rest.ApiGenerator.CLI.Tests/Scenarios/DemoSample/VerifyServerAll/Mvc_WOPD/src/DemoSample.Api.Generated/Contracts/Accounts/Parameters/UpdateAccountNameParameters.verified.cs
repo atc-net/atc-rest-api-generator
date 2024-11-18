@@ -17,14 +17,14 @@ public class UpdateAccountNameParameters
     /// <summary>
     /// The accountId.
     /// </summary>
-    [FromRoute]
+    [FromRoute(Name = "accountId")]
     [Required]
     public Guid AccountId { get; set; }
 
     /// <summary>
     /// The account name.
     /// </summary>
-    [FromHeader]
+    [FromHeader(Name = "name")]
     public string? Name { get; set; }
 
     /// <inheritdoc />

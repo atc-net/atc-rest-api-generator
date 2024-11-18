@@ -8,14 +8,14 @@ public class NugetPackageReferenceProvider(
     private Dictionary<string, string> PackageDefaultVersions { get; } = new(StringComparer.Ordinal)
     {
         { "Asp.Versioning.Http", "8.1.0" },
-        { "Atc", "2.0.472" },
+        { "Atc", "2.0.525" },
         { "Atc.Azure.Options", "3.0.31" },
-        { "Atc.Rest", "2.0.472" },
+        { "Atc.Rest", "2.0.525" },
         { "Atc.Rest.Client", "1.0.36" },
-        { "Atc.Rest.Extended", "2.0.472" },
-        { "Atc.Rest.FluentAssertions", "2.0.472" },
-        { "Atc.Rest.MinimalApi", "1.0.81" },
-        { "Atc.XUnit", "2.0.472" },
+        { "Atc.Rest.Extended", "2.0.525" },
+        { "Atc.Rest.FluentAssertions", "2.0.525" },
+        { "Atc.Rest.MinimalApi", "1.0.87" },
+        { "Atc.XUnit", "2.0.525" },
         { "AutoFixture", "4.18.1" },
         { "AutoFixture.AutoNSubstitute", "4.18.1" },
         { "AutoFixture.Xunit2", "4.18.1" },
@@ -28,7 +28,7 @@ public class NugetPackageReferenceProvider(
         { "Microsoft.NETCore.Platforms", "7.0.4" },
         { "Microsoft.NET.Test.Sdk", "17.10.0" },
         { "NSubstitute", "5.1.0" },
-        { "Swashbuckle.AspNetCore", "6.7.0" },
+        { "Swashbuckle.AspNetCore", "7.0.0" },
         { "xunit", "2.8.1" },
         { "xunit.runner.visualstudio", "2.8.1" },
     };
@@ -84,6 +84,7 @@ public class NugetPackageReferenceProvider(
         {
             new("Asp.Versioning.Http", PackageDefaultVersions["Asp.Versioning.Http"]),
             new("Atc", atcVersion),
+            new("Atc.Rest.Extended", atcVersion),
             new("Atc.Rest.MinimalApi", PackageDefaultVersions["Atc.Rest.MinimalApi"]),
             new("Microsoft.NETCore.Platforms", PackageDefaultVersions["Microsoft.NETCore.Platforms"]),
             new("Swashbuckle.AspNetCore", PackageDefaultVersions["Swashbuckle.AspNetCore"]),

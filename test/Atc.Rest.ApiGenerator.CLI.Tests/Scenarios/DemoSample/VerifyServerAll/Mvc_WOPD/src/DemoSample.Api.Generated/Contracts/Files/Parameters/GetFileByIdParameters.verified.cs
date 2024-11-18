@@ -17,7 +17,7 @@ public class GetFileByIdParameters
     /// <summary>
     /// The file id.
     /// </summary>
-    [FromRoute]
+    [FromRoute(Name = "id")]
     [Required]
     public string Id { get; set; }
 

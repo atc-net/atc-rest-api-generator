@@ -13,9 +13,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc" Version="2.0.513" />
-    <PackageReference Include="Atc.Console.Spectre" Version="2.0.513" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+    <PackageReference Include="Atc" Version="2.0.525" />
+    <PackageReference Include="Atc.Console.Spectre" Version="2.0.525" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
   </ItemGroup>
 
   <ItemGroup>

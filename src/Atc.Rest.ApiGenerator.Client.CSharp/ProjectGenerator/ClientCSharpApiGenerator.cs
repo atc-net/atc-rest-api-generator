@@ -87,7 +87,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
                 ],
                 [
                     new("DocumentationFile", Attributes: null, @$"bin\Debug\net8.0\{projectName}.xml"),
-                    new("NoWarn", Attributes: null, "1573;1591;1701;1702;1712;8618;"),
+                    new("NoWarn", Attributes: null, "$(NoWarn);1573;1591;1701;1702;1712;8618;"),
                 ],
             ],
             [

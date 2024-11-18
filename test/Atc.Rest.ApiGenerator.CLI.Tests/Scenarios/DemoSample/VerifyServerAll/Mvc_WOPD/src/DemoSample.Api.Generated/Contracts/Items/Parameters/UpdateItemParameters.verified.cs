@@ -17,7 +17,7 @@ public class UpdateItemParameters
     /// <summary>
     /// The id of the order.
     /// </summary>
-    [FromRoute]
+    [FromRoute(Name = "id")]
     [Required]
     public Guid Id { get; set; }
 

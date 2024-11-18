@@ -22,7 +22,7 @@ public sealed class AspNetOutputTypeAttribute : DescriptionAttribute
     {
         get
         {
-            var values = Enum.GetNames(typeof(AspNetOutputType))
+            var values = Enum.GetNames<AspNetOutputType>()
                 .Select(enumValue => enumValue.Equals(Default.ToString(), StringComparison.Ordinal)
                     ? $"{enumValue} (default)"
                     : enumValue)
