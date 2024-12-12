@@ -2,7 +2,8 @@ namespace Atc.Rest.ApiGenerator.OpenApi.Extensions;
 
 public static class OpenApiParameterExtensions
 {
-    public static bool IsSchemaEnumAndUseJsonString(this OpenApiParameter apiParameter)
+    public static bool IsSchemaEnumAndUsesJsonString(
+        this OpenApiParameter apiParameter)
     {
         if (apiParameter.Schema.IsSchemaEnum())
         {

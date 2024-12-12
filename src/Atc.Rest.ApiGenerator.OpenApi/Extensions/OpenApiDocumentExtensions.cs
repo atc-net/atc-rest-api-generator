@@ -262,7 +262,7 @@ public static class OpenApiDocumentExtensions
 
                 foreach (var apiParameter in apiPathPair.Value.Parameters)
                 {
-                    if (apiParameter.IsSchemaEnumAndUseJsonString())
+                    if (apiParameter.IsSchemaEnumAndUsesJsonString())
                     {
                         return true;
                     }
@@ -270,7 +270,7 @@ public static class OpenApiDocumentExtensions
 
                 foreach (var apiParameter in apiOperationPair.Value.Parameters)
                 {
-                    if (apiParameter.IsSchemaEnumAndUseJsonString())
+                    if (apiParameter.IsSchemaEnumAndUsesJsonString())
                     {
                         return true;
                     }
