@@ -12,12 +12,21 @@ namespace Monta.ApiClient.Generated.Contracts.ChargePoints;
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class MapResult
 {
+    /// <summary>
+    /// list of all charge points found in that area.
+    /// </summary>
     [Required]
     public List<MapResultChargePoint> ChargePoints { get; set; }
 
+    /// <summary>
+    /// list of all sites found in that area.
+    /// </summary>
     [Required]
     public List<MapResultSite> Sites { get; set; }
 
+    /// <summary>
+    /// list of all clusters (of charge points and sites) found in that area.
+    /// </summary>
     [Required]
     public List<MapResultCluster> Cluster { get; set; }
 

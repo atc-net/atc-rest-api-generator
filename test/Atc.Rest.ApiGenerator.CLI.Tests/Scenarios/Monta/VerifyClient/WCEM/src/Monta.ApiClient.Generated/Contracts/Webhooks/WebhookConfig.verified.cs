@@ -17,7 +17,7 @@ public class WebhookConfig
     /// </summary>
     [Required]
     [StringLength(191)]
-    [RegularExpression("https://.*")]
+    [RegularExpression("https://(?!(.*monta\\.com?)).*")]
     public string WebhookUrl { get; set; }
 
     /// <summary>
@@ -29,9 +29,10 @@ public class WebhookConfig
     public string WebhookSecret { get; set; }
 
     /// <summary>
-    /// A list of event type to subscribe to. Use ["*"] to subscribe to all.
+    /// A list of event types to subscribe to.
     /// </summary>
-    public List<WebhookEntryEventType> EventTypes { get; set; } = new List<WebhookEntryEventType>();
+    [Required]
+    public List<WebhookEntryEventType> EventTypes { get; set; }
 
     /// <inheritdoc />
     public override string ToString()

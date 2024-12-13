@@ -13,7 +13,7 @@ namespace Monta.ApiClient.Generated.Contracts.Currencies;
 public class MontaPageCurrencyDto
 {
     [Required]
-    public List<CurrencyDto3> Data { get; set; }
+    public List<CurrencyDto> Data { get; set; }
 
     [Required]
     public MontaPageMeta Meta { get; set; }

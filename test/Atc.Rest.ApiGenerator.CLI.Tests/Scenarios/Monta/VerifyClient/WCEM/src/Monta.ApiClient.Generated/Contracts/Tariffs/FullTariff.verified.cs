@@ -12,6 +12,9 @@ namespace Monta.ApiClient.Generated.Contracts.Tariffs;
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class FullTariff
 {
+    /// <summary>
+    /// tariff.
+    /// </summary>
     [Required]
     public TariffDto Tariff { get; set; }
 
@@ -21,6 +24,9 @@ public class FullTariff
     [Required]
     public List<Price> Prices { get; set; }
 
+    /// <summary>
+    /// Price specification.
+    /// </summary>
     public PriceSpecification? PriceSpecification { get; set; }
 
     /// <inheritdoc />

@@ -21,9 +21,17 @@ public interface IGetInsightsChargesChargerReportEndpointResult : IEndpointRespo
 
     bool IsUnauthorized { get; }
 
+    bool IsForbidden { get; }
+
+    bool IsNotFound { get; }
+
     MontaPageChargesInsightChargerReportDto OkContent { get; }
 
     string? BadRequestContent { get; }
 
     string? UnauthorizedContent { get; }
+
+    string? ForbiddenContent { get; }
+
+    string? NotFoundContent { get; }
 }

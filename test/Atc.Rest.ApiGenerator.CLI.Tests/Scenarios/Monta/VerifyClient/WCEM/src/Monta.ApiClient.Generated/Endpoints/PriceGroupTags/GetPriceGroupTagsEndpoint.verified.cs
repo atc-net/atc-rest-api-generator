@@ -43,6 +43,8 @@ public class GetPriceGroupTagsEndpoint : IGetPriceGroupTagsEndpoint
         responseBuilder.AddSuccessResponse<MontaPagePriceGroupTagDto>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.BadRequest);
         responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.Unauthorized);
+        responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.Forbidden);
+        responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.NotFound);
         return await responseBuilder.BuildResponseAsync(x => new GetPriceGroupTagsEndpointResult(x), cancellationToken);
     }
 }

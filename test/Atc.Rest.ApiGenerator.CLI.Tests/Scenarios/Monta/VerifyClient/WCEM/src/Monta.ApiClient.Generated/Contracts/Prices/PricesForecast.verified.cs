@@ -12,12 +12,21 @@ namespace Monta.ApiClient.Generated.Contracts.Prices;
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class PricesForecast
 {
+    /// <summary>
+    /// The operator to which this charge point and price group belongs to.
+    /// </summary>
     [Required]
     public Operator Operator { get; set; }
 
+    /// <summary>
+    /// The currency applicable for this forecast.
+    /// </summary>
     [Required]
-    public Currency Currency { get; set; }
+    public Currency17 Currency { get; set; }
 
+    /// <summary>
+    /// The price group applicable for this forecast.
+    /// </summary>
     [Required]
     public PriceGroup PriceGroup { get; set; }
 

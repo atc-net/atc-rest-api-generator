@@ -13,9 +13,6 @@ namespace Monta.ApiClient.Generated.Contracts;
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum WebhookEntryEventType
 {
-    [EnumMember(Value = "*")]
-    None,
-
     [EnumMember(Value = "charges")]
     Charges,
 
@@ -24,6 +21,9 @@ public enum WebhookEntryEventType
 
     [EnumMember(Value = "sites")]
     Sites,
+
+    [EnumMember(Value = "users")]
+    Users,
 
     [EnumMember(Value = "team-members")]
     TeamMembers,
@@ -45,4 +45,10 @@ public enum WebhookEntryEventType
 
     [EnumMember(Value = "plans")]
     Plans,
+
+    [EnumMember(Value = "charge-auth-tokens")]
+    ChargeAuthTokens,
+
+    [EnumMember(Value = "reports")]
+    Reports,
 }

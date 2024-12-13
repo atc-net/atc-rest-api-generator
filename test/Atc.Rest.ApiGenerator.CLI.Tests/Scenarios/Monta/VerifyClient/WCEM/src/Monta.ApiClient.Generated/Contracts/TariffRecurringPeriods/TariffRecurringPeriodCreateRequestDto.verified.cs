@@ -24,9 +24,15 @@ public class TariffRecurringPeriodCreateRequestDto
     [Required]
     public long GroupId { get; set; }
 
+    /// <summary>
+    /// Capitalized name of the day of the week.
+    /// </summary>
     [Required]
     public DayOfWeek DayOfWeek { get; set; }
 
+    /// <summary>
+    /// Capitalized name of the day of the week that the price is for.
+    /// </summary>
     public DayOfWeek? EndDayOfWeek { get; set; }
 
     /// <summary>

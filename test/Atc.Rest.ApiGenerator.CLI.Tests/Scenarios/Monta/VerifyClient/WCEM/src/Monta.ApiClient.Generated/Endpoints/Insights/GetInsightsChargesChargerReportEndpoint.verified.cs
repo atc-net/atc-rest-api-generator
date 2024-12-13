@@ -33,6 +33,8 @@ public class GetInsightsChargesChargerReportEndpoint : IGetInsightsChargesCharge
         var client = factory.CreateClient(httpClientName);
 
         var requestBuilder = httpMessageFactory.FromTemplate("/api/v1/insights/charges/charger-report");
+        requestBuilder.WithQueryParameter("page", parameters.Page);
+        requestBuilder.WithQueryParameter("perPage", parameters.PerPage);
         requestBuilder.WithQueryParameter("teamId", parameters.TeamId);
         requestBuilder.WithQueryParameter("chargePointIds", parameters.ChargePointIds);
         requestBuilder.WithQueryParameter("fromDate", parameters.FromDate);
@@ -45,6 +47,8 @@ public class GetInsightsChargesChargerReportEndpoint : IGetInsightsChargesCharge
         responseBuilder.AddSuccessResponse<MontaPageChargesInsightChargerReportDto>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.BadRequest);
         responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.Unauthorized);
+        responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.Forbidden);
+        responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.NotFound);
         return await responseBuilder.BuildResponseAsync(x => new GetInsightsChargesChargerReportEndpointResult(x), cancellationToken);
     }
 }

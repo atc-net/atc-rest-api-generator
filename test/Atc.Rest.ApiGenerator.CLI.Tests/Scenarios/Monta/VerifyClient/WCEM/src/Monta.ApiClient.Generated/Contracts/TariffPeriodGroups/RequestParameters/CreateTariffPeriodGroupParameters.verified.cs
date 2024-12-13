@@ -15,7 +15,7 @@ namespace Monta.ApiClient.Generated.Contracts.TariffPeriodGroups;
 public class CreateTariffPeriodGroupParameters
 {
     [Required]
-    public TariffPeriodGroup Request { get; set; }
+    public TariffPeriodGroup1 Request { get; set; }
 
     /// <inheritdoc />
     public override string ToString()

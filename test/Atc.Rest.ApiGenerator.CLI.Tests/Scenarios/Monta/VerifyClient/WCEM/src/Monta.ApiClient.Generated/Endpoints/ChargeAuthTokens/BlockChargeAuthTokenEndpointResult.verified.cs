@@ -31,6 +31,9 @@ public class BlockChargeAuthTokenEndpointResult : EndpointResponse, IBlockCharge
     public bool IsForbidden
         => StatusCode == HttpStatusCode.Forbidden;
 
+    public bool IsNotFound
+        => StatusCode == HttpStatusCode.NotFound;
+
     public ChargeAuthToken OkContent
         => IsOk && ContentObject is ChargeAuthToken result
             ? result
@@ -50,4 +53,9 @@ public class BlockChargeAuthTokenEndpointResult : EndpointResponse, IBlockCharge
         => IsForbidden && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsForbidden property first.");
+
+    public string? NotFoundContent
+        => IsNotFound && ContentObject is string result
+            ? result
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsNotFound property first.");
 }

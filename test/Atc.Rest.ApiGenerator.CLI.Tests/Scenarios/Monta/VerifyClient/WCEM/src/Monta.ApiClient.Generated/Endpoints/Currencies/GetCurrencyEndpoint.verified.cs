@@ -39,7 +39,7 @@ public class GetCurrencyEndpoint : IGetCurrencyEndpoint
         using var response = await client.SendAsync(requestMessage, cancellationToken);
 
         var responseBuilder = httpMessageFactory.FromResponse(response);
-        responseBuilder.AddSuccessResponse<CurrencyDto4>(HttpStatusCode.OK);
+        responseBuilder.AddSuccessResponse<CurrencyDto>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.BadRequest);
         responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.Unauthorized);
         responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.Forbidden);

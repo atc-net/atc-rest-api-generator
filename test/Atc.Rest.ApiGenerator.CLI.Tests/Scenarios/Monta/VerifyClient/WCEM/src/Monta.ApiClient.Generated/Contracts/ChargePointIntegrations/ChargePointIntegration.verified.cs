@@ -17,6 +17,9 @@ public class ChargePointIntegration
     /// </summary>
     public long Id { get; set; }
 
+    /// <summary>
+    /// The current state of the charge point integration.
+    /// </summary>
     [Required]
     public ChargePointIntegrationStateDto State { get; set; }
 
@@ -37,6 +40,9 @@ public class ChargePointIntegration
     /// </summary>
     public int? ConnectorId { get; set; }
 
+    /// <summary>
+    /// The charge point associated to this integration.
+    /// </summary>
     [Required]
     public ChargePoint ChargePoint { get; set; }
 

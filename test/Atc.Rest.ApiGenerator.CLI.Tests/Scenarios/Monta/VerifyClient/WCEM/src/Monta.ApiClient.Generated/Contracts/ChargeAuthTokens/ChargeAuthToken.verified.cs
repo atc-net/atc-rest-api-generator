@@ -54,6 +54,9 @@ public class ChargeAuthToken
     /// </summary>
     public string? Name { get; set; }
 
+    /// <summary>
+    /// Operator of this charge auth token.
+    /// </summary>
     public Operator? Operator { get; set; }
 
     /// <summary>

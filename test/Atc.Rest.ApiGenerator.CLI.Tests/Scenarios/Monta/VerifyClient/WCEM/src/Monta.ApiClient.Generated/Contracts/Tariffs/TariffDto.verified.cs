@@ -71,6 +71,9 @@ public class TariffDto
     [Required]
     public List<string> ZipCodes { get; set; }
 
+    /// <summary>
+    /// Type of the tariff.
+    /// </summary>
     [Required]
     public TariffType TariffType { get; set; }
 
@@ -91,6 +94,9 @@ public class TariffDto
     [Required]
     public string Area { get; set; }
 
+    /// <summary>
+    /// Customer type of the tariff.
+    /// </summary>
     public TariffCustomerType? CustomerType { get; set; }
 
     /// <summary>

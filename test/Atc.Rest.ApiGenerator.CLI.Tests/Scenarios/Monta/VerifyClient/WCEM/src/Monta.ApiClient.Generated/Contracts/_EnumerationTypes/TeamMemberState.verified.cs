@@ -19,18 +19,15 @@ public enum TeamMemberState
     [EnumMember(Value = "invited")]
     Invited,
 
-    [EnumMember(Value = "rejected")]
-    Rejected,
-
     [EnumMember(Value = "accepted")]
     Accepted,
+
+    [EnumMember(Value = "rejected_at")]
+    RejectedAt,
 
     [EnumMember(Value = "blocked")]
     Blocked,
 
     [EnumMember(Value = "expired")]
     Expired,
-
-    [EnumMember(Value = "other")]
-    Other,
 }

@@ -38,6 +38,9 @@ public class Site
     [Required]
     public string Name { get; set; }
 
+    /// <summary>
+    /// Operator of this charging site.
+    /// </summary>
     public Operator? Operator { get; set; }
 
     /// <summary>
@@ -93,6 +96,9 @@ public class Site
     /// </summary>
     public string? Note { get; set; }
 
+    /// <summary>
+    /// Location information for this site.
+    /// </summary>
     [Required]
     public Location Location { get; set; }
 

@@ -46,6 +46,8 @@ public class GetSponsoredChargePointsEndpoint : IGetSponsoredChargePointsEndpoin
         responseBuilder.AddSuccessResponse<MontaPageSponsoredChargePointDto>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.BadRequest);
         responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.Unauthorized);
+        responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.Forbidden);
+        responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.NotFound);
         return await responseBuilder.BuildResponseAsync(x => new GetSponsoredChargePointsEndpointResult(x), cancellationToken);
     }
 }

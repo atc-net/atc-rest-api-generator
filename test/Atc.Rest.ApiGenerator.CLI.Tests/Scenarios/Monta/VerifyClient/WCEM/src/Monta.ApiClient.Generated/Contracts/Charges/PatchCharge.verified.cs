@@ -12,7 +12,10 @@ namespace Monta.ApiClient.Generated.Contracts.Charges;
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class PatchCharge
 {
-    public GenericPaymentSession? GenericPaymentSession { get; set; }
+    /// <summary>
+    /// For Partners who want to start charging from payment terminals, kiosks etc. Used to link charge transaction against your billing and to allow users retrieving receipts via receipt.monta.com by using date and `genericPaymentSession.externalId`or `genericPaymentSession.cardLast4`.&lt;br/&gt;&lt;br/&gt;**Note: This field is optional, but if provided, you need to provide the full data, since it will be overwritten with values from this object.**.
+    /// </summary>
+    public PatchGenericPaymentSession? GenericPaymentSession { get; set; }
 
     /// <summary>
     /// External Id of this entity, managed by you.

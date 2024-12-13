@@ -17,12 +17,30 @@ public class PatchTeamMember
     /// </summary>
     public List<long>? ChargePointIds { get; set; } = new List<long>();
 
+    /// <summary>
+    /// Role for this member within the team.
+    /// </summary>
     public TeamMemberRole? Role { get; set; }
 
     /// <summary>
     /// The price group for this team member.
     /// </summary>
     public long? PriceGroupId { get; set; }
+
+    /// <summary>
+    /// The cost group for this team member.
+    /// </summary>
+    public long? CostGroupId { get; set; }
+
+    /// <summary>
+    /// The team member profile id to apply to this team member.
+    /// </summary>
+    public long? TeamMemberProfileId { get; set; }
+
+    /// <summary>
+    /// Indicates if the team member access to pay with team wallet when charging.
+    /// </summary>
+    public bool? CanConfigureChargePoints { get; set; } = false;
 
     /// <summary>
     /// Gives the team member access to pay with team wallet when charging.
@@ -47,6 +65,11 @@ public class PatchTeamMember
     public TeamWalletChargePaymentType? TeamWalletChargePaymentType { get; set; }
 
     /// <summary>
+    /// List of country ids for which the team member can pay for charges.
+    /// </summary>
+    public List<int>? CanPayForChargesCountryIds { get; set; } = new List<int>();
+
+    /// <summary>
     /// A note for the team member.
     /// </summary>
     public string? Note { get; set; }
@@ -63,5 +86,5 @@ public class PatchTeamMember
 
     /// <inheritdoc />
     public override string ToString()
-        => $"{nameof(ChargePointIds)}.Count: {ChargePointIds?.Count ?? 0}, {nameof(Role)}: ({Role}), {nameof(PriceGroupId)}: {PriceGroupId}, {nameof(CanPayWithTeamWallet)}: {CanPayWithTeamWallet}, {nameof(CanManageTeamWallet)}: {CanManageTeamWallet}, {nameof(CanRequestSponsoring)}: {CanRequestSponsoring}, {nameof(CanManageTeamMembers)}: {CanManageTeamMembers}, {nameof(TeamWalletChargePaymentType)}: ({TeamWalletChargePaymentType}), {nameof(Note)}: {Note}, {nameof(PartnerExternalId)}: {PartnerExternalId}, {nameof(PartnerCustomPayload)}.Count: {PartnerCustomPayload?.Count ?? 0}";
+        => $"{nameof(ChargePointIds)}.Count: {ChargePointIds?.Count ?? 0}, {nameof(Role)}: ({Role}), {nameof(PriceGroupId)}: {PriceGroupId}, {nameof(CostGroupId)}: {CostGroupId}, {nameof(TeamMemberProfileId)}: {TeamMemberProfileId}, {nameof(CanConfigureChargePoints)}: {CanConfigureChargePoints}, {nameof(CanPayWithTeamWallet)}: {CanPayWithTeamWallet}, {nameof(CanManageTeamWallet)}: {CanManageTeamWallet}, {nameof(CanRequestSponsoring)}: {CanRequestSponsoring}, {nameof(CanManageTeamMembers)}: {CanManageTeamMembers}, {nameof(TeamWalletChargePaymentType)}: ({TeamWalletChargePaymentType}), {nameof(CanPayForChargesCountryIds)}.Count: {CanPayForChargesCountryIds?.Count ?? 0}, {nameof(Note)}: {Note}, {nameof(PartnerExternalId)}: {PartnerExternalId}, {nameof(PartnerCustomPayload)}.Count: {PartnerCustomPayload?.Count ?? 0}";
 }

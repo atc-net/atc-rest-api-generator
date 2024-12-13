@@ -32,14 +32,20 @@ public class WalletTransaction
     /// </summary>
     public double FromVatAmount { get; set; }
 
+    /// <summary>
+    /// Currency for `fromAmount`.
+    /// </summary>
     [Required]
-    public Currency FromCurrency { get; set; }
+    public Currency13 FromCurrency { get; set; }
 
     /// <summary>
     /// Type of sender: operator, team.
     /// </summary>
     public string? FromType { get; set; }
 
+    /// <summary>
+    /// Type of sender: operator, team.
+    /// </summary>
     public TeamOrOperator? From { get; set; }
 
     /// <summary>
@@ -62,14 +68,20 @@ public class WalletTransaction
     /// </summary>
     public double ToVatAmount { get; set; }
 
+    /// <summary>
+    /// Currency used for `toAmount`.
+    /// </summary>
     [Required]
-    public Currency ToCurrency { get; set; }
+    public Currency14 ToCurrency { get; set; }
 
     /// <summary>
     /// Type of receiver: operator, team.
     /// </summary>
     public string? ToType { get; set; }
 
+    /// <summary>
+    /// Type of sender: operator, team.
+    /// </summary>
     public TeamOrOperator? To { get; set; }
 
     /// <summary>
@@ -94,12 +106,23 @@ public class WalletTransaction
     public DateTimeOffset? UpdatedAt { get; set; }
 
     /// <summary>
+    /// Completion date of transaction.
+    /// </summary>
+    public DateTimeOffset? CompletedAt { get; set; }
+
+    /// <summary>
     /// Reference id of this transaction. e.g the charge id.
     /// </summary>
     public string? ReferenceId { get; set; }
 
+    /// <summary>
+    /// Reference type of this transaction.
+    /// </summary>
     public WalletTransactionReferenceType? ReferenceType { get; set; }
 
+    /// <summary>
+    /// Transaction group of this transaction.
+    /// </summary>
     [Required]
     public WalletTransactionGroup Group { get; set; }
 
@@ -116,6 +139,9 @@ public class WalletTransaction
     /// </summary>
     public double VatPercentage { get; set; }
 
+    /// <summary>
+    /// Transaction state of this transaction.
+    /// </summary>
     [Required]
     public WalletTransactionState State { get; set; }
 
@@ -125,18 +151,11 @@ public class WalletTransaction
     public string? Note { get; set; }
 
     /// <summary>
-    /// External Id of this entity, managed by you.
+    /// Additional information for this transaction.
     /// </summary>
-    public string? PartnerExternalId { get; set; }
-
-    /// <summary>
-    /// Custom JSON payload for this entity, managed by you.
-    /// </summary>
-    public List<object>? PartnerCustomPayload { get; set; } = new List<object>();
-
     public MetadataDto? Metadata { get; set; }
 
     /// <inheritdoc />
     public override string ToString()
-        => $"{nameof(Id)}: {Id}, {nameof(FromAmount)}: {FromAmount}, {nameof(FromSubAmount)}: {FromSubAmount}, {nameof(FromVatAmount)}: {FromVatAmount}, {nameof(FromCurrency)}: ({FromCurrency}), {nameof(FromType)}: {FromType}, {nameof(From)}: ({From}), {nameof(FromWalletId)}: {FromWalletId}, {nameof(ToAmount)}: {ToAmount}, {nameof(ToSubAmount)}: {ToSubAmount}, {nameof(ToVatAmount)}: {ToVatAmount}, {nameof(ToCurrency)}: ({ToCurrency}), {nameof(ToType)}: {ToType}, {nameof(To)}: ({To}), {nameof(ToWalletId)}: {ToWalletId}, {nameof(ExchangeRate)}: {ExchangeRate}, {nameof(CreatedAt)}: ({CreatedAt}), {nameof(UpdatedAt)}: ({UpdatedAt}), {nameof(ReferenceId)}: {ReferenceId}, {nameof(ReferenceType)}: ({ReferenceType}), {nameof(Group)}: ({Group}), {nameof(Kind)}: {Kind}, {nameof(VatPercentage)}: {VatPercentage}, {nameof(State)}: ({State}), {nameof(Note)}: {Note}, {nameof(PartnerExternalId)}: {PartnerExternalId}, {nameof(PartnerCustomPayload)}.Count: {PartnerCustomPayload?.Count ?? 0}, {nameof(Metadata)}: ({Metadata})";
+        => $"{nameof(Id)}: {Id}, {nameof(FromAmount)}: {FromAmount}, {nameof(FromSubAmount)}: {FromSubAmount}, {nameof(FromVatAmount)}: {FromVatAmount}, {nameof(FromCurrency)}: ({FromCurrency}), {nameof(FromType)}: {FromType}, {nameof(From)}: ({From}), {nameof(FromWalletId)}: {FromWalletId}, {nameof(ToAmount)}: {ToAmount}, {nameof(ToSubAmount)}: {ToSubAmount}, {nameof(ToVatAmount)}: {ToVatAmount}, {nameof(ToCurrency)}: ({ToCurrency}), {nameof(ToType)}: {ToType}, {nameof(To)}: ({To}), {nameof(ToWalletId)}: {ToWalletId}, {nameof(ExchangeRate)}: {ExchangeRate}, {nameof(CreatedAt)}: ({CreatedAt}), {nameof(UpdatedAt)}: ({UpdatedAt}), {nameof(CompletedAt)}: ({CompletedAt}), {nameof(ReferenceId)}: {ReferenceId}, {nameof(ReferenceType)}: ({ReferenceType}), {nameof(Group)}: ({Group}), {nameof(Kind)}: {Kind}, {nameof(VatPercentage)}: {VatPercentage}, {nameof(State)}: ({State}), {nameof(Note)}: {Note}, {nameof(Metadata)}: ({Metadata})";
 }

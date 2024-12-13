@@ -64,6 +64,9 @@ public class CreateTariffRequest
     [Required]
     public List<string> ZipCodes { get; set; }
 
+    /// <summary>
+    /// Dynamic or weekly.
+    /// </summary>
     public TariffType TariffType { get; set; }
 
     /// <summary>
@@ -83,6 +86,9 @@ public class CreateTariffRequest
     [Required]
     public string Area { get; set; }
 
+    /// <summary>
+    /// What kind of customer types are the tariff for?.
+    /// </summary>
     public TariffCustomerType? CustomerType { get; set; }
 
     /// <inheritdoc />

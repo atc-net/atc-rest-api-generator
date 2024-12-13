@@ -24,6 +24,8 @@ public class GetWalletTransactionsParameters
     /// </summary>
     public int PerPage { get; set; } = 10;
 
+    public int? OperatorId { get; set; }
+
     public int? TeamId { get; set; }
 
     [RegularExpression("^(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2})Z$")]
@@ -44,5 +46,5 @@ public class GetWalletTransactionsParameters
 
     /// <inheritdoc />
     public override string ToString()
-        => $"{nameof(Page)}: {Page}, {nameof(PerPage)}: {PerPage}, {nameof(TeamId)}: {TeamId}, {nameof(FromDate)}: ({FromDate}), {nameof(ToDate)}: ({ToDate}), {nameof(ReferenceId)}: {ReferenceId}, {nameof(ReferenceType)}: ({ReferenceType}), {nameof(State)}: ({State}), {nameof(Group)}: ({Group}), {nameof(PartnerExternalId)}: {PartnerExternalId}";
+        => $"{nameof(Page)}: {Page}, {nameof(PerPage)}: {PerPage}, {nameof(OperatorId)}: {OperatorId}, {nameof(TeamId)}: {TeamId}, {nameof(FromDate)}: ({FromDate}), {nameof(ToDate)}: ({ToDate}), {nameof(ReferenceId)}: {ReferenceId}, {nameof(ReferenceType)}: ({ReferenceType}), {nameof(State)}: ({State}), {nameof(Group)}: ({Group}), {nameof(PartnerExternalId)}: {PartnerExternalId}";
 }

@@ -31,6 +31,9 @@ public class GetOperatorEndpointResult : EndpointResponse, IGetOperatorEndpointR
     public bool IsForbidden
         => StatusCode == HttpStatusCode.Forbidden;
 
+    public bool IsNotFound
+        => StatusCode == HttpStatusCode.NotFound;
+
     public Operator OkContent
         => IsOk && ContentObject is Operator result
             ? result
@@ -50,4 +53,9 @@ public class GetOperatorEndpointResult : EndpointResponse, IGetOperatorEndpointR
         => IsForbidden && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsForbidden property first.");
+
+    public string? NotFoundContent
+        => IsNotFound && ContentObject is string result
+            ? result
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsNotFound property first.");
 }

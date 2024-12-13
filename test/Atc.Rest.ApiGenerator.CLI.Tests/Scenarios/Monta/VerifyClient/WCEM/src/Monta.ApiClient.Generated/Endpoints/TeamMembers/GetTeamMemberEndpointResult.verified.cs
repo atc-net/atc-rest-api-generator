@@ -28,8 +28,14 @@ public class GetTeamMemberEndpointResult : EndpointResponse, IGetTeamMemberEndpo
     public bool IsUnauthorized
         => StatusCode == HttpStatusCode.Unauthorized;
 
-    public TeamMemberDto OkContent
-        => IsOk && ContentObject is TeamMemberDto result
+    public bool IsForbidden
+        => StatusCode == HttpStatusCode.Forbidden;
+
+    public bool IsNotFound
+        => StatusCode == HttpStatusCode.NotFound;
+
+    public TeamMember OkContent
+        => IsOk && ContentObject is TeamMember result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsOk property first.");
 
@@ -42,4 +48,14 @@ public class GetTeamMemberEndpointResult : EndpointResponse, IGetTeamMemberEndpo
         => IsUnauthorized && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsUnauthorized property first.");
+
+    public string? ForbiddenContent
+        => IsForbidden && ContentObject is string result
+            ? result
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsForbidden property first.");
+
+    public string? NotFoundContent
+        => IsNotFound && ContentObject is string result
+            ? result
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsNotFound property first.");
 }

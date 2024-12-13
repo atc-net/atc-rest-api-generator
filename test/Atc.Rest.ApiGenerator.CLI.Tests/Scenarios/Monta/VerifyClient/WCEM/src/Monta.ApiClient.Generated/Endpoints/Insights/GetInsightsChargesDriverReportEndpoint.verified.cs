@@ -33,6 +33,8 @@ public class GetInsightsChargesDriverReportEndpoint : IGetInsightsChargesDriverR
         var client = factory.CreateClient(httpClientName);
 
         var requestBuilder = httpMessageFactory.FromTemplate("/api/v1/insights/charges/driver-report");
+        requestBuilder.WithQueryParameter("page", parameters.Page);
+        requestBuilder.WithQueryParameter("perPage", parameters.PerPage);
         requestBuilder.WithQueryParameter("teamId", parameters.TeamId);
         requestBuilder.WithQueryParameter("teamMemberIds", parameters.TeamMemberIds);
         requestBuilder.WithQueryParameter("fromDate", parameters.FromDate);
@@ -46,6 +48,8 @@ public class GetInsightsChargesDriverReportEndpoint : IGetInsightsChargesDriverR
         responseBuilder.AddSuccessResponse<MontaPageChargesInsightDriverReportDto>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.BadRequest);
         responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.Unauthorized);
+        responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.Forbidden);
+        responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.NotFound);
         return await responseBuilder.BuildResponseAsync(x => new GetInsightsChargesDriverReportEndpointResult(x), cancellationToken);
     }
 }

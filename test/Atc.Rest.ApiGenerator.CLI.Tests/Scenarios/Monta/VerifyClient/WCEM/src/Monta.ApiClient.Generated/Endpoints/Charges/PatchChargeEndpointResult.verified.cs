@@ -31,6 +31,9 @@ public class PatchChargeEndpointResult : EndpointResponse, IPatchChargeEndpointR
     public bool IsForbidden
         => StatusCode == HttpStatusCode.Forbidden;
 
+    public bool IsNotFound
+        => StatusCode == HttpStatusCode.NotFound;
+
     public Charge OkContent
         => IsOk && ContentObject is Charge result
             ? result
@@ -50,4 +53,9 @@ public class PatchChargeEndpointResult : EndpointResponse, IPatchChargeEndpointR
         => IsForbidden && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsForbidden property first.");
+
+    public string? NotFoundContent
+        => IsNotFound && ContentObject is string result
+            ? result
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsNotFound property first.");
 }

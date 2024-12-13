@@ -54,13 +54,22 @@ public class Team
     /// </summary>
     public string? VatNumber { get; set; }
 
+    /// <summary>
+    /// The operator to this team is associated.
+    /// </summary>
     public Operator? Operator { get; set; }
 
+    /// <summary>
+    /// The address where the team is located.
+    /// </summary>
     [Required]
     public TeamDtoTeamAddressDto Address { get; set; }
 
+    /// <summary>
+    /// The currency assigned for this team.
+    /// </summary>
     [Required]
-    public Currency Currency { get; set; }
+    public Currency7 Currency { get; set; }
 
     /// <summary>
     /// Type of the team.
@@ -69,9 +78,29 @@ public class Team
     public string Type { get; set; }
 
     /// <summary>
+    /// Category of the team.
+    /// </summary>
+    public TeamDtoTeamCategoryDto? Category { get; set; }
+
+    /// <summary>
     /// Id of the user that owns this team.
     /// </summary>
     public long UserId { get; set; }
+
+    /// <summary>
+    /// Whether the team is frozen or not.
+    /// </summary>
+    public bool IsFrozen { get; set; }
+
+    /// <summary>
+    /// Team freezing reason.
+    /// </summary>
+    public string? FrozenReason { get; set; }
+
+    /// <summary>
+    /// Frozen date of this team.
+    /// </summary>
+    public DateTimeOffset? FrozenAt { get; set; }
 
     /// <summary>
     /// Blocked date of this team.
@@ -97,5 +126,5 @@ public class Team
 
     /// <inheritdoc />
     public override string ToString()
-        => $"{nameof(Id)}: {Id}, {nameof(Name)}: {Name}, {nameof(ExternalId)}: {ExternalId}, {nameof(PartnerExternalId)}: {PartnerExternalId}, {nameof(PartnerCustomPayload)}.Count: {PartnerCustomPayload?.Count ?? 0}, {nameof(JoinCode)}: {JoinCode}, {nameof(CompanyName)}: {CompanyName}, {nameof(VatNumber)}: {VatNumber}, {nameof(Operator)}: ({Operator}), {nameof(Address)}: ({Address}), {nameof(Currency)}: ({Currency}), {nameof(Type)}: {Type}, {nameof(UserId)}: {UserId}, {nameof(BlockedAt)}: ({BlockedAt}), {nameof(CreatedAt)}: ({CreatedAt}), {nameof(UpdatedAt)}: ({UpdatedAt}), {nameof(DeletedAt)}: ({DeletedAt})";
+        => $"{nameof(Id)}: {Id}, {nameof(Name)}: {Name}, {nameof(ExternalId)}: {ExternalId}, {nameof(PartnerExternalId)}: {PartnerExternalId}, {nameof(PartnerCustomPayload)}.Count: {PartnerCustomPayload?.Count ?? 0}, {nameof(JoinCode)}: {JoinCode}, {nameof(CompanyName)}: {CompanyName}, {nameof(VatNumber)}: {VatNumber}, {nameof(Operator)}: ({Operator}), {nameof(Address)}: ({Address}), {nameof(Currency)}: ({Currency}), {nameof(Type)}: {Type}, {nameof(Category)}: ({Category}), {nameof(UserId)}: {UserId}, {nameof(IsFrozen)}: {IsFrozen}, {nameof(FrozenReason)}: {FrozenReason}, {nameof(FrozenAt)}: ({FrozenAt}), {nameof(BlockedAt)}: ({BlockedAt}), {nameof(CreatedAt)}: ({CreatedAt}), {nameof(UpdatedAt)}: ({UpdatedAt}), {nameof(DeletedAt)}: ({DeletedAt})";
 }

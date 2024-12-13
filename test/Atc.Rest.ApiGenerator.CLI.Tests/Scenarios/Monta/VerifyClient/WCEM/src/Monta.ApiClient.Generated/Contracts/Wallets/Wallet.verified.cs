@@ -38,6 +38,9 @@ public class Wallet
     /// </summary>
     public long CountryId { get; set; }
 
+    /// <summary>
+    /// Balance of this wallet, if available (not in list endpoints).
+    /// </summary>
     public WalletDtoBalanceDto? Balance { get; set; }
 
     /// <inheritdoc />

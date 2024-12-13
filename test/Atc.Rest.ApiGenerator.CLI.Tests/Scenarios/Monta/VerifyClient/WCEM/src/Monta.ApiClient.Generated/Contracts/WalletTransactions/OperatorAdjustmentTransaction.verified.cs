@@ -39,17 +39,7 @@ public class OperatorAdjustmentTransaction
     /// </summary>
     public double Amount { get; set; }
 
-    /// <summary>
-    /// External Id of this entity, managed by you.
-    /// </summary>
-    public string? PartnerExternalId { get; set; }
-
-    /// <summary>
-    /// Custom JSON payload for this entity, managed by you.
-    /// </summary>
-    public List<object>? PartnerCustomPayload { get; set; } = new List<object>();
-
     /// <inheritdoc />
     public override string ToString()
-        => $"{nameof(FromWalletId)}: {FromWalletId}, {nameof(ToWalletId)}: {ToWalletId}, {nameof(Note)}: {Note}, {nameof(CurrencyId)}: {CurrencyId}, {nameof(Amount)}: {Amount}, {nameof(PartnerExternalId)}: {PartnerExternalId}, {nameof(PartnerCustomPayload)}.Count: {PartnerCustomPayload?.Count ?? 0}";
+        => $"{nameof(FromWalletId)}: {FromWalletId}, {nameof(ToWalletId)}: {ToWalletId}, {nameof(Note)}: {Note}, {nameof(CurrencyId)}: {CurrencyId}, {nameof(Amount)}: {Amount}";
 }

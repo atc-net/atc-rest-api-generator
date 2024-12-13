@@ -25,7 +25,7 @@ public interface IGetCurrencyEndpointResult : IEndpointResponse
 
     bool IsNotFound { get; }
 
-    CurrencyDto4 OkContent { get; }
+    CurrencyDto OkContent { get; }
 
     string? BadRequestContent { get; }
 

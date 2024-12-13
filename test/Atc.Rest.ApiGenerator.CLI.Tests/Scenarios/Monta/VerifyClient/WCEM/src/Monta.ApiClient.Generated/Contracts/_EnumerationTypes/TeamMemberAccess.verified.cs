@@ -18,7 +18,4 @@ public enum TeamMemberAccess
 
     [EnumMember(Value = "selected")]
     Selected,
-
-    [EnumMember(Value = "other")]
-    Other,
 }

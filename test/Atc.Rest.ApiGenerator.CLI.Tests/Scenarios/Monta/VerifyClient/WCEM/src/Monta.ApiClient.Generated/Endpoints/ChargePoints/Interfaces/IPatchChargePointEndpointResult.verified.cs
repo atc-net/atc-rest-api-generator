@@ -23,6 +23,8 @@ public interface IPatchChargePointEndpointResult : IEndpointResponse
 
     bool IsForbidden { get; }
 
+    bool IsNotFound { get; }
+
     ChargePoint OkContent { get; }
 
     string? BadRequestContent { get; }
@@ -30,4 +32,6 @@ public interface IPatchChargePointEndpointResult : IEndpointResponse
     string? UnauthorizedContent { get; }
 
     string? ForbiddenContent { get; }
+
+    string? NotFoundContent { get; }
 }

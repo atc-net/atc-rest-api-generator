@@ -42,6 +42,8 @@ public class CreateSubscriptionEndpoint : ICreateSubscriptionEndpoint
         responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.Created);
         responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.BadRequest);
         responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.Unauthorized);
+        responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.Forbidden);
+        responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.NotFound);
         return await responseBuilder.BuildResponseAsync(x => new CreateSubscriptionEndpointResult(x), cancellationToken);
     }
 }

@@ -21,9 +21,17 @@ public interface IGetTariffRecurringPeriodsEndpointResult : IEndpointResponse
 
     bool IsUnauthorized { get; }
 
+    bool IsForbidden { get; }
+
+    bool IsNotFound { get; }
+
     PageTariffRecurringPeriodDto OkContent { get; }
 
     string? BadRequestContent { get; }
 
     string? UnauthorizedContent { get; }
+
+    string? ForbiddenContent { get; }
+
+    string? NotFoundContent { get; }
 }

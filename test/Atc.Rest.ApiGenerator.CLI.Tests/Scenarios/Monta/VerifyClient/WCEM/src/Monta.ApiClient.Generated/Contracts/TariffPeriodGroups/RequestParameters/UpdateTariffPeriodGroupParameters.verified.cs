@@ -18,7 +18,7 @@ public class UpdateTariffPeriodGroupParameters
     public long Id { get; set; }
 
     [Required]
-    public TariffPeriodGroup Request { get; set; }
+    public TariffPeriodGroup2 Request { get; set; }
 
     /// <inheritdoc />
     public override string ToString()

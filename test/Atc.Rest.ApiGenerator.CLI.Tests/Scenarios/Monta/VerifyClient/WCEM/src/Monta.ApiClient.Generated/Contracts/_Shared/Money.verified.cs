@@ -18,6 +18,9 @@ public class Money
     [Required]
     public long Amount { get; set; }
 
+    /// <summary>
+    /// Currency.
+    /// </summary>
     [Required]
     public Currency Currency { get; set; }
 

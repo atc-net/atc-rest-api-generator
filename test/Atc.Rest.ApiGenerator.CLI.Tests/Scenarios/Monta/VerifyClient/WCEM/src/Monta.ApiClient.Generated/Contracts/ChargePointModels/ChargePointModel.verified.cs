@@ -29,6 +29,9 @@ public class ChargePointModel
     [Required]
     public string Name { get; set; }
 
+    /// <summary>
+    /// The brand of the charge point model.
+    /// </summary>
     [Required]
     public ChargePointModelDtoChargePointBrandDto Brand { get; set; }
 

@@ -41,15 +41,23 @@ public class StartChargeRequest
     public double? SocLimit { get; set; }
 
     /// <summary>
+    /// The charge price limit, meaning the charge will stop once the price limit is reached. &lt;br /&gt;*Note*: `priceLimit` will be in the currency of the charge point.
+    /// </summary>
+    public double? PriceLimit { get; set; }
+
+    /// <summary>
     /// Allows you to enforce a specific price group for this charge. &lt;br /&gt;*Note*: The price group must be of type `team` or `charge-point`.
     /// </summary>
     [Range(0, int.MaxValue)]
     public long? PriceGroupId { get; set; }
 
+    /// <summary>
+    /// For Partners who want to start charging from payment terminals, kiosks etc. Used to link charge transaction against your billing and to allow users retrieving receipts via receipt.monta.com by using date and `genericPaymentSession.externalId`or `genericPaymentSession.cardLast4`.
+    /// </summary>
     public GenericPaymentSession? GenericPaymentSession { get; set; }
 
     /// <summary>
-    /// External Id of this entity, managed by you.
+    /// External Id of this entity, managed by you. &lt;br /&gt;*Note*: How this field is used is up to the partner, but we highly recommend using a unique `partnerExternalId` for each `charge`.
     /// </summary>
     public string? PartnerExternalId { get; set; }
 
@@ -60,5 +68,5 @@ public class StartChargeRequest
 
     /// <inheritdoc />
     public override string ToString()
-        => $"{nameof(PayingTeamId)}: {PayingTeamId}, {nameof(ChargePointId)}: {ChargePointId}, {nameof(ReserveCharge)}: {ReserveCharge}, {nameof(KwhLimit)}: {KwhLimit}, {nameof(SocLimit)}: {SocLimit}, {nameof(PriceGroupId)}: {PriceGroupId}, {nameof(GenericPaymentSession)}: ({GenericPaymentSession}), {nameof(PartnerExternalId)}: {PartnerExternalId}, {nameof(PartnerCustomPayload)}.Count: {PartnerCustomPayload?.Count ?? 0}";
+        => $"{nameof(PayingTeamId)}: {PayingTeamId}, {nameof(ChargePointId)}: {ChargePointId}, {nameof(ReserveCharge)}: {ReserveCharge}, {nameof(KwhLimit)}: {KwhLimit}, {nameof(SocLimit)}: {SocLimit}, {nameof(PriceLimit)}: {PriceLimit}, {nameof(PriceGroupId)}: {PriceGroupId}, {nameof(GenericPaymentSession)}: ({GenericPaymentSession}), {nameof(PartnerExternalId)}: {PartnerExternalId}, {nameof(PartnerCustomPayload)}.Count: {PartnerCustomPayload?.Count ?? 0}";
 }

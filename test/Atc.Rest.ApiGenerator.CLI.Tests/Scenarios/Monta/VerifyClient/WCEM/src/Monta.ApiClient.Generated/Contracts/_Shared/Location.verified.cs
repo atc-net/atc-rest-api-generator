@@ -12,8 +12,14 @@ namespace Monta.ApiClient.Generated.Contracts;
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class Location
 {
+    /// <summary>
+    /// Coordinates (lat, lng).
+    /// </summary>
     public Coordinates? Coordinates { get; set; }
 
+    /// <summary>
+    /// Address.
+    /// </summary>
     public Address? Address { get; set; }
 
     /// <inheritdoc />

@@ -37,6 +37,8 @@ public class GetSubscriptionsEndpoint : IGetSubscriptionsEndpoint
         requestBuilder.WithQueryParameter("perPage", parameters.PerPage);
         requestBuilder.WithQueryParameter("planId", parameters.PlanId);
         requestBuilder.WithQueryParameter("chargePointId", parameters.ChargePointId);
+        requestBuilder.WithQueryParameter("customerId", parameters.CustomerId);
+        requestBuilder.WithQueryParameter("customerType", parameters.CustomerType);
         requestBuilder.WithQueryParameter("subscriptionPurchaseId", parameters.SubscriptionPurchaseId);
 
         using var requestMessage = requestBuilder.Build(HttpMethod.Get);
@@ -46,6 +48,8 @@ public class GetSubscriptionsEndpoint : IGetSubscriptionsEndpoint
         responseBuilder.AddSuccessResponse<MontaPageSubscriptionDto>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.BadRequest);
         responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.Unauthorized);
+        responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.Forbidden);
+        responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.NotFound);
         return await responseBuilder.BuildResponseAsync(x => new GetSubscriptionsEndpointResult(x), cancellationToken);
     }
 }

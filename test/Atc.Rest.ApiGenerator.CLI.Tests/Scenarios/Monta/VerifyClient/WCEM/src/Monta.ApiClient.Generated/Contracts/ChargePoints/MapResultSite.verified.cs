@@ -49,6 +49,9 @@ public class MapResultSite
     /// </summary>
     public string? Note { get; set; }
 
+    /// <summary>
+    /// Location information for this site.
+    /// </summary>
     [Required]
     public Location Location { get; set; }
 

@@ -12,6 +12,9 @@ namespace Monta.ApiClient.Generated.Contracts.ChargePoints;
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class MapResultCluster
 {
+    /// <summary>
+    /// Coordinates of the cluster.
+    /// </summary>
     [Required]
     public Coordinates Coordinates { get; set; }
 

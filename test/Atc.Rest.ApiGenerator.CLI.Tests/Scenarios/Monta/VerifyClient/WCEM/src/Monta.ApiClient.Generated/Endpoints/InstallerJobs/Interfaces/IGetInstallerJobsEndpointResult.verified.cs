@@ -21,9 +21,17 @@ public interface IGetInstallerJobsEndpointResult : IEndpointResponse
 
     bool IsUnauthorized { get; }
 
+    bool IsForbidden { get; }
+
+    bool IsNotFound { get; }
+
     MontaPageInstallerJobDto OkContent { get; }
 
     string? BadRequestContent { get; }
 
     string? UnauthorizedContent { get; }
+
+    string? ForbiddenContent { get; }
+
+    string? NotFoundContent { get; }
 }

@@ -22,10 +22,19 @@ public class SponsoredChargePointData
     /// </summary>
     public string? Name { get; set; }
 
-    public PublicUser? User { get; set; }
+    /// <summary>
+    /// The user (owner) of this charge point.
+    /// </summary>
+    public PublicUser1? User { get; set; }
 
+    /// <summary>
+    /// The sponsored price group of this charge point.
+    /// </summary>
     public PriceGroup? SponsoredPriceGroup { get; set; }
 
+    /// <summary>
+    /// Location information for this charge point.
+    /// </summary>
     [Required]
     public Location Location { get; set; }
 

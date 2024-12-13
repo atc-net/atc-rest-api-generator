@@ -23,6 +23,8 @@ public interface IPatchChargeEndpointResult : IEndpointResponse
 
     bool IsForbidden { get; }
 
+    bool IsNotFound { get; }
+
     Charge OkContent { get; }
 
     string? BadRequestContent { get; }
@@ -30,4 +32,6 @@ public interface IPatchChargeEndpointResult : IEndpointResponse
     string? UnauthorizedContent { get; }
 
     string? ForbiddenContent { get; }
+
+    string? NotFoundContent { get; }
 }

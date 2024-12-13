@@ -21,9 +21,17 @@ public interface IGetChargeAuthTokensEndpointResult : IEndpointResponse
 
     bool IsUnauthorized { get; }
 
+    bool IsForbidden { get; }
+
+    bool IsNotFound { get; }
+
     MontaPageChargeAuthTokenDto OkContent { get; }
 
     string? BadRequestContent { get; }
 
     string? UnauthorizedContent { get; }
+
+    string? ForbiddenContent { get; }
+
+    string? NotFoundContent { get; }
 }

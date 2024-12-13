@@ -31,6 +31,9 @@ public class PatchSiteEndpointResult : EndpointResponse, IPatchSiteEndpointResul
     public bool IsForbidden
         => StatusCode == HttpStatusCode.Forbidden;
 
+    public bool IsNotFound
+        => StatusCode == HttpStatusCode.NotFound;
+
     public Site OkContent
         => IsOk && ContentObject is Site result
             ? result
@@ -50,4 +53,9 @@ public class PatchSiteEndpointResult : EndpointResponse, IPatchSiteEndpointResul
         => IsForbidden && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsForbidden property first.");
+
+    public string? NotFoundContent
+        => IsNotFound && ContentObject is string result
+            ? result
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsNotFound property first.");
 }

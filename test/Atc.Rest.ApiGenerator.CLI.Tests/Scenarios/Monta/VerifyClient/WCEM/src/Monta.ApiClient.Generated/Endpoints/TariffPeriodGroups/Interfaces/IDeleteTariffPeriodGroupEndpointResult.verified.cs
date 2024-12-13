@@ -21,9 +21,17 @@ public interface IDeleteTariffPeriodGroupEndpointResult : IEndpointResponse
 
     bool IsUnauthorized { get; }
 
+    bool IsForbidden { get; }
+
+    bool IsNotFound { get; }
+
     string? NoContentContent { get; }
 
     string? BadRequestContent { get; }
 
     string? UnauthorizedContent { get; }
+
+    string? ForbiddenContent { get; }
+
+    string? NotFoundContent { get; }
 }

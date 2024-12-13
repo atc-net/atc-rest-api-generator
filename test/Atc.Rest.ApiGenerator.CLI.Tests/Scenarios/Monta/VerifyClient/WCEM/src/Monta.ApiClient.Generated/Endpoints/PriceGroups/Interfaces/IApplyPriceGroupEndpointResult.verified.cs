@@ -21,6 +21,8 @@ public interface IApplyPriceGroupEndpointResult : IEndpointResponse
 
     bool IsUnauthorized { get; }
 
+    bool IsForbidden { get; }
+
     bool IsNotFound { get; }
 
     PriceGroup OkContent { get; }
@@ -28,6 +30,8 @@ public interface IApplyPriceGroupEndpointResult : IEndpointResponse
     string? BadRequestContent { get; }
 
     string? UnauthorizedContent { get; }
+
+    string? ForbiddenContent { get; }
 
     string? NotFoundContent { get; }
 }

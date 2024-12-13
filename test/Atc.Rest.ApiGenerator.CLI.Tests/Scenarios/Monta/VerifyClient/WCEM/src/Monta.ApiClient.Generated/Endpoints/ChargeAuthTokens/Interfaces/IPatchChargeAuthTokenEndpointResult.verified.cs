@@ -23,6 +23,8 @@ public interface IPatchChargeAuthTokenEndpointResult : IEndpointResponse
 
     bool IsForbidden { get; }
 
+    bool IsNotFound { get; }
+
     ChargeAuthToken OkContent { get; }
 
     string? BadRequestContent { get; }
@@ -30,4 +32,6 @@ public interface IPatchChargeAuthTokenEndpointResult : IEndpointResponse
     string? UnauthorizedContent { get; }
 
     string? ForbiddenContent { get; }
+
+    string? NotFoundContent { get; }
 }

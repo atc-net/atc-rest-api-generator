@@ -33,6 +33,9 @@ public class CreateChargeAuthToken
     [RegularExpression("^(?!VID:)[\\s\\S]*")]
     public string Identifier { get; set; }
 
+    /// <summary>
+    /// Type of the charge auth token.
+    /// </summary>
     [Required]
     public ChargeAuthenticationType Type { get; set; }
 

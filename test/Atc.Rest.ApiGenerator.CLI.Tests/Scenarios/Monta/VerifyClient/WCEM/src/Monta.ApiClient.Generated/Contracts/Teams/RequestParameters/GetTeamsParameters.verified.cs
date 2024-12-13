@@ -15,16 +15,6 @@ namespace Monta.ApiClient.Generated.Contracts.Teams;
 public class GetTeamsParameters
 {
     /// <summary>
-    /// Filter teams by partnerExternalId, to filter only resources without `partnerExternalId` *use* `partnerExternalId=""`.
-    /// </summary>
-    public string PartnerExternalId { get; set; }
-
-    /// <summary>
-    /// Filter to include delete teams in the response.
-    /// </summary>
-    public bool IncludeDeleted { get; set; } = false;
-
-    /// <summary>
     /// page number to retrieve (starts with 0).
     /// </summary>
     public int Page { get; set; } = 0;
@@ -36,5 +26,5 @@ public class GetTeamsParameters
 
     /// <inheritdoc />
     public override string ToString()
-        => $"{nameof(PartnerExternalId)}: {PartnerExternalId}, {nameof(IncludeDeleted)}: {IncludeDeleted}, {nameof(Page)}: {Page}, {nameof(PerPage)}: {PerPage}";
+        => $"{nameof(Page)}: {Page}, {nameof(PerPage)}: {PerPage}";
 }

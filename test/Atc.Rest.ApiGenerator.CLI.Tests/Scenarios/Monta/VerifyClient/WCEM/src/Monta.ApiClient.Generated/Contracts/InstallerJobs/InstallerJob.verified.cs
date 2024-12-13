@@ -22,6 +22,9 @@ public class InstallerJob
     /// </summary>
     public long SiteId { get; set; }
 
+    /// <summary>
+    /// The operator of this installer job.
+    /// </summary>
     [Required]
     public Operator Operator { get; set; }
 

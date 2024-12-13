@@ -17,6 +17,9 @@ public class PatchSponsoredChargePoint
     /// </summary>
     public long? PriceGroupId { get; set; }
 
+    /// <summary>
+    /// The payout schedule for this sponsored charge point.
+    /// </summary>
     public SponsoredChargePointPayoutType? PayoutSchedule { get; set; }
 
     /// <summary>

@@ -23,6 +23,8 @@ public interface IPostOrPutChargePointIntegrationEndpointResult : IEndpointRespo
 
     bool IsForbidden { get; }
 
+    bool IsNotFound { get; }
+
     ChargePointIntegration OkContent { get; }
 
     string? BadRequestContent { get; }
@@ -30,4 +32,6 @@ public interface IPostOrPutChargePointIntegrationEndpointResult : IEndpointRespo
     string? UnauthorizedContent { get; }
 
     string? ForbiddenContent { get; }
+
+    string? NotFoundContent { get; }
 }

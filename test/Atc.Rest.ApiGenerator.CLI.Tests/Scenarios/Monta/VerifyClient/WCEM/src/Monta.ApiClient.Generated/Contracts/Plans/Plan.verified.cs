@@ -60,6 +60,9 @@ public class Plan
     /// </summary>
     public string? SupportEmail { get; set; }
 
+    /// <summary>
+    /// Indicates whether this plan can be applied to teams or charge points. 'operator' value is only used internally.
+    /// </summary>
     [Required]
     public PlanApplicableFor ApplicableFor { get; set; }
 
@@ -69,6 +72,9 @@ public class Plan
     [Required]
     public bool Active { get; set; }
 
+    /// <summary>
+    /// Indicates whether this plan is shown in your (operator's) app only, or in the Monta app as well.
+    /// </summary>
     [Required]
     public PlanApplicationAudience ApplicationAudience { get; set; }
 
@@ -78,6 +84,9 @@ public class Plan
     [Required]
     public bool VisibleInMarketPlace { get; set; }
 
+    /// <summary>
+    /// Indicates if the price is per charge point or a fixed price.
+    /// </summary>
     [Required]
     public PlanPriceModel PriceModel { get; set; }
 
@@ -93,9 +102,15 @@ public class Plan
     [Required]
     public bool PricesWithVat { get; set; }
 
+    /// <summary>
+    /// Plan service type, custom or tax-refund.
+    /// </summary>
     [Required]
     public PlanServiceType ServiceType { get; set; }
 
+    /// <summary>
+    /// Additional configuration, based on serviceType.
+    /// </summary>
     [Required]
     public PlanServiceConfig ServiceConfig { get; set; }
 

@@ -37,6 +37,9 @@ public class ChargePoint
     /// </summary>
     public long? SiteId { get; set; }
 
+    /// <summary>
+    /// Operator of this charge point.
+    /// </summary>
     public Operator? Operator { get; set; }
 
     /// <summary>
@@ -97,8 +100,14 @@ public class ChargePoint
     /// </summary>
     public string? OperatorNote { get; set; }
 
+    /// <summary>
+    /// State of the charge point.
+    /// </summary>
     public ChargePointState? State { get; set; }
 
+    /// <summary>
+    /// Location information for this charge point.
+    /// </summary>
     [Required]
     public Location Location { get; set; }
 
@@ -108,6 +117,9 @@ public class ChargePoint
     [Required]
     public List<ChargePointConnector> Connectors { get; set; }
 
+    /// <summary>
+    /// Deeplinks to open charge screen in Monta app or web.
+    /// </summary>
     [Required]
     public ChargePointDeeplinks Deeplinks { get; set; }
 
@@ -141,6 +153,9 @@ public class ChargePoint
     /// </summary>
     public string? FirmwareVersion { get; set; }
 
+    /// <summary>
+    /// Indicates what kind of integration this charge point is using (e.g oicp, ocpi, Note: null meaning not integrated).
+    /// </summary>
     public ChargePointIntegrationType? IntegrationType { get; set; }
 
     /// <summary>
@@ -184,7 +199,27 @@ public class ChargePoint
     /// </summary>
     public int? ReservationTime { get; set; }
 
+    /// <summary>
+    /// SIM card data for the given charge point.
+    /// </summary>
+    public SimCard? SimCard { get; set; }
+
+    /// <summary>
+    /// Indicates whether roaming is enabled for this charge point.
+    /// </summary>
+    public bool Roaming { get; set; }
+
+    /// <summary>
+    /// The last date/time this charge point was reported as connected.
+    /// </summary>
+    public DateTimeOffset? LastConnectedAt { get; set; }
+
+    /// <summary>
+    /// The date/time this charge point was reported as disconnected.
+    /// </summary>
+    public DateTimeOffset? DisconnectedAt { get; set; }
+
     /// <inheritdoc />
     public override string ToString()
-        => $"{nameof(Id)}: {Id}, {nameof(TeamId)}: {TeamId}, {nameof(PartnerExternalId)}: {PartnerExternalId}, {nameof(PartnerCustomPayload)}.Count: {PartnerCustomPayload?.Count ?? 0}, {nameof(SiteId)}: {SiteId}, {nameof(Operator)}: ({Operator}), {nameof(CreatedAt)}: ({CreatedAt}), {nameof(UpdatedAt)}: ({UpdatedAt}), {nameof(DeletedAt)}: ({DeletedAt}), {nameof(ActiveAt)}: ({ActiveAt}), {nameof(SerialNumber)}: {SerialNumber}, {nameof(Name)}: {Name}, {nameof(Visibility)}: {Visibility}, {nameof(MaxKw)}: {MaxKw}, {nameof(Type)}: {Type}, {nameof(Note)}: {Note}, {nameof(OperatorNote)}: {OperatorNote}, {nameof(State)}: ({State}), {nameof(Location)}: ({Location}), {nameof(Connectors)}.Count: {Connectors?.Count ?? 0}, {nameof(Deeplinks)}: ({Deeplinks}), {nameof(LastMeterReadingKwh)}: {LastMeterReadingKwh}, {nameof(CablePluggedIn)}: {CablePluggedIn}, {nameof(ChargePointModelId)}: {ChargePointModelId}, {nameof(BrandName)}: {BrandName}, {nameof(ModelName)}: {ModelName}, {nameof(FirmwareVersion)}: {FirmwareVersion}, {nameof(IntegrationType)}: ({IntegrationType}), {nameof(EvseId)}: {EvseId}, {nameof(PriceGroupId)}: {PriceGroupId}, {nameof(CostGroupId)}: {CostGroupId}, {nameof(RoamingPriceGroupId)}: {RoamingPriceGroupId}, {nameof(SponsoredPriceGroupId)}: {SponsoredPriceGroupId}, {nameof(IsActive)}: {IsActive}, {nameof(Reservable)}: {Reservable}, {nameof(ReservationTime)}: {ReservationTime}";
+        => $"{nameof(Id)}: {Id}, {nameof(TeamId)}: {TeamId}, {nameof(PartnerExternalId)}: {PartnerExternalId}, {nameof(PartnerCustomPayload)}.Count: {PartnerCustomPayload?.Count ?? 0}, {nameof(SiteId)}: {SiteId}, {nameof(Operator)}: ({Operator}), {nameof(CreatedAt)}: ({CreatedAt}), {nameof(UpdatedAt)}: ({UpdatedAt}), {nameof(DeletedAt)}: ({DeletedAt}), {nameof(ActiveAt)}: ({ActiveAt}), {nameof(SerialNumber)}: {SerialNumber}, {nameof(Name)}: {Name}, {nameof(Visibility)}: {Visibility}, {nameof(MaxKw)}: {MaxKw}, {nameof(Type)}: {Type}, {nameof(Note)}: {Note}, {nameof(OperatorNote)}: {OperatorNote}, {nameof(State)}: ({State}), {nameof(Location)}: ({Location}), {nameof(Connectors)}.Count: {Connectors?.Count ?? 0}, {nameof(Deeplinks)}: ({Deeplinks}), {nameof(LastMeterReadingKwh)}: {LastMeterReadingKwh}, {nameof(CablePluggedIn)}: {CablePluggedIn}, {nameof(ChargePointModelId)}: {ChargePointModelId}, {nameof(BrandName)}: {BrandName}, {nameof(ModelName)}: {ModelName}, {nameof(FirmwareVersion)}: {FirmwareVersion}, {nameof(IntegrationType)}: ({IntegrationType}), {nameof(EvseId)}: {EvseId}, {nameof(PriceGroupId)}: {PriceGroupId}, {nameof(CostGroupId)}: {CostGroupId}, {nameof(RoamingPriceGroupId)}: {RoamingPriceGroupId}, {nameof(SponsoredPriceGroupId)}: {SponsoredPriceGroupId}, {nameof(IsActive)}: {IsActive}, {nameof(Reservable)}: {Reservable}, {nameof(ReservationTime)}: {ReservationTime}, {nameof(SimCard)}: ({SimCard}), {nameof(Roaming)}: {Roaming}, {nameof(LastConnectedAt)}: ({LastConnectedAt}), {nameof(DisconnectedAt)}: ({DisconnectedAt})";
 }

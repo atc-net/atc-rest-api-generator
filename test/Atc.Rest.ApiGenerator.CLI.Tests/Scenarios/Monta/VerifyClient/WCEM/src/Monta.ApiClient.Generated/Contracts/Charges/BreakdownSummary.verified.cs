@@ -42,7 +42,12 @@ public class BreakdownSummary
     [Required]
     public long TotalPrice { get; set; }
 
+    /// <summary>
+    /// Total discount applied for the given charge.
+    /// </summary>
+    public long? TotalDiscount { get; set; }
+
     /// <inheritdoc />
     public override string ToString()
-        => $"{nameof(TotalMasterPrice)}: {TotalMasterPrice}, {nameof(TotalSecondaryPrice)}: {TotalSecondaryPrice}, {nameof(TotalFees)}: {TotalFees}, {nameof(TotalAdjustments)}: {TotalAdjustments}, {nameof(TotalPrice)}: {TotalPrice}";
+        => $"{nameof(TotalMasterPrice)}: {TotalMasterPrice}, {nameof(TotalSecondaryPrice)}: {TotalSecondaryPrice}, {nameof(TotalFees)}: {TotalFees}, {nameof(TotalAdjustments)}: {TotalAdjustments}, {nameof(TotalPrice)}: {TotalPrice}, {nameof(TotalDiscount)}: {TotalDiscount}";
 }

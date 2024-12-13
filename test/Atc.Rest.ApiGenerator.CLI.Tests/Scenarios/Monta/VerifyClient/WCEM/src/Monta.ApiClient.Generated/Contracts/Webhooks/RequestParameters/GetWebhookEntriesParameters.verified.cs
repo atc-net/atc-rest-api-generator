@@ -24,10 +24,7 @@ public class GetWebhookEntriesParameters
     /// </summary>
     public int PerPage { get; set; } = 10;
 
-    /// <summary>
-    /// The status from which webhook entries will be filtered by.
-    /// </summary>
-    public long Status { get; set; }
+    public string? Status { get; set; }
 
     /// <inheritdoc />
     public override string ToString()

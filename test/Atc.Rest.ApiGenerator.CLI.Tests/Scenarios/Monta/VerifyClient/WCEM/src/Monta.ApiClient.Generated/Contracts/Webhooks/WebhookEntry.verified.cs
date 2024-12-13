@@ -27,15 +27,28 @@ public class WebhookEntry
     /// </summary>
     public long OperatorId { get; set; }
 
+    /// <summary>
+    /// Type of event this entry belongs to.
+    /// Note: This is not the type of the entity (payload.EntityType), but the type of the event that you can subscribe to.
+    /// </summary>
     [Required]
     public WebhookEntryEventType EventType { get; set; }
 
+    /// <summary>
+    /// payload of this entry.
+    /// </summary>
     [Required]
     public WebhookEntryPayload Payload { get; set; }
 
+    /// <summary>
+    /// Status of the entry.
+    /// </summary>
     [Required]
     public WebhookEntryStatus Status { get; set; }
 
+    /// <summary>
+    /// Contains the error message if the delivery failed.
+    /// </summary>
     public WebhookEntryErrorPayload? Error { get; set; }
 
     /// <summary>

@@ -12,9 +12,15 @@ namespace Monta.ApiClient.Generated.Contracts.Charges;
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class ChargesInsightEntry
 {
+    /// <summary>
+    /// The type for this insight entry.
+    /// </summary>
     [Required]
     public ChargesInsightEntryTypeDto Type { get; set; }
 
+    /// <summary>
+    /// The summary for this insight entry, The summary contains the compiled statistics for the entry.
+    /// </summary>
     [Required]
     public ChargesInsightSummary Summary { get; set; }
 

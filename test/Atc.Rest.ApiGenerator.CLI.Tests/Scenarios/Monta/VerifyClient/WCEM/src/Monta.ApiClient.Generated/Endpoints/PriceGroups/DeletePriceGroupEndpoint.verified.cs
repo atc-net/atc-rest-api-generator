@@ -42,6 +42,7 @@ public class DeletePriceGroupEndpoint : IDeletePriceGroupEndpoint
         responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.NoContent);
         responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.BadRequest);
         responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.Unauthorized);
+        responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.Forbidden);
         responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.NotFound);
         return await responseBuilder.BuildResponseAsync(x => new DeletePriceGroupEndpointResult(x), cancellationToken);
     }

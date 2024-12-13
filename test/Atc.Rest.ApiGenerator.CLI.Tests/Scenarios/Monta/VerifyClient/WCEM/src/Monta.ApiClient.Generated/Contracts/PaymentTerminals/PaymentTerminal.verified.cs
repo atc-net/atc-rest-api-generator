@@ -18,6 +18,9 @@ public class PaymentTerminal
     [Required]
     public string Id { get; set; }
 
+    /// <summary>
+    /// Type of this terminal, ie "payter".
+    /// </summary>
     [Required]
     public PaymentTerminalType Type { get; set; }
 

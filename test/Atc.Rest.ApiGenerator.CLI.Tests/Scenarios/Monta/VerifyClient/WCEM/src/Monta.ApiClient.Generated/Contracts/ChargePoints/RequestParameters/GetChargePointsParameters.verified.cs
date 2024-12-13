@@ -33,11 +33,17 @@ public class GetChargePointsParameters
     [RegularExpression("^(-?\\d*\\.\\d+|\\d+\\.\\d*)(,)(-?\\d*\\.\\d+|\\d+\\.\\d*)$")]
     public string? SortByLocation { get; set; }
 
-    public bool? IncludeDeleted { get; set; }
+    public string? BoundingBox { get; set; }
+
+    public long? OperatorId { get; set; }
+
+    public bool IncludeDeleted { get; set; } = false;
+
+    public bool IncludePublic { get; set; } = false;
 
     public ChargePointState? State { get; set; }
 
     /// <inheritdoc />
     public override string ToString()
-        => $"{nameof(Page)}: {Page}, {nameof(PerPage)}: {PerPage}, {nameof(SiteId)}: {SiteId}, {nameof(TeamId)}: {TeamId}, {nameof(PartnerExternalId)}: {PartnerExternalId}, {nameof(SortByLocation)}: {SortByLocation}, {nameof(IncludeDeleted)}: {IncludeDeleted}, {nameof(State)}: ({State})";
+        => $"{nameof(Page)}: {Page}, {nameof(PerPage)}: {PerPage}, {nameof(SiteId)}: {SiteId}, {nameof(TeamId)}: {TeamId}, {nameof(PartnerExternalId)}: {PartnerExternalId}, {nameof(SortByLocation)}: {SortByLocation}, {nameof(BoundingBox)}: {BoundingBox}, {nameof(OperatorId)}: {OperatorId}, {nameof(IncludeDeleted)}: {IncludeDeleted}, {nameof(IncludePublic)}: {IncludePublic}, {nameof(State)}: ({State})";
 }

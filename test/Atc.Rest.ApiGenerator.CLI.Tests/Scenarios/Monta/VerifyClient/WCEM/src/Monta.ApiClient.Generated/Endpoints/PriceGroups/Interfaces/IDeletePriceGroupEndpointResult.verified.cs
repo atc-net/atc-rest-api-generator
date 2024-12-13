@@ -21,6 +21,8 @@ public interface IDeletePriceGroupEndpointResult : IEndpointResponse
 
     bool IsUnauthorized { get; }
 
+    bool IsForbidden { get; }
+
     bool IsNotFound { get; }
 
     string? NoContentContent { get; }
@@ -28,6 +30,8 @@ public interface IDeletePriceGroupEndpointResult : IEndpointResponse
     string? BadRequestContent { get; }
 
     string? UnauthorizedContent { get; }
+
+    string? ForbiddenContent { get; }
 
     string? NotFoundContent { get; }
 }

@@ -17,6 +17,9 @@ public class Subscription
     /// </summary>
     public long Id { get; set; }
 
+    /// <summary>
+    /// State of the subscription.
+    /// </summary>
     [Required]
     public SubscriptionState State { get; set; }
 
@@ -75,6 +78,9 @@ public class Subscription
     /// </summary>
     public long CustomerId { get; set; }
 
+    /// <summary>
+    /// Customer type.
+    /// </summary>
     [Required]
     public SubscriptionCustomerType CustomerType { get; set; }
 
@@ -83,6 +89,9 @@ public class Subscription
     /// </summary>
     public long PlanId { get; set; }
 
+    /// <summary>
+    /// Subscription configuration, based on the plans serviceType.Currently you can configure tax-refund subscriptions only.
+    /// </summary>
     public SubscriptionServiceConfig? ServiceConfig { get; set; }
 
     /// <summary>

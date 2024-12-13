@@ -23,6 +23,8 @@ public interface IGetOperatorEndpointResult : IEndpointResponse
 
     bool IsForbidden { get; }
 
+    bool IsNotFound { get; }
+
     Operator OkContent { get; }
 
     string? BadRequestContent { get; }
@@ -30,4 +32,6 @@ public interface IGetOperatorEndpointResult : IEndpointResponse
     string? UnauthorizedContent { get; }
 
     string? ForbiddenContent { get; }
+
+    string? NotFoundContent { get; }
 }

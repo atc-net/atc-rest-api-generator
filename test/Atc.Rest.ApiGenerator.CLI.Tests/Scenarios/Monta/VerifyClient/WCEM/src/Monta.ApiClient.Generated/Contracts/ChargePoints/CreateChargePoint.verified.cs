@@ -46,9 +46,15 @@ public class CreateChargePoint
     [Required]
     public double MaxKw { get; set; }
 
+    /// <summary>
+    /// Visibility type of the charge point.
+    /// </summary>
     [Required]
     public VisibilityType Visibility { get; set; }
 
+    /// <summary>
+    /// Electric current type the charge point support.
+    /// </summary>
     [Required]
     public ElectricCurrentType Type { get; set; }
 

@@ -40,6 +40,9 @@ public class PatchTeam
     [EmailAddress]
     public string? ContactEmail { get; set; }
 
+    /// <summary>
+    /// Address of the team.
+    /// </summary>
     public CreatedOrUpdateAddress? Address { get; set; }
 
     /// <summary>

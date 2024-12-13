@@ -24,6 +24,9 @@ public class Pricing
     /// </summary>
     public string? Description { get; set; }
 
+    /// <summary>
+    /// Type of the pricing. `minute` is used for Minute fee. `min` is used for the master price.
+    /// </summary>
     [Required]
     public PricingType Type { get; set; }
 
@@ -54,7 +57,7 @@ public class Pricing
     /// <summary>
     /// Used by Spot Price. It will multiply the fallback price by this percentage.
     /// </summary>
-    public double? Percentage { get; set; } = 100.000;
+    public double? Percentage { get; set; }
 
     /// <summary>
     /// The id of the selected Tariff.
@@ -72,13 +75,25 @@ public class Pricing
     /// </summary>
     public int? ApplyAfterMinutes { get; set; }
 
+    /// <summary>
+    /// The price of this Fee or Master price.
+    /// </summary>
     [Required]
     public Money Price { get; set; }
 
+    /// <summary>
+    /// Used by spot price. The minimum that the raw spot price can be. This will be used in calculations if spot price is lower than this.
+    /// </summary>
     public Money? PriceMin { get; set; }
 
+    /// <summary>
+    /// Used by spot price. The maximum that the raw spot price can be. This will be used in calculations if spot price is higher than this.
+    /// </summary>
     public Money? PriceMax { get; set; }
 
+    /// <summary>
+    /// Used by Idle fee. The maximum the user will be charged for the idle fee.
+    /// </summary>
     public Money? FeePriceMax { get; set; }
 
     /// <summary>

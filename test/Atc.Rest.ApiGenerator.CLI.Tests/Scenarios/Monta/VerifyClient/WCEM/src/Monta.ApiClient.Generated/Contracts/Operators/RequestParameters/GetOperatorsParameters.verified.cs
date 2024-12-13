@@ -14,9 +14,15 @@ namespace Monta.ApiClient.Generated.Contracts.Operators;
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class GetOperatorsParameters
 {
-    public int? Page { get; set; } = 0;
+    /// <summary>
+    /// page number to retrieve (starts with 0).
+    /// </summary>
+    public int Page { get; set; } = 0;
 
-    public int? PerPage { get; set; }
+    /// <summary>
+    /// number of items per page (between 1 and 100, default 10).
+    /// </summary>
+    public int PerPage { get; set; } = 10;
 
     /// <inheritdoc />
     public override string ToString()

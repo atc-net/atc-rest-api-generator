@@ -43,6 +43,8 @@ public class UpdateTariffPeriodGroupEndpoint : IUpdateTariffPeriodGroupEndpoint
         responseBuilder.AddSuccessResponse<TariffPeriodGroup>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.BadRequest);
         responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.Unauthorized);
+        responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.Forbidden);
+        responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.NotFound);
         return await responseBuilder.BuildResponseAsync(x => new UpdateTariffPeriodGroupEndpointResult(x), cancellationToken);
     }
 }

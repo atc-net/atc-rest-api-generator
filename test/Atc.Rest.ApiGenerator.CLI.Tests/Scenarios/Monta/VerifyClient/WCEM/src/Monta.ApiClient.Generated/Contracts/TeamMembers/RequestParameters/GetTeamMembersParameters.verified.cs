@@ -30,7 +30,7 @@ public class GetTeamMembersParameters
 
     public TeamMemberRole? Role { get; set; }
 
-    public TeamMemberState? State { get; set; }
+    public TeamMemberState3? State { get; set; }
 
     [Range(0, 2147483647)]
     public long? UserId { get; set; }

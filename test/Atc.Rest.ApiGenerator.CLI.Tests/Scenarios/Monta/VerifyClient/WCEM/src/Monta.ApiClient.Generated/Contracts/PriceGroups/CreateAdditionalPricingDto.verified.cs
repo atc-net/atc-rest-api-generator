@@ -12,6 +12,9 @@ namespace Monta.ApiClient.Generated.Contracts.PriceGroups;
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class CreateAdditionalPricingDto
 {
+    /// <summary>
+    /// Type of the additional pricing. `absolute` means the value is a price.
+    /// </summary>
     [Required]
     public AdditionalPricingType Type { get; set; }
 
@@ -19,9 +22,15 @@ public class CreateAdditionalPricingDto
     /// The value of this additional pricing.
     /// </summary>
     [Required]
+    [Range(0, double.MaxValue)]
     public double Value { get; set; }
+
+    /// <summary>
+    /// A title for this additional pricing.
+    /// </summary>
+    public string? Title { get; set; }
 
     /// <inheritdoc />
     public override string ToString()
-        => $"{nameof(Type)}: ({Type}), {nameof(Value)}: {Value}";
+        => $"{nameof(Type)}: ({Type}), {nameof(Value)}: {Value}, {nameof(Title)}: {Title}";
 }

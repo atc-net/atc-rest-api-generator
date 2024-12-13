@@ -49,6 +49,9 @@ public enum ComponentTypeDto
     [EnumMember(Value = "adjustment")]
     Adjustment,
 
+    [EnumMember(Value = "bilateral-agreement")]
+    BilateralAgreement,
+
     [EnumMember(Value = "other")]
     Other,
 }

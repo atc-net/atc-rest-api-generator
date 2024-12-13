@@ -28,9 +28,13 @@ public class GetSubscriptionsParameters
 
     public long? ChargePointId { get; set; }
 
+    public long? CustomerId { get; set; }
+
+    public SubscriptionCustomerType? CustomerType { get; set; }
+
     public long? SubscriptionPurchaseId { get; set; }
 
     /// <inheritdoc />
     public override string ToString()
-        => $"{nameof(Page)}: {Page}, {nameof(PerPage)}: {PerPage}, {nameof(PlanId)}: {PlanId}, {nameof(ChargePointId)}: {ChargePointId}, {nameof(SubscriptionPurchaseId)}: {SubscriptionPurchaseId}";
+        => $"{nameof(Page)}: {Page}, {nameof(PerPage)}: {PerPage}, {nameof(PlanId)}: {PlanId}, {nameof(ChargePointId)}: {ChargePointId}, {nameof(CustomerId)}: {CustomerId}, {nameof(CustomerType)}: ({CustomerType}), {nameof(SubscriptionPurchaseId)}: {SubscriptionPurchaseId}";
 }
