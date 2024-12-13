@@ -12,8 +12,14 @@ namespace Monta.ApiClient.Generated.Contracts.TariffRecurringPeriods;
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class TariffRecurringPeriodUpdateRequestDto
 {
+    /// <summary>
+    /// Capitalized name of the day of the week.
+    /// </summary>
     public DayOfWeek? DayOfWeek { get; set; }
 
+    /// <summary>
+    /// Capitalized name of the end day of the week.
+    /// </summary>
     public DayOfWeek? EndDayOfWeek { get; set; }
 
     /// <summary>

@@ -34,6 +34,9 @@ public class PublicChargePoint
     [Required]
     public string ChargePointOperatorName { get; set; }
 
+    /// <summary>
+    /// Location information for this charge point.
+    /// </summary>
     [Required]
     public Location Location { get; set; }
 

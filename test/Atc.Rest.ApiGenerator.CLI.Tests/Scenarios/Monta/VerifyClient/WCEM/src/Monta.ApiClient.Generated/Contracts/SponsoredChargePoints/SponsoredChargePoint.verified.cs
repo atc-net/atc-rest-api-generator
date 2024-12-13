@@ -22,6 +22,9 @@ public class SponsoredChargePoint
     /// </summary>
     public long TeamId { get; set; }
 
+    /// <summary>
+    /// The payout frequency for this sponsored charge point.
+    /// </summary>
     [Required]
     public SponsoredChargePointPayoutType Payout { get; set; }
 
@@ -30,8 +33,14 @@ public class SponsoredChargePoint
     /// </summary>
     public bool PayForSubscriptions { get; set; }
 
+    /// <summary>
+    /// Operator of this sponsored charge point.
+    /// </summary>
     public Operator? Operator { get; set; }
 
+    /// <summary>
+    /// The charge point being sponsored.
+    /// </summary>
     [Required]
     public SponsoredChargePointData ChargePoint { get; set; }
 

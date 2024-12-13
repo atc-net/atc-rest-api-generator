@@ -22,13 +22,11 @@ public class CreatedOrUpdateAddress
     /// <summary>
     /// Second line of address.
     /// </summary>
-    [MinLength(1)]
     public string? Address2 { get; set; }
 
     /// <summary>
     /// Third line of address.
     /// </summary>
-    [MinLength(1)]
     public string? Address3 { get; set; }
 
     /// <summary>

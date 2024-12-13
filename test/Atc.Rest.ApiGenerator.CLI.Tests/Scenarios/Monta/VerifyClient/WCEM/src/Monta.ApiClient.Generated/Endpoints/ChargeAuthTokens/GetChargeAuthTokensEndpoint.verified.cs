@@ -45,6 +45,8 @@ public class GetChargeAuthTokensEndpoint : IGetChargeAuthTokensEndpoint
         responseBuilder.AddSuccessResponse<MontaPageChargeAuthTokenDto>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.BadRequest);
         responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.Unauthorized);
+        responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.Forbidden);
+        responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.NotFound);
         return await responseBuilder.BuildResponseAsync(x => new GetChargeAuthTokensEndpointResult(x), cancellationToken);
     }
 }

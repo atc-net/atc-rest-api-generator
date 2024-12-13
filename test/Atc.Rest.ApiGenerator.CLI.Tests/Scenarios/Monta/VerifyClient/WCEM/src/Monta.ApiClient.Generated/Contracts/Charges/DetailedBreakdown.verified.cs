@@ -12,11 +12,17 @@ namespace Monta.ApiClient.Generated.Contracts.Charges;
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class DetailedBreakdown
 {
+    /// <summary>
+    /// The summary of the total prices for this breakdown.
+    /// </summary>
     [Required]
     public BreakdownSummary Summary { get; set; }
 
+    /// <summary>
+    /// The currency applicable for this breakdown (for all the components: prices, fees, adjustments).
+    /// </summary>
     [Required]
-    public Currency Currency { get; set; }
+    public Currency9 Currency { get; set; }
 
     /// <summary>
     /// The breakdown entries for this breakdown, currently organized on an hourly basis.

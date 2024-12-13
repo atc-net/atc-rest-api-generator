@@ -21,6 +21,8 @@ public interface ICreatePriceGroupEndpointResult : IEndpointResponse
 
     bool IsUnauthorized { get; }
 
+    bool IsForbidden { get; }
+
     bool IsNotFound { get; }
 
     string? CreatedContent { get; }
@@ -28,6 +30,8 @@ public interface ICreatePriceGroupEndpointResult : IEndpointResponse
     string? BadRequestContent { get; }
 
     string? UnauthorizedContent { get; }
+
+    string? ForbiddenContent { get; }
 
     string? NotFoundContent { get; }
 }

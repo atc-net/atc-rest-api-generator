@@ -23,6 +23,8 @@ public interface IDeleteTeamEndpointResult : IEndpointResponse
 
     bool IsForbidden { get; }
 
+    bool IsNotFound { get; }
+
     string? NoContentContent { get; }
 
     string? BadRequestContent { get; }
@@ -30,4 +32,6 @@ public interface IDeleteTeamEndpointResult : IEndpointResponse
     string? UnauthorizedContent { get; }
 
     string? ForbiddenContent { get; }
+
+    string? NotFoundContent { get; }
 }

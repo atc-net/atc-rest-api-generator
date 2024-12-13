@@ -22,6 +22,9 @@ public enum WebhookEntryPayloadEntityType
     [EnumMember(Value = "site")]
     Site,
 
+    [EnumMember(Value = "user")]
+    User,
+
     [EnumMember(Value = "team")]
     Team,
 
@@ -42,4 +45,10 @@ public enum WebhookEntryPayloadEntityType
 
     [EnumMember(Value = "plan")]
     Plan,
+
+    [EnumMember(Value = "charge-auth-token")]
+    ChargeAuthToken,
+
+    [EnumMember(Value = "report")]
+    Report,
 }

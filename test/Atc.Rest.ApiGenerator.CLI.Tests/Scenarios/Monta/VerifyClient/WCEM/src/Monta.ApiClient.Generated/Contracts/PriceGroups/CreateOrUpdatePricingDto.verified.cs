@@ -17,6 +17,9 @@ public class CreateOrUpdatePricingDto
     /// </summary>
     public string? Description { get; set; }
 
+    /// <summary>
+    /// Type of the pricing. `minute` is used for Minute fee. `min` is used for the master price.
+    /// </summary>
     [Required]
     public PricingType Type { get; set; }
 

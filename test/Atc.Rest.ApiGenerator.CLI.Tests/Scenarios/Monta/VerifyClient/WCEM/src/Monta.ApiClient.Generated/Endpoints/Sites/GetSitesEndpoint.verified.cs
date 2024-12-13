@@ -38,6 +38,8 @@ public class GetSitesEndpoint : IGetSitesEndpoint
         requestBuilder.WithQueryParameter("teamId", parameters.TeamId);
         requestBuilder.WithQueryParameter("partnerExternalId", parameters.PartnerExternalId);
         requestBuilder.WithQueryParameter("sortByLocation", parameters.SortByLocation);
+        requestBuilder.WithQueryParameter("operatorId", parameters.OperatorId);
+        requestBuilder.WithQueryParameter("includePublic", parameters.IncludePublic);
         requestBuilder.WithQueryParameter("includeDeleted", parameters.IncludeDeleted);
 
         using var requestMessage = requestBuilder.Build(HttpMethod.Get);
@@ -47,6 +49,8 @@ public class GetSitesEndpoint : IGetSitesEndpoint
         responseBuilder.AddSuccessResponse<MontaPageSiteDto>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.BadRequest);
         responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.Unauthorized);
+        responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.Forbidden);
+        responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.NotFound);
         return await responseBuilder.BuildResponseAsync(x => new GetSitesEndpointResult(x), cancellationToken);
     }
 }

@@ -18,13 +18,19 @@ public class CreateTeamDto
     public long? UserId { get; set; }
 
     /// <summary>
-    /// email of the user that owns the team, useful when the userId is not known.
+    /// Email of the user that owns the team, useful when the userId is not known.
     /// </summary>
     /// <remarks>
     /// Email validation being enforced.
     /// </remarks>
     [EmailAddress]
     public string? UserEmail { get; set; }
+
+    /// <summary>
+    /// Id of the operator this team should be assigned to&lt;br /&gt;*Note*: if not provided the team will be assigned to the default operator for the given consumer, if the default operator cannot be assigned the request will be rejected.
+    /// </summary>
+    [Range(0, int.MaxValue)]
+    public long? OperatorId { get; set; }
 
     /// <summary>
     /// Name of the team.
@@ -43,9 +49,15 @@ public class CreateTeamDto
     [EmailAddress]
     public string ContactEmail { get; set; }
 
+    /// <summary>
+    /// type of the team.
+    /// </summary>
     [Required]
     public TeamTypeCreatable Type { get; set; }
 
+    /// <summary>
+    /// Address of the team, Note: be sure to add always a valid address.
+    /// </summary>
     [Required]
     public CreatedOrUpdateAddress Address { get; set; }
 
@@ -80,5 +92,5 @@ public class CreateTeamDto
 
     /// <inheritdoc />
     public override string ToString()
-        => $"{nameof(UserId)}: {UserId}, {nameof(UserEmail)}: {UserEmail}, {nameof(Name)}: {Name}, {nameof(ContactEmail)}: {ContactEmail}, {nameof(Type)}: ({Type}), {nameof(Address)}: ({Address}), {nameof(CompanyName)}: {CompanyName}, {nameof(VatNumber)}: {VatNumber}, {nameof(FinanceEmail)}: {FinanceEmail}, {nameof(PartnerExternalId)}: {PartnerExternalId}, {nameof(PartnerCustomPayload)}.Count: {PartnerCustomPayload?.Count ?? 0}";
+        => $"{nameof(UserId)}: {UserId}, {nameof(UserEmail)}: {UserEmail}, {nameof(OperatorId)}: {OperatorId}, {nameof(Name)}: {Name}, {nameof(ContactEmail)}: {ContactEmail}, {nameof(Type)}: ({Type}), {nameof(Address)}: ({Address}), {nameof(CompanyName)}: {CompanyName}, {nameof(VatNumber)}: {VatNumber}, {nameof(FinanceEmail)}: {FinanceEmail}, {nameof(PartnerExternalId)}: {PartnerExternalId}, {nameof(PartnerCustomPayload)}.Count: {PartnerCustomPayload?.Count ?? 0}";
 }

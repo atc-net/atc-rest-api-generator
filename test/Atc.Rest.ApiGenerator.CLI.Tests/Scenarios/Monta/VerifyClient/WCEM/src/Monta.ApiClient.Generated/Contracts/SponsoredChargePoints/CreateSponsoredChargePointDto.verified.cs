@@ -36,6 +36,9 @@ public class CreateSponsoredChargePointDto
     [Range(0, int.MaxValue)]
     public long? PriceGroupId { get; set; }
 
+    /// <summary>
+    /// The payout schedule for this sponsored charge point.
+    /// </summary>
     [Required]
     public SponsoredChargePointPayoutType PayoutSchedule { get; set; }
 

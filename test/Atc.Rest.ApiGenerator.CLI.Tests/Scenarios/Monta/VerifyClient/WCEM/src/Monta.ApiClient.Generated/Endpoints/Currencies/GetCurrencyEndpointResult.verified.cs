@@ -34,8 +34,8 @@ public class GetCurrencyEndpointResult : EndpointResponse, IGetCurrencyEndpointR
     public bool IsNotFound
         => StatusCode == HttpStatusCode.NotFound;
 
-    public CurrencyDto4 OkContent
-        => IsOk && ContentObject is CurrencyDto4 result
+    public CurrencyDto OkContent
+        => IsOk && ContentObject is CurrencyDto result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsOk property first.");
 

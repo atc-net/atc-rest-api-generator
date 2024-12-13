@@ -23,6 +23,8 @@ public interface IPostInstallerJobEndpointResult : IEndpointResponse
 
     bool IsForbidden { get; }
 
+    bool IsNotFound { get; }
+
     string? CreatedContent { get; }
 
     string? BadRequestContent { get; }
@@ -30,4 +32,6 @@ public interface IPostInstallerJobEndpointResult : IEndpointResponse
     string? UnauthorizedContent { get; }
 
     string? ForbiddenContent { get; }
+
+    string? NotFoundContent { get; }
 }

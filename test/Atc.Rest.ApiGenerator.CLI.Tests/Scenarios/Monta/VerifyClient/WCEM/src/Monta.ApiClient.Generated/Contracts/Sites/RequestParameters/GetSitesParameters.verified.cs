@@ -24,28 +24,20 @@ public class GetSitesParameters
     /// </summary>
     public int PerPage { get; set; } = 10;
 
-    /// <summary>
-    /// The team id from which sites will be filtered by.
-    /// </summary>
-    public long TeamId { get; set; }
+    public long? TeamId { get; set; }
 
-    /// <summary>
-    /// Filter sites by partnerExternalId, to filter only resources without `partnerExternalId` *use* `partnerExternalId=""`.
-    /// </summary>
-    public string PartnerExternalId { get; set; }
+    public string? PartnerExternalId { get; set; }
 
-    /// <summary>
-    /// lat,long coordinates. If supplied, the Charge Points will be sorted in nearest first order relative
-    /// to this point. (Format: 55.7096,12.5856).
-    /// </summary>
-    public string SortByLocation { get; set; }
+    [RegularExpression("^(-?\\d*\\.\\d+|\\d+\\.\\d*)(,)(-?\\d*\\.\\d+|\\d+\\.\\d*)$")]
+    public string? SortByLocation { get; set; }
 
-    /// <summary>
-    /// Includes deleted resources in the response.
-    /// </summary>
+    public long? OperatorId { get; set; }
+
+    public bool IncludePublic { get; set; } = false;
+
     public bool IncludeDeleted { get; set; } = false;
 
     /// <inheritdoc />
     public override string ToString()
-        => $"{nameof(Page)}: {Page}, {nameof(PerPage)}: {PerPage}, {nameof(TeamId)}: {TeamId}, {nameof(PartnerExternalId)}: {PartnerExternalId}, {nameof(SortByLocation)}: {SortByLocation}, {nameof(IncludeDeleted)}: {IncludeDeleted}";
+        => $"{nameof(Page)}: {Page}, {nameof(PerPage)}: {PerPage}, {nameof(TeamId)}: {TeamId}, {nameof(PartnerExternalId)}: {PartnerExternalId}, {nameof(SortByLocation)}: {SortByLocation}, {nameof(OperatorId)}: {OperatorId}, {nameof(IncludePublic)}: {IncludePublic}, {nameof(IncludeDeleted)}: {IncludeDeleted}";
 }

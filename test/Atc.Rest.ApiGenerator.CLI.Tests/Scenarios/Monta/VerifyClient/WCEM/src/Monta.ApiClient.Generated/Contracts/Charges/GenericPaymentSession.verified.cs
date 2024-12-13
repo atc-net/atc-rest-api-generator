@@ -39,7 +39,12 @@ public class GenericPaymentSession
     /// </summary>
     public string? CardLast4 { get; set; }
 
+    /// <summary>
+    /// The amount of the payment session. Negative amounts will be rejected by the API.
+    /// </summary>
+    public double? Amount { get; set; }
+
     /// <inheritdoc />
     public override string ToString()
-        => $"{nameof(Provider)}: {Provider}, {nameof(ExternalId)}: {ExternalId}, {nameof(PartnerExternalId)}: {PartnerExternalId}, {nameof(CardBrand)}: {CardBrand}, {nameof(CardLast4)}: {CardLast4}";
+        => $"{nameof(Provider)}: {Provider}, {nameof(ExternalId)}: {ExternalId}, {nameof(PartnerExternalId)}: {PartnerExternalId}, {nameof(CardBrand)}: {CardBrand}, {nameof(CardLast4)}: {CardLast4}, {nameof(Amount)}: {Amount}";
 }

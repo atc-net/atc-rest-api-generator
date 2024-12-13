@@ -33,8 +33,6 @@ public class GetTeamsEndpoint : IGetTeamsEndpoint
         var client = factory.CreateClient(httpClientName);
 
         var requestBuilder = httpMessageFactory.FromTemplate("/api/v1/teams");
-        requestBuilder.WithQueryParameter("partnerExternalId", parameters.PartnerExternalId);
-        requestBuilder.WithQueryParameter("includeDeleted", parameters.IncludeDeleted);
         requestBuilder.WithQueryParameter("page", parameters.Page);
         requestBuilder.WithQueryParameter("perPage", parameters.PerPage);
 
@@ -45,6 +43,8 @@ public class GetTeamsEndpoint : IGetTeamsEndpoint
         responseBuilder.AddSuccessResponse<MontaPageTeamDto>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.BadRequest);
         responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.Unauthorized);
+        responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.Forbidden);
+        responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.NotFound);
         return await responseBuilder.BuildResponseAsync(x => new GetTeamsEndpointResult(x), cancellationToken);
     }
 }

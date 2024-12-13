@@ -25,9 +25,15 @@ public class CreateOrUpdatePriceGroupDto
     [Required]
     public string Name { get; set; }
 
+    /// <summary>
+    /// Type of the price group.
+    /// </summary>
     [Required]
     public PriceGroupType Type { get; set; }
 
+    /// <summary>
+    /// The master price.
+    /// </summary>
     [Required]
     public CreateOrUpdatePricingDto MasterPrice { get; set; }
 

@@ -18,9 +18,15 @@ public class ChargeBreakdown
     [Required]
     public long ChargeId { get; set; }
 
+    /// <summary>
+    /// The price breakdown, Includes information necessary to understand the composition of the final charge price.
+    /// </summary>
     [Required]
     public DetailedBreakdown PriceBreakdown { get; set; }
 
+    /// <summary>
+    /// The cost breakdown is similar to the price breakdown but focuses on the costs incurred for the given charge.
+    /// </summary>
     [Required]
     public DetailedBreakdown CostBreakdown { get; set; }
 

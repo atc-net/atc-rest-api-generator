@@ -27,9 +27,15 @@ public class PriceGroup
 
     public bool Default { get; set; }
 
+    /// <summary>
+    /// Type of the price group.
+    /// </summary>
     [Required]
     public PriceGroupType Type { get; set; }
 
+    /// <summary>
+    /// The master price.
+    /// </summary>
     [Required]
     public Pricing MasterPrice { get; set; }
 

@@ -35,6 +35,7 @@ public class GetWalletTransactionsEndpoint : IGetWalletTransactionsEndpoint
         var requestBuilder = httpMessageFactory.FromTemplate("/api/v1/wallet-transactions");
         requestBuilder.WithQueryParameter("page", parameters.Page);
         requestBuilder.WithQueryParameter("perPage", parameters.PerPage);
+        requestBuilder.WithQueryParameter("operatorId", parameters.OperatorId);
         requestBuilder.WithQueryParameter("teamId", parameters.TeamId);
         requestBuilder.WithQueryParameter("fromDate", parameters.FromDate);
         requestBuilder.WithQueryParameter("toDate", parameters.ToDate);
@@ -51,6 +52,8 @@ public class GetWalletTransactionsEndpoint : IGetWalletTransactionsEndpoint
         responseBuilder.AddSuccessResponse<MontaPageWalletTransactionDto>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.BadRequest);
         responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.Unauthorized);
+        responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.Forbidden);
+        responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.NotFound);
         return await responseBuilder.BuildResponseAsync(x => new GetWalletTransactionsEndpointResult(x), cancellationToken);
     }
 }

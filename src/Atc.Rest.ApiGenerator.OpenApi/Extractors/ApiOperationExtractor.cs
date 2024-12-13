@@ -5,7 +5,7 @@ namespace Atc.Rest.ApiGenerator.OpenApi.Extractors;
 
 public sealed class ApiOperationExtractor : IApiOperationExtractor
 {
-    public static readonly char[] ModelNameSeparators = { ' ', '-', '_', '.' };
+    public static readonly char[] ModelNameSeparators = [' ', '-', '_', '.'];
 
     public IList<ApiOperation> Extract(
         OpenApiDocument apiDocument)

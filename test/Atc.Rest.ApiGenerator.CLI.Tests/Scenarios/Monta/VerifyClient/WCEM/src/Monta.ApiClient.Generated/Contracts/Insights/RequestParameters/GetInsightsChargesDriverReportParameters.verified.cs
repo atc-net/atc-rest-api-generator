@@ -14,7 +14,18 @@ namespace Monta.ApiClient.Generated.Contracts.Insights;
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class GetInsightsChargesDriverReportParameters
 {
+    /// <summary>
+    /// page number to retrieve (starts with 0).
+    /// </summary>
+    public int Page { get; set; } = 0;
+
+    /// <summary>
+    /// number of items per page (between 1 and 100, default 10).
+    /// </summary>
+    public int PerPage { get; set; } = 10;
+
     [Required]
+    [Range(0, 2147483647)]
     public long TeamId { get; set; }
 
     public string? TeamMemberIds { get; set; }
@@ -25,9 +36,9 @@ public class GetInsightsChargesDriverReportParameters
     [Required]
     public DateTimeOffset ToDate { get; set; }
 
-    public DriverReportDatesFilteredBy? DatesFilteredBy { get; set; }
+    public DriverReportDatesFilteredBy? DatesFilteredBy { get; set; } = DriverReportDatesFilteredBy.ChargeTransaction;
 
     /// <inheritdoc />
     public override string ToString()
-        => $"{nameof(TeamId)}: {TeamId}, {nameof(TeamMemberIds)}: {TeamMemberIds}, {nameof(FromDate)}: ({FromDate}), {nameof(ToDate)}: ({ToDate}), {nameof(DatesFilteredBy)}: ({DatesFilteredBy})";
+        => $"{nameof(Page)}: {Page}, {nameof(PerPage)}: {PerPage}, {nameof(TeamId)}: {TeamId}, {nameof(TeamMemberIds)}: {TeamMemberIds}, {nameof(FromDate)}: ({FromDate}), {nameof(ToDate)}: ({ToDate}), {nameof(DatesFilteredBy)}: ({DatesFilteredBy})";
 }

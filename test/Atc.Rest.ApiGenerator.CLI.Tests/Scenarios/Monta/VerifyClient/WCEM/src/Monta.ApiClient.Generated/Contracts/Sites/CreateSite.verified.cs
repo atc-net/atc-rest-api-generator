@@ -25,9 +25,15 @@ public class CreateSite
     [MinLength(1)]
     public string Name { get; set; }
 
+    /// <summary>
+    /// Address of the site, Note: please ensure to always provide a valid address.
+    /// </summary>
     [Required]
     public CreatedOrUpdateAddress Address { get; set; }
 
+    /// <summary>
+    /// Visibility type of the site.
+    /// </summary>
     [Required]
     public VisibilityType1 Visibility { get; set; }
 

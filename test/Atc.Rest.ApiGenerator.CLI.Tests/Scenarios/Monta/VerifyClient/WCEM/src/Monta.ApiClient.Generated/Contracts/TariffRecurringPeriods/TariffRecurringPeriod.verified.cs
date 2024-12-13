@@ -22,9 +22,15 @@ public class TariffRecurringPeriod
     /// </summary>
     public long TariffId { get; set; }
 
+    /// <summary>
+    /// day of the period.
+    /// </summary>
     [Required]
     public DayOfWeek DayOfWeek { get; set; }
 
+    /// <summary>
+    /// End day of the period.
+    /// </summary>
     public DayOfWeek? EndDayOfWeek { get; set; }
 
     /// <summary>

@@ -17,11 +17,20 @@ public class Charge
     /// </summary>
     public long Id { get; set; }
 
+    /// <summary>
+    /// User that performed the charge.
+    /// </summary>
     [Required]
-    public PublicUser User { get; set; }
+    public PublicUser3 User { get; set; }
 
+    /// <summary>
+    /// Team that performed the charge, if part of the charge points' team.
+    /// </summary>
     public SimpleTeamMemberDto? TeamMember { get; set; }
 
+    /// <summary>
+    /// Type of the charge.
+    /// </summary>
     [Required]
     public ChargeType Type { get; set; }
 
@@ -30,6 +39,9 @@ public class Charge
     /// </summary>
     public long ChargePointId { get; set; }
 
+    /// <summary>
+    /// The public information about the charge point related to this charge.
+    /// </summary>
     [Required]
     public PublicChargePoint PublicChargePoint { get; set; }
 
@@ -106,6 +118,9 @@ public class Charge
     /// </summary>
     public DateTimeOffset? CompletedAt { get; set; }
 
+    /// <summary>
+    /// State of the charge.
+    /// </summary>
     [Required]
     public ChargeStateDto State { get; set; }
 
@@ -185,16 +200,34 @@ public class Charge
     /// </summary>
     public string? Note { get; set; }
 
-    public Currency? Currency { get; set; }
+    /// <summary>
+    /// Currency used for payment.
+    /// </summary>
+    public Currency11? Currency { get; set; }
 
+    /// <summary>
+    /// Team who paid for this charge.
+    /// </summary>
     public PayingTeam? PayingTeam { get; set; }
 
+    /// <summary>
+    /// Team who sponsored this charge.
+    /// </summary>
     public SponsorTeam? SponsorTeam { get; set; }
 
+    /// <summary>
+    /// Operator this of this charge.
+    /// </summary>
     public Operator? Operator { get; set; }
 
+    /// <summary>
+    /// The object used to authenticate a charge.
+    /// </summary>
     public ChargeAuthentication? ChargeAuth { get; set; }
 
+    /// <summary>
+    /// Information about the state of charge if available.
+    /// </summary>
     public StateOfCharge? Soc { get; set; }
 
     /// <summary>
@@ -202,6 +235,9 @@ public class Charge
     /// </summary>
     public double? SocLimit { get; set; }
 
+    /// <summary>
+    /// Generic payment session for this charge. If provided, the charge was paid with this payment session.
+    /// </summary>
     public GenericPaymentSession? GenericPaymentSession { get; set; }
 
     /// <summary>

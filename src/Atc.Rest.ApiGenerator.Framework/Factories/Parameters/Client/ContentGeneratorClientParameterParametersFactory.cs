@@ -37,6 +37,8 @@ public static class ContentGeneratorClientParameterParametersFactory
         {
             var useListForDataType = openApiParameter.Schema.IsTypeArray();
 
+            var parameterName = openApiParameter.Name.EnsureValidFormattedPropertyName();
+
             var dataType = useListForDataType
                 ? openApiParameter.Schema.Items.GetDataType()
                 : openApiParameter.Schema.GetDataType();
@@ -47,9 +49,19 @@ public static class ContentGeneratorClientParameterParametersFactory
 
             if (parameters.FirstOrDefault(x => x.Name == openApiParameter.Name) is null)
             {
+                var defaultValueInitializer = openApiParameter.Schema.GetDefaultValueAsString();
+
+                if (!string.IsNullOrEmpty(defaultValueInitializer) &&
+                    openApiParameter.ContainsEnumInSchemaOrProperties())
+                {
+                    defaultValueInitializer = dataType.Equals(parameterName, StringComparison.Ordinal)
+                        ? $"{ContentGeneratorConstants.Contracts}.{dataType}.{defaultValueInitializer.PascalCase(ApiOperationExtractor.ModelNameSeparators, removeSeparators: true)}"
+                        : $"{dataType}.{defaultValueInitializer.PascalCase(ApiOperationExtractor.ModelNameSeparators, removeSeparators: true)}";
+                }
+
                 parameters.Add(new ContentGeneratorClientParameterParametersProperty(
                     openApiParameter.Name,
-                    openApiParameter.Name.EnsureValidFormattedPropertyName(),
+                    parameterName,
                     openApiParameter.ExtractDocumentationTags(),
                     dataType,
                     isSimpleType,
@@ -57,7 +69,7 @@ public static class ContentGeneratorClientParameterParametersFactory
                     GetIsNullable(openApiParameter, useListForDataType),
                     openApiParameter.Required,
                     GetAdditionalValidationAttributes(openApiParameter),
-                    openApiParameter.Schema.GetDefaultValueAsString()));
+                    defaultValueInitializer));
             }
         }
     }
@@ -94,7 +106,7 @@ public static class ContentGeneratorClientParameterParametersFactory
         var requestBodyType = "string?";
         if (requestSchema.Reference is not null)
         {
-            requestBodyType = requestSchema.Reference.Id.EnsureFirstCharacterToUpper();
+            requestBodyType = requestSchema.Reference.Id.PascalCase(ApiOperationExtractor.ModelNameSeparators, removeSeparators: true);
         }
         else if (isFormatTypeOfBinary)
         {
@@ -106,7 +118,7 @@ public static class ContentGeneratorClientParameterParametersFactory
         }
         else if (requestSchema.Items is not null)
         {
-            requestBodyType = requestSchema.Items.Reference.Id.EnsureFirstCharacterToUpper();
+            requestBodyType = requestSchema.Items.Reference.Id.PascalCase(ApiOperationExtractor.ModelNameSeparators, removeSeparators: true);
         }
 
         parameters.Add(new ContentGeneratorClientParameterParametersProperty(

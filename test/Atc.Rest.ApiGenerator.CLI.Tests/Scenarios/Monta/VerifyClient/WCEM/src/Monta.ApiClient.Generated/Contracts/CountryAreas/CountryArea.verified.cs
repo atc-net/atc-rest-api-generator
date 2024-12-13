@@ -35,6 +35,9 @@ public class CountryArea
     /// </summary>
     public string? ExternalId { get; set; }
 
+    /// <summary>
+    /// The level of depth for this country area.
+    /// </summary>
     [Required]
     public CountryAreaLevel Level { get; set; }
 

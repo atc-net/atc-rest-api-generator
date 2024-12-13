@@ -18,4 +18,7 @@ public enum ElectricCurrentType
 
     [EnumMember(Value = "dc")]
     Dc,
+
+    [EnumMember(Value = "other")]
+    Other,
 }

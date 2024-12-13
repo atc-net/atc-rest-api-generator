@@ -38,6 +38,9 @@ public class PriceGroupTag
     /// </summary>
     public List<object>? PartnerCustomPayload { get; set; } = new List<object>();
 
+    /// <summary>
+    /// The operator to which this resource belongs to.
+    /// </summary>
     public Operator? Operator { get; set; }
 
     /// <summary>

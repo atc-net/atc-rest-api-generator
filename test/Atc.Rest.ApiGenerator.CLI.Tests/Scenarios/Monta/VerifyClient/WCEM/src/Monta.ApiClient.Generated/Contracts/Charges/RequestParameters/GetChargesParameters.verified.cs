@@ -26,6 +26,8 @@ public class GetChargesParameters
 
     public long? TeamId { get; set; }
 
+    public long? OperatorId { get; set; }
+
     public long? ChargePointId { get; set; }
 
     public long? SiteId { get; set; }
@@ -42,9 +44,9 @@ public class GetChargesParameters
 
     public string? PartnerExternalId { get; set; }
 
-    public OperatorRole? OperatorRole { get; set; }
+    public OperatorRole? OperatorRole { get; set; } = Contracts.OperatorRole.Owner;
 
     /// <inheritdoc />
     public override string ToString()
-        => $"{nameof(Page)}: {Page}, {nameof(PerPage)}: {PerPage}, {nameof(TeamId)}: {TeamId}, {nameof(ChargePointId)}: {ChargePointId}, {nameof(SiteId)}: {SiteId}, {nameof(State)}: {State}, {nameof(FromDate)}: ({FromDate}), {nameof(ToDate)}: ({ToDate}), {nameof(ChargeAuthType)}: ({ChargeAuthType}), {nameof(ChargeAuthId)}: {ChargeAuthId}, {nameof(PartnerExternalId)}: {PartnerExternalId}, {nameof(OperatorRole)}: ({OperatorRole})";
+        => $"{nameof(Page)}: {Page}, {nameof(PerPage)}: {PerPage}, {nameof(TeamId)}: {TeamId}, {nameof(OperatorId)}: {OperatorId}, {nameof(ChargePointId)}: {ChargePointId}, {nameof(SiteId)}: {SiteId}, {nameof(State)}: {State}, {nameof(FromDate)}: ({FromDate}), {nameof(ToDate)}: ({ToDate}), {nameof(ChargeAuthType)}: ({ChargeAuthType}), {nameof(ChargeAuthId)}: {ChargeAuthId}, {nameof(PartnerExternalId)}: {PartnerExternalId}, {nameof(OperatorRole)}: ({OperatorRole})";
 }

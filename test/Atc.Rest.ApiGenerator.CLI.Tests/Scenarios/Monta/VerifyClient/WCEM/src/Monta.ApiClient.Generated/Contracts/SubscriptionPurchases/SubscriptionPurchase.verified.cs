@@ -22,6 +22,9 @@ public class SubscriptionPurchase
     /// </summary>
     public string? Note { get; set; }
 
+    /// <summary>
+    /// The type of this subscription purchase.
+    /// </summary>
     [Required]
     public SubscriptionPurchaseTypeDto Type { get; set; }
 
@@ -50,9 +53,15 @@ public class SubscriptionPurchase
     /// </summary>
     public double TotalAmount { get; set; }
 
+    /// <summary>
+    /// The currency for this purchase.
+    /// </summary>
     [Required]
-    public Currency Currency { get; set; }
+    public Currency3 Currency { get; set; }
 
+    /// <summary>
+    /// The subscription this purchase refers to.
+    /// </summary>
     [Required]
     public Subscription Subscription { get; set; }
 

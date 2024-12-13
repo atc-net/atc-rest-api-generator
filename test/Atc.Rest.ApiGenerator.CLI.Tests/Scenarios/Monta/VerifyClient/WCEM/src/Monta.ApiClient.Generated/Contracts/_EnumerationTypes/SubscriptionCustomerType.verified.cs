@@ -10,18 +10,10 @@ namespace Monta.ApiClient.Generated.Contracts;
 /// Enumeration: SubscriptionCustomerType.
 /// </summary>
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
-[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum SubscriptionCustomerType
 {
-    [EnumMember(Value = "team")]
-    Team,
-
-    [EnumMember(Value = "charge-point")]
-    ChargePoint,
-
-    [EnumMember(Value = "operator")]
-    Operator,
-
-    [EnumMember(Value = "other")]
-    Other,
+    TEAM,
+    CHARGE_POINT,
+    OPERATOR,
+    OTHER,
 }

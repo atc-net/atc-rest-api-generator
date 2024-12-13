@@ -36,6 +36,7 @@ public class GetChargesEndpoint : IGetChargesEndpoint
         requestBuilder.WithQueryParameter("page", parameters.Page);
         requestBuilder.WithQueryParameter("perPage", parameters.PerPage);
         requestBuilder.WithQueryParameter("teamId", parameters.TeamId);
+        requestBuilder.WithQueryParameter("operatorId", parameters.OperatorId);
         requestBuilder.WithQueryParameter("chargePointId", parameters.ChargePointId);
         requestBuilder.WithQueryParameter("siteId", parameters.SiteId);
         requestBuilder.WithQueryParameter("state", parameters.State);
@@ -53,6 +54,8 @@ public class GetChargesEndpoint : IGetChargesEndpoint
         responseBuilder.AddSuccessResponse<MontaPageChargeDto>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.BadRequest);
         responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.Unauthorized);
+        responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.Forbidden);
+        responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.NotFound);
         return await responseBuilder.BuildResponseAsync(x => new GetChargesEndpointResult(x), cancellationToken);
     }
 }

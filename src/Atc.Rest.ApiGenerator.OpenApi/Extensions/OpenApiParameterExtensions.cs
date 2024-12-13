@@ -2,7 +2,8 @@ namespace Atc.Rest.ApiGenerator.OpenApi.Extensions;
 
 public static class OpenApiParameterExtensions
 {
-    public static bool IsSchemaEnumAndUseJsonString(this OpenApiParameter apiParameter)
+    public static bool IsSchemaEnumAndUsesJsonString(
+        this OpenApiParameter apiParameter)
     {
         if (apiParameter.Schema.IsSchemaEnum())
         {
@@ -23,6 +24,13 @@ public static class OpenApiParameterExtensions
 
         return false;
     }
+
+    public static bool ContainsEnumInSchemaOrProperties(
+        this OpenApiParameter apiParameter)
+        => apiParameter.Schema.IsSchemaEnumOrPropertyEnum() ||
+           apiParameter.Schema.AllOf.Any(allOfSchema => allOfSchema.IsSchemaEnumOrPropertyEnum()) ||
+           apiParameter.Schema.OneOf.Any(oneOfSchema => oneOfSchema.IsSchemaEnumOrPropertyEnum()) ||
+           apiParameter.Schema.AnyOf.Any(anyOfSchema => anyOfSchema.IsSchemaEnumOrPropertyEnum());
 
     public static CodeDocumentationTags ExtractDocumentationTags(
         this OpenApiParameter apiParameter)

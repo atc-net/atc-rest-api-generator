@@ -24,7 +24,13 @@ public class Consumer
     public long OperatorId { get; set; }
 
     /// <summary>
-    /// List of team ids that are unlocked for API operations. If empty, all teams of this operator are unlocked.
+    /// List of operator ids that are authorized for API operations. If empty, all child operators of this operator are authorized.
+    /// </summary>
+    [Required]
+    public List<long> OperatorIds { get; set; }
+
+    /// <summary>
+    /// List of team ids that are authorized for API operations. If empty, all teams of this operator are authorized.
     /// </summary>
     [Required]
     public List<long> TeamIds { get; set; }
@@ -64,5 +70,5 @@ public class Consumer
 
     /// <inheritdoc />
     public override string ToString()
-        => $"{nameof(Name)}: {Name}, {nameof(OperatorId)}: {OperatorId}, {nameof(TeamIds)}.Count: {TeamIds?.Count ?? 0}, {nameof(ClientId)}: {ClientId}, {nameof(RateLimit)}: {RateLimit}, {nameof(RateLimitIntervalInSeconds)}: {RateLimitIntervalInSeconds}, {nameof(Scopes)}.Count: {Scopes?.Count ?? 0}, {nameof(CreatedAt)}: ({CreatedAt}), {nameof(UpdatedAt)}: ({UpdatedAt})";
+        => $"{nameof(Name)}: {Name}, {nameof(OperatorId)}: {OperatorId}, {nameof(OperatorIds)}.Count: {OperatorIds?.Count ?? 0}, {nameof(TeamIds)}.Count: {TeamIds?.Count ?? 0}, {nameof(ClientId)}: {ClientId}, {nameof(RateLimit)}: {RateLimit}, {nameof(RateLimitIntervalInSeconds)}: {RateLimitIntervalInSeconds}, {nameof(Scopes)}.Count: {Scopes?.Count ?? 0}, {nameof(CreatedAt)}: ({CreatedAt}), {nameof(UpdatedAt)}: ({UpdatedAt})";
 }

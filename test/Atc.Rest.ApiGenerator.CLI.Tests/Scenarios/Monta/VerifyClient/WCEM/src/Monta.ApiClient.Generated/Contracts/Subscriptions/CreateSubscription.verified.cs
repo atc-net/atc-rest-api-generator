@@ -18,14 +18,17 @@ public class CreateSubscription
     [Range(0, int.MaxValue)]
     public long PlanId { get; set; }
 
-    [Required]
-    public SubscriptionCustomerType CustomerType { get; set; }
-
     /// <summary>
-    /// Id of the customer the subscription is created for, e.g. a chargePointId.
+    /// Id of the customer the subscription is created for, e.g. team or charge-point id.
     /// </summary>
     [Range(0, int.MaxValue)]
     public long CustomerId { get; set; }
+
+    /// <summary>
+    /// Type of the customer that the subscription is created for. e.g. team or charge-point.
+    /// </summary>
+    [Required]
+    public SubscriptionCustomerType CustomerType { get; set; }
 
     /// <summary>
     /// Allows to modify the absolute discount on a subscription if provided.
@@ -41,9 +44,18 @@ public class CreateSubscription
     /// </summary>
     public double? DiscountPercentage { get; set; }
 
+    /// <summary>
+    /// Configure the subscription, based on the plans serviceType.Currently you can configure tax-refund subscriptions only.
+    /// </summary>
     public SubscriptionServiceConfig? ServiceConfig { get; set; }
+
+    /// <summary>
+    /// The user that should be assigned as the purchaser of the subscription. If not provided, the subscription will be assigned to the default user for this consumer.
+    /// </summary>
+    [Range(0, int.MaxValue)]
+    public long? UserId { get; set; }
 
     /// <inheritdoc />
     public override string ToString()
-        => $"{nameof(PlanId)}: {PlanId}, {nameof(CustomerType)}: ({CustomerType}), {nameof(CustomerId)}: {CustomerId}, {nameof(DiscountAbsolute)}: {DiscountAbsolute}, {nameof(DiscountPercentage)}: {DiscountPercentage}, {nameof(ServiceConfig)}: ({ServiceConfig})";
+        => $"{nameof(PlanId)}: {PlanId}, {nameof(CustomerId)}: {CustomerId}, {nameof(CustomerType)}: ({CustomerType}), {nameof(DiscountAbsolute)}: {DiscountAbsolute}, {nameof(DiscountPercentage)}: {DiscountPercentage}, {nameof(ServiceConfig)}: ({ServiceConfig}), {nameof(UserId)}: {UserId}";
 }

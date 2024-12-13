@@ -22,8 +22,11 @@ public class PlanPrice
     /// </summary>
     public double Price { get; set; }
 
+    /// <summary>
+    /// Currency for `price`.
+    /// </summary>
     [Required]
-    public Currency Currency { get; set; }
+    public Currency1 Currency { get; set; }
 
     /// <inheritdoc />
     public override string ToString()

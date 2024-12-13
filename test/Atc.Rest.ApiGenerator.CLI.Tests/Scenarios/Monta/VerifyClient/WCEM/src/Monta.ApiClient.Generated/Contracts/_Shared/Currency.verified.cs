@@ -13,23 +13,37 @@ namespace Monta.ApiClient.Generated.Contracts;
 public class Currency
 {
     /// <summary>
-    /// Currency identifier, e.g. dkk.
+    /// id of the currency.
+    /// </summary>
+    [Range(0, int.MaxValue)]
+    public long? Id { get; set; }
+
+    /// <summary>
+    /// Whether the currency is master or not, master meaning the default currency.
+    /// </summary>
+    public bool Master { get; set; }
+
+    /// <summary>
+    /// 3 characters identifier.
     /// </summary>
     [Required]
+    [MinLength(3)]
+    [MaxLength(3)]
     public string Identifier { get; set; }
 
     /// <summary>
-    /// Readable name of currency.
+    /// Name of the currency.
     /// </summary>
-    [Required]
     public string Name { get; set; }
 
     /// <summary>
-    /// Number of decimals for this currency.
+    /// How many decimals the currency has.
     /// </summary>
+    [Required]
+    [Range(0, int.MaxValue)]
     public int Decimals { get; set; }
 
     /// <inheritdoc />
     public override string ToString()
-        => $"{nameof(Identifier)}: {Identifier}, {nameof(Name)}: {Name}, {nameof(Decimals)}: {Decimals}";
+        => $"{nameof(Id)}: {Id}, {nameof(Master)}: {Master}, {nameof(Identifier)}: {Identifier}, {nameof(Name)}: {Name}, {nameof(Decimals)}: {Decimals}";
 }

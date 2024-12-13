@@ -28,6 +28,12 @@ public class GetSponsoredChargePointsEndpointResult : EndpointResponse, IGetSpon
     public bool IsUnauthorized
         => StatusCode == HttpStatusCode.Unauthorized;
 
+    public bool IsForbidden
+        => StatusCode == HttpStatusCode.Forbidden;
+
+    public bool IsNotFound
+        => StatusCode == HttpStatusCode.NotFound;
+
     public MontaPageSponsoredChargePointDto OkContent
         => IsOk && ContentObject is MontaPageSponsoredChargePointDto result
             ? result
@@ -42,4 +48,14 @@ public class GetSponsoredChargePointsEndpointResult : EndpointResponse, IGetSpon
         => IsUnauthorized && ContentObject is string result
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsUnauthorized property first.");
+
+    public string? ForbiddenContent
+        => IsForbidden && ContentObject is string result
+            ? result
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsForbidden property first.");
+
+    public string? NotFoundContent
+        => IsNotFound && ContentObject is string result
+            ? result
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsNotFound property first.");
 }

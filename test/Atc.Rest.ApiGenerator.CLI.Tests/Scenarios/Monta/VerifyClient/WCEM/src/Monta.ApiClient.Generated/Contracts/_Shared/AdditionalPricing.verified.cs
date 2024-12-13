@@ -12,13 +12,24 @@ namespace Monta.ApiClient.Generated.Contracts;
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class AdditionalPricing
 {
+    /// <summary>
+    /// Type of the additional pricing. `absolute` means the value is a price.
+    /// </summary>
     [Required]
     public AdditionalPricingType Type { get; set; }
 
+    /// <summary>
+    /// The value of this additional pricing. Both `absolute` and `percentage` values here are represented as a money object.
+    /// </summary>
     [Required]
     public Money Value { get; set; }
 
+    /// <summary>
+    /// A title for this additional pricing.
+    /// </summary>
+    public string? Title { get; set; }
+
     /// <inheritdoc />
     public override string ToString()
-        => $"{nameof(Type)}: ({Type}), {nameof(Value)}: ({Value})";
+        => $"{nameof(Type)}: ({Type}), {nameof(Value)}: ({Value}), {nameof(Title)}: {Title}";
 }

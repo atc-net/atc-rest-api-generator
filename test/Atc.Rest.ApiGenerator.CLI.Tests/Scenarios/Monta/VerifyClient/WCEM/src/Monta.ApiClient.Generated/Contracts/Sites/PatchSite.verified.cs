@@ -17,8 +17,14 @@ public class PatchSite
     /// </summary>
     public string? Name { get; set; }
 
+    /// <summary>
+    /// Address of the site, Note: please ensure to always provide a valid address.
+    /// </summary>
     public CreatedOrUpdateAddress? Address { get; set; }
 
+    /// <summary>
+    /// Visibility type of the site.
+    /// </summary>
     public VisibilityType3? Visibility { get; set; }
 
     /// <summary>

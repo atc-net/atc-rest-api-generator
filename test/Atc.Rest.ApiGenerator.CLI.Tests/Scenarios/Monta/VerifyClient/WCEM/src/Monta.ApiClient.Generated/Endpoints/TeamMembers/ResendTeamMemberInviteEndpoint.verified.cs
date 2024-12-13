@@ -39,9 +39,11 @@ public class ResendTeamMemberInviteEndpoint : IResendTeamMemberInviteEndpoint
         using var response = await client.SendAsync(requestMessage, cancellationToken);
 
         var responseBuilder = httpMessageFactory.FromResponse(response);
-        responseBuilder.AddSuccessResponse<TeamMemberDto>(HttpStatusCode.OK);
+        responseBuilder.AddSuccessResponse<TeamMember>(HttpStatusCode.OK);
         responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.BadRequest);
         responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.Unauthorized);
+        responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.Forbidden);
+        responseBuilder.AddErrorResponse<ErrorResponse>(HttpStatusCode.NotFound);
         return await responseBuilder.BuildResponseAsync(x => new ResendTeamMemberInviteEndpointResult(x), cancellationToken);
     }
 }

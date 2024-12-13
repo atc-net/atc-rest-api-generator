@@ -21,9 +21,17 @@ public interface IResendTeamMemberInviteEndpointResult : IEndpointResponse
 
     bool IsUnauthorized { get; }
 
-    TeamMemberDto OkContent { get; }
+    bool IsForbidden { get; }
+
+    bool IsNotFound { get; }
+
+    TeamMember OkContent { get; }
 
     string? BadRequestContent { get; }
 
     string? UnauthorizedContent { get; }
+
+    string? ForbiddenContent { get; }
+
+    string? NotFoundContent { get; }
 }

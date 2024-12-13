@@ -12,6 +12,9 @@ namespace Monta.ApiClient.Generated.Contracts.Webhooks;
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class WebhookEntryPayload
 {
+    /// <summary>
+    /// Type of the entity.
+    /// </summary>
     [Required]
     public WebhookEntryPayloadEntityType EntityType { get; set; }
 
@@ -21,8 +24,16 @@ public class WebhookEntryPayload
     [Required]
     public string EntityId { get; set; }
 
+    /// <summary>
+    /// Type of the event.
+    /// </summary>
     [Required]
     public KafkaEventType EventType { get; set; }
+
+    /// <summary>
+    /// The timestamp indicating when the event was generated.
+    /// </summary>
+    public DateTimeOffset? EventTime { get; set; }
 
     /// <summary>
     /// payload of this entity, e.g. a full Charge object.
@@ -31,5 +42,5 @@ public class WebhookEntryPayload
 
     /// <inheritdoc />
     public override string ToString()
-        => $"{nameof(EntityType)}: ({EntityType}), {nameof(EntityId)}: {EntityId}, {nameof(EventType)}: ({EventType}), {nameof(Payload)}.Count: {Payload?.Count ?? 0}";
+        => $"{nameof(EntityType)}: ({EntityType}), {nameof(EntityId)}: {EntityId}, {nameof(EventType)}: ({EventType}), {nameof(EventTime)}: ({EventTime}), {nameof(Payload)}.Count: {Payload?.Count ?? 0}";
 }

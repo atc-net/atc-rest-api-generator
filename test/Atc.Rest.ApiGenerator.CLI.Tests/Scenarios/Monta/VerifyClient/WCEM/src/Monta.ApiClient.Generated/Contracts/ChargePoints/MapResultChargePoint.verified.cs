@@ -53,6 +53,9 @@ public class MapResultChargePoint
     /// </summary>
     public string? State { get; set; }
 
+    /// <summary>
+    /// Location information for this charge point.
+    /// </summary>
     [Required]
     public Location Location { get; set; }
 
@@ -62,6 +65,9 @@ public class MapResultChargePoint
     [Required]
     public List<ChargePointConnector> Connectors { get; set; }
 
+    /// <summary>
+    /// Deeplinks to open charge screen in Monta app or web.
+    /// </summary>
     [Required]
     public ChargePointDeeplinks Deeplinks { get; set; }
 

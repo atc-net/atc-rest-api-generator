@@ -13,7 +13,7 @@ namespace Monta.ApiClient.Generated.Contracts.TeamMembers;
 public class MontaPageTeamMemberDto
 {
     [Required]
-    public List<TeamMemberDto> Data { get; set; }
+    public List<TeamMember> Data { get; set; }
 
     [Required]
     public MontaPageMeta Meta { get; set; }

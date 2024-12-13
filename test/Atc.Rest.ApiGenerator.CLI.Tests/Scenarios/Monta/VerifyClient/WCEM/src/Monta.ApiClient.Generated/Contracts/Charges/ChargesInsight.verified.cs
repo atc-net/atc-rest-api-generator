@@ -12,6 +12,9 @@ namespace Monta.ApiClient.Generated.Contracts.Charges;
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
 public class ChargesInsight
 {
+    /// <summary>
+    /// The type of charge insight.
+    /// </summary>
     [Required]
     public ChargesInsightTypeDto Type { get; set; }
 
@@ -33,11 +36,17 @@ public class ChargesInsight
     [Required]
     public string Title { get; set; }
 
+    /// <summary>
+    /// The operator to which this charge insight belongs to.
+    /// </summary>
     [Required]
     public Operator Operator { get; set; }
 
+    /// <summary>
+    /// The currency applicable for this charge insight.
+    /// </summary>
     [Required]
-    public Currency Currency { get; set; }
+    public Currency5 Currency { get; set; }
 
     /// <summary>
     /// The compilation of insights entries composing this charge insight.

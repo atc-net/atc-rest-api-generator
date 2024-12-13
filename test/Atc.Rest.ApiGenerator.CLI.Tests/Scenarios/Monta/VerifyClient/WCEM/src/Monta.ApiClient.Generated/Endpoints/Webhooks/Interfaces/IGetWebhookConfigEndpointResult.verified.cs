@@ -21,6 +21,8 @@ public interface IGetWebhookConfigEndpointResult : IEndpointResponse
 
     bool IsUnauthorized { get; }
 
+    bool IsForbidden { get; }
+
     bool IsNotFound { get; }
 
     WebhookConfig OkContent { get; }
@@ -28,6 +30,8 @@ public interface IGetWebhookConfigEndpointResult : IEndpointResponse
     string? BadRequestContent { get; }
 
     string? UnauthorizedContent { get; }
+
+    string? ForbiddenContent { get; }
 
     string? NotFoundContent { get; }
 }

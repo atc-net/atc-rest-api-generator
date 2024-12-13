@@ -29,8 +29,14 @@ public class PatchChargePoint
     /// </summary>
     public double? MaxKw { get; set; }
 
+    /// <summary>
+    /// Visibility type of the charge point.
+    /// </summary>
     public VisibilityType? Visibility { get; set; }
 
+    /// <summary>
+    /// Electric current type the charge point support.
+    /// </summary>
     [Required]
     public ElectricCurrentType? Type { get; set; }
 
@@ -62,7 +68,12 @@ public class PatchChargePoint
     public string? PartnerExternalId { get; set; }
 
     /// <summary>
-    /// Custom JSON payload for this entity, managed by you.
+    /// Custom JSON payload managed by you.
+    /// &lt;br /&gt;To override default values or provide additional metadata.
+    /// Can include keys like `custom_roaming_name` and `custom_roaming_evse_id` for roaming charge points,
+    /// if so the fields must follow the correct format.
+    /// The payload is limited to 1000 characters overall.
+    /// .
     /// </summary>
     public List<object>? PartnerCustomPayload { get; set; } = new List<object>();
 
