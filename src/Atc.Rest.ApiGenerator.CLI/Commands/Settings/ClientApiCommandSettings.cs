@@ -6,9 +6,13 @@ public class ClientApiCommandSettings : BaseGenerateCommandSettings
     [Description("Path to generated project (directory)")]
     public string OutputPath { get; init; } = string.Empty;
 
-    [CommandOption($"{ArgumentCommandConstants.LongClientFolderName} [CLIENTFOLDERNAME]")]
-    [Description("If client folder is provided, generated files will be placed here instead of the project root.")]
-    public FlagValue<string>? ClientFolderName { get; init; }
+    [CommandOption($"{ArgumentCommandConstants.LongContractsLocation} [CONTRACTSLOCATION]")]
+    [Description($"If contracts-localtion is provided, generated files will be placed here instead of the {ContentGeneratorConstants.Contracts} folder.")]
+    public FlagValue<string>? ContractsLocation { get; init; }
+
+    [CommandOption($"{ArgumentCommandConstants.LongEndpointsLocation} [ENDPOINTSLOCATION]")]
+    [Description($"If endpoints-localtion is provided, generated files will be placed here instead of the {ContentGeneratorConstants.Endpoints} folder.")]
+    public FlagValue<string>? EndpointsLocation { get; init; }
 
     [CommandOption(ArgumentCommandConstants.LongExcludeEndpointGeneration)]
     [Description("Exclude endpoint generation")]

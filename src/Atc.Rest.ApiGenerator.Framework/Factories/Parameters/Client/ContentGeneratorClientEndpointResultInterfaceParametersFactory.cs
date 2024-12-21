@@ -6,6 +6,7 @@ public static class ContentGeneratorClientEndpointResultInterfaceParametersFacto
         string projectName,
         string apiGroupName,
         string @namespace,
+        string contractsLocation,
         OpenApiPathItem openApiPath,
         OpenApiOperation openApiOperation)
     {
@@ -18,7 +19,7 @@ public static class ContentGeneratorClientEndpointResultInterfaceParametersFacto
         AppendParameters(parameters, openApiOperation.Parameters);
         AppendParametersFromBody(parameters, openApiOperation.RequestBody);
 
-        var modelNamespace = $"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
+        var modelNamespace = NamespaceFactory.CreateFull(projectName, contractsLocation, apiGroupName);
         var operationName = openApiOperation.GetOperationName();
         var controllerAuthorization = openApiPath.ExtractApiPathAuthorization();
         var endpointAuthorization = openApiOperation.ExtractApiOperationAuthorization(openApiPath);

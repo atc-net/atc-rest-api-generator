@@ -144,8 +144,7 @@ public static class ApiOptionsHelper
 
             if (serverCommandSettings.UseProblemDetailsAsDefaultResponseBody)
             {
-                apiOptions.Generator.Response.UseProblemDetailsAsDefaultBody =
-                    serverCommandSettings.UseProblemDetailsAsDefaultResponseBody;
+                apiOptions.Generator.Response.UseProblemDetailsAsDefaultBody = serverCommandSettings.UseProblemDetailsAsDefaultResponseBody;
             }
 
             if (serverCommandSettings.ProjectPrefixName is not null)
@@ -186,10 +185,16 @@ public static class ApiOptionsHelper
 
                 apiOptions.Generator.Client ??= new ApiOptionsGeneratorClient();
 
-                if (clientApiCommandSettings.ClientFolderName is not null &&
-                    clientApiCommandSettings.ClientFolderName.IsSet)
+                if (clientApiCommandSettings.ContractsLocation is not null &&
+                    clientApiCommandSettings.ContractsLocation.IsSet)
                 {
-                    apiOptions.Generator.Client.FolderName = clientApiCommandSettings.ClientFolderName.Value;
+                    apiOptions.Generator.Client.ContractsLocation = clientApiCommandSettings.ContractsLocation.Value;
+                }
+
+                if (clientApiCommandSettings.EndpointsLocation is not null &&
+                    clientApiCommandSettings.EndpointsLocation.IsSet)
+                {
+                    apiOptions.Generator.Client.EndpointsLocation = clientApiCommandSettings.EndpointsLocation.Value;
                 }
 
                 if (clientApiCommandSettings.HttpClientName is not null &&
@@ -209,13 +214,6 @@ public static class ApiOptionsHelper
             }
         }
 
-        if (apiOptions.Generator.ProjectSuffixName.Contains(' ', StringComparison.Ordinal) ||
-            apiOptions.Generator.ProjectSuffixName.Contains('-', StringComparison.Ordinal))
-        {
-            apiOptions.Generator.ProjectSuffixName = apiOptions.Generator.ProjectSuffixName
-                .Trim()
-                .Replace(' ', '.')
-                .Replace('-', '.');
-        }
+        apiOptions.Generator.ProjectSuffixName = apiOptions.Generator.ProjectSuffixName.EnsureNamespaceFormat();
     }
 }

@@ -24,6 +24,7 @@ global using Atc.Rest.ApiGenerator.Contracts.Extensions;
 global using Atc.Rest.ApiGenerator.Contracts.Models;
 global using Atc.Rest.ApiGenerator.Framework.ContentGenerators;
 global using Atc.Rest.ApiGenerator.Framework.ContentGeneratorsParameters.Server;
+global using Atc.Rest.ApiGenerator.Framework.Extensions;
 global using Atc.Rest.ApiGenerator.Framework.Factories.Parameters.ServerClient;
 global using Atc.Rest.ApiGenerator.Framework.Factories.Server;
 global using Atc.Rest.ApiGenerator.Framework.Helpers;

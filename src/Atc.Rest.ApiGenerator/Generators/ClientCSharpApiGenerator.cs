@@ -39,9 +39,14 @@ public class ClientCSharpApiGenerator
         {
             clientCSharpApiGenerator.HttpClientName = projectOptions.ApiOptions.Generator.Client.HttpClientName;
 
-            if (!string.IsNullOrEmpty(projectOptions.ApiOptions.Generator.Client.FolderName))
+            if (!string.IsNullOrEmpty(projectOptions.ApiOptions.Generator.Client.ContractsLocation))
             {
-                clientCSharpApiGenerator.ClientFolderName = projectOptions.ApiOptions.Generator.Client.FolderName;
+                clientCSharpApiGenerator.ContractsLocation = projectOptions.ApiOptions.Generator.Client.ContractsLocation;
+            }
+
+            if (!string.IsNullOrEmpty(projectOptions.ApiOptions.Generator.Client.EndpointsLocation))
+            {
+                clientCSharpApiGenerator.EndpointsLocation = projectOptions.ApiOptions.Generator.Client.EndpointsLocation;
             }
         }
     }

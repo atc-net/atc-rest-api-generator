@@ -11,7 +11,9 @@ namespace Atc.Rest.ApiGenerator.Client.CSharp.ProjectGenerator;
 /// </remarks>
 public interface IClientCSharpApiGenerator
 {
-    string? ClientFolderName { get; set; }
+    string ContractsLocation { get; set; }
+
+    string EndpointsLocation { get; set; }
 
     string HttpClientName { get; set; }
 
