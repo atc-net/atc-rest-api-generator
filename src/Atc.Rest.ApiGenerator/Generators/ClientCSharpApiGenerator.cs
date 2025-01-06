@@ -32,6 +32,8 @@ public class ClientCSharpApiGenerator
             projectOptions.Document,
             operationSchemaMappings,
             projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
+            projectOptions.ApiOptions.Generator.Client?.UsePartialClassForContracts ?? false,
+            projectOptions.ApiOptions.Generator.Client?.UsePartialClassForEndpoints ?? false,
             projectOptions.ApiOptions.Generator.IncludeDeprecated,
             projectOptions.ApiOptions.Generator.Response.CustomErrorResponseModel);
 

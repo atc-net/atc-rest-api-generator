@@ -11,7 +11,8 @@ public static class ContentGeneratorServerClientModelParametersFactory
         AttributeParameters codeGeneratorAttribute,
         string modelName,
         OpenApiSchema apiSchemaModel,
-        bool includeDeprecated)
+        bool usePartialClass = false,
+        bool includeDeprecated = false)
     {
         ArgumentNullException.ThrowIfNull(apiSchemaModel);
         ArgumentNullException.ThrowIfNull(modelName);
@@ -31,7 +32,7 @@ public static class ContentGeneratorServerClientModelParametersFactory
             @namespace,
             documentationTags,
             new List<AttributeParameters> { codeGeneratorAttribute },
-            AccessModifiers.PublicClass,
+            usePartialClass ? AccessModifiers.PublicPartialClass : AccessModifiers.PublicClass,
             ClassTypeName: modelName,
             GenericTypeName: genericTypeName,
             InheritedClassTypeName: null,
@@ -69,7 +70,8 @@ public static class ContentGeneratorServerClientModelParametersFactory
         string codeGeneratorContentHeader,
         string fullNamespace,
         AttributeParameters codeGeneratorAttribute,
-        CustomErrorResponseModel customErrorResponseModel)
+        CustomErrorResponseModel customErrorResponseModel,
+        bool usePartialClass)
     {
         ArgumentNullException.ThrowIfNull(customErrorResponseModel);
 
@@ -135,7 +137,7 @@ public static class ContentGeneratorServerClientModelParametersFactory
             fullNamespace,
             documentationTags,
             new List<AttributeParameters> { codeGeneratorAttribute },
-            AccessModifiers.PublicClass,
+            usePartialClass ? AccessModifiers.PublicPartialClass : AccessModifiers.PublicClass,
             ClassTypeName: customErrorResponseModel.Name.EnsureFirstCharacterToUpper(),
             GenericTypeName: null,
             InheritedClassTypeName: null,

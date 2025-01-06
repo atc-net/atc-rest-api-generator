@@ -11,7 +11,8 @@ public static class ContentGeneratorClientEndpointParametersFactory
         OperationType httpMethod,
         OpenApiOperation openApiOperation,
         string httpClientName,
-        string urlPath)
+        string urlPath,
+        bool usePartialClass)
     {
         ArgumentNullException.ThrowIfNull(openApiPath);
         ArgumentNullException.ThrowIfNull(openApiOperation);
@@ -38,6 +39,7 @@ public static class ContentGeneratorClientEndpointParametersFactory
                 DocumentationTags: openApiOperation.ExtractDocumentationTagsForEndpoint(),
                 HttpClientName: httpClientName,
                 UrlPath: urlPath,
+                usePartialClass ? AccessModifiers.PublicPartialClass : AccessModifiers.PublicClass,
                 EndpointName: $"{operationName}{ContentGeneratorConstants.Endpoint}",
                 InterfaceName: $"I{operationName}{ContentGeneratorConstants.Endpoint}",
                 ResultName: $"{operationName}{ContentGeneratorConstants.EndpointResult}",
@@ -55,6 +57,7 @@ public static class ContentGeneratorClientEndpointParametersFactory
             DocumentationTags: openApiOperation.ExtractDocumentationTagsForEndpoint(),
             HttpClientName: httpClientName,
             UrlPath: urlPath,
+            usePartialClass ? AccessModifiers.PublicPartialClass : AccessModifiers.PublicClass,
             EndpointName: $"{operationName}{ContentGeneratorConstants.Endpoint}",
             InterfaceName: $"I{operationName}{ContentGeneratorConstants.Endpoint}",
             ResultName: $"{operationName}{ContentGeneratorConstants.EndpointResult}",

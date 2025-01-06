@@ -22,6 +22,14 @@ public class ClientApiCommandSettings : BaseGenerateCommandSettings
     [Description("If provided this name will be added as the client name in endpoint files.")]
     public FlagValue<string>? HttpClientName { get; init; }
 
+    [CommandOption(ArgumentCommandConstants.LongUsePartialClassForContracts)]
+    [Description("Use Partial-Class for contracts")]
+    public bool UsePartialClassForContracts { get; init; }
+
+    [CommandOption(ArgumentCommandConstants.LongUsePartialClassForEndpoints)]
+    [Description("Use Partial-Class for endpoints")]
+    public bool UsePartialClassForEndpoints { get; init; }
+
     public override ValidationResult Validate()
     {
         var validationResult = base.Validate();

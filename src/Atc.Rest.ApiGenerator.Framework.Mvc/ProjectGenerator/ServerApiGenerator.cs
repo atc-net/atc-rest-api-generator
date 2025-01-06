@@ -429,6 +429,9 @@ public class ServerApiGenerator : IServerApiGenerator
         string apiGroupName,
         bool isSharedContract)
     {
+        // TODO: Add support for partial classes from api-options
+        var usePartialClassForContracts = false;
+
         var fullNamespace = isSharedContract
             ? $"{projectName}.{ContentGeneratorConstants.Contracts}"
             : $"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
@@ -439,6 +442,7 @@ public class ServerApiGenerator : IServerApiGenerator
             codeGeneratorAttribute,
             modelName,
             apiSchemaModel,
+            usePartialClassForContracts,
             includeDeprecated);
 
         var contentGeneratorClass = new GenerateContentForClass(

@@ -26,7 +26,9 @@ public static class FileInfoFactory
             .Replace('\\', ' ')
             .Replace('-', ' ')
             .Replace('.', ' ')
-            .PascalCase(separators: [' ', '-']);
+            .PascalCase(separators: [' ', '-'])
+            .Replace("_shared", "_Shared", StringComparison.Ordinal)
+            .Replace("_enumerationTypes", "_EnumerationTypes", StringComparison.Ordinal);
         return projectPath.CombineFileInfo(subPath.Split(' ').Concat([fileName]).ToArray());
     }
 }

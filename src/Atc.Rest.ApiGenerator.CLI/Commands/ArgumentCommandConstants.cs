@@ -25,6 +25,8 @@ public static class ArgumentCommandConstants
 
     public const string LongClientHttpClientName = "--httpClientName";
     public const string LongExcludeEndpointGeneration = "--excludeEndpointGeneration";
+    public const string LongUsePartialClassForContracts = "--usePartialClassForContracts";
+    public const string LongUsePartialClassForEndpoints = "--usePartialClassForEndpoints";
 
     public const string LongServerOutputSolutionPath = "--outputSlnPath";
     public const string LongServerOutputSourcePath = "--outputSrcPath";

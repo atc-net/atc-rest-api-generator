@@ -15,6 +15,8 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
     private readonly string codeGeneratorContentHeader;
     private readonly AttributeParameters codeGeneratorAttribute;
     private readonly bool useProblemDetailsAsDefaultResponseBody;
+    private readonly bool usePartialClassForContracts;
+    private readonly bool usePartialClassForEndpoints;
     private readonly bool includeDeprecated;
     private readonly CustomErrorResponseModel? customErrorResponseModel;
 
@@ -27,6 +29,8 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
         OpenApiDocument openApiDocument,
         IList<ApiOperation> operationSchemaMappings,
         bool useProblemDetailsAsDefaultResponseBody,
+        bool usePartialClassForContracts,
+        bool usePartialClassForEndpoints,
         bool includeDeprecated,
         CustomErrorResponseModel? customErrorResponseModel)
     {
@@ -47,6 +51,8 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
         this.openApiDocument = openApiDocument;
         this.operationSchemaMappings = operationSchemaMappings;
         this.useProblemDetailsAsDefaultResponseBody = useProblemDetailsAsDefaultResponseBody;
+        this.usePartialClassForContracts = usePartialClassForContracts;
+        this.usePartialClassForEndpoints = usePartialClassForEndpoints;
         this.includeDeprecated = includeDeprecated;
 
         codeGeneratorContentHeader = GeneratedCodeHeaderGeneratorFactory
@@ -56,11 +62,11 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
             .CreateGeneratedCode(apiGeneratorVersion);
     }
 
-    public string ContractsLocation { get; set; }
+    public string ContractsLocation { get; set; } = ContentGeneratorConstants.Contracts;
 
-    public string EndpointsLocation { get; set; }
+    public string EndpointsLocation { get; set; } = ContentGeneratorConstants.Endpoints;
 
-    public string HttpClientName { get; set; } = "DefaultHttpClient";
+    public string HttpClientName { get; set; } = ContentGeneratorConstants.DefaultHttpClient;
 
     public async Task ScaffoldProjectFile()
     {
@@ -205,7 +211,8 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
                     codeGeneratorAttribute,
                     openApiPath.Value,
                     openApiOperation.Value,
-                    HttpClientName);
+                    HttpClientName,
+                    usePartialClassForEndpoints);
 
                 var contentGenerator = new GenerateContentForInterface(
                     new CodeDocumentationTagsGenerator(),
@@ -242,12 +249,13 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
                     projectName,
                     apiGroupName,
                     fullNamespace,
-                    ContractsLocation, 
+                    ContractsLocation,
                     openApiPath.Value,
                     openApiOperation.Key,
                     openApiOperation.Value,
                     HttpClientName,
-                    $"{openApiDocument.GetServerUrlBasePath()}{openApiPath.Key}");
+                    $"{openApiDocument.GetServerUrlBasePath()}{openApiPath.Key}",
+                    usePartialClassForEndpoints);
 
                 var contentGenerator = new ContentGeneratorClientEndpoint(
                     new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
@@ -290,7 +298,8 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
                     fullNamespace,
                     ContractsLocation,
                     openApiPath.Value,
-                    openApiOperation.Value);
+                    openApiOperation.Value,
+                    usePartialClassForContracts);
 
                 var contentGenerator = new ContentGeneratorClientEndpointResultInterface(
                     new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
@@ -332,7 +341,8 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
                     fullNamespace,
                     ContractsLocation,
                     openApiPath.Value,
-                    openApiOperation.Value);
+                    openApiOperation.Value,
+                    usePartialClassForContracts);
 
                 var contentGenerator = new ContentGeneratorClientEndpointResult(
                     new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
@@ -418,6 +428,11 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
                     continue;
                 }
 
+                if (apiGroupName.IsWellKnownSystemTypeName())
+                {
+                    continue;
+                }
+
                 var requiredUsing = NamespaceFactory.CreateFull(projectName, ContractsLocation, apiGroupName);
                 if (!requiredUsings.Contains(requiredUsing, StringComparer.CurrentCulture))
                 {
@@ -438,6 +453,11 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
             {
                 if (apiOperationModel.IsEnum ||
                     apiOperationModel.IsShared)
+                {
+                    continue;
+                }
+
+                if (apiGroupName.IsWellKnownSystemTypeName())
                 {
                     continue;
                 }
@@ -503,6 +523,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
             codeGeneratorAttribute,
             modelName,
             apiSchemaModel,
+            usePartialClassForContracts,
             includeDeprecated);
 
         var contentGeneratorClass = new GenerateContentForClass(
@@ -535,7 +556,8 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
             codeGeneratorContentHeader,
             fullNamespace,
             codeGeneratorAttribute,
-            customErrorResponseModel);
+            customErrorResponseModel,
+            usePartialClassForContracts);
 
         var contentGeneratorClass = new GenerateContentForClass(
             new CodeDocumentationTagsGenerator(),

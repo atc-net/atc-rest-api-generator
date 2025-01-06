@@ -8,7 +8,8 @@ public static class ContentGeneratorClientEndpointResultParametersFactory
         string @namespace,
         string contractsLocation,
         OpenApiPathItem openApiPath,
-        OpenApiOperation openApiOperation)
+        OpenApiOperation openApiOperation,
+        bool usePartialClass)
     {
         ArgumentNullException.ThrowIfNull(openApiPath);
         ArgumentNullException.ThrowIfNull(openApiOperation);
@@ -32,6 +33,7 @@ public static class ContentGeneratorClientEndpointResultParametersFactory
                 Namespace: @namespace,
                 OperationName: operationName,
                 DocumentationTags: openApiOperation.ExtractDocumentationTagsForEndpointResult(),
+                usePartialClass ? AccessModifiers.PublicPartialClass : AccessModifiers.PublicClass,
                 EndpointResultName: $"{operationName}{ContentGeneratorConstants.EndpointResult}",
                 EndpointResultInterfaceName: $"I{operationName}{ContentGeneratorConstants.EndpointResult}",
                 InheritClassName: ContentGeneratorConstants.EndpointResponse,
@@ -46,6 +48,7 @@ public static class ContentGeneratorClientEndpointResultParametersFactory
             Namespace: @namespace,
             OperationName: operationName,
             DocumentationTags: openApiOperation.ExtractDocumentationTagsForEndpointResult(),
+            usePartialClass ? AccessModifiers.PublicPartialClass : AccessModifiers.PublicClass,
             EndpointResultName: $"{operationName}{ContentGeneratorConstants.EndpointResult}",
             EndpointResultInterfaceName: $"I{operationName}{ContentGeneratorConstants.EndpointResult}",
             InheritClassName: ContentGeneratorConstants.EndpointResponse,

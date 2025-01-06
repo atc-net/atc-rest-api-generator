@@ -8,7 +8,8 @@ public static class ContentGeneratorClientEndpointInterfaceParametersFactory
         AttributeParameters codeGeneratorAttribute,
         OpenApiPathItem openApiPath,
         OpenApiOperation openApiOperation,
-        string httpClientName)
+        string httpClientName,
+        bool usePartialInterface)
     {
         var operationName = openApiOperation.GetOperationName();
 
@@ -82,7 +83,7 @@ public static class ContentGeneratorClientEndpointInterfaceParametersFactory
             @namespace,
             DocumentationTags: openApiOperation.ExtractDocumentationTagsForEndpointInterface(),
             new List<AttributeParameters> { codeGeneratorAttribute },
-            AccessModifiers.Public,
+            usePartialInterface ? AccessModifiers.PublicPartialInterface : AccessModifiers.PublicInterface,
             InterfaceTypeName: $"I{operationName}{ContentGeneratorConstants.Endpoint}",
             InheritedInterfaceTypeName: null,
             Properties: null,

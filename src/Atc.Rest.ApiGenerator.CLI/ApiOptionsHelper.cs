@@ -180,7 +180,7 @@ public static class ApiOptionsHelper
 
                 if (string.IsNullOrEmpty(apiOptions.Generator.ProjectSuffixName))
                 {
-                    apiOptions.Generator.ProjectSuffixName = "ApiClient.Generated";
+                    apiOptions.Generator.ProjectSuffixName = $"{ContentGeneratorConstants.DefaultHttpClientName}.Generated";
                 }
 
                 apiOptions.Generator.Client ??= new ApiOptionsGeneratorClient();
@@ -202,13 +202,26 @@ public static class ApiOptionsHelper
                 {
                     apiOptions.Generator.Client.HttpClientName = clientApiCommandSettings.HttpClientName.Value;
                 }
-                else if ("ApiClient".Equals(apiOptions.Generator.Client.HttpClientName, StringComparison.Ordinal))
+                else if (ContentGeneratorConstants.DefaultHttpClientName.Equals(apiOptions.Generator.Client.HttpClientName, StringComparison.Ordinal))
                 {
                     var baseGenerateCommandSettings = (BaseGenerateCommandSettings)settings;
-                    apiOptions.Generator.Client.HttpClientName = $"{baseGenerateCommandSettings.ProjectPrefixName}-ApiClient";
+                    apiOptions.Generator.Client.HttpClientName = $"{baseGenerateCommandSettings.ProjectPrefixName}-{ContentGeneratorConstants.DefaultHttpClientName}";
                 }
 
-                apiOptions.Generator.Client.ExcludeEndpointGeneration = clientApiCommandSettings.ExcludeEndpointGeneration;
+                if (clientApiCommandSettings.ExcludeEndpointGeneration)
+                {
+                    apiOptions.Generator.Client.ExcludeEndpointGeneration = clientApiCommandSettings.ExcludeEndpointGeneration;
+                }
+
+                if (clientApiCommandSettings.UsePartialClassForContracts)
+                {
+                    apiOptions.Generator.Client.UsePartialClassForContracts = clientApiCommandSettings.UsePartialClassForContracts;
+                }
+
+                if (clientApiCommandSettings.UsePartialClassForEndpoints)
+                {
+                    apiOptions.Generator.Client.UsePartialClassForEndpoints = clientApiCommandSettings.UsePartialClassForEndpoints;
+                }
 
                 break;
             }

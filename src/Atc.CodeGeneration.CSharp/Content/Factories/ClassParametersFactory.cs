@@ -6,13 +6,14 @@ public static class ClassParametersFactory
         string headerContent,
         string @namespace,
         AttributeParameters attribute,
-        string classTypeName)
+        string classTypeName,
+        bool usePartialClass = false)
         => new(
             HeaderContent: headerContent,
             Namespace: @namespace,
             DocumentationTags: null,
             Attributes: new List<AttributeParameters> { attribute },
-            AccessModifiers.PublicClass,
+            usePartialClass ? AccessModifiers.PublicPartialClass : AccessModifiers.PublicClass,
             ClassTypeName: classTypeName,
             GenericTypeName: null,
             InheritedClassTypeName: null,

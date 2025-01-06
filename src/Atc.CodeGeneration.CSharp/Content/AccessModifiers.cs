@@ -19,11 +19,23 @@ public enum AccessModifiers
     [Description("public class")]
     PublicClass,
 
+    [Description("public partial class")]
+    PublicPartialClass,
+
     [Description("public static class")]
     PublicStaticClass,
 
     [Description("public sealed class")]
     PublicSealedClass,
+
+    [Description("public interface")]
+    PublicInterface,
+
+    [Description("public partial interface")]
+    PublicPartialInterface,
+
+    [Description("public static interface")]
+    PublicStaticInterface,
 
     [Description("public record")]
     PublicRecord,

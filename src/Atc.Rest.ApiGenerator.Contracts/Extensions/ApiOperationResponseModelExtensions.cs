@@ -167,7 +167,7 @@ public static class ApiOperationResponseModelExtensions
         foreach (var model in responseModels)
         {
             if (model.DataType is not null &&
-                IsWellKnownSystemTypeName(model.DataType))
+                model.DataType.IsWellKnownSystemTypeName())
             {
                 var operationSchemaMapping = operationSchemaMappings.First(x => x.Model.Name == model.DataType);
                 if (operationSchemaMapping.Model.IsShared)

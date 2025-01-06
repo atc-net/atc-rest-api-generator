@@ -25,4 +25,6 @@ public static class ContentGeneratorConstants
     public const string SpecialFolderSharedModels = "_Shared";
     public const string Tests = "Tests";
     public const string UndefinedDescription = "Undefined description.";
+    public const string DefaultHttpClientName = "ApiClient";
+    public const string DefaultHttpClient = "DefaultHttpClient";
 }

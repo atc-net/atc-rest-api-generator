@@ -6,10 +6,14 @@ public class ApiOptionsGeneratorClient
 
     public string EndpointsLocation { get; set; } = ContentGeneratorConstants.Endpoints;
 
+    public string HttpClientName { get; set; } = ContentGeneratorConstants.DefaultHttpClientName;
+
     public bool ExcludeEndpointGeneration { get; set; }
 
-    public string HttpClientName { get; set; } = "ApiClient";
+    public bool UsePartialClassForContracts { get; set; }
+
+    public bool UsePartialClassForEndpoints { get; set; }
 
     public override string ToString()
-        => $"{nameof(ContractsLocation)}: {ContractsLocation}, {nameof(EndpointsLocation)}: {EndpointsLocation}, {nameof(ExcludeEndpointGeneration)}: {ExcludeEndpointGeneration}, {nameof(HttpClientName)}: {HttpClientName}";
+        => $"{nameof(ContractsLocation)}: {ContractsLocation}, {nameof(EndpointsLocation)}: {EndpointsLocation}, {nameof(HttpClientName)}: {HttpClientName}, {nameof(ExcludeEndpointGeneration)}: {ExcludeEndpointGeneration}, {nameof(UsePartialClassForContracts)}: {UsePartialClassForContracts}, {nameof(UsePartialClassForEndpoints)}: {UsePartialClassForEndpoints}";
 }
