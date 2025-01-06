@@ -44,6 +44,8 @@ public class ServerDomainGenerator : IServerDomainGenerator
             .CreateGeneratedCode(apiGeneratorVersion);
     }
 
+    public string ContractsLocation { get; set; } = ContentGeneratorConstants.Contracts;
+
     public async Task ScaffoldProjectFile()
     {
         var packageReferences = await nugetPackageReferenceProvider.GetPackageReferencesForDomainProjectForMinimalApi();
@@ -263,8 +265,8 @@ public class ServerDomainGenerator : IServerDomainGenerator
 
         var apiGroupNames = openApiDocument.GetApiGroupNames();
 
-        requiredUsings.AddRange(apiGroupNames.Select(x => $"{apiProjectName}.{ContentGeneratorConstants.Contracts}.{x}"));
-        requiredUsings.AddRange(apiGroupNames.Select(x => $"{projectName}.{ContentGeneratorConstants.Handlers}.{x}"));
+        requiredUsings.AddRange(apiGroupNames.Select(x => NamespaceFactory.CreateFull(apiProjectName, ContractsLocation, x)));
+        requiredUsings.AddRange(apiGroupNames.Select(x => NamespaceFactory.CreateFull(projectName, ContentGeneratorConstants.Handlers, x)));
 
         GlobalUsingsHelper.CreateOrUpdate(
             logger,

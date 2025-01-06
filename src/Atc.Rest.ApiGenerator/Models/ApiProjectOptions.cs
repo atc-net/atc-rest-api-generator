@@ -25,23 +25,5 @@ public class ApiProjectOptions : BaseProjectOptions
             forClient,
             clientFolderName)
     {
-        if (string.IsNullOrEmpty(clientFolderName))
-        {
-            PathForEndpoints = new DirectoryInfo(Path.Combine(PathForSrcGenerate.FullName, ContentGeneratorConstants.Endpoints));
-            PathForContracts = new DirectoryInfo(Path.Combine(PathForSrcGenerate.FullName, ContentGeneratorConstants.Contracts));
-            PathForContractsShared = new DirectoryInfo(Path.Combine(PathForContracts.FullName, ContentGeneratorConstants.SpecialFolderSharedModels));
-        }
-        else
-        {
-            PathForEndpoints = new DirectoryInfo(Path.Combine(Path.Combine(PathForSrcGenerate.FullName, clientFolderName), ContentGeneratorConstants.Endpoints));
-            PathForContracts = new DirectoryInfo(Path.Combine(Path.Combine(PathForSrcGenerate.FullName, clientFolderName), ContentGeneratorConstants.Contracts));
-            PathForContractsShared = new DirectoryInfo(Path.Combine(Path.Combine(PathForContracts.FullName), ContentGeneratorConstants.SpecialFolderSharedModels));
-        }
     }
-
-    public DirectoryInfo PathForEndpoints { get; }
-
-    public DirectoryInfo PathForContracts { get; }
-
-    public DirectoryInfo PathForContractsShared { get; }
 }

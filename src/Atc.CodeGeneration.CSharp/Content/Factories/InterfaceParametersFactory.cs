@@ -28,7 +28,7 @@ public static class InterfaceParametersFactory
             Namespace: @namespace,
             DocumentationTags: null,
             Attributes: attributes,
-            AccessModifiers.Public,
+            AccessModifiers.PublicInterface,
             InterfaceTypeName: interfaceTypeName,
             InheritedInterfaceTypeName: null,
             Properties: null,

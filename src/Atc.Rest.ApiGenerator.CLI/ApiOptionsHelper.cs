@@ -132,12 +132,14 @@ public static class ApiOptionsHelper
     {
         if (settings is BaseServerCommandSettings serverCommandSettings)
         {
-            if (serverCommandSettings.AspNetOutputType.IsSet)
+            if (serverCommandSettings.AspNetOutputType.IsSet ||
+                serverCommandSettings.AspNetOutputType.Value != apiOptions.Generator.AspNetOutputType)
             {
                 apiOptions.Generator.AspNetOutputType = serverCommandSettings.AspNetOutputType.Value;
             }
 
-            if (serverCommandSettings.SwaggerThemeMode.IsSet)
+            if (serverCommandSettings.SwaggerThemeMode.IsSet ||
+                serverCommandSettings.SwaggerThemeMode.Value != apiOptions.Generator.SwaggerThemeMode)
             {
                 apiOptions.Generator.SwaggerThemeMode = serverCommandSettings.SwaggerThemeMode.Value;
             }
@@ -150,6 +152,28 @@ public static class ApiOptionsHelper
             if (serverCommandSettings.ProjectPrefixName is not null)
             {
                 apiOptions.Generator.ProjectName = serverCommandSettings.ProjectPrefixName;
+            }
+
+            if (serverCommandSettings.ContractsLocation is not null &&
+                serverCommandSettings.ContractsLocation.IsSet)
+            {
+                apiOptions.Generator.ContractsLocation = serverCommandSettings.ContractsLocation.Value;
+            }
+
+            if (serverCommandSettings.EndpointsLocation is not null &&
+                serverCommandSettings.EndpointsLocation.IsSet)
+            {
+                apiOptions.Generator.EndpointsLocation = serverCommandSettings.EndpointsLocation.Value;
+            }
+
+            if (serverCommandSettings.UsePartialClassForContracts)
+            {
+                apiOptions.Generator.UsePartialClassForContracts = serverCommandSettings.UsePartialClassForContracts;
+            }
+
+            if (serverCommandSettings.UsePartialClassForEndpoints)
+            {
+                apiOptions.Generator.UsePartialClassForEndpoints = serverCommandSettings.UsePartialClassForEndpoints;
             }
 
             if (serverCommandSettings.RemoveNamespaceGroupSeparatorInGlobalUsings)
@@ -183,19 +207,29 @@ public static class ApiOptionsHelper
                     apiOptions.Generator.ProjectSuffixName = $"{ContentGeneratorConstants.DefaultHttpClientName}.Generated";
                 }
 
-                apiOptions.Generator.Client ??= new ApiOptionsGeneratorClient();
-
                 if (clientApiCommandSettings.ContractsLocation is not null &&
                     clientApiCommandSettings.ContractsLocation.IsSet)
                 {
-                    apiOptions.Generator.Client.ContractsLocation = clientApiCommandSettings.ContractsLocation.Value;
+                    apiOptions.Generator.ContractsLocation = clientApiCommandSettings.ContractsLocation.Value;
                 }
 
                 if (clientApiCommandSettings.EndpointsLocation is not null &&
                     clientApiCommandSettings.EndpointsLocation.IsSet)
                 {
-                    apiOptions.Generator.Client.EndpointsLocation = clientApiCommandSettings.EndpointsLocation.Value;
+                    apiOptions.Generator.EndpointsLocation = clientApiCommandSettings.EndpointsLocation.Value;
                 }
+
+                if (clientApiCommandSettings.UsePartialClassForContracts)
+                {
+                    apiOptions.Generator.UsePartialClassForContracts = clientApiCommandSettings.UsePartialClassForContracts;
+                }
+
+                if (clientApiCommandSettings.UsePartialClassForEndpoints)
+                {
+                    apiOptions.Generator.UsePartialClassForEndpoints = clientApiCommandSettings.UsePartialClassForEndpoints;
+                }
+
+                apiOptions.Generator.Client ??= new ApiOptionsGeneratorClient();
 
                 if (clientApiCommandSettings.HttpClientName is not null &&
                     clientApiCommandSettings.HttpClientName.IsSet)
@@ -211,16 +245,6 @@ public static class ApiOptionsHelper
                 if (clientApiCommandSettings.ExcludeEndpointGeneration)
                 {
                     apiOptions.Generator.Client.ExcludeEndpointGeneration = clientApiCommandSettings.ExcludeEndpointGeneration;
-                }
-
-                if (clientApiCommandSettings.UsePartialClassForContracts)
-                {
-                    apiOptions.Generator.Client.UsePartialClassForContracts = clientApiCommandSettings.UsePartialClassForContracts;
-                }
-
-                if (clientApiCommandSettings.UsePartialClassForEndpoints)
-                {
-                    apiOptions.Generator.Client.UsePartialClassForEndpoints = clientApiCommandSettings.UsePartialClassForEndpoints;
                 }
 
                 break;

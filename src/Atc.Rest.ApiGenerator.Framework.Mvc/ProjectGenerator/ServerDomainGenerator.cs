@@ -39,6 +39,8 @@ public class ServerDomainGenerator : IServerDomainGenerator
             .CreateGeneratedCode(apiGeneratorVersion);
     }
 
+    public string ContractsLocation { get; set; } = ContentGeneratorConstants.Contracts;
+
     public async Task ScaffoldProjectFile()
     {
         await Task.CompletedTask;
@@ -161,7 +163,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
 
         var apiGroupNames = openApiDocument.GetApiGroupNames();
 
-        requiredUsings.AddRange(apiGroupNames.Select(x => $"{apiProjectName}.{ContentGeneratorConstants.Contracts}.{x}"));
+        requiredUsings.AddRange(apiGroupNames.Select(x => NamespaceFactory.CreateFull(apiProjectName, ContractsLocation, x)));
 
         GlobalUsingsHelper.CreateOrUpdate(
             logger,

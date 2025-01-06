@@ -110,7 +110,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
             projectPath,
-            projectPath.CombineFileInfo($"{projectName}.csproj"),
+            FileInfoFactory.Create(projectPath, $"{projectName}.csproj"),
             ContentWriterArea.Src,
             content,
             overrideIfExist: false);
@@ -428,11 +428,6 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
                     continue;
                 }
 
-                if (apiGroupName.IsWellKnownSystemTypeName())
-                {
-                    continue;
-                }
-
                 var requiredUsing = NamespaceFactory.CreateFull(projectName, ContractsLocation, apiGroupName);
                 if (!requiredUsings.Contains(requiredUsing, StringComparer.CurrentCulture))
                 {
@@ -550,7 +545,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
             return;
         }
 
-        var fullNamespace = $"{projectName}.{ContentGeneratorConstants.Contracts}";
+        var fullNamespace = NamespaceFactory.CreateFull(projectName, ContractsLocation);
 
         var parameters = ContentGeneratorServerClientModelParametersFactory.CreateForCustomErrorResponseModel(
             codeGeneratorContentHeader,
@@ -568,7 +563,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
             projectPath,
-            projectPath.CombineFileInfo(ContentGeneratorConstants.Contracts, ContentGeneratorConstants.SpecialFolderSharedModels, $"{customErrorResponseModel.Name.EnsureFirstCharacterToUpper()}.cs"),
+            FileInfoFactory.Create(projectPath, ContractsLocation, ContentGeneratorConstants.SpecialFolderSharedModels, $"{customErrorResponseModel.Name.EnsureFirstCharacterToUpper()}.cs"),
             ContentWriterArea.Src,
             content);
     }

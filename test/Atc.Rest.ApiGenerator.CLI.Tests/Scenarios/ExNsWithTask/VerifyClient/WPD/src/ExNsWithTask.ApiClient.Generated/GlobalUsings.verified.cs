@@ -13,7 +13,6 @@ global using Atc.Rest.Client.Builder;
 global using ExNsWithTask.ApiClient.Generated.Contracts;
 global using ExNsWithTask.ApiClient.Generated.Contracts.EventArgs;
 global using ExNsWithTask.ApiClient.Generated.Contracts.Orders;
-global using ExNsWithTask.ApiClient.Generated.Contracts.Tasks;
 global using ExNsWithTask.ApiClient.Generated.Contracts.TestUnits;
 global using ExNsWithTask.ApiClient.Generated.Endpoints.EventArgs.Interfaces;
 global using ExNsWithTask.ApiClient.Generated.Endpoints.Orders.Interfaces;

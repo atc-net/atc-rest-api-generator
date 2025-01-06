@@ -195,11 +195,4 @@ public static class ApiOperationResponseModelExtensions
 
         return models;
     }
-
-    private static bool IsWellKnownSystemTypeName(
-        string value)
-        => value.EndsWith("Task", StringComparison.Ordinal) ||
-           value.EndsWith("Tasks", StringComparison.Ordinal) ||
-           value.EndsWith("Endpoint", StringComparison.Ordinal) ||
-           value.EndsWith("EventArgs", StringComparison.Ordinal);
 }

@@ -37,6 +37,11 @@ public class ServerDomainGenerator
             projectOptions.PathForSrcGenerate,
             projectOptions.Document);
 
+        if (!string.IsNullOrEmpty(projectOptions.ApiOptions.Generator.ContractsLocation))
+        {
+            serverDomainGeneratorMvc.ContractsLocation = projectOptions.ApiOptions.Generator.ContractsLocation;
+        }
+
         serverDomainGeneratorMinimalApi = new Framework.Minimal.ProjectGenerator.ServerDomainGenerator(
             loggerFactory,
             nugetPackageReferenceProvider,
@@ -45,6 +50,11 @@ public class ServerDomainGenerator
             apiProjectName,
             projectOptions.PathForSrcGenerate,
             projectOptions.Document);
+
+        if (!string.IsNullOrEmpty(projectOptions.ApiOptions.Generator.ContractsLocation))
+        {
+            serverDomainGeneratorMinimalApi.ContractsLocation = projectOptions.ApiOptions.Generator.ContractsLocation;
+        }
 
         if (projectOptions.PathForTestGenerate is not null)
         {

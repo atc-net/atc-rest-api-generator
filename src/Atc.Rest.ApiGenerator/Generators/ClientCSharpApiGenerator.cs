@@ -32,24 +32,24 @@ public class ClientCSharpApiGenerator
             projectOptions.Document,
             operationSchemaMappings,
             projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
-            projectOptions.ApiOptions.Generator.Client?.UsePartialClassForContracts ?? false,
-            projectOptions.ApiOptions.Generator.Client?.UsePartialClassForEndpoints ?? false,
+            projectOptions.ApiOptions.Generator.UsePartialClassForContracts,
+            projectOptions.ApiOptions.Generator.UsePartialClassForEndpoints,
             projectOptions.ApiOptions.Generator.IncludeDeprecated,
             projectOptions.ApiOptions.Generator.Response.CustomErrorResponseModel);
+
+        if (!string.IsNullOrEmpty(projectOptions.ApiOptions.Generator.ContractsLocation))
+        {
+            clientCSharpApiGenerator.ContractsLocation = projectOptions.ApiOptions.Generator.ContractsLocation;
+        }
+
+        if (!string.IsNullOrEmpty(projectOptions.ApiOptions.Generator.EndpointsLocation))
+        {
+            clientCSharpApiGenerator.EndpointsLocation = projectOptions.ApiOptions.Generator.EndpointsLocation;
+        }
 
         if (projectOptions.ApiOptions.Generator.Client is not null)
         {
             clientCSharpApiGenerator.HttpClientName = projectOptions.ApiOptions.Generator.Client.HttpClientName;
-
-            if (!string.IsNullOrEmpty(projectOptions.ApiOptions.Generator.Client.ContractsLocation))
-            {
-                clientCSharpApiGenerator.ContractsLocation = projectOptions.ApiOptions.Generator.Client.ContractsLocation;
-            }
-
-            if (!string.IsNullOrEmpty(projectOptions.ApiOptions.Generator.Client.EndpointsLocation))
-            {
-                clientCSharpApiGenerator.EndpointsLocation = projectOptions.ApiOptions.Generator.Client.EndpointsLocation;
-            }
         }
     }
 

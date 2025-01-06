@@ -14,6 +14,14 @@ public class ApiOptionsGenerator
 
     public string ProjectSuffixName { get; set; } = string.Empty;
 
+    public string ContractsLocation { get; set; } = ContentGeneratorConstants.Contracts;
+
+    public string EndpointsLocation { get; set; } = ContentGeneratorConstants.Endpoints;
+
+    public bool UsePartialClassForContracts { get; set; }
+
+    public bool UsePartialClassForEndpoints { get; set; }
+
     public bool RemoveNamespaceGroupSeparatorInGlobalUsings { get; set; }
 
     public ApiOptionsGeneratorRequest Request { get; set; } = new();

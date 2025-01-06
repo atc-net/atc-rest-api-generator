@@ -72,7 +72,7 @@ public static class ContentGeneratorServerHandlerInterfaceParametersFactory
             @namespace,
             DocumentationTags: openApiOperation.ExtractDocumentationTagsForHandlerInterface(),
             new List<AttributeParameters> { codeGeneratorAttribute },
-            AccessModifiers.Public,
+            AccessModifiers.PublicInterface,
             InterfaceTypeName: $"I{operationName}{ContentGeneratorConstants.Handler}",
             InheritedInterfaceTypeName: null,
             Properties: null,

@@ -11,6 +11,8 @@ namespace Atc.Rest.ApiGenerator.Framework.ProjectGenerator;
 /// </remarks>
 public interface IServerDomainGenerator
 {
+    string ContractsLocation { get; set; }
+
     Task ScaffoldProjectFile();
 
     void ScaffoldHandlers();

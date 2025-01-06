@@ -11,6 +11,10 @@ namespace Atc.Rest.ApiGenerator.Framework.ProjectGenerator;
 /// </remarks>
 public interface IServerApiGenerator
 {
+    string ContractsLocation { get; set; }
+
+    string EndpointsLocation { get; set; }
+
     Task ScaffoldProjectFile();
 
     void GenerateAssemblyMarker();

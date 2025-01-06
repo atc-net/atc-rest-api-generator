@@ -39,7 +39,19 @@ public class ServerApiGenerator
             operationSchemaMappings,
             projectOptions.RouteBase,
             projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
+            projectOptions.ApiOptions.Generator.UsePartialClassForContracts,
+            projectOptions.ApiOptions.Generator.UsePartialClassForEndpoints,
             projectOptions.ApiOptions.Generator.IncludeDeprecated);
+
+        if (!string.IsNullOrEmpty(projectOptions.ApiOptions.Generator.ContractsLocation))
+        {
+            serverApiGeneratorMvc.ContractsLocation = projectOptions.ApiOptions.Generator.ContractsLocation;
+        }
+
+        if (!string.IsNullOrEmpty(projectOptions.ApiOptions.Generator.EndpointsLocation))
+        {
+            serverApiGeneratorMvc.EndpointsLocation = projectOptions.ApiOptions.Generator.EndpointsLocation;
+        }
 
         serverApiGeneratorMinimalApi = new Framework.Minimal.ProjectGenerator.ServerApiGenerator(
             loggerFactory,
@@ -51,7 +63,19 @@ public class ServerApiGenerator
             operationSchemaMappings,
             projectOptions.RouteBase,
             projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
+            projectOptions.ApiOptions.Generator.UsePartialClassForContracts,
+            projectOptions.ApiOptions.Generator.UsePartialClassForEndpoints,
             projectOptions.ApiOptions.Generator.IncludeDeprecated);
+
+        if (!string.IsNullOrEmpty(projectOptions.ApiOptions.Generator.ContractsLocation))
+        {
+            serverApiGeneratorMvc.ContractsLocation = projectOptions.ApiOptions.Generator.ContractsLocation;
+        }
+
+        if (!string.IsNullOrEmpty(projectOptions.ApiOptions.Generator.EndpointsLocation))
+        {
+            serverApiGeneratorMvc.EndpointsLocation = projectOptions.ApiOptions.Generator.EndpointsLocation;
+        }
     }
 
     public async Task<bool> Generate()
