@@ -14,7 +14,9 @@ public static class NamespaceFactory
     public static string Create(
         params string[] subNamespaces)
     {
-        var fullNamespace = string.Join(' ', subNamespaces);
+        var fullNamespace = string
+            .Join(' ', subNamespaces)
+            .Replace(" . ", " ", StringComparison.Ordinal);
 
         return fullNamespace.EnsureNamespaceFormat();
     }
