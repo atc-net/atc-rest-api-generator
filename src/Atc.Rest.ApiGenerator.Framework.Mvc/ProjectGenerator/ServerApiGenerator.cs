@@ -318,7 +318,8 @@ public class ServerApiGenerator : IServerApiGenerator
                 apiGroupName,
                 GetRouteByApiGroupName(apiGroupName),
                 ContentGeneratorConstants.Controller,
-                openApiDocument);
+                openApiDocument,
+                usePartialClassForEndpoints);
 
             var contentGenerator = new ContentGenerators.ContentGeneratorServerController(
                 new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),

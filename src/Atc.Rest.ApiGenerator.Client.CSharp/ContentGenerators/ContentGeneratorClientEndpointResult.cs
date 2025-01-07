@@ -36,7 +36,7 @@ public class ContentGeneratorClientEndpointResult : IContentGenerator
         }
 
         sb.AppendLine(codeAttributeGenerator.Generate());
-        sb.AppendLine($"{parameters.AccessModifiers.GetDescription()} {parameters.EndpointResultName} : {parameters.InheritClassName}, {parameters.EndpointResultInterfaceName}");
+        sb.AppendLine($"{parameters.DeclarationModifier.GetDescription()} {parameters.EndpointResultName} : {parameters.InheritClassName}, {parameters.EndpointResultInterfaceName}");
         sb.AppendLine("{");
         sb.AppendLine(4, $"public {parameters.EndpointResultName}(EndpointResponse response)");
         sb.AppendLine(8, ": base(response)");

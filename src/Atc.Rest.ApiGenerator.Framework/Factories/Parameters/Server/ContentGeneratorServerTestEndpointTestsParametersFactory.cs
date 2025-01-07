@@ -13,7 +13,7 @@ public static class ContentGeneratorServerTestEndpointTestsParametersFactory
         {
             new(
                 DocumentationTags: null,
-                AccessModifiers.Public,
+                DeclarationModifiers.Public,
                 GenericTypeName: null,
                 TypeName: $"{operationName}{ContentGeneratorConstants.Tests}",
                 InheritedClassTypeName: "base",
@@ -36,7 +36,7 @@ public static class ContentGeneratorServerTestEndpointTestsParametersFactory
             new(
                 DocumentationTags: null,
                 Attributes: AttributesParametersFactory.Create("Fact", "Skip = \"Change this to a real integration-test\""),
-                AccessModifier: AccessModifiers.Public,
+                DeclarationModifier: DeclarationModifiers.Public,
                 ReturnTypeName: "void",
                 ReturnGenericTypeName: null,
                 Name: "Sample",
@@ -55,7 +55,7 @@ public static class ContentGeneratorServerTestEndpointTestsParametersFactory
                 AttributeParametersFactory.Create("Collection", "\"Sequential-Endpoints\""),
                 AttributeParametersFactory.Create("Trait", "Traits.Category, Traits.Categories.Integration"),
             },
-            AccessModifiers.PublicClass,
+            DeclarationModifiers.PublicClass,
             ClassTypeName: $"{operationName}{ContentGeneratorConstants.Tests}",
             GenericTypeName: null,
             InheritedClassTypeName: "WebApiControllerBaseTest",

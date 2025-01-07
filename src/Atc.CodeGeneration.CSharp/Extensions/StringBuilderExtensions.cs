@@ -3,20 +3,23 @@ namespace Atc.CodeGeneration.CSharp.Extensions;
 [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "OK.")]
 public static class StringBuilderExtensions
 {
-    public static void AppendAccessModifier(
+    public static void AppendDeclarationModifier(
         this StringBuilder sb,
-        AccessModifiers accessModifier)
-        => sb.AppendAccessModifier(0, accessModifier);
+        DeclarationModifiers declarationModifier)
+        => sb.AppendDeclarationModifier(0, declarationModifier);
 
-    public static void AppendAccessModifier(
+    public static void AppendDeclarationModifier(
         this StringBuilder sb,
         int indentSpaces,
-        AccessModifiers accessModifier)
+        DeclarationModifiers declarationModifier)
     {
-        if (accessModifier != AccessModifiers.None)
+        if (declarationModifier == DeclarationModifiers.None)
         {
-            sb.Append(indentSpaces, $"{accessModifier.GetDescription()} ");
+            return;
         }
+
+        sb.Append(indentSpaces, declarationModifier.GetDescription());
+        sb.Append(' ');
     }
 
     public static void AppendTypeAndName(

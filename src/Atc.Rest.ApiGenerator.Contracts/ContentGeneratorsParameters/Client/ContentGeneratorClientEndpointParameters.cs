@@ -7,7 +7,7 @@ public record ContentGeneratorClientEndpointParameters(
     CodeDocumentationTags DocumentationTags,
     string HttpClientName,
     string UrlPath,
-    AccessModifiers AccessModifiers,
+    DeclarationModifiers DeclarationModifier,
     string EndpointName,
     string InterfaceName,
     string ResultName,

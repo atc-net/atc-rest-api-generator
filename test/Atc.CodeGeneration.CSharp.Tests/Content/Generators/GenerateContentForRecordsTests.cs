@@ -22,11 +22,12 @@ public record GetLocationsByCountryCodeA3Parameters(
             "Energy.Consumption.Api.Contracts.Contracts.Petrol.Parameters",
             DocumentationTags: null,
             Attributes: null,
+            DeclarationModifiers.PublicRecord,
             new List<RecordParameters>
             {
                 new(
                     DocumentationTags: null,
-                    AccessModifiers.PublicRecord,
+                    DeclarationModifiers.PublicRecord,
                     Name: "CreateLocationParameters",
                     new List<ParameterBaseParameters>
                     {
@@ -42,7 +43,7 @@ public record GetLocationsByCountryCodeA3Parameters(
                     }),
                 new(
                     DocumentationTags: null,
-                    AccessModifiers.PublicRecord,
+                    DeclarationModifiers.PublicRecord,
                     Name: "GetLocationByIdParameters",
                     new List<ParameterBaseParameters>
                     {
@@ -58,7 +59,7 @@ public record GetLocationsByCountryCodeA3Parameters(
                     }),
                 new(
                     DocumentationTags: null,
-                    AccessModifiers.PublicRecord,
+                    DeclarationModifiers.PublicRecord,
                     Name: "GetLocationsByCountryCodeA3Parameters",
                     new List<ParameterBaseParameters>
                     {

@@ -190,7 +190,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
         var methodConfigureDomainServices = new MethodParameters(
             DocumentationTags: null,
             Attributes: null,
-            AccessModifiers.PublicStatic,
+            DeclarationModifiers.PublicStatic,
             ReturnGenericTypeName: null,
             ReturnTypeName: "IServiceCollection",
             Name: "ConfigureDomainHandlers",
@@ -224,7 +224,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
             Namespace: $"{projectName}.Extensions",
             DocumentationTags: null,
             Attributes: [codeGeneratorAttribute],
-            AccessModifiers.PublicStaticClass,
+            DeclarationModifiers.PublicStaticClass,
             ClassTypeName: "ServiceCollectionEndpointHandlerExtensions",
             GenericTypeName: null,
             InheritedClassTypeName: null,

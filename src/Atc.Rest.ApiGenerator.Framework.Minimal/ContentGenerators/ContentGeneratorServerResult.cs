@@ -35,7 +35,7 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
         }
 
         sb.AppendLine(codeAttributeGenerator.Generate());
-        sb.AppendLine($"public class {parameters.ResultName}");
+        sb.AppendLine($"{parameters.DeclarationModifier.GetDescription()} {parameters.ResultName}");
         sb.AppendLine("{");
         sb.AppendLine(4, $"private {parameters.ResultName}(IResult result)");
         sb.AppendLine(4, "{");

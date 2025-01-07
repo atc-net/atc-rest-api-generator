@@ -301,7 +301,8 @@ public class ServerApiGenerator : IServerApiGenerator
                 apiGroupName,
                 GetRouteByApiGroupName(apiGroupName),
                 ContentGeneratorConstants.EndpointDefinition,
-                openApiDocument);
+                openApiDocument,
+                usePartialClassForEndpoints);
 
             var contentGenerator = new ContentGenerators.ContentGeneratorServerEndpoints(
                 new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
@@ -442,6 +443,7 @@ public class ServerApiGenerator : IServerApiGenerator
             codeGeneratorAttribute,
             modelName,
             apiSchemaModel,
+            usePartialClassForContracts,
             includeDeprecated);
 
         var contentGeneratorRecord = new GenerateContentForRecords(

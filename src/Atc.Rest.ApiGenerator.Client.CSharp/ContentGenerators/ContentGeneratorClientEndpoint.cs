@@ -41,7 +41,7 @@ public class ContentGeneratorClientEndpoint : IContentGenerator
         }
 
         sb.AppendLine(codeAttributeGenerator.Generate());
-        sb.AppendLine($"{parameters.AccessModifiers.GetDescription()} {parameters.EndpointName} : {parameters.InterfaceName}");
+        sb.AppendLine($"{parameters.DeclarationModifier.GetDescription()} {parameters.EndpointName} : {parameters.InterfaceName}");
         sb.AppendLine("{");
         sb.AppendLine(4, "private readonly IHttpClientFactory factory;");
         sb.AppendLine(4, "private readonly IHttpMessageFactory httpMessageFactory;");

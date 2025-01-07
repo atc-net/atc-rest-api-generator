@@ -5,6 +5,7 @@ public record ContentGeneratorServerEndpointParameters(
     string ApiGroupName,
     string RouteBase,
     CodeDocumentationTags DocumentationTags,
+    DeclarationModifiers DeclarationModifier,
     string EndpointName,
     ApiAuthorizeModel? Authorization,
     IList<ContentGeneratorServerEndpointMethodParameters> MethodParameters);

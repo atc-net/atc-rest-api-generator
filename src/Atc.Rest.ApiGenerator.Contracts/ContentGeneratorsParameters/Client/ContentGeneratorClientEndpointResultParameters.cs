@@ -4,7 +4,7 @@ public record ContentGeneratorClientEndpointResultParameters(
     string Namespace,
     string OperationName,
     CodeDocumentationTags DocumentationTags,
-    AccessModifiers AccessModifiers,
+    DeclarationModifiers DeclarationModifier,
     string EndpointResultName,
     string EndpointResultInterfaceName,
     string InheritClassName,

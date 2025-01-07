@@ -4,6 +4,7 @@ public record ContentGeneratorServerParameterParameters(
     string Namespace,
     string OperationName,
     CodeDocumentationTags DocumentationTags,
+    DeclarationModifiers DeclarationModifier,
     string ParameterName,
     IList<ContentGeneratorServerParameterParametersProperty> PropertyParameters);
 

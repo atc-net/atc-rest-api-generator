@@ -31,7 +31,7 @@ public static class ContentGeneratorClientEndpointResultInterfaceParametersFacto
             Namespace: @namespace,
             OperationName: operationName,
             DocumentationTags: openApiOperation.ExtractDocumentationTagsForEndpointResultInterface(),
-            usePartialClass ? AccessModifiers.PublicPartialInterface : AccessModifiers.PublicInterface,
+            usePartialClass ? DeclarationModifiers.PublicPartialInterface : DeclarationModifiers.PublicInterface,
             InterfaceName: $"I{operationName}{ContentGeneratorConstants.EndpointResult}",
             InheritInterfaceName: "IEndpointResponse",
             HasParameterType: hasParameterType,

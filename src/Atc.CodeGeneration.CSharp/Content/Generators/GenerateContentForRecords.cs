@@ -34,11 +34,11 @@ public class GenerateContentForRecords : IContentGenerator
                 recordParameters.Parameters.Any(x => x.IsGenericListType &&
                                                      x.TypeName.Equals("T", StringComparison.Ordinal)))
             {
-                sb.Append($"{recordParameters.AccessModifier.GetDescription()} {recordParameters.Name}<T>");
+                sb.Append($"{recordParameters.DeclarationModifier.GetDescription()} {recordParameters.Name}<T>");
             }
             else
             {
-                sb.Append($"{recordParameters.AccessModifier.GetDescription()} {recordParameters.Name}");
+                sb.Append($"{recordParameters.DeclarationModifier.GetDescription()} {recordParameters.Name}");
             }
 
             if (recordParameters.Parameters is null ||

@@ -25,6 +25,7 @@ public static class ContentGeneratorServerParameterParametersFactory
             @namespace,
             operationName,
             openApiOperation.ExtractDocumentationTagsForParameters(),
+            DeclarationModifiers.PublicClass,
             ParameterName: $"{operationName}{ContentGeneratorConstants.Parameters}",
             parameters);
     }
@@ -49,6 +50,7 @@ public static class ContentGeneratorServerParameterParametersFactory
             @namespace,
             operationName,
             openApiOperation.ExtractDocumentationTagsForParameters(),
+            DeclarationModifiers.PublicClass,
             ParameterName: $"{operationName}{ContentGeneratorConstants.Parameters}",
             SortOptionalParametersMustAppearAfterAllRequiredParameters(parameters));
     }
