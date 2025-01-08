@@ -1,7 +1,16 @@
 namespace Atc.Rest.ApiGenerator.Framework.Settings;
 
-public class GeneratorSettings
+public class GeneratorSettings(
+    Version version,
+    string projectName,
+    DirectoryInfo projectPath)
 {
+    public Version Version { get; private set; } = version;
+
+    public string ProjectName { get; private set; } = projectName;
+
+    public DirectoryInfo ProjectPath { get; private set; } = projectPath;
+
     public string EndpointsLocation { get; set; } = ContentGeneratorConstants.Endpoints;
 
     public string ContractsLocation { get; set; } = ContentGeneratorConstants.Contracts;

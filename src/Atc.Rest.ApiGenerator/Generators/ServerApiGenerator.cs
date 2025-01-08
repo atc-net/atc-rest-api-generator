@@ -29,14 +29,15 @@ public class ServerApiGenerator
 
         var operationSchemaMappings = apiOperationExtractor.Extract(projectOptions.Document);
 
-        var generatorSettings = GeneratorSettingsFactory.Create(projectOptions.ApiOptions.Generator);
+        var generatorSettings = GeneratorSettingsFactory.Create(
+            projectOptions.ApiGeneratorVersion,
+            projectOptions.ProjectName,
+            projectOptions.PathForSrcGenerate,
+            projectOptions.ApiOptions.Generator);
 
         serverApiGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerApiGenerator(
             loggerFactory,
             nugetPackageReferenceProvider,
-            projectOptions.ApiGeneratorVersion,
-            projectOptions.ProjectName,
-            projectOptions.PathForSrcGenerate,
             projectOptions.Document,
             operationSchemaMappings,
             projectOptions.RouteBase,
@@ -45,9 +46,6 @@ public class ServerApiGenerator
         serverApiGeneratorMinimalApi = new Framework.Minimal.ProjectGenerator.ServerApiGenerator(
             loggerFactory,
             nugetPackageReferenceProvider,
-            projectOptions.ApiGeneratorVersion,
-            projectOptions.ProjectName,
-            projectOptions.PathForSrcGenerate,
             projectOptions.Document,
             operationSchemaMappings,
             projectOptions.RouteBase,

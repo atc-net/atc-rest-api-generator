@@ -5,9 +5,6 @@ public class ServerApiGenerator : IServerApiGenerator
 {
     private readonly ILogger<ServerApiGenerator> logger;
     private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
-    private readonly Version apiGeneratorVersion;
-    private readonly string projectName;
-    private readonly DirectoryInfo projectPath;
     private readonly OpenApiDocument openApiDocument;
     private readonly IList<ApiOperation> operationSchemaMappings;
     private readonly string routeBase;
@@ -18,9 +15,6 @@ public class ServerApiGenerator : IServerApiGenerator
     public ServerApiGenerator(
         ILoggerFactory loggerFactory,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
-        Version apiGeneratorVersion,
-        string projectName,
-        DirectoryInfo projectPath,
         OpenApiDocument openApiDocument,
         IList<ApiOperation> operationSchemaMappings,
         string routeBase,
@@ -28,29 +22,23 @@ public class ServerApiGenerator : IServerApiGenerator
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
         ArgumentNullException.ThrowIfNull(nugetPackageReferenceProvider);
-        ArgumentNullException.ThrowIfNull(apiGeneratorVersion);
-        ArgumentNullException.ThrowIfNull(projectName);
-        ArgumentNullException.ThrowIfNull(projectPath);
         ArgumentNullException.ThrowIfNull(openApiDocument);
         ArgumentNullException.ThrowIfNull(routeBase);
         ArgumentNullException.ThrowIfNull(generatorSettings);
 
         logger = loggerFactory.CreateLogger<ServerApiGenerator>();
         this.nugetPackageReferenceProvider = nugetPackageReferenceProvider;
-        this.apiGeneratorVersion = apiGeneratorVersion;
-        this.projectName = projectName;
-        this.projectPath = projectPath;
         this.openApiDocument = openApiDocument;
         this.operationSchemaMappings = operationSchemaMappings;
         this.routeBase = routeBase;
         settings = generatorSettings;
 
         codeGeneratorContentHeader = GeneratedCodeHeaderGeneratorFactory
-            .Create(apiGeneratorVersion)
+            .Create(settings.Version)
             .Generate();
         codeGeneratorAttribute = new AttributeParameters(
             "GeneratedCode",
-            $"\"{ContentWriterConstants.ApiGeneratorName}\", \"{apiGeneratorVersion}\"");
+            $"\"{ContentWriterConstants.ApiGeneratorName}\", \"{settings.Version}\"");
     }
 
     public string ContractsLocation { get; set; } = ContentGeneratorConstants.Contracts;
@@ -82,7 +70,7 @@ public class ServerApiGenerator : IServerApiGenerator
                     new("GenerateDocumentationFile", Attributes: null, "true"),
                 ],
                 [
-                    new("DocumentationFile", Attributes: null, @$"bin\Debug\net8.0\{projectName}.xml"),
+                    new("DocumentationFile", Attributes: null, @$"bin\Debug\net8.0\{settings.ProjectName}.xml"),
                     new("NoWarn", Attributes: null, "$(NoWarn);1573;1591;1701;1702;1712;8618;"),
                 ],
             ],
@@ -97,8 +85,8 @@ public class ServerApiGenerator : IServerApiGenerator
 
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
-            projectPath,
-            FileInfoFactory.Create(projectPath, $"{projectName}.csproj"),
+            settings.ProjectPath,
+            FileInfoFactory.Create(settings.ProjectPath, $"{settings.ProjectName}.csproj"),
             ContentWriterArea.Src,
             content,
             overrideIfExist: false);
@@ -106,7 +94,7 @@ public class ServerApiGenerator : IServerApiGenerator
 
     public void GenerateAssemblyMarker()
     {
-        ArgumentNullException.ThrowIfNull(apiGeneratorVersion);
+        ArgumentNullException.ThrowIfNull(settings.Version);
 
         var suppressMessageAvoidEmptyInterfaceAttribute = new AttributeParameters(
             "SuppressMessage",
@@ -114,7 +102,7 @@ public class ServerApiGenerator : IServerApiGenerator
 
         var interfaceParameters = InterfaceParametersFactory.Create(
             codeGeneratorContentHeader,
-            projectName,
+            settings.ProjectName,
             [suppressMessageAvoidEmptyInterfaceAttribute, codeGeneratorAttribute],
             "IApiContractAssemblyMarker");
 
@@ -126,8 +114,8 @@ public class ServerApiGenerator : IServerApiGenerator
 
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
-            projectPath,
-            FileInfoFactory.Create(projectPath, "IApiContractAssemblyMarker.cs"),
+            settings.ProjectPath,
+            FileInfoFactory.Create(settings.ProjectPath, "IApiContractAssemblyMarker.cs"),
             ContentWriterArea.Src,
             content);
     }
@@ -166,7 +154,7 @@ public class ServerApiGenerator : IServerApiGenerator
         {
             var apiGroupName = openApiPath.GetApiGroupName();
 
-            var fullNamespace = NamespaceFactory.CreateFull(projectName, ContractsLocation, apiGroupName);
+            var fullNamespace = NamespaceFactory.CreateFull(settings.ProjectName, ContractsLocation, apiGroupName);
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
@@ -187,8 +175,8 @@ public class ServerApiGenerator : IServerApiGenerator
                     openApiPath.Value.Parameters);
 
                 var contentGenerator = new ContentGenerators.ContentGeneratorServerParameter(
-                    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
-                    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
+                    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(settings.Version)),
+                    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(settings.Version)),
                     new CodeDocumentationTagsGenerator(),
                     parameterParameters);
 
@@ -196,8 +184,8 @@ public class ServerApiGenerator : IServerApiGenerator
 
                 var contentWriter = new ContentWriter(logger);
                 contentWriter.Write(
-                    projectPath,
-                    FileInfoFactory.Create(projectPath, ContractsLocation, apiGroupName, ContentGeneratorConstants.Parameters, $"{parameterParameters.ParameterName}.cs"),
+                    settings.ProjectPath,
+                    FileInfoFactory.Create(settings.ProjectPath, ContractsLocation, apiGroupName, ContentGeneratorConstants.Parameters, $"{parameterParameters.ParameterName}.cs"),
                     ContentWriterArea.Src,
                     content);
             }
@@ -210,7 +198,7 @@ public class ServerApiGenerator : IServerApiGenerator
         {
             var apiGroupName = openApiPath.GetApiGroupName();
 
-            var fullNamespace = NamespaceFactory.CreateFull(projectName, ContractsLocation, apiGroupName);
+            var fullNamespace = NamespaceFactory.CreateFull(settings.ProjectName, ContractsLocation, apiGroupName);
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
@@ -224,8 +212,8 @@ public class ServerApiGenerator : IServerApiGenerator
                     openApiOperation.Value);
 
                 var contentGenerator = new ContentGenerators.ContentGeneratorServerResult(
-                    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
-                    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
+                    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(settings.Version)),
+                    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(settings.Version)),
                     new CodeDocumentationTagsGenerator(),
                     resultParameters,
                     settings.UseProblemDetailsAsDefaultResponseBody);
@@ -234,8 +222,8 @@ public class ServerApiGenerator : IServerApiGenerator
 
                 var contentWriter = new ContentWriter(logger);
                 contentWriter.Write(
-                    projectPath,
-                    FileInfoFactory.Create(projectPath, ContractsLocation, apiGroupName, ContentGeneratorConstants.Results, $"{resultParameters.ResultName}.cs"),
+                    settings.ProjectPath,
+                    FileInfoFactory.Create(settings.ProjectPath, ContractsLocation, apiGroupName, ContentGeneratorConstants.Results, $"{resultParameters.ResultName}.cs"),
                     ContentWriterArea.Src,
                     content);
             }
@@ -248,7 +236,7 @@ public class ServerApiGenerator : IServerApiGenerator
         {
             var apiGroupName = openApiPath.GetApiGroupName();
 
-            var fullNamespace = NamespaceFactory.CreateFull(projectName, ContractsLocation, apiGroupName);
+            var fullNamespace = NamespaceFactory.CreateFull(settings.ProjectName, ContractsLocation, apiGroupName);
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
@@ -272,8 +260,8 @@ public class ServerApiGenerator : IServerApiGenerator
 
                 var contentWriter = new ContentWriter(logger);
                 contentWriter.Write(
-                    projectPath,
-                    FileInfoFactory.Create(projectPath, ContractsLocation, apiGroupName, ContentGeneratorConstants.Interfaces, $"{interfaceParameters.InterfaceTypeName}.cs"),
+                    settings.ProjectPath,
+                    FileInfoFactory.Create(settings.ProjectPath, ContractsLocation, apiGroupName, ContentGeneratorConstants.Interfaces, $"{interfaceParameters.InterfaceTypeName}.cs"),
                     ContentWriterArea.Src,
                     content);
             }
@@ -284,11 +272,11 @@ public class ServerApiGenerator : IServerApiGenerator
     {
         foreach (var apiGroupName in openApiDocument.GetApiGroupNames())
         {
-            var fullNamespace = NamespaceFactory.CreateFull(projectName, EndpointsLocation);
+            var fullNamespace = NamespaceFactory.CreateFull(settings.ProjectName, EndpointsLocation);
 
             var endpointParameters = ContentGeneratorServerEndpointParametersFactory.Create(
                 operationSchemaMappings,
-                projectName,
+                settings.ProjectName,
                 fullNamespace,
                 apiGroupName,
                 GetRouteByApiGroupName(apiGroupName),
@@ -297,8 +285,8 @@ public class ServerApiGenerator : IServerApiGenerator
                 settings.UsePartialClassForEndpoints);
 
             var contentGenerator = new ContentGenerators.ContentGeneratorServerEndpoints(
-                new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
-                new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
+                new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(settings.Version)),
+                new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(settings.Version)),
                 new CodeDocumentationTagsGenerator(),
                 endpointParameters,
                 settings.UseProblemDetailsAsDefaultResponseBody);
@@ -307,8 +295,8 @@ public class ServerApiGenerator : IServerApiGenerator
 
             var contentWriter = new ContentWriter(logger);
             contentWriter.Write(
-                projectPath,
-                FileInfoFactory.Create(projectPath, EndpointsLocation, $"{endpointParameters.EndpointName}.cs"),
+                settings.ProjectPath,
+                FileInfoFactory.Create(settings.ProjectPath, EndpointsLocation, $"{endpointParameters.EndpointName}.cs"),
                 ContentWriterArea.Src,
                 content);
         }
@@ -319,7 +307,7 @@ public class ServerApiGenerator : IServerApiGenerator
         => ResourcesHelper.CopyApiSpecification(
             apiSpecificationFile,
             openApiDocument,
-            projectPath);
+            settings.ProjectPath);
 
     public void MaintainGlobalUsings(
         bool removeNamespaceGroupSeparatorInGlobalUsings)
@@ -358,7 +346,7 @@ public class ServerApiGenerator : IServerApiGenerator
 
         if (operationSchemaMappings.Any(apiOperation => apiOperation.Model.IsShared))
         {
-            var requiredUsing = NamespaceFactory.CreateFull(projectName, ContractsLocation);
+            var requiredUsing = NamespaceFactory.CreateFull(settings.ProjectName, ContractsLocation);
             if (!requiredUsings.Contains(requiredUsing, StringComparer.CurrentCulture))
             {
                 requiredUsings.Add(requiredUsing);
@@ -366,12 +354,12 @@ public class ServerApiGenerator : IServerApiGenerator
         }
 
         var apiGroupNames = openApiDocument.GetApiGroupNames();
-        requiredUsings.AddRange(apiGroupNames.Select(x => NamespaceFactory.CreateFull(projectName, ContractsLocation, x)));
+        requiredUsings.AddRange(apiGroupNames.Select(x => NamespaceFactory.CreateFull(settings.ProjectName, ContractsLocation, x)));
 
         GlobalUsingsHelper.CreateOrUpdate(
             logger,
             ContentWriterArea.Src,
-            projectPath,
+            settings.ProjectPath,
             requiredUsings,
             removeNamespaceGroupSeparatorInGlobalUsings);
     }
@@ -396,7 +384,7 @@ public class ServerApiGenerator : IServerApiGenerator
         string enumerationName,
         OpenApiSchema openApiSchemaEnumeration)
     {
-        var fullNamespace = NamespaceFactory.CreateFull(projectName, ContractsLocation);
+        var fullNamespace = NamespaceFactory.CreateFull(settings.ProjectName, ContractsLocation);
 
         var enumParameters = ContentGeneratorServerClientEnumParametersFactory.Create(
             codeGeneratorContentHeader,
@@ -413,8 +401,8 @@ public class ServerApiGenerator : IServerApiGenerator
 
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
-            projectPath,
-            FileInfoFactory.Create(projectPath, ContractsLocation, ContentGeneratorConstants.SpecialFolderEnumerationTypes, $"{enumerationName}.cs"),
+            settings.ProjectPath,
+            FileInfoFactory.Create(settings.ProjectPath, ContractsLocation, ContentGeneratorConstants.SpecialFolderEnumerationTypes, $"{enumerationName}.cs"),
             ContentWriterArea.Src,
             content);
     }
@@ -426,8 +414,8 @@ public class ServerApiGenerator : IServerApiGenerator
         bool isSharedContract)
     {
         var fullNamespace = isSharedContract
-            ? NamespaceFactory.CreateFull(projectName, ContractsLocation)
-            : NamespaceFactory.CreateFull(projectName, ContractsLocation, apiGroupName);
+            ? NamespaceFactory.CreateFull(settings.ProjectName, ContractsLocation)
+            : NamespaceFactory.CreateFull(settings.ProjectName, ContractsLocation, apiGroupName);
 
         var parameters = ContentGeneratorServerClientModelParametersFactory.CreateForRecord(
             codeGeneratorContentHeader,
@@ -446,10 +434,10 @@ public class ServerApiGenerator : IServerApiGenerator
 
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
-            projectPath,
+            settings.ProjectPath,
             isSharedContract
-                ? FileInfoFactory.Create(projectPath, ContractsLocation, ContentGeneratorConstants.SpecialFolderSharedModels, $"{modelName}.cs")
-                : FileInfoFactory.Create(projectPath, ContractsLocation, apiGroupName, ContentGeneratorConstants.Models, $"{modelName}.cs"),
+                ? FileInfoFactory.Create(settings.ProjectPath, ContractsLocation, ContentGeneratorConstants.SpecialFolderSharedModels, $"{modelName}.cs")
+                : FileInfoFactory.Create(settings.ProjectPath, ContractsLocation, apiGroupName, ContentGeneratorConstants.Models, $"{modelName}.cs"),
             ContentWriterArea.Src,
             content);
     }

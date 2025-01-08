@@ -4,9 +4,7 @@ namespace Atc.Rest.ApiGenerator.Framework.Mvc.ProjectGenerator;
 public class ServerDomainGenerator : IServerDomainGenerator
 {
     private readonly ILogger<ServerDomainGenerator> logger;
-    private readonly string projectName;
     private readonly string apiProjectName;
-    private readonly DirectoryInfo projectPath;
     private readonly OpenApiDocument openApiDocument;
     private readonly string codeGeneratorContentHeader;
     private readonly AttributeParameters codeGeneratorAttribute;
@@ -14,33 +12,25 @@ public class ServerDomainGenerator : IServerDomainGenerator
 
     public ServerDomainGenerator(
         ILoggerFactory loggerFactory,
-        Version apiGeneratorVersion,
-        string projectName,
         string apiProjectName,
-        DirectoryInfo projectPath,
         OpenApiDocument openApiDocument,
         GeneratorSettings generatorSettings)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
-        ArgumentNullException.ThrowIfNull(apiGeneratorVersion);
-        ArgumentNullException.ThrowIfNull(projectName);
         ArgumentNullException.ThrowIfNull(apiProjectName);
-        ArgumentNullException.ThrowIfNull(projectPath);
         ArgumentNullException.ThrowIfNull(openApiDocument);
         ArgumentNullException.ThrowIfNull(generatorSettings);
 
         logger = loggerFactory.CreateLogger<ServerDomainGenerator>();
-        this.projectName = projectName;
         this.apiProjectName = apiProjectName;
-        this.projectPath = projectPath;
         this.openApiDocument = openApiDocument;
         settings = generatorSettings;
 
         codeGeneratorContentHeader = GeneratedCodeHeaderGeneratorFactory
-            .Create(apiGeneratorVersion)
+            .Create(settings.Version)
             .Generate();
         codeGeneratorAttribute = AttributeParametersFactory
-            .CreateGeneratedCode(apiGeneratorVersion);
+            .CreateGeneratedCode(settings.Version);
     }
 
     public async Task ScaffoldProjectFile()
@@ -58,7 +48,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
                     new("GenerateDocumentationFile", Attributes: null, "true"),
                 ],
                 [
-                    new("DocumentationFile", Attributes: null, @$"bin\Debug\net8.0\{projectName}.xml"),
+                    new("DocumentationFile", Attributes: null, @$"bin\Debug\net8.0\{settings.ProjectName}.xml"),
                     new("NoWarn", Attributes: null, "$(NoWarn);1573;1591;1701;1702;1712;8618;"),
                 ],
             ],
@@ -88,8 +78,8 @@ public class ServerDomainGenerator : IServerDomainGenerator
 
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
-            projectPath,
-            projectPath.CombineFileInfo($"{projectName}.csproj"),
+            settings.ProjectPath,
+            settings.ProjectPath.CombineFileInfo($"{settings.ProjectName}.csproj"),
             ContentWriterArea.Src,
             content,
             overrideIfExist: false);
@@ -103,7 +93,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
 
             foreach (var openApiOperation in urlPath.Value.Operations)
             {
-                var fullNamespace = $"{projectName}.{ContentGeneratorConstants.Handlers}.{apiGroupName}";
+                var fullNamespace = $"{settings.ProjectName}.{ContentGeneratorConstants.Handlers}.{apiGroupName}";
 
                 var classParameters = ContentGeneratorServerHandlerParametersFactory.Create(
                     fullNamespace,
@@ -118,8 +108,8 @@ public class ServerDomainGenerator : IServerDomainGenerator
 
                 var contentWriter = new ContentWriter(logger);
                 contentWriter.Write(
-                    projectPath,
-                    projectPath.CombineFileInfo(
+                    settings.ProjectPath,
+                    settings.ProjectPath.CombineFileInfo(
                         ContentGeneratorConstants.Handlers,
                         apiGroupName,
                         $"{classParameters.TypeName}.cs"),
@@ -134,7 +124,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
     {
         var classParameters = ClassParametersFactory.Create(
             codeGeneratorContentHeader,
-            projectName,
+            settings.ProjectName,
             codeGeneratorAttribute,
             "DomainRegistration");
 
@@ -146,8 +136,8 @@ public class ServerDomainGenerator : IServerDomainGenerator
 
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
-            projectPath,
-            projectPath.CombineFileInfo("DomainRegistration.cs"),
+            settings.ProjectPath,
+            settings.ProjectPath.CombineFileInfo("DomainRegistration.cs"),
             ContentWriterArea.Src,
             content);
     }
@@ -170,7 +160,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
         GlobalUsingsHelper.CreateOrUpdate(
             logger,
             ContentWriterArea.Src,
-            projectPath,
+            settings.ProjectPath,
             requiredUsings,
             removeNamespaceGroupSeparatorInGlobalUsings);
     }

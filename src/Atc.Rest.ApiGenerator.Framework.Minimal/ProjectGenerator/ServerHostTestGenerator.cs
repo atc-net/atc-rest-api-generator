@@ -4,54 +4,48 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
 {
     private readonly ILogger<ServerHostTestGenerator> logger;
     private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
-    private readonly string projectName;
     private readonly string hostProjectName;
     private readonly string apiProjectName;
     private readonly string domainProjectName;
-    private readonly DirectoryInfo projectPath;
     private readonly OpenApiDocument openApiDocument;
     private readonly IList<ApiOperation> operationSchemaMappings;
     private readonly string codeGeneratorContentHeader;
     private readonly AttributeParameters codeGeneratorAttribute;
+    private readonly GeneratorSettings settings;
 
     public ServerHostTestGenerator(
         ILoggerFactory loggerFactory,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
-        Version apiGeneratorVersion,
-        string projectName,
         string hostProjectName,
         string apiProjectName,
         string domainProjectName,
-        DirectoryInfo projectPath,
         OpenApiDocument openApiDocument,
-        IList<ApiOperation> operationSchemaMappings)
+        IList<ApiOperation> operationSchemaMappings,
+        GeneratorSettings generatorSettings)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
         ArgumentNullException.ThrowIfNull(nugetPackageReferenceProvider);
-        ArgumentNullException.ThrowIfNull(apiGeneratorVersion);
-        ArgumentNullException.ThrowIfNull(projectName);
         ArgumentNullException.ThrowIfNull(hostProjectName);
         ArgumentNullException.ThrowIfNull(apiProjectName);
         ArgumentNullException.ThrowIfNull(domainProjectName);
-        ArgumentNullException.ThrowIfNull(projectPath);
         ArgumentNullException.ThrowIfNull(openApiDocument);
         ArgumentNullException.ThrowIfNull(operationSchemaMappings);
+        ArgumentNullException.ThrowIfNull(generatorSettings);
 
         logger = loggerFactory.CreateLogger<ServerHostTestGenerator>();
         this.nugetPackageReferenceProvider = nugetPackageReferenceProvider;
-        this.projectName = projectName;
         this.hostProjectName = hostProjectName;
         this.apiProjectName = apiProjectName;
         this.domainProjectName = domainProjectName;
-        this.projectPath = projectPath;
         this.openApiDocument = openApiDocument;
         this.operationSchemaMappings = operationSchemaMappings;
+        settings = generatorSettings;
 
         codeGeneratorContentHeader = GeneratedCodeHeaderGeneratorFactory
-            .Create(apiGeneratorVersion)
+            .Create(settings.Version)
             .Generate();
         codeGeneratorAttribute = AttributeParametersFactory
-            .CreateGeneratedCode(apiGeneratorVersion);
+            .CreateGeneratedCode(settings.Version);
     }
 
     public async Task ScaffoldProjectFile()
@@ -75,7 +69,7 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
                     new("TargetFramework", Attributes: null, "net8.0"),
                 ],
                 [
-                    new("DocumentationFile", Attributes: null, @$"bin\Debug\net8.0\{projectName}.xml"),
+                    new("DocumentationFile", Attributes: null, @$"bin\Debug\net8.0\{settings.ProjectName}.xml"),
                     new("NoWarn", Attributes: null, "$(NoWarn);1573;1591;1701;1702;1712;8618;"),
                 ],
             ],
@@ -111,8 +105,8 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
 
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
-            projectPath,
-            projectPath.CombineFileInfo($"{projectName}.csproj"),
+            settings.ProjectPath,
+            settings.ProjectPath.CombineFileInfo($"{settings.ProjectName}.csproj"),
             ContentWriterArea.Src,
             content,
             overrideIfExist: false);
@@ -189,7 +183,7 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
                     continue;
                 }
 
-                var fullNamespace = $"{projectName}.{ContentGeneratorConstants.Endpoints}.{apiGroupName}";
+                var fullNamespace = NamespaceFactory.CreateFull(settings.ProjectName, settings.EndpointsLocation, apiGroupName);
 
                 var classParameters = ContentGeneratorServerTestEndpointHandlerStubParametersFactory.Create(
                     codeGeneratorContentHeader,
@@ -206,8 +200,8 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
 
                 var contentWriter = new ContentWriter(logger);
                 contentWriter.Write(
-                    projectPath,
-                    projectPath.CombineFileInfo(ContentGeneratorConstants.Endpoints, apiGroupName, $"{classParameters.TypeName}.cs"),
+                    settings.ProjectPath,
+                    FileInfoFactory.Create(settings.ProjectPath, settings.EndpointsLocation, apiGroupName, $"{classParameters.TypeName}.cs"),
                     ContentWriterArea.Test,
                     content);
             }
@@ -297,7 +291,7 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
         GlobalUsingsHelper.CreateOrUpdate(
             logger,
             ContentWriterArea.Test,
-            projectPath,
+            settings.ProjectPath,
             requiredUsings,
             removeNamespaceGroupSeparatorInGlobalUsings);
     }

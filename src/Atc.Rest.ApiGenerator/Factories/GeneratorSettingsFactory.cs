@@ -3,11 +3,17 @@ namespace Atc.Rest.ApiGenerator.Factories;
 public static class GeneratorSettingsFactory
 {
     public static GeneratorSettings Create(
+        Version version,
+        string projectName,
+        DirectoryInfo projectPath,
         ApiOptionsGenerator apiOptionsGenerator)
     {
         ArgumentNullException.ThrowIfNull(apiOptionsGenerator);
 
-        var generatorSettings = new GeneratorSettings
+        var generatorSettings = new GeneratorSettings(
+            version,
+            projectName,
+            projectPath)
         {
             UseProblemDetailsAsDefaultResponseBody = apiOptionsGenerator.Response.UseProblemDetailsAsDefaultBody,
             UsePartialClassForContracts = apiOptionsGenerator.UsePartialClassForContracts,

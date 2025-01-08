@@ -23,14 +23,15 @@ public class ClientCSharpApiGenerator
 
         var operationSchemaMappings = apiOperationExtractor.Extract(projectOptions.Document);
 
-        var generatorSettings = GeneratorSettingsFactory.Create(projectOptions.ApiOptions.Generator);
+        var generatorSettings = GeneratorSettingsFactory.Create(
+            projectOptions.ApiGeneratorVersion,
+            projectOptions.ProjectName,
+            projectOptions.PathForSrcGenerate,
+            projectOptions.ApiOptions.Generator);
 
         clientCSharpApiGenerator = new Client.CSharp.ProjectGenerator.ClientCSharpApiGenerator(
             loggerFactory,
             nugetPackageReferenceProvider,
-            projectOptions.ApiGeneratorVersion,
-            projectOptions.ProjectName,
-            projectOptions.PathForSrcGenerate,
             projectOptions.Document,
             operationSchemaMappings,
             generatorSettings,
