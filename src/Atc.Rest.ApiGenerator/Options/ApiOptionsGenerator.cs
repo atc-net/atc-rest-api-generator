@@ -18,6 +18,8 @@ public class ApiOptionsGenerator
 
     public string EndpointsLocation { get; set; } = ContentGeneratorConstants.Endpoints;
 
+    public string HandlersLocation { get; set; } = ContentGeneratorConstants.Handlers;
+
     public bool UsePartialClassForContracts { get; set; }
 
     public bool UsePartialClassForEndpoints { get; set; }

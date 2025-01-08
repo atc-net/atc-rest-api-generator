@@ -10,6 +10,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
     private readonly OpenApiDocument openApiDocument;
     private readonly string codeGeneratorContentHeader;
     private readonly AttributeParameters codeGeneratorAttribute;
+    private readonly GeneratorSettings settings;
 
     public ServerDomainGenerator(
         ILoggerFactory loggerFactory,
@@ -17,7 +18,8 @@ public class ServerDomainGenerator : IServerDomainGenerator
         string projectName,
         string apiProjectName,
         DirectoryInfo projectPath,
-        OpenApiDocument openApiDocument)
+        OpenApiDocument openApiDocument,
+        GeneratorSettings generatorSettings)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
         ArgumentNullException.ThrowIfNull(apiGeneratorVersion);
@@ -25,12 +27,14 @@ public class ServerDomainGenerator : IServerDomainGenerator
         ArgumentNullException.ThrowIfNull(apiProjectName);
         ArgumentNullException.ThrowIfNull(projectPath);
         ArgumentNullException.ThrowIfNull(openApiDocument);
+        ArgumentNullException.ThrowIfNull(generatorSettings);
 
         logger = loggerFactory.CreateLogger<ServerDomainGenerator>();
         this.projectName = projectName;
         this.apiProjectName = apiProjectName;
         this.projectPath = projectPath;
         this.openApiDocument = openApiDocument;
+        settings = generatorSettings;
 
         codeGeneratorContentHeader = GeneratedCodeHeaderGeneratorFactory
             .Create(apiGeneratorVersion)
@@ -38,8 +42,6 @@ public class ServerDomainGenerator : IServerDomainGenerator
         codeGeneratorAttribute = AttributeParametersFactory
             .CreateGeneratedCode(apiGeneratorVersion);
     }
-
-    public string ContractsLocation { get; set; } = ContentGeneratorConstants.Contracts;
 
     public async Task ScaffoldProjectFile()
     {
@@ -163,7 +165,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
 
         var apiGroupNames = openApiDocument.GetApiGroupNames();
 
-        requiredUsings.AddRange(apiGroupNames.Select(x => NamespaceFactory.CreateFull(apiProjectName, ContractsLocation, x)));
+        requiredUsings.AddRange(apiGroupNames.Select(x => NamespaceFactory.CreateFull(apiProjectName, settings.ContractsLocation, x)));
 
         GlobalUsingsHelper.CreateOrUpdate(
             logger,

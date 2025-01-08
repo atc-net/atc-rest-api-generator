@@ -29,18 +29,16 @@ public class ServerDomainGenerator
 
         var apiProjectName = projectOptions.ProjectName.Replace(".Domain", ".Api.Generated", StringComparison.Ordinal);
 
+        var generatorSettings = GeneratorSettingsFactory.Create(projectOptions.ApiOptions.Generator);
+
         serverDomainGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerDomainGenerator(
             loggerFactory,
             projectOptions.ApiGeneratorVersion,
             projectOptions.ProjectName,
             apiProjectName,
             projectOptions.PathForSrcGenerate,
-            projectOptions.Document);
-
-        if (!string.IsNullOrEmpty(projectOptions.ApiOptions.Generator.ContractsLocation))
-        {
-            serverDomainGeneratorMvc.ContractsLocation = projectOptions.ApiOptions.Generator.ContractsLocation;
-        }
+            projectOptions.Document,
+            generatorSettings);
 
         serverDomainGeneratorMinimalApi = new Framework.Minimal.ProjectGenerator.ServerDomainGenerator(
             loggerFactory,
@@ -49,16 +47,12 @@ public class ServerDomainGenerator
             projectOptions.ProjectName,
             apiProjectName,
             projectOptions.PathForSrcGenerate,
-            projectOptions.Document);
-
-        if (!string.IsNullOrEmpty(projectOptions.ApiOptions.Generator.ContractsLocation))
-        {
-            serverDomainGeneratorMinimalApi.ContractsLocation = projectOptions.ApiOptions.Generator.ContractsLocation;
-        }
+            projectOptions.Document,
+            generatorSettings);
 
         if (projectOptions.PathForTestGenerate is not null)
         {
-            serverDomainTestGenerator = new Framework.ProjectGenerator.ServerDomainTestGenerator(
+            serverDomainTestGenerator = new ServerDomainTestGenerator(
                 loggerFactory,
                 nugetPackageReferenceProvider,
                 projectOptions.ApiGeneratorVersion,

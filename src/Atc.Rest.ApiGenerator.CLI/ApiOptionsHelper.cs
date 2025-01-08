@@ -166,6 +166,12 @@ public static class ApiOptionsHelper
                 apiOptions.Generator.EndpointsLocation = serverCommandSettings.EndpointsLocation.Value;
             }
 
+            if (serverCommandSettings.HandlersLocation is not null &&
+                serverCommandSettings.HandlersLocation.IsSet)
+            {
+                apiOptions.Generator.HandlersLocation = serverCommandSettings.HandlersLocation.Value;
+            }
+
             if (serverCommandSettings.UsePartialClassForContracts)
             {
                 apiOptions.Generator.UsePartialClassForContracts = serverCommandSettings.UsePartialClassForContracts;

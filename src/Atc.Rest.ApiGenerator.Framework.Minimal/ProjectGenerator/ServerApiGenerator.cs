@@ -13,10 +13,7 @@ public class ServerApiGenerator : IServerApiGenerator
     private readonly string routeBase;
     private readonly string codeGeneratorContentHeader;
     private readonly AttributeParameters codeGeneratorAttribute;
-    private readonly bool useProblemDetailsAsDefaultResponseBody;
-    private readonly bool usePartialClassForContracts;
-    private readonly bool usePartialClassForEndpoints;
-    private readonly bool includeDeprecated;
+    private readonly GeneratorSettings settings;
 
     public ServerApiGenerator(
         ILoggerFactory loggerFactory,
@@ -27,10 +24,7 @@ public class ServerApiGenerator : IServerApiGenerator
         OpenApiDocument openApiDocument,
         IList<ApiOperation> operationSchemaMappings,
         string routeBase,
-        bool useProblemDetailsAsDefaultResponseBody,
-        bool usePartialClassForContracts,
-        bool usePartialClassForEndpoints,
-        bool includeDeprecated)
+        GeneratorSettings generatorSettings)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
         ArgumentNullException.ThrowIfNull(nugetPackageReferenceProvider);
@@ -39,6 +33,7 @@ public class ServerApiGenerator : IServerApiGenerator
         ArgumentNullException.ThrowIfNull(projectPath);
         ArgumentNullException.ThrowIfNull(openApiDocument);
         ArgumentNullException.ThrowIfNull(routeBase);
+        ArgumentNullException.ThrowIfNull(generatorSettings);
 
         logger = loggerFactory.CreateLogger<ServerApiGenerator>();
         this.nugetPackageReferenceProvider = nugetPackageReferenceProvider;
@@ -48,10 +43,7 @@ public class ServerApiGenerator : IServerApiGenerator
         this.openApiDocument = openApiDocument;
         this.operationSchemaMappings = operationSchemaMappings;
         this.routeBase = routeBase;
-        this.useProblemDetailsAsDefaultResponseBody = useProblemDetailsAsDefaultResponseBody;
-        this.usePartialClassForContracts = usePartialClassForContracts;
-        this.usePartialClassForEndpoints = usePartialClassForEndpoints;
-        this.includeDeprecated = includeDeprecated;
+        settings = generatorSettings;
 
         codeGeneratorContentHeader = GeneratedCodeHeaderGeneratorFactory
             .Create(apiGeneratorVersion)
@@ -178,7 +170,7 @@ public class ServerApiGenerator : IServerApiGenerator
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
-                if (openApiOperation.Value.Deprecated && !includeDeprecated)
+                if (openApiOperation.Value.Deprecated && !settings.IncludeDeprecatedOperations)
                 {
                     continue;
                 }
@@ -222,7 +214,7 @@ public class ServerApiGenerator : IServerApiGenerator
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
-                if (openApiOperation.Value.Deprecated && !includeDeprecated)
+                if (openApiOperation.Value.Deprecated && !settings.IncludeDeprecatedOperations)
                 {
                     continue;
                 }
@@ -236,7 +228,7 @@ public class ServerApiGenerator : IServerApiGenerator
                     new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
                     new CodeDocumentationTagsGenerator(),
                     resultParameters,
-                    useProblemDetailsAsDefaultResponseBody);
+                    settings.UseProblemDetailsAsDefaultResponseBody);
 
                 var content = contentGenerator.Generate();
 
@@ -260,7 +252,7 @@ public class ServerApiGenerator : IServerApiGenerator
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
-                if (openApiOperation.Value.Deprecated && !includeDeprecated)
+                if (openApiOperation.Value.Deprecated && !settings.IncludeDeprecatedOperations)
                 {
                     continue;
                 }
@@ -302,14 +294,14 @@ public class ServerApiGenerator : IServerApiGenerator
                 GetRouteByApiGroupName(apiGroupName),
                 ContentGeneratorConstants.EndpointDefinition,
                 openApiDocument,
-                usePartialClassForEndpoints);
+                settings.UsePartialClassForEndpoints);
 
             var contentGenerator = new ContentGenerators.ContentGeneratorServerEndpoints(
                 new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
                 new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
                 new CodeDocumentationTagsGenerator(),
                 endpointParameters,
-                useProblemDetailsAsDefaultResponseBody);
+                settings.UseProblemDetailsAsDefaultResponseBody);
 
             var content = contentGenerator.Generate();
 
@@ -343,7 +335,7 @@ public class ServerApiGenerator : IServerApiGenerator
             "Microsoft.AspNetCore.Mvc",
         };
 
-        if (openApiDocument.IsUsingRequiredForSystemTextJsonSerializationAndSystemRuntimeSerialization(includeDeprecated))
+        if (openApiDocument.IsUsingRequiredForSystemTextJsonSerializationAndSystemRuntimeSerialization(settings.IncludeDeprecatedOperations))
         {
             requiredUsings.Add("System.Runtime.Serialization");
             requiredUsings.Add("System.Text.Json.Serialization");
@@ -354,7 +346,7 @@ public class ServerApiGenerator : IServerApiGenerator
             requiredUsings.Add("Atc.Rest.Results");
         }
 
-        if (openApiDocument.IsUsingRequiredForMicrosoftAspNetCoreAuthorization(includeDeprecated))
+        if (openApiDocument.IsUsingRequiredForMicrosoftAspNetCoreAuthorization(settings.IncludeDeprecatedOperations))
         {
             requiredUsings.Add("Microsoft.AspNetCore.Authorization");
         }
@@ -443,8 +435,8 @@ public class ServerApiGenerator : IServerApiGenerator
             codeGeneratorAttribute,
             modelName,
             apiSchemaModel,
-            usePartialClassForContracts,
-            includeDeprecated);
+            settings.UsePartialClassForContracts,
+            settings.IncludeDeprecatedOperations);
 
         var contentGeneratorRecord = new GenerateContentForRecords(
             new CodeDocumentationTagsGenerator(),

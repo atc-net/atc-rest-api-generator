@@ -12,6 +12,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
     private readonly OpenApiDocument openApiDocument;
     private readonly string codeGeneratorContentHeader;
     private readonly AttributeParameters codeGeneratorAttribute;
+    private readonly GeneratorSettings settings;
 
     public ServerDomainGenerator(
         ILoggerFactory loggerFactory,
@@ -20,7 +21,8 @@ public class ServerDomainGenerator : IServerDomainGenerator
         string projectName,
         string apiProjectName,
         DirectoryInfo projectPath,
-        OpenApiDocument openApiDocument)
+        OpenApiDocument openApiDocument,
+        GeneratorSettings generatorSettings)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
         ArgumentNullException.ThrowIfNull(nugetPackageReferenceProvider);
@@ -29,6 +31,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
         ArgumentNullException.ThrowIfNull(apiProjectName);
         ArgumentNullException.ThrowIfNull(projectPath);
         ArgumentNullException.ThrowIfNull(openApiDocument);
+        ArgumentNullException.ThrowIfNull(generatorSettings);
 
         logger = loggerFactory.CreateLogger<ServerDomainGenerator>();
         this.nugetPackageReferenceProvider = nugetPackageReferenceProvider;
@@ -36,6 +39,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
         this.apiProjectName = apiProjectName;
         this.projectPath = projectPath;
         this.openApiDocument = openApiDocument;
+        settings = generatorSettings;
 
         codeGeneratorContentHeader = GeneratedCodeHeaderGeneratorFactory
             .Create(apiGeneratorVersion)
@@ -43,8 +47,6 @@ public class ServerDomainGenerator : IServerDomainGenerator
         codeGeneratorAttribute = AttributeParametersFactory
             .CreateGeneratedCode(apiGeneratorVersion);
     }
-
-    public string ContractsLocation { get; set; } = ContentGeneratorConstants.Contracts;
 
     public async Task ScaffoldProjectFile()
     {
@@ -117,11 +119,11 @@ public class ServerDomainGenerator : IServerDomainGenerator
 
             foreach (var openApiOperation in urlPath.Value.Operations)
             {
-                var fullNamespace = $"{projectName}.{ContentGeneratorConstants.Handlers}.{apiGroupName}";
+                var fullNamespace = NamespaceFactory.CreateFull(projectName, settings.HandlersLocation, apiGroupName);
 
                 var classParameters = ContentGeneratorServerHandlerParametersFactory.Create(
                     fullNamespace,
-                    $"Api.Generated.{ContentGeneratorConstants.Contracts}.{apiGroupName}",
+                    $"Api.Generated.{ContentGeneratorConstants.Contracts}.{apiGroupName}", // TODO: Fix this
                     urlPath.Value,
                     openApiOperation.Value);
 
@@ -134,10 +136,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
                 var contentWriter = new ContentWriter(logger);
                 contentWriter.Write(
                     projectPath,
-                    projectPath.CombineFileInfo(
-                        ContentGeneratorConstants.Handlers,
-                        apiGroupName,
-                        $"{classParameters.TypeName}.cs"),
+                    FileInfoFactory.Create(projectPath, settings.HandlersLocation, apiGroupName, $"{classParameters.TypeName}.cs"),
                     ContentWriterArea.Src,
                     content,
                     overrideIfExist: false);
@@ -265,8 +264,8 @@ public class ServerDomainGenerator : IServerDomainGenerator
 
         var apiGroupNames = openApiDocument.GetApiGroupNames();
 
-        requiredUsings.AddRange(apiGroupNames.Select(x => NamespaceFactory.CreateFull(apiProjectName, ContractsLocation, x)));
-        requiredUsings.AddRange(apiGroupNames.Select(x => NamespaceFactory.CreateFull(projectName, ContentGeneratorConstants.Handlers, x)));
+        requiredUsings.AddRange(apiGroupNames.Select(x => NamespaceFactory.CreateFull(apiProjectName, settings.ContractsLocation, x)));
+        requiredUsings.AddRange(apiGroupNames.Select(x => NamespaceFactory.CreateFull(projectName, settings.HandlersLocation, x)));
 
         GlobalUsingsHelper.CreateOrUpdate(
             logger,

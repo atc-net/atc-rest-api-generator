@@ -23,6 +23,8 @@ public class ClientCSharpApiGenerator
 
         var operationSchemaMappings = apiOperationExtractor.Extract(projectOptions.Document);
 
+        var generatorSettings = GeneratorSettingsFactory.Create(projectOptions.ApiOptions.Generator);
+
         clientCSharpApiGenerator = new Client.CSharp.ProjectGenerator.ClientCSharpApiGenerator(
             loggerFactory,
             nugetPackageReferenceProvider,
@@ -31,21 +33,8 @@ public class ClientCSharpApiGenerator
             projectOptions.PathForSrcGenerate,
             projectOptions.Document,
             operationSchemaMappings,
-            projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
-            projectOptions.ApiOptions.Generator.UsePartialClassForContracts,
-            projectOptions.ApiOptions.Generator.UsePartialClassForEndpoints,
-            projectOptions.ApiOptions.Generator.IncludeDeprecated,
+            generatorSettings,
             projectOptions.ApiOptions.Generator.Response.CustomErrorResponseModel);
-
-        if (!string.IsNullOrEmpty(projectOptions.ApiOptions.Generator.ContractsLocation))
-        {
-            clientCSharpApiGenerator.ContractsLocation = projectOptions.ApiOptions.Generator.ContractsLocation;
-        }
-
-        if (!string.IsNullOrEmpty(projectOptions.ApiOptions.Generator.EndpointsLocation))
-        {
-            clientCSharpApiGenerator.EndpointsLocation = projectOptions.ApiOptions.Generator.EndpointsLocation;
-        }
 
         if (projectOptions.ApiOptions.Generator.Client is not null)
         {

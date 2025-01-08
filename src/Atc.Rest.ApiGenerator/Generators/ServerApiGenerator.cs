@@ -29,6 +29,8 @@ public class ServerApiGenerator
 
         var operationSchemaMappings = apiOperationExtractor.Extract(projectOptions.Document);
 
+        var generatorSettings = GeneratorSettingsFactory.Create(projectOptions.ApiOptions.Generator);
+
         serverApiGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerApiGenerator(
             loggerFactory,
             nugetPackageReferenceProvider,
@@ -38,20 +40,7 @@ public class ServerApiGenerator
             projectOptions.Document,
             operationSchemaMappings,
             projectOptions.RouteBase,
-            projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
-            projectOptions.ApiOptions.Generator.UsePartialClassForContracts,
-            projectOptions.ApiOptions.Generator.UsePartialClassForEndpoints,
-            projectOptions.ApiOptions.Generator.IncludeDeprecated);
-
-        if (!string.IsNullOrEmpty(projectOptions.ApiOptions.Generator.ContractsLocation))
-        {
-            serverApiGeneratorMvc.ContractsLocation = projectOptions.ApiOptions.Generator.ContractsLocation;
-        }
-
-        if (!string.IsNullOrEmpty(projectOptions.ApiOptions.Generator.EndpointsLocation))
-        {
-            serverApiGeneratorMvc.EndpointsLocation = projectOptions.ApiOptions.Generator.EndpointsLocation;
-        }
+            generatorSettings);
 
         serverApiGeneratorMinimalApi = new Framework.Minimal.ProjectGenerator.ServerApiGenerator(
             loggerFactory,
@@ -62,20 +51,7 @@ public class ServerApiGenerator
             projectOptions.Document,
             operationSchemaMappings,
             projectOptions.RouteBase,
-            projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
-            projectOptions.ApiOptions.Generator.UsePartialClassForContracts,
-            projectOptions.ApiOptions.Generator.UsePartialClassForEndpoints,
-            projectOptions.ApiOptions.Generator.IncludeDeprecated);
-
-        if (!string.IsNullOrEmpty(projectOptions.ApiOptions.Generator.ContractsLocation))
-        {
-            serverApiGeneratorMvc.ContractsLocation = projectOptions.ApiOptions.Generator.ContractsLocation;
-        }
-
-        if (!string.IsNullOrEmpty(projectOptions.ApiOptions.Generator.EndpointsLocation))
-        {
-            serverApiGeneratorMvc.EndpointsLocation = projectOptions.ApiOptions.Generator.EndpointsLocation;
-        }
+            generatorSettings);
     }
 
     public async Task<bool> Generate()
