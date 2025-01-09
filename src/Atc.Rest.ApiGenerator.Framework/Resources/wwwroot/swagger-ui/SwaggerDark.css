@@ -66,7 +66,7 @@ button, input, select, textarea {
   }
 
   .swagger-ui pre {
-    font-family: monospace,monospace;
+    font-family: monospace;
     font-size: 1em
   }
 
@@ -77,8 +77,6 @@ button, input, select, textarea {
 
   .swagger-ui abbr[title] {
     border-bottom: none;
-    text-decoration: underline;
-    -webkit-text-decoration: underline dotted;
     text-decoration: underline dotted
   }
 
@@ -88,7 +86,7 @@ button, input, select, textarea {
   }
 
   .swagger-ui code, .swagger-ui kbd, .swagger-ui samp {
-    font-family: monospace,monospace;
+    font-family: monospace;
     font-size: 1em
   }
 
@@ -1065,7 +1063,7 @@ button, input, select, textarea {
 }
 
 .swagger-ui .b--washed-yellow {
-  border-color: #1c1c21ceb
+  border-color: #1c1c21ce
 }
 
 .swagger-ui .b--washed-red {
@@ -1603,7 +1601,6 @@ button, input, select, textarea {
 .swagger-ui .pre {
   overflow-x: auto;
   overflow-y: hidden;
-  overflow: scroll
 }
 
 .swagger-ui .top-0 {
@@ -4940,7 +4937,7 @@ button, input, select, textarea {
 }
 
 .swagger-ui .washed-yellow {
-  color: #1c1c21ceb
+  color: #1c1c21ce
 }
 
 .swagger-ui .washed-red {
@@ -5168,7 +5165,7 @@ button, input, select, textarea {
 }
 
 .swagger-ui .bg-washed-yellow {
-  background-color: #1c1c21ceb
+  background-color: #1c1c21ce
 }
 
 .swagger-ui .bg-washed-red {
@@ -5512,7 +5509,7 @@ button, input, select, textarea {
 }
 
 .swagger-ui .hover-washed-yellow:focus, .swagger-ui .hover-washed-yellow:hover {
-  color: #1c1c21ceb
+  color: #1c1c21ce
 }
 
 .swagger-ui .hover-washed-red:focus, .swagger-ui .hover-washed-red:hover {
@@ -5612,7 +5609,7 @@ button, input, select, textarea {
 }
 
 .swagger-ui .hover-bg-washed-yellow:focus, .swagger-ui .hover-bg-washed-yellow:hover {
-  background-color: #1c1c21ceb
+  background-color: #1c1c21ce
 }
 
 .swagger-ui .hover-bg-washed-red:focus, .swagger-ui .hover-bg-washed-red:hover {
