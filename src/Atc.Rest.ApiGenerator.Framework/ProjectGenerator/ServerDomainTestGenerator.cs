@@ -5,38 +5,32 @@ public class ServerDomainTestGenerator : IServerDomainTestGenerator
 {
     private readonly ILogger<ServerDomainTestGenerator> logger;
     private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
-    private readonly string projectName;
     private readonly string apiProjectName;
     private readonly string domainProjectName;
-    private readonly DirectoryInfo projectPath;
     private readonly OpenApiDocument openApiDocument;
+    private readonly GeneratorSettings settings;
 
     public ServerDomainTestGenerator(
         ILoggerFactory loggerFactory,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
-        Version apiGeneratorVersion,
-        string projectName,
         string apiProjectName,
         string domainProjectName,
-        DirectoryInfo projectPath,
-        OpenApiDocument openApiDocument)
+        OpenApiDocument openApiDocument,
+        GeneratorSettings generatorSettings)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
         ArgumentNullException.ThrowIfNull(nugetPackageReferenceProvider);
-        ArgumentNullException.ThrowIfNull(apiGeneratorVersion);
-        ArgumentNullException.ThrowIfNull(projectName);
         ArgumentNullException.ThrowIfNull(apiProjectName);
         ArgumentNullException.ThrowIfNull(domainProjectName);
-        ArgumentNullException.ThrowIfNull(projectPath);
         ArgumentNullException.ThrowIfNull(openApiDocument);
+        ArgumentNullException.ThrowIfNull(generatorSettings);
 
         logger = loggerFactory.CreateLogger<ServerDomainTestGenerator>();
         this.nugetPackageReferenceProvider = nugetPackageReferenceProvider;
-        this.projectName = projectName;
         this.apiProjectName = apiProjectName;
         this.domainProjectName = domainProjectName;
-        this.projectPath = projectPath;
         this.openApiDocument = openApiDocument;
+        settings = generatorSettings;
     }
 
     public async Task ScaffoldProjectFile()
@@ -85,8 +79,8 @@ public class ServerDomainTestGenerator : IServerDomainTestGenerator
 
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
-            projectPath,
-            projectPath.CombineFileInfo($"{projectName}.csproj"),
+            settings.ProjectPath,
+            settings.ProjectPath.CombineFileInfo($"{settings.ProjectName}.csproj"),
             ContentWriterArea.Src,
             content,
             overrideIfExist: false);
@@ -100,7 +94,7 @@ public class ServerDomainTestGenerator : IServerDomainTestGenerator
 
             foreach (var openApiOperation in urlPath.Value.Operations)
             {
-                var fullNamespace = $"{projectName}.{ContentGeneratorConstants.Handlers}.{apiGroupName}";
+                var fullNamespace = NamespaceFactory.CreateFull(settings.ProjectName, settings.HandlersLocation, apiGroupName);
 
                 var classParameters = ContentGeneratorServerHandlerParametersTestFactory.CreateForCustomTest(
                     fullNamespace,
@@ -114,11 +108,8 @@ public class ServerDomainTestGenerator : IServerDomainTestGenerator
 
                 var contentWriter = new ContentWriter(logger);
                 contentWriter.Write(
-                    projectPath,
-                    projectPath.CombineFileInfo(
-                        ContentGeneratorConstants.Handlers,
-                        apiGroupName,
-                        $"{classParameters.TypeName}.cs"),
+                    settings.ProjectPath,
+                    FileInfoFactory.Create(settings.ProjectPath, settings.HandlersLocation, apiGroupName, $"{classParameters.TypeName}.cs"),
                     ContentWriterArea.Test,
                     content,
                     overrideIfExist: false);
@@ -138,7 +129,7 @@ public class ServerDomainTestGenerator : IServerDomainTestGenerator
         GlobalUsingsHelper.CreateOrUpdate(
             logger,
             ContentWriterArea.Test,
-            projectPath,
+            settings.ProjectPath,
             requiredUsings,
             removeNamespaceGroupSeparatorInGlobalUsings);
     }

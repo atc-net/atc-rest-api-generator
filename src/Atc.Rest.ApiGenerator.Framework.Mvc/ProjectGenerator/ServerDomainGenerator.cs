@@ -93,7 +93,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
 
             foreach (var openApiOperation in urlPath.Value.Operations)
             {
-                var fullNamespace = $"{settings.ProjectName}.{ContentGeneratorConstants.Handlers}.{apiGroupName}";
+                var fullNamespace = NamespaceFactory.CreateFull(settings.ProjectName, settings.HandlersLocation, apiGroupName);
 
                 var classParameters = ContentGeneratorServerHandlerParametersFactory.Create(
                     fullNamespace,
@@ -109,10 +109,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
                 var contentWriter = new ContentWriter(logger);
                 contentWriter.Write(
                     settings.ProjectPath,
-                    settings.ProjectPath.CombineFileInfo(
-                        ContentGeneratorConstants.Handlers,
-                        apiGroupName,
-                        $"{classParameters.TypeName}.cs"),
+                    FileInfoFactory.Create(settings.ProjectPath, settings.HandlersLocation, apiGroupName, $"{classParameters.TypeName}.cs"),
                     ContentWriterArea.Src,
                     content,
                     overrideIfExist: false);

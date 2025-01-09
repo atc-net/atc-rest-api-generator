@@ -50,15 +50,19 @@ public class ServerDomainGenerator
 
         if (projectOptions.PathForTestGenerate is not null)
         {
+            var generatorTestSettings = GeneratorSettingsFactory.Create(
+                projectOptions.ApiGeneratorVersion,
+                $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Tests}",
+                projectOptions.PathForTestGenerate,
+                projectOptions.ApiOptions.Generator);
+
             serverDomainTestGenerator = new ServerDomainTestGenerator(
                 loggerFactory,
                 nugetPackageReferenceProvider,
-                projectOptions.ApiGeneratorVersion,
-                $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Tests}",
                 apiProjectName,
                 projectOptions.ProjectName,
-                projectOptions.PathForTestGenerate,
-                projectOptions.Document);
+                projectOptions.Document,
+                generatorTestSettings);
         }
     }
 
