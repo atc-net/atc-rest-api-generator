@@ -68,7 +68,7 @@ public class GenerateServerHostCommand : AsyncCommand<ServerHostCommandSettings>
         {
             if (!openApiDocumentValidator.IsValid(
                     apiOptions.Validation,
-                    apiOptions.IncludeDeprecated,
+                    apiOptions.IncludeDeprecatedOperations,
                     apiDocumentContainer))
             {
                 return ConsoleExitStatusCodes.Failure;

@@ -35,7 +35,8 @@ public class ServerHostGenerator
             projectOptions.ApiGeneratorVersion,
             projectOptions.ProjectName,
             projectOptions.PathForSrcGenerate,
-            projectOptions.ApiOptions.Generator);
+            projectOptions.ApiOptions.Generator,
+            projectOptions.ApiOptions.IncludeDeprecatedOperations);
 
         serverHostGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerHostGenerator(
             loggerFactory,
@@ -62,7 +63,8 @@ public class ServerHostGenerator
                 projectOptions.ApiGeneratorVersion,
                 $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Tests}",
                 projectOptions.PathForTestGenerate,
-                projectOptions.ApiOptions.Generator);
+                projectOptions.ApiOptions.Generator,
+                projectOptions.ApiOptions.IncludeDeprecatedOperations);
 
             serverHostTestGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerHostTestGenerator(
                 loggerFactory,

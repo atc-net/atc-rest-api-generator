@@ -2,20 +2,16 @@ namespace Atc.Rest.ApiGenerator.Framework.Factories;
 
 public static class NamespaceFactory
 {
-    public static string CreateFull(
-        string projectName,
-        params string[] subNamespaces)
-    {
-        var fullNamespace = string.Join(' ', new[] { projectName }.Concat(subNamespaces));
-
-        return Create(fullNamespace);
-    }
-
     public static string Create(
-        params string[] subNamespaces)
+        params string[] values)
     {
+        if (values is null)
+        {
+            return string.Empty;
+        }
+
         var fullNamespace = string
-            .Join(' ', subNamespaces)
+            .Join(' ', values)
             .Replace(" . ", " ", StringComparison.Ordinal);
 
         return fullNamespace.EnsureNamespaceFormat();

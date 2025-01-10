@@ -14,6 +14,7 @@ global using Atc.CodeGeneration.CSharp.Content;
 global using Atc.CodeGeneration.CSharp.Content.Factories;
 global using Atc.CodeGeneration.CSharp.Content.Generators;
 global using Atc.CodeGeneration.CSharp.Extensions;
+global using Atc.Data.Models;
 global using Atc.DotNet;
 global using Atc.Helpers;
 global using Atc.Rest.ApiGenerator.Contracts;

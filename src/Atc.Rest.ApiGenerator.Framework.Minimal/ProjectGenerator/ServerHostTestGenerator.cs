@@ -176,14 +176,16 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
         {
             var apiGroupName = openApiPath.GetApiGroupName();
 
+            var endpointsLocation = LocationFactory.CreateWithApiGroupName(apiGroupName, settings.EndpointsLocation);
+
+            var fullNamespace = NamespaceFactory.Create(settings.ProjectName, endpointsLocation);
+
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
                 if (openApiOperation.Value.Deprecated)
                 {
                     continue;
                 }
-
-                var fullNamespace = NamespaceFactory.CreateFull(settings.ProjectName, settings.EndpointsLocation, apiGroupName);
 
                 var classParameters = ContentGeneratorServerTestEndpointHandlerStubParametersFactory.Create(
                     codeGeneratorContentHeader,
@@ -201,7 +203,7 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
                 var contentWriter = new ContentWriter(logger);
                 contentWriter.Write(
                     settings.ProjectPath,
-                    FileInfoFactory.Create(settings.ProjectPath, settings.EndpointsLocation, apiGroupName, $"{classParameters.TypeName}.cs"),
+                    FileInfoFactory.Create(settings.ProjectPath, endpointsLocation, $"{classParameters.TypeName}.cs"),
                     ContentWriterArea.Test,
                     content);
             }
@@ -273,7 +275,7 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
 
         if (operationSchemaMappings.Any(apiOperation => apiOperation.Model.IsShared))
         {
-            requiredUsings.Add($"{apiProjectName}.Contracts");
+            requiredUsings.Add(NamespaceFactory.Create(apiProjectName, LocationFactory.CreateWithoutTemplateForApiGroupName(settings.ContractsLocation)));
         }
 
         var apiGroupNames = openApiDocument.GetApiGroupNames();
@@ -285,7 +287,7 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
                 continue;
             }
 
-            requiredUsings.Add($"{apiProjectName}.Contracts.{apiGroupName}");
+            requiredUsings.Add(NamespaceFactory.Create(apiProjectName, LocationFactory.CreateWithApiGroupName(apiGroupName, settings.ContractsLocation)));
         }
 
         GlobalUsingsHelper.CreateOrUpdate(

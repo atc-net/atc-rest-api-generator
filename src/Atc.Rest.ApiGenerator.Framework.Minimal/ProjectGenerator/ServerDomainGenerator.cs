@@ -107,13 +107,16 @@ public class ServerDomainGenerator : IServerDomainGenerator
         {
             var apiGroupName = urlPath.GetApiGroupName();
 
+            var handlersLocation = LocationFactory.CreateWithApiGroupName(apiGroupName, settings.HandlersLocation);
+            var contractsLocation = LocationFactory.CreateWithApiGroupName(apiGroupName, settings.ContractsLocation);
+
+            var fullNamespace = NamespaceFactory.Create(settings.ProjectName, handlersLocation);
+
             foreach (var openApiOperation in urlPath.Value.Operations)
             {
-                var fullNamespace = NamespaceFactory.CreateFull(settings.ProjectName, settings.HandlersLocation, apiGroupName);
-
                 var classParameters = ContentGeneratorServerHandlerParametersFactory.Create(
                     fullNamespace,
-                    $"Api.Generated.{ContentGeneratorConstants.Contracts}.{apiGroupName}", // TODO: Fix this
+                    $"Api.Generated.{contractsLocation}", // TODO: Fix this
                     urlPath.Value,
                     openApiOperation.Value);
 
@@ -126,7 +129,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
                 var contentWriter = new ContentWriter(logger);
                 contentWriter.Write(
                     settings.ProjectPath,
-                    FileInfoFactory.Create(settings.ProjectPath, settings.HandlersLocation, apiGroupName, $"{classParameters.TypeName}.cs"),
+                    FileInfoFactory.Create(settings.ProjectPath, handlersLocation, $"{classParameters.TypeName}.cs"),
                     ContentWriterArea.Src,
                     content,
                     overrideIfExist: false);
@@ -254,8 +257,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
 
         var apiGroupNames = openApiDocument.GetApiGroupNames();
 
-        requiredUsings.AddRange(apiGroupNames.Select(x => NamespaceFactory.CreateFull(apiProjectName, settings.ContractsLocation, x)));
-        requiredUsings.AddRange(apiGroupNames.Select(x => NamespaceFactory.CreateFull(settings.ProjectName, settings.HandlersLocation, x)));
+        requiredUsings.AddRange(apiGroupNames.Select(x => LocationFactory.Create(apiProjectName, LocationFactory.CreateWithApiGroupName(x, settings.ContractsLocation))));
 
         GlobalUsingsHelper.CreateOrUpdate(
             logger,

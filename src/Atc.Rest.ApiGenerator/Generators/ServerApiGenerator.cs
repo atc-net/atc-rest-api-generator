@@ -33,7 +33,8 @@ public class ServerApiGenerator
             projectOptions.ApiGeneratorVersion,
             projectOptions.ProjectName,
             projectOptions.PathForSrcGenerate,
-            projectOptions.ApiOptions.Generator);
+            projectOptions.ApiOptions.Generator,
+            projectOptions.ApiOptions.IncludeDeprecatedOperations);
 
         serverApiGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerApiGenerator(
             loggerFactory,

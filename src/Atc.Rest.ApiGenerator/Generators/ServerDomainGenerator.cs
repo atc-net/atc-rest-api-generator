@@ -33,7 +33,8 @@ public class ServerDomainGenerator
             projectOptions.ApiGeneratorVersion,
             projectOptions.ProjectName,
             projectOptions.PathForSrcGenerate,
-            projectOptions.ApiOptions.Generator);
+            projectOptions.ApiOptions.Generator,
+            projectOptions.ApiOptions.IncludeDeprecatedOperations);
 
         serverDomainGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerDomainGenerator(
             loggerFactory,
@@ -54,7 +55,8 @@ public class ServerDomainGenerator
                 projectOptions.ApiGeneratorVersion,
                 $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Tests}",
                 projectOptions.PathForTestGenerate,
-                projectOptions.ApiOptions.Generator);
+                projectOptions.ApiOptions.Generator,
+                projectOptions.ApiOptions.IncludeDeprecatedOperations);
 
             serverDomainTestGenerator = new ServerDomainTestGenerator(
                 loggerFactory,

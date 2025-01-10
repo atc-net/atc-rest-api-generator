@@ -27,4 +27,6 @@ public static class ContentGeneratorConstants
     public const string UndefinedDescription = "Undefined description.";
     public const string DefaultHttpClientName = "ApiClient";
     public const string DefaultHttpClient = "DefaultHttpClient";
+    public const string TemplateKeyForApiGroupName = "apiGroupName";
+    public const string TemplateForApiGroupName = "[[apiGroupName]]";
 }

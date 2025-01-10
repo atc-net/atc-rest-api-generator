@@ -23,7 +23,7 @@ public static class ContentGeneratorClientEndpointParametersFactory
         AppendParameters(parameters, openApiOperation.Parameters);
         AppendParametersFromBody(parameters, openApiOperation.RequestBody);
 
-        var modelNamespace = NamespaceFactory.CreateFull(projectName, contractsLocation, apiGroupName);
+        var modelNamespace = LocationFactory.Create(projectName, contractsLocation);
         var operationName = openApiOperation.GetOperationName();
         var controllerAuthorization = openApiPath.ExtractApiPathAuthorization();
         var endpointAuthorization = openApiOperation.ExtractApiOperationAuthorization(openApiPath);

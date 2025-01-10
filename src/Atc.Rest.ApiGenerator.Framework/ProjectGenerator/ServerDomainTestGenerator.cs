@@ -92,10 +92,12 @@ public class ServerDomainTestGenerator : IServerDomainTestGenerator
         {
             var apiGroupName = urlPath.GetApiGroupName();
 
+            var handlersLocation = LocationFactory.CreateWithApiGroupName(apiGroupName, settings.HandlersLocation);
+
+            var fullNamespace = NamespaceFactory.Create(settings.ProjectName, handlersLocation);
+
             foreach (var openApiOperation in urlPath.Value.Operations)
             {
-                var fullNamespace = NamespaceFactory.CreateFull(settings.ProjectName, settings.HandlersLocation, apiGroupName);
-
                 var classParameters = ContentGeneratorServerHandlerParametersTestFactory.CreateForCustomTest(
                     fullNamespace,
                     openApiOperation.Value);
@@ -109,7 +111,7 @@ public class ServerDomainTestGenerator : IServerDomainTestGenerator
                 var contentWriter = new ContentWriter(logger);
                 contentWriter.Write(
                     settings.ProjectPath,
-                    FileInfoFactory.Create(settings.ProjectPath, settings.HandlersLocation, apiGroupName, $"{classParameters.TypeName}.cs"),
+                    FileInfoFactory.Create(settings.ProjectPath, handlersLocation, $"{classParameters.TypeName}.cs"),
                     ContentWriterArea.Test,
                     content,
                     overrideIfExist: false);

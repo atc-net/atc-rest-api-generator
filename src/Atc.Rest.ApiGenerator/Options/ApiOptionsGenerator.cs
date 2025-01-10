@@ -8,17 +8,15 @@ public class ApiOptionsGenerator
 
     public bool UseRestExtended { get; set; } = true;
 
-    public bool IncludeDeprecated { get; set; }
-
     public string ProjectName { get; set; } = string.Empty;
 
     public string ProjectSuffixName { get; set; } = string.Empty;
 
-    public string ContractsLocation { get; set; } = ContentGeneratorConstants.Contracts;
+    public string ContractsLocation { get; set; } = ContentGeneratorConstants.Contracts + ".[[apiGroupName]]";
 
-    public string EndpointsLocation { get; set; } = ContentGeneratorConstants.Endpoints;
+    public string EndpointsLocation { get; set; } = ContentGeneratorConstants.Endpoints + ".[[apiGroupName]]";
 
-    public string HandlersLocation { get; set; } = ContentGeneratorConstants.Handlers;
+    public string HandlersLocation { get; set; } = ContentGeneratorConstants.Handlers + ".[[apiGroupName]]";
 
     public bool UsePartialClassForContracts { get; set; }
 
@@ -33,5 +31,5 @@ public class ApiOptionsGenerator
     public ApiOptionsGeneratorClient? Client { get; set; }
 
     public override string ToString()
-        => $"{nameof(AspNetOutputType)}: {AspNetOutputType}, {nameof(SwaggerThemeMode)}: {SwaggerThemeMode}, {nameof(UseRestExtended)}: {UseRestExtended}, {nameof(IncludeDeprecated)}: {IncludeDeprecated}, {nameof(ProjectName)}: {ProjectName}, {nameof(ProjectSuffixName)}: {ProjectSuffixName}, {nameof(RemoveNamespaceGroupSeparatorInGlobalUsings)}: {RemoveNamespaceGroupSeparatorInGlobalUsings}, {nameof(Request)}: ({Request}), {nameof(Response)}: ({Response}), {nameof(Client)}: ({Client})";
+        => $"{nameof(AspNetOutputType)}: {AspNetOutputType}, {nameof(SwaggerThemeMode)}: {SwaggerThemeMode}, {nameof(UseRestExtended)}: {UseRestExtended}, {nameof(ProjectName)}: {ProjectName}, {nameof(ProjectSuffixName)}: {ProjectSuffixName}, {nameof(RemoveNamespaceGroupSeparatorInGlobalUsings)}: {RemoveNamespaceGroupSeparatorInGlobalUsings}, {nameof(Request)}: ({Request}), {nameof(Response)}: ({Response}), {nameof(Client)}: ({Client})";
 }

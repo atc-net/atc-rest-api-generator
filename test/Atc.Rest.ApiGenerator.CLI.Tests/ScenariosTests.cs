@@ -336,12 +336,9 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
         Assert.True(
             outputCsFilesWithRelativePath.Length == verifyCsFilesWithRelativePath.Length,
             $"Different count on *.cs files, " +
-            $"verify.count={verifyCsFilesWithRelativePath.Length} and " +
-            $"generated.count={outputCsFilesWithRelativePath.Length} for scenario '{scenarioPath.Name}'. " +
-            $"\n\nFiles only in output:" +
-            $"\n\t{string.Join("\n\t", onlyInOutput)}" +
-            $"\n\nFiles only in verify:" +
-            $"\n\t{string.Join("\n\t", onlyInVerify)}\n");
+            $"verify.count={verifyCsFilesWithRelativePath.Length} and generated.count={outputCsFilesWithRelativePath.Length} for scenario '{scenarioPath.Name}'. " +
+            $"\n\nFiles only in output:\n\t{string.Join("\n\t", onlyInOutput)}" +
+            $"\n\nFiles only in verify:\n\t{string.Join("\n\t", onlyInVerify)}\n");
     }
 
     private static async Task AssertBuildForServerAll(
@@ -446,21 +443,25 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
             .ToArray();
 
         var verifyCsFilesWithRelativePath = verifyCsFiles.Select(x => x.FullName)
-            .Select(x => Path.GetRelativePath(scenarioPath.CombineFileInfo("VerifyServerAll", suffix).FullName, x))
+            .Select(x => Path.GetRelativePath(scenarioPath.CombineFileInfo("VerifyClient", suffix).FullName, x))
             .ToArray();
 
-        var onlyInOutput = outputCsFilesWithRelativePath.Except(verifyCsFilesWithRelativePath, StringComparer.Ordinal).ToArray();
-        var onlyInVerify = verifyCsFilesWithRelativePath.Except(outputCsFilesWithRelativePath, StringComparer.Ordinal).ToArray();
+        var onlyInOutput = outputCsFilesWithRelativePath
+            .Except(verifyCsFilesWithRelativePath, StringComparer.Ordinal)
+            .OrderBy(x => x, StringComparer.Ordinal)
+            .ToArray();
+
+        var onlyInVerify = verifyCsFilesWithRelativePath
+            .Except(outputCsFilesWithRelativePath, StringComparer.Ordinal)
+            .OrderBy(x => x, StringComparer.Ordinal)
+            .ToArray();
 
         Assert.True(
             outputCsFilesWithRelativePath.Length == verifyCsFilesWithRelativePath.Length,
             $"Different count on *.cs files, " +
-            $"verify.count={verifyCsFilesWithRelativePath.Length} and " +
-            $"generated.count={outputCsFilesWithRelativePath.Length} for scenario '{scenarioPath.Name}'. " +
-            $"\n\nFiles only in output:" +
-            $"\n\t{string.Join("\n\t", onlyInOutput)}" +
-            $"\n\nFiles only in verify:" +
-            $"\n\t{string.Join("\n\t", onlyInVerify)}\n");
+            $"verify.count={verifyCsFilesWithRelativePath.Length} and generated.count={outputCsFilesWithRelativePath.Length} for scenario '{scenarioPath.Name}'. " +
+            $"\n\nFiles only in output:\n\t{string.Join("\n\t", onlyInOutput)}" +
+            $"\n\nFiles only in verify:\n\t{string.Join("\n\t", onlyInVerify)}\n");
     }
 
     public Task InitializeAsync()

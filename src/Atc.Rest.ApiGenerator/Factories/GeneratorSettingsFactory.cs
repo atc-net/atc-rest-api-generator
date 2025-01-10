@@ -6,7 +6,8 @@ public static class GeneratorSettingsFactory
         Version version,
         string projectName,
         DirectoryInfo projectPath,
-        ApiOptionsGenerator apiOptionsGenerator)
+        ApiOptionsGenerator apiOptionsGenerator,
+        bool includeDeprecatedOperations)
     {
         ArgumentNullException.ThrowIfNull(apiOptionsGenerator);
 
@@ -18,7 +19,7 @@ public static class GeneratorSettingsFactory
             UseProblemDetailsAsDefaultResponseBody = apiOptionsGenerator.Response.UseProblemDetailsAsDefaultBody,
             UsePartialClassForContracts = apiOptionsGenerator.UsePartialClassForContracts,
             UsePartialClassForEndpoints = apiOptionsGenerator.UsePartialClassForEndpoints,
-            IncludeDeprecatedOperations = apiOptionsGenerator.IncludeDeprecated,
+            IncludeDeprecatedOperations = includeDeprecatedOperations,
         };
 
         if (!string.IsNullOrEmpty(apiOptionsGenerator.EndpointsLocation))
