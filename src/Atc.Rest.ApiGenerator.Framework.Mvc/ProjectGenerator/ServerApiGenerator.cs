@@ -374,7 +374,7 @@ public class ServerApiGenerator : IServerApiGenerator
 
         var apiGroupNames = openApiDocument.GetApiGroupNames();
 
-        requiredUsings.AddRange(apiGroupNames.Select(x => LocationFactory.Create(settings.ProjectName, LocationFactory.CreateWithApiGroupName(x, settings.ContractsLocation))));
+        requiredUsings.AddRange(apiGroupNames.Select(x => NamespaceFactory.Create(settings.ProjectName, LocationFactory.CreateWithApiGroupName(x, settings.ContractsLocation))));
 
         GlobalUsingsHelper.CreateOrUpdate(
             logger,

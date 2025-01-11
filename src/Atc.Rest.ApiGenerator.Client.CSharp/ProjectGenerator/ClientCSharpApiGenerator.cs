@@ -420,7 +420,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
                     continue;
                 }
 
-                var requiredUsing = LocationFactory.Create(settings.ProjectName, contractsLocation);
+                var requiredUsing = NamespaceFactory.Create(settings.ProjectName, contractsLocation);
                 if (!requiredUsings.Contains(requiredUsing, StringComparer.CurrentCulture))
                 {
                     requiredUsings.Add(requiredUsing);
@@ -451,7 +451,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
                     continue;
                 }
 
-                var requiredUsing = LocationFactory.Create(settings.ProjectName, contractsLocation);
+                var requiredUsing = NamespaceFactory.Create(settings.ProjectName, contractsLocation);
                 if (!requiredUsings.Contains(requiredUsing, StringComparer.CurrentCulture))
                 {
                     requiredUsings.Add(requiredUsing);
@@ -459,7 +459,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
             }
         }
 
-        requiredUsings.AddRange(apiGroupNames.Select(x => LocationFactory.Create(settings.ProjectName, LocationFactory.CreateWithApiGroupName(x, settings.EndpointsLocation), ContentGeneratorConstants.Interfaces)));
+        requiredUsings.AddRange(apiGroupNames.Select(x => NamespaceFactory.Create(settings.ProjectName, LocationFactory.CreateWithApiGroupName(x, settings.EndpointsLocation), ContentGeneratorConstants.Interfaces)));
 
         GlobalUsingsHelper.CreateOrUpdate(
             logger,

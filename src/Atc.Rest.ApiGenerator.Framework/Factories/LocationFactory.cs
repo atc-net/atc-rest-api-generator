@@ -33,21 +33,6 @@ public static class LocationFactory
     }
 
     public static string Create(
-        params string[] values)
-    {
-        if (values is null)
-        {
-            return string.Empty;
-        }
-
-        var fullNamespace = string
-            .Join(' ', values)
-            .Replace(" . ", " ", StringComparison.Ordinal);
-
-        return fullNamespace.EnsureNamespaceFormat();
-    }
-
-    public static string Create(
         ICollection<KeyValueItem> templateItems,
         params string[] values)
     {
