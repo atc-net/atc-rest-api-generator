@@ -15,6 +15,7 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
     private static FileInfo? cliExeFile;
 
     [Theory]
+    [InlineData("CodeStructure1")]
     [InlineData("DemoSample")]
     [InlineData("ExAllResponseTypes")]
     [InlineData("ExAsyncEnumerable")]
@@ -52,26 +53,31 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
     }
 
     [Theory]
-    [InlineData("DemoSample", AspNetOutputType.Mvc, false)]
-    [InlineData("DemoSample", AspNetOutputType.Mvc, true)]
-    [InlineData("ExAllResponseTypes", AspNetOutputType.Mvc, false)]
-    [InlineData("ExAllResponseTypes", AspNetOutputType.Mvc, true)]
-    [InlineData("ExAsyncEnumerable", AspNetOutputType.Mvc, false)]
-    [InlineData("ExAsyncEnumerable", AspNetOutputType.Mvc, true)]
-    [InlineData("ExAsyncEnumerable", AspNetOutputType.MinimalApi, false)]
-    [InlineData("ExAsyncEnumerable", AspNetOutputType.MinimalApi, true)]
-    [InlineData("ExGenericPagination", AspNetOutputType.Mvc, false)]
-    [InlineData("ExGenericPagination", AspNetOutputType.Mvc, true)]
-    [InlineData("ExNsWithTask", AspNetOutputType.Mvc, false)]
-    [InlineData("ExNsWithTask", AspNetOutputType.Mvc, true)]
-    [InlineData("ExUsers", AspNetOutputType.Mvc, false)]
-    [InlineData("ExUsers", AspNetOutputType.Mvc, true)]
-    [InlineData("PetStore", AspNetOutputType.Mvc, false)]
-    [InlineData("PetStore", AspNetOutputType.Mvc, true)]
+    [InlineData("CodeStructure1", AspNetOutputType.Mvc, false, "[[apiGroupName]].MyContracts", "[[apiGroupName]].MyEndpoints", "[[apiGroupName]].MyHandlers")]
+    [InlineData("CodeStructure1", AspNetOutputType.Mvc, true, "[[apiGroupName]].MyContracts", "[[apiGroupName]].MyEndpoints", "[[apiGroupName]].MyHandlers")]
+    [InlineData("DemoSample", AspNetOutputType.Mvc, false, null, null, null)]
+    [InlineData("DemoSample", AspNetOutputType.Mvc, true, null, null, null)]
+    [InlineData("ExAllResponseTypes", AspNetOutputType.Mvc, false, null, null, null)]
+    [InlineData("ExAllResponseTypes", AspNetOutputType.Mvc, true, null, null, null)]
+    [InlineData("ExAsyncEnumerable", AspNetOutputType.Mvc, false, null, null, null)]
+    [InlineData("ExAsyncEnumerable", AspNetOutputType.Mvc, true, null, null, null)]
+    [InlineData("ExAsyncEnumerable", AspNetOutputType.MinimalApi, false, null, null, null)]
+    [InlineData("ExAsyncEnumerable", AspNetOutputType.MinimalApi, true, null, null, null)]
+    [InlineData("ExGenericPagination", AspNetOutputType.Mvc, false, null, null, null)]
+    [InlineData("ExGenericPagination", AspNetOutputType.Mvc, true, null, null, null)]
+    [InlineData("ExNsWithTask", AspNetOutputType.Mvc, false, null, null, null)]
+    [InlineData("ExNsWithTask", AspNetOutputType.Mvc, true, null, null, null)]
+    [InlineData("ExUsers", AspNetOutputType.Mvc, false, null, null, null)]
+    [InlineData("ExUsers", AspNetOutputType.Mvc, true, null, null, null)]
+    [InlineData("PetStore", AspNetOutputType.Mvc, false, null, null, null)]
+    [InlineData("PetStore", AspNetOutputType.Mvc, true, null, null, null)]
     public async Task GenerateVerifyAndBuildForServerAllByScenario(
         string scenarioName,
         AspNetOutputType aspNetOutputType,
-        bool useProblemDetailsAsDefaultResponseBody)
+        bool useProblemDetailsAsDefaultResponseBody,
+        string? contractsLocation,
+        string? endpointsLocation,
+        string? handlersLocation)
     {
         // Arrange
         var scenarioPath = CollectScenarioPaths().First(x => x.Name == scenarioName);
@@ -85,31 +91,35 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
         }
 
         // Act & Assert
-        await AssertGenerateForServerAll(outputPath, scenarioPath, specificationFile, aspNetOutputType, useProblemDetailsAsDefaultResponseBody);
+        await AssertGenerateForServerAll(outputPath, scenarioPath, specificationFile, aspNetOutputType, useProblemDetailsAsDefaultResponseBody, contractsLocation, endpointsLocation, handlersLocation);
         await AssertVerifyCsFilesForServerAll(outputPath, scenarioPath, aspNetOutputType, useProblemDetailsAsDefaultResponseBody);
         await AssertBuildForServerAll(outputPath, scenarioPath);
     }
 
     [Theory]
-    [InlineData("DemoSample", false, false)]
-    [InlineData("DemoSample", true, false)]
-    [InlineData("ExAllResponseTypes", false, false)]
-    [InlineData("ExAllResponseTypes", true, false)]
-    [InlineData("ExAsyncEnumerable", false, false)]
-    [InlineData("ExAsyncEnumerable", true, false)]
-    [InlineData("ExGenericPagination", false, false)]
-    [InlineData("ExGenericPagination", true, false)]
-    [InlineData("ExNsWithTask", false, false)]
-    [InlineData("ExNsWithTask", true, false)]
-    [InlineData("ExUsers", false, false)]
-    [InlineData("ExUsers", true, false)]
-    [InlineData("PetStore", false, false)]
-    [InlineData("PetStore", true, false)]
-    [InlineData("Monta", false, true)]
+    [InlineData("CodeStructure1", false, false, "[[apiGroupName]].MyContracts", "[[apiGroupName]].MyEndpoints")]
+    [InlineData("CodeStructure1", true, false, "[[apiGroupName]].MyContracts", "[[apiGroupName]].MyEndpoints")]
+    [InlineData("DemoSample", false, false, null, null)]
+    [InlineData("DemoSample", true, false, null, null)]
+    [InlineData("ExAllResponseTypes", false, false, null, null)]
+    [InlineData("ExAllResponseTypes", true, false, null, null)]
+    [InlineData("ExAsyncEnumerable", false, false, null, null)]
+    [InlineData("ExAsyncEnumerable", true, false, null, null)]
+    [InlineData("ExGenericPagination", false, false, null, null)]
+    [InlineData("ExGenericPagination", true, false, null, null)]
+    [InlineData("ExNsWithTask", false, false, null, null)]
+    [InlineData("ExNsWithTask", true, false, null, null)]
+    [InlineData("ExUsers", false, false, null, null)]
+    [InlineData("ExUsers", true, false, null, null)]
+    [InlineData("PetStore", false, false, null, null)]
+    [InlineData("PetStore", true, false, null, null)]
+    [InlineData("Monta", false, true, null, null)]
     public async Task GenerateVerifyAndBuildForClientCSharpByScenario(
         string scenarioName,
         bool useProblemDetailsAsDefaultResponseBody,
-        bool useCustomErrorResponseModel)
+        bool useCustomErrorResponseModel,
+        string? contractsLocation,
+        string? endpointsLocation)
     {
         // Arrange
         var scenarioPath = CollectScenarioPaths().First(x => x.Name == scenarioName);
@@ -124,7 +134,7 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
         }
 
         // Act & Assert
-        await AssertGenerateForClientCSharp(outputPath, scenarioPath, specificationFile, optionsFile, useProblemDetailsAsDefaultResponseBody, useCustomErrorResponseModel);
+        await AssertGenerateForClientCSharp(outputPath, scenarioPath, specificationFile, optionsFile, useProblemDetailsAsDefaultResponseBody, useCustomErrorResponseModel, contractsLocation, endpointsLocation);
         await AssertVerifyCsFilesForClientCSharp(outputPath, scenarioPath, useProblemDetailsAsDefaultResponseBody, useCustomErrorResponseModel);
     }
 
@@ -247,7 +257,10 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
         DirectoryInfo scenarioPath,
         FileInfo specificationFile,
         AspNetOutputType aspNetOutputType,
-        bool useProblemDetailsAsDefaultResponseBody)
+        bool useProblemDetailsAsDefaultResponseBody,
+        string? contractsLocation,
+        string? endpointsLocation,
+        string? handlersLocation)
     {
         var sbCommands = new StringBuilder();
         sbCommands.Append("generate server all");
@@ -266,6 +279,24 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
         if (useProblemDetailsAsDefaultResponseBody)
         {
             sbCommands.Append(" --useProblemDetailsAsDefaultResponseBody");
+        }
+
+        if (contractsLocation is not null)
+        {
+            sbCommands.Append(" --contractsLocation ");
+            sbCommands.Append(contractsLocation);
+        }
+
+        if (endpointsLocation is not null)
+        {
+            sbCommands.Append(" --endpointsLocation ");
+            sbCommands.Append(endpointsLocation);
+        }
+
+        if (handlersLocation is not null)
+        {
+            sbCommands.Append(" --handlersLocation ");
+            sbCommands.Append(handlersLocation);
         }
 
         sbCommands.Append(" --verbose");
@@ -361,7 +392,9 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
         FileInfo specificationFile,
         FileInfo? optionsFile,
         bool useProblemDetailsAsDefaultResponseBody,
-        bool useCustomErrorResponseModel)
+        bool useCustomErrorResponseModel,
+        string? contractsLocation,
+        string? endpointsLocation)
     {
         var sbCommands = new StringBuilder();
         sbCommands.Append("generate client csharp");
@@ -381,6 +414,18 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
         {
             sbCommands.Append(" --optionsPath ");
             sbCommands.Append(optionsFile.FullName);
+        }
+
+        if (contractsLocation is not null)
+        {
+            sbCommands.Append(" --contractsLocation ");
+            sbCommands.Append(contractsLocation);
+        }
+
+        if (endpointsLocation is not null)
+        {
+            sbCommands.Append(" --endpointsLocation ");
+            sbCommands.Append(endpointsLocation);
         }
 
         sbCommands.Append(" --verbose");
