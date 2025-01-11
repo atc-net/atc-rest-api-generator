@@ -18,6 +18,11 @@
       - [Option **generate server all -h**](#option-generate-server-all--h)
       - [Command **options-file**](#command-options-file)
       - [Default options-file - ApiGeneratorOptions.json](#default-options-file---apigeneratoroptionsjson)
+      - [Custom options-file - ApiGeneratorOptions.json](#custom-options-file---apigeneratoroptionsjson)
+      - [Options for locations explained](#options-for-locations-explained)
+        - [Syntax](#syntax)
+        - [Examples](#examples)
+      - [Other options explained](#other-options-explained)
   - [PetStore Example](#petstore-example)
   - [Security - supporting role-based security and custom authentication-schemes](#security---supporting-role-based-security-and-custom-authentication-schemes)
     - [Roles and authentication-scheme validation](#roles-and-authentication-scheme-validation)
@@ -79,12 +84,12 @@ flowchart TB;
 
     CLI --> ApiGenerator;
     CLI --> CodingRules;
-    
+
     ApiGenerator --> ClientCSharp;
     ApiGenerator --> ServerMvc;
     ApiGenerator --> ServerMinimal;
     ApiGenerator .-> Contracts;
-   
+
     ClientCSharp --> Framework;
     ClientCSharp .-> Contracts;
     ClientCSharp .-> CSharpGenerator;
@@ -181,6 +186,9 @@ COMMANDS:
 ```powershell
 atc-rest-api-generator generate server all -h
 
+DESCRIPTION:
+Creates API, domain and host projects.
+
 USAGE:
     atc-rest-api-generator.exe generate server all [OPTIONS]
 
@@ -195,16 +203,24 @@ OPTIONS:
     -s, --specificationPath <SPECIFICATIONPATH>                                   Path to Open API specification (directory, file or url)
         --optionsPath [OPTIONSPATH]                                               Path to options json-file
         --validate-strictMode                                                     Use strictmode
+        --validate-operationIdValidation                                          Use operationId validation
         --validate-operationIdCasingStyle [OPERATIONIDCASINGSTYLE]                Set casingStyle for operationId. Valid values are: CamelCase (default), KebabCase, PascalCase, SnakeCase
         --validate-modelNameCasingStyle [MODELNAMECASINGSTYLE]                    Set casingStyle for model name. Valid values are: CamelCase, KebabCase, PascalCase (default), SnakeCase
         --validate-modelPropertyNameCasingStyle [MODELPROPERTYNAMECASINGSTYLE]    Set casingStyle for model property name. Valid values are: CamelCase (default), KebabCase, PascalCase, SnakeCase
-        --useAuthorization                                                        Use authorization
     -p, --projectPrefixName <PROJECTPREFIXNAME>                                   Project prefix name (e.g. 'PetStore' becomes 'PetStore.Api.Generated')
+        --disableCodingRules                                                      Disable ATC-Coding-Rules
+        --useProblemDetailsAsDefaultResponseBody                                  Use ProblemDetails as default responsen body
+        --endpointsLocation [ENDPOINTSLOCATION]                                   If endpoints-localtion is provided, generated files will be placed here instead of the Endpoints folder
+        --contractsLocation [CONTRACTSLOCATION]                                   If contracts-localtion is provided, generated files will be placed here instead of the Contracts folder
+        --handlersLocation [HANDLERSLOCATION]                                     If handlers-localtion is provided, generated files will be placed here instead of the Handlers folder
+        --usePartialClassForContracts                                             Use Partial-Class for contracts
+        --usePartialClassForEndpoints                                             Use Partial-Class for endpoints
+        --removeNamespaceGroupSeparatorInGlobalUsings                             Remove space between namespace groups in GlobalUsing.cs
+        --aspnet-output-type [ASPNETOUTPUTTYPE]                                   Set AspNet output type for the generated api. Valid values are: Mvc (default), MinimalApi
+        --swagger-theme [SWAGGERTHEME]                                            Set Swagger theme for the hosting api. Valid values are: None, Default (default), Light, Dark
         --outputSlnPath <OUTPUTSLNPATH>                                           Path to solution file (directory or file)
         --outputSrcPath <OUTPUTSRCPATH>                                           Path to generated src projects (directory)
         --outputTestPath [OUTPUTTESTPATH]                                         Path to generated test projects (directory)
-        --disableCodingRules                                                      Disable ATC-Coding-Rules
-        --removeNamespaceGroupSeparatorInGlobalUsings                             Remove space between namespace groups in GlobalUsing.cs
 ```
 
 #### Command **options-file**
@@ -225,13 +241,26 @@ COMMANDS:
     validate    Validate the options file 'ApiGeneratorOptions.json'
 ```
 
+> **Note:** All values from the options-file will be overriden if pressent from the CLI options.
+>
+> **Example:** If the usePartialClassForContracts=false in the options-file and the CLI `--usePartialClassForContracts` options set, then the usePartialClassForContracts is true.
+
 #### Default options-file - ApiGeneratorOptions.json
 
 ```json
 {
   "generator": {
-    "useAuthorization": false,
+    "aspNetOutputType": "Mvc",
+    "swaggerThemeMode": "None",
     "useRestExtended": true,
+    "projectName": "",
+    "projectSuffixName": "",
+    "contractsLocation": "Contracts.[[apiGroupName]]",
+    "endpointsLocation": "Endpoints.[[apiGroupName]]",
+    "handlersLocation": "Handlers.[[apiGroupName]]",
+    "usePartialClassForContracts": false,
+    "usePartialClassForEndpoints": false,
+    "removeNamespaceGroupSeparatorInGlobalUsings": false,
     "request": {},
     "response": {
       "useProblemDetailsAsDefaultBody": false
@@ -239,12 +268,118 @@ COMMANDS:
   },
   "validation": {
     "strictMode": false,
+    "operationIdValidation": false,
     "operationIdCasingStyle": "CamelCase",
     "modelNameCasingStyle": "PascalCase",
     "modelPropertyNameCasingStyle": "CamelCase"
-  }
+  },
+  "includeDeprecatedOperations": false
 }
 ```
+
+#### Custom options-file - ApiGeneratorOptions.json
+
+```json
+{
+    "generator": {
+      "aspNetOutputType": "MinimalApi",
+      "swaggerThemeMode": "Dark",
+      "useRestExtended": true,
+      "projectName": "",
+      "projectSuffixName": "",
+      "contractsLocation": "Contracts.[[apiGroupName]]",
+      "endpointsLocation": "Endpoints.[[apiGroupName]]",
+      "handlersLocation": "Handlers.[[apiGroupName]]",
+      "usePartialClassForContracts": false,
+      "usePartialClassForEndpoints": false,
+      "removeNamespaceGroupSeparatorInGlobalUsings": false,
+      "request": {},
+      "response": {
+        "useProblemDetailsAsDefaultBody": false,
+        "customErrorResponseModel": {
+          "name": "ErrorResponse",
+          "description": "Represents an error response.",
+          "schema": {
+            "status": {
+              "dataType": "string?",
+              "description": "Gets or sets the status of the error."
+            },
+            "message": {
+              "dataType": "string?",
+              "description": "Gets or sets the error message."
+            },
+            "readableMessage": {
+              "dataType": "string?",
+              "description": "Gets or sets the readable message."
+            },
+            "errorCode": {
+              "dataType": "string?",
+              "description": "Gets or sets the error code."
+            },
+            "context": {
+              "dataType": "object?",
+              "description": "Gets or sets the context information."
+            }
+          }
+        }
+      },
+      "client": {
+        "excludeEndpointGeneration": false,
+        "httpClientName": "My-ApiClient"
+      }
+    },
+    "validation": {
+      "strictMode": false,
+      "operationIdValidation": false,
+      "operationIdCasingStyle": "CamelCase",
+      "modelNameCasingStyle": "PascalCase",
+      "modelPropertyNameCasingStyle": "CamelCase"
+    },
+    "includeDeprecatedOperations": false
+}
+```
+
+#### Options for locations explained
+
+The following options control the file locations for generated files such as contracts, endpoints, and handlers.
+You can use specific syntax to define and customize the output file structure.
+
+##### Syntax
+
+For options like `contractsLocation`, `endpointsLocation`, and `handlersLocation`,
+you can define paths using placeholders and custom directory names.
+
+The syntax is flexible and allows you to organize files based on grouping or specific requirements.
+
+##### Examples
+
+| Option-Name | Option-Value | Example-file | Generated-output |
+|-------------|--------------|--------------|------------------|
+| contractsLocation | Contracts                    | Account.cs | [Project-root]\Contracts\Accounts\Account.cs   |
+| contractsLocation | Contracts.[[apiGroupName]]   | Account.cs | [Project-root]\Contracts\Accounts\Account.cs   |
+| contractsLocation | Contracts-[[apiGroupName]]   | Account.cs | [Project-root]\Contracts\Accounts\Account.cs   |
+| contractsLocation | [[apiGroupName]].MyContracts | Account.cs | [Project-root]\Accounts\MyContracts\Account.cs |
+| contractsLocation | [[apiGroupName]]-MyContracts | Account.cs | [Project-root]\Accounts\MyContracts\Account.cs |
+| contractsLocation | [[apiGroupName]]             | Account.cs | [Project-root]\Accounts\Account.cs             |
+| contractsLocation | .                            | Account.cs | [Project-root]\Account.cs                      |
+
+> Placeholder Explanation:
+>
+> - [[apiGroupName]]: A placeholder replaced by the API group name during code generation. This allows grouping files dynamically based on your API structure.
+> - [Project-root]: The root directory of your project where the generated files will be placed.
+
+By using these options, you can effectively organize generated files into meaningful folder structures, ensuring clarity and scalability in your project layout.
+
+#### Other options explained
+
+The `projectSuffixName` extend `projectName` like the example:
+
+| projectName | projectSuffixName | Generated project name | Reson |
+|-------------|-------------------|------------------------|-------|
+| PetStore    |                   | PetStore.Api.Generated | default is `Api.Generated` |
+| PetStore    | MyApi             | PetStore.MyApi         | |
+| PetStore    | Foo.Api           | PetStore.Foo.Api       | |
+| PetStore    | Bar-Api           | PetStore.Bar.Api       | |
 
 ## PetStore Example
 
