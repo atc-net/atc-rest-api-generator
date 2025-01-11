@@ -15,7 +15,6 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
     private static FileInfo? cliExeFile;
 
     [Theory]
-    [InlineData("CodeStructure1")]
     [InlineData("DemoSample")]
     [InlineData("ExAllResponseTypes")]
     [InlineData("ExAsyncEnumerable")]
@@ -23,6 +22,7 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
     [InlineData("ExNsWithTask")]
     [InlineData("ExUsers")]
     [InlineData("PetStore")]
+    [InlineData("Structure1")]
     public async Task ValidateYamlSpecificationByScenario(
         string scenarioName)
     {
@@ -53,8 +53,6 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
     }
 
     [Theory]
-    [InlineData("CodeStructure1", AspNetOutputType.Mvc, false, "[[apiGroupName]].MyContracts", "[[apiGroupName]].MyEndpoints", "[[apiGroupName]].MyHandlers")]
-    [InlineData("CodeStructure1", AspNetOutputType.Mvc, true, "[[apiGroupName]].MyContracts", "[[apiGroupName]].MyEndpoints", "[[apiGroupName]].MyHandlers")]
     [InlineData("DemoSample", AspNetOutputType.Mvc, false, null, null, null)]
     [InlineData("DemoSample", AspNetOutputType.Mvc, true, null, null, null)]
     [InlineData("ExAllResponseTypes", AspNetOutputType.Mvc, false, null, null, null)]
@@ -71,6 +69,8 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
     [InlineData("ExUsers", AspNetOutputType.Mvc, true, null, null, null)]
     [InlineData("PetStore", AspNetOutputType.Mvc, false, null, null, null)]
     [InlineData("PetStore", AspNetOutputType.Mvc, true, null, null, null)]
+    [InlineData("Structure1", AspNetOutputType.Mvc, false, "[[apiGroupName]].MyContracts", "[[apiGroupName]].MyEndpoints", "[[apiGroupName]].MyHandlers")]
+    [InlineData("Structure1", AspNetOutputType.Mvc, true, "[[apiGroupName]].MyContracts", "[[apiGroupName]].MyEndpoints", "[[apiGroupName]].MyHandlers")]
     public async Task GenerateVerifyAndBuildForServerAllByScenario(
         string scenarioName,
         AspNetOutputType aspNetOutputType,
@@ -97,8 +97,6 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
     }
 
     [Theory]
-    [InlineData("CodeStructure1", false, false, "[[apiGroupName]].MyContracts", "[[apiGroupName]].MyEndpoints")]
-    [InlineData("CodeStructure1", true, false, "[[apiGroupName]].MyContracts", "[[apiGroupName]].MyEndpoints")]
     [InlineData("DemoSample", false, false, null, null)]
     [InlineData("DemoSample", true, false, null, null)]
     [InlineData("ExAllResponseTypes", false, false, null, null)]
@@ -114,6 +112,8 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
     [InlineData("PetStore", false, false, null, null)]
     [InlineData("PetStore", true, false, null, null)]
     [InlineData("Monta", false, true, null, null)]
+    [InlineData("Structure1", false, false, "[[apiGroupName]].MyContracts", "[[apiGroupName]].MyEndpoints")]
+    [InlineData("Structure1", true, false, "[[apiGroupName]].MyContracts", "[[apiGroupName]].MyEndpoints")]
     public async Task GenerateVerifyAndBuildForClientCSharpByScenario(
         string scenarioName,
         bool useProblemDetailsAsDefaultResponseBody,
