@@ -11,8 +11,7 @@ public abstract class BaseProjectOptions
         string? projectSuffixName,
         ApiOptions apiOptions,
         bool usingCodingRules,
-        bool forClient = false,
-        string? clientFolderName = null)
+        bool forClient = false)
     {
         ArgumentNullException.ThrowIfNull(projectSrcGeneratePath);
 
@@ -70,7 +69,6 @@ public abstract class BaseProjectOptions
 
         UsingCodingRules = usingCodingRules;
         IsForClient = forClient;
-        ClientFolderName = clientFolderName;
 
         ApiGroupNames = openApiDocument.GetApiGroupNames();
     }
@@ -116,8 +114,6 @@ public abstract class BaseProjectOptions
     public string RouteBase { get; }
 
     public bool IsForClient { get; }
-
-    public string? ClientFolderName { get; }
 
     public IList<string> ApiGroupNames { get; }
 }

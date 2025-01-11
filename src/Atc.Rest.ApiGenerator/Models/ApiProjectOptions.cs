@@ -11,8 +11,7 @@ public class ApiProjectOptions : BaseProjectOptions
         string? projectSuffixName,
         ApiOptions apiOptions,
         bool usingCodingRules,
-        bool forClient = false,
-        string? clientFolderName = null)
+        bool forClient = false)
         : base(
             projectSrcGeneratePath,
             projectTestGeneratePath,
@@ -22,8 +21,7 @@ public class ApiProjectOptions : BaseProjectOptions
             projectSuffixName,
             apiOptions,
             usingCodingRules,
-            forClient,
-            clientFolderName)
+            forClient)
     {
     }
 }
