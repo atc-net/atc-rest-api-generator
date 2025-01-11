@@ -1,5 +1,6 @@
 namespace Atc.Rest.ApiGenerator.Framework.Tests.Factories;
 
+[Trait(Traits.Category, Traits.Categories.Integration)]
 public class FileInfoFactoryTests
 {
     [Theory]
