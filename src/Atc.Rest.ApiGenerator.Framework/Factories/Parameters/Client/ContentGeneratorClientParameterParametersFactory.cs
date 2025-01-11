@@ -25,6 +25,7 @@ public static class ContentGeneratorClientParameterParametersFactory
             @namespace,
             operationName,
             openApiOperation.ExtractDocumentationTagsForParameters(),
+            DeclarationModifiers.PublicClass,
             ParameterName: $"{operationName}{ContentGeneratorConstants.Parameters}",
             parameters);
     }

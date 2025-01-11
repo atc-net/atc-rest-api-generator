@@ -53,7 +53,7 @@ public class GenerateContentWriter
 
         var sb = new StringBuilder();
 
-        sb.AppendAccessModifier(4, parameters.AccessModifier);
+        sb.AppendDeclarationModifier(4, parameters.DeclarationModifier);
 
         if (string.IsNullOrEmpty(parameters.GenericTypeName))
         {
@@ -181,9 +181,9 @@ public class GenerateContentWriter
         }
 
         sb.Append("    ");
-        if (parameters.AccessModifier != AccessModifiers.None)
+        if (parameters.DeclarationModifier != DeclarationModifiers.None)
         {
-            sb.AppendAccessModifier(parameters.AccessModifier);
+            sb.AppendDeclarationModifier(parameters.DeclarationModifier);
         }
 
         sb.AppendTypeAndName(parameters.GenericTypeName, parameters.TypeName, parameters.IsNullableType, parameters.Name);
@@ -261,9 +261,9 @@ public class GenerateContentWriter
         }
 
         sb.Append("    ");
-        if (parameters.AccessModifier != AccessModifiers.None)
+        if (parameters.DeclarationModifier != DeclarationModifiers.None)
         {
-            sb.AppendAccessModifier(parameters.AccessModifier);
+            sb.AppendDeclarationModifier(parameters.DeclarationModifier);
         }
 
         if (string.IsNullOrEmpty(parameters.ReturnTypeName))
@@ -306,7 +306,7 @@ public class GenerateContentWriter
                     useCommaForEndChar);
             }
 
-            if (parameters.AccessModifier == AccessModifiers.None)
+            if (parameters.DeclarationModifier == DeclarationModifiers.None)
             {
                 sb.Append(';');
             }

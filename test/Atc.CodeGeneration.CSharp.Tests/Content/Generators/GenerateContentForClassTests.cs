@@ -36,7 +36,7 @@ public class UpdateAccountRequest
             new(
                 DocumentationTags: null,
                 Attributes: null,
-                AccessModifier: AccessModifiers.Public,
+                DeclarationModifier: DeclarationModifiers.Public,
                 GenericTypeName: null,
                 IsGenericListType: false,
                 TypeName: "string",
@@ -57,7 +57,7 @@ public class UpdateAccountRequest
             Namespace: "Demo.Api.Generated.Contracts.Accounts",
             DocumentationTags: documentationTags,
             Attributes: AttributesWithGeneratedCode,
-            AccessModifier: AccessModifiers.PublicClass,
+            DeclarationModifier: DeclarationModifiers.PublicClass,
             ClassTypeName: "UpdateAccountRequest",
             GenericTypeName: null,
             InheritedClassTypeName: null,
@@ -128,7 +128,7 @@ public class UpdateAccountNameParameters
                     new("FromRoute", "Name = \"accountId\""),
                     new("Required", null),
                 },
-                AccessModifier: AccessModifiers.Public,
+                DeclarationModifier: DeclarationModifiers.Public,
                 GenericTypeName: null,
                 IsGenericListType: false,
                 TypeName: "Guid",
@@ -148,7 +148,7 @@ public class UpdateAccountNameParameters
                 {
                     new("FromHeader", "Name = \"name\""),
                 },
-                AccessModifier: AccessModifiers.Public,
+                DeclarationModifier: DeclarationModifiers.Public,
                 GenericTypeName: null,
                 IsGenericListType: false,
                 TypeName: "string",
@@ -169,7 +169,7 @@ public class UpdateAccountNameParameters
             Namespace: "Demo.Api.Generated.Contracts.Accounts",
             DocumentationTags: documentationTags,
             Attributes: AttributesWithGeneratedCode,
-            AccessModifier: AccessModifiers.PublicClass,
+            DeclarationModifier: DeclarationModifiers.PublicClass,
             ClassTypeName: "UpdateAccountNameParameters",
             GenericTypeName: null,
             InheritedClassTypeName: null,
@@ -265,7 +265,7 @@ public class AccountsController : ControllerBase
                     new("ProducesResponseType", "typeof(ProblemDetails), StatusCodes.Status401Unauthorized"),
                     new("ProducesResponseType", "typeof(ProblemDetails), StatusCodes.Status403Forbidden"),
                 },
-                AccessModifier: AccessModifiers.PublicAsync,
+                DeclarationModifier: DeclarationModifiers.PublicAsync,
                 ReturnGenericTypeName: "Task",
                 ReturnTypeName: "ActionResult",
                 Name: "UpdateAccountName",
@@ -288,7 +288,7 @@ public class AccountsController : ControllerBase
                     new("ProducesResponseType", "typeof(ProblemDetails), StatusCodes.Status401Unauthorized"),
                     new("ProducesResponseType", "typeof(ProblemDetails), StatusCodes.Status403Forbidden"),
                 },
-                AccessModifier: AccessModifiers.PublicAsync,
+                DeclarationModifier: DeclarationModifiers.PublicAsync,
                 ReturnGenericTypeName: "Task",
                 ReturnTypeName: "ActionResult",
                 Name: "SetAccountName",
@@ -308,7 +308,7 @@ public class AccountsController : ControllerBase
             Namespace: "Demo.Api.Generated.Endpoints",
             DocumentationTags: documentationTags,
             Attributes: attributes,
-            AccessModifier: AccessModifiers.PublicClass,
+            DeclarationModifier: DeclarationModifiers.PublicClass,
             ClassTypeName: "AccountsController",
             GenericTypeName: null,
             InheritedClassTypeName: "ControllerBase",
@@ -371,7 +371,7 @@ public class UpdateAccountNameResult : ResultBase
         {
             new(
                 DocumentationTags: null,
-                AccessModifier: AccessModifiers.Private,
+                DeclarationModifier: DeclarationModifiers.Private,
                 GenericTypeName: null,
                 TypeName: "UpdateAccountNameResult",
                 InheritedClassTypeName: "base",
@@ -394,7 +394,7 @@ public class UpdateAccountNameResult : ResultBase
             new(
                 DocumentationTags: new CodeDocumentationTags("200 - Ok response."),
                 Attributes: null,
-                AccessModifier: AccessModifiers.PublicStatic,
+                DeclarationModifier: DeclarationModifiers.PublicStatic,
                 ReturnGenericTypeName: null,
                 ReturnTypeName: "UpdateAccountNameResult",
                 Name: "Ok",
@@ -405,7 +405,7 @@ public class UpdateAccountNameResult : ResultBase
             new(
                 DocumentationTags: new CodeDocumentationTags("Performs an implicit conversion from UpdateAccountNameResult to ActionResult."),
                 Attributes: null,
-                AccessModifier: AccessModifiers.PublicStaticImplicitOperator,
+                DeclarationModifier: DeclarationModifiers.PublicStaticImplicitOperator,
                 ReturnGenericTypeName: null,
                 ReturnTypeName: null,
                 Name: "UpdateAccountNameResult",
@@ -420,7 +420,7 @@ public class UpdateAccountNameResult : ResultBase
             Namespace: "Demo.Api.Generated.Contracts.Accounts",
             DocumentationTags: documentationTags,
             Attributes: AttributesWithGeneratedCode,
-            AccessModifier: AccessModifiers.PublicClass,
+            DeclarationModifier: DeclarationModifiers.PublicClass,
             ClassTypeName: "UpdateAccountNameResult",
             GenericTypeName: null,
             InheritedClassTypeName: "ResultBase",
@@ -520,7 +520,7 @@ return await responseBuilder.BuildResponseAsync(x => new CreateLocationEndpointR
         {
             new(
                 DocumentationTags: null,
-                AccessModifier: AccessModifiers.Public,
+                DeclarationModifier: DeclarationModifiers.Public,
                 GenericTypeName: null,
                 TypeName: "CreateLocationEndpoint",
                 InheritedClassTypeName: null,
@@ -552,7 +552,7 @@ return await responseBuilder.BuildResponseAsync(x => new CreateLocationEndpointR
             new(
                 DocumentationTags: null,
                 Attributes: null,
-                AccessModifier: AccessModifiers.PublicAsync,
+                DeclarationModifier: DeclarationModifiers.PublicAsync,
                 ReturnGenericTypeName: "Task",
                 ReturnTypeName: "ICreateLocationEndpointResult",
                 Name: "ExecuteAsync",
@@ -587,7 +587,7 @@ return await responseBuilder.BuildResponseAsync(x => new CreateLocationEndpointR
             Namespace: "XXX.ApiClient.Generated.Endpoints",
             DocumentationTags: documentationTags,
             Attributes: AttributesWithGeneratedCode,
-            AccessModifier: AccessModifiers.PublicClass,
+            DeclarationModifier: DeclarationModifiers.PublicClass,
             ClassTypeName: "CreateLocationEndpoint",
             GenericTypeName: null,
             InheritedClassTypeName: "ICreateLocationEndpoint",
@@ -681,7 +681,7 @@ public class CreateLocationEndpointResult : EndpointResponse
         {
             new(
                 DocumentationTags: null,
-                AccessModifier: AccessModifiers.Public,
+                DeclarationModifier: DeclarationModifiers.Public,
                 GenericTypeName: null,
                 TypeName: "CreateLocationEndpointResult",
                 InheritedClassTypeName: "base",
@@ -704,7 +704,7 @@ public class CreateLocationEndpointResult : EndpointResponse
             new(
                 DocumentationTags: null,
                 Attributes: null,
-                AccessModifier: AccessModifiers.Public,
+                DeclarationModifier: DeclarationModifiers.Public,
                 GenericTypeName: null,
                 IsGenericListType: false,
                 TypeName: "bool",
@@ -721,7 +721,7 @@ public class CreateLocationEndpointResult : EndpointResponse
             new(
                 DocumentationTags: null,
                 Attributes: null,
-                AccessModifier: AccessModifiers.Public,
+                DeclarationModifier: DeclarationModifiers.Public,
                 GenericTypeName: null,
                 IsGenericListType: false,
                 TypeName: "bool",
@@ -738,7 +738,7 @@ public class CreateLocationEndpointResult : EndpointResponse
             new(
                 DocumentationTags: null,
                 Attributes: null,
-                AccessModifier: AccessModifiers.Public,
+                DeclarationModifier: DeclarationModifiers.Public,
                 GenericTypeName: null,
                 IsGenericListType: false,
                 TypeName: "bool",
@@ -755,7 +755,7 @@ public class CreateLocationEndpointResult : EndpointResponse
             new(
                 DocumentationTags: null,
                 Attributes: null,
-                AccessModifier: AccessModifiers.Public,
+                DeclarationModifier: DeclarationModifiers.Public,
                 GenericTypeName: null,
                 IsGenericListType: false,
                 TypeName: "bool",
@@ -772,7 +772,7 @@ public class CreateLocationEndpointResult : EndpointResponse
             new(
                 DocumentationTags: null,
                 Attributes: null,
-                AccessModifier: AccessModifiers.Public,
+                DeclarationModifier: DeclarationModifiers.Public,
                 GenericTypeName: null,
                 IsGenericListType: false,
                 TypeName: "bool",
@@ -789,7 +789,7 @@ public class CreateLocationEndpointResult : EndpointResponse
             new(
                 DocumentationTags: null,
                 Attributes: null,
-                AccessModifier: AccessModifiers.Public,
+                DeclarationModifier: DeclarationModifiers.Public,
                 GenericTypeName: null,
                 IsGenericListType: false,
                 TypeName: "Location",
@@ -806,7 +806,7 @@ public class CreateLocationEndpointResult : EndpointResponse
             new(
                 DocumentationTags: null,
                 Attributes: null,
-                AccessModifier: AccessModifiers.Public,
+                DeclarationModifier: DeclarationModifiers.Public,
                 GenericTypeName: null,
                 IsGenericListType: false,
                 TypeName: "ValidationProblemDetails",
@@ -823,7 +823,7 @@ public class CreateLocationEndpointResult : EndpointResponse
             new(
                 DocumentationTags: null,
                 Attributes: null,
-                AccessModifier: AccessModifiers.Public,
+                DeclarationModifier: DeclarationModifiers.Public,
                 GenericTypeName: null,
                 IsGenericListType: false,
                 TypeName: "ProblemDetails",
@@ -840,7 +840,7 @@ public class CreateLocationEndpointResult : EndpointResponse
             new(
                 DocumentationTags: null,
                 Attributes: null,
-                AccessModifier: AccessModifiers.Public,
+                DeclarationModifier: DeclarationModifiers.Public,
                 GenericTypeName: null,
                 IsGenericListType: false,
                 TypeName: "ProblemDetails",
@@ -857,7 +857,7 @@ public class CreateLocationEndpointResult : EndpointResponse
             new(
                 DocumentationTags: null,
                 Attributes: null,
-                AccessModifier: AccessModifiers.Public,
+                DeclarationModifier: DeclarationModifiers.Public,
                 GenericTypeName: null,
                 IsGenericListType: false,
                 TypeName: "ProblemDetails",
@@ -878,7 +878,7 @@ public class CreateLocationEndpointResult : EndpointResponse
             Namespace: "XXX.ApiClient.Generated.Endpoints",
             DocumentationTags: documentationTags,
             Attributes: AttributesWithGeneratedCode,
-            AccessModifier: AccessModifiers.PublicClass,
+            DeclarationModifier: DeclarationModifiers.PublicClass,
             ClassTypeName: "CreateLocationEndpointResult",
             GenericTypeName: null,
             InheritedClassTypeName: "EndpointResponse",

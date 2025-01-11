@@ -11,8 +11,7 @@ public class ApiProjectOptions : BaseProjectOptions
         string? projectSuffixName,
         ApiOptions apiOptions,
         bool usingCodingRules,
-        bool forClient = false,
-        string? clientFolderName = null)
+        bool forClient = false)
         : base(
             projectSrcGeneratePath,
             projectTestGeneratePath,
@@ -22,26 +21,7 @@ public class ApiProjectOptions : BaseProjectOptions
             projectSuffixName,
             apiOptions,
             usingCodingRules,
-            forClient,
-            clientFolderName)
+            forClient)
     {
-        if (string.IsNullOrEmpty(clientFolderName))
-        {
-            PathForEndpoints = new DirectoryInfo(Path.Combine(PathForSrcGenerate.FullName, ContentGeneratorConstants.Endpoints));
-            PathForContracts = new DirectoryInfo(Path.Combine(PathForSrcGenerate.FullName, ContentGeneratorConstants.Contracts));
-            PathForContractsShared = new DirectoryInfo(Path.Combine(PathForContracts.FullName, ContentGeneratorConstants.SpecialFolderSharedModels));
-        }
-        else
-        {
-            PathForEndpoints = new DirectoryInfo(Path.Combine(Path.Combine(PathForSrcGenerate.FullName, clientFolderName), ContentGeneratorConstants.Endpoints));
-            PathForContracts = new DirectoryInfo(Path.Combine(Path.Combine(PathForSrcGenerate.FullName, clientFolderName), ContentGeneratorConstants.Contracts));
-            PathForContractsShared = new DirectoryInfo(Path.Combine(Path.Combine(PathForContracts.FullName), ContentGeneratorConstants.SpecialFolderSharedModels));
-        }
     }
-
-    public DirectoryInfo PathForEndpoints { get; }
-
-    public DirectoryInfo PathForContracts { get; }
-
-    public DirectoryInfo PathForContractsShared { get; }
 }

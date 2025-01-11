@@ -7,58 +7,42 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
 {
     private readonly ILogger<ClientCSharpApiGenerator> logger;
     private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
-    private readonly Version apiGeneratorVersion;
-    private readonly string projectName;
-    private readonly DirectoryInfo projectPath;
     private readonly OpenApiDocument openApiDocument;
     private readonly IList<ApiOperation> operationSchemaMappings;
     private readonly string codeGeneratorContentHeader;
     private readonly AttributeParameters codeGeneratorAttribute;
-    private readonly bool useProblemDetailsAsDefaultResponseBody;
-    private readonly bool includeDeprecated;
+    private readonly GeneratorSettings settings;
     private readonly CustomErrorResponseModel? customErrorResponseModel;
 
     public ClientCSharpApiGenerator(
         ILoggerFactory loggerFactory,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
-        Version apiGeneratorVersion,
-        string projectName,
-        DirectoryInfo projectPath,
         OpenApiDocument openApiDocument,
         IList<ApiOperation> operationSchemaMappings,
-        bool useProblemDetailsAsDefaultResponseBody,
-        bool includeDeprecated,
+        GeneratorSettings generatorSettings,
         CustomErrorResponseModel? customErrorResponseModel)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
         ArgumentNullException.ThrowIfNull(nugetPackageReferenceProvider);
-        ArgumentNullException.ThrowIfNull(apiGeneratorVersion);
-        ArgumentNullException.ThrowIfNull(projectName);
-        ArgumentNullException.ThrowIfNull(projectPath);
         ArgumentNullException.ThrowIfNull(openApiDocument);
         ArgumentNullException.ThrowIfNull(operationSchemaMappings);
+        ArgumentNullException.ThrowIfNull(generatorSettings);
 
         logger = loggerFactory.CreateLogger<ClientCSharpApiGenerator>();
         this.nugetPackageReferenceProvider = nugetPackageReferenceProvider;
-        this.apiGeneratorVersion = apiGeneratorVersion;
-        this.projectName = projectName;
-        this.projectPath = projectPath;
         this.customErrorResponseModel = customErrorResponseModel;
         this.openApiDocument = openApiDocument;
         this.operationSchemaMappings = operationSchemaMappings;
-        this.useProblemDetailsAsDefaultResponseBody = useProblemDetailsAsDefaultResponseBody;
-        this.includeDeprecated = includeDeprecated;
+        settings = generatorSettings;
 
         codeGeneratorContentHeader = GeneratedCodeHeaderGeneratorFactory
-            .Create(apiGeneratorVersion)
+            .Create(settings.Version)
             .Generate();
         codeGeneratorAttribute = AttributeParametersFactory
-            .CreateGeneratedCode(apiGeneratorVersion);
+            .CreateGeneratedCode(settings.Version);
     }
 
-    public string? ClientFolderName { get; set; }
-
-    public string HttpClientName { get; set; } = "DefaultHttpClient";
+    public string HttpClientName { get; set; } = ContentGeneratorConstants.DefaultHttpClient;
 
     public async Task ScaffoldProjectFile()
     {
@@ -86,7 +70,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
                     new("GenerateDocumentationFile", Attributes: null, "true"),
                 ],
                 [
-                    new("DocumentationFile", Attributes: null, @$"bin\Debug\net8.0\{projectName}.xml"),
+                    new("DocumentationFile", Attributes: null, @$"bin\Debug\net8.0\{settings.ProjectName}.xml"),
                     new("NoWarn", Attributes: null, "$(NoWarn);1573;1591;1701;1702;1712;8618;"),
                 ],
             ],
@@ -101,8 +85,8 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
 
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
-            projectPath,
-            projectPath.CombineFileInfo($"{projectName}.csproj"),
+            settings.ProjectPath,
+            FileInfoFactory.Create(settings.ProjectPath, $"{settings.ProjectName}.csproj"),
             ContentWriterArea.Src,
             content,
             overrideIfExist: false);
@@ -144,13 +128,13 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
         {
             var apiGroupName = openApiPath.GetApiGroupName();
 
-            var fullNamespace = string.IsNullOrEmpty(ClientFolderName)
-                ? $"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}"
-                : $"{projectName}.{ClientFolderName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
+            var contractsLocation = LocationFactory.CreateWithApiGroupName(apiGroupName, settings.ContractsLocation);
+
+            var fullNamespace = NamespaceFactory.Create(settings.ProjectName, contractsLocation);
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
-                if (openApiOperation.Value.Deprecated && !includeDeprecated)
+                if (openApiOperation.Value.Deprecated && !settings.IncludeDeprecatedOperations)
                 {
                     continue;
                 }
@@ -167,8 +151,8 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
                     openApiPath.Value.Parameters);
 
                 var contentGenerator = new ContentGeneratorClientParameter(
-                    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
-                    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
+                    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(settings.Version)),
+                    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(settings.Version)),
                     new CodeDocumentationTagsGenerator(),
                     parameterParameters);
 
@@ -176,8 +160,8 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
 
                 var contentWriter = new ContentWriter(logger);
                 contentWriter.Write(
-                    projectPath,
-                    projectPath.CombineFileInfo(ContentGeneratorConstants.Contracts, apiGroupName, ContentGeneratorConstants.RequestParameters, $"{parameterParameters.ParameterName}.cs"),
+                    settings.ProjectPath,
+                    FileInfoFactory.Create(settings.ProjectPath, contractsLocation, ContentGeneratorConstants.RequestParameters, $"{parameterParameters.ParameterName}.cs"),
                     ContentWriterArea.Src,
                     content);
             }
@@ -190,13 +174,13 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
         {
             var apiGroupName = openApiPath.GetApiGroupName();
 
-            var fullNamespace = string.IsNullOrEmpty(ClientFolderName)
-                ? $"{projectName}.{ContentGeneratorConstants.Endpoints}.{apiGroupName}.{ContentGeneratorConstants.Interfaces}"
-                : $"{projectName}.{ClientFolderName}.{ContentGeneratorConstants.Endpoints}.{apiGroupName}.{ContentGeneratorConstants.Interfaces}";
+            var endpointsLocation = LocationFactory.CreateWithApiGroupName(apiGroupName, settings.EndpointsLocation);
+
+            var fullNamespace = NamespaceFactory.Create(settings.ProjectName, endpointsLocation) + $".{ContentGeneratorConstants.Interfaces}";
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
-                if (openApiOperation.Value.Deprecated && !includeDeprecated)
+                if (openApiOperation.Value.Deprecated && !settings.IncludeDeprecatedOperations)
                 {
                     continue;
                 }
@@ -207,7 +191,8 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
                     codeGeneratorAttribute,
                     openApiPath.Value,
                     openApiOperation.Value,
-                    HttpClientName);
+                    HttpClientName,
+                    settings.UsePartialClassForEndpoints);
 
                 var contentGenerator = new GenerateContentForInterface(
                     new CodeDocumentationTagsGenerator(),
@@ -217,8 +202,8 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
 
                 var contentWriter = new ContentWriter(logger);
                 contentWriter.Write(
-                    projectPath,
-                    projectPath.CombineFileInfo(ContentGeneratorConstants.Endpoints, apiGroupName, ContentGeneratorConstants.Interfaces, $"{interfaceParameters.TypeName}.cs"),
+                    settings.ProjectPath,
+                    FileInfoFactory.Create(settings.ProjectPath, endpointsLocation, ContentGeneratorConstants.Interfaces, $"{interfaceParameters.TypeName}.cs"),
                     ContentWriterArea.Src,
                     content);
             }
@@ -231,41 +216,44 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
         {
             var apiGroupName = openApiPath.GetApiGroupName();
 
-            var fullNamespace = string.IsNullOrEmpty(ClientFolderName)
-                ? $"{projectName}.{ContentGeneratorConstants.Endpoints}.{apiGroupName}"
-                : $"{projectName}.{ClientFolderName}.{ContentGeneratorConstants.Endpoints}.{apiGroupName}";
+            var endpointsLocation = LocationFactory.CreateWithApiGroupName(apiGroupName, settings.EndpointsLocation);
+            var contractsLocation = LocationFactory.CreateWithApiGroupName(apiGroupName, settings.ContractsLocation);
+
+            var fullNamespace = NamespaceFactory.Create(settings.ProjectName, endpointsLocation);
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
-                if (openApiOperation.Value.Deprecated && !includeDeprecated)
+                if (openApiOperation.Value.Deprecated && !settings.IncludeDeprecatedOperations)
                 {
                     continue;
                 }
 
                 var endpointParameters = ContentGeneratorClientEndpointParametersFactory.Create(
-                    projectName,
+                    settings.ProjectName,
                     apiGroupName,
                     fullNamespace,
+                    contractsLocation,
                     openApiPath.Value,
                     openApiOperation.Key,
                     openApiOperation.Value,
                     HttpClientName,
-                    $"{openApiDocument.GetServerUrlBasePath()}{openApiPath.Key}");
+                    $"{openApiDocument.GetServerUrlBasePath()}{openApiPath.Key}",
+                    settings.UsePartialClassForEndpoints);
 
                 var contentGenerator = new ContentGeneratorClientEndpoint(
-                    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
-                    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
+                    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(settings.Version)),
+                    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(settings.Version)),
                     new CodeDocumentationTagsGenerator(),
                     endpointParameters,
-                    useProblemDetailsAsDefaultResponseBody,
+                    settings.UseProblemDetailsAsDefaultResponseBody,
                     customErrorResponseModel?.Name);
 
                 var content = contentGenerator.Generate();
 
                 var contentWriter = new ContentWriter(logger);
                 contentWriter.Write(
-                    projectPath,
-                    projectPath.CombineFileInfo(ContentGeneratorConstants.Endpoints, apiGroupName, $"{endpointParameters.EndpointName}.cs"),
+                    settings.ProjectPath,
+                    FileInfoFactory.Create(settings.ProjectPath, endpointsLocation, $"{endpointParameters.EndpointName}.cs"),
                     ContentWriterArea.Src,
                     content);
             }
@@ -278,37 +266,40 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
         {
             var apiGroupName = openApiPath.GetApiGroupName();
 
-            var fullNamespace = string.IsNullOrEmpty(ClientFolderName)
-                ? $"{projectName}.{ContentGeneratorConstants.Endpoints}.{apiGroupName}.{ContentGeneratorConstants.Interfaces}"
-                : $"{projectName}.{ClientFolderName}.{ContentGeneratorConstants.Endpoints}.{apiGroupName}.{ContentGeneratorConstants.Interfaces}";
+            var endpointsLocation = LocationFactory.CreateWithApiGroupName(apiGroupName, settings.EndpointsLocation);
+            var contractsLocation = LocationFactory.CreateWithApiGroupName(apiGroupName, settings.ContractsLocation);
+
+            var fullNamespace = NamespaceFactory.Create(settings.ProjectName, endpointsLocation) + $".{ContentGeneratorConstants.Interfaces}";
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
-                if (openApiOperation.Value.Deprecated && !includeDeprecated)
+                if (openApiOperation.Value.Deprecated && !settings.IncludeDeprecatedOperations)
                 {
                     continue;
                 }
 
                 var endpointResultInterfaceParameters = ContentGeneratorClientEndpointResultInterfaceParametersFactory.Create(
-                    projectName,
+                    settings.ProjectName,
                     apiGroupName,
                     fullNamespace,
+                    contractsLocation,
                     openApiPath.Value,
-                    openApiOperation.Value);
+                    openApiOperation.Value,
+                    settings.UsePartialClassForContracts);
 
                 var contentGenerator = new ContentGeneratorClientEndpointResultInterface(
-                    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
-                    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
+                    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(settings.Version)),
+                    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(settings.Version)),
                     new CodeDocumentationTagsGenerator(),
                     endpointResultInterfaceParameters,
-                    useProblemDetailsAsDefaultResponseBody);
+                    settings.UseProblemDetailsAsDefaultResponseBody);
 
                 var content = contentGenerator.Generate();
 
                 var contentWriter = new ContentWriter(logger);
                 contentWriter.Write(
-                    projectPath,
-                    projectPath.CombineFileInfo(ContentGeneratorConstants.Endpoints, apiGroupName, ContentGeneratorConstants.Interfaces, $"{endpointResultInterfaceParameters.InterfaceName}.cs"),
+                    settings.ProjectPath,
+                    FileInfoFactory.Create(settings.ProjectPath, endpointsLocation, ContentGeneratorConstants.Interfaces, $"{endpointResultInterfaceParameters.InterfaceName}.cs"),
                     ContentWriterArea.Src,
                     content);
             }
@@ -321,37 +312,40 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
         {
             var apiGroupName = openApiPath.GetApiGroupName();
 
-            var fullNamespace = string.IsNullOrEmpty(ClientFolderName)
-                ? $"{projectName}.{ContentGeneratorConstants.Endpoints}.{apiGroupName}"
-                : $"{projectName}.{ClientFolderName}.{ContentGeneratorConstants.Endpoints}.{apiGroupName}";
+            var endpointsLocation = LocationFactory.CreateWithApiGroupName(apiGroupName, settings.EndpointsLocation);
+            var contractsLocation = LocationFactory.CreateWithApiGroupName(apiGroupName, settings.ContractsLocation);
+
+            var fullNamespace = NamespaceFactory.Create(settings.ProjectName, endpointsLocation);
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
-                if (openApiOperation.Value.Deprecated && !includeDeprecated)
+                if (openApiOperation.Value.Deprecated && !settings.IncludeDeprecatedOperations)
                 {
                     continue;
                 }
 
                 var endpointResultParameters = ContentGeneratorClientEndpointResultParametersFactory.Create(
-                    projectName,
+                    settings.ProjectName,
                     apiGroupName,
                     fullNamespace,
+                    contractsLocation,
                     openApiPath.Value,
-                    openApiOperation.Value);
+                    openApiOperation.Value,
+                    settings.UsePartialClassForContracts);
 
                 var contentGenerator = new ContentGeneratorClientEndpointResult(
-                    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
-                    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
+                    new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(settings.Version)),
+                    new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(settings.Version)),
                     new CodeDocumentationTagsGenerator(),
                     endpointResultParameters,
-                    useProblemDetailsAsDefaultResponseBody);
+                    settings.UseProblemDetailsAsDefaultResponseBody);
 
                 var content = contentGenerator.Generate();
 
                 var contentWriter = new ContentWriter(logger);
                 contentWriter.Write(
-                    projectPath,
-                    projectPath.CombineFileInfo(ContentGeneratorConstants.Endpoints, apiGroupName, $"{endpointResultParameters.EndpointResultName}.cs"),
+                    settings.ProjectPath,
+                    FileInfoFactory.Create(settings.ProjectPath, endpointsLocation, $"{endpointResultParameters.EndpointResultName}.cs"),
                     ContentWriterArea.Src,
                     content);
             }
@@ -375,17 +369,17 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
             "Microsoft.AspNetCore.Mvc",
         };
 
-        if (openApiDocument.IsUsingRequiredForSystemLinq(includeDeprecated))
+        if (openApiDocument.IsUsingRequiredForSystemLinq(settings.IncludeDeprecatedOperations))
         {
             requiredUsings.Add("System.Linq");
         }
 
-        if (openApiDocument.IsUsingRequiredForSystemCollectionGeneric(includeDeprecated))
+        if (openApiDocument.IsUsingRequiredForSystemCollectionGeneric(settings.IncludeDeprecatedOperations))
         {
             requiredUsings.Add("System.Collections.Generic");
         }
 
-        if (openApiDocument.IsUsingRequiredForSystemTextJsonSerializationAndSystemRuntimeSerialization(includeDeprecated))
+        if (openApiDocument.IsUsingRequiredForSystemTextJsonSerializationAndSystemRuntimeSerialization(settings.IncludeDeprecatedOperations))
         {
             requiredUsings.Add("System.Runtime.Serialization");
             requiredUsings.Add("System.Text.Json.Serialization");
@@ -403,16 +397,19 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
 
         if (operationSchemaMappings.Any(apiOperation => apiOperation.Model.IsShared))
         {
-            requiredUsings.Add($"{projectName}.{ContentGeneratorConstants.Contracts}");
+            requiredUsings.Add(NamespaceFactory.Create(settings.ProjectName, LocationFactory.CreateWithoutTemplateForApiGroupName(settings.ContractsLocation)));
         }
 
         var apiGroupNames = openApiDocument.GetApiGroupNames();
         foreach (var openApiPath in openApiDocument.Paths)
         {
             var apiGroupName = openApiPath.GetApiGroupName();
+
+            var contractsLocation = LocationFactory.CreateWithApiGroupName(apiGroupName, settings.ContractsLocation);
+
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
-                if (openApiOperation.Value.Deprecated && !includeDeprecated)
+                if (openApiOperation.Value.Deprecated && !settings.IncludeDeprecatedOperations)
                 {
                     continue;
                 }
@@ -423,7 +420,7 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
                     continue;
                 }
 
-                var requiredUsing = $"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
+                var requiredUsing = NamespaceFactory.Create(settings.ProjectName, contractsLocation);
                 if (!requiredUsings.Contains(requiredUsing, StringComparer.CurrentCulture))
                 {
                     requiredUsings.Add(requiredUsing);
@@ -439,6 +436,8 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
 
             var apiOperationModels = GetDistinctApiOperationModels(apiOperations);
 
+            var contractsLocation = LocationFactory.CreateWithApiGroupName(apiGroupName, settings.ContractsLocation);
+
             foreach (var apiOperationModel in apiOperationModels)
             {
                 if (apiOperationModel.IsEnum ||
@@ -447,7 +446,12 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
                     continue;
                 }
 
-                var requiredUsing = $"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
+                if (apiGroupName.IsWellKnownSystemTypeName())
+                {
+                    continue;
+                }
+
+                var requiredUsing = NamespaceFactory.Create(settings.ProjectName, contractsLocation);
                 if (!requiredUsings.Contains(requiredUsing, StringComparer.CurrentCulture))
                 {
                     requiredUsings.Add(requiredUsing);
@@ -455,12 +459,12 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
             }
         }
 
-        requiredUsings.AddRange(apiGroupNames.Select(x => $"{projectName}.{ContentGeneratorConstants.Endpoints}.{x}.{ContentGeneratorConstants.Interfaces}"));
+        requiredUsings.AddRange(apiGroupNames.Select(x => NamespaceFactory.Create(settings.ProjectName, LocationFactory.CreateWithApiGroupName(x, settings.EndpointsLocation), ContentGeneratorConstants.Interfaces)));
 
         GlobalUsingsHelper.CreateOrUpdate(
             logger,
             ContentWriterArea.Src,
-            projectPath,
+            settings.ProjectPath,
             requiredUsings,
             removeNamespaceGroupSeparatorInGlobalUsings);
     }
@@ -469,7 +473,9 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
         string enumerationName,
         OpenApiSchema openApiSchemaEnumeration)
     {
-        var fullNamespace = $"{projectName}.{ContentGeneratorConstants.Contracts}";
+        var contractsLocation = LocationFactory.CreateWithoutTemplateForApiGroupName(settings.ContractsLocation);
+
+        var fullNamespace = NamespaceFactory.Create(settings.ProjectName, contractsLocation);
 
         var enumParameters = ContentGeneratorServerClientEnumParametersFactory.Create(
             codeGeneratorContentHeader,
@@ -486,8 +492,8 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
 
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
-            projectPath,
-            projectPath.CombineFileInfo(ContentGeneratorConstants.Contracts, ContentGeneratorConstants.SpecialFolderEnumerationTypes, $"{enumerationName}.cs"),
+            settings.ProjectPath,
+            FileInfoFactory.Create(settings.ProjectPath, contractsLocation, ContentGeneratorConstants.SpecialFolderEnumerationTypes, $"{enumerationName}.cs"),
             ContentWriterArea.Src,
             content);
     }
@@ -498,9 +504,11 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
         string apiGroupName,
         bool isSharedContract)
     {
-        var fullNamespace = isSharedContract
-            ? $"{projectName}.{ContentGeneratorConstants.Contracts}"
-            : $"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
+        var contractsLocation = isSharedContract
+            ? LocationFactory.CreateWithoutTemplateForApiGroupName(settings.ContractsLocation)
+            : LocationFactory.CreateWithApiGroupName(apiGroupName, settings.ContractsLocation);
+
+        var fullNamespace = NamespaceFactory.Create(settings.ProjectName, contractsLocation);
 
         var parameters = ContentGeneratorServerClientModelParametersFactory.CreateForClass(
             codeGeneratorContentHeader,
@@ -508,7 +516,8 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
             codeGeneratorAttribute,
             modelName,
             apiSchemaModel,
-            includeDeprecated);
+            settings.UsePartialClassForContracts,
+            settings.IncludeDeprecatedOperations);
 
         var contentGeneratorClass = new GenerateContentForClass(
             new CodeDocumentationTagsGenerator(),
@@ -518,10 +527,10 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
 
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
-            projectPath,
+            settings.ProjectPath,
             isSharedContract
-                ? projectPath.CombineFileInfo(ContentGeneratorConstants.Contracts, ContentGeneratorConstants.SpecialFolderSharedModels, $"{modelName}.cs")
-                : projectPath.CombineFileInfo(ContentGeneratorConstants.Contracts, apiGroupName, $"{modelName}.cs"),
+                ? FileInfoFactory.Create(settings.ProjectPath, contractsLocation, ContentGeneratorConstants.SpecialFolderSharedModels, $"{modelName}.cs")
+                : FileInfoFactory.Create(settings.ProjectPath, contractsLocation, $"{modelName}.cs"),
             ContentWriterArea.Src,
             content);
     }
@@ -534,13 +543,16 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
             return;
         }
 
-        var fullNamespace = $"{projectName}.{ContentGeneratorConstants.Contracts}";
+        var contractsLocation = LocationFactory.CreateWithoutTemplateForApiGroupName(settings.ContractsLocation);
+
+        var fullNamespace = NamespaceFactory.Create(settings.ProjectName, contractsLocation);
 
         var parameters = ContentGeneratorServerClientModelParametersFactory.CreateForCustomErrorResponseModel(
             codeGeneratorContentHeader,
             fullNamespace,
             codeGeneratorAttribute,
-            customErrorResponseModel);
+            customErrorResponseModel,
+            settings.UsePartialClassForContracts);
 
         var contentGeneratorClass = new GenerateContentForClass(
             new CodeDocumentationTagsGenerator(),
@@ -550,8 +562,8 @@ public class ClientCSharpApiGenerator : IClientCSharpApiGenerator
 
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
-            projectPath,
-            projectPath.CombineFileInfo(ContentGeneratorConstants.Contracts, ContentGeneratorConstants.SpecialFolderSharedModels, $"{customErrorResponseModel.Name.EnsureFirstCharacterToUpper()}.cs"),
+            settings.ProjectPath,
+            FileInfoFactory.Create(settings.ProjectPath, contractsLocation, ContentGeneratorConstants.SpecialFolderSharedModels, $"{customErrorResponseModel.Name.EnsureFirstCharacterToUpper()}.cs"),
             ContentWriterArea.Src,
             content);
     }

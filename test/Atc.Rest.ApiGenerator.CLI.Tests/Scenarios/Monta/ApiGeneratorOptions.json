@@ -5,6 +5,11 @@
       "useRestExtended": true,
       "includeDeprecated": false,
       "projectSuffixName": "",
+      "contractsLocation": "Contracts.[[apiGroupName]]",
+      "endpointsLocation": "Endpoints.[[apiGroupName]]",
+      "handlersLocation": "Handlers.[[apiGroupName]]",
+      "usePartialClassForContracts": false,
+      "usePartialClassForEndpoints": false,
       "removeNamespaceGroupSeparatorInGlobalUsings": false,
       "request": {},
       "response": {
@@ -37,7 +42,6 @@
         }
       },
       "client": {
-        "folderName": "",
         "excludeEndpointGeneration": false,
         "httpClientName": "Monta-ApiClient"
       }
@@ -49,5 +53,5 @@
       "modelNameCasingStyle": "PascalCase",
       "modelPropertyNameCasingStyle": "CamelCase"
     },
-    "includeDeprecated": false
+    "includeDeprecatedOperations": false
 }

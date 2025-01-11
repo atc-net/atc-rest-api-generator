@@ -31,15 +31,20 @@ public class ServerHostGenerator
         var domainProjectName = projectOptions.ProjectName.Replace(".Api", ".Domain", StringComparison.Ordinal);
         var operationSchemaMappings = apiOperationExtractor.Extract(projectOptions.Document);
 
+        var generatorSettings = GeneratorSettingsFactory.Create(
+            projectOptions.ApiGeneratorVersion,
+            projectOptions.ProjectName,
+            projectOptions.PathForSrcGenerate,
+            projectOptions.ApiOptions.Generator,
+            projectOptions.ApiOptions.IncludeDeprecatedOperations);
+
         serverHostGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerHostGenerator(
             loggerFactory,
             nugetPackageReferenceProvider,
-            projectOptions.ApiGeneratorVersion,
-            projectOptions.ProjectName,
             apiProjectName,
             domainProjectName,
-            projectOptions.PathForSrcGenerate,
-            projectOptions.Document)
+            projectOptions.Document,
+            generatorSettings)
         {
             UseRestExtended = projectOptions.UseRestExtended,
         };
@@ -47,39 +52,39 @@ public class ServerHostGenerator
         serverHostGeneratorMinimalApi = new Framework.Minimal.ProjectGenerator.ServerHostGenerator(
             loggerFactory,
             nugetPackageReferenceProvider,
-            projectOptions.ApiGeneratorVersion,
-            projectOptions.ProjectName,
             apiProjectName,
             domainProjectName,
-            projectOptions.PathForSrcGenerate,
-            projectOptions.Document);
+            projectOptions.Document,
+            generatorSettings);
 
         if (projectOptions.PathForTestGenerate is not null)
         {
+            var generatorTestSettings = GeneratorSettingsFactory.Create(
+                projectOptions.ApiGeneratorVersion,
+                $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Tests}",
+                projectOptions.PathForTestGenerate,
+                projectOptions.ApiOptions.Generator,
+                projectOptions.ApiOptions.IncludeDeprecatedOperations);
+
             serverHostTestGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerHostTestGenerator(
                 loggerFactory,
                 nugetPackageReferenceProvider,
-                projectOptions.ApiGeneratorVersion,
-                $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Tests}",
                 projectOptions.ProjectName,
                 apiProjectName,
                 domainProjectName,
-                projectOptions.PathForTestGenerate,
                 projectOptions.Document,
                 operationSchemaMappings,
-                projectOptions.ApiOptions.IncludeDeprecated);
+                generatorTestSettings);
 
             serverHostTestGeneratorMinimalApi = new Framework.Minimal.ProjectGenerator.ServerHostTestGenerator(
                 loggerFactory,
                 nugetPackageReferenceProvider,
-                projectOptions.ApiGeneratorVersion,
-                $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Tests}",
                 projectOptions.ProjectName,
                 apiProjectName,
                 domainProjectName,
-                projectOptions.PathForTestGenerate,
                 projectOptions.Document,
-                operationSchemaMappings);
+                operationSchemaMappings,
+                generatorTestSettings);
         }
     }
 

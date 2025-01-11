@@ -6,8 +6,10 @@ public static class ContentGeneratorClientEndpointResultInterfaceParametersFacto
         string projectName,
         string apiGroupName,
         string @namespace,
+        string contractsLocation,
         OpenApiPathItem openApiPath,
-        OpenApiOperation openApiOperation)
+        OpenApiOperation openApiOperation,
+        bool usePartialClass)
     {
         ArgumentNullException.ThrowIfNull(openApiPath);
         ArgumentNullException.ThrowIfNull(openApiOperation);
@@ -18,7 +20,7 @@ public static class ContentGeneratorClientEndpointResultInterfaceParametersFacto
         AppendParameters(parameters, openApiOperation.Parameters);
         AppendParametersFromBody(parameters, openApiOperation.RequestBody);
 
-        var modelNamespace = $"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
+        var modelNamespace = NamespaceFactory.Create(projectName, contractsLocation);
         var operationName = openApiOperation.GetOperationName();
         var controllerAuthorization = openApiPath.ExtractApiPathAuthorization();
         var endpointAuthorization = openApiOperation.ExtractApiOperationAuthorization(openApiPath);
@@ -29,6 +31,7 @@ public static class ContentGeneratorClientEndpointResultInterfaceParametersFacto
             Namespace: @namespace,
             OperationName: operationName,
             DocumentationTags: openApiOperation.ExtractDocumentationTagsForEndpointResultInterface(),
+            usePartialClass ? DeclarationModifiers.PublicPartialInterface : DeclarationModifiers.PublicInterface,
             InterfaceName: $"I{operationName}{ContentGeneratorConstants.EndpointResult}",
             InheritInterfaceName: "IEndpointResponse",
             HasParameterType: hasParameterType,

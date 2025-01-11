@@ -167,7 +167,7 @@ public static class ApiOperationResponseModelExtensions
         foreach (var model in responseModels)
         {
             if (model.DataType is not null &&
-                IsWellKnownSystemTypeName(model.DataType))
+                model.DataType.IsWellKnownSystemTypeName())
             {
                 var operationSchemaMapping = operationSchemaMappings.First(x => x.Model.Name == model.DataType);
                 if (operationSchemaMapping.Model.IsShared)
@@ -195,11 +195,4 @@ public static class ApiOperationResponseModelExtensions
 
         return models;
     }
-
-    private static bool IsWellKnownSystemTypeName(
-        string value)
-        => value.EndsWith("Task", StringComparison.Ordinal) ||
-           value.EndsWith("Tasks", StringComparison.Ordinal) ||
-           value.EndsWith("Endpoint", StringComparison.Ordinal) ||
-           value.EndsWith("EventArgs", StringComparison.Ordinal);
 }

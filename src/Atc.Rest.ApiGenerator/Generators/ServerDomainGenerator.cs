@@ -29,34 +29,42 @@ public class ServerDomainGenerator
 
         var apiProjectName = projectOptions.ProjectName.Replace(".Domain", ".Api.Generated", StringComparison.Ordinal);
 
-        serverDomainGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerDomainGenerator(
-            loggerFactory,
+        var generatorSettings = GeneratorSettingsFactory.Create(
             projectOptions.ApiGeneratorVersion,
             projectOptions.ProjectName,
-            apiProjectName,
             projectOptions.PathForSrcGenerate,
-            projectOptions.Document);
+            projectOptions.ApiOptions.Generator,
+            projectOptions.ApiOptions.IncludeDeprecatedOperations);
+
+        serverDomainGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerDomainGenerator(
+            loggerFactory,
+            apiProjectName,
+            projectOptions.Document,
+            generatorSettings);
 
         serverDomainGeneratorMinimalApi = new Framework.Minimal.ProjectGenerator.ServerDomainGenerator(
             loggerFactory,
             nugetPackageReferenceProvider,
-            projectOptions.ApiGeneratorVersion,
-            projectOptions.ProjectName,
             apiProjectName,
-            projectOptions.PathForSrcGenerate,
-            projectOptions.Document);
+            projectOptions.Document,
+            generatorSettings);
 
         if (projectOptions.PathForTestGenerate is not null)
         {
-            serverDomainTestGenerator = new Framework.ProjectGenerator.ServerDomainTestGenerator(
-                loggerFactory,
-                nugetPackageReferenceProvider,
+            var generatorTestSettings = GeneratorSettingsFactory.Create(
                 projectOptions.ApiGeneratorVersion,
                 $"{projectOptions.ProjectName}.{ContentGeneratorConstants.Tests}",
+                projectOptions.PathForTestGenerate,
+                projectOptions.ApiOptions.Generator,
+                projectOptions.ApiOptions.IncludeDeprecatedOperations);
+
+            serverDomainTestGenerator = new ServerDomainTestGenerator(
+                loggerFactory,
+                nugetPackageReferenceProvider,
                 apiProjectName,
                 projectOptions.ProjectName,
-                projectOptions.PathForTestGenerate,
-                projectOptions.Document);
+                projectOptions.Document,
+                generatorTestSettings);
         }
     }
 

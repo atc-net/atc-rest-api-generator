@@ -23,26 +23,24 @@ public class ClientCSharpApiGenerator
 
         var operationSchemaMappings = apiOperationExtractor.Extract(projectOptions.Document);
 
-        clientCSharpApiGenerator = new Client.CSharp.ProjectGenerator.ClientCSharpApiGenerator(
-            loggerFactory,
-            nugetPackageReferenceProvider,
+        var generatorSettings = GeneratorSettingsFactory.Create(
             projectOptions.ApiGeneratorVersion,
             projectOptions.ProjectName,
             projectOptions.PathForSrcGenerate,
+            projectOptions.ApiOptions.Generator,
+            projectOptions.ApiOptions.IncludeDeprecatedOperations);
+
+        clientCSharpApiGenerator = new Client.CSharp.ProjectGenerator.ClientCSharpApiGenerator(
+            loggerFactory,
+            nugetPackageReferenceProvider,
             projectOptions.Document,
             operationSchemaMappings,
-            projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
-            projectOptions.ApiOptions.Generator.IncludeDeprecated,
+            generatorSettings,
             projectOptions.ApiOptions.Generator.Response.CustomErrorResponseModel);
 
         if (projectOptions.ApiOptions.Generator.Client is not null)
         {
             clientCSharpApiGenerator.HttpClientName = projectOptions.ApiOptions.Generator.Client.HttpClientName;
-
-            if (!string.IsNullOrEmpty(projectOptions.ApiOptions.Generator.Client.FolderName))
-            {
-                clientCSharpApiGenerator.ClientFolderName = projectOptions.ApiOptions.Generator.Client.FolderName;
-            }
         }
     }
 

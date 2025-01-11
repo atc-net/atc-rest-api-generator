@@ -34,7 +34,7 @@ public class GenerateContentForEnum : IContentGenerator
             sb.AppendLine("[JsonConverter(typeof(JsonStringEnumConverter))]");
         }
 
-        sb.Append($"{parameters.AccessModifier.GetDescription()} enum ");
+        sb.Append($"{parameters.DeclarationModifier.GetDescription()} enum ");
         sb.AppendLine($"{parameters.EnumTypeName}");
 
         sb.AppendLine("{");

@@ -132,25 +132,54 @@ public static class ApiOptionsHelper
     {
         if (settings is BaseServerCommandSettings serverCommandSettings)
         {
-            if (serverCommandSettings.AspNetOutputType.IsSet)
+            if (serverCommandSettings.AspNetOutputType.IsSet ||
+                serverCommandSettings.AspNetOutputType.Value != apiOptions.Generator.AspNetOutputType)
             {
                 apiOptions.Generator.AspNetOutputType = serverCommandSettings.AspNetOutputType.Value;
             }
 
-            if (serverCommandSettings.SwaggerThemeMode.IsSet)
+            if (serverCommandSettings.SwaggerThemeMode.IsSet ||
+                serverCommandSettings.SwaggerThemeMode.Value != apiOptions.Generator.SwaggerThemeMode)
             {
                 apiOptions.Generator.SwaggerThemeMode = serverCommandSettings.SwaggerThemeMode.Value;
             }
 
             if (serverCommandSettings.UseProblemDetailsAsDefaultResponseBody)
             {
-                apiOptions.Generator.Response.UseProblemDetailsAsDefaultBody =
-                    serverCommandSettings.UseProblemDetailsAsDefaultResponseBody;
+                apiOptions.Generator.Response.UseProblemDetailsAsDefaultBody = serverCommandSettings.UseProblemDetailsAsDefaultResponseBody;
             }
 
             if (serverCommandSettings.ProjectPrefixName is not null)
             {
                 apiOptions.Generator.ProjectName = serverCommandSettings.ProjectPrefixName;
+            }
+
+            if (serverCommandSettings.ContractsLocation is not null &&
+                serverCommandSettings.ContractsLocation.IsSet)
+            {
+                apiOptions.Generator.ContractsLocation = serverCommandSettings.ContractsLocation.Value;
+            }
+
+            if (serverCommandSettings.EndpointsLocation is not null &&
+                serverCommandSettings.EndpointsLocation.IsSet)
+            {
+                apiOptions.Generator.EndpointsLocation = serverCommandSettings.EndpointsLocation.Value;
+            }
+
+            if (serverCommandSettings.HandlersLocation is not null &&
+                serverCommandSettings.HandlersLocation.IsSet)
+            {
+                apiOptions.Generator.HandlersLocation = serverCommandSettings.HandlersLocation.Value;
+            }
+
+            if (serverCommandSettings.UsePartialClassForContracts)
+            {
+                apiOptions.Generator.UsePartialClassForContracts = serverCommandSettings.UsePartialClassForContracts;
+            }
+
+            if (serverCommandSettings.UsePartialClassForEndpoints)
+            {
+                apiOptions.Generator.UsePartialClassForEndpoints = serverCommandSettings.UsePartialClassForEndpoints;
             }
 
             if (serverCommandSettings.RemoveNamespaceGroupSeparatorInGlobalUsings)
@@ -165,8 +194,7 @@ public static class ApiOptionsHelper
             {
                 if (clientApiCommandSettings.UseProblemDetailsAsDefaultResponseBody)
                 {
-                    apiOptions.Generator.Response.UseProblemDetailsAsDefaultBody =
-                        clientApiCommandSettings.UseProblemDetailsAsDefaultResponseBody;
+                    apiOptions.Generator.Response.UseProblemDetailsAsDefaultBody = clientApiCommandSettings.UseProblemDetailsAsDefaultResponseBody;
                 }
 
                 if (clientApiCommandSettings.ProjectPrefixName is not null)
@@ -181,41 +209,54 @@ public static class ApiOptionsHelper
 
                 if (string.IsNullOrEmpty(apiOptions.Generator.ProjectSuffixName))
                 {
-                    apiOptions.Generator.ProjectSuffixName = "ApiClient.Generated";
+                    apiOptions.Generator.ProjectSuffixName = $"{ContentGeneratorConstants.DefaultHttpClientName}.Generated";
+                }
+
+                if (clientApiCommandSettings.ContractsLocation is not null &&
+                    clientApiCommandSettings.ContractsLocation.IsSet)
+                {
+                    apiOptions.Generator.ContractsLocation = clientApiCommandSettings.ContractsLocation.Value;
+                }
+
+                if (clientApiCommandSettings.EndpointsLocation is not null &&
+                    clientApiCommandSettings.EndpointsLocation.IsSet)
+                {
+                    apiOptions.Generator.EndpointsLocation = clientApiCommandSettings.EndpointsLocation.Value;
+                }
+
+                if (clientApiCommandSettings.UsePartialClassForContracts)
+                {
+                    apiOptions.Generator.UsePartialClassForContracts = clientApiCommandSettings.UsePartialClassForContracts;
+                }
+
+                if (clientApiCommandSettings.UsePartialClassForEndpoints)
+                {
+                    apiOptions.Generator.UsePartialClassForEndpoints = clientApiCommandSettings.UsePartialClassForEndpoints;
                 }
 
                 apiOptions.Generator.Client ??= new ApiOptionsGeneratorClient();
-
-                if (clientApiCommandSettings.ClientFolderName is not null &&
-                    clientApiCommandSettings.ClientFolderName.IsSet)
-                {
-                    apiOptions.Generator.Client.FolderName = clientApiCommandSettings.ClientFolderName.Value;
-                }
 
                 if (clientApiCommandSettings.HttpClientName is not null &&
                     clientApiCommandSettings.HttpClientName.IsSet)
                 {
                     apiOptions.Generator.Client.HttpClientName = clientApiCommandSettings.HttpClientName.Value;
                 }
-                else if ("ApiClient".Equals(apiOptions.Generator.Client.HttpClientName, StringComparison.Ordinal))
+                else if (ContentGeneratorConstants.DefaultHttpClientName.Equals(apiOptions.Generator.Client.HttpClientName, StringComparison.Ordinal))
                 {
                     var baseGenerateCommandSettings = (BaseGenerateCommandSettings)settings;
-                    apiOptions.Generator.Client.HttpClientName = $"{baseGenerateCommandSettings.ProjectPrefixName}-ApiClient";
+                    apiOptions.Generator.Client.HttpClientName = $"{baseGenerateCommandSettings.ProjectPrefixName}-{ContentGeneratorConstants.DefaultHttpClientName}";
                 }
 
-                apiOptions.Generator.Client.ExcludeEndpointGeneration = clientApiCommandSettings.ExcludeEndpointGeneration;
+                if (clientApiCommandSettings.ExcludeEndpointGeneration)
+                {
+                    apiOptions.Generator.Client.ExcludeEndpointGeneration = clientApiCommandSettings.ExcludeEndpointGeneration;
+                }
 
                 break;
             }
         }
 
-        if (apiOptions.Generator.ProjectSuffixName.Contains(' ', StringComparison.Ordinal) ||
-            apiOptions.Generator.ProjectSuffixName.Contains('-', StringComparison.Ordinal))
-        {
-            apiOptions.Generator.ProjectSuffixName = apiOptions.Generator.ProjectSuffixName
-                .Trim()
-                .Replace(' ', '.')
-                .Replace('-', '.');
-        }
+        apiOptions.Generator.ProjectName = apiOptions.Generator.ProjectName.EnsureNamespaceFormat();
+        apiOptions.Generator.ProjectSuffixName = apiOptions.Generator.ProjectSuffixName.EnsureNamespaceFormat();
     }
 }

@@ -27,7 +27,7 @@ public class GenerateContentForClass : IContentGenerator
                 parameters.DocumentationTags,
                 parameters.Attributes));
 
-        sb.Append($"{parameters.AccessModifier.GetDescription()} {parameters.ClassTypeName}");
+        sb.Append($"{parameters.DeclarationModifier.GetDescription()} {parameters.ClassTypeName}");
         if (!string.IsNullOrEmpty(parameters.GenericTypeName))
         {
             sb.Append($"<{parameters.GenericTypeName}>");

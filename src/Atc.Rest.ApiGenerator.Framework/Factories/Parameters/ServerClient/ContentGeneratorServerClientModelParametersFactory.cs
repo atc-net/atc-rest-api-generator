@@ -11,7 +11,8 @@ public static class ContentGeneratorServerClientModelParametersFactory
         AttributeParameters codeGeneratorAttribute,
         string modelName,
         OpenApiSchema apiSchemaModel,
-        bool includeDeprecated)
+        bool usePartialClass = false,
+        bool includeDeprecated = false)
     {
         ArgumentNullException.ThrowIfNull(apiSchemaModel);
         ArgumentNullException.ThrowIfNull(modelName);
@@ -31,7 +32,7 @@ public static class ContentGeneratorServerClientModelParametersFactory
             @namespace,
             documentationTags,
             new List<AttributeParameters> { codeGeneratorAttribute },
-            AccessModifiers.PublicClass,
+            usePartialClass ? DeclarationModifiers.PublicPartialClass : DeclarationModifiers.PublicClass,
             ClassTypeName: modelName,
             GenericTypeName: genericTypeName,
             InheritedClassTypeName: null,
@@ -49,7 +50,8 @@ public static class ContentGeneratorServerClientModelParametersFactory
         AttributeParameters codeGeneratorAttribute,
         string modelName,
         OpenApiSchema apiSchemaModel,
-        bool includeDeprecated)
+        bool usePartialRecord = false,
+        bool includeDeprecated = false)
     {
         ArgumentNullException.ThrowIfNull(apiSchemaModel);
 
@@ -62,6 +64,7 @@ public static class ContentGeneratorServerClientModelParametersFactory
             @namespace,
             documentationTags,
             new List<AttributeParameters> { codeGeneratorAttribute },
+            usePartialRecord ? DeclarationModifiers.PublicPartialRecord : DeclarationModifiers.PublicRecord,
             Parameters: recordParameters);
     }
 
@@ -69,7 +72,8 @@ public static class ContentGeneratorServerClientModelParametersFactory
         string codeGeneratorContentHeader,
         string fullNamespace,
         AttributeParameters codeGeneratorAttribute,
-        CustomErrorResponseModel customErrorResponseModel)
+        CustomErrorResponseModel customErrorResponseModel,
+        bool usePartialClass)
     {
         ArgumentNullException.ThrowIfNull(customErrorResponseModel);
 
@@ -92,7 +96,7 @@ public static class ContentGeneratorServerClientModelParametersFactory
         {
             CodeDocumentationTags? documentationTag = null;
 
-            var dataType = string.Empty;
+            string dataType;
             var isNullableType = false;
             string? defaultValue = null;
 
@@ -114,7 +118,7 @@ public static class ContentGeneratorServerClientModelParametersFactory
                 new PropertyParameters(
                     documentationTag,
                     Attributes: null,
-                    AccessModifiers.Public,
+                    DeclarationModifiers.Public,
                     GenericTypeName: null,
                     TypeName: dataType,
                     IsNullableType: isNullableType,
@@ -135,7 +139,7 @@ public static class ContentGeneratorServerClientModelParametersFactory
             fullNamespace,
             documentationTags,
             new List<AttributeParameters> { codeGeneratorAttribute },
-            AccessModifiers.PublicClass,
+            usePartialClass ? DeclarationModifiers.PublicPartialClass : DeclarationModifiers.PublicClass,
             ClassTypeName: customErrorResponseModel.Name.EnsureFirstCharacterToUpper(),
             GenericTypeName: null,
             InheritedClassTypeName: null,
@@ -207,7 +211,7 @@ public static class ContentGeneratorServerClientModelParametersFactory
                 new PropertyParameters(
                     documentationTags,
                     Attributes: null,
-                    AccessModifier: AccessModifiers.Public,
+                    DeclarationModifier: DeclarationModifiers.Public,
                     GenericTypeName: NameConstants.List,
                     IsGenericListType: true,
                     TypeName: childModelName,
@@ -331,7 +335,7 @@ public static class ContentGeneratorServerClientModelParametersFactory
                             apiSchema.Key,
                             hasAnyPropertiesAsArrayWithFormatTypeBinary,
                             openApiParameter),
-                        AccessModifier: AccessModifiers.Public,
+                        DeclarationModifier: DeclarationModifiers.Public,
                         GenericTypeName: dataTypeForList,
                         IsGenericListType: !string.IsNullOrEmpty(dataTypeForList),
                         TypeName: dataType,
@@ -382,7 +386,7 @@ public static class ContentGeneratorServerClientModelParametersFactory
         [
             new(
                 documentationTags,
-                AccessModifiers.PublicRecord,
+                DeclarationModifiers.PublicRecord,
                 Name: modelName,
                 Parameters: ExtractRecordParameterBaseParameters(apiSchemaModel, includeDeprecated))
 
@@ -405,7 +409,7 @@ public static class ContentGeneratorServerClientModelParametersFactory
              new PropertyParameters(
                  DocumentationTags: null,
                  Attributes: null,
-                 AccessModifier: AccessModifiers.Public,
+                 DeclarationModifier: DeclarationModifiers.Public,
                  GenericTypeName: NameConstants.List,
                  IsGenericListType: true,
                  TypeName: childModelName,

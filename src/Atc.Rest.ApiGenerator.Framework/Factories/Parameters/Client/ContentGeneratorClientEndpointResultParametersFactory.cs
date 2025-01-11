@@ -6,8 +6,10 @@ public static class ContentGeneratorClientEndpointResultParametersFactory
         string projectName,
         string apiGroupName,
         string @namespace,
+        string contractsLocation,
         OpenApiPathItem openApiPath,
-        OpenApiOperation openApiOperation)
+        OpenApiOperation openApiOperation,
+        bool usePartialClass)
     {
         ArgumentNullException.ThrowIfNull(openApiPath);
         ArgumentNullException.ThrowIfNull(openApiOperation);
@@ -18,7 +20,7 @@ public static class ContentGeneratorClientEndpointResultParametersFactory
         AppendParameters(parameters, openApiOperation.Parameters);
         AppendParametersFromBody(parameters, openApiOperation.RequestBody);
 
-        var modelNamespace = $"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
+        var modelNamespace = NamespaceFactory.Create(projectName, contractsLocation);
         var operationName = openApiOperation.GetOperationName();
         var controllerAuthorization = openApiPath.ExtractApiPathAuthorization();
         var endpointAuthorization = openApiOperation.ExtractApiOperationAuthorization(openApiPath);
@@ -31,6 +33,7 @@ public static class ContentGeneratorClientEndpointResultParametersFactory
                 Namespace: @namespace,
                 OperationName: operationName,
                 DocumentationTags: openApiOperation.ExtractDocumentationTagsForEndpointResult(),
+                usePartialClass ? DeclarationModifiers.PublicPartialClass : DeclarationModifiers.PublicClass,
                 EndpointResultName: $"{operationName}{ContentGeneratorConstants.EndpointResult}",
                 EndpointResultInterfaceName: $"I{operationName}{ContentGeneratorConstants.EndpointResult}",
                 InheritClassName: ContentGeneratorConstants.EndpointResponse,
@@ -45,6 +48,7 @@ public static class ContentGeneratorClientEndpointResultParametersFactory
             Namespace: @namespace,
             OperationName: operationName,
             DocumentationTags: openApiOperation.ExtractDocumentationTagsForEndpointResult(),
+            usePartialClass ? DeclarationModifiers.PublicPartialClass : DeclarationModifiers.PublicClass,
             EndpointResultName: $"{operationName}{ContentGeneratorConstants.EndpointResult}",
             EndpointResultInterfaceName: $"I{operationName}{ContentGeneratorConstants.EndpointResult}",
             InheritClassName: ContentGeneratorConstants.EndpointResponse,

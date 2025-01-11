@@ -9,7 +9,8 @@ public static class ContentGeneratorServerEndpointParametersFactory
         string apiGroupName,
         string route,
         string endpointSuffixName,
-        OpenApiDocument openApiDocument)
+        OpenApiDocument openApiDocument,
+        bool usePartialClassForEndpoints)
     {
         var modelNamespace = $"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
         var methodParameters = new List<ContentGeneratorServerEndpointMethodParameters>();
@@ -50,6 +51,7 @@ public static class ContentGeneratorServerEndpointParametersFactory
             ApiGroupName: apiGroupName,
             route,
             documentationTags,
+            usePartialClassForEndpoints ? DeclarationModifiers.PublicPartialClass : DeclarationModifiers.PublicSealedClass,
             EndpointName: $"{apiGroupName}{endpointSuffixName}",
             controllerAuthorization,
             methodParameters);

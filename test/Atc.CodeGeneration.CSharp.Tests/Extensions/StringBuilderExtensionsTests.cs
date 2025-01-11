@@ -4,25 +4,25 @@ namespace Atc.CodeGeneration.CSharp.Tests.Extensions;
 public class StringBuilderExtensionsTests
 {
     [Theory]
-    [InlineData("", AccessModifiers.None)]
-    [InlineData("public ", AccessModifiers.Public)]
-    [InlineData("public async ", AccessModifiers.PublicAsync)]
-    [InlineData("public static ", AccessModifiers.PublicStatic)]
-    [InlineData("public static implicit operator ", AccessModifiers.PublicStaticImplicitOperator)]
-    [InlineData("public record ", AccessModifiers.PublicRecord)]
-    [InlineData("public record struct ", AccessModifiers.PublicRecordStruct)]
-    [InlineData("private ", AccessModifiers.Private)]
-    [InlineData("protected ", AccessModifiers.Protected)]
-    [InlineData("internal ", AccessModifiers.Internal)]
-    public void AppendAccessModifier(
+    [InlineData("", DeclarationModifiers.None)]
+    [InlineData("public ", DeclarationModifiers.Public)]
+    [InlineData("public async ", DeclarationModifiers.PublicAsync)]
+    [InlineData("public static ", DeclarationModifiers.PublicStatic)]
+    [InlineData("public static implicit operator ", DeclarationModifiers.PublicStaticImplicitOperator)]
+    [InlineData("public record ", DeclarationModifiers.PublicRecord)]
+    [InlineData("public record struct ", DeclarationModifiers.PublicRecordStruct)]
+    [InlineData("private ", DeclarationModifiers.Private)]
+    [InlineData("protected ", DeclarationModifiers.Protected)]
+    [InlineData("internal ", DeclarationModifiers.Internal)]
+    public void AppendDeclarationModifier(
         string expected,
-        AccessModifiers accessModifier)
+        DeclarationModifiers declarationModifier)
     {
         // Arrange
         var sb = new StringBuilder();
 
         // Act
-        sb.AppendAccessModifier(accessModifier);
+        sb.AppendDeclarationModifier(declarationModifier);
         var actual = sb.ToString();
 
         // Assert
@@ -30,26 +30,26 @@ public class StringBuilderExtensionsTests
     }
 
     [Theory]
-    [InlineData("", 3, AccessModifiers.None)]
-    [InlineData("   public ", 3, AccessModifiers.Public)]
-    [InlineData("   public async ", 3, AccessModifiers.PublicAsync)]
-    [InlineData("   public static ", 3, AccessModifiers.PublicStatic)]
-    [InlineData("   public static implicit operator ", 3, AccessModifiers.PublicStaticImplicitOperator)]
-    [InlineData("   public record ", 3, AccessModifiers.PublicRecord)]
-    [InlineData("   public record struct ", 3, AccessModifiers.PublicRecordStruct)]
-    [InlineData("   private ", 3, AccessModifiers.Private)]
-    [InlineData("   protected ", 3, AccessModifiers.Protected)]
-    [InlineData("   internal ", 3, AccessModifiers.Internal)]
-    public void AppendAccessModifier_WithIndentSpaces(
+    [InlineData("", 3, DeclarationModifiers.None)]
+    [InlineData("   public ", 3, DeclarationModifiers.Public)]
+    [InlineData("   public async ", 3, DeclarationModifiers.PublicAsync)]
+    [InlineData("   public static ", 3, DeclarationModifiers.PublicStatic)]
+    [InlineData("   public static implicit operator ", 3, DeclarationModifiers.PublicStaticImplicitOperator)]
+    [InlineData("   public record ", 3, DeclarationModifiers.PublicRecord)]
+    [InlineData("   public record struct ", 3, DeclarationModifiers.PublicRecordStruct)]
+    [InlineData("   private ", 3, DeclarationModifiers.Private)]
+    [InlineData("   protected ", 3, DeclarationModifiers.Protected)]
+    [InlineData("   internal ", 3, DeclarationModifiers.Internal)]
+    public void AppendDeclarationModifier_WithIndentSpaces(
         string expected,
         int indentSpaces,
-        AccessModifiers accessModifier)
+        DeclarationModifiers declarationModifier)
     {
         // Arrange
         var sb = new StringBuilder();
 
         // Act
-        sb.AppendAccessModifier(indentSpaces, accessModifier);
+        sb.AppendDeclarationModifier(indentSpaces, declarationModifier);
         var actual = sb.ToString();
 
         // Assert

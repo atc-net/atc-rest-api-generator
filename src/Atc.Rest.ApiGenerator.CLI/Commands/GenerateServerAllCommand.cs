@@ -75,7 +75,7 @@ public class GenerateServerAllCommand : AsyncCommand<ServerAllCommandSettings>
         {
             if (!openApiDocumentValidator.IsValid(
                     apiOptions.Validation,
-                    apiOptions.IncludeDeprecated,
+                    apiOptions.IncludeDeprecatedOperations,
                     apiDocumentContainer))
             {
                 return ConsoleExitStatusCodes.Failure;

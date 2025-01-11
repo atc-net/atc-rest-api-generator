@@ -14,6 +14,26 @@ public class BaseGenerateCommandSettings : BaseConfigurationCommandSettings
     [Description("Use ProblemDetails as default responsen body")]
     public bool UseProblemDetailsAsDefaultResponseBody { get; init; }
 
+    [CommandOption($"{ArgumentCommandConstants.LongEndpointsLocation} [ENDPOINTSLOCATION]")]
+    [Description($"If endpoints-localtion is provided, generated files will be placed here instead of the {ContentGeneratorConstants.Endpoints} folder.")]
+    public FlagValue<string>? EndpointsLocation { get; init; }
+
+    [CommandOption($"{ArgumentCommandConstants.LongContractsLocation} [CONTRACTSLOCATION]")]
+    [Description($"If contracts-localtion is provided, generated files will be placed here instead of the {ContentGeneratorConstants.Contracts} folder.")]
+    public FlagValue<string>? ContractsLocation { get; init; }
+
+    [CommandOption($"{ArgumentCommandConstants.LongHandlersLocation} [HANDLERSLOCATION]")]
+    [Description($"If handlers-localtion is provided, generated files will be placed here instead of the {ContentGeneratorConstants.Handlers} folder.")]
+    public FlagValue<string>? HandlersLocation { get; init; }
+
+    [CommandOption(ArgumentCommandConstants.LongUsePartialClassForContracts)]
+    [Description("Use Partial-Class for contracts")]
+    public bool UsePartialClassForContracts { get; init; }
+
+    [CommandOption(ArgumentCommandConstants.LongUsePartialClassForEndpoints)]
+    [Description("Use Partial-Class for endpoints")]
+    public bool UsePartialClassForEndpoints { get; init; }
+
     [CommandOption($"{ArgumentCommandConstants.LongRemoveNamespaceGroupSeparatorInGlobalUsings}")]
     [Description("Remove space between namespace groups in GlobalUsing.cs")]
     public bool RemoveNamespaceGroupSeparatorInGlobalUsings { get; init; }

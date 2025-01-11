@@ -54,6 +54,7 @@ public static class ContentGeneratorServerResultParametersFactory
             @namespace,
             operationName,
             openApiOperation.ExtractDocumentationTagsForResult(),
+            DeclarationModifiers.PublicClass,
             $"{operationName}{ContentGeneratorConstants.Result}",
             methodParameters,
             implicitOperatorParameters);

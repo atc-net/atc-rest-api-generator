@@ -36,7 +36,7 @@ public record BaseParameters(
     string? HeaderContent,
     string Namespace,
     CodeDocumentationTags? DocumentationTags,
-    AccessModifiers AccessModifier,
+    DeclarationModifiers DeclarationModifier,
     string TypeName);
 
 public record InterfaceParameters(
@@ -44,7 +44,7 @@ public record InterfaceParameters(
     string Namespace,
     CodeDocumentationTags? DocumentationTags,
     IList<AttributeParameters>? Attributes,
-    AccessModifiers AccessModifier,
+    DeclarationModifiers DeclarationModifier,
     string InterfaceTypeName,
     string? InheritedInterfaceTypeName,
     IList<PropertyParameters>? Properties,
@@ -53,7 +53,7 @@ public record InterfaceParameters(
         HeaderContent,
         Namespace,
         DocumentationTags,
-        AccessModifier,
+        DeclarationModifier,
         InterfaceTypeName);
 
 public record ClassParameters(
@@ -61,7 +61,7 @@ public record ClassParameters(
     string Namespace,
     CodeDocumentationTags? DocumentationTags,
     IList<AttributeParameters>? Attributes,
-    AccessModifiers AccessModifier,
+    DeclarationModifiers DeclarationModifier,
     string ClassTypeName,
     string? GenericTypeName,
     string? InheritedClassTypeName,
@@ -75,7 +75,7 @@ public record ClassParameters(
         HeaderContent,
         Namespace,
         DocumentationTags,
-        AccessModifier,
+        DeclarationModifier,
         ClassTypeName);
 
 public record EnumParameters(
@@ -83,7 +83,7 @@ public record EnumParameters(
     string Namespace,
     CodeDocumentationTags? DocumentationTags,
     IList<AttributeParameters>? Attributes,
-    AccessModifiers AccessModifier,
+    DeclarationModifiers DeclarationModifier,
     string EnumTypeName,
     bool UseFlags,
     IList<EnumValueParameters> Values)
@@ -91,7 +91,7 @@ public record EnumParameters(
         HeaderContent,
         Namespace,
         DocumentationTags,
-        AccessModifier,
+        DeclarationModifier,
         EnumTypeName);
 
 public record AttributeParameters(
@@ -120,7 +120,7 @@ public record ConstructorParameterBaseParameters(
 
 public record ConstructorParameters(
     CodeDocumentationTags? DocumentationTags,
-    AccessModifiers AccessModifier,
+    DeclarationModifiers DeclarationModifier,
     string? GenericTypeName,
     string TypeName,
     string? InheritedClassTypeName,
@@ -129,7 +129,7 @@ public record ConstructorParameters(
 public record PropertyParameters(
     CodeDocumentationTags? DocumentationTags,
     IList<AttributeParameters>? Attributes,
-    AccessModifiers AccessModifier,
+    DeclarationModifiers DeclarationModifier,
     string? GenericTypeName,
     string TypeName,
     bool IsNullableType,
@@ -156,7 +156,7 @@ public record PropertyParameters(
 public record MethodParameters(
     CodeDocumentationTags? DocumentationTags,
     IList<AttributeParameters>? Attributes,
-    AccessModifiers AccessModifier,
+    DeclarationModifiers DeclarationModifier,
     string? ReturnGenericTypeName,
     string? ReturnTypeName,
     string Name,
@@ -176,10 +176,11 @@ public record RecordsParameters(
     string Namespace,
     CodeDocumentationTags? DocumentationTags,
     IList<AttributeParameters>? Attributes,
+    DeclarationModifiers DeclarationModifier,
     IList<RecordParameters> Parameters);
 
 public record RecordParameters(
     CodeDocumentationTags? DocumentationTags,
-    AccessModifiers AccessModifier,
+    DeclarationModifiers DeclarationModifier,
     string Name,
     IList<ParameterBaseParameters>? Parameters);

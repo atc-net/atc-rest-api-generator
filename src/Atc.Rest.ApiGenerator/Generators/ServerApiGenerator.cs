@@ -29,29 +29,28 @@ public class ServerApiGenerator
 
         var operationSchemaMappings = apiOperationExtractor.Extract(projectOptions.Document);
 
-        serverApiGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerApiGenerator(
-            loggerFactory,
-            nugetPackageReferenceProvider,
+        var generatorSettings = GeneratorSettingsFactory.Create(
             projectOptions.ApiGeneratorVersion,
             projectOptions.ProjectName,
             projectOptions.PathForSrcGenerate,
+            projectOptions.ApiOptions.Generator,
+            projectOptions.ApiOptions.IncludeDeprecatedOperations);
+
+        serverApiGeneratorMvc = new Framework.Mvc.ProjectGenerator.ServerApiGenerator(
+            loggerFactory,
+            nugetPackageReferenceProvider,
             projectOptions.Document,
             operationSchemaMappings,
             projectOptions.RouteBase,
-            projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
-            projectOptions.ApiOptions.Generator.IncludeDeprecated);
+            generatorSettings);
 
         serverApiGeneratorMinimalApi = new Framework.Minimal.ProjectGenerator.ServerApiGenerator(
             loggerFactory,
             nugetPackageReferenceProvider,
-            projectOptions.ApiGeneratorVersion,
-            projectOptions.ProjectName,
-            projectOptions.PathForSrcGenerate,
             projectOptions.Document,
             operationSchemaMappings,
             projectOptions.RouteBase,
-            projectOptions.ApiOptions.Generator.Response.UseProblemDetailsAsDefaultBody,
-            projectOptions.ApiOptions.Generator.IncludeDeprecated);
+            generatorSettings);
     }
 
     public async Task<bool> Generate()

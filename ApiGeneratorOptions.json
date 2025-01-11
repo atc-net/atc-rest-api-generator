@@ -4,6 +4,13 @@
     "swaggerThemeMode": "None",
     "useRestExtended": true,
     "includeDeprecated": false,
+    "projectSuffixName": "",
+    "contractsLocation": "Contracts.[[apiGroupName]]",
+    "endpointsLocation": "Endpoints.[[apiGroupName]]",
+    "handlersLocation": "Handlers.[[apiGroupName]]",
+    "usePartialClassForContracts": false,
+    "usePartialClassForEndpoints": false,
+    "removeNamespaceGroupSeparatorInGlobalUsings": false,
     "request": {},
     "response": {
       "useProblemDetailsAsDefaultBody": false
@@ -16,5 +23,5 @@
     "modelNameCasingStyle": "PascalCase",
     "modelPropertyNameCasingStyle": "CamelCase"
   },
-  "includeDeprecated": false
+  "includeDeprecatedOperations": false
 }

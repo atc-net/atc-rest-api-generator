@@ -6,42 +6,36 @@ public class ServerDomainGenerator : IServerDomainGenerator
 {
     private readonly ILogger<ServerDomainGenerator> logger;
     private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
-    private readonly string projectName;
     private readonly string apiProjectName;
-    private readonly DirectoryInfo projectPath;
     private readonly OpenApiDocument openApiDocument;
     private readonly string codeGeneratorContentHeader;
     private readonly AttributeParameters codeGeneratorAttribute;
+    private readonly GeneratorSettings settings;
 
     public ServerDomainGenerator(
         ILoggerFactory loggerFactory,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
-        Version apiGeneratorVersion,
-        string projectName,
         string apiProjectName,
-        DirectoryInfo projectPath,
-        OpenApiDocument openApiDocument)
+        OpenApiDocument openApiDocument,
+        GeneratorSettings generatorSettings)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
         ArgumentNullException.ThrowIfNull(nugetPackageReferenceProvider);
-        ArgumentNullException.ThrowIfNull(apiGeneratorVersion);
-        ArgumentNullException.ThrowIfNull(projectName);
         ArgumentNullException.ThrowIfNull(apiProjectName);
-        ArgumentNullException.ThrowIfNull(projectPath);
         ArgumentNullException.ThrowIfNull(openApiDocument);
+        ArgumentNullException.ThrowIfNull(generatorSettings);
 
         logger = loggerFactory.CreateLogger<ServerDomainGenerator>();
         this.nugetPackageReferenceProvider = nugetPackageReferenceProvider;
-        this.projectName = projectName;
         this.apiProjectName = apiProjectName;
-        this.projectPath = projectPath;
         this.openApiDocument = openApiDocument;
+        settings = generatorSettings;
 
         codeGeneratorContentHeader = GeneratedCodeHeaderGeneratorFactory
-            .Create(apiGeneratorVersion)
+            .Create(settings.Version)
             .Generate();
         codeGeneratorAttribute = AttributeParametersFactory
-            .CreateGeneratedCode(apiGeneratorVersion);
+            .CreateGeneratedCode(settings.Version);
     }
 
     public async Task ScaffoldProjectFile()
@@ -69,7 +63,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
                     new("GenerateDocumentationFile", Attributes: null, "true"),
                 ],
                 [
-                    new("DocumentationFile", Attributes: null, @$"bin\Debug\net8.0\{projectName}.xml"),
+                    new("DocumentationFile", Attributes: null, @$"bin\Debug\net8.0\{settings.ProjectName}.xml"),
                     new("NoWarn", Attributes: null, "$(NoWarn);1573;1591;1701;1702;1712;8618;"),
                 ],
             ],
@@ -100,8 +94,8 @@ public class ServerDomainGenerator : IServerDomainGenerator
 
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
-            projectPath,
-            projectPath.CombineFileInfo($"{projectName}.csproj"),
+            settings.ProjectPath,
+            settings.ProjectPath.CombineFileInfo($"{settings.ProjectName}.csproj"),
             ContentWriterArea.Src,
             content,
             overrideIfExist: false);
@@ -113,13 +107,16 @@ public class ServerDomainGenerator : IServerDomainGenerator
         {
             var apiGroupName = urlPath.GetApiGroupName();
 
+            var handlersLocation = LocationFactory.CreateWithApiGroupName(apiGroupName, settings.HandlersLocation);
+            var contractsLocation = LocationFactory.CreateWithApiGroupName(apiGroupName, settings.ContractsLocation);
+
+            var fullNamespace = NamespaceFactory.Create(settings.ProjectName, handlersLocation);
+
             foreach (var openApiOperation in urlPath.Value.Operations)
             {
-                var fullNamespace = $"{projectName}.{ContentGeneratorConstants.Handlers}.{apiGroupName}";
-
                 var classParameters = ContentGeneratorServerHandlerParametersFactory.Create(
                     fullNamespace,
-                    $"Api.Generated.{ContentGeneratorConstants.Contracts}.{apiGroupName}",
+                    $"Api.Generated.{contractsLocation}", // TODO: Fix this
                     urlPath.Value,
                     openApiOperation.Value);
 
@@ -131,11 +128,8 @@ public class ServerDomainGenerator : IServerDomainGenerator
 
                 var contentWriter = new ContentWriter(logger);
                 contentWriter.Write(
-                    projectPath,
-                    projectPath.CombineFileInfo(
-                        ContentGeneratorConstants.Handlers,
-                        apiGroupName,
-                        $"{classParameters.TypeName}.cs"),
+                    settings.ProjectPath,
+                    FileInfoFactory.Create(settings.ProjectPath, handlersLocation, $"{classParameters.TypeName}.cs"),
                     ContentWriterArea.Src,
                     content,
                     overrideIfExist: false);
@@ -151,7 +145,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
 
         var interfaceParameters = InterfaceParametersFactory.Create(
             codeGeneratorContentHeader,
-            projectName,
+            settings.ProjectName,
             [suppressMessageAvoidEmptyInterfaceAttribute, codeGeneratorAttribute],
             "IDomainAssemblyMarker");
 
@@ -163,8 +157,8 @@ public class ServerDomainGenerator : IServerDomainGenerator
 
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
-            projectPath,
-            projectPath.CombineFileInfo("IDomainAssemblyMarker.cs"),
+            settings.ProjectPath,
+            settings.ProjectPath.CombineFileInfo("IDomainAssemblyMarker.cs"),
             ContentWriterArea.Src,
             content);
     }
@@ -188,7 +182,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
         var methodConfigureDomainServices = new MethodParameters(
             DocumentationTags: null,
             Attributes: null,
-            AccessModifiers.PublicStatic,
+            DeclarationModifiers.PublicStatic,
             ReturnGenericTypeName: null,
             ReturnTypeName: "IServiceCollection",
             Name: "ConfigureDomainHandlers",
@@ -219,10 +213,10 @@ public class ServerDomainGenerator : IServerDomainGenerator
 
         var classParameters = new ClassParameters(
             codeGeneratorContentHeader,
-            Namespace: $"{projectName}.Extensions",
+            Namespace: $"{settings.ProjectName}.Extensions",
             DocumentationTags: null,
             Attributes: [codeGeneratorAttribute],
-            AccessModifiers.PublicStaticClass,
+            DeclarationModifiers.PublicStaticClass,
             ClassTypeName: "ServiceCollectionEndpointHandlerExtensions",
             GenericTypeName: null,
             InheritedClassTypeName: null,
@@ -244,8 +238,8 @@ public class ServerDomainGenerator : IServerDomainGenerator
 
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
-            projectPath,
-            projectPath.CombineFileInfo("Extensions", "ServiceCollectionEndpointHandlerExtensions.cs"),
+            settings.ProjectPath,
+            settings.ProjectPath.CombineFileInfo("Extensions", "ServiceCollectionEndpointHandlerExtensions.cs"),
             ContentWriterArea.Src,
             content);
     }
@@ -263,13 +257,12 @@ public class ServerDomainGenerator : IServerDomainGenerator
 
         var apiGroupNames = openApiDocument.GetApiGroupNames();
 
-        requiredUsings.AddRange(apiGroupNames.Select(x => $"{apiProjectName}.{ContentGeneratorConstants.Contracts}.{x}"));
-        requiredUsings.AddRange(apiGroupNames.Select(x => $"{projectName}.{ContentGeneratorConstants.Handlers}.{x}"));
+        requiredUsings.AddRange(apiGroupNames.Select(x => NamespaceFactory.Create(apiProjectName, LocationFactory.CreateWithApiGroupName(x, settings.ContractsLocation))));
 
         GlobalUsingsHelper.CreateOrUpdate(
             logger,
             ContentWriterArea.Src,
-            projectPath,
+            settings.ProjectPath,
             requiredUsings,
             removeNamespaceGroupSeparatorInGlobalUsings);
     }

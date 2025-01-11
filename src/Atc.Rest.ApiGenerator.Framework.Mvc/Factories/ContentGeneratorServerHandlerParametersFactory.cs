@@ -43,7 +43,7 @@ public static class ContentGeneratorServerHandlerParametersFactory
             new(
                 DocumentationTags: null,
                 Attributes: null,
-                AccessModifier: AccessModifiers.Public,
+                DeclarationModifier: DeclarationModifiers.Public,
                 ReturnTypeName: $"{operationName}{ContentGeneratorConstants.Result}",
                 ReturnGenericTypeName: "Task",
                 Name: "ExecuteAsync",
@@ -58,7 +58,7 @@ public static class ContentGeneratorServerHandlerParametersFactory
             @namespace,
             openApiOperation.ExtractDocumentationTagsForHandler(),
             Attributes: null,
-            AccessModifiers.PublicSealedClass,
+            DeclarationModifiers.PublicSealedClass,
             ClassTypeName: $"{operationName}{ContentGeneratorConstants.Handler}",
             GenericTypeName: null,
             InheritedClassTypeName: $"I{operationName}{ContentGeneratorConstants.Handler}",

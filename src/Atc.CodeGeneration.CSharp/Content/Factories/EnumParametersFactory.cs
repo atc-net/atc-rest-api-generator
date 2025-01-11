@@ -14,7 +14,7 @@ public static class EnumParametersFactory
             Namespace: @namespace,
             DocumentationTags: documentationTags,
             Attributes: attributes,
-            AccessModifier: AccessModifiers.Public,
+            DeclarationModifier: DeclarationModifiers.Public,
             EnumTypeName: enumTypeName,
             UseFlags: false,
             EnumValuesParametersFactory.Create(enumNames));
@@ -31,7 +31,7 @@ public static class EnumParametersFactory
             Namespace: @namespace,
             DocumentationTags: documentationTags,
             Attributes: attributes,
-            AccessModifier: AccessModifiers.Public,
+            DeclarationModifier: DeclarationModifiers.Public,
             EnumTypeName: enumTypeName,
             UseFlags: DetermineIfFlagsAttributeShouldBeUsed(enumNameValues),
             EnumValuesParametersFactory.Create(enumNameValues));

@@ -37,7 +37,7 @@ public class ContentGeneratorClientEndpointResultInterface : IContentGenerator
         }
 
         sb.AppendLine(codeAttributeGenerator.Generate());
-        sb.AppendLine($"public interface {parameters.InterfaceName} : {parameters.InheritInterfaceName}");
+        sb.AppendLine($"{parameters.DeclarationModifier.GetDescription()} {parameters.InterfaceName} : {parameters.InheritInterfaceName}");
         sb.AppendLine("{");
         AppendContent(sb);
         sb.Append('}');

@@ -20,9 +20,14 @@ public static class ArgumentCommandConstants
     public const string LongConfigurationValidateModelNameCasingStyle = "--validate-modelNameCasingStyle";
     public const string LongConfigurationValidateModelPropertyNameCasingStyle = "--validate-modelPropertyNameCasingStyle";
 
-    public const string LongClientFolderName = "--clientFolderName";
+    public const string LongEndpointsLocation = "--endpointsLocation";
+    public const string LongContractsLocation = "--contractsLocation";
+    public const string LongHandlersLocation = "--handlersLocation";
+
     public const string LongClientHttpClientName = "--httpClientName";
     public const string LongExcludeEndpointGeneration = "--excludeEndpointGeneration";
+    public const string LongUsePartialClassForContracts = "--usePartialClassForContracts";
+    public const string LongUsePartialClassForEndpoints = "--usePartialClassForEndpoints";
 
     public const string LongServerOutputSolutionPath = "--outputSlnPath";
     public const string LongServerOutputSourcePath = "--outputSrcPath";

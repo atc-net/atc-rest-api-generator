@@ -51,7 +51,7 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
             new(
                 DocumentationTags: null,
                 Attributes: null,
-                AccessModifier: AccessModifiers.Public,
+                DeclarationModifier: DeclarationModifiers.Public,
                 ReturnTypeName: returnTypeName,
                 ReturnGenericTypeName: "Task",
                 Name: "ExecuteAsync",
@@ -70,7 +70,7 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
             @namespace,
             DocumentationTags: null,
             new List<AttributeParameters> { codeGeneratorAttribute },
-            AccessModifiers.PublicClass,
+            DeclarationModifiers.PublicClass,
             ClassTypeName: $"{operationName}{ContentGeneratorConstants.HandlerStub}",
             GenericTypeName: null,
             InheritedClassTypeName: inheritedClassTypeName,

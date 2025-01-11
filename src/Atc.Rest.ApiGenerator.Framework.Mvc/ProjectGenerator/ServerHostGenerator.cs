@@ -5,40 +5,32 @@ public class ServerHostGenerator : IServerHostGenerator
 {
     private readonly ILogger<ServerHostGenerator> logger;
     private readonly INugetPackageReferenceProvider nugetPackageReferenceProvider;
-    private readonly Version apiGeneratorVersion;
-    private readonly string projectName;
     private readonly string apiProjectName;
     private readonly string domainProjectName;
-    private readonly DirectoryInfo projectPath;
     private readonly OpenApiDocument openApiDocument;
+    private readonly GeneratorSettings settings;
 
     public ServerHostGenerator(
         ILoggerFactory loggerFactory,
         INugetPackageReferenceProvider nugetPackageReferenceProvider,
-        Version apiGeneratorVersion,
-        string projectName,
         string apiProjectName,
         string domainProjectName,
-        DirectoryInfo projectPath,
-        OpenApiDocument openApiDocument)
+        OpenApiDocument openApiDocument,
+        GeneratorSettings generatorSettings)
     {
         ArgumentNullException.ThrowIfNull(loggerFactory);
         ArgumentNullException.ThrowIfNull(nugetPackageReferenceProvider);
-        ArgumentNullException.ThrowIfNull(apiGeneratorVersion);
-        ArgumentNullException.ThrowIfNull(projectName);
         ArgumentNullException.ThrowIfNull(apiProjectName);
         ArgumentNullException.ThrowIfNull(domainProjectName);
-        ArgumentNullException.ThrowIfNull(projectPath);
         ArgumentNullException.ThrowIfNull(openApiDocument);
+        ArgumentNullException.ThrowIfNull(generatorSettings);
 
         logger = loggerFactory.CreateLogger<ServerHostGenerator>();
         this.nugetPackageReferenceProvider = nugetPackageReferenceProvider;
-        this.apiGeneratorVersion = apiGeneratorVersion;
-        this.projectName = projectName;
         this.apiProjectName = apiProjectName;
         this.domainProjectName = domainProjectName;
-        this.projectPath = projectPath;
         this.openApiDocument = openApiDocument;
+        settings = generatorSettings;
     }
 
     public bool UseRestExtended { get; set; }
@@ -68,7 +60,7 @@ public class ServerHostGenerator : IServerHostGenerator
                     new("GenerateDocumentationFile", Attributes: null, "true"),
                 ],
                 [
-                    new("DocumentationFile", Attributes: null, @$"bin\Debug\net8.0\{projectName}.xml"),
+                    new("DocumentationFile", Attributes: null, @$"bin\Debug\net8.0\{settings.ProjectName}.xml"),
                     new("NoWarn", Attributes: null, "$(NoWarn);1573;1591;1701;1702;1712;8618;"),
                 ],
             ],
@@ -98,8 +90,8 @@ public class ServerHostGenerator : IServerHostGenerator
 
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
-            projectPath,
-            projectPath.CombineFileInfo($"{projectName}.csproj"),
+            settings.ProjectPath,
+            settings.ProjectPath.CombineFileInfo($"{settings.ProjectName}.csproj"),
             ContentWriterArea.Src,
             content,
             overrideIfExist: false);
@@ -107,8 +99,8 @@ public class ServerHostGenerator : IServerHostGenerator
 
     public void ScaffoldPropertiesLaunchSettingsFile()
         => ResourcesHelper.ScaffoldPropertiesLaunchSettingsFile(
-            projectName,
-            projectPath,
+            settings.ProjectName,
+            settings.ProjectPath,
             useExtended: true);
 
     public void ScaffoldJsonSerializerOptionsExtensions()
@@ -128,14 +120,14 @@ public class ServerHostGenerator : IServerHostGenerator
         SwaggerThemeMode swaggerThemeMode)
     {
         var contentGenerator = new ContentGenerators.ContentGeneratorServerProgram(
-            new ContentGeneratorBaseParameters(Namespace: projectName));
+            new ContentGeneratorBaseParameters(Namespace: settings.ProjectName));
 
         var content = contentGenerator.Generate();
 
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
-            projectPath,
-            projectPath.CombineFileInfo("Program.cs"),
+            settings.ProjectPath,
+            settings.ProjectPath.CombineFileInfo("Program.cs"),
             ContentWriterArea.Src,
             content,
             overrideIfExist: false);
@@ -144,14 +136,14 @@ public class ServerHostGenerator : IServerHostGenerator
     public void ScaffoldStartupFile()
     {
         var contentGenerator = new ContentGenerators.ContentGeneratorServerStartup(
-            new ContentGeneratorBaseParameters(Namespace: projectName));
+            new ContentGeneratorBaseParameters(Namespace: settings.ProjectName));
 
         var content = contentGenerator.Generate();
 
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
-            projectPath,
-            projectPath.CombineFileInfo("Startup.cs"),
+            settings.ProjectPath,
+            settings.ProjectPath.CombineFileInfo("Startup.cs"),
             ContentWriterArea.Src,
             content,
             overrideIfExist: false);
@@ -165,8 +157,8 @@ public class ServerHostGenerator : IServerHostGenerator
 
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
-            projectPath,
-            projectPath.CombineFileInfo("web.config"),
+            settings.ProjectPath,
+            settings.ProjectPath.CombineFileInfo("web.config"),
             ContentWriterArea.Src,
             content,
             overrideIfExist: false);
@@ -174,7 +166,7 @@ public class ServerHostGenerator : IServerHostGenerator
 
     public void GenerateConfigureSwaggerDocOptions()
     {
-        var fullNamespace = $"{projectName}";
+        var fullNamespace = $"{settings.ProjectName}";
 
         var contentGeneratorServerSwaggerDocOptionsParameters = ContentGeneratorServerSwaggerDocOptionsParameterFactory
             .Create(
@@ -182,16 +174,16 @@ public class ServerHostGenerator : IServerHostGenerator
                 openApiDocument.ToSwaggerDocOptionsParameters());
 
         var contentGenerator = new ContentGeneratorServerConfigureSwaggerDocOptions(
-            new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
-            new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(apiGeneratorVersion)),
+            new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(settings.Version)),
+            new GeneratedCodeAttributeGenerator(new GeneratedCodeGeneratorParameters(settings.Version)),
             contentGeneratorServerSwaggerDocOptionsParameters);
 
         var content = contentGenerator.Generate();
 
         var contentWriter = new ContentWriter(logger);
         contentWriter.Write(
-            projectPath,
-            projectPath.CombineFileInfo("Options", "ConfigureSwaggerDocOptions.cs"),
+            settings.ProjectPath,
+            settings.ProjectPath.CombineFileInfo("Options", "ConfigureSwaggerDocOptions.cs"),
             ContentWriterArea.Src,
             content);
     }
@@ -205,8 +197,8 @@ public class ServerHostGenerator : IServerHostGenerator
             "System.Reflection",
             "System.Text",
             domainProjectName,
-            $"{projectName}.Generated",
-            $"{projectName}.Options",
+            $"{settings.ProjectName}.Generated",
+            $"{settings.ProjectName}.Options",
         };
 
         if (UseRestExtended)
@@ -221,11 +213,11 @@ public class ServerHostGenerator : IServerHostGenerator
         GlobalUsingsHelper.CreateOrUpdate(
             logger,
             ContentWriterArea.Src,
-            projectPath,
+            settings.ProjectPath,
             requiredUsings,
             removeNamespaceGroupSeparatorInGlobalUsings);
     }
 
     public void MaintainWwwResources()
-        => ResourcesHelper.MaintainWwwResources(projectPath);
+        => ResourcesHelper.MaintainWwwResources(settings.ProjectPath);
 }

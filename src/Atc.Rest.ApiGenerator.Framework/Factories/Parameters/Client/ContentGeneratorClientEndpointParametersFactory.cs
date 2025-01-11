@@ -6,11 +6,13 @@ public static class ContentGeneratorClientEndpointParametersFactory
         string projectName,
         string apiGroupName,
         string @namespace,
+        string contractsLocation,
         OpenApiPathItem openApiPath,
         OperationType httpMethod,
         OpenApiOperation openApiOperation,
         string httpClientName,
-        string urlPath)
+        string urlPath,
+        bool usePartialClass)
     {
         ArgumentNullException.ThrowIfNull(openApiPath);
         ArgumentNullException.ThrowIfNull(openApiOperation);
@@ -21,7 +23,7 @@ public static class ContentGeneratorClientEndpointParametersFactory
         AppendParameters(parameters, openApiOperation.Parameters);
         AppendParametersFromBody(parameters, openApiOperation.RequestBody);
 
-        var modelNamespace = $"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
+        var modelNamespace = NamespaceFactory.Create(projectName, contractsLocation);
         var operationName = openApiOperation.GetOperationName();
         var controllerAuthorization = openApiPath.ExtractApiPathAuthorization();
         var endpointAuthorization = openApiOperation.ExtractApiOperationAuthorization(openApiPath);
@@ -37,6 +39,7 @@ public static class ContentGeneratorClientEndpointParametersFactory
                 DocumentationTags: openApiOperation.ExtractDocumentationTagsForEndpoint(),
                 HttpClientName: httpClientName,
                 UrlPath: urlPath,
+                usePartialClass ? DeclarationModifiers.PublicPartialClass : DeclarationModifiers.PublicClass,
                 EndpointName: $"{operationName}{ContentGeneratorConstants.Endpoint}",
                 InterfaceName: $"I{operationName}{ContentGeneratorConstants.Endpoint}",
                 ResultName: $"{operationName}{ContentGeneratorConstants.EndpointResult}",
@@ -54,6 +57,7 @@ public static class ContentGeneratorClientEndpointParametersFactory
             DocumentationTags: openApiOperation.ExtractDocumentationTagsForEndpoint(),
             HttpClientName: httpClientName,
             UrlPath: urlPath,
+            usePartialClass ? DeclarationModifiers.PublicPartialClass : DeclarationModifiers.PublicClass,
             EndpointName: $"{operationName}{ContentGeneratorConstants.Endpoint}",
             InterfaceName: $"I{operationName}{ContentGeneratorConstants.Endpoint}",
             ResultName: $"{operationName}{ContentGeneratorConstants.EndpointResult}",

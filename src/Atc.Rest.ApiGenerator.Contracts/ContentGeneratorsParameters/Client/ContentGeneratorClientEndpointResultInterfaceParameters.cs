@@ -4,6 +4,7 @@ public record ContentGeneratorClientEndpointResultInterfaceParameters(
     string Namespace,
     string OperationName,
     CodeDocumentationTags DocumentationTags,
+    DeclarationModifiers DeclarationModifier,
     string InterfaceName,
     string InheritInterfaceName,
     bool HasParameterType,

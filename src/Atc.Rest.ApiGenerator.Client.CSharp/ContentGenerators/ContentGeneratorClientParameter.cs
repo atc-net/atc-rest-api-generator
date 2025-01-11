@@ -35,7 +35,7 @@ public sealed class ContentGeneratorClientParameter : IContentGenerator
         }
 
         sb.AppendLine(codeAttributeGenerator.Generate());
-        sb.AppendLine($"public class {parameters.ParameterName}");
+        sb.AppendLine($"{parameters.DeclarationModifier.GetDescription()} {parameters.ParameterName}");
         sb.AppendLine("{");
 
         foreach (var parameter in parameters.PropertyParameters)

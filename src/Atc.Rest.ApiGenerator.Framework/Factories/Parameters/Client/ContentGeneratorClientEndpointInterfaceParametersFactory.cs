@@ -8,7 +8,8 @@ public static class ContentGeneratorClientEndpointInterfaceParametersFactory
         AttributeParameters codeGeneratorAttribute,
         OpenApiPathItem openApiPath,
         OpenApiOperation openApiOperation,
-        string httpClientName)
+        string httpClientName,
+        bool usePartialInterface)
     {
         var operationName = openApiOperation.GetOperationName();
 
@@ -67,7 +68,7 @@ public static class ContentGeneratorClientEndpointInterfaceParametersFactory
                     exceptions: null,
                     @return: null),
                 Attributes: null,
-                AccessModifier: AccessModifiers.None,
+                DeclarationModifier: DeclarationModifiers.None,
                 ReturnTypeName: $"{operationName}{ContentGeneratorConstants.EndpointResult}",
                 ReturnGenericTypeName: "Task",
                 Name: "ExecuteAsync",
@@ -82,7 +83,7 @@ public static class ContentGeneratorClientEndpointInterfaceParametersFactory
             @namespace,
             DocumentationTags: openApiOperation.ExtractDocumentationTagsForEndpointInterface(),
             new List<AttributeParameters> { codeGeneratorAttribute },
-            AccessModifiers.Public,
+            usePartialInterface ? DeclarationModifiers.PublicPartialInterface : DeclarationModifiers.PublicInterface,
             InterfaceTypeName: $"I{operationName}{ContentGeneratorConstants.Endpoint}",
             InheritedInterfaceTypeName: null,
             Properties: null,

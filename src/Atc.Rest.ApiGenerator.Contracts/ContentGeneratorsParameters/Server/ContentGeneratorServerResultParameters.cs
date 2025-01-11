@@ -4,6 +4,7 @@ public record ContentGeneratorServerResultParameters(
     string Namespace,
     string OperationName,
     CodeDocumentationTags DocumentationTags,
+    DeclarationModifiers DeclarationModifier,
     string ResultName,
     IList<ContentGeneratorServerResultMethodParameters> MethodParameters,
     ContentGeneratorServerResultImplicitOperatorParameters? ImplicitOperatorParameters);

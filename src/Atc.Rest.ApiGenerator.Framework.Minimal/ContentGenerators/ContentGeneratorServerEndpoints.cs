@@ -37,7 +37,7 @@ public sealed class ContentGeneratorServerEndpoints : IContentGenerator
 
         sb.AppendLine(codeAttributeGenerator.Generate());
 
-        sb.AppendLine($"public sealed class {parameters.ApiGroupName}EndpointDefinition : IEndpointDefinition");
+        sb.AppendLine($"{parameters.DeclarationModifier.GetDescription()} {parameters.ApiGroupName}EndpointDefinition : IEndpointDefinition");
         sb.AppendLine("{");
         AppendContent(sb);
         sb.Append('}');

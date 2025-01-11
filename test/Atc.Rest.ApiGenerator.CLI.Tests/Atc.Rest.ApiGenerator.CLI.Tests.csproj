@@ -24,6 +24,8 @@
     <Compile Remove="Scenarios\Monta\VerifyClient\**" />
     <Compile Remove="Scenarios\PetStore\VerifyClient\**" />
     <Compile Remove="Scenarios\PetStore\VerifyServerAll\**" />
+    <Compile Remove="Scenarios\Structure1\VerifyClient\**" />
+    <Compile Remove="Scenarios\Structure1\VerifyServerAll\**" />
     <EmbeddedResource Remove="Scenarios\DemoSample\VerifyClient\**" />
     <EmbeddedResource Remove="Scenarios\DemoSample\VerifyServerAll\**" />
     <EmbeddedResource Remove="Scenarios\ExAllResponseTypes\VerifyClient\**" />
@@ -39,6 +41,8 @@
     <EmbeddedResource Remove="Scenarios\Monta\VerifyClient\**" />
     <EmbeddedResource Remove="Scenarios\PetStore\VerifyClient\**" />
     <EmbeddedResource Remove="Scenarios\PetStore\VerifyServerAll\**" />
+    <EmbeddedResource Remove="Scenarios\Structure1\VerifyClient\**" />
+    <EmbeddedResource Remove="Scenarios\Structure1\VerifyServerAll\**" />
     <None Remove="Scenarios\DemoSample\VerifyClient\**" />
     <None Remove="Scenarios\DemoSample\VerifyServerAll\**" />
     <None Remove="Scenarios\ExAllResponseTypes\VerifyClient\**" />
@@ -54,6 +58,8 @@
     <None Remove="Scenarios\Monta\VerifyClient\**" />
     <None Remove="Scenarios\PetStore\VerifyClient\**" />
     <None Remove="Scenarios\PetStore\VerifyServerAll\**" />
+    <None Remove="Scenarios\Structure1\VerifyClient\**" />
+    <None Remove="Scenarios\Structure1\VerifyServerAll\**" />
   </ItemGroup>
 
   <ItemGroup>
