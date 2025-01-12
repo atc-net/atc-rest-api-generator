@@ -71,6 +71,8 @@ public class ScenariosTests : ScenarioIntegrationTestBase, IAsyncLifetime
     [InlineData("PetStore", AspNetOutputType.Mvc, true, null, null, null)]
     [InlineData("Structure1", AspNetOutputType.Mvc, false, "[[apiGroupName]].MyContracts", "[[apiGroupName]].MyEndpoints", "[[apiGroupName]].MyHandlers")]
     [InlineData("Structure1", AspNetOutputType.Mvc, true, "[[apiGroupName]].MyContracts", "[[apiGroupName]].MyEndpoints", "[[apiGroupName]].MyHandlers")]
+    [InlineData("Structure1", AspNetOutputType.MinimalApi, false, "[[apiGroupName]].MyContracts", "[[apiGroupName]].MyEndpoints", "[[apiGroupName]].MyHandlers")]
+    [InlineData("Structure1", AspNetOutputType.MinimalApi, true, "[[apiGroupName]].MyContracts", "[[apiGroupName]].MyEndpoints", "[[apiGroupName]].MyHandlers")]
     public async Task GenerateVerifyAndBuildForServerAllByScenario(
         string scenarioName,
         AspNetOutputType aspNetOutputType,
