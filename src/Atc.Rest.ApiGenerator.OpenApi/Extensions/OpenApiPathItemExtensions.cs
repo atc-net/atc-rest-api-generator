@@ -16,6 +16,31 @@ public static class OpenApiPathItemExtensions
         };
     }
 
+    public static bool IsPathStartingApiGroupName(
+        this KeyValuePair<string, OpenApiPathItem> urlPath, string segmentName)
+    {
+        if (segmentName is null)
+        {
+            throw new ArgumentNullException(nameof(segmentName));
+        }
+
+        var sa = urlPath.Key.Split('/', StringSplitOptions.RemoveEmptyEntries);
+        if (string.IsNullOrEmpty(segmentName) && sa.Length == 0)
+        {
+            return true;
+        }
+
+        if (sa.Length == 0)
+        {
+            return false;
+        }
+
+        var apiGroupName = urlPath.GetApiGroupName();
+
+        return segmentName.Equals(apiGroupName, StringComparison.OrdinalIgnoreCase) ||
+               segmentName.Equals(apiGroupName.EnsureSingular(), StringComparison.OrdinalIgnoreCase);
+    }
+
     public static ApiAuthorizeModel? ExtractApiPathAuthorization(
         this OpenApiPathItem apiPath)
     {

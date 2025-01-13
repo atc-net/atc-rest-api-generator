@@ -166,9 +166,11 @@ public class ServerApiGenerator : IServerApiGenerator
         {
             var apiGroupName = openApiPath.GetApiGroupName();
 
-            var contractsLocation = LocationFactory.CreateWithApiGroupName(apiGroupName, settings.ContractsLocation);
+            var contractsNamespace = NamespaceFactory.CreateWithApiGroupName(apiGroupName, settings.ContractsNamespace);
 
-            var fullNamespace = NamespaceFactory.Create(settings.ProjectName, contractsLocation);
+            var fullNamespace = NamespaceFactory.Create(settings.ProjectName, contractsNamespace);
+
+            var contractsLocation = LocationFactory.CreateWithApiGroupName(apiGroupName, settings.ContractsLocation);
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
@@ -212,9 +214,11 @@ public class ServerApiGenerator : IServerApiGenerator
         {
             var apiGroupName = openApiPath.GetApiGroupName();
 
-            var contractsLocation = LocationFactory.CreateWithApiGroupName(apiGroupName, settings.ContractsLocation);
+            var contractsNamespace = NamespaceFactory.CreateWithApiGroupName(apiGroupName, settings.ContractsLocation);
 
-            var fullNamespace = NamespaceFactory.Create(settings.ProjectName, contractsLocation);
+            var fullNamespace = NamespaceFactory.Create(settings.ProjectName, contractsNamespace);
+
+            var contractsLocation = LocationFactory.CreateWithApiGroupName(apiGroupName, settings.ContractsLocation);
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
@@ -252,9 +256,11 @@ public class ServerApiGenerator : IServerApiGenerator
         {
             var apiGroupName = openApiPath.GetApiGroupName();
 
-            var contractsLocation = LocationFactory.CreateWithApiGroupName(apiGroupName, settings.ContractsLocation);
+            var contractsNamespace = NamespaceFactory.CreateWithApiGroupName(apiGroupName, settings.ContractsLocation);
 
-            var fullNamespace = NamespaceFactory.Create(settings.ProjectName, contractsLocation);
+            var fullNamespace = NamespaceFactory.Create(settings.ProjectName, contractsNamespace);
+
+            var contractsLocation = LocationFactory.CreateWithApiGroupName(apiGroupName, settings.ContractsLocation);
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
@@ -290,9 +296,11 @@ public class ServerApiGenerator : IServerApiGenerator
     {
         foreach (var apiGroupName in openApiDocument.GetApiGroupNames())
         {
-            var endpointsLocation = LocationFactory.CreateWithoutTemplateForApiGroupName(settings.EndpointsLocation);
+            var endpointsNamespace = NamespaceFactory.CreateWithoutTemplateForApiGroupName(settings.EndpointsNamespace);
 
-            var fullNamespace = NamespaceFactory.Create(settings.ProjectName, endpointsLocation);
+            var fullNamespace = NamespaceFactory.Create(settings.ProjectName, endpointsNamespace);
+
+            var endpointsLocation = LocationFactory.CreateWithoutTemplateForApiGroupName(settings.EndpointsLocation);
 
             var controllerParameters = ContentGeneratorServerEndpointParametersFactory.Create(
                 operationSchemaMappings,
@@ -364,7 +372,7 @@ public class ServerApiGenerator : IServerApiGenerator
         {
             var requiredUsing = NamespaceFactory.Create(
                 settings.ProjectName,
-                LocationFactory.CreateWithoutTemplateForApiGroupName(settings.ContractsLocation));
+                LocationFactory.CreateWithoutTemplateForApiGroupName(settings.ContractsNamespace));
 
             if (!requiredUsings.Contains(requiredUsing, StringComparer.CurrentCulture))
             {
@@ -374,7 +382,7 @@ public class ServerApiGenerator : IServerApiGenerator
 
         var apiGroupNames = openApiDocument.GetApiGroupNames();
 
-        requiredUsings.AddRange(apiGroupNames.Select(x => NamespaceFactory.Create(settings.ProjectName, LocationFactory.CreateWithApiGroupName(x, settings.ContractsLocation))));
+        requiredUsings.AddRange(apiGroupNames.Select(x => NamespaceFactory.Create(settings.ProjectName, NamespaceFactory.CreateWithApiGroupName(x, settings.ContractsNamespace))));
 
         GlobalUsingsHelper.CreateOrUpdate(
             logger,
@@ -390,7 +398,11 @@ public class ServerApiGenerator : IServerApiGenerator
         var (key, _) = openApiDocument.Paths.FirstOrDefault(x => x.IsPathStartingSegmentName(apiGroupName));
         if (key is null)
         {
-            throw new NotSupportedException($"{nameof(apiGroupName)} was not found in any route.");
+            (key, _) = openApiDocument.Paths.FirstOrDefault(x => x.IsPathStartingApiGroupName(apiGroupName));
+            if (key is null)
+            {
+                throw new NotSupportedException($"{nameof(apiGroupName)} was not found in any route.");
+            }
         }
 
         var routeSuffix = key
@@ -404,9 +416,11 @@ public class ServerApiGenerator : IServerApiGenerator
         string enumerationName,
         OpenApiSchema openApiSchemaEnumeration)
     {
-        var contractsLocation = LocationFactory.CreateWithoutTemplateForApiGroupName(settings.ContractsLocation);
+        var contractsNamespace = NamespaceFactory.CreateWithoutTemplateForApiGroupName(settings.ContractsNamespace);
 
-        var fullNamespace = NamespaceFactory.Create(settings.ProjectName, contractsLocation);
+        var fullNamespace = NamespaceFactory.Create(settings.ProjectName, contractsNamespace);
+
+        var contractsLocation = LocationFactory.CreateWithoutTemplateForApiGroupName(settings.ContractsLocation);
 
         var enumParameters = ContentGeneratorServerClientEnumParametersFactory.Create(
             codeGeneratorContentHeader,
@@ -435,11 +449,15 @@ public class ServerApiGenerator : IServerApiGenerator
         string apiGroupName,
         bool isSharedContract)
     {
+        var contractsNamespace = isSharedContract
+            ? NamespaceFactory.CreateWithoutTemplateForApiGroupName(settings.ContractsNamespace)
+            : NamespaceFactory.CreateWithApiGroupName(apiGroupName, settings.ContractsNamespace);
+
+        var fullNamespace = NamespaceFactory.Create(settings.ProjectName, contractsNamespace);
+
         var contractsLocation = isSharedContract
             ? LocationFactory.CreateWithoutTemplateForApiGroupName(settings.ContractsLocation)
             : LocationFactory.CreateWithApiGroupName(apiGroupName, settings.ContractsLocation);
-
-        var fullNamespace = NamespaceFactory.Create(settings.ProjectName, contractsLocation);
 
         var parameters = ContentGeneratorServerClientModelParametersFactory.CreateForClass(
             codeGeneratorContentHeader,
