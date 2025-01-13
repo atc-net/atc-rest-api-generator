@@ -13,9 +13,15 @@ public class GeneratorSettings(
 
     public string EndpointsLocation { get; set; } = ContentGeneratorConstants.Endpoints;
 
+    public string EndpointsNamespace { get; set; } = ContentGeneratorConstants.Endpoints;
+
     public string ContractsLocation { get; set; } = ContentGeneratorConstants.Contracts;
 
+    public string ContractsNamespace { get; set; } = ContentGeneratorConstants.Contracts;
+
     public string HandlersLocation { get; set; } = ContentGeneratorConstants.Handlers;
+
+    public string HandlersNamespace { get; set; } = ContentGeneratorConstants.Handlers;
 
     public bool UsePartialClassForContracts { get; set; }
 

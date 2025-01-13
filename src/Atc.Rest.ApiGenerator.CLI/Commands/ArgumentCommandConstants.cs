@@ -21,8 +21,11 @@ public static class ArgumentCommandConstants
     public const string LongConfigurationValidateModelPropertyNameCasingStyle = "--validate-modelPropertyNameCasingStyle";
 
     public const string LongEndpointsLocation = "--endpointsLocation";
+    public const string LongEndpointsNamespace = "--endpointsNamespace";
     public const string LongContractsLocation = "--contractsLocation";
+    public const string LongContractsNamespace = "--contractsNamespace";
     public const string LongHandlersLocation = "--handlersLocation";
+    public const string LongHandlersNamespace = "--handlersNamespace";
 
     public const string LongClientHttpClientName = "--httpClientName";
     public const string LongExcludeEndpointGeneration = "--excludeEndpointGeneration";

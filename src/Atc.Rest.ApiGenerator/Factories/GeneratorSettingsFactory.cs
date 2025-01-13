@@ -27,14 +27,29 @@ public static class GeneratorSettingsFactory
             generatorSettings.EndpointsLocation = apiOptionsGenerator.EndpointsLocation;
         }
 
+        if (!string.IsNullOrEmpty(apiOptionsGenerator.EndpointsNamespace))
+        {
+            generatorSettings.EndpointsNamespace = apiOptionsGenerator.EndpointsNamespace;
+        }
+
         if (!string.IsNullOrEmpty(apiOptionsGenerator.ContractsLocation))
         {
             generatorSettings.ContractsLocation = apiOptionsGenerator.ContractsLocation;
         }
 
+        if (!string.IsNullOrEmpty(apiOptionsGenerator.ContractsNamespace))
+        {
+            generatorSettings.ContractsNamespace = apiOptionsGenerator.ContractsNamespace;
+        }
+
         if (!string.IsNullOrEmpty(apiOptionsGenerator.HandlersLocation))
         {
             generatorSettings.HandlersLocation = apiOptionsGenerator.HandlersLocation;
+        }
+
+        if (!string.IsNullOrEmpty(apiOptionsGenerator.HandlersNamespace))
+        {
+            generatorSettings.HandlersNamespace = apiOptionsGenerator.HandlersNamespace;
         }
 
         return generatorSettings;
