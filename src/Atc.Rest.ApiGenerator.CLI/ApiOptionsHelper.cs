@@ -256,7 +256,7 @@ public static class ApiOptionsHelper
             }
         }
 
-        apiOptions.Generator.ProjectName = apiOptions.Generator.ProjectName.EnsureNamespaceFormat();
-        apiOptions.Generator.ProjectSuffixName = apiOptions.Generator.ProjectSuffixName.EnsureNamespaceFormat();
+        apiOptions.Generator.ProjectName = apiOptions.Generator.ProjectName.EnsureNamespaceFormatPart();
+        apiOptions.Generator.ProjectSuffixName = apiOptions.Generator.ProjectSuffixName.EnsureNamespaceFormatPart();
     }
 }

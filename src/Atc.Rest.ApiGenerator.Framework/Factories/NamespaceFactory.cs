@@ -5,15 +5,20 @@ public static class NamespaceFactory
     public static string Create(
         params string[] values)
     {
-        if (values is null)
+        if (values is null || values.Length == 0)
         {
             return string.Empty;
         }
 
-        var fullNamespace = string
-            .Join(' ', values)
-            .Replace(" . ", " ", StringComparison.Ordinal);
+        var formattedValues = values
+            .Select((value, index) =>
+                index == 0
+                    ? value.EnsureNamespaceFormatPart()
+                    : value.EnsureNamespaceFormat())
+            .Where(value => !string.IsNullOrEmpty(value));
 
-        return fullNamespace.EnsureNamespaceFormat();
+        var fullNamespace = string.Join('.', formattedValues);
+
+        return fullNamespace;
     }
 }
