@@ -21,4 +21,13 @@ public static class NamespaceFactory
 
         return fullNamespace;
     }
+
+    public static string CreateWithApiGroupName(
+        string apiGroupName,
+        string value)
+        => LocationFactory.CreateWithApiGroupName(apiGroupName, value);
+
+    public static string CreateWithoutTemplateForApiGroupName(
+        string value)
+        => LocationFactory.CreateWithoutTemplateForApiGroupName(value);
 }
