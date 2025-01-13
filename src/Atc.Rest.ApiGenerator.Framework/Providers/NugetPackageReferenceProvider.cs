@@ -11,7 +11,7 @@ public class NugetPackageReferenceProvider(
         { "Atc", "2.0.525" },
         { "Atc.Azure.Options", "3.0.31" },
         { "Atc.Rest", "2.0.525" },
-        { "Atc.Rest.Client", "1.0.36" },
+        { "Atc.Rest.Client", "1.0.84" },
         { "Atc.Rest.Extended", "2.0.525" },
         { "Atc.Rest.FluentAssertions", "2.0.525" },
         { "Atc.Rest.MinimalApi", "1.0.87" },
