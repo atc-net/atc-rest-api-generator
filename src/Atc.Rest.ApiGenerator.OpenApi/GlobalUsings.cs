@@ -6,6 +6,7 @@ global using System.Net.Mime;
 global using System.Text;
 
 global using Atc.CodeDocumentation.CodeComment;
+global using Atc.CodeGeneration.CSharp.Extensions;
 global using Atc.Data.Models;
 global using Atc.Rest.ApiGenerator.Contracts;
 global using Atc.Rest.ApiGenerator.Contracts.ContentGeneratorsParameters.Server;

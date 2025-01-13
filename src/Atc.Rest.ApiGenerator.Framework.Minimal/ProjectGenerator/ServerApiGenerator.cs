@@ -156,6 +156,8 @@ public class ServerApiGenerator : IServerApiGenerator
 
             var contractsLocation = LocationFactory.CreateWithApiGroupName(apiGroupName, settings.ContractsLocation);
 
+            var contractNamespaceWithoutApiGroupName = NamespaceFactory.CreateWithoutTemplateForApiGroupName(settings.ContractsNamespace);
+
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
                 if (openApiOperation.Value.Deprecated && !settings.IncludeDeprecatedOperations)
@@ -172,7 +174,8 @@ public class ServerApiGenerator : IServerApiGenerator
                 var parameterParameters = ContentGeneratorServerParameterParametersFactory.CreateForRecord(
                     fullNamespace,
                     openApiOperation.Value,
-                    openApiPath.Value.Parameters);
+                    openApiPath.Value.Parameters,
+                    contractNamespaceWithoutApiGroupName);
 
                 var contentGenerator = new ContentGenerators.ContentGeneratorServerParameter(
                     new GeneratedCodeHeaderGenerator(new GeneratedCodeGeneratorParameters(settings.Version)),

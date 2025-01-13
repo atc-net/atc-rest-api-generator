@@ -8,7 +8,8 @@ public static class ContentGeneratorServerParameterParametersFactory
     public static ContentGeneratorServerParameterParameters CreateForClass(
         string @namespace,
         OpenApiOperation openApiOperation,
-        IList<OpenApiParameter> globalPathParameters)
+        IList<OpenApiParameter> globalPathParameters,
+        string contractNamespaceWithoutApiGroupName)
     {
         ArgumentNullException.ThrowIfNull(openApiOperation);
         ArgumentNullException.ThrowIfNull(globalPathParameters);
@@ -17,8 +18,8 @@ public static class ContentGeneratorServerParameterParametersFactory
 
         var parameters = new List<ContentGeneratorServerParameterParametersProperty>();
 
-        AppendParameters(parameters, globalPathParameters);
-        AppendParameters(parameters, openApiOperation.Parameters);
+        AppendParameters(parameters, globalPathParameters, contractNamespaceWithoutApiGroupName);
+        AppendParameters(parameters, openApiOperation.Parameters, contractNamespaceWithoutApiGroupName);
         AppendParametersFromBody(parameters, openApiOperation.RequestBody);
 
         return new ContentGeneratorServerParameterParameters(
@@ -33,7 +34,8 @@ public static class ContentGeneratorServerParameterParametersFactory
     public static ContentGeneratorServerParameterParameters CreateForRecord(
         string @namespace,
         OpenApiOperation openApiOperation,
-        IList<OpenApiParameter> globalPathParameters)
+        IList<OpenApiParameter> globalPathParameters,
+        string contractNamespaceWithoutApiGroupName)
     {
         ArgumentNullException.ThrowIfNull(openApiOperation);
         ArgumentNullException.ThrowIfNull(globalPathParameters);
@@ -42,8 +44,8 @@ public static class ContentGeneratorServerParameterParametersFactory
 
         var parameters = new List<ContentGeneratorServerParameterParametersProperty>();
 
-        AppendParameters(parameters, globalPathParameters);
-        AppendParameters(parameters, openApiOperation.Parameters);
+        AppendParameters(parameters, globalPathParameters, contractNamespaceWithoutApiGroupName);
+        AppendParameters(parameters, openApiOperation.Parameters, contractNamespaceWithoutApiGroupName);
         AppendParametersFromBody(parameters, openApiOperation.RequestBody);
 
         return new ContentGeneratorServerParameterParameters(
@@ -57,7 +59,8 @@ public static class ContentGeneratorServerParameterParametersFactory
 
     private static void AppendParameters(
         ICollection<ContentGeneratorServerParameterParametersProperty> parameters,
-        IEnumerable<OpenApiParameter> openApiParameters)
+        IEnumerable<OpenApiParameter> openApiParameters,
+        string contractNamespaceWithoutApiGroupName)
     {
         foreach (var openApiParameter in openApiParameters)
         {
@@ -73,6 +76,8 @@ public static class ContentGeneratorServerParameterParametersFactory
 
             if (parameters.FirstOrDefault(x => x.Name == openApiParameter.Name) is null)
             {
+                var defaultValueInitializer = openApiParameter.GetDefaultValueInitializer(contractNamespaceWithoutApiGroupName);
+
                 parameters.Add(new ContentGeneratorServerParameterParametersProperty(
                     openApiParameter.Name,
                     openApiParameter.Name.EnsureValidFormattedPropertyName(),
@@ -84,7 +89,7 @@ public static class ContentGeneratorServerParameterParametersFactory
                     GetIsNullable(openApiParameter),
                     openApiParameter.Required,
                     GetAdditionalValidationAttributes(openApiParameter),
-                    openApiParameter.Schema.GetDefaultValueAsString()));
+                    defaultValueInitializer));
             }
         }
     }
