@@ -275,7 +275,7 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
 
         if (operationSchemaMappings.Any(apiOperation => apiOperation.Model.IsShared))
         {
-            requiredUsings.Add(NamespaceFactory.Create(apiProjectName, NamespaceFactory.CreateWithoutTemplateForApiGroupName(settings.ContractsLocation)));
+            requiredUsings.Add(NamespaceFactory.Create(apiProjectName, NamespaceFactory.CreateWithoutTemplateForApiGroupName(settings.ContractsNamespace)));
         }
 
         var apiGroupNames = openApiDocument.GetApiGroupNames();
@@ -287,7 +287,7 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
                 continue;
             }
 
-            requiredUsings.Add(NamespaceFactory.Create(apiProjectName, NamespaceFactory.CreateWithApiGroupName(apiGroupName, settings.ContractsLocation)));
+            requiredUsings.Add(NamespaceFactory.Create(apiProjectName, NamespaceFactory.CreateWithApiGroupName(apiGroupName, settings.ContractsNamespace)));
         }
 
         GlobalUsingsHelper.CreateOrUpdate(

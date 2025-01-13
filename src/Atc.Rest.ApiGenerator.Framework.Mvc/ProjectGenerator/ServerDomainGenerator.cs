@@ -154,7 +154,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
 
         var apiGroupNames = openApiDocument.GetApiGroupNames();
 
-        requiredUsings.AddRange(apiGroupNames.Select(x => NamespaceFactory.Create(apiProjectName, NamespaceFactory.CreateWithApiGroupName(x, settings.ContractsLocation))));
+        requiredUsings.AddRange(apiGroupNames.Select(x => NamespaceFactory.Create(apiProjectName, NamespaceFactory.CreateWithApiGroupName(x, settings.ContractsNamespace))));
 
         GlobalUsingsHelper.CreateOrUpdate(
             logger,

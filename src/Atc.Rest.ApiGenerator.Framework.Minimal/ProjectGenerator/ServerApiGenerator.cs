@@ -198,7 +198,7 @@ public class ServerApiGenerator : IServerApiGenerator
         {
             var apiGroupName = openApiPath.GetApiGroupName();
 
-            var contractsNamespace = NamespaceFactory.CreateWithApiGroupName(apiGroupName, settings.ContractsLocation);
+            var contractsNamespace = NamespaceFactory.CreateWithApiGroupName(apiGroupName, settings.ContractsNamespace);
 
             var fullNamespace = NamespaceFactory.Create(settings.ProjectName, contractsNamespace);
 
@@ -240,7 +240,7 @@ public class ServerApiGenerator : IServerApiGenerator
         {
             var apiGroupName = openApiPath.GetApiGroupName();
 
-            var contractsNamespace = NamespaceFactory.CreateWithApiGroupName(apiGroupName, settings.ContractsLocation);
+            var contractsNamespace = NamespaceFactory.CreateWithApiGroupName(apiGroupName, settings.ContractsNamespace);
 
             var fullNamespace = NamespaceFactory.Create(settings.ProjectName, contractsNamespace);
 
