@@ -14,6 +14,9 @@ public class NamespaceFactoryTests
     [InlineData(new[] { "MyProject", "nested.folder", "Users", "MyUser" }, "MyProject.Nested.Folder.Users.MyUser")]
     [InlineData(new[] { "MyProject", @"nested\folder", "Users", "MyUser" }, "MyProject.Nested.Folder.Users.MyUser")]
     [InlineData(new[] { "MyProject", ".", "Users", "MyUser" }, "MyProject.Users.MyUser")]
+    [InlineData(new[] { "IoT", "SubNamespace" }, "IoT.SubNamespace")]
+    [InlineData(new[] { "hallo-world", "SubNamespace" }, "HalloWorld.SubNamespace")]
+    [InlineData(new[] { "AAA", "SubNamespace" }, "AAA.SubNamespace")]
     public void Create_ShouldReturnCorrect_Namespace(
         string[] values,
         string expected)
