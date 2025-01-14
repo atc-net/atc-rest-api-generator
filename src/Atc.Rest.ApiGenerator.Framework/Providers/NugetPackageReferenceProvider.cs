@@ -19,18 +19,18 @@ public class NugetPackageReferenceProvider(
         { "AutoFixture", "4.18.1" },
         { "AutoFixture.AutoNSubstitute", "4.18.1" },
         { "AutoFixture.Xunit2", "4.18.1" },
-        { "FluentAssertions", "6.12.0" },
+        { "FluentAssertions", "7.0.0" },
         { "FluentValidation.AspNetCore", "11.3.0" },
         { "Microsoft.ApplicationInsights.AspNetCore", "2.22.0" },
         { "Microsoft.AspNetCore.Authentication.JwtBearer", "8.0.4" },
         { "Microsoft.AspNetCore.OpenApi", "8.0.6" },
         { "Microsoft.AspNetCore.Mvc.Testing", "8.0.6" },
         { "Microsoft.NETCore.Platforms", "7.0.4" },
-        { "Microsoft.NET.Test.Sdk", "17.10.0" },
-        { "NSubstitute", "5.1.0" },
+        { "Microsoft.NET.Test.Sdk", "17.12.0" },
+        { "NSubstitute", "5.3.0" },
         { "Swashbuckle.AspNetCore", "7.0.0" },
-        { "xunit", "2.9.2" },
-        { "xunit.runner.visualstudio", "2.8.1" },
+        { "xunit", "2.9.3" },
+        { "xunit.runner.visualstudio", "3.0.1" },
     };
 
     public async Task<Version> GetAtcApiGeneratorVersion()
