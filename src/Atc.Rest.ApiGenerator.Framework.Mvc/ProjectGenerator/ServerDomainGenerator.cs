@@ -97,6 +97,11 @@ public class ServerDomainGenerator : IServerDomainGenerator
 
             foreach (var openApiOperation in urlPath.Value.Operations)
             {
+                if (openApiOperation.Value.Deprecated && !settings.IncludeDeprecatedOperations)
+                {
+                    continue;
+                }
+
                 var classParameters = ContentGeneratorServerHandlerParametersFactory.Create(
                     fullNamespace,
                     urlPath.Value,
@@ -154,7 +159,7 @@ public class ServerDomainGenerator : IServerDomainGenerator
 
         var apiGroupNames = openApiDocument.GetApiGroupNames();
 
-        requiredUsings.AddRange(apiGroupNames.Select(x => NamespaceFactory.Create(apiProjectName, LocationFactory.CreateWithApiGroupName(x, settings.ContractsLocation))));
+        requiredUsings.AddRange(apiGroupNames.Select(x => NamespaceFactory.Create(apiProjectName, NamespaceFactory.CreateWithApiGroupName(x, settings.ContractsNamespace))));
 
         GlobalUsingsHelper.CreateOrUpdate(
             logger,

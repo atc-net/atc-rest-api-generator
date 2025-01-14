@@ -18,13 +18,25 @@ public class BaseGenerateCommandSettings : BaseConfigurationCommandSettings
     [Description($"If endpoints-localtion is provided, generated files will be placed here instead of the {ContentGeneratorConstants.Endpoints} folder.")]
     public FlagValue<string>? EndpointsLocation { get; init; }
 
+    [CommandOption($"{ArgumentCommandConstants.LongEndpointsNamespace} [ENDPOINTSNAMESPACE]")]
+    [Description($"If endpoints-namespace is provided, generated files will be placed here instead of the {ContentGeneratorConstants.Endpoints} namespace.")]
+    public FlagValue<string>? EndpointsNamespace { get; init; }
+
     [CommandOption($"{ArgumentCommandConstants.LongContractsLocation} [CONTRACTSLOCATION]")]
     [Description($"If contracts-localtion is provided, generated files will be placed here instead of the {ContentGeneratorConstants.Contracts} folder.")]
     public FlagValue<string>? ContractsLocation { get; init; }
 
+    [CommandOption($"{ArgumentCommandConstants.LongContractsNamespace} [CONTRACTSNAMESPACE]")]
+    [Description($"If contracts-namespace is provided, generated files will be placed here instead of the {ContentGeneratorConstants.Contracts} namespace.")]
+    public FlagValue<string>? ContractsNamespace { get; init; }
+
     [CommandOption($"{ArgumentCommandConstants.LongHandlersLocation} [HANDLERSLOCATION]")]
     [Description($"If handlers-localtion is provided, generated files will be placed here instead of the {ContentGeneratorConstants.Handlers} folder.")]
     public FlagValue<string>? HandlersLocation { get; init; }
+
+    [CommandOption($"{ArgumentCommandConstants.LongHandlersNamespace} [HANDLERSNAMESPACE]")]
+    [Description($"If handlers-namespace is provided, generated files will be placed here instead of the {ContentGeneratorConstants.Handlers} namespace.")]
+    public FlagValue<string>? HandlersNamespace { get; init; }
 
     [CommandOption(ArgumentCommandConstants.LongUsePartialClassForContracts)]
     [Description("Use Partial-Class for contracts")]

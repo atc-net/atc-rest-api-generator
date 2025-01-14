@@ -211,8 +211,11 @@ OPTIONS:
         --disableCodingRules                                                      Disable ATC-Coding-Rules
         --useProblemDetailsAsDefaultResponseBody                                  Use ProblemDetails as default responsen body
         --endpointsLocation [ENDPOINTSLOCATION]                                   If endpoints-localtion is provided, generated files will be placed here instead of the Endpoints folder
+        --endpointsNamespace [ENDPOINTSNAMESPACE]                                 If endpoints-namespace is provided, generated files will be placed here instead of the Endpoints namespace
         --contractsLocation [CONTRACTSLOCATION]                                   If contracts-localtion is provided, generated files will be placed here instead of the Contracts folder
+        --contractsNamespace [CONTRACTSNAMESPACE]                                 If contracts-namespace is provided, generated files will be placed here instead of the Contracts namespace
         --handlersLocation [HANDLERSLOCATION]                                     If handlers-localtion is provided, generated files will be placed here instead of the Handlers folder
+        --handlersNamespace [HANDLERSNAMESPACE]                                   If handlers-namespace is provided, generated files will be placed here instead of the Handlers namespace
         --usePartialClassForContracts                                             Use Partial-Class for contracts
         --usePartialClassForEndpoints                                             Use Partial-Class for endpoints
         --removeNamespaceGroupSeparatorInGlobalUsings                             Remove space between namespace groups in GlobalUsing.cs
@@ -256,8 +259,11 @@ COMMANDS:
     "projectName": "",
     "projectSuffixName": "",
     "contractsLocation": "Contracts.[[apiGroupName]]",
+    "contractsNamespace": "Contracts.[[apiGroupName]]",
     "endpointsLocation": "Endpoints.[[apiGroupName]]",
+    "endpointsNamespace": "Endpoints.[[apiGroupName]]",
     "handlersLocation": "Handlers.[[apiGroupName]]",
+    "handlersNamespace": "Handlers.[[apiGroupName]]",
     "usePartialClassForContracts": false,
     "usePartialClassForEndpoints": false,
     "removeNamespaceGroupSeparatorInGlobalUsings": false,
@@ -288,8 +294,11 @@ COMMANDS:
       "projectName": "",
       "projectSuffixName": "",
       "contractsLocation": "Contracts.[[apiGroupName]]",
+      "contractsNamespace": "Contracts.[[apiGroupName]]",
       "endpointsLocation": "Endpoints.[[apiGroupName]]",
+      "endpointsNamespace": "Endpoints.[[apiGroupName]]",
       "handlersLocation": "Handlers.[[apiGroupName]]",
+      "handlersNamespace": "Handlers.[[apiGroupName]]",
       "usePartialClassForContracts": false,
       "usePartialClassForEndpoints": false,
       "removeNamespaceGroupSeparatorInGlobalUsings": false,
@@ -346,7 +355,7 @@ You can use specific syntax to define and customize the output file structure.
 
 ##### Syntax
 
-For options like `contractsLocation`, `endpointsLocation`, and `handlersLocation`,
+For options like `contractsLocation`, `contractsNamespace`, `endpointsLocation`, `endpointsNamespace`, `handlersLocation`, `handlersNamespace`,
 you can define paths using placeholders and custom directory names.
 
 The syntax is flexible and allows you to organize files based on grouping or specific requirements.
@@ -355,13 +364,20 @@ The syntax is flexible and allows you to organize files based on grouping or spe
 
 | Option-Name | Option-Value | Example-file | Generated-output |
 |-------------|--------------|--------------|------------------|
-| contractsLocation | Contracts                    | Account.cs | [Project-root]\Contracts\Accounts\Account.cs   |
-| contractsLocation | Contracts.[[apiGroupName]]   | Account.cs | [Project-root]\Contracts\Accounts\Account.cs   |
-| contractsLocation | Contracts-[[apiGroupName]]   | Account.cs | [Project-root]\Contracts\Accounts\Account.cs   |
-| contractsLocation | [[apiGroupName]].MyContracts | Account.cs | [Project-root]\Accounts\MyContracts\Account.cs |
-| contractsLocation | [[apiGroupName]]-MyContracts | Account.cs | [Project-root]\Accounts\MyContracts\Account.cs |
-| contractsLocation | [[apiGroupName]]             | Account.cs | [Project-root]\Accounts\Account.cs             |
-| contractsLocation | .                            | Account.cs | [Project-root]\Account.cs                      |
+| contractsLocation  | Contracts                    | Account.cs | [Project-root]\Contracts\Accounts\Account.cs   |
+| contractsLocation  | Contracts.[[apiGroupName]]   | Account.cs | [Project-root]\Contracts\Accounts\Account.cs   |
+| contractsLocation  | Contracts-[[apiGroupName]]   | Account.cs | [Project-root]\Contracts\Accounts\Account.cs   |
+| contractsLocation  | [[apiGroupName]].MyContracts | Account.cs | [Project-root]\Accounts\MyContracts\Account.cs |
+| contractsLocation  | [[apiGroupName]]-MyContracts | Account.cs | [Project-root]\Accounts\MyContracts\Account.cs |
+| contractsLocation  | [[apiGroupName]]             | Account.cs | [Project-root]\Accounts\Account.cs             |
+| contractsLocation  | .                            | Account.cs | [Project-root]\Account.cs                      |
+| contractsNamespace | Contracts                    | Account.cs | [Project-root].Contracts.Accounts.Account.cs   |
+| contractsNamespace | Contracts.[[apiGroupName]]   | Account.cs | [Project-root].Contracts.Accounts.Account.cs   |
+| contractsNamespace | Contracts-[[apiGroupName]]   | Account.cs | [Project-root].Contracts.Accounts.Account.cs   |
+| contractsNamespace | [[apiGroupName]].MyContracts | Account.cs | [Project-root].Accounts.MyContracts.Account.cs |
+| contractsNamespace | [[apiGroupName]]-MyContracts | Account.cs | [Project-root].Accounts.MyContracts.Account.cs |
+| contractsNamespace | [[apiGroupName]]             | Account.cs | [Project-root].Accounts.Account.cs             |
+| contractsNamespace | .                            | Account.cs | [Project-root].Account.cs                      |
 
 > Placeholder Explanation:
 >

@@ -14,9 +14,15 @@ public class ApiOptionsGenerator
 
     public string ContractsLocation { get; set; } = ContentGeneratorConstants.Contracts + ".[[apiGroupName]]";
 
+    public string ContractsNamespace { get; set; } = ContentGeneratorConstants.Contracts + ".[[apiGroupName]]";
+
     public string EndpointsLocation { get; set; } = ContentGeneratorConstants.Endpoints + ".[[apiGroupName]]";
 
+    public string EndpointsNamespace { get; set; } = ContentGeneratorConstants.Endpoints + ".[[apiGroupName]]";
+
     public string HandlersLocation { get; set; } = ContentGeneratorConstants.Handlers + ".[[apiGroupName]]";
+
+    public string HandlersNamespace { get; set; } = ContentGeneratorConstants.Handlers + ".[[apiGroupName]]";
 
     public bool UsePartialClassForContracts { get; set; }
 

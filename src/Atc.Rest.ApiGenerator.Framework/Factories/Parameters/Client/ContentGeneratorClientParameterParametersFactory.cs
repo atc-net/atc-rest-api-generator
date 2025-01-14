@@ -8,7 +8,8 @@ public static class ContentGeneratorClientParameterParametersFactory
     public static ContentGeneratorClientParameterParameters Create(
         string @namespace,
         OpenApiOperation openApiOperation,
-        IList<OpenApiParameter> globalPathParameters)
+        IList<OpenApiParameter> globalPathParameters,
+        string contractNamespaceWithoutApiGroupName)
     {
         ArgumentNullException.ThrowIfNull(openApiOperation);
         ArgumentNullException.ThrowIfNull(globalPathParameters);
@@ -17,8 +18,8 @@ public static class ContentGeneratorClientParameterParametersFactory
 
         var parameters = new List<ContentGeneratorClientParameterParametersProperty>();
 
-        AppendParameters(parameters, globalPathParameters);
-        AppendParameters(parameters, openApiOperation.Parameters);
+        AppendParameters(parameters, globalPathParameters, contractNamespaceWithoutApiGroupName);
+        AppendParameters(parameters, openApiOperation.Parameters, contractNamespaceWithoutApiGroupName);
         AppendParametersFromBody(parameters, openApiOperation.RequestBody);
 
         return new ContentGeneratorClientParameterParameters(
@@ -32,13 +33,12 @@ public static class ContentGeneratorClientParameterParametersFactory
 
     private static void AppendParameters(
         ICollection<ContentGeneratorClientParameterParametersProperty> parameters,
-        IEnumerable<OpenApiParameter> openApiParameters)
+        IEnumerable<OpenApiParameter> openApiParameters,
+        string contractNamespaceWithoutApiGroupName)
     {
         foreach (var openApiParameter in openApiParameters)
         {
             var useListForDataType = openApiParameter.Schema.IsTypeArray();
-
-            var parameterName = openApiParameter.Name.EnsureValidFormattedPropertyName();
 
             var dataType = useListForDataType
                 ? openApiParameter.Schema.Items.GetDataType()
@@ -50,19 +50,11 @@ public static class ContentGeneratorClientParameterParametersFactory
 
             if (parameters.FirstOrDefault(x => x.Name == openApiParameter.Name) is null)
             {
-                var defaultValueInitializer = openApiParameter.Schema.GetDefaultValueAsString();
-
-                if (!string.IsNullOrEmpty(defaultValueInitializer) &&
-                    openApiParameter.ContainsEnumInSchemaOrProperties())
-                {
-                    defaultValueInitializer = dataType.Equals(parameterName, StringComparison.Ordinal)
-                        ? $"{ContentGeneratorConstants.Contracts}.{dataType}.{defaultValueInitializer.PascalCase(ApiOperationExtractor.ModelNameSeparators, removeSeparators: true)}"
-                        : $"{dataType}.{defaultValueInitializer.PascalCase(ApiOperationExtractor.ModelNameSeparators, removeSeparators: true)}";
-                }
+                var defaultValueInitializer = openApiParameter.GetDefaultValueInitializer(contractNamespaceWithoutApiGroupName);
 
                 parameters.Add(new ContentGeneratorClientParameterParametersProperty(
                     openApiParameter.Name,
-                    parameterName,
+                    openApiParameter.Name.EnsureValidFormattedPropertyName(),
                     openApiParameter.ExtractDocumentationTags(),
                     dataType,
                     isSimpleType,

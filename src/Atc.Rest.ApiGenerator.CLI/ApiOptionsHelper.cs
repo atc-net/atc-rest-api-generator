@@ -154,22 +154,40 @@ public static class ApiOptionsHelper
                 apiOptions.Generator.ProjectName = serverCommandSettings.ProjectPrefixName;
             }
 
-            if (serverCommandSettings.ContractsLocation is not null &&
-                serverCommandSettings.ContractsLocation.IsSet)
-            {
-                apiOptions.Generator.ContractsLocation = serverCommandSettings.ContractsLocation.Value;
-            }
-
             if (serverCommandSettings.EndpointsLocation is not null &&
                 serverCommandSettings.EndpointsLocation.IsSet)
             {
                 apiOptions.Generator.EndpointsLocation = serverCommandSettings.EndpointsLocation.Value;
             }
 
+            if (serverCommandSettings.EndpointsNamespace is not null &&
+                serverCommandSettings.EndpointsNamespace.IsSet)
+            {
+                apiOptions.Generator.EndpointsNamespace = serverCommandSettings.EndpointsNamespace.Value;
+            }
+
+            if (serverCommandSettings.ContractsLocation is not null &&
+                serverCommandSettings.ContractsLocation.IsSet)
+            {
+                apiOptions.Generator.ContractsLocation = serverCommandSettings.ContractsLocation.Value;
+            }
+
+            if (serverCommandSettings.ContractsNamespace is not null &&
+                serverCommandSettings.ContractsNamespace.IsSet)
+            {
+                apiOptions.Generator.ContractsNamespace = serverCommandSettings.ContractsNamespace.Value;
+            }
+
             if (serverCommandSettings.HandlersLocation is not null &&
                 serverCommandSettings.HandlersLocation.IsSet)
             {
                 apiOptions.Generator.HandlersLocation = serverCommandSettings.HandlersLocation.Value;
+            }
+
+            if (serverCommandSettings.HandlersNamespace is not null &&
+                serverCommandSettings.HandlersNamespace.IsSet)
+            {
+                apiOptions.Generator.HandlersNamespace = serverCommandSettings.HandlersNamespace.Value;
             }
 
             if (serverCommandSettings.UsePartialClassForContracts)
@@ -212,16 +230,28 @@ public static class ApiOptionsHelper
                     apiOptions.Generator.ProjectSuffixName = $"{ContentGeneratorConstants.DefaultHttpClientName}.Generated";
                 }
 
+                if (clientApiCommandSettings.EndpointsLocation is not null &&
+                    clientApiCommandSettings.EndpointsLocation.IsSet)
+                {
+                    apiOptions.Generator.EndpointsLocation = clientApiCommandSettings.EndpointsLocation.Value;
+                }
+
+                if (clientApiCommandSettings.EndpointsNamespace is not null &&
+                    clientApiCommandSettings.EndpointsNamespace.IsSet)
+                {
+                    apiOptions.Generator.EndpointsNamespace = clientApiCommandSettings.EndpointsNamespace.Value;
+                }
+
                 if (clientApiCommandSettings.ContractsLocation is not null &&
                     clientApiCommandSettings.ContractsLocation.IsSet)
                 {
                     apiOptions.Generator.ContractsLocation = clientApiCommandSettings.ContractsLocation.Value;
                 }
 
-                if (clientApiCommandSettings.EndpointsLocation is not null &&
-                    clientApiCommandSettings.EndpointsLocation.IsSet)
+                if (clientApiCommandSettings.ContractsNamespace is not null &&
+                    clientApiCommandSettings.ContractsNamespace.IsSet)
                 {
-                    apiOptions.Generator.EndpointsLocation = clientApiCommandSettings.EndpointsLocation.Value;
+                    apiOptions.Generator.ContractsNamespace = clientApiCommandSettings.ContractsNamespace.Value;
                 }
 
                 if (clientApiCommandSettings.UsePartialClassForContracts)

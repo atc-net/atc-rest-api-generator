@@ -6,7 +6,7 @@ public static class ContentGeneratorClientEndpointResultParametersFactory
         string projectName,
         string apiGroupName,
         string @namespace,
-        string contractsLocation,
+        string contractsNamespace,
         OpenApiPathItem openApiPath,
         OpenApiOperation openApiOperation,
         bool usePartialClass)
@@ -20,7 +20,7 @@ public static class ContentGeneratorClientEndpointResultParametersFactory
         AppendParameters(parameters, openApiOperation.Parameters);
         AppendParametersFromBody(parameters, openApiOperation.RequestBody);
 
-        var modelNamespace = NamespaceFactory.Create(projectName, contractsLocation);
+        var modelNamespace = NamespaceFactory.Create(projectName, contractsNamespace);
         var operationName = openApiOperation.GetOperationName();
         var controllerAuthorization = openApiPath.ExtractApiPathAuthorization();
         var endpointAuthorization = openApiOperation.ExtractApiOperationAuthorization(openApiPath);
