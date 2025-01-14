@@ -139,7 +139,7 @@ public static class ContentGeneratorServerParameterParametersFactory
         var requestBodyType = "string?";
         if (requestSchema.Reference is not null)
         {
-            requestBodyType = requestSchema.Reference.Id.EnsureFirstCharacterToUpper();
+            requestBodyType = requestSchema.Reference.Id.PascalCase(ApiOperationExtractor.ModelNameSeparators, removeSeparators: true);
         }
         else if (isFormatTypeOfBinary)
         {
@@ -151,7 +151,7 @@ public static class ContentGeneratorServerParameterParametersFactory
         }
         else if (requestSchema.Items is not null)
         {
-            requestBodyType = requestSchema.Items.Reference.Id.EnsureFirstCharacterToUpper();
+            requestBodyType = requestSchema.Items.Reference.Id.PascalCase(ApiOperationExtractor.ModelNameSeparators, removeSeparators: true);
         }
 
         parameters.Add(new ContentGeneratorServerParameterParametersProperty(
