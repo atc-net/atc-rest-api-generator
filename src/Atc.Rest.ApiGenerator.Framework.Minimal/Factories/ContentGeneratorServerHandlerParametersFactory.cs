@@ -4,12 +4,9 @@ public static class ContentGeneratorServerHandlerParametersFactory
 {
     public static ClassParameters Create(
         string @namespace,
-        string contractNamespace,
         OpenApiPathItem openApiPath,
         OpenApiOperation openApiOperation)
     {
-        ArgumentNullException.ThrowIfNull(openApiOperation);
-
         var operationName = openApiOperation.GetOperationName();
 
         var hasParameters = openApiPath.HasParameters() ||
