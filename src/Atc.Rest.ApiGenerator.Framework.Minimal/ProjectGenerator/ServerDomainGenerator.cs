@@ -108,15 +108,18 @@ public class ServerDomainGenerator : IServerDomainGenerator
             var apiGroupName = urlPath.GetApiGroupName();
 
             var handlersLocation = LocationFactory.CreateWithApiGroupName(apiGroupName, settings.HandlersLocation);
-            var contractsLocation = LocationFactory.CreateWithApiGroupName(apiGroupName, settings.ContractsLocation);
 
             var fullNamespace = NamespaceFactory.Create(settings.ProjectName, handlersLocation);
 
             foreach (var openApiOperation in urlPath.Value.Operations)
             {
+                if (openApiOperation.Value.Deprecated && !settings.IncludeDeprecatedOperations)
+                {
+                    continue;
+                }
+
                 var classParameters = ContentGeneratorServerHandlerParametersFactory.Create(
                     fullNamespace,
-                    $"Api.Generated.{contractsLocation}", // TODO: Fix this
                     urlPath.Value,
                     openApiOperation.Value);
 

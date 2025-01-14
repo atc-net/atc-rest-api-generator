@@ -97,6 +97,11 @@ public class ServerDomainGenerator : IServerDomainGenerator
 
             foreach (var openApiOperation in urlPath.Value.Operations)
             {
+                if (openApiOperation.Value.Deprecated && !settings.IncludeDeprecatedOperations)
+                {
+                    continue;
+                }
+
                 var classParameters = ContentGeneratorServerHandlerParametersFactory.Create(
                     fullNamespace,
                     urlPath.Value,
