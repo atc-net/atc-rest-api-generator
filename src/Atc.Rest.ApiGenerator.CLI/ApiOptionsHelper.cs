@@ -132,13 +132,13 @@ public static class ApiOptionsHelper
     {
         if (settings is BaseServerCommandSettings serverCommandSettings)
         {
-            if (serverCommandSettings.AspNetOutputType.IsSet ||
+            if (serverCommandSettings.AspNetOutputType.IsSet &&
                 serverCommandSettings.AspNetOutputType.Value != apiOptions.Generator.AspNetOutputType)
             {
                 apiOptions.Generator.AspNetOutputType = serverCommandSettings.AspNetOutputType.Value;
             }
 
-            if (serverCommandSettings.SwaggerThemeMode.IsSet ||
+            if (serverCommandSettings.SwaggerThemeMode.IsSet &&
                 serverCommandSettings.SwaggerThemeMode.Value != apiOptions.Generator.SwaggerThemeMode)
             {
                 apiOptions.Generator.SwaggerThemeMode = serverCommandSettings.SwaggerThemeMode.Value;
