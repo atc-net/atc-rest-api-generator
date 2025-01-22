@@ -132,13 +132,13 @@ public static class ApiOptionsHelper
     {
         if (settings is BaseServerCommandSettings serverCommandSettings)
         {
-            if (serverCommandSettings.AspNetOutputType.IsSet ||
+            if (serverCommandSettings.AspNetOutputType.IsSet &&
                 serverCommandSettings.AspNetOutputType.Value != apiOptions.Generator.AspNetOutputType)
             {
                 apiOptions.Generator.AspNetOutputType = serverCommandSettings.AspNetOutputType.Value;
             }
 
-            if (serverCommandSettings.SwaggerThemeMode.IsSet ||
+            if (serverCommandSettings.SwaggerThemeMode.IsSet &&
                 serverCommandSettings.SwaggerThemeMode.Value != apiOptions.Generator.SwaggerThemeMode)
             {
                 apiOptions.Generator.SwaggerThemeMode = serverCommandSettings.SwaggerThemeMode.Value;
@@ -149,10 +149,7 @@ public static class ApiOptionsHelper
                 apiOptions.Generator.Response.UseProblemDetailsAsDefaultBody = serverCommandSettings.UseProblemDetailsAsDefaultResponseBody;
             }
 
-            if (serverCommandSettings.ProjectPrefixName is not null)
-            {
-                apiOptions.Generator.ProjectName = serverCommandSettings.ProjectPrefixName;
-            }
+            apiOptions.Generator.ProjectName = serverCommandSettings.ProjectPrefixName;
 
             if (serverCommandSettings.EndpointsLocation is not null &&
                 serverCommandSettings.EndpointsLocation.IsSet)
@@ -215,10 +212,7 @@ public static class ApiOptionsHelper
                     apiOptions.Generator.Response.UseProblemDetailsAsDefaultBody = clientApiCommandSettings.UseProblemDetailsAsDefaultResponseBody;
                 }
 
-                if (clientApiCommandSettings.ProjectPrefixName is not null)
-                {
-                    apiOptions.Generator.ProjectName = clientApiCommandSettings.ProjectPrefixName;
-                }
+                apiOptions.Generator.ProjectName = clientApiCommandSettings.ProjectPrefixName;
 
                 if (clientApiCommandSettings.RemoveNamespaceGroupSeparatorInGlobalUsings)
                 {
