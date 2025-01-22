@@ -390,12 +390,12 @@ By using these options, you can effectively organize generated files into meanin
 
 The `projectSuffixName` extend `projectName` like the example:
 
-| projectName | projectSuffixName | Generated project name | Reson |
-|-------------|-------------------|------------------------|-------|
+| projectName | projectSuffixName | Generated project name | Reason                     |
+|-------------|-------------------|------------------------|----------------------------|
 | PetStore    |                   | PetStore.Api.Generated | default is `Api.Generated` |
-| PetStore    | MyApi             | PetStore.MyApi         | |
-| PetStore    | Foo.Api           | PetStore.Foo.Api       | |
-| PetStore    | Bar-Api           | PetStore.Bar.Api       | |
+| PetStore    | MyApi             | PetStore.MyApi         |                            |
+| PetStore    | Foo.Api           | PetStore.Foo.Api       |                            |
+| PetStore    | Bar-Api           | PetStore.Bar.Api       |                            |
 
 ## PetStore Example
 
