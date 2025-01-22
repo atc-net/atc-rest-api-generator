@@ -149,10 +149,7 @@ public static class ApiOptionsHelper
                 apiOptions.Generator.Response.UseProblemDetailsAsDefaultBody = serverCommandSettings.UseProblemDetailsAsDefaultResponseBody;
             }
 
-            if (serverCommandSettings.ProjectPrefixName is not null)
-            {
-                apiOptions.Generator.ProjectName = serverCommandSettings.ProjectPrefixName;
-            }
+            apiOptions.Generator.ProjectName = serverCommandSettings.ProjectPrefixName;
 
             if (serverCommandSettings.EndpointsLocation is not null &&
                 serverCommandSettings.EndpointsLocation.IsSet)
@@ -215,10 +212,7 @@ public static class ApiOptionsHelper
                     apiOptions.Generator.Response.UseProblemDetailsAsDefaultBody = clientApiCommandSettings.UseProblemDetailsAsDefaultResponseBody;
                 }
 
-                if (clientApiCommandSettings.ProjectPrefixName is not null)
-                {
-                    apiOptions.Generator.ProjectName = clientApiCommandSettings.ProjectPrefixName;
-                }
+                apiOptions.Generator.ProjectName = clientApiCommandSettings.ProjectPrefixName;
 
                 if (clientApiCommandSettings.RemoveNamespaceGroupSeparatorInGlobalUsings)
                 {
