@@ -19,7 +19,7 @@ public record CreateUserRequest(
     [property: Uri] Uri Homepage,
     [property: Required] GenderType Gender,
     Address? MyNullableAddress,
-    [property: Required] Object Tags,
-    Object DesiredProperties1,
-    Object? DesiredProperties2,
-    Object? DesiredProperties3);
+    [property: Required] Dictionary<string, string> Tags,
+    Dictionary<string, string> DesiredProperties1,
+    Dictionary<string, string>? DesiredProperties2,
+    Dictionary<string, int>? DesiredProperties3);
