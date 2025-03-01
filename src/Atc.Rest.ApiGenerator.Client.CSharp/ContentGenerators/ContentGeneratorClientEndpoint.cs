@@ -141,9 +141,9 @@ public class ContentGeneratorClientEndpoint : IContentGenerator
                 case HttpStatusCode.Continue:
                 case HttpStatusCode.SwitchingProtocols:
                 case HttpStatusCode.Processing:
-                case HttpStatusCode.EarlyHints:
                 case HttpStatusCode.Created:
                 case HttpStatusCode.Accepted:
+                case HttpStatusCode.EarlyHints:
                 case HttpStatusCode.NonAuthoritativeInformation:
                 case HttpStatusCode.NoContent:
                 case HttpStatusCode.ResetContent:
