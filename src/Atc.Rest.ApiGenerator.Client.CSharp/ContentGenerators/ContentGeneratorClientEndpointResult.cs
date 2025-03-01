@@ -250,14 +250,12 @@ public class ContentGeneratorClientEndpointResult : IContentGenerator
                     sb.AppendLine(12, "? result");
                     sb.AppendLine(12, $": throw new InvalidOperationException(\"Content is not the expected type - please use the Is{responseModel.StatusCode.ToNormalizedString()} property first.\");");
                     break;
-                case HttpStatusCode.EarlyHints:
-                    // Skip.
-                    break;
                 case HttpStatusCode.Continue:
                 case HttpStatusCode.SwitchingProtocols:
                 case HttpStatusCode.Processing:
                 case HttpStatusCode.Created:
                 case HttpStatusCode.Accepted:
+                case HttpStatusCode.EarlyHints:
                 case HttpStatusCode.NonAuthoritativeInformation:
                 case HttpStatusCode.NoContent:
                 case HttpStatusCode.ResetContent:
@@ -341,14 +339,12 @@ public class ContentGeneratorClientEndpointResult : IContentGenerator
                     sb.AppendLine();
                     AppendMethodContentStatusCodeOk(sb, responseModel);
                     break;
-                case HttpStatusCode.EarlyHints:
-                    // Skip.
-                    break;
                 case HttpStatusCode.Continue:
                 case HttpStatusCode.SwitchingProtocols:
                 case HttpStatusCode.Processing:
                 case HttpStatusCode.Created:
                 case HttpStatusCode.Accepted:
+                case HttpStatusCode.EarlyHints:
                 case HttpStatusCode.NonAuthoritativeInformation:
                 case HttpStatusCode.NoContent:
                 case HttpStatusCode.ResetContent:
