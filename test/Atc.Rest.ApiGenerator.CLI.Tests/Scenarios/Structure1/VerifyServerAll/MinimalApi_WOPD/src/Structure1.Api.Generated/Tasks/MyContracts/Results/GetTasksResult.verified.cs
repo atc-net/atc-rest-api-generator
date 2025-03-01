@@ -24,7 +24,7 @@ public class GetTasksResult
     /// <summary>
     /// 200 - Ok response.
     /// </summary>
-    public static GetTasksResult Ok(List<Task> result)
+    public static GetTasksResult Ok(IEnumerable<Task> result)
         => new(TypedResults.Ok(result));
 
     /// <summary>

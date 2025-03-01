@@ -14,6 +14,6 @@ public class GetFileByIdHandlerStub : IGetFileByIdHandler
         CancellationToken cancellationToken = default)
     {
         var bytes = Encoding.UTF8.GetBytes("Hello World");
-        return Task.FromResult(GetFileByIdResult.Ok(bytes, "dummy.txt"));
+        return Task.FromResult(GetFileByIdResult.Ok(bytes, "text/plain", "dummy.txt"));
     }
 }

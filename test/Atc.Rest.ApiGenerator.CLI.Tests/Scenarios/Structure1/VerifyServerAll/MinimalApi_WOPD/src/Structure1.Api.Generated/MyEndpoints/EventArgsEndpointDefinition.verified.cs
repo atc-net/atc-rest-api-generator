@@ -26,7 +26,7 @@ public sealed class EventArgsEndpointDefinition : IEndpointDefinition
             .WithName("GetEventArgs")
             .WithSummary("Get EventArgs List.")
             .WithDescription("Get EventArgs List.")
-            .Produces<IEnumerable<Contracts.EventArgs.EventArgs>>();
+            .Produces<IEnumerable<EventArgs.MyContracts.EventArgs>>();
 
         eventArgs
             .MapGet("{id}", GetEventArgById)
@@ -34,7 +34,7 @@ public sealed class EventArgsEndpointDefinition : IEndpointDefinition
             .WithSummary("Get EventArgs By Id.")
             .WithDescription("Get EventArgs By Id.")
             .AddEndpointFilter<ValidationFilter<GetEventArgByIdParameters>>()
-            .Produces<Contracts.EventArgs.EventArgs>()
+            .Produces<EventArgs.MyContracts.EventArgs>()
             .Produces<string?>(StatusCodes.Status400BadRequest)
             .Produces<string?>(StatusCodes.Status404NotFound);
     }

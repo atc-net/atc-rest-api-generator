@@ -24,7 +24,7 @@ public class GetUsersResult
     /// <summary>
     /// 200 - Ok response.
     /// </summary>
-    public static GetUsersResult Ok(List<User> result)
+    public static GetUsersResult Ok(IEnumerable<User> result)
         => new(TypedResults.Ok(result));
 
     /// <summary>

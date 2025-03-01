@@ -24,7 +24,7 @@ public class GetAddressesByPostalCodesResult
     /// <summary>
     /// 200 - Ok response.
     /// </summary>
-    public static GetAddressesByPostalCodesResult Ok(List<Address> result)
+    public static GetAddressesByPostalCodesResult Ok(IEnumerable<Address> result)
         => new(TypedResults.Ok(result));
 
     /// <summary>

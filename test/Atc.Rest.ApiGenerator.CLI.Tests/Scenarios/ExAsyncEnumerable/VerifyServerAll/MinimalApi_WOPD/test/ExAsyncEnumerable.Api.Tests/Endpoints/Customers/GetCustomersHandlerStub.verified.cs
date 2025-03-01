@@ -15,8 +15,16 @@ public class GetCustomersHandlerStub : IGetCustomersHandler
     {
         var data = new Fixture().Create<List<Customer>>();
 
-        var paginationData = new PaginationResult<Customer>();
+        var paginationData = new PaginationResult<Customer>(10, null, data);
 
-        return Task.FromResult(GetCustomersResult.Ok(paginationData));
+        return Task.FromResult(GetCustomersResult.Ok(GetDataAsync(paginationData)));
+    }
+
+    private static async IAsyncEnumerable<PaginationResult<Customer>> GetDataAsync(
+        PaginationResult<Customer> data)
+    {
+        yield return data;
+
+        await Task.CompletedTask;
     }
 }

@@ -19,7 +19,7 @@ public sealed class EventArgsController : ControllerBase
     /// Operation: GetEventArgs.
     /// </summary>
     [HttpGet]
-    [ProducesResponseType(typeof(IEnumerable<Contracts.EventArgs.EventArgs>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IEnumerable<EventArgs.MyContracts.EventArgs>), StatusCodes.Status200OK)]
     public async Task<ActionResult> GetEventArgs(
         [FromServices] IGetEventArgsHandler handler,
         CancellationToken cancellationToken)
@@ -30,7 +30,7 @@ public sealed class EventArgsController : ControllerBase
     /// Operation: GetEventArgById.
     /// </summary>
     [HttpGet("{id}")]
-    [ProducesResponseType(typeof(Contracts.EventArgs.EventArgs), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(EventArgs.MyContracts.EventArgs), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     public async Task<ActionResult> GetEventArgById(

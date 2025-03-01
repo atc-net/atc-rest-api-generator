@@ -7,13 +7,13 @@
 namespace Structure1.Api.Tests.Tasks.MyEndpoints;
 
 [GeneratedCode("ApiGenerator", "x.x.x.x")]
-public class GetTasksHandlerStub : Structure1.Api.Tests.Tasks.MyEndpoints.IGetTasksHandler
+public class GetTasksHandlerStub : Generated.Tasks.MyContracts.IGetTasksHandler
 {
-    public Task<Structure1.Api.Tests.Tasks.MyEndpoints.GetTasksResult> ExecuteAsync(
+    public Task<Generated.Tasks.MyContracts.GetTasksResult> ExecuteAsync(
         CancellationToken cancellationToken = default)
     {
-        var data = new Fixture().Create<List<Structure1.Api.Tests.Tasks.MyEndpoints.Task>>();
+        var data = new Fixture().Create<List<Generated.Tasks.MyContracts.Task>>();
 
-        return Task.FromResult(Structure1.Api.Tests.Tasks.MyEndpoints.GetTasksResult.Ok(data));
+        return Task.FromResult(Generated.Tasks.MyContracts.GetTasksResult.Ok(data));
     }
 }

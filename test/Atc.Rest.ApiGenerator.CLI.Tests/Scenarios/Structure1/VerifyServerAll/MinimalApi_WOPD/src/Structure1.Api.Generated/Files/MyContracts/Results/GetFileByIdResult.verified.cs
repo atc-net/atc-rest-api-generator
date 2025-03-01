@@ -24,12 +24,18 @@ public class GetFileByIdResult
     /// <summary>
     /// 200 - Ok response.
     /// </summary>
-    public static GetFileByIdResult Ok(string? message = null)
-        => new(TypedResults.Ok(message));
+    public static GetFileByIdResult Ok(byte[] bytes, string contentType, string fileName)
+        => new(TypedResults.Bytes(bytes, contentType, fileName));
 
     /// <summary>
     /// 404 - NotFound response.
     /// </summary>
     public static GetFileByIdResult NotFound(string? message = null)
         => new(TypedResults.NotFound(message));
+
+    /// <summary>
+    /// Performs an implicit conversion from GetFileByIdResult to IResult.
+    /// </summary>
+    public static IResult ToIResult(GetFileByIdResult result)
+        => result.Result;
 }

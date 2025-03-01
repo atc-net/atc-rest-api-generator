@@ -19,7 +19,7 @@ public sealed class TasksController : ControllerBase
     /// Operation: GetTasks.
     /// </summary>
     [HttpGet]
-    [ProducesResponseType(typeof(IEnumerable<Contracts.Tasks.Task>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IEnumerable<Tasks.MyContracts.Task>), StatusCodes.Status200OK)]
     public async Task<ActionResult> GetTasks(
         [FromServices] IGetTasksHandler handler,
         CancellationToken cancellationToken)

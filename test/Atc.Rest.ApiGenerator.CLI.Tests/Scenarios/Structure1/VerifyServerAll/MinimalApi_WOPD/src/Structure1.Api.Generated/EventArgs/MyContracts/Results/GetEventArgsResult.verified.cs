@@ -24,7 +24,7 @@ public class GetEventArgsResult
     /// <summary>
     /// 200 - Ok response.
     /// </summary>
-    public static GetEventArgsResult Ok(List<EventArgs> result)
+    public static GetEventArgsResult Ok(IEnumerable<EventArgs> result)
         => new(TypedResults.Ok(result));
 
     /// <summary>

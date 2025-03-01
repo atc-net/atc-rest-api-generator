@@ -143,6 +143,8 @@ public interface IGetExampleEndpointResult : IEndpointResponse
 
     ProblemDetails ProcessingContent { get; }
 
+    ProblemDetails EarlyHintsContent { get; }
+
     ExampleModel OkContent { get; }
 
     ProblemDetails CreatedContent { get; }
