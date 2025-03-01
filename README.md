@@ -42,17 +42,17 @@
 
 |Project|Target Framework|Description|Nuget Download Link|
 |---|---|---|---|
-|[Atc.Rest.ApiGenerator](src/Atc.Rest.ApiGenerator) | net8.0 | Atc.Rest.ApiGenerator is a WebApi C# code generator using a OpenApi 3.0.x specification YAML file. | [![Nuget](https://img.shields.io/nuget/dt/Atc.Rest.ApiGenerator?logo=nuget&style=flat-square)](https://www.nuget.org/packages/Atc.Rest.ApiGenerator) |
-|[Atc.Rest.ApiGenerator.CLI](src/Atc.Rest.ApiGenerator.CLI) |net8.0 | A CLI tool that use Atc.Rest.ApiGenerator to create/update a project specified by a OpenApi 3.0.x specification YAML file. | [![Nuget](https://img.shields.io/nuget/dt/atc-rest-api-generator?logo=nuget&style=flat-square)](https://www.nuget.org/packages/atc-rest-api-generator) |
-|[Atc.Rest.ApiGenerator.CodingRules](src/Atc.Rest.ApiGenerator.CodingRules) | net8.0| Create/update atc coding rules for the generated code | |
-|[Atc.Rest.ApiGenerator.Contracts](src/Atc.Rest.ApiGenerator.Contracts) | net8.0| Shared contracts and interfaces for the generated code. | |
-|[Atc.Rest.ApiGenerator.Framework.Mvc](src/Atc.Rest.ApiGenerator.Framework.Mvc) | net8.0| Provides support for generating ASP.NET MVC / Controller based REST API server implementations. | |
-|[Atc.Rest.ApiGenerator.Framework.Minimal](src/Atc.Rest.ApiGenerator.Framework.Minimal) | net8.0| Provides support for generating MinimalAPI based REST server implementations. | |
-|[Atc.Rest.ApiGenerator.Client.CSharp](src/Atc.Rest.ApiGenerator.Client.CSharp) | net8.0| Generates C# client code for interacting with the generated REST APIs. | |
-|[Atc.Rest.ApiGenerator.Framework](src/Atc.Rest.ApiGenerator.Framework) | net8.0| Shared framework components and utilities for the API generator projects. | |
-|[Atc.Rest.ApiGenerator.OpenApi](src/Atc.Rest.ApiGenerator.OpenApi) | net8.0| Handles OpenAPI specification parsing and manipulation for the API generator. | |
-|[Atc.Rest.ApiGenerator.Nuget](src/Atc.Rest.ApiGenerator.Nuget) | net8.0| Manages NuGet packages required by the generated code and frameworks. | |
-|[Atc.CodeGeneration.CSharp](src/Atc.CodeGeneration.CSharp) | net8.0| Provides utilities and functionalities for generating C# code. | |
+|[Atc.Rest.ApiGenerator](src/Atc.Rest.ApiGenerator) | net9.0 | Atc.Rest.ApiGenerator is a WebApi C# code generator using a OpenApi 3.0.x specification YAML file. | [![Nuget](https://img.shields.io/nuget/dt/Atc.Rest.ApiGenerator?logo=nuget&style=flat-square)](https://www.nuget.org/packages/Atc.Rest.ApiGenerator) |
+|[Atc.Rest.ApiGenerator.CLI](src/Atc.Rest.ApiGenerator.CLI) |net9.0 | A CLI tool that use Atc.Rest.ApiGenerator to create/update a project specified by a OpenApi 3.0.x specification YAML file. | [![Nuget](https://img.shields.io/nuget/dt/atc-rest-api-generator?logo=nuget&style=flat-square)](https://www.nuget.org/packages/atc-rest-api-generator) |
+|[Atc.Rest.ApiGenerator.CodingRules](src/Atc.Rest.ApiGenerator.CodingRules) | net9.0| Create/update atc coding rules for the generated code | |
+|[Atc.Rest.ApiGenerator.Contracts](src/Atc.Rest.ApiGenerator.Contracts) | net9.0| Shared contracts and interfaces for the generated code. | |
+|[Atc.Rest.ApiGenerator.Framework.Mvc](src/Atc.Rest.ApiGenerator.Framework.Mvc) | net9.0| Provides support for generating ASP.NET MVC / Controller based REST API server implementations. | |
+|[Atc.Rest.ApiGenerator.Framework.Minimal](src/Atc.Rest.ApiGenerator.Framework.Minimal) | net9.0| Provides support for generating MinimalAPI based REST server implementations. | |
+|[Atc.Rest.ApiGenerator.Client.CSharp](src/Atc.Rest.ApiGenerator.Client.CSharp) | net9.0| Generates C# client code for interacting with the generated REST APIs. | |
+|[Atc.Rest.ApiGenerator.Framework](src/Atc.Rest.ApiGenerator.Framework) | net9.0| Shared framework components and utilities for the API generator projects. | |
+|[Atc.Rest.ApiGenerator.OpenApi](src/Atc.Rest.ApiGenerator.OpenApi) | net9.0| Handles OpenAPI specification parsing and manipulation for the API generator. | |
+|[Atc.Rest.ApiGenerator.Nuget](src/Atc.Rest.ApiGenerator.Nuget) | net9.0| Manages NuGet packages required by the generated code and frameworks. | |
+|[Atc.CodeGeneration.CSharp](src/Atc.CodeGeneration.CSharp) | net9.0| Provides utilities and functionalities for generating C# code. | |
 
 ## Project dependency graph
 
@@ -512,23 +512,23 @@ Running the above command produces the following output:
 🟢   root: atc-coding-rules-updater.json created
 🟢   root: atc-coding-rules-updater.ps1 created
 🐭 Working on EditorConfig files
-     Download from: [GitHub] /atc-net/atc-coding-rules/main/distribution/dotnet8/.editorconfig
+     Download from: [GitHub] /atc-net/atc-coding-rules/main/distribution/dotnet9/.editorconfig
      Download time: 27.947 ms
 🟢   root: .editorconfig created
-     Download from: [GitHub] /atc-net/atc-coding-rules/main/distribution/dotnet8/src/.editorconfig
+     Download from: [GitHub] /atc-net/atc-coding-rules/main/distribution/dotnet9/src/.editorconfig
      Download time: 22.987 ms
 🟢   src: .editorconfig created
-     Download from: [GitHub] /atc-net/atc-coding-rules/main/distribution/dotnet8/test/.editorconfig
+     Download from: [GitHub] /atc-net/atc-coding-rules/main/distribution/dotnet9/test/.editorconfig
      Download time: 24.465 ms
 🟢   test: .editorconfig created
 🔨 Working on Directory.Build.props files
-     Download from: [GitHub] /atc-net/atc-coding-rules/main/distribution/dotnet8/Directory.Build.props
+     Download from: [GitHub] /atc-net/atc-coding-rules/main/distribution/dotnet9/Directory.Build.props
      Download time: 20.880 ms
 🟢   root: Directory.Build.props created
-     Download from: [GitHub] /atc-net/atc-coding-rules/main/distribution/dotnet8/src/Directory.Build.props
+     Download from: [GitHub] /atc-net/atc-coding-rules/main/distribution/dotnet9/src/Directory.Build.props
      Download time: 48.340 ms
 🟢   src: Directory.Build.props created
-     Download from: [GitHub] /atc-net/atc-coding-rules/main/distribution/dotnet8/test/Directory.Build.props
+     Download from: [GitHub] /atc-net/atc-coding-rules/main/distribution/dotnet9/test/Directory.Build.props
      Download time: 29.480 ms
 🟢   test: Directory.Build.props created
 ✅ Done

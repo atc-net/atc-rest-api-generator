@@ -1,20 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc" Version="2.0.525" />
-    <PackageReference Include="Atc.CodeDocumentation" Version="2.0.525" />
-    <PackageReference Include="Atc.OpenApi" Version="2.0.525" />
-    <PackageReference Include="Microsoft.OpenApi" Version="1.6.22" />
-    <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.6.22" />
+    <PackageReference Include="Atc" Version="2.0.552" />
+    <PackageReference Include="Atc.CodeDocumentation" Version="2.0.552" />
+    <PackageReference Include="Atc.OpenApi" Version="2.0.552" />
+    <PackageReference Include="Microsoft.OpenApi" Version="1.6.23" />
+    <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.6.23" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Atc.Rest.ApiGenerator.Contracts\Atc.Rest.ApiGenerator.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="SonarAnalyzer.CSharp" Version="10.7.0.110445" />
   </ItemGroup>
 
 </Project>

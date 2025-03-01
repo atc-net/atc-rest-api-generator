@@ -1,5 +1,5 @@
 {
-  "projectTarget": "DotNet8",
+  "projectTarget": "Dotnet9",
   "useLatestMinorNugetVersion": true,
   "useTemporarySuppressions": false,
   "temporarySuppressionAsExcel": false,

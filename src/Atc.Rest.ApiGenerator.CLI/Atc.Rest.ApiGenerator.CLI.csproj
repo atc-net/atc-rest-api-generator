@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <PackageId>atc-rest-api-generator</PackageId>
     <PackageTags>rest;api;netstandard;generator</PackageTags>
     <Description>A .NET Core Web API C# code generator using a OpenApi 3.0.x specification YAML file.</Description>
@@ -13,9 +13,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc" Version="2.0.525" />
-    <PackageReference Include="Atc.Console.Spectre" Version="2.0.525" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
+    <PackageReference Include="Atc" Version="2.0.552" />
+    <PackageReference Include="Atc.Console.Spectre" Version="2.0.552" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.2" />
   </ItemGroup>
 
   <ItemGroup>

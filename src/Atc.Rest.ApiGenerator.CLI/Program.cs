@@ -113,7 +113,7 @@ public static class Program
     {
         if (args.Length == 0)
         {
-            return new[] { CommandConstants.ArgumentShortHelp };
+            return [CommandConstants.ArgumentShortHelp];
         }
 
         // TODO: Add multiple validations

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -26,10 +26,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc" Version="2.0.525" />
-    <PackageReference Include="Atc.DotNet" Version="2.0.525" />
-    <PackageReference Include="Atc.OpenApi" Version="2.0.525" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />
+    <PackageReference Include="Atc" Version="2.0.552" />
+    <PackageReference Include="Atc.DotNet" Version="2.0.552" />
+    <PackageReference Include="Atc.OpenApi" Version="2.0.552" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.2" />
   </ItemGroup>
 
   <ItemGroup>

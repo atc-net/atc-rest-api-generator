@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
 
 env:
-  ATC_EMAIL: 'atcnet.org@gmail.com'
-  ATC_NAME: 'Atc-Net'
-  NUGET_REPO_URL: 'https://api.nuget.org/v3/index.json'
+  ATC_EMAIL: "atcnet.org@gmail.com"
+  ATC_NAME: "Atc-Net"
+  NUGET_REPO_URL: "https://api.nuget.org/v3/index.json"
 
 jobs:
   release:
@@ -27,10 +27,10 @@ jobs:
         with:
           setAllVars: true
 
-      - name: ⚙️ Setup dotnet 8.0.x
+      - name: ⚙️ Setup dotnet 9.0.x
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: "9.0.x"
 
       - name: 🧹 Clean
         run: dotnet clean -c Release && dotnet nuget locals all --clear

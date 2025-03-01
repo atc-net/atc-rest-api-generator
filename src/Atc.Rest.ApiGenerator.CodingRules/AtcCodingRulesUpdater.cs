@@ -9,7 +9,7 @@ public sealed partial class AtcCodingRulesUpdater : IAtcCodingRulesUpdater
     public const string GitRawContentUrl = "https://raw.githubusercontent.com";
     public const string GitHubPrefix = "[silver][[GitHub]][/] ";
 
-    private const string RawCodingRulesDistributionUrl = "https://raw.githubusercontent.com/atc-net/atc-coding-rules/main/distribution/dotnet8";
+    private const string RawCodingRulesDistributionUrl = "https://raw.githubusercontent.com/atc-net/atc-coding-rules/main/distribution/dotnet9";
     public const string FileNameEditorConfig = ".editorconfig";
     public const string FileNameDirectoryBuildProps = "Directory.Build.props";
 
@@ -111,7 +111,7 @@ public sealed partial class AtcCodingRulesUpdater : IAtcCodingRulesUpdater
         {
             var sb = new StringBuilder();
             sb.AppendLine("{");
-            sb.AppendLine("  \"projectTarget\": \"DotNet8\",");
+            sb.AppendLine("  \"projectTarget\": \"Dotnet9\",");
             sb.AppendLine("  \"mappings\": {");
             sb.Append("    \"src\": { \"paths\": [ \"");
 
