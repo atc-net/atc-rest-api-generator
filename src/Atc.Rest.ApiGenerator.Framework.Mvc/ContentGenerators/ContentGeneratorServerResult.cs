@@ -97,10 +97,11 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
         ContentGeneratorServerResultMethodParameters item,
         string resultName)
     {
-        if (item.ResponseModel.MediaType == MediaTypeNames.Application.Octet)
+        if (item.ResponseModel.MediaType is not null &&
+            item.ResponseModel.MediaType != MediaTypeNames.Application.Json)
         {
-            sb.AppendLine(4, $"public static {resultName} Ok(byte[] bytes, string fileName)");
-            sb.AppendLine(8, $"=> new {resultName}(ResultFactory.CreateFileContentResult(bytes, fileName));");
+            sb.AppendLine(4, $"public static {resultName} Ok(byte[] bytes, string contentType, string fileName)");
+            sb.AppendLine(8, $"=> new {resultName}(ResultFactory.CreateFileContentResult(bytes, fileName, contentType));");
             return;
         }
 
@@ -170,7 +171,7 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
                 break;
             case HttpStatusCode.EarlyHints:
                 sb.AppendLine(4, $"public static {resultName} {item.ResponseModel.StatusCode.ToNormalizedString()}()");
-                sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResultWithProblemDetails)}({nameof(HttpStatusCode)}.{item.ResponseModel.StatusCode}));");
+                sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResultWithProblemDetails)}({nameof(HttpStatusCode)}.{item.ResponseModel.StatusCode}, string.Empty));");
                 break;
             case HttpStatusCode.Continue:
             case HttpStatusCode.SwitchingProtocols:
@@ -258,7 +259,7 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
                 break;
             case HttpStatusCode.EarlyHints:
                 sb.AppendLine(4, $"public static {resultName} {item.ResponseModel.StatusCode.ToNormalizedString()}()");
-                sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResult)}({nameof(HttpStatusCode)}.{item.ResponseModel.StatusCode}, string? message = null));");
+                sb.AppendLine(8, $"=> new {resultName}({nameof(Results.ResultFactory)}.{nameof(Results.ResultFactory.CreateContentResult)}({nameof(HttpStatusCode)}.{item.ResponseModel.StatusCode}, string.Empty));");
                 break;
             case HttpStatusCode.Continue:
             case HttpStatusCode.SwitchingProtocols:

@@ -7,18 +7,21 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
         string @namespace,
         AttributeParameters codeGeneratorAttribute,
         OpenApiPathItem openApiPath,
-        OpenApiOperation openApiOperation)
+        OpenApiOperation openApiOperation,
+        string contractNamespace,
+        AspNetOutputType aspNetOutputType)
     {
         ArgumentNullException.ThrowIfNull(@namespace);
         ArgumentNullException.ThrowIfNull(openApiOperation);
+        ArgumentNullException.ThrowIfNull(contractNamespace);
 
         var operationName = openApiOperation.GetOperationName();
 
         var hasParameters = openApiPath.HasParameters() ||
                             openApiOperation.HasParametersOrRequestBody();
 
-        var inheritedClassTypeName = EnsureFullNamespaceIfNeeded($"I{operationName}{ContentGeneratorConstants.Handler}", @namespace);
-        var returnTypeName = EnsureFullNamespaceIfNeeded($"{operationName}{ContentGeneratorConstants.Result}", @namespace);
+        var inheritedClassTypeName = EnsureFullNamespaceIfNeeded($"I{operationName}{ContentGeneratorConstants.Handler}", contractNamespace);
+        var returnTypeName = EnsureFullNamespaceIfNeeded($"{operationName}{ContentGeneratorConstants.Result}", contractNamespace);
 
         var methodParametersParameters = new List<ParameterBaseParameters>();
         if (hasParameters)
@@ -46,24 +49,85 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
                 Name: "cancellationToken",
                 DefaultValue: "default"));
 
-        var methodParameters = new List<MethodParameters>
+        var methodParameters = new List<MethodParameters>();
+
+        var responseModel = openApiOperation
+            .ExtractApiOperationResponseModels()
+            .FirstOrDefault(x => x.StatusCode == HttpStatusCode.OK);
+
+        if (responseModel is not null && responseModel.UseAsyncEnumerable)
         {
-            new(
-                DocumentationTags: null,
-                Attributes: null,
-                DeclarationModifier: DeclarationModifiers.Public,
-                ReturnTypeName: returnTypeName,
-                ReturnGenericTypeName: "Task",
-                Name: "ExecuteAsync",
-                Parameters: methodParametersParameters,
-                AlwaysBreakDownParameters: true,
-                UseExpressionBody: false,
-                Content: GenerateContentExecuteMethod(
-                    @namespace,
-                    returnTypeName,
-                    openApiOperation,
-                    hasParameters)),
-        };
+            methodParameters.Add(
+                new(
+                    DocumentationTags: null,
+                    Attributes: null,
+                    DeclarationModifier: DeclarationModifiers.Public,
+                    ReturnTypeName: returnTypeName,
+                    ReturnGenericTypeName: "Task",
+                    Name: "ExecuteAsync",
+                    Parameters: methodParametersParameters,
+                    AlwaysBreakDownParameters: true,
+                    UseExpressionBody: false,
+                    Content: GenerateContentExecuteMethod(
+                        contractNamespace,
+                        returnTypeName,
+                        openApiOperation,
+                        hasParameters,
+                        asAsyncEnumerable: true,
+                        aspNetOutputType)));
+
+            var parameterDataType = $"{responseModel.CollectionDataType}<{responseModel.GetQualifiedDataType()}>";
+            var returnDataType = responseModel.CollectionDataType == NameConstants.List
+                ? responseModel.GetQualifiedDataType()
+                : $"{responseModel.CollectionDataType}<{responseModel.GetQualifiedDataType()}>";
+
+            var methodParametersParametersForDataAsync = new List<ParameterBaseParameters>
+                {
+                    new(
+                        Attributes: null,
+                        GenericTypeName: null,
+                        IsGenericListType: false,
+                        TypeName: parameterDataType,
+                        IsNullableType: false,
+                        IsReferenceType: true,
+                        Name: "data",
+                        DefaultValue: null),
+                };
+
+            methodParameters.Add(
+                new(
+                    DocumentationTags: null,
+                    Attributes: null,
+                    DeclarationModifier: DeclarationModifiers.PrivateStaticAsync,
+                    ReturnTypeName: returnDataType,
+                    ReturnGenericTypeName: "IAsyncEnumerable",
+                    Name: "GetDataAsync",
+                    Parameters: methodParametersParametersForDataAsync,
+                    AlwaysBreakDownParameters: true,
+                    UseExpressionBody: false,
+                    Content: GenerateContentAsyncEnumerableMethod(responseModel.CollectionDataType == NameConstants.List)));
+        }
+        else
+        {
+            methodParameters.Add(
+                new(
+                    DocumentationTags: null,
+                    Attributes: null,
+                    DeclarationModifier: DeclarationModifiers.Public,
+                    ReturnTypeName: returnTypeName,
+                    ReturnGenericTypeName: "Task",
+                    Name: "ExecuteAsync",
+                    Parameters: methodParametersParameters,
+                    AlwaysBreakDownParameters: true,
+                    UseExpressionBody: false,
+                    Content: GenerateContentExecuteMethod(
+                        contractNamespace,
+                        returnTypeName,
+                        openApiOperation,
+                        hasParameters,
+                        asAsyncEnumerable: false,
+                        aspNetOutputType)));
+        }
 
         return new ClassParameters(
             headerContent,
@@ -87,7 +151,9 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
         string @namespace,
         string contractResultTypeName,
         OpenApiOperation openApiOperation,
-        bool hasParameters)
+        bool hasParameters,
+        bool asAsyncEnumerable,
+        AspNetOutputType aspNetOutputType)
     {
         var responseStatusCodes = openApiOperation.Responses.GetHttpStatusCodes();
         if (!responseStatusCodes.Any())
@@ -158,7 +224,7 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
                 break;
             case "byte[]":
                 sb.AppendLine("var bytes = Encoding.UTF8.GetBytes(\"Hello World\");");
-                sb.Append($"return {GetTaskName(@namespace)}.FromResult({contractResultTypeName}.Ok(bytes, \"dummy.txt\"));");
+                sb.Append($"return {GetTaskName(@namespace)}.FromResult({contractResultTypeName}.Ok(bytes, \"{MediaTypeNames.Text.Plain}\", \"dummy.txt\"));");
                 break;
             default:
                 if (returnSchema is not null)
@@ -168,7 +234,9 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
                         @namespace,
                         contractResultTypeName,
                         returnSchema,
-                        hasParameters);
+                        hasParameters,
+                        asAsyncEnumerable,
+                        aspNetOutputType);
                 }
 
                 break;
@@ -177,12 +245,35 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
         return sb.ToString();
     }
 
+    private static string GenerateContentAsyncEnumerableMethod(
+        bool useList)
+    {
+        var sb = new StringBuilder();
+        if (useList)
+        {
+            sb.AppendLine("foreach (var item in data)");
+            sb.AppendLine("{");
+            sb.AppendLine(4, "yield return item;");
+            sb.AppendLine("}");
+        }
+        else
+        {
+            sb.AppendLine("yield return data;");
+        }
+
+        sb.AppendLine();
+        sb.AppendLine("await Task.CompletedTask;");
+        return sb.ToString();
+    }
+
     private static void AppendGenerateContentForComplexData(
         StringBuilder sb,
         string @namespace,
         string contractResultTypeName,
         OpenApiSchema returnSchema,
-        bool hasParameters)
+        bool hasParameters,
+        bool asAsyncEnumerable,
+        AspNetOutputType aspNetOutputType)
     {
         var isTypeCustomPagination = returnSchema.IsTypeCustomPagination();
 
@@ -234,7 +325,23 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
                     if (customPaginationSchema is not null)
                     {
                         var genericDataTypeName = customPaginationSchema.GetModelName();
-                        sb.AppendLine($"var paginationData = new {genericDataTypeName}<{returnName}>();");
+                        if (aspNetOutputType == AspNetOutputType.Mvc)
+                        {
+                            sb.AppendLine($"var paginationData = new {genericDataTypeName}<{returnName}>");
+                            sb.AppendLine("{");
+                            sb.AppendLine(4, "PageSize = 10,");
+                            sb.AppendLine(
+                                4,
+                                customPaginationSchema.Properties.Keys.Contains("results", StringComparer.OrdinalIgnoreCase)
+                                    ? "Results = data,"
+                                    : "Items = data,");
+                            sb.AppendLine("};");
+                        }
+                        else
+                        {
+                            sb.AppendLine($"var paginationData = new {genericDataTypeName}<{returnName}>(10, null, data);");
+                        }
+
                         sb.AppendLine();
                     }
                 }
@@ -270,11 +377,25 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
                     }
                 }
 
-                sb.Append($"return {GetTaskName(@namespace)}.FromResult({contractResultTypeName}.Ok(paginationData));");
+                if (asAsyncEnumerable)
+                {
+                    sb.Append($"return {GetTaskName(@namespace)}.FromResult({contractResultTypeName}.Ok(GetDataAsync(paginationData)));");
+                }
+                else
+                {
+                    sb.Append($"return {GetTaskName(@namespace)}.FromResult({contractResultTypeName}.Ok(paginationData));");
+                }
             }
             else
             {
-                sb.Append($"return {GetTaskName(@namespace)}.FromResult({contractResultTypeName}.Ok(data));");
+                if (asAsyncEnumerable)
+                {
+                    sb.Append($"return {GetTaskName(@namespace)}.FromResult({contractResultTypeName}.Ok(GetDataAsync(data)));");
+                }
+                else
+                {
+                    sb.Append($"return {GetTaskName(@namespace)}.FromResult({contractResultTypeName}.Ok(data));");
+                }
             }
         }
         else
@@ -332,10 +453,13 @@ public static class ContentGeneratorServerTestEndpointHandlerStubParametersFacto
             return value;
         }
 
-        var s1 = @namespace.Replace(".Generated", string.Empty, StringComparison.Ordinal);
-        var s2 = s1.Replace("Tests.Endpoints.", "Generated.Contracts.", StringComparison.Ordinal);
+        var index = @namespace.IndexOf("Generated", StringComparison.Ordinal);
+        if (index != -1)
+        {
+            @namespace = @namespace[index..];
+        }
 
-        return $"{s2}.{value}";
+        return $"{@namespace}.{value}";
     }
 
     private static bool EndsWithWellKnownContract(

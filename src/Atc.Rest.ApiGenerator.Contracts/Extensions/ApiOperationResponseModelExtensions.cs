@@ -156,9 +156,11 @@ public static class ApiOperationResponseModelExtensions
 
     public static IEnumerable<ApiOperationResponseModel> AdjustNamespacesIfNeeded(
         this IEnumerable<ApiOperationResponseModel> responseModels,
-        IList<ApiOperation> operationSchemaMappings)
+        IList<ApiOperation> operationSchemaMappings,
+        string contractNamespace)
     {
-        if (responseModels is null)
+        if (responseModels is null ||
+            contractNamespace is null)
         {
             return Array.Empty<ApiOperationResponseModel>();
         }
@@ -170,22 +172,16 @@ public static class ApiOperationResponseModelExtensions
                 model.DataType.IsWellKnownSystemTypeName())
             {
                 var operationSchemaMapping = operationSchemaMappings.First(x => x.Model.Name == model.DataType);
-                if (operationSchemaMapping.Model.IsShared)
-                {
-                    models.Add(
-                        model with
-                        {
-                            DataType = $"{ContentGeneratorConstants.Contracts}.{model.DataType}",
-                        });
-                }
-                else
-                {
-                    models.Add(
-                        model with
-                        {
-                            DataType = $"{ContentGeneratorConstants.Contracts}.{operationSchemaMapping.ApiGroupName}.{model.DataType}",
-                        });
-                }
+
+                contractNamespace = operationSchemaMapping.Model.IsShared
+                    ? contractNamespace.Replace("[[apiGroupName]]", string.Empty, StringComparison.Ordinal).Trim('.')
+                    : contractNamespace.Replace("[[apiGroupName]]", operationSchemaMapping.ApiGroupName, StringComparison.Ordinal);
+
+                models.Add(
+                    model with
+                    {
+                        DataType = $"{contractNamespace}.{model.DataType}",
+                    });
             }
             else
             {

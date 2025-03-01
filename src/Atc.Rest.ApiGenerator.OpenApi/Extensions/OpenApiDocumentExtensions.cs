@@ -152,6 +152,32 @@ public static class OpenApiDocumentExtensions
         return false;
     }
 
+    public static bool IsUsingRequiredForSystemNet(
+        this OpenApiDocument openApiDocument,
+        bool includeDeprecated)
+    {
+        foreach (var apiPathPair in openApiDocument.Paths)
+        {
+            foreach (var apiOperationPair in apiPathPair.Value.Operations)
+            {
+                if (apiOperationPair.Value.Deprecated && !includeDeprecated)
+                {
+                    continue;
+                }
+
+                var statusCodes = apiOperationPair.Value.Responses.GetHttpStatusCodes();
+                if (statusCodes.Exists(x => x
+                        is HttpStatusCode.Created
+                        or HttpStatusCode.BadRequest))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     public static bool IsUsingRequiredForSystemCollectionGeneric(
         this OpenApiDocument openApiDocument,
         bool includeDeprecated)
@@ -240,6 +266,34 @@ public static class OpenApiDocumentExtensions
                     {
                         return true;
                     }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public static bool IsUsingRequiredForSystemText(
+        this OpenApiDocument openApiDocument,
+        bool includeDeprecated)
+    {
+        foreach (var apiPathPair in openApiDocument.Paths)
+        {
+            foreach (var apiOperationPair in apiPathPair.Value.Operations)
+            {
+                if (apiOperationPair.Value.Deprecated && !includeDeprecated)
+                {
+                    continue;
+                }
+
+                var okResponseModel = apiOperationPair.Value
+                    .ExtractApiOperationResponseModels()
+                    .FirstOrDefault(x => x.StatusCode == HttpStatusCode.OK);
+
+                if (okResponseModel?.MediaType != null &&
+                    okResponseModel.MediaType != MediaTypeNames.Application.Json)
+                {
+                    return true;
                 }
             }
         }

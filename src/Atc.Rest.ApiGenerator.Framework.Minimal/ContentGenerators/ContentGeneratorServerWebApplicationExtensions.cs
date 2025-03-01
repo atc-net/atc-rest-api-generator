@@ -21,6 +21,7 @@ public class ContentGeneratorServerWebApplicationExtensions : IContentGenerator
         sb.AppendLine();
         sb.AppendLine("public static class WebApplicationExtensions");
         sb.AppendLine("{");
+        sb.AppendLine(4, "[SuppressMessage(\"Spacing Rules\", \"SA1010:Opening Square Brackets Must Be Spaced Correctly\", Justification = \"OK.\")]");
         sb.AppendLine(4, "private static readonly string[] PatchHttpMethods = [\"patch\"];");
         sb.AppendLine();
         sb.AppendLine(4, "public static RouteHandlerBuilder MapPatch(");

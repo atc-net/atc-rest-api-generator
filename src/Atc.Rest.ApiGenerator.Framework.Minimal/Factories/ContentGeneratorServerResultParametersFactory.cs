@@ -35,10 +35,7 @@ public static class ContentGeneratorServerResultParametersFactory
         var okResponseModel = responseModels.Find(x => x.StatusCode == HttpStatusCode.OK) ??
                               responseModels.Find(x => x.StatusCode == HttpStatusCode.Created);
 
-        if (ShouldAppendImplicitOperatorContent(
-                httpStatusCodes,
-                okResponseModel?.DataType,
-                openApiOperation.Responses.IsSchemaUsingBinaryFormatForOkResponse()))
+        if (ShouldAppendImplicitOperatorContent(httpStatusCodes))
         {
             var collectionDataType = okResponseModel?.CollectionDataType;
             var dataType = okResponseModel?.DataType;
@@ -60,33 +57,10 @@ public static class ContentGeneratorServerResultParametersFactory
     }
 
     private static bool ShouldAppendImplicitOperatorContent(
-        ICollection<HttpStatusCode> httpStatusCodes,
-        string? modelName,
-        bool isSchemaUsingBinaryFormatForOkResponse)
+        ICollection<HttpStatusCode> httpStatusCodes)
     {
         if (!httpStatusCodes.Contains(HttpStatusCode.OK) &&
             !httpStatusCodes.Contains(HttpStatusCode.Created))
-        {
-            return false;
-        }
-
-        var httpStatusCode = HttpStatusCode.Continue; // Dummy
-        if (httpStatusCodes.Contains(HttpStatusCode.OK))
-        {
-            httpStatusCode = HttpStatusCode.OK;
-        }
-        else if (httpStatusCodes.Contains(HttpStatusCode.Created))
-        {
-            httpStatusCode = HttpStatusCode.Created;
-        }
-
-        if (httpStatusCode == HttpStatusCode.Created &&
-            string.IsNullOrEmpty(modelName))
-        {
-            return false;
-        }
-
-        if (isSchemaUsingBinaryFormatForOkResponse)
         {
             return false;
         }

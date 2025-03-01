@@ -1,4 +1,5 @@
 global using System.Net;
+global using System.Net.Mime;
 global using System.Text;
 
 global using Atc.CodeDocumentation.CodeComment;
