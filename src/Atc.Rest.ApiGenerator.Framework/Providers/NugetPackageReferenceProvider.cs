@@ -9,7 +9,7 @@ public class NugetPackageReferenceProvider(
     {
         { "Asp.Versioning.Http", "8.1.0" },
         { "Atc", "2.0.525" },
-        { "Atc.Azure.Options", "3.0.31" },
+        { "Atc.Azure.Options", "3.0.34" },
         { "Atc.Rest", "2.0.525" },
         { "Atc.Rest.Client", "1.0.84" },
         { "Atc.Rest.Extended", "2.0.525" },
@@ -19,18 +19,18 @@ public class NugetPackageReferenceProvider(
         { "AutoFixture", "4.18.1" },
         { "AutoFixture.AutoNSubstitute", "4.18.1" },
         { "AutoFixture.Xunit2", "4.18.1" },
-        { "FluentAssertions", "7.0.0" },
+        { "FluentAssertions", "7.2.0" },
         { "FluentValidation.AspNetCore", "11.3.0" },
         { "Microsoft.ApplicationInsights.AspNetCore", "2.22.0" },
         { "Microsoft.AspNetCore.Authentication.JwtBearer", "8.0.4" },
         { "Microsoft.AspNetCore.OpenApi", "8.0.6" },
         { "Microsoft.AspNetCore.Mvc.Testing", "8.0.6" },
         { "Microsoft.NETCore.Platforms", "7.0.4" },
-        { "Microsoft.NET.Test.Sdk", "17.12.0" },
+        { "Microsoft.NET.Test.Sdk", "17.13.0" },
         { "NSubstitute", "5.3.0" },
-        { "Swashbuckle.AspNetCore", "7.2.0" },
+        { "Swashbuckle.AspNetCore", "7.3.1" },
         { "xunit", "2.9.3" },
-        { "xunit.runner.visualstudio", "3.0.1" },
+        { "xunit.runner.visualstudio", "3.0.2" },
     };
 
     public async Task<Version> GetAtcApiGeneratorVersion()
