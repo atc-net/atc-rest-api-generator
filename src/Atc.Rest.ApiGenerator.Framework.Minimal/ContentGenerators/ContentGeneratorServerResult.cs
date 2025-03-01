@@ -99,7 +99,13 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
         ContentGeneratorServerResultMethodParameters item,
         string resultName)
     {
-        // TODO: byte[] bytes, string fileName
+        if (item.ResponseModel.MediaType is not null &&
+            item.ResponseModel.MediaType != MediaTypeNames.Application.Json)
+        {
+            sb.AppendLine(4, $"public static {resultName} Ok(byte[] bytes, string contentType, string fileName)");
+            sb.AppendLine(8, "=> new(TypedResults.Bytes(bytes, contentType, fileName));");
+            return;
+        }
 
         if (string.IsNullOrEmpty(item.ResponseModel.DataType))
         {
@@ -108,21 +114,28 @@ public sealed class ContentGeneratorServerResult : IContentGenerator
             return;
         }
 
-        if (item.ResponseModel.UseAsyncEnumerable)
+        if (string.IsNullOrEmpty(item.ResponseModel.CollectionDataType))
         {
-            sb.AppendLine(
-                4,
-                string.IsNullOrEmpty(item.ResponseModel.CollectionDataType)
-                    ? $"public static {resultName} Ok(IAsyncEnumerable<{item.ResponseModel.DataType}> result)"
-                    : $"public static {resultName} Ok(IAsyncEnumerable<{item.ResponseModel.CollectionDataType}<{item.ResponseModel.DataType}>> result)");
+            sb.AppendLine(4, $"public static {resultName} Ok({item.ResponseModel.DataType} result)");
         }
         else
         {
-            sb.AppendLine(
-                4,
-                string.IsNullOrEmpty(item.ResponseModel.CollectionDataType)
-                    ? $"public static {resultName} Ok({item.ResponseModel.DataType} result)"
-                    : $"public static {resultName} Ok({item.ResponseModel.CollectionDataType}<{item.ResponseModel.DataType}> result)");
+            if (item.ResponseModel.UseAsyncEnumerable)
+            {
+                sb.AppendLine(
+                    4,
+                    item.ResponseModel.CollectionDataType == NameConstants.List
+                        ? $"public static {resultName} Ok(IAsyncEnumerable<{item.ResponseModel.DataType}> result)"
+                        : $"public static {resultName} Ok(IAsyncEnumerable<{item.ResponseModel.CollectionDataType}<{item.ResponseModel.DataType}>> result)");
+            }
+            else
+            {
+                sb.AppendLine(
+                    4,
+                    item.ResponseModel.CollectionDataType == NameConstants.List
+                        ? $"public static {resultName} Ok(IEnumerable<{item.ResponseModel.DataType}> result)"
+                        : $"public static {resultName} Ok({item.ResponseModel.CollectionDataType}<{item.ResponseModel.DataType}> result)");
+            }
         }
 
         sb.AppendLine(8, "=> new(TypedResults.Ok(result));");

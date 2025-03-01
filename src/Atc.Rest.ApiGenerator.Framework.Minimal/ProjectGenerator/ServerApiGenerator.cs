@@ -297,6 +297,7 @@ public class ServerApiGenerator : IServerApiGenerator
                 GetRouteByApiGroupName(apiGroupName),
                 ContentGeneratorConstants.EndpointDefinition,
                 openApiDocument,
+                settings.ContractsNamespace,
                 settings.UsePartialClassForEndpoints);
 
             var contentGenerator = new ContentGenerators.ContentGeneratorServerEndpoints(

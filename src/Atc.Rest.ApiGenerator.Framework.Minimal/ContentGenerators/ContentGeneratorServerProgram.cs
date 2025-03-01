@@ -84,9 +84,9 @@ public sealed class ContentGeneratorServerProgram : IContentGenerator
         if (SwaggerThemeMode != SwaggerThemeMode.None)
         {
             sb.AppendLine(8, "app.ConfigureSwagger(builder.Environment.ApplicationName);");
+            sb.AppendLine();
         }
 
-        sb.AppendLine();
         sb.AppendLine(8, "app.UseHttpsRedirection();");
         sb.AppendLine(8, "app.UseHsts();");
         sb.AppendLine();

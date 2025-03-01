@@ -10,6 +10,7 @@ public static class ContentGeneratorServerEndpointParametersFactory
         string route,
         string endpointSuffixName,
         OpenApiDocument openApiDocument,
+        string contractNamespace,
         bool usePartialClassForEndpoints)
     {
         var modelNamespace = $"{projectName}.{ContentGeneratorConstants.Contracts}.{apiGroupName}";
@@ -26,7 +27,7 @@ public static class ContentGeneratorServerEndpointParametersFactory
                 var endpointAuthorization = apiOperation.Value.ExtractApiOperationAuthorization(apiPathData);
                 var responseModels = apiOperation.Value
                     .ExtractApiOperationResponseModels(modelNamespace)
-                    .AdjustNamespacesIfNeeded(operationSchemaMappings);
+                    .AdjustNamespacesIfNeeded(operationSchemaMappings, contractNamespace);
 
                 methodParameters.Add(new ContentGeneratorServerEndpointMethodParameters(
                     OperationTypeRepresentation: apiOperation.Key.ToString(),

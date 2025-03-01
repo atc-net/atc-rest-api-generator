@@ -70,7 +70,7 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
                 ],
                 [
                     new("DocumentationFile", Attributes: null, @$"bin\Debug\net8.0\{settings.ProjectName}.xml"),
-                    new("NoWarn", Attributes: null, "$(NoWarn);1573;1591;1701;1702;1712;8618;"),
+                    new("NoWarn", Attributes: null, "$(NoWarn);1573;1591;1701;1702;1712;8618;NU1603;NU1608;"),
                 ],
             ],
             [
@@ -177,8 +177,11 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
             var apiGroupName = openApiPath.GetApiGroupName();
 
             var endpointsLocation = LocationFactory.CreateWithApiGroupName(apiGroupName, settings.EndpointsLocation);
+            var endpointsNamespace = LocationFactory.CreateWithApiGroupName(apiGroupName, settings.EndpointsNamespace);
+            var contractsNamespace = LocationFactory.CreateWithApiGroupName(apiGroupName, settings.ContractsNamespace);
 
-            var fullNamespace = NamespaceFactory.Create(settings.ProjectName, endpointsLocation);
+            var fullNamespace = NamespaceFactory.Create(settings.ProjectName, endpointsNamespace);
+            var fullContractNamespace = NamespaceFactory.Create(settings.ProjectName.Replace("Tests", "Generated", StringComparison.Ordinal), contractsNamespace);
 
             foreach (var openApiOperation in openApiPath.Value.Operations)
             {
@@ -192,7 +195,9 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
                     fullNamespace,
                     codeGeneratorAttribute,
                     openApiPath.Value,
-                    openApiOperation.Value);
+                    openApiOperation.Value,
+                    fullContractNamespace,
+                    AspNetOutputType.MinimalApi);
 
                 var contentGenerator = new GenerateContentForClass(
                     new CodeDocumentationTagsGenerator(),
@@ -253,20 +258,29 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
         var requiredUsings = new List<string>
             {
                 "System.CodeDom.Compiler",
-                "System.Text",
-                "System.Text.Json",
-                "System.Text.Json.Serialization",
-                "System.Reflection",
-                "Atc.XUnit",
-                "Atc.Rest.Options",
                 "AutoFixture",
-                "Microsoft.AspNetCore.Hosting",
-                "Microsoft.AspNetCore.Http",
-                "Microsoft.Extensions.Configuration",
-                "Microsoft.Extensions.DependencyInjection",
-                "Xunit",
-                apiProjectName,
             };
+
+        //// TODO: Maybe some is needed?
+        ////if (false)
+        ////{
+        ////    requiredUsings.Add("System.Reflection");
+        ////    requiredUsings.Add("System.Text");
+        ////    requiredUsings.Add("System.Text.Json");
+        ////    requiredUsings.Add("System.Text.Json.Serialization");
+        ////    requiredUsings.Add("Atc.Rest.Options");
+        ////    requiredUsings.Add("Atc.XUnit");
+        ////    requiredUsings.Add("Microsoft.AspNetCore.Hosting");
+        ////    requiredUsings.Add("Microsoft.AspNetCore.Http");
+        ////    requiredUsings.Add("Microsoft.Extensions.Configuration");
+        ////    requiredUsings.Add("Microsoft.Extensions.DependencyInjection");
+        ////    requiredUsings.Add("Xunit");
+        ////}
+
+        if (openApiDocument.IsUsingRequiredForSystemText(settings.IncludeDeprecatedOperations))
+        {
+            requiredUsings.Add("System.Text");
+        }
 
         if (openApiDocument.IsUsingRequiredForAtcRestResults())
         {

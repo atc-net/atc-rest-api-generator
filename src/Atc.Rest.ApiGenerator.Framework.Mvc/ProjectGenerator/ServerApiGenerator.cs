@@ -313,6 +313,7 @@ public class ServerApiGenerator : IServerApiGenerator
                 GetRouteByApiGroupName(apiGroupName),
                 ContentGeneratorConstants.Controller,
                 openApiDocument,
+                settings.ContractsNamespace,
                 settings.UsePartialClassForEndpoints);
 
             var contentGenerator = new ContentGenerators.ContentGeneratorServerController(
@@ -352,8 +353,10 @@ public class ServerApiGenerator : IServerApiGenerator
             "Atc.Rest.Results",
         };
 
-        // TODO: Check for any use ??
-        requiredUsings.Add("System.Net");
+        if (openApiDocument.IsUsingRequiredForSystemNet(settings.IncludeDeprecatedOperations))
+        {
+            requiredUsings.Add("System.Net");
+        }
 
         if (openApiDocument.IsUsingRequiredForSystemTextJsonSerializationAndSystemRuntimeSerialization(settings.IncludeDeprecatedOperations))
         {
