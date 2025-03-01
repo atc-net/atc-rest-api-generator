@@ -55,7 +55,6 @@ public static class Program
 
         app.UseStaticFiles();
 
-
         app.UseHttpsRedirection();
         app.UseHsts();
 

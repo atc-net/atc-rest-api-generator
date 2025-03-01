@@ -38,4 +38,10 @@ public class PostUserResult
     /// </summary>
     public static PostUserResult Conflict(string? message = null)
         => new(TypedResults.Conflict(message));
+
+    /// <summary>
+    /// Performs an implicit conversion from PostUserResult to IResult.
+    /// </summary>
+    public static IResult ToIResult(PostUserResult result)
+        => result.Result;
 }

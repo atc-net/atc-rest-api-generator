@@ -13,7 +13,7 @@ public class GetEventArgByIdHandlerStub : IGetEventArgByIdHandler
         GetEventArgByIdParameters parameters,
         CancellationToken cancellationToken = default)
     {
-        var data = new Fixture().Create<Structure1.Api.Tests.EventArgs.MyEndpoints.EventArgs>();
+        var data = new Fixture().Create<Generated.EventArgs.MyContracts.EventArgs>();
 
         return Task.FromResult(GetEventArgByIdResult.Ok(data));
     }

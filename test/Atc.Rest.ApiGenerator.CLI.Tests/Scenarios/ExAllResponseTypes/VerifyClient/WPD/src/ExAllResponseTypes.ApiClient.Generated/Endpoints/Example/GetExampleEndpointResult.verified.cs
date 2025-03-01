@@ -217,6 +217,11 @@ public class GetExampleEndpointResult : EndpointResponse, IGetExampleEndpointRes
             ? result
             : throw new InvalidOperationException("Content is not the expected type - please use the IsProcessing property first.");
 
+    public ProblemDetails EarlyHintsContent
+        => IsEarlyHints && ContentObject is ProblemDetails result
+            ? result
+            : throw new InvalidOperationException("Content is not the expected type - please use the IsEarlyHints property first.");
+
     public ExampleModel OkContent
         => IsOk && ContentObject is ExampleModel result
             ? result

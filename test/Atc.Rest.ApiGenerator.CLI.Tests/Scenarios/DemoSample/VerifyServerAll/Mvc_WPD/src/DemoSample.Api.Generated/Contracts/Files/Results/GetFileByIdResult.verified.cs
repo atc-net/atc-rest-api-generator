@@ -19,8 +19,8 @@ public class GetFileByIdResult : ResultBase
     /// <summary>
     /// 200 - Ok response.
     /// </summary>
-    public static GetFileByIdResult Ok(byte[] bytes, string fileName)
-        => new GetFileByIdResult(ResultFactory.CreateFileContentResult(bytes, fileName));
+    public static GetFileByIdResult Ok(byte[] bytes, string contentType, string fileName)
+        => new GetFileByIdResult(ResultFactory.CreateFileContentResult(bytes, fileName, contentType));
 
     /// <summary>
     /// 404 - NotFound response.

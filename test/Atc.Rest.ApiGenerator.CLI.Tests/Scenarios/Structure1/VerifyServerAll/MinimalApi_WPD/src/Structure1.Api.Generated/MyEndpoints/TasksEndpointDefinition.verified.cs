@@ -26,7 +26,7 @@ public sealed class TasksEndpointDefinition : IEndpointDefinition
             .WithName("GetTasks")
             .WithSummary("Returns tasks.")
             .WithDescription("Returns tasks.")
-            .Produces<IEnumerable<Contracts.Tasks.Task>>();
+            .Produces<IEnumerable<Tasks.MyContracts.Task>>();
     }
 
     internal async Task<IResult> GetTasks(

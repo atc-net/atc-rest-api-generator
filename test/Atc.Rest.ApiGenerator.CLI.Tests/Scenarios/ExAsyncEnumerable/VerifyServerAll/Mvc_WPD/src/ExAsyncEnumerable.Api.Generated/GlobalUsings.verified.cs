@@ -1,6 +1,5 @@
 ﻿global using System.CodeDom.Compiler;
 global using System.ComponentModel.DataAnnotations;
-global using System.Net;
 
 global using Atc.Factories;
 global using Atc.Rest.Results;

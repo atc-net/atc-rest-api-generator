@@ -12,7 +12,7 @@ public class GetEventArgsHandlerStub : IGetEventArgsHandler
     public Task<GetEventArgsResult> ExecuteAsync(
         CancellationToken cancellationToken = default)
     {
-        var data = new Fixture().Create<List<Structure1.Api.Tests.EventArgs.MyEndpoints.EventArgs>>();
+        var data = new Fixture().Create<List<Generated.EventArgs.MyContracts.EventArgs>>();
 
         return Task.FromResult(GetEventArgsResult.Ok(data));
     }

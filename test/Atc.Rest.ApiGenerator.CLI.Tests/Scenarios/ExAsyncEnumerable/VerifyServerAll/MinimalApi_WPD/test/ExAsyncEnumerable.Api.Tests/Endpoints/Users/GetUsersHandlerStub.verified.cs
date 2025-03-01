@@ -14,6 +14,17 @@ public class GetUsersHandlerStub : IGetUsersHandler
     {
         var data = new Fixture().Create<List<User>>();
 
-        return Task.FromResult(GetUsersResult.Ok(data));
+        return Task.FromResult(GetUsersResult.Ok(GetDataAsync(data)));
+    }
+
+    private static async IAsyncEnumerable<User> GetDataAsync(
+        List<User> data)
+    {
+        foreach (var item in data)
+        {
+            yield return item;
+        }
+
+        await Task.CompletedTask;
     }
 }
