@@ -68,10 +68,10 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
             "Microsoft.NET.Sdk",
             [
                 [
-                    new("TargetFramework", Attributes: null, "net8.0"),
+                    new("TargetFramework", Attributes: null, "net9.0"),
                 ],
                 [
-                    new("DocumentationFile", Attributes: null, @$"bin\Debug\net8.0\{settings.ProjectName}.xml"),
+                    new("DocumentationFile", Attributes: null, @$"bin\Debug\net9.0\{settings.ProjectName}.xml"),
                     new("NoWarn", Attributes: null, "$(NoWarn);1573;1591;1701;1702;1712;8618;NU1603;NU1608;"),
                 ],
             ],

@@ -51,7 +51,7 @@ public class ServerDomainTestGenerator : IServerDomainTestGenerator
             "Microsoft.NET.Sdk",
             [
                 [
-                    new("TargetFramework", Attributes: null, "net8.0"),
+                    new("TargetFramework", Attributes: null, "net9.0"),
                 ],
             ],
             [
