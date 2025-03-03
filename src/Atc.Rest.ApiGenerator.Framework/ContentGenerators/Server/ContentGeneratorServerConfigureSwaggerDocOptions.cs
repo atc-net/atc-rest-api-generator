@@ -67,7 +67,7 @@ public sealed class ContentGeneratorServerConfigureSwaggerDocOptions : IContentG
                 .Trim();
         }
 
-        sb.AppendLine(8, $"var text = new StringBuilder(\"{description}\");");
+        sb.AppendLine(8, $"var text = new StringBuilder(@\"{description}\");");
         sb.AppendLine(8, "var info = new OpenApiInfo");
         sb.AppendLine(8, "{");
         sb.AppendLine(12, "Title = $\"{environment.ApplicationName} {description.GroupName.ToUpperInvariant()}\",");
