@@ -41,7 +41,8 @@ public class ServerApiGenerator : IServerApiGenerator
             .CreateGeneratedCode(settings.Version);
     }
 
-    public async Task ScaffoldProjectFile()
+    public async Task ScaffoldProjectFile(
+        bool usingCodingRules)
     {
         var packageReferences = await nugetPackageReferenceProvider.GetPackageReferencesForApiProjectForMvc();
 
@@ -67,7 +68,12 @@ public class ServerApiGenerator : IServerApiGenerator
                 ],
                 [
                     new("DocumentationFile", Attributes: null, @$"bin\Debug\net9.0\{settings.ProjectName}.xml"),
-                    new("NoWarn", Attributes: null, "$(NoWarn);1573;1591;1701;1702;1712;8618;"),
+                    new(
+                        "NoWarn",
+                        Attributes: null,
+                        usingCodingRules
+                            ? "$(NoWarn);1573;1591;1701;1702;1712;8618;"
+                            : "$(NoWarn);1573;1591;1701;1702;1712;8618;8632;"),
                 ],
             ],
             [
@@ -342,7 +348,8 @@ public class ServerApiGenerator : IServerApiGenerator
             settings.ProjectPath);
 
     public void MaintainGlobalUsings(
-        bool removeNamespaceGroupSeparatorInGlobalUsings)
+        bool removeNamespaceGroupSeparatorInGlobalUsings,
+        bool usingCodingRules)
     {
         var requiredUsings = new List<string>
         {
@@ -352,6 +359,15 @@ public class ServerApiGenerator : IServerApiGenerator
             "Microsoft.AspNetCore.Mvc",
             "Atc.Rest.Results",
         };
+
+        if (!usingCodingRules)
+        {
+            requiredUsings.Add("System");
+            requiredUsings.Add("System.Collections.Generic");
+            requiredUsings.Add("System.Linq");
+            requiredUsings.Add("System.Threading");
+            requiredUsings.Add("System.Threading.Tasks");
+        }
 
         if (openApiDocument.IsUsingRequiredForSystemNet(settings.IncludeDeprecatedOperations))
         {

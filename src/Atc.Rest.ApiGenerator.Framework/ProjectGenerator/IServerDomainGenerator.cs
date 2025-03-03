@@ -20,5 +20,6 @@ public interface IServerDomainGenerator
     void GenerateServiceCollectionEndpointHandlerExtensions();
 
     void MaintainGlobalUsings(
-        bool removeNamespaceGroupSeparatorInGlobalUsings);
+        bool removeNamespaceGroupSeparatorInGlobalUsings,
+        bool usingCodingRules);
 }

@@ -11,7 +11,8 @@ namespace Atc.Rest.ApiGenerator.Framework.ProjectGenerator;
 /// </remarks>
 public interface IServerHostTestGenerator
 {
-    Task ScaffoldProjectFile();
+    Task ScaffoldProjectFile(
+        bool usingCodingRules);
 
     void ScaffoldAppSettingsIntegrationTestFile();
 
@@ -24,6 +25,6 @@ public interface IServerHostTestGenerator
     void GenerateEndpointTests();
 
     void MaintainGlobalUsings(
-        bool usingCodingRules,
-        bool removeNamespaceGroupSeparatorInGlobalUsings);
+        bool removeNamespaceGroupSeparatorInGlobalUsings,
+        bool usingCodingRules);
 }

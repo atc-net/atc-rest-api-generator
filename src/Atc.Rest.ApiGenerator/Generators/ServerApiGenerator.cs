@@ -68,7 +68,8 @@ public class ServerApiGenerator
 
         if (projectOptions.ApiOptions.Generator.AspNetOutputType == AspNetOutputType.Mvc)
         {
-            await serverApiGeneratorMvc.ScaffoldProjectFile();
+            await serverApiGeneratorMvc.ScaffoldProjectFile(
+                projectOptions.UsingCodingRules);
 
             serverApiGeneratorMvc.GenerateAssemblyMarker();
             serverApiGeneratorMvc.GenerateModels();
@@ -78,11 +79,14 @@ public class ServerApiGenerator
             serverApiGeneratorMvc.GenerateEndpoints();
 
             serverApiGeneratorMvc.MaintainApiSpecification(projectOptions.DocumentFile);
-            serverApiGeneratorMvc.MaintainGlobalUsings(projectOptions.ApiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings);
+            serverApiGeneratorMvc.MaintainGlobalUsings(
+                projectOptions.ApiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings,
+                projectOptions.UsingCodingRules);
         }
         else
         {
-            await serverApiGeneratorMinimalApi.ScaffoldProjectFile();
+            await serverApiGeneratorMinimalApi.ScaffoldProjectFile(
+                projectOptions.UsingCodingRules);
 
             serverApiGeneratorMinimalApi.GenerateAssemblyMarker();
             serverApiGeneratorMinimalApi.GenerateModels();
@@ -92,7 +96,9 @@ public class ServerApiGenerator
             serverApiGeneratorMinimalApi.GenerateEndpoints();
 
             serverApiGeneratorMinimalApi.MaintainApiSpecification(projectOptions.DocumentFile);
-            serverApiGeneratorMinimalApi.MaintainGlobalUsings(projectOptions.ApiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings);
+            serverApiGeneratorMinimalApi.MaintainGlobalUsings(
+                projectOptions.ApiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings,
+                projectOptions.UsingCodingRules);
         }
 
         return true;

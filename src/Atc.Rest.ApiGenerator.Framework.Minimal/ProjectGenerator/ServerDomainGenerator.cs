@@ -248,7 +248,8 @@ public class ServerDomainGenerator : IServerDomainGenerator
     }
 
     public void MaintainGlobalUsings(
-        bool removeNamespaceGroupSeparatorInGlobalUsings)
+        bool removeNamespaceGroupSeparatorInGlobalUsings,
+        bool usingCodingRules)
     {
         var requiredUsings = new List<string>
         {
@@ -257,6 +258,13 @@ public class ServerDomainGenerator : IServerDomainGenerator
             "Microsoft.Extensions.Configuration",
             "Microsoft.Extensions.DependencyInjection",
         };
+
+        if (!usingCodingRules)
+        {
+            requiredUsings.Add("System");
+            requiredUsings.Add("System.Threading");
+            requiredUsings.Add("System.Threading.Tasks");
+        }
 
         var apiGroupNames = openApiDocument.GetApiGroupNames();
 

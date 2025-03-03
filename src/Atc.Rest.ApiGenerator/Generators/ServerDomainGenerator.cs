@@ -95,7 +95,8 @@ public class ServerDomainGenerator
             serverDomainGeneratorMvc.GenerateAssemblyMarker();
 
             serverDomainGeneratorMvc.MaintainGlobalUsings(
-                projectOptions.ApiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings);
+                projectOptions.ApiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings,
+                projectOptions.UsingCodingRules);
         }
         else
         {
@@ -106,7 +107,8 @@ public class ServerDomainGenerator
             serverDomainGeneratorMinimalApi.GenerateServiceCollectionEndpointHandlerExtensions();
 
             serverDomainGeneratorMinimalApi.MaintainGlobalUsings(
-                projectOptions.ApiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings);
+                projectOptions.ApiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings,
+                projectOptions.UsingCodingRules);
         }
 
         if (serverDomainTestGenerator is not null &&
