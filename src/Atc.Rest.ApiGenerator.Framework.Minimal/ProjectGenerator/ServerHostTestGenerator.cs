@@ -48,9 +48,11 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
             .CreateGeneratedCode(settings.Version);
     }
 
-    public async Task ScaffoldProjectFile()
+    public async Task ScaffoldProjectFile(
+        bool usingCodingRules)
     {
-        var packageReferences = await nugetPackageReferenceProvider.GetPackageReferencesForTestHostProjectForMinimalApi();
+        var packageReferences = await nugetPackageReferenceProvider.GetPackageReferencesForTestHostProjectForMinimalApi(
+            usingCodingRules);
 
         var itemGroupPackageReferences = packageReferences
             .Select(packageReference => new ItemGroupParameter(
@@ -70,7 +72,12 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
                 ],
                 [
                     new("DocumentationFile", Attributes: null, @$"bin\Debug\net9.0\{settings.ProjectName}.xml"),
-                    new("NoWarn", Attributes: null, "$(NoWarn);1573;1591;1701;1702;1712;8618;NU1603;NU1608;"),
+                    new(
+                        "NoWarn",
+                        Attributes: null,
+                        usingCodingRules
+                            ? "$(NoWarn);1573;1591;1701;1702;1712;8618;NU1603;NU1608;"
+                            : "$(NoWarn);1573;1591;1701;1702;1712;8618;8632;NU1603;NU1608;"),
                 ],
             ],
             [
@@ -252,14 +259,24 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
     }
 
     public void MaintainGlobalUsings(
-        bool usingCodingRules,
-        bool removeNamespaceGroupSeparatorInGlobalUsings)
+        bool removeNamespaceGroupSeparatorInGlobalUsings,
+        bool usingCodingRules)
     {
         var requiredUsings = new List<string>
-            {
-                "System.CodeDom.Compiler",
-                "AutoFixture",
-            };
+        {
+            "System.CodeDom.Compiler",
+            "AutoFixture",
+        };
+
+        if (!usingCodingRules)
+        {
+            requiredUsings.Add("System");
+            requiredUsings.Add("System.Threading");
+            requiredUsings.Add("System.Threading.Tasks");
+            requiredUsings.Add("System.Collections.Generic");
+            requiredUsings.Add("System.IO");
+            requiredUsings.Add("System.Net.Http");
+        }
 
         //// TODO: Maybe some is needed?
         ////if (false)

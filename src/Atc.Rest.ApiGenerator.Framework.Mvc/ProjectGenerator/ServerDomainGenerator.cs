@@ -150,12 +150,20 @@ public class ServerDomainGenerator : IServerDomainGenerator
         => throw new NotSupportedException($"{nameof(GenerateServiceCollectionEndpointHandlerExtensions)} is not supported for MVC");
 
     public void MaintainGlobalUsings(
-        bool removeNamespaceGroupSeparatorInGlobalUsings)
+        bool removeNamespaceGroupSeparatorInGlobalUsings,
+        bool usingCodingRules)
     {
         var requiredUsings = new List<string>
         {
             "System.CodeDom.Compiler",
         };
+
+        if (!usingCodingRules)
+        {
+            requiredUsings.Add("System");
+            requiredUsings.Add("System.Threading");
+            requiredUsings.Add("System.Threading.Tasks");
+        }
 
         var apiGroupNames = openApiDocument.GetApiGroupNames();
 

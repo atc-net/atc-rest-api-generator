@@ -36,7 +36,8 @@ public interface IServerHostGenerator
     void ScaffoldWebConfig();
 
     void MaintainGlobalUsings(
-        bool removeNamespaceGroupSeparatorInGlobalUsings);
+        bool removeNamespaceGroupSeparatorInGlobalUsings,
+        bool usingCodingRules);
 
     void MaintainWwwResources();
 }

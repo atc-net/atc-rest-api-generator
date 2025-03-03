@@ -50,9 +50,11 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
             .CreateGeneratedCode(settings.Version);
     }
 
-    public async Task ScaffoldProjectFile()
+    public async Task ScaffoldProjectFile(
+        bool usingCodingRules)
     {
-        var packageReferences = await nugetPackageReferenceProvider.GetPackageReferencesForTestHostProjectForMvc();
+        var packageReferences = await nugetPackageReferenceProvider.GetPackageReferencesForTestHostProjectForMvc(
+            usingCodingRules);
 
         var itemGroupPackageReferences = packageReferences
             .Select(packageReference => new ItemGroupParameter(
@@ -72,7 +74,12 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
                 ],
                 [
                     new("DocumentationFile", Attributes: null, @$"bin\Debug\net9.0\{settings.ProjectName}.xml"),
-                    new("NoWarn", Attributes: null, "$(NoWarn);1573;1591;1701;1702;1712;8618;NU1603;NU1608;"),
+                    new(
+                        "NoWarn",
+                        Attributes: null,
+                        usingCodingRules
+                            ? "$(NoWarn);1573;1591;1701;1702;1712;8618;NU1603;NU1608;"
+                            : "$(NoWarn);1573;1591;1701;1702;1712;8618;8632;NU1603;NU1608;"),
                 ],
             ],
             [
@@ -252,28 +259,38 @@ public class ServerHostTestGenerator : IServerHostTestGenerator
     }
 
     public void MaintainGlobalUsings(
-        bool usingCodingRules,
-        bool removeNamespaceGroupSeparatorInGlobalUsings)
+        bool removeNamespaceGroupSeparatorInGlobalUsings,
+        bool usingCodingRules)
     {
         var requiredUsings = new List<string>
-            {
-                "System.CodeDom.Compiler",
-                "System.Text",
-                "System.Text.Json",
-                "System.Text.Json.Serialization",
-                "System.Reflection",
-                "Atc.XUnit",
-                "Atc.Rest.Options",
-                "AutoFixture",
-                "Microsoft.AspNetCore.Hosting",
-                "Microsoft.AspNetCore.Http",
-                "Microsoft.AspNetCore.TestHost",
-                "Microsoft.AspNetCore.Mvc.Testing",
-                "Microsoft.Extensions.Configuration",
-                "Microsoft.Extensions.DependencyInjection",
-                "Xunit",
-                apiProjectName,
-            };
+        {
+            "System.CodeDom.Compiler",
+            "System.Text",
+            "System.Text.Json",
+            "System.Text.Json.Serialization",
+            "System.Reflection",
+            "Atc.XUnit",
+            "Atc.Rest.Options",
+            "AutoFixture",
+            "Microsoft.AspNetCore.Hosting",
+            "Microsoft.AspNetCore.Http",
+            "Microsoft.AspNetCore.TestHost",
+            "Microsoft.AspNetCore.Mvc.Testing",
+            "Microsoft.Extensions.Configuration",
+            "Microsoft.Extensions.DependencyInjection",
+            "Xunit",
+            apiProjectName,
+        };
+
+        if (!usingCodingRules)
+        {
+            requiredUsings.Add("System");
+            requiredUsings.Add("System.Threading");
+            requiredUsings.Add("System.Threading.Tasks");
+            requiredUsings.Add("System.Collections.Generic");
+            requiredUsings.Add("System.IO");
+            requiredUsings.Add("System.Net.Http");
+        }
 
         if (openApiDocument.IsUsingRequiredForAtcRestResults())
         {

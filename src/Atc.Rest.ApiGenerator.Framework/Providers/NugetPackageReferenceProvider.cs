@@ -164,7 +164,8 @@ public class NugetPackageReferenceProvider(
         return packageReferences;
     }
 
-    public async Task<IList<(string PackageId, string PackageVersion, string? SubElements)>> GetPackageReferencesForTestHostProjectForMvc()
+    public async Task<IList<(string PackageId, string PackageVersion, string? SubElements)>> GetPackageReferencesForTestHostProjectForMvc(
+        bool usingCodingRules)
     {
         var atcVersion = await GetAtcVersionAsString3();
 
@@ -178,10 +179,16 @@ public class NugetPackageReferenceProvider(
             new("xunit.runner.visualstudio", PackageDefaultVersions["xunit.runner.visualstudio"], "<PrivateAssets>all</PrivateAssets>\n<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>"),
         };
 
+        if (!usingCodingRules)
+        {
+            packageReferences.Add(new("AutoFixture", PackageDefaultVersions["AutoFixture"], null));
+        }
+
         return packageReferences;
     }
 
-    public async Task<IList<(string PackageId, string PackageVersion, string? SubElements)>> GetPackageReferencesForTestHostProjectForMinimalApi()
+    public async Task<IList<(string PackageId, string PackageVersion, string? SubElements)>> GetPackageReferencesForTestHostProjectForMinimalApi(
+        bool usingCodingRules)
     {
         var atcVersion = await GetAtcVersionAsString3();
 

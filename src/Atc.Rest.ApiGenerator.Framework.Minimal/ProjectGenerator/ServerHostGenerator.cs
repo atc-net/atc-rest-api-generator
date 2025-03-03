@@ -236,7 +236,8 @@ public class ServerHostGenerator : IServerHostGenerator
     }
 
     public void MaintainGlobalUsings(
-        bool removeNamespaceGroupSeparatorInGlobalUsings)
+        bool removeNamespaceGroupSeparatorInGlobalUsings,
+        bool usingCodingRules)
     {
         var requiredUsings = new List<string>
         {
@@ -262,6 +263,17 @@ public class ServerHostGenerator : IServerHostGenerator
             domainProjectName,
             $"{domainProjectName}.Extensions",
         };
+
+        if (!usingCodingRules)
+        {
+            requiredUsings.Add("System");
+            requiredUsings.Add("System.IO");
+            requiredUsings.Add("Microsoft.AspNetCore.Builder");
+            requiredUsings.Add("Microsoft.AspNetCore.Hosting");
+            requiredUsings.Add("Microsoft.Extensions.Hosting");
+            requiredUsings.Add("Microsoft.Extensions.Configuration");
+            requiredUsings.Add("Microsoft.Extensions.DependencyInjection");
+        }
 
         GlobalUsingsHelper.CreateOrUpdate(
             logger,

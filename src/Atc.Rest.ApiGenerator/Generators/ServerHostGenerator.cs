@@ -119,7 +119,8 @@ public class ServerHostGenerator
             serverHostGeneratorMvc.GenerateConfigureSwaggerDocOptions();
 
             serverHostGeneratorMvc.MaintainGlobalUsings(
-                projectOptions.ApiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings);
+                projectOptions.ApiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings,
+                projectOptions.UsingCodingRules);
             serverHostGeneratorMvc.MaintainWwwResources();
 
             if (serverHostTestGeneratorMvc is not null &&
@@ -127,7 +128,9 @@ public class ServerHostGenerator
             {
                 logger.LogInformation($"{ContentWriterConstants.AreaGenerateTest} Working on server host unit-test generation ({projectOptions.ProjectName}.Tests)");
 
-                await serverHostTestGeneratorMvc.ScaffoldProjectFile();
+                await serverHostTestGeneratorMvc.ScaffoldProjectFile(
+                    projectOptions.UsingCodingRules);
+
                 serverHostTestGeneratorMvc.ScaffoldAppSettingsIntegrationTestFile();
 
                 serverHostTestGeneratorMvc.GenerateWebApiStartupFactoryFile();
@@ -136,8 +139,8 @@ public class ServerHostGenerator
                 serverHostTestGeneratorMvc.GenerateEndpointTests();
 
                 serverHostTestGeneratorMvc.MaintainGlobalUsings(
-                    projectOptions.UsingCodingRules,
-                    projectOptions.ApiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings);
+                    projectOptions.ApiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings,
+                    projectOptions.UsingCodingRules);
             }
         }
         else
@@ -157,7 +160,9 @@ public class ServerHostGenerator
             serverHostGeneratorMinimalApi.GenerateConfigureSwaggerDocOptions();
 
             serverHostGeneratorMinimalApi.MaintainGlobalUsings(
-                projectOptions.ApiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings);
+                projectOptions.ApiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings,
+                projectOptions.UsingCodingRules);
+
             serverHostGeneratorMinimalApi.MaintainWwwResources();
 
             if (serverHostTestGeneratorMinimalApi is not null &&
@@ -165,7 +170,9 @@ public class ServerHostGenerator
             {
                 logger.LogInformation($"{ContentWriterConstants.AreaGenerateTest} Working on server host unit-test generation ({projectOptions.ProjectName}.Tests)");
 
-                await serverHostTestGeneratorMinimalApi.ScaffoldProjectFile();
+                await serverHostTestGeneratorMinimalApi.ScaffoldProjectFile(
+                    projectOptions.UsingCodingRules);
+
                 serverHostTestGeneratorMinimalApi.ScaffoldAppSettingsIntegrationTestFile();
 
                 serverHostTestGeneratorMinimalApi.GenerateWebApiStartupFactoryFile();
@@ -174,8 +181,8 @@ public class ServerHostGenerator
                 serverHostTestGeneratorMinimalApi.GenerateEndpointTests();
 
                 serverHostTestGeneratorMinimalApi.MaintainGlobalUsings(
-                    projectOptions.UsingCodingRules,
-                    projectOptions.ApiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings);
+                    projectOptions.ApiOptions.Generator.RemoveNamespaceGroupSeparatorInGlobalUsings,
+                    projectOptions.UsingCodingRules);
             }
         }
 

@@ -19,9 +19,11 @@ public interface INugetPackageReferenceProvider
 
     Task<IList<(string PackageId, string PackageVersion, string? SubElements)>> GetPackageReferencesForApiClientProject();
 
-    Task<IList<(string PackageId, string PackageVersion, string? SubElements)>> GetPackageReferencesForTestHostProjectForMvc();
+    Task<IList<(string PackageId, string PackageVersion, string? SubElements)>> GetPackageReferencesForTestHostProjectForMvc(
+        bool usingCodingRules);
 
-    Task<IList<(string PackageId, string PackageVersion, string? SubElements)>> GetPackageReferencesForTestHostProjectForMinimalApi();
+    Task<IList<(string PackageId, string PackageVersion, string? SubElements)>> GetPackageReferencesForTestHostProjectForMinimalApi(
+        bool usingCodingRules);
 
     Task<IList<(string PackageId, string PackageVersion, string? SubElements)>> GetPackageReferencesForTestDomainProjectForMvc();
 

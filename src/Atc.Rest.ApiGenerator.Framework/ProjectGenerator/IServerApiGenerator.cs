@@ -11,7 +11,8 @@ namespace Atc.Rest.ApiGenerator.Framework.ProjectGenerator;
 /// </remarks>
 public interface IServerApiGenerator
 {
-    Task ScaffoldProjectFile();
+    Task ScaffoldProjectFile(
+        bool usingCodingRules);
 
     void GenerateAssemblyMarker();
 
@@ -29,5 +30,6 @@ public interface IServerApiGenerator
         FileInfo apiSpecificationFile);
 
     void MaintainGlobalUsings(
-        bool removeNamespaceGroupSeparatorInGlobalUsings);
+        bool removeNamespaceGroupSeparatorInGlobalUsings,
+        bool usingCodingRules);
 }
