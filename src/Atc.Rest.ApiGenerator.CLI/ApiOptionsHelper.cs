@@ -43,7 +43,7 @@ public static class ApiOptionsHelper
             return new ApiOptions();
         }
 
-        var options = await FileHelper<ApiOptions>.ReadJsonFileAndDeserializeAsync(fileInfo);
+        var options = await FileHelper<ApiOptions>.ReadJsonFileToModelAsync(fileInfo);
         return options ?? new ApiOptions();
     }
 
@@ -57,7 +57,7 @@ public static class ApiOptionsHelper
         var fileInfo = GetOptionsFile(optionsPath);
         if (fileInfo.Exists)
         {
-            options = await FileHelper<ApiOptions>.ReadJsonFileAndDeserializeAsync(fileInfo) ?? new ApiOptions();
+            options = await FileHelper<ApiOptions>.ReadJsonFileToModelAsync(fileInfo) ?? new ApiOptions();
         }
 
         await FileHelper<ApiOptions>.WriteModelToJsonFileAsync(fileInfo, options);
@@ -77,7 +77,7 @@ public static class ApiOptionsHelper
 
         try
         {
-            var options = await FileHelper<ApiOptions>.ReadJsonFileAndDeserializeAsync(fileInfo);
+            var options = await FileHelper<ApiOptions>.ReadJsonFileToModelAsync(fileInfo);
             return options is null
                 ? (false, "File is invalid")
                 : (true, string.Empty);
