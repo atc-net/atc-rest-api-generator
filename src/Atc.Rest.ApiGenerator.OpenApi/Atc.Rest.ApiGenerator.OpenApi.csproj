@@ -6,19 +6,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc" Version="2.0.560" />
-    <PackageReference Include="Atc.CodeDocumentation" Version="2.0.560" />
-    <PackageReference Include="Atc.OpenApi" Version="2.0.560" />
+    <PackageReference Include="Atc" Version="2.0.562" />
+    <PackageReference Include="Atc.CodeDocumentation" Version="2.0.562" />
+    <PackageReference Include="Atc.OpenApi" Version="2.0.562" />
     <PackageReference Include="Microsoft.OpenApi" Version="1.6.25" />
     <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.6.25" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Atc.Rest.ApiGenerator.Contracts\Atc.Rest.ApiGenerator.Contracts.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="SonarAnalyzer.CSharp" Version="10.7.0.110445" />
   </ItemGroup>
 
 </Project>
