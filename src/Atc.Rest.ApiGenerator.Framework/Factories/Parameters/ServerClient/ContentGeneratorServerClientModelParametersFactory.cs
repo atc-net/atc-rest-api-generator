@@ -179,7 +179,13 @@ public static class ContentGeneratorServerClientModelParametersFactory
                     : $"{schema.GetModelName()}.{value.EnsureFirstCharacterToUpper()}";
             }
 
-            return schema.Default.GetDefaultValueAsString();
+            if (schema.Type is not null &&
+                schema.Type != "object")
+            {
+                return schema.Default.GetDefaultValueAsString();
+            }
+
+            return null;
         }
 
         if (NameConstants.List.Equals(dataTypeForList, StringComparison.Ordinal))
@@ -252,7 +258,7 @@ public static class ContentGeneratorServerClientModelParametersFactory
 
                     if ("Object".Equals(dataType, StringComparison.Ordinal))
                     {
-                        dataType = "object";
+                        dataType = OpenApiDataTypeConstants.Object;
                     }
                 }
                 else
@@ -269,7 +275,7 @@ public static class ContentGeneratorServerClientModelParametersFactory
                         }
                         else
                         {
-                            dataType = "object";
+                            dataType = OpenApiDataTypeConstants.Object;
                         }
                     }
                 }
@@ -450,7 +456,7 @@ public static class ContentGeneratorServerClientModelParametersFactory
 
                     if ("Object".Equals(dataType, StringComparison.Ordinal))
                     {
-                        dataType = "object";
+                        dataType = OpenApiDataTypeConstants.Object;
                     }
                 }
                 else
@@ -467,7 +473,7 @@ public static class ContentGeneratorServerClientModelParametersFactory
                         }
                         else
                         {
-                            dataType = "object";
+                            dataType = OpenApiDataTypeConstants.Object;
                         }
                     }
                 }
