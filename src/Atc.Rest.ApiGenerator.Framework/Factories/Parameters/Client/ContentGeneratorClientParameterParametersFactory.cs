@@ -109,7 +109,7 @@ public static class ContentGeneratorClientParameterParametersFactory
         {
             requestBodyType = "IFormFile";
         }
-        else if (requestSchema.Items is not null)
+        else if (requestSchema.Items?.Reference is not null)
         {
             requestBodyType = requestSchema.Items.Reference.Id.PascalCase(ApiOperationExtractor.ModelNameSeparators, removeSeparators: true);
         }
