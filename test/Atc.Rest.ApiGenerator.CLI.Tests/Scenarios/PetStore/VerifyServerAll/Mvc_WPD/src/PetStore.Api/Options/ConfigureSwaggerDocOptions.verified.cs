@@ -39,7 +39,7 @@ public class ConfigureSwaggerDocOptions : IConfigureOptions<SwaggerGenOptions>
     private OpenApiInfo CreateInfoForApiVersion(
         ApiVersionDescription description)
     {
-        var text = new StringBuilder("");
+        var text = new StringBuilder();
         var info = new OpenApiInfo
         {
             Title = $"{environment.ApplicationName} {description.GroupName.ToUpperInvariant()}",
