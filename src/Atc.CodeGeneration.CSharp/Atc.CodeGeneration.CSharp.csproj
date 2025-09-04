@@ -6,13 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc" Version="2.0.560" />
-    <PackageReference Include="Atc.CodeDocumentation" Version="2.0.560" />
+    <PackageReference Include="Atc" Version="2.0.562" />
+    <PackageReference Include="Atc.CodeDocumentation" Version="2.0.562" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="SonarAnalyzer.CSharp" Version="10.7.0.110445" />
   </ItemGroup>
 
 </Project>
