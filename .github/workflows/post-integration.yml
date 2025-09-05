@@ -66,6 +66,9 @@ jobs:
           dotnet build -c Release /p:UseSourceLink=true --no-restore
           dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
+      - name: Set up git authentication for push
+        run: git remote set-url origin https://x-access-token:${{ secrets.PAT_WORKFLOWS }}@github.com/atc-net/atc-rest-api-generator.git
+
       - name: ⏩ Merge to stable-branch
         run: |
           git config --local user.email ${{ env.ATC_EMAIL }}
