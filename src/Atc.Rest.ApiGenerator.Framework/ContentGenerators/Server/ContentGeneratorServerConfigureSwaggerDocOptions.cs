@@ -245,12 +245,14 @@ public sealed class ContentGeneratorServerConfigureSwaggerDocOptions : IContentG
         // Use verbatim if backslashes or newlines are present.
         if (text.IndexOfAny(new[] { '\\', '\r', '\n' }) >= 0)
         {
-            var verbatim = text.Replace("\"", "\"\"");
+            var verbatim = text.Replace("\"", "\"\"", StringComparison.Ordinal);
             return "@\"" + verbatim + "\"";
         }
 
         // Otherwise, use a normal C# string literal.
-        var normal = text.Replace("\\", "\\\\").Replace("\"", "\\\"");
+        var normal = text
+            .Replace("\\", "\\\\", StringComparison.Ordinal)
+            .Replace("\"", "\\\"", StringComparison.Ordinal);
         return "\"" + normal + "\"";
     }
 
