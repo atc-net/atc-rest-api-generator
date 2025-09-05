@@ -168,9 +168,9 @@ public sealed class ApiOperationExtractor : IApiOperationExtractor
                     httpOperation,
                     parentApiSchema,
                     result);
-            }
 
-            return;
+                return;
+            }
         }
 
         (var schemaKey, apiSchema) = ConsolidateSchemaObjectTypes(apiSchema);

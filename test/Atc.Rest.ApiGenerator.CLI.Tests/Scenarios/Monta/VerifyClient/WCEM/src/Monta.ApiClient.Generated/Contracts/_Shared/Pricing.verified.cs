@@ -57,7 +57,7 @@ public class Pricing
     /// <summary>
     /// Used by Spot Price. It will multiply the fallback price by this percentage.
     /// </summary>
-    public double? Percentage { get; set; }
+    public float? Percentage { get; set; }
 
     /// <summary>
     /// The id of the selected Tariff.

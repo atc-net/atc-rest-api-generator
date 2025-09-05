@@ -47,7 +47,9 @@ public static class OpenApiParameterExtensions
         var defaultValueInitializer = openApiParameter.Schema.GetDefaultValueAsString();
 
         if (!string.IsNullOrEmpty(defaultValueInitializer) &&
-            openApiParameter.ContainsEnumInSchemaOrProperties())
+            openApiParameter.ContainsEnumInSchemaOrProperties() &&
+            dataType != "long" &&
+            dataType != "string")
         {
             defaultValueInitializer = dataType.Equals(parameterName, StringComparison.Ordinal)
                 ? $"{contractNamespaceWithoutApiGroupName}.{dataType}.{defaultValueInitializer.PascalCase(ApiOperationExtractor.ModelNameSeparators, removeSeparators: true)}"
