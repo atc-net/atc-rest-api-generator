@@ -88,7 +88,7 @@ jobs:
         run: dotnet restore
 
       - name: 🛠️ Build with dotnet
-        run: dotnet build Atc.Rest.Api.Generator.sln
+        run: dotnet build Atc.Rest.Api.Generator.slnx
 
       - name: ⬇️🌎 Download Swagger Petstore v3 spec
         run: curl -O https://petstore3.swagger.io/api/v3/openapi.yaml

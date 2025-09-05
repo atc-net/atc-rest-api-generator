@@ -1,0 +1,27 @@
+<Solution>
+  <Folder Name="/Docs/">
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/Src/">
+    <Project Path="src/Atc.CodeGeneration.CSharp/Atc.CodeGeneration.CSharp.csproj" />
+    <Project Path="src/Atc.Rest.ApiGenerator.CLI/Atc.Rest.ApiGenerator.CLI.csproj" />
+    <Project Path="src/Atc.Rest.ApiGenerator.Client.CSharp/Atc.Rest.ApiGenerator.Client.CSharp.csproj" />
+    <Project Path="src/Atc.Rest.ApiGenerator.CodingRules/Atc.Rest.ApiGenerator.CodingRules.csproj" />
+    <Project Path="src/Atc.Rest.ApiGenerator.Contracts/Atc.Rest.ApiGenerator.Contracts.csproj" />
+    <Project Path="src/Atc.Rest.ApiGenerator.Framework.Minimal/Atc.Rest.ApiGenerator.Framework.Minimal.csproj" />
+    <Project Path="src/Atc.Rest.ApiGenerator.Framework.Mvc/Atc.Rest.ApiGenerator.Framework.Mvc.csproj" />
+    <Project Path="src/Atc.Rest.ApiGenerator.Framework/Atc.Rest.ApiGenerator.Framework.csproj" />
+    <Project Path="src/Atc.Rest.ApiGenerator.Nuget/Atc.Rest.ApiGenerator.Nuget.csproj" />
+    <Project Path="src/Atc.Rest.ApiGenerator.OpenApi/Atc.Rest.ApiGenerator.OpenApi.csproj" />
+    <Project Path="src/Atc.Rest.ApiGenerator/Atc.Rest.ApiGenerator.csproj" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="test/Atc.CodeGeneration.CSharp.Tests/Atc.CodeGeneration.CSharp.Tests.csproj" />
+    <Project Path="test/Atc.Rest.ApiGenerator.CLI.Tests/Atc.Rest.ApiGenerator.CLI.Tests.csproj" />
+    <Project Path="test/Atc.Rest.ApiGenerator.Contracts.Tests/Atc.Rest.ApiGenerator.Contracts.Tests.csproj" />
+    <Project Path="test/Atc.Rest.ApiGenerator.Framework.Mvc.Tests/Atc.Rest.ApiGenerator.Framework.Mvc.Tests.csproj" />
+    <Project Path="test/Atc.Rest.ApiGenerator.Framework.Tests/Atc.Rest.ApiGenerator.Framework.Tests.csproj" />
+    <Project Path="test/Atc.Rest.ApiGenerator.Nuget.Tests/Atc.Rest.ApiGenerator.Nuget.Tests.csproj" />
+    <Project Path="test/Atc.Rest.ApiGenerator.OpenApi.Tests/Atc.Rest.ApiGenerator.OpenApi.Tests.csproj" />
+  </Folder>
+</Solution>
