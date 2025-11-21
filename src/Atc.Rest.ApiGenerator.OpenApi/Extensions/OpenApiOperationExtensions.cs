@@ -248,4 +248,83 @@ public static class OpenApiOperationExtensions
         this OpenApiOperation operation)
         => operation.Extensions.TryGetValue("x-return-async-enumerable", out var extension) &&
            extension is OpenApiBoolean { Value: true };
+
+    //// ! This from Atc.OpenApi.OpenApiOperationExtensions - remove this when OpenApi in this project is updated!
+    private const string RegexPatternUppercase = @"(?<!^)(?=[A-Z])";
+
+    //// ! This from Atc.OpenApi.OpenApiOperationExtensions - remove this when OpenApi in this project is updated!
+    public static bool IsOperationNamePluralized2(
+        this OpenApiOperation openApiOperation,
+        OperationType operationType)
+    {
+        if (openApiOperation is null)
+        {
+            throw new ArgumentNullException(nameof(openApiOperation));
+        }
+
+        var operationName = openApiOperation.GetOperationName();
+
+        // Remove Http-verb
+        if (operationName.StartsWith(operationType.ToString(), StringComparison.Ordinal))
+        {
+            operationName = operationName[operationType.ToString().Length..];
+        }
+
+        // Split by uppercase
+        var sa = System.Text.RegularExpressions.Regex.Split(operationName, RegexPatternUppercase, System.Text.RegularExpressions.RegexOptions.None, TimeSpan.FromSeconds(1));
+        if (sa.Length > 0)
+        {
+            // Test for last-term
+            var termWord = sa[^1];
+            if (termWord.EndsWith('s') &&
+                !(termWord.Equals("Ids", StringComparison.Ordinal) ||
+                  termWord.Equals("Identifiers", StringComparison.Ordinal) ||
+                  termWord.Equals("Details", StringComparison.Ordinal) ||
+                  termWord.Equals("Status", StringComparison.Ordinal)))
+            {
+                return true;
+            }
+
+            // Test for first-term
+            termWord = sa[0];
+            if (termWord.EndsWith('s'))
+            {
+                return true;
+            }
+
+            if (sa.Any(x => x.Equals("By", StringComparison.Ordinal)))
+            {
+                var index = Array.IndexOf(sa, "By");
+                if (index > 1)
+                {
+                    termWord = sa[index - 1];
+                    if (termWord.Equals("Details", StringComparison.Ordinal) ||
+                        termWord.Equals("Status", StringComparison.Ordinal))
+                    {
+                        return false;
+                    }
+
+                    if (termWord.EndsWith('s'))
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    //// ! This from Atc.OpenApi.OpenApiOperationExtensions - remove this when OpenApi in this project is updated!
+    public static bool IsOperationIdPluralized2(
+        this OpenApiOperation openApiOperation,
+        OperationType operationType)
+    {
+        if (openApiOperation is null)
+        {
+            throw new ArgumentNullException(nameof(openApiOperation));
+        }
+
+        return IsOperationNamePluralized2(openApiOperation, operationType);
+    }
 }

@@ -500,7 +500,7 @@ public class OpenApiDocumentValidator : IOpenApiDocumentValidator
                     var responseModelSchema = operationValue.GetModelSchemaFromResponse();
                     if (responseModelSchema is not null)
                     {
-                        if (operationValue.IsOperationIdPluralized(operationKey))
+                        if (operationValue.IsOperationIdPluralized2(operationKey))
                         {
                             if (!responseModelSchema.IsModelOfTypeArray(modelSchemas) &&
                                 !responseModelSchema.IsTypeCustomPagination())
