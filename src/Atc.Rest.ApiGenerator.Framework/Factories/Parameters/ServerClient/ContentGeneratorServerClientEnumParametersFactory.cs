@@ -43,7 +43,7 @@ public static class ContentGeneratorServerClientEnumParametersFactory
             {
                 case 1:
                     result.Add(
-                        key: sa[0].Trim().Replace(":", "-", StringComparison.CurrentCulture),
+                        key: sa[0].Trim(),
                         value: null);
                     break;
                 case 2:

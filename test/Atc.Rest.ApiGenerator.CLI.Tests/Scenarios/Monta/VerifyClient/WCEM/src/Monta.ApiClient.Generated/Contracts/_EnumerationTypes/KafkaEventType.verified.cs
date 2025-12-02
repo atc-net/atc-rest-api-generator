@@ -21,4 +21,22 @@ public enum KafkaEventType
 
     [EnumMember(Value = "deleted")]
     Deleted,
+
+    [EnumMember(Value = "scanned")]
+    Scanned,
+
+    [EnumMember(Value = "monta:ocpp:OcppRequestResponse")]
+    MontaOcppOcppRequestResponse,
+
+    [EnumMember(Value = "monta:ocpp:ChargePointConnected")]
+    MontaOcppChargePointConnected,
+
+    [EnumMember(Value = "monta:ocpp:ChargePointDisconnected")]
+    MontaOcppChargePointDisconnected,
+
+    [EnumMember(Value = "monta:ocpp:OcppProtocolError")]
+    MontaOcppOcppProtocolError,
+
+    [EnumMember(Value = "monta:ocpp:OcppRequestTimeout")]
+    MontaOcppOcppRequestTimeout,
 }
