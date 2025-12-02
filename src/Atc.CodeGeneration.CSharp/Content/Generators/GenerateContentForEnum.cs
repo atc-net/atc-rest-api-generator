@@ -6,6 +6,7 @@ public class GenerateContentForEnum : IContentGenerator
 {
     private readonly ICodeDocumentationTagsGenerator codeDocumentationTagsGenerator;
     private readonly EnumParameters parameters;
+    private readonly char[] removeSeparatorsForName = { ' ', '-', '_', ':' };
 
     public GenerateContentForEnum(
         ICodeDocumentationTagsGenerator codeDocumentationTagsGenerator,
@@ -57,8 +58,10 @@ public class GenerateContentForEnum : IContentGenerator
                 }
                 else
                 {
+                    var name = parametersValue.Name.PascalCase(removeSeparatorsForName, true);
+
                     sbLine.AppendLine($"[EnumMember(Value = \"{parametersValue.Name}\")]");
-                    sbLine.Append(4, parametersValue.Name.PascalCase(removeSeparators: true));
+                    sbLine.Append(4, name);
                 }
             }
             else

@@ -15250,6 +15250,22 @@ components:
       - created
       - updated
       - deleted
+      - scanned
+      - monta:ocpp:OcppRequestResponse
+      - monta:ocpp:ChargePointConnected
+      - monta:ocpp:ChargePointDisconnected
+      - monta:ocpp:OcppProtocolError
+      - monta:ocpp:OcppRequestTimeout
+      x-enum-varnames:
+      - CREATED
+      - UPDATED
+      - DELETED
+      - SCANNED
+      - OCPP_REQUEST_RESPONSE
+      - CHARGE_POINT_CONNECTED
+      - CHARGE_POINT_DISCONNECTED
+      - OCPP_PROTOCOL_ERROR
+      - OCPP_REQUEST_TIMEOUT
     KwhPerHour:
       required:
       - time
