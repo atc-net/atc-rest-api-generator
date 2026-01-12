@@ -33,7 +33,8 @@ public static class ContentGeneratorServerResultParametersFactory
         ContentGeneratorServerResultImplicitOperatorParameters? implicitOperatorParameters = null;
 
         var okResponseModel = responseModels.Find(x => x.StatusCode == HttpStatusCode.OK) ??
-                              responseModels.Find(x => x.StatusCode == HttpStatusCode.Created);
+                              responseModels.Find(x => x.StatusCode == HttpStatusCode.Created) ??
+                              responseModels.Find(x => x.StatusCode == HttpStatusCode.NoContent);
 
         if (ShouldAppendImplicitOperatorContent(httpStatusCodes))
         {
@@ -60,7 +61,8 @@ public static class ContentGeneratorServerResultParametersFactory
         ICollection<HttpStatusCode> httpStatusCodes)
     {
         if (!httpStatusCodes.Contains(HttpStatusCode.OK) &&
-            !httpStatusCodes.Contains(HttpStatusCode.Created))
+            !httpStatusCodes.Contains(HttpStatusCode.Created) &&
+            !httpStatusCodes.Contains(HttpStatusCode.NoContent))
         {
             return false;
         }
