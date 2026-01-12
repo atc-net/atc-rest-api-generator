@@ -355,3 +355,4 @@ openapi.yaml
 
 # Verify Tests failed verifications
 *.received.cs
+tmpclaude-*-cwd
