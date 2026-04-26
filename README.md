@@ -2,6 +2,43 @@
 
 [![NuGet Version](https://img.shields.io/nuget/v/atc-rest-api-generator.svg?logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/atc-rest-api-generator)
 
+> [!IMPORTANT]
+> ## This repository is no longer actively maintained
+>
+> A next-generation successor is available and is the recommended path forward for all new and existing projects:
+>
+> 👉 **[atc-net/atc-rest-api-source-generator](https://github.com/atc-net/atc-rest-api-source-generator)** &nbsp;·&nbsp; 📚 **[Wiki / Documentation](https://github.com/atc-net/atc-rest-api-source-generator/wiki)**
+>
+> This repo will only receive critical fixes when strictly necessary. All new feature work, improvements, and ongoing support happen in the new repository.
+
+## Why move to the new generator?
+
+The new `Atc.Rest.Api.SourceGenerator` is built on 5+ years of learnings from this CLI-based generator and replaces it with a modern Roslyn source generator approach.
+
+- **🔧 Easier to maintain for consumers** — No CLI invocation, no committed generated files, no "did someone forget to regenerate?" bugs. Add the NuGet package, drop your OpenAPI YAML, and `dotnet build` produces the code on-the-fly. Marker files replace the JSON options file.
+- **🚀 Many more features** — Minimal API output, contract-enforced result types (compile error if a handler returns a status code not defined in the spec), built-in rate limiting, output caching / HybridCache, client-side resilience (retry, circuit breaker), TypeScript client generation (Fetch/Axios + React Query + Zod), Native AOT support, file uploads and `IAsyncEnumerable<T>` streaming, JWT/OAuth2/API Key security from the spec, and more.
+- **🛡️ Already battle-tested in production** — In active use across many customer solutions; the architectural decisions and edge cases have been hardened by real-world workloads.
+- **🔁 Proven migration path** — A large number of APIs originally generated with this old tool have already been migrated and are running in production on the new generator.
+- **🛠️ Built-in migration tooling** — `atc-rest-api-gen migrate validate` and `atc-rest-api-gen migrate execute` automate moving an existing project (structure, naming conventions, configuration) over to the new generator.
+- **🗒️ No generated files in git** — Smaller repos, no merge conflicts on generated code, single source of truth (the OpenAPI spec).
+- **⚙️ Modern .NET target** — Built for .NET 10 and current ASP.NET Core patterns.
+
+### Where to go from here
+
+| You want to… | Go to |
+|---|---|
+| Get an overview of the new generator | [Wiki Home](https://github.com/atc-net/atc-rest-api-source-generator/wiki) |
+| Migrate an existing project from this old CLI generator | [Migration Guide](https://github.com/atc-net/atc-rest-api-source-generator/wiki/Migration-Guide) |
+| Start a new project (basic walkthrough) | [Getting Started — Basic](https://github.com/atc-net/atc-rest-api-source-generator/wiki/Getting-Started-with-Basic) |
+| Start a new project using the CLI scaffolding | [Getting Started — CLI](https://github.com/atc-net/atc-rest-api-source-generator/wiki/Getting-Started-with-CLI) |
+| Read the business / stakeholder rationale | [FAQ — Business Value](https://github.com/atc-net/atc-rest-api-source-generator/wiki/FAQ-Business-Value) |
+| Browse the full CLI command reference | [Working with the CLI](https://github.com/atc-net/atc-rest-api-source-generator/wiki/Working-with-CLI) |
+| See the planned features and status | [Roadmap](https://github.com/atc-net/atc-rest-api-source-generator/wiki/Roadmap) |
+
+> 💡 **TL;DR for current users of `atc-rest-api-generator`:** install `Atc.Rest.Api.SourceGenerator`, run `atc-rest-api-gen migrate execute`, and your project is on the new generator. The original documentation for this old tool is preserved below for reference.
+
+---
+
 ## Table of content
 
 - [ATC-NET REST API Generator](#atc-net-rest-api-generator)
